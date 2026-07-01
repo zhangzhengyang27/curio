@@ -1,0 +1,333 @@
+<template>
+  <div class="graphics-root" ref="gContainer">
+    <div id="container"></div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const gContainer = ref(null)
+const cleanupFns = []
+
+async function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script')
+    s.src = src
+    s.onload = resolve
+    s.onerror = reject
+    document.head.appendChild(s)
+  })
+}
+
+
+function installCleanupHooks() {
+  const origRaf = window.requestAnimationFrame
+  const origCancelRaf = window.cancelAnimationFrame
+  const rafIds = []
+  window.requestAnimationFrame = (cb) => {
+    const id = origRaf((time) => {
+      const idx = rafIds.indexOf(id)
+      if (idx !== -1) rafIds.splice(idx, 1)
+      cb(time)
+    })
+    rafIds.push(id)
+    return id
+  }
+  window.cancelAnimationFrame = (id) => {
+    const idx = rafIds.indexOf(id)
+    if (idx !== -1) rafIds.splice(idx, 1)
+    return origCancelRaf(id)
+  }
+  cleanupFns.push(() => {
+    rafIds.forEach(id => origCancelRaf(id))
+    window.requestAnimationFrame = origRaf
+    window.cancelAnimationFrame = origCancelRaf
+  })
+
+  const listeners = []
+  const origWindowAdd = window.addEventListener
+  const origDocAdd = document.addEventListener
+  window.addEventListener = (type, fn, opts) => {
+    listeners.push(['window', type, fn, opts])
+    return origWindowAdd.call(window, type, fn, opts)
+  }
+  document.addEventListener = (type, fn, opts) => {
+    listeners.push(['document', type, fn, opts])
+    return origDocAdd.call(document, type, fn, opts)
+  }
+  cleanupFns.push(() => {
+    listeners.forEach(([target, type, fn, opts]) => {
+      if (target === 'window') window.removeEventListener(type, fn, opts)
+      else if (target === 'document') document.removeEventListener(type, fn, opts)
+    })
+    window.addEventListener = origWindowAdd
+    document.addEventListener = origDocAdd
+  })
+
+  const glContexts = []
+  const origGetContext = HTMLCanvasElement.prototype.getContext
+  HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+    const ctx = origGetContext.call(this, type, attrs)
+    if (ctx && /^(webgl|webgl2|experimental-webgl)$/.test(type)) {
+      glContexts.push(ctx)
+    }
+    return ctx
+  }
+  cleanupFns.push(() => {
+    glContexts.forEach((ctx) => {
+      const ext = ctx.getExtension('WEBGL_lose_context')
+      if (ext) ext.loseContext()
+    })
+    HTMLCanvasElement.prototype.getContext = origGetContext
+  })
+}
+
+async function initGraphicsExample() {
+  await loadScript("/graphics/assets/external/spritejs.js");
+  await loadScript("/graphics/assets/external/sprite-extend-3d.js");
+  await loadScript("/graphics/assets/external/d3-array.v2.min.js");
+  await loadScript("/graphics/assets/external/d3-geo.v2.min.js");
+  await loadScript("/graphics/assets/external/topojson.js");
+  {
+    const mapWidth = 960;
+        const mapHeight = 480;
+        const mapScale = 4;
+    
+        
+        // 默认宽高 960 X 500，默认 translate 是 480 X 250
+        const projection = d3.geoEquirectangular();
+        projection.scale(projection.scale() * mapScale).translate([mapWidth * mapScale * 0.5, (mapHeight + 2) * mapScale * 0.5]);
+    
+        const topojsonData = '/graphics/assets/external/843bbd2c37f94f26.json';
+        
+        async function loadMap(src = topojsonData, {strokeColor, fillColor} = {}) {
+          const data = await (await fetch(src)).json();
+          const countries = topojson.feature(data, data.objects.countries);
+          const canvas = new OffscreenCanvas(mapScale * mapWidth, mapScale * mapHeight);
+          const context = canvas.getContext('2d');
+          context.imageSmoothingEnabled = false;
+    
+          return drawMap({context, countries, strokeColor, fillColor});
+        }
+    
+    
+        function drawMap({
+          context,
+          countries,
+          strokeColor = '#666',
+          fillColor = '#000',
+          strokeWidth = 1.5,
+        } = {}) {
+          const path = d3.geoPath(projection).context(context);
+    
+          context.save();
+          context.translate(0, mapScale * mapHeight);
+          context.scale(1, -1);
+          context.strokeStyle = strokeColor;
+          context.lineWidth = strokeWidth;
+          context.fillStyle = fillColor;
+          context.beginPath();
+          path(countries);
+          context.fill();
+          context.stroke();
+          context.restore();
+    
+          const bitmap = context.canvas.transferToImageBitmap();
+          return bitmap;
+        }
+    
+        const {Scene} = spritejs;
+        const {Sphere} = spritejs.ext3d;
+    
+        const vertex = `
+          precision highp float;
+          precision highp int;
+    
+          attribute vec3 position;
+          attribute vec3 normal;
+          attribute vec4 color;
+          attribute vec2 uv;
+    
+          uniform mat4 modelViewMatrix;
+          uniform mat4 projectionMatrix;
+          uniform mat3 normalMatrix;
+    
+          varying vec3 vNormal;
+          varying vec2 vUv;
+          varying vec4 vColor;
+    
+          uniform vec3 pointLightPosition; //点光源位置
+    
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+    
+            vUv = uv;
+            vColor = color;
+    
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }    
+        `;
+    
+        const fragment = `
+          precision highp float;
+          precision highp int;
+    
+          varying vec3 vNormal;
+          varying vec4 vColor;
+    
+          uniform sampler2D tMap;
+          varying vec2 vUv;
+    
+          uniform vec2 uResolution;
+    
+          void main() {
+            vec4 color = vColor;
+            vec4 texColor = texture2D(tMap, vUv);
+            vec2 st = gl_FragCoord.xy / uResolution;
+    
+            float alpha = texColor.a;
+            color.rgb = mix(color.rgb, texColor.rgb, alpha);
+            color.rgb = mix(texColor.rgb, color.rgb, clamp(color.a / max(0.0001, texColor.a), 0.0, 1.0));
+            color.a = texColor.a + (1.0 - texColor.a) * color.a;
+    
+            float d = distance(st, vec2(0.5));
+    
+            gl_FragColor.rgb = color.rgb + 0.3 * pow((1.0 - d), 3.0);
+            gl_FragColor.a = color.a;
+          } 
+        `;
+    
+        const container = gContainer.value.querySelector('#container');
+        const scene = new Scene({
+          container,
+        });
+        const layer = scene.layer3d('fglayer', {
+          alpha: false,
+          camera: {
+            fov: 35,
+            pos: [0, 0, 5],
+          },
+        });
+    
+        const texture = layer.createTexture({});
+    
+        loadMap().then((bitmap) => {
+          texture.image = bitmap;
+          texture.needsUpdate = true;
+          layer.forceUpdate();
+        });
+    
+        const program = layer.createProgram({
+          vertex,
+          fragment,
+          texture,
+          cullFace: null,
+        });
+    
+        const globe = new Sphere(program, {
+          colors: '#333',
+          widthSegments: 64,
+          heightSegments: 32,
+        });
+    
+        layer.append(globe);
+    
+        layer.setOrbit({}); // 开启旋转控制
+    
+        const skyVertex = `
+          precision highp float;
+          precision highp int;
+    
+          attribute vec3 position;
+          attribute vec3 normal;
+          attribute vec2 uv;
+    
+          uniform mat3 normalMatrix;
+          uniform mat4 modelViewMatrix;
+          uniform mat4 projectionMatrix;
+    
+          varying vec2 vUv;
+    
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `;
+    
+        const skyFragment = `
+          precision highp float;
+          precision highp int;
+          varying vec2 vUv;
+    
+          highp float random(vec2 co)
+          {
+            highp float a = 12.9898;
+            highp float b = 78.233;
+            highp float c = 43758.5453;
+            highp float dt= dot(co.xy ,vec2(a,b));
+            highp float sn= mod(dt,3.14);
+            return fract(sin(sn) * c);
+          }
+    
+          // Value Noise by Inigo Quilez - iq/2013
+          // https://www.shadertoy.com/view/lsf3WH
+          highp float noise(vec2 st) {
+            vec2 i = floor(st);
+            vec2 f = fract(st);
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            return mix( mix( random( i + vec2(0.0,0.0) ),
+                            random( i + vec2(1.0,0.0) ), u.x),
+                        mix( random( i + vec2(0.0,1.0) ),
+                            random( i + vec2(1.0,1.0) ), u.x), u.y);
+          }
+    
+          void main() {
+            gl_FragColor.rgb = vec3(1.0);
+            gl_FragColor.a = step(0.93, noise(vUv * 6000.0));
+          }
+        `;
+    
+        function createSky(layer, skyProgram) {
+          skyProgram = skyProgram || layer.createProgram({
+            vertex: skyVertex,
+            fragment: skyFragment,
+            transparent: true,
+            cullFace: null,
+          });
+          const skyBox = new Sphere(skyProgram);
+          skyBox.attributes.scale = 100;
+          layer.append(skyBox);
+          return skyBox;
+        }
+    
+        createSky(layer);
+  }
+}
+
+onMounted(() => {
+  installCleanupHooks()
+  initGraphicsExample().catch(err => {
+    console.error('Graphics example init failed:', err)
+  })
+})
+
+onUnmounted(() => {
+  cleanupFns.forEach(fn => fn())
+  cleanupFns.length = 0
+})
+</script>
+
+<style scoped>
+html, .graphics-root {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    #container {
+      width: 100%;
+      height: 100%;
+    }
+</style>

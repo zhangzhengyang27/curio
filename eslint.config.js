@@ -119,6 +119,52 @@ export default tseslint.config(
     },
   },
 
+  // 由 HTML 自动转换的 Graphics 示例：保留原始代码风格，关闭对转换产物过于严格的规则
+  {
+    files: ['src/examples/components/graphics/**/*.vue'],
+    linterOptions: { reportUnusedDisableDirectives: 'off' },
+    rules: {
+      'no-useless-assignment': 'off',
+      'no-constant-condition': 'off',
+      'no-empty': 'off',
+      'no-fallthrough': 'off',
+      'no-func-assign': 'off',
+      'no-unassigned-vars': 'off',
+      'no-unexpected-multiline': 'off',
+      'no-unsafe-finally': 'off',
+      'no-extra-boolean-cast': 'off',
+      'constructor-super': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-this-alias': 'off',
+      'vue/max-attributes-per-line': 'off',
+      'vue/attributes-order': 'off',
+      'vue/html-self-closing': 'off',
+    },
+  },
+
+  // Graphics 第三方库：UMD/IIFE 全局变量较多，关闭严格规则
+  {
+    files: ['src/examples/jsm-compat/graphics/**/*.js'],
+    linterOptions: { reportUnusedDisableDirectives: 'off' },
+    rules: {
+      'no-useless-assignment': 'off',
+      'no-constant-condition': 'off',
+      'no-empty': 'off',
+      'no-fallthrough': 'off',
+      'no-func-assign': 'off',
+      'no-unassigned-vars': 'off',
+      'no-unexpected-multiline': 'off',
+      'no-unsafe-finally': 'off',
+      'no-extra-boolean-cast': 'off',
+      'constructor-super': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-this-alias': 'off',
+      'no-undef': 'off',
+    },
+  },
+
   // WebGL 第三方库：UMD/IIFE 全局变量较多，关闭 no-undef
   {
     files: ['src/examples/jsm-compat/webgl/**/libs/*.js', 'src/examples/jsm-compat/webgl/**/libs/*.min.js'],

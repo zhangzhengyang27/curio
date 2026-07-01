@@ -154,10 +154,11 @@ function downloadExternal(inputUrl) {
     const client = inputUrl.startsWith('https:') ? https : http
     const req = client.get(inputUrl, { timeout: 30000 }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        // 跟随重定向
+        // 跟随重定向（支持相对路径）
         file.close()
-        fs.unlinkSync(outPath)
-        downloadExternal(res.headers.location).then((redirectLocalUrl) => {
+        if (fs.existsSync(outPath)) fs.unlinkSync(outPath)
+        const redirectUrl = new URL(res.headers.location, inputUrl).href
+        downloadExternal(redirectUrl).then((redirectLocalUrl) => {
           localUrlMap.set(inputUrl, redirectLocalUrl)
           resolve(redirectLocalUrl)
         }).catch(reject)
