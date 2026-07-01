@@ -3,9 +3,13 @@
     camera="perspective"
     :camera-position="[0, 2.5, 10]"
     :camera-options="{ fov: 55, near: 1, far: 3000 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>

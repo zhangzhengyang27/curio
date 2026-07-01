@@ -1,22 +1,50 @@
 <template>
   <div class="worker-offscreen-container">
     <div class="info">
-      <a href="https://threejs.org" target="_blank" rel="noopener noreferrer">three.js</a>
+      <a
+        href="https://threejs.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >three.js</a>
       - offscreen canvas (
-      <a href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas" target="_blank" rel="noopener noreferrer">about</a>
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas"
+        target="_blank"
+        rel="noopener noreferrer"
+      >about</a>
       )
-      <p v-if="!offscreenSupported" class="message">
+      <p
+        v-if="!offscreenSupported"
+        class="message"
+      >
         Your browser does not support OffscreenCanvas with a WebGL Context.
       </p>
     </div>
 
-    <div ref="containerRef" class="canvas-container">
-      <canvas ref="canvas1Ref" class="onscreen-canvas"></canvas>
-      <canvas ref="canvas2Ref" class="offscreen-canvas"></canvas>
+    <div
+      ref="containerRef"
+      class="canvas-container"
+    >
+      <canvas
+        ref="canvas1Ref"
+        class="onscreen-canvas"
+      />
+      <canvas
+        ref="canvas2Ref"
+        class="offscreen-canvas"
+      />
     </div>
     <div class="ui">
-      <button ref="buttonRef" @click="toggleJank">START JANK</button>
-      <span ref="resultRef" class="result"></span>
+      <button
+        ref="buttonRef"
+        @click="toggleJank"
+      >
+        START JANK
+      </button>
+      <span
+        ref="resultRef"
+        class="result"
+      />
     </div>
   </div>
 </template>

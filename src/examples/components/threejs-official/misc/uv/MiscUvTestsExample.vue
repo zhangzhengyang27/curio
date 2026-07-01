@@ -1,5 +1,8 @@
 <template>
-  <div ref="containerRef" class="uv-tests-container" />
+  <div
+    ref="containerRef"
+    class="uv-tests-container"
+  />
 </template>
 
 <script setup>

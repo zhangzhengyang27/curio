@@ -5,9 +5,13 @@
     :camera-position="[0, 1.6, 0]"
     :camera-options="{ fov: 50, near: 0.1, far: 10 }"
     :enable-controls="false"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebXRExampleScene>
 </template>
@@ -168,7 +172,7 @@ function onReady(__stage) {
   
   				// controls
   
-  				controls = new TransformControls( camera, renderer.domElement );
+  				const controls = new TransformControls( camera, renderer.domElement );
   				controls.attach( group.children[ 0 ] );
   				scene.add( controls.getHelper() );
   

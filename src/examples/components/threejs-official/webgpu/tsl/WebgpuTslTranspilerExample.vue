@@ -2,19 +2,37 @@
   <div class="transpiler-root">
     <div id="source-dropdown">
       <label for="decoder-select">Encoder</label>
-      <select id="decoder-select" v-model="options.decoder">
-        <option value="GLSL">GLSL</option>
+      <select
+        id="decoder-select"
+        v-model="options.decoder"
+      >
+        <option value="GLSL">
+          GLSL
+        </option>
       </select>
     </div>
     <div id="result-dropdown">
       <label for="encoder-select">Decoder</label>
-      <select id="encoder-select" v-model="options.encoder">
-        <option value="TSL">TSL</option>
-        <option value="WGSL">WGSL</option>
+      <select
+        id="encoder-select"
+        v-model="options.encoder"
+      >
+        <option value="TSL">
+          TSL
+        </option>
+        <option value="WGSL">
+          WGSL
+        </option>
       </select>
     </div>
-    <div id="source" ref="sourceRef" />
-    <div id="result" ref="resultRef" />
+    <div
+      id="source"
+      ref="sourceRef"
+    />
+    <div
+      id="result"
+      ref="resultRef"
+    />
   </div>
 </template>
 

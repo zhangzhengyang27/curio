@@ -4,9 +4,13 @@
     antialias
     :camera-position="[0, 0, 25]"
     :camera-options="{ fov: 45, near: 0.1, far: 100 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>

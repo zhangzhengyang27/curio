@@ -2,9 +2,13 @@
   <WebXRExampleScene
     camera="perspective"
     :camera-options="{ fov: 70, near: 1, far: 2000 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebXRExampleScene>
 </template>

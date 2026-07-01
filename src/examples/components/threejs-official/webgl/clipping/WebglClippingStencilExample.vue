@@ -5,9 +5,13 @@
     :clear-color="0x263238"
     :camera-position="[2, 2, 2]"
     :camera-options="{ fov: 36, near: 1, far: 100 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>

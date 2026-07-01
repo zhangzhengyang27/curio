@@ -547,7 +547,7 @@ function DRACOWorker() {
 
 					};
 
-					DracoDecoderModule( decoderConfig ); // eslint-disable-line no-undef
+					DracoDecoderModule( decoderConfig );  
 
 				} );
 				break;

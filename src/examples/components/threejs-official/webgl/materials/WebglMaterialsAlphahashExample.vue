@@ -32,6 +32,7 @@ function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
+  const controls = __stage.controls
   
 
   

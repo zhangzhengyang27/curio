@@ -5,9 +5,13 @@
     :camera-look-at="[0, 0, 0]"
     :camera-options="{ fov: 40, near: 1, far: 200 }"
     custom-render
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>

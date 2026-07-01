@@ -1,6 +1,12 @@
 <template>
-  <div ref="containerRef" class="multiple-canvas-container">
-    <div v-if="!webgpuAvailable" class="webgpu-error" />
+  <div
+    ref="containerRef"
+    class="multiple-canvas-container"
+  >
+    <div
+      v-if="!webgpuAvailable"
+      class="webgpu-error"
+    />
   </div>
 </template>
 

@@ -496,7 +496,7 @@ class NodeMaterialObserver {
 			let currentAttributeCount = 0;
 			let storedAttributeCount = 0;
 
-			for ( const _ in attributes ) currentAttributeCount ++; // eslint-disable-line no-unused-vars
+			for ( const _ in attributes ) currentAttributeCount ++;  
 
 			for ( const name in storedAttributes ) {
 
@@ -40079,9 +40079,9 @@ const cdl = /*@__PURE__*/ Fn( ( [
 	const v = max$1( color.rgb.mul( slope ).add( offset ), 0.0 );
 	const pv = v.pow( power );
 
-	If( v.r.greaterThan( 0.0 ), () => { v.r.assign( pv.r ); } ); // eslint-disable-line
-	If( v.g.greaterThan( 0.0 ), () => { v.g.assign( pv.g ); } ); // eslint-disable-line
-	If( v.b.greaterThan( 0.0 ), () => { v.b.assign( pv.b ); } ); // eslint-disable-line
+	If( v.r.greaterThan( 0.0 ), () => { v.r.assign( pv.r ); } );  
+	If( v.g.greaterThan( 0.0 ), () => { v.g.assign( pv.g ); } );  
+	If( v.b.greaterThan( 0.0 ), () => { v.b.assign( pv.b ); } );  
 
 	v.assign( luma.add( v.sub( luma ).mul( saturation ) ).max( 0 ) );
 

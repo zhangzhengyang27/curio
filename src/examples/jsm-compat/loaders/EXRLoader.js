@@ -837,7 +837,7 @@ class EXRLoader extends DataTextureLoader {
 		function decodeRunLength( source ) {
 
 			let size = source.byteLength;
-			const out = new Array();
+			const out = [];
 			let p = 0;
 
 			const reader = new DataView( source );
@@ -1784,7 +1784,7 @@ class EXRLoader extends DataTextureLoader {
 				throw new Error( 'THREE.EXRLoader: ' + EXRHeader.compression + ' version ' + dwaHeader.version + ' is unsupported' );
 
 			// Read channel ruleset information
-			const channelRules = new Array();
+			const channelRules = [];
 			let ruleSize = parseUint16( inDataView, inOffset ) - INT16_SIZE;
 
 			while ( ruleSize > 0 ) {
@@ -1914,7 +1914,7 @@ class EXRLoader extends DataTextureLoader {
 			const rowOffsets = new Array( channelData.length );
 			for ( let i = 0; i < rowOffsets.length; ++ i ) {
 
-				rowOffsets[ i ] = new Array();
+				rowOffsets[ i ] = [];
 
 			}
 

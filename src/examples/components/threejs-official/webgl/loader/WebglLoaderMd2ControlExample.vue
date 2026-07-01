@@ -5,9 +5,13 @@
     :camera-position="[0, 150, 1300]"
     :camera-options="{ fov: 45, near: 1, far: 4000 }"
     :enable-controls="false"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>

@@ -5,9 +5,13 @@
     :camera-position="[0, 200, -200]"
     :camera-options="{ fov: 60, near: 1, far: 1000 }"
     :enable-controls="false"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>
@@ -30,6 +34,7 @@ function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
+  const controls = __stage.controls
   
 
   

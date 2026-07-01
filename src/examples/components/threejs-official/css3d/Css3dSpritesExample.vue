@@ -5,9 +5,13 @@
     :camera-look-at="[0, 0, 0]"
     :camera-options="{ fov: 75, near: 1, far: 5000 }"
     :enable-controls="false"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </CSS3DExampleScene>
 </template>

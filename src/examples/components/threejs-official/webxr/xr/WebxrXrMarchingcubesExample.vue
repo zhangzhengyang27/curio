@@ -4,9 +4,13 @@
     antialias
     :camera-position="[0, 1.6, 3]"
     :camera-options="{ fov: 50, near: 0.01, far: 50 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebXRExampleScene>
 </template>
@@ -31,6 +35,7 @@ function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
+  const controls = __stage.controls
   
 
   

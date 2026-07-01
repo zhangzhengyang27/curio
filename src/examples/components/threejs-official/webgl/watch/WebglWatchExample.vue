@@ -4,9 +4,13 @@
     antialias
     :camera-position="[0.8, 0.5, -1.5]"
     :camera-options="{ fov: 55, near: 0.1, far: 20 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </ExampleScene>
 </template>
@@ -36,6 +40,7 @@ function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
+  const controls = __stage.controls
   
 
   

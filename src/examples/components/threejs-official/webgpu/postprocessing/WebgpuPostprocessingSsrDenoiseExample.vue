@@ -3,9 +3,13 @@
     camera="perspective"
     :camera-position="[0.9210513838983053, 0.16195074025403253, 0.431687274895316]"
     :camera-options="{ fov: 35, near: 0.1, far: 8 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebGPUExampleScene>
 </template>
@@ -37,6 +41,7 @@ async function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
+  const controls = __stage.controls
   
 
   

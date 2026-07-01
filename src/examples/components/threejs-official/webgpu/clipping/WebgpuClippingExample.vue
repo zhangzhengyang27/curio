@@ -4,9 +4,13 @@
     antialias
     :camera-position="[0, 1.3, 3]"
     :camera-options="{ fov: 36, near: 0.25, far: 16 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebGPUExampleScene>
 </template>

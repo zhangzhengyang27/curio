@@ -2,9 +2,13 @@
   <WebGPUExampleScene
     camera="perspective"
     :camera-options="{ fov: 65, near: 3, far: 10 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebGPUExampleScene>
 </template>

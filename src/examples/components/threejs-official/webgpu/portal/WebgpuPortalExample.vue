@@ -5,9 +5,13 @@
     :camera-position="[2.5, 1, 3]"
     :camera-look-at="[0, 1, 0]"
     :camera-options="{ fov: 50, near: 0.01, far: 30 }"
-    @ready="onReady">
+    @ready="onReady"
+  >
     <template #default>
-      <div class="example-info" v-html="infoHtml" />
+      <div
+        class="example-info"
+        v-html="infoHtml"
+      />
     </template>
   </WebGPUExampleScene>
 </template>
