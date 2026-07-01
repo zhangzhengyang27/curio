@@ -309,13 +309,10 @@ function transformStyles(styles, htmlRelDir) {
   return transformed
 }
 
-function resolveTitle(rawTitle, fileName) {
-  const genericTitles = ['', 'document', '未命名', 'undefined']
-  const cleanTitle = rawTitle.trim()
-  if (cleanTitle && !genericTitles.includes(cleanTitle.toLowerCase())) {
-    return cleanTitle
-  }
-  return fileName.replace(/\.html$/i, '')
+function resolveTitle(_rawTitle, fileName) {
+  // 原始 HTML 的 <title> 在 study-webgl 等教材中大量复用/错误，
+  // 使用文件名（去掉序号前缀、连字符和扩展名）作为标题更可靠。
+  return fileName.replace(/\.html$/i, '').replace(/^\d+[-_]/, '').replace(/-/g, '')
 }
 
 function isGlMatrixLegacy(src) {

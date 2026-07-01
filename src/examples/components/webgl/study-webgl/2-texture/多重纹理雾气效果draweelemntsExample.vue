@@ -115,7 +115,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
   
-              attribOutUV = webgl.getAttribLocation(webgl.program, "outUV");
+              let attribOutUV = webgl.getAttribLocation(webgl.program, "outUV");
               webgl.enableVertexAttribArray(attribOutUV);
               webgl.vertexAttribPointer(attribOutUV, 2, webgl.FLOAT, false, 6 * 4, 4 * 4);
   
