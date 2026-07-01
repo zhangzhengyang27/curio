@@ -1,18 +1,10 @@
 <template>
   <div class="mygrapics-root" ref="mgContainer">
     <h1 id="title"></h1>
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="800" viewBox="0 0 1600 1600">
-      </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="800" viewBox="0 0 1600 1600">
+    </svg>
   </div>
 </template>
-
-<style scoped>
-h1 {
-      position: absolute;
-      width: 800px;
-      text-align: center;
-    }
-</style>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -110,3 +102,11 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+h1 {
+      position: absolute;
+      width: 800px;
+      text-align: center;
+    }
+</style>

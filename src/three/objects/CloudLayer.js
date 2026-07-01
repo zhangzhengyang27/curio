@@ -52,7 +52,7 @@ export function createCloudLayer(R, options = {}) {
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.wrapS = THREE.RepeatWrapping
-  texture.wrapU = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
 
   const geometry = new THREE.SphereGeometry(radius, 64, 64)
   const material = new THREE.MeshBasicMaterial({

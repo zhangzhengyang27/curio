@@ -203,6 +203,14 @@ function downloadFrames() {
   gifFrames = []
 }
 
+onUnmounted(() => {
+  if (gifRecording) {
+    gifRecording = false
+    clearInterval(gifInterval)
+    gifFrames = []
+  }
+})
+
 function openFileImport() {
   fileInput.value?.click()
 }

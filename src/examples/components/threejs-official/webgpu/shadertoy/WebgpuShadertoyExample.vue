@@ -66,7 +66,7 @@ async function onReady(__stage) {
   
   					const jsCode = this.transpile( glsl, true );
   
-  					const { mainImage } = eval( jsCode )( TSL );
+  					const { mainImage } = new Function( 'return (' + jsCode + ')' )()( TSL );
   
   					this.mainImage = mainImage;
   

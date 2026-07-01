@@ -4,18 +4,6 @@
   </div>
 </template>
 
-<style scoped>
-.block {
-      width: 100px;
-      height: 100px;
-      top: 100px;
-      left: 100px;
-      transform-origin: 50% 50%;
-      position: absolute;
-      background: blue;
-    }
-</style>
-
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -108,3 +96,15 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+.block {
+      width: 100px;
+      height: 100px;
+      top: 100px;
+      left: 100px;
+      transform-origin: 50% 50%;
+      position: absolute;
+      background: blue;
+    }
+</style>

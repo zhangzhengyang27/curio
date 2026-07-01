@@ -30,8 +30,6 @@ const props = defineProps({
 const iframeRef = ref(null)
 const srcDoc = ref('')
 
-const THREE_VERSION = '0.185.0'
-
 const DEFAULT_IMPORT_MAP = {
   imports: {
     three: '/node_modules/three/build/three.module.js',

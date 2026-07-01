@@ -11,11 +11,13 @@ export const useTimelineStore = defineStore('timeline', () => {
   let playTimer = null
 
   function setYearlyData(data) {
-    yearlyData.value = data
+    yearlyData.value = data || null
     let max = 0
-    Object.values(data).forEach(yd => {
-      Object.values(yd).forEach(v => { if (v > max) max = v })
-    })
+    if (data) {
+      Object.values(data).forEach(yd => {
+        Object.values(yd).forEach(v => { if (typeof v === 'number' && v > max) max = v })
+      })
+    }
     globalMax.value = max
   }
 
@@ -46,21 +48,21 @@ export const useTimelineStore = defineStore('timeline', () => {
   function getPillarData(year) {
     const data = yearlyData.value?.[year]
     const prevData = yearlyData.value?.[year - 1]
-    if (!data) return []
+    if (!data) return { pillars: [], maxHeight: 60 }
     let maxGdp = 0
     // Pre-filter: only names with <6 chars and no special characters (likely real countries)
-    const isRealCountry = (n) => !n.includes('(') && !n.includes('（') && !n.includes('区') && !n.includes('组织') && !n.includes('成员') && !n.includes('红') && !n.includes('货币') && !n.includes('签') && n.length <= 6
-    Object.values(yearlyData.value).forEach(yd => {
+    const isRealCountry = (n) => typeof n === 'string' && !n.includes('(') && !n.includes('（') && !n.includes('区') && !n.includes('组织') && !n.includes('成员') && !n.includes('红') && !n.includes('货币') && !n.includes('签') && n.length <= 6
+    Object.values(yearlyData.value || {}).forEach(yd => {
       Object.entries(yd).forEach(([n, v]) => {
-        if (isRealCountry(n) && v > maxGdp) maxGdp = v
+        if (isRealCountry(n) && typeof v === 'number' && v > maxGdp) maxGdp = v
       })
     })
     const entries = Object.entries(data)
-      .filter(([n]) => isRealCountry(n))
+      .filter(([n, v]) => isRealCountry(n) && typeof v === 'number')
       .sort((a, b) => b[1] - a[1])
       .slice(0, 30)
       .map(([name, gdp]) => {
-        const prevGdp = prevData?.[name] || gdp
+        const prevGdp = (prevData && typeof prevData[name] === 'number') ? prevData[name] : gdp
         const growth = prevGdp > 0 ? (gdp - prevGdp) / prevGdp : 0
         const h = maxGdp > 0 ? (gdp / maxGdp) * 60 : 1
         const absG = Math.min(Math.abs(growth) * 12, 1)

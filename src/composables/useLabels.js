@@ -11,6 +11,8 @@ import {
  */
 export function useLabels() {
   // 创建标签元素（保留的旧接口，用于鼠标悬停主标签）
+  const trackedLabels = new Set()
+
   function createLabelEl(text = '') {
     const div = document.createElement('div')
     div.style.visibility = 'hidden'
@@ -24,6 +26,7 @@ export function useLabels() {
     div.style.pointerEvents = 'none'
 
     const label = new CSS2DObject(div)
+    trackedLabels.add(label)
     return { label, div }
   }
 
@@ -47,7 +50,18 @@ export function useLabels() {
     labelObj.element.style.visibility = 'hidden'
   }
 
+  function resize() {
+    labelRenderer.setSize(window.innerWidth, window.innerHeight)
+  }
+
   function dispose() {
+    trackedLabels.forEach(label => {
+      if (label.parent) label.parent.remove(label)
+      if (label.element && label.element.parentNode) {
+        label.element.parentNode.removeChild(label.element)
+      }
+    })
+    trackedLabels.clear()
     labelRenderer.domElement.remove()
   }
 
@@ -57,6 +71,7 @@ export function useLabels() {
     showLabel,
     hideLabel,
     dispose,
+    resize,
     // HTML DOM markers 辅助（复用同一个 CSS2DRenderer）
     createHtmlMarker,
     createHtmlMarkers,

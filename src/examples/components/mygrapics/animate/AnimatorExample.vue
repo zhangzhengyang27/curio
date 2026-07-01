@@ -1,33 +1,13 @@
 <template>
   <div class="mygrapics-root" ref="mgContainer">
     <div class="container">
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-      </div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      width: 300px;
-    }
-    .block {
-      width: 100px;
-      height: 100px;
-      margin: 20px;
-      flex-shrink: 0;
-      transform-origin: 50% 50%;
-    }
-    .block:nth-child(1) {background: red;}
-    .block:nth-child(2) {background: blue;}
-    .block:nth-child(3) {background: green;}
-    .block:nth-child(4) {background: orange;}
-</style>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -126,3 +106,23 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+.container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 300px;
+    }
+    .block {
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      flex-shrink: 0;
+      transform-origin: 50% 50%;
+    }
+    .block:nth-child(1) {background: red;}
+    .block:nth-child(2) {background: blue;}
+    .block:nth-child(3) {background: green;}
+    .block:nth-child(4) {background: orange;}
+</style>

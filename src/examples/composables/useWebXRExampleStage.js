@@ -30,7 +30,7 @@ export function useWebXRExampleStage(canvasRef, containerRef, overlayRef, option
     shadowMap = false,
     defaultLights = false,
     fitContainer = true,
-    autoStart = true,
+    _autoStart = true,
     maxPixelRatio = 2,
     grid = false,
     customRender = false,

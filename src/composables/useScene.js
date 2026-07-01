@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { disposeObject3D } from '../three/gc.js'
 
 export function useScene(canvas) {
   const scene = new THREE.Scene()
@@ -70,8 +71,9 @@ export function useScene(canvas) {
 
   function dispose() {
     window.removeEventListener('resize', onResize)
-    renderer.dispose()
+    disposeObject3D(scene)
     scene.clear()
+    renderer.dispose()
   }
 
   return { scene, camera, renderer, dispose }

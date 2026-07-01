@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+ 
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
@@ -355,7 +355,13 @@ function isEsModule(content) {
   return /(^|[;\s])(import|export)\s/.test(cleaned)
 }
 
+function isPublicExternalAssetUrl(importPath) {
+  // 已被 localizeExternalUrls 替换为 public 目录的外部资源，不应再按本地模块重写
+  return importPath.includes('/assets/external/')
+}
+
 function resolveLocalImport(importPath, fromFile) {
+  if (isPublicExternalAssetUrl(importPath)) return null
   if (!importPath.startsWith('.') && !importPath.startsWith('/')) return null
   const baseDir = path.dirname(fromFile)
   let resolved = path.resolve(baseDir, importPath)
@@ -380,6 +386,7 @@ function rewriteJsImports(content, fromFile) {
       if (!importPath.startsWith('.') && !importPath.startsWith('/')) return match
       const resolved = resolveLocalImport(importPath, fromFile)
       if (!resolved) {
+        if (isPublicExternalAssetUrl(importPath)) return match
         // 未找到时仍尝试生成合理路径
         const relDir = posixRel(SOURCE_DIR, path.dirname(fromFile))
         const normalized = path.posix.normalize(path.posix.join(relDir, importPath))
@@ -516,7 +523,7 @@ function rewriteWorkerUrls(text, htmlRelDir) {
   )
 }
 
-function copyWorkerFiles(text, htmlDir, htmlRelDir) {
+function copyWorkerFiles(text, htmlDir) {
   const matches = text.matchAll(/new\s+Worker\(\s*["'](\.\.?\/[^"']*)["']\s*\)/g)
   for (const m of matches) {
     const relPath = m[1]
@@ -707,7 +714,7 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
         }
       }
     } else if (script.body) {
-      copyWorkerFiles(script.body, htmlDir, htmlRelDir)
+      copyWorkerFiles(script.body, htmlDir)
       let body = cleanScriptBody(script.body)
       body = rewriteWorkerUrls(body, htmlRelDir)
       body = rewriteAssetPaths(body, htmlRelDir)
@@ -721,10 +728,14 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
             copyLocalModule(resolved)
             topLevelImports.add(`import ${importsDecl} from '${toJsmImport(resolved)}'`)
           } else if (importPath.startsWith('.') || importPath.startsWith('/')) {
-            // 未解析到时仍生成路径
-            const relDir = posixRel(SOURCE_DIR, htmlDir)
-            const normalized = path.posix.normalize(path.posix.join(relDir, importPath))
-            topLevelImports.add(`import ${importsDecl} from '@/examples/jsm-compat/graphics/${normalized}'`)
+            if (isPublicExternalAssetUrl(importPath)) {
+              topLevelImports.add(`import ${importsDecl} from '${importPath}'`)
+            } else {
+              // 未解析到时仍生成路径
+              const relDir = posixRel(SOURCE_DIR, htmlDir)
+              const normalized = path.posix.normalize(path.posix.join(relDir, importPath))
+              topLevelImports.add(`import ${importsDecl} from '@/examples/jsm-compat/graphics/${normalized}'`)
+            }
           } else {
             topLevelImports.add(`import ${importsDecl} from '${importPath}'`)
           }
@@ -749,7 +760,8 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
   const usedImports = filterUnusedImports(Array.from(topLevelImports), initText)
 
   const importLines = [
-    "import { ref, onMounted, onUnmounted } from 'vue'",
+    "import { ref, onMounted } from 'vue'",
+    "import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'",
     ...usedImports,
   ]
 
@@ -772,113 +784,18 @@ async function loadScript(src) {
 ${importLines.join('\n')}
 
 const gContainer = ref(null)
-const cleanupFns = []
 const gfxLoadedScripts = []
+const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 ${loadScriptDef}
-
-function installCleanupHooks() {
-  const origRaf = window.requestAnimationFrame
-  const origCancelRaf = window.cancelAnimationFrame
-  const rafIds = []
-  window.requestAnimationFrame = (cb) => {
-    const id = origRaf((time) => {
-      const idx = rafIds.indexOf(id)
-      if (idx !== -1) rafIds.splice(idx, 1)
-      cb(time)
-    })
-    rafIds.push(id)
-    return id
-  }
-  window.cancelAnimationFrame = (id) => {
-    const idx = rafIds.indexOf(id)
-    if (idx !== -1) rafIds.splice(idx, 1)
-    return origCancelRaf(id)
-  }
-  cleanupFns.push(() => {
-    rafIds.forEach(id => origCancelRaf(id))
-    window.requestAnimationFrame = origRaf
-    window.cancelAnimationFrame = origCancelRaf
-  })
-
-  const timeouts = []
-  const origSetTimeout = window.setTimeout
-  const origSetInterval = window.setInterval
-  const origClearTimeout = window.clearTimeout
-  const origClearInterval = window.clearInterval
-  window.setTimeout = (fn, delay, ...args) => {
-    const id = origSetTimeout(fn, delay, ...args)
-    timeouts.push(['timeout', id])
-    return id
-  }
-  window.setInterval = (fn, delay, ...args) => {
-    const id = origSetInterval(fn, delay, ...args)
-    timeouts.push(['interval', id])
-    return id
-  }
-  cleanupFns.push(() => {
-    timeouts.forEach(([kind, id]) => {
-      if (kind === 'timeout') origClearTimeout(id)
-      else origClearInterval(id)
-    })
-    window.setTimeout = origSetTimeout
-    window.setInterval = origSetInterval
-    window.clearTimeout = origClearTimeout
-    window.clearInterval = origClearInterval
-  })
-
-  const listeners = []
-  const origWindowAdd = window.addEventListener
-  const origDocAdd = document.addEventListener
-  window.addEventListener = (type, fn, opts) => {
-    listeners.push(['window', type, fn, opts])
-    return origWindowAdd.call(window, type, fn, opts)
-  }
-  document.addEventListener = (type, fn, opts) => {
-    listeners.push(['document', type, fn, opts])
-    return origDocAdd.call(document, type, fn, opts)
-  }
-  cleanupFns.push(() => {
-    listeners.forEach(([target, type, fn, opts]) => {
-      if (target === 'window') window.removeEventListener(type, fn, opts)
-      else if (target === 'document') document.removeEventListener(type, fn, opts)
-    })
-    window.addEventListener = origWindowAdd
-    document.addEventListener = origDocAdd
-  })
-
-  const glContexts = []
-  const origGetContext = HTMLCanvasElement.prototype.getContext
-  HTMLCanvasElement.prototype.getContext = function(type, attrs) {
-    const ctx = origGetContext.call(this, type, attrs)
-    if (ctx && /^(webgl|webgl2|experimental-webgl)$/.test(type)) {
-      glContexts.push(ctx)
-    }
-    return ctx
-  }
-  cleanupFns.push(() => {
-    glContexts.forEach((ctx) => {
-      const ext = ctx.getExtension('WEBGL_lose_context')
-      if (ext) ext.loseContext()
-    })
-    HTMLCanvasElement.prototype.getContext = origGetContext
-    gfxLoadedScripts.forEach(s => s.remove())
-  })
-}
 
 async function initGraphicsExample() {
 ${initLines.join('\n')}
 }
 
 onMounted(() => {
-  installCleanupHooks()
-  initGraphicsExample().catch(err => {
+  runInit(initGraphicsExample).catch(err => {
     console.error('Graphics example init failed:', err)
   })
-})
-
-onUnmounted(() => {
-  cleanupFns.forEach(fn => fn())
-  cleanupFns.length = 0
 })
 <\/script>`
 

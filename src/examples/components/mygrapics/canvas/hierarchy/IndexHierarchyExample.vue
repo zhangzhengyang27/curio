@@ -4,13 +4,6 @@
   </div>
 </template>
 
-<style scoped>
-canvas {
-            width: 800px;
-            height: 800px;
-        }
-</style>
-
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -107,3 +100,10 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+canvas {
+            width: 800px;
+            height: 800px;
+        }
+</style>

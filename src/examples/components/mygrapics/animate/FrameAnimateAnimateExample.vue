@@ -4,27 +4,6 @@
   </div>
 </template>
 
-<style scoped>
-.bird {
-      position: absolute;
-      left: 100px;
-      top: 100px;
-      width:86px;
-      height:60px;
-      zoom: 0.5;
-      background-repeat: no-repeat;
-      background-image: url(/mygrapics/assets/external/t01f265b6b6479fffc4.png);
-      background-position: -178px -2px;
-      animation: flappy .5s step-end infinite;
-    }
-
-    @keyframes flappy {
-      0% {background-position: -178px -2px;}
-      33% {background-position: -90px -2px;}
-      66% {background-position: -2px -2px;}
-    }
-</style>
-
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -110,3 +89,24 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+.bird {
+      position: absolute;
+      left: 100px;
+      top: 100px;
+      width:86px;
+      height:60px;
+      zoom: 0.5;
+      background-repeat: no-repeat;
+      background-image: url(/mygrapics/assets/external/t01f265b6b6479fffc4.png);
+      background-position: -178px -2px;
+      animation: flappy .5s step-end infinite;
+    }
+
+    @keyframes flappy {
+      0% {background-position: -178px -2px;}
+      33% {background-position: -90px -2px;}
+      66% {background-position: -2px -2px;}
+    }
+</style>

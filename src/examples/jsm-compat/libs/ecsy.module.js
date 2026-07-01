@@ -1759,7 +1759,7 @@ function enableRemoteDevtools(remoteId) {
 
               hookConsoleAndErrors(connection);
             } else if (data.type === "executeScript") {
-              let value = eval(data.script);
+              let value = (0, eval)(data.script);
               if (data.returnEval) {
                 connection.send({
                   method: "evalReturn",

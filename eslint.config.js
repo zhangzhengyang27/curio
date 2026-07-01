@@ -5,7 +5,26 @@ import vueParser from 'vue-eslint-parser'
 import globals from 'globals'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', '.vite', 'public'] },
+  {
+    ignores: [
+      'dist',
+      'node_modules',
+      '.vite',
+      'public',
+      // 自动生成的示例代码与第三方库，不纳入常规 lint
+      'src/examples/three-build-compat',
+      'src/examples/jsm-compat',
+      'src/examples/components/cesium-examples',
+      'src/examples/components/earth-lessons',
+      'src/examples/components/granary-3d',
+      'src/examples/components/graphics',
+      'src/examples/components/mygrapics',
+      'src/examples/components/three-cesium-examples',
+      'src/examples/components/threejs-official',
+      'src/examples/components/webgl',
+      'src/examples/registry/*Examples.js',
+    ],
+  },
 
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -170,6 +189,25 @@ export default tseslint.config(
     files: ['src/examples/jsm-compat/webgl/**/libs/*.js', 'src/examples/jsm-compat/webgl/**/libs/*.min.js'],
     rules: {
       'no-undef': 'off',
+    },
+  },
+
+  // CommonJS 脚本（package.json type=module 下显式 .cjs）
+  {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+
+  // 开发脚本 — 允许未使用变量、宽松
+  {
+    files: ['scripts/**/*.js'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 

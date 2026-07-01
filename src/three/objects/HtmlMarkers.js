@@ -97,8 +97,8 @@ export function updateHtmlMarkersVisibility(markersGroup, camera, _R) {
     if (!child.userData.isHtmlMarker) return
     child.getWorldPosition(temp)
 
-    const toMarker = temp.clone().normalize()
-    const toCam = camPos.clone().normalize()
+    const toMarker = new THREE.Vector3().copy(temp).normalize()
+    const toCam = new THREE.Vector3().copy(camPos).normalize()
     const visible = toMarker.dot(toCam) >= 0
 
     if (child.element) {

@@ -37,6 +37,7 @@ function startPreviewServer() {
     let output = ''
     let port = null
 
+    // eslint-disable-next-line no-control-regex
     const stripAnsi = (str) => str.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
 
     const checkReady = (data) => {

@@ -40,5 +40,12 @@ export function useCameraFlight(controls, camera, R = 100) {
     animationId = requestAnimationFrame(animate)
   }
 
-  return { flyTo }
+  function cancel() {
+    if (animationId) {
+      cancelAnimationFrame(animationId)
+      animationId = null
+    }
+  }
+
+  return { flyTo, cancel }
 }

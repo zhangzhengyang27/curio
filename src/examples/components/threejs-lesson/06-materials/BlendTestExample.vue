@@ -69,7 +69,7 @@ function onReady(ctx) {
   }
 
   let time = 0
-  addUpdateCallback((delta, elapsed) => {
+  addUpdateCallback((delta, _elapsed) => {
     time += delta * 1000
     highlightMat.opacity = (Math.sin(time * 0.005) * 0.5 + 0.5) * 0.4 + 0.1
   })

@@ -90,11 +90,12 @@ export function getCountryGdpColor(gdpData) {
   const colorScale = createLinearScale([0, 1], ['#1a2a3a', '#ff8800'])
 
   gdpData.Root.data.record.forEach(obj => {
-    if (obj.field[2].text == 2015) {
+    if (obj.field[2].text === 2015) {
       const name = obj.field[0].text
-      const gdp = obj.field[3].text
+      const gdpText = obj.field[3].text
+      const gdp = gdpText ? parseFloat(gdpText) : 0
       let color
-      if (gdp) {
+      if (gdp && gdp > 0) {
         color = new THREE.Color(colorScale(Math.sqrt(gdp / gdpMax)))
       } else {
         color = new THREE.Color(0xffffff)

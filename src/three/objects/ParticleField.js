@@ -146,7 +146,7 @@ export function updateStormParticles(obj, delta) {
 }
 
 function updatePoints(points, delta, rotationSpeed = 1) {
-  const { userData: pData, normal, center, _maxRadius } = points.userData
+  const { userData: pData, normal, center } = points.userData
   const pos = points.geometry.attributes.position
   const u = new THREE.Vector3(-normal.z, 0, normal.x).normalize()
   const v = new THREE.Vector3().crossVectors(normal, u).normalize()

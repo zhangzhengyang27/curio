@@ -1,36 +1,10 @@
 <template>
   <div class="mygrapics-root" ref="mgContainer">
     <div class="container">
-        <div class="block"></div>
-      </div>
+      <div class="block"></div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      width: 300px;
-    }
-    .block {
-      width: 100px;
-      height: 100px;
-      position: absolute;
-      top: 100px;
-      left: 100px;
-      background: blue;
-      flex-shrink: 0;
-      transform-origin: 50% 50%;
-    }
-    .animate {
-      animation: mymove 3s cubic-bezier(0.5, -1.5, 0.5, 2.5) forwards;
-    }
-    @keyframes mymove {
-      from {left: 100px}
-      to {left: 400px}
-    }
-</style>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -122,3 +96,29 @@ onUnmounted(() => {
   cleanupFns.length = 0
 })
 </script>
+
+<style scoped>
+.container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 300px;
+    }
+    .block {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      background: blue;
+      flex-shrink: 0;
+      transform-origin: 50% 50%;
+    }
+    .animate {
+      animation: mymove 3s cubic-bezier(0.5, -1.5, 0.5, 2.5) forwards;
+    }
+    @keyframes mymove {
+      from {left: 100px}
+      to {left: 400px}
+    }
+</style>

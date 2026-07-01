@@ -54,7 +54,8 @@ const renderLoop = useRenderLoop()
 const { intersect, clearSelection, selectMesh } = raycasterCtx
 
 let scene, camera, renderer, controls, disposeOrbit, disposeScene, stopLoop, disposeLabels
-let labelManager, flyToFn, earth, overlayGroup
+let labelManager, flyToFn, cancelFlight, earth, overlayGroup
+let canvasEl = null
 let visualizationLayer
 let htmlMarkersGroup = null
 let atmosphere, cloudLayer, stormPoints, sphereMesh // sphereMesh保存地球球体引用
@@ -71,9 +72,11 @@ let isRealisticEarth = false // 是否使用真实地球贴图
 let proceduralTexture = null // 程序生成的地球纹理备份
 let countryMeshStates = [] // 国家 Mesh 的原始材质状态备份
 let realisticHighlightMesh = null // 真实地球模式下高亮的国家 Mesh
+let removeLabelResize = null // label resize 监听清理函数
 
 onMounted(async () => {
   try {
+    canvasEl = canvasRef.value
     const sceneCtx = useScene(canvasRef.value)
     scene = sceneCtx.scene; camera = sceneCtx.camera; renderer = sceneCtx.renderer; disposeScene = sceneCtx.dispose
 
@@ -82,7 +85,9 @@ onMounted(async () => {
     const orbitCtx = useOrbitControls(camera, renderer.domElement)
     controls = orbitCtx.controls; disposeOrbit = orbitCtx.dispose
 
-    flyToFn = useCameraFlight(controls, camera, R).flyTo
+    const flightCtx = useCameraFlight(controls, camera, R)
+    flyToFn = flightCtx.flyTo
+    cancelFlight = flightCtx.cancel
 
     // 创建图层共享的 Tween 组
     tweenGroup = new TWEEN.Group()
@@ -91,6 +96,10 @@ onMounted(async () => {
     labelContainer.value.appendChild(labelManager.labelRenderer.domElement)
     const { label } = labelManager.createLabelEl('GDP')
     scene.add(label); labelManager.mainLabel = label; disposeLabels = labelManager.dispose
+
+    function onLabelResize() { labelManager?.resize() }
+    window.addEventListener('resize', onLabelResize)
+    removeLabelResize = () => window.removeEventListener('resize', onLabelResize)
 
     earth = createEarth(R, { tweenGroup })
     earthStore.setEarthGroup(earth); scene.add(earth)
@@ -230,8 +239,8 @@ onMounted(async () => {
     }
     renderLoop.setRenderFn(renderFn); renderLoop.start(); stopLoop = renderLoop.stop
 
-    canvasRef.value.addEventListener('click', onCanvasClick)
-    canvasRef.value.addEventListener('contextmenu', onContextMenu)
+    canvasEl.addEventListener('click', onCanvasClick)
+    canvasEl.addEventListener('contextmenu', onContextMenu)
   } catch (err) {
     console.error('EarthCanvas init error:', err)
   }
@@ -488,6 +497,8 @@ function updatePillars(year) {
     if (!currentNames.has(pm.name)) {
       pm.bar.removeFromParent()
       pm.dot.removeFromParent()
+      disposeObject3D(pm.bar)
+      disposeObject3D(pm.dot)
       return false
     }
     return true
@@ -498,8 +509,11 @@ onUnmounted(() => {
   stopLoop?.()
   stopWatch?.()
   stopWatchSelected?.()
-  canvasRef.value?.removeEventListener('click', onCanvasClick)
-  canvasRef.value?.removeEventListener('contextmenu', onContextMenu)
+  cancelFlight?.()
+  removeLabelResize?.()
+  canvasEl?.removeEventListener('click', onCanvasClick)
+  canvasEl?.removeEventListener('contextmenu', onContextMenu)
+  canvasEl = null
   visualizationLayer?.dispose()
   clearHtmlMarkers()
   // 释放经纬网格
@@ -507,6 +521,29 @@ onUnmounted(() => {
     if (graticulesMesh.parent) graticulesMesh.parent.remove(graticulesMesh)
     disposeObject3D(graticulesMesh)
     graticulesMesh = null
+  }
+  // 释放风暴粒子
+  if (stormPoints) {
+    if (stormPoints.parent) stormPoints.parent.remove(stormPoints)
+    disposeObject3D(stormPoints)
+    stormPoints = null
+  }
+  // 释放 GDP 柱体
+  if (pillarGroup) {
+    disposeObject3D(pillarGroup)
+    if (pillarGroup.parent) pillarGroup.parent.remove(pillarGroup)
+    pillarGroup = null
+  }
+  pillarMeshes = []
+  // 释放 overlayGroup（含自定义图层对象）
+  if (overlayGroup) {
+    disposeObject3D(overlayGroup)
+    if (overlayGroup.parent) overlayGroup.parent.remove(overlayGroup)
+    overlayGroup = null
+  }
+  // 释放真实地球高亮
+  if (realisticHighlightMesh) {
+    clearRealisticHighlight()
   }
   // 释放瓦片引擎并恢复地球本体可见性
   if (tileEngine) {
@@ -520,6 +557,12 @@ onUnmounted(() => {
     tweenGroup.removeAll()
     tweenGroup = null
   }
+  // 释放后处理
+  composer?.dispose()
+  // 清理 store 引用与备份状态
+  countryMeshStates = []
+  originalGdpColors = {}
+  earthStore.setEarthGroup(null)
   disposeLabels?.(); disposeOrbit?.(); disposeScene?.()
 })
 
@@ -543,7 +586,10 @@ function toggleNightMode() {
 }
 
 function createStorm(lon = 139.7, lat = 35.7) {
-  if (stormPoints) stormPoints.removeFromParent()
+  if (stormPoints) {
+    stormPoints.removeFromParent()
+    disposeObject3D(stormPoints)
+  }
   stormPoints = createStormParticles(lon, lat, R, { color: 0x4488ff, particleCount: 600 })
   scene.add(stormPoints)
 }
