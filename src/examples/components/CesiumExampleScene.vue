@@ -1,5 +1,8 @@
 <template>
-  <div ref="containerRef" class="cesium-example-scene" />
+  <div
+    ref="containerRef"
+    class="cesium-example-scene"
+  />
 </template>
 
 <script setup>

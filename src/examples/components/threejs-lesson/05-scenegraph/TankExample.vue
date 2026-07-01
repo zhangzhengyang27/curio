@@ -7,7 +7,7 @@
     :shadow-map="true"
     :enable-controls="false"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

@@ -3,7 +3,7 @@
     camera="perspective"
     :camera-position="[1, 2, 4]"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

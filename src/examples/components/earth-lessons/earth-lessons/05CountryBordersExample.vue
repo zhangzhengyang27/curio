@@ -7,7 +7,7 @@
     :clear-color="0xb9d3ff"
     :enable-controls="true"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

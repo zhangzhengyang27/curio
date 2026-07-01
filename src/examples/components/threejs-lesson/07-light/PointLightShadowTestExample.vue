@@ -4,7 +4,7 @@
     :camera-position="[0, 25, 0]"
     :shadow-map="true"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

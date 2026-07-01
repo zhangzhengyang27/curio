@@ -4,7 +4,7 @@
     :camera-position="[0, 0, 4]"
     :camera-options="{ fov: 45 }"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

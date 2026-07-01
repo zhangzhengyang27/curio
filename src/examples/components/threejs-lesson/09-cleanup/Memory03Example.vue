@@ -6,7 +6,7 @@
     :camera-look-at="[0, 0, 0]"
     :clear-color="0xf6f6f8"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

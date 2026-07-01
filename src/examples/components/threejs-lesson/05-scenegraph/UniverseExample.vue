@@ -4,7 +4,7 @@
     :camera-position="[0, 20, 0]"
     :camera-look-at="[0, 0, 0]"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

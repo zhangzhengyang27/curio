@@ -5,7 +5,7 @@
     :fit-container="false"
     :max-pixel-ratio="1"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

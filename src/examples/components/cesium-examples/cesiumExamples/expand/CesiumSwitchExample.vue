@@ -3,11 +3,14 @@
     <CesiumExampleScene
       ref="cesiumSceneRef"
       :viewer-options="viewerOptions"
+      class="cesium-switch-scene"
       @ready="onCesiumReady"
       @before-dispose="onBeforeDispose"
-      class="cesium-switch-scene"
     />
-    <div ref="threeBoxRef" class="cesium-switch-three" />
+    <div
+      ref="threeBoxRef"
+      class="cesium-switch-three"
+    />
   </div>
 </template>
 

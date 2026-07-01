@@ -10,19 +10,49 @@ importers:
     dependencies:
       3d-tiles-renderer:
         specifier: ^0.4.28
-        version: 0.4.28(three@0.185.0)
+        version: 0.4.28(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      '@mediapipe/tasks-vision':
+        specifier: ^0.10.35
+        version: 0.10.35
       '@mkkellogg/gaussian-splats-3d':
         specifier: ^0.4.7
         version: 0.4.7(three@0.185.0)
+      '@needle-tools/gltf-progressive':
+        specifier: ^3.6.0-beta.2
+        version: 3.6.0-beta.2(three@0.185.0)
+      '@needle-tools/three-animation-pointer':
+        specifier: ^1.1.2
+        version: 1.1.2(three@0.185.0)
+      '@perplexdotgg/bounce':
+        specifier: ^1.8.1
+        version: 1.8.1
       '@sparkjsdev/spark':
         specifier: ^2.1.0
         version: 2.1.0(three@0.185.0)
+      '@takram/three-atmosphere':
+        specifier: ^0.19.1
+        version: 0.19.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      '@takram/three-clouds':
+        specifier: ^0.7.6
+        version: 0.7.6(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      '@takram/three-geospatial':
+        specifier: ^0.9.1
+        version: 0.9.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      '@takram/three-geospatial-effects':
+        specifier: ^0.6.4
+        version: 0.6.4(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)
       '@theatre/core':
         specifier: ^0.7.2
         version: 0.7.2
       '@theatre/studio':
         specifier: ^0.7.2
         version: 0.7.2(@theatre/core@0.7.2)
+      '@three.ez/batched-mesh-extensions':
+        specifier: ^0.0.12
+        version: 0.0.12(three@0.185.0)
+      '@three.ez/simplify-geometry':
+        specifier: ^0.0.1
+        version: 0.0.1(three@0.185.0)
       '@tweenjs/tween.js':
         specifier: ^25.0.0
         version: 25.0.0
@@ -71,6 +101,12 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
+      lottie-web:
+        specifier: ^5.13.0
+        version: 5.13.0
+      monomorph:
+        specifier: ^2.3.1
+        version: 2.3.1
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3))
@@ -86,18 +122,33 @@ importers:
       three:
         specifier: ^0.185.0
         version: 0.185.0
+      three-bvh-csg:
+        specifier: ^0.0.18
+        version: 0.0.18(three-mesh-bvh@0.9.10(three@0.185.0))(three@0.185.0)
       three-geojson-geometry:
         specifier: ^2.1.1
         version: 2.1.1(three@0.185.0)
       three-globe:
         specifier: ^2.45.2
         version: 2.45.2(three@0.185.0)
+      three-good-godrays:
+        specifier: ^0.12.0
+        version: 0.12.0(postprocessing@6.39.1(three@0.185.0))(three@0.185.0)
+      three-gpu-pathtracer:
+        specifier: ^0.0.24
+        version: 0.0.24(three-mesh-bvh@0.9.10(three@0.185.0))(three@0.185.0)(xatlas-web@0.1.0)
+      three-html-render:
+        specifier: ^0.1.2
+        version: 0.1.2(three@0.185.0)
       three-mesh-bvh:
         specifier: ^0.9.10
         version: 0.9.10(three@0.185.0)
       three-slippy-map-globe:
         specifier: ^1.0.6
         version: 1.0.6(three@0.185.0)
+      three-subdivide:
+        specifier: ^1.1.5
+        version: 1.1.5(three@0.185.0)
       three-tile:
         specifier: ^0.11.14
         version: 0.11.14(three@0.185.0)
@@ -110,6 +161,9 @@ importers:
       vue-router:
         specifier: ^5.1.0
         version: 5.1.0(@vue/compiler-sfc@3.5.39)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3)))(rolldown@1.1.3)(rollup@4.62.2)(vite@8.1.0(@types/node@26.0.1)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))
+      web-ifc:
+        specifier: ^0.0.77
+        version: 0.0.77
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -211,6 +265,10 @@ packages:
     resolution: {integrity: sha512-aLxAE+imI9bCcyaPrUDjBv3uSkWieifjLe0kuFOZF0zli0L6GCsTmsePnTr55adbIAgYz2zhN1vnFimCBUYcRQ==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
+
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/types@7.29.7':
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
@@ -324,6 +382,9 @@ packages:
   '@mapbox/vector-tile@2.0.5':
     resolution: {integrity: sha512-pXj8m7KTsqZt+1jsE0xIpGvqTSbblfkuEJL/NJmNePMtEwxO8V3XMDo9WMSfDeqHvCtBI9Lmt4mGcGR10zecmw==}
 
+  '@mediapipe/tasks-vision@0.10.35':
+    resolution: {integrity: sha512-HOvadwVRE6JC+45nyYhmnywnr5h/J8KZvOeUNVOG9q/0875pZgItznFB9bRTvLc264YSJqiZ1NsIpCStJw/egg==}
+
   '@mkkellogg/gaussian-splats-3d@0.4.7':
     resolution: {integrity: sha512-0vy9/i9sJLFH/v3WJZ4axCsqjkToe8UsV3xY7bvK5EUC0akiRsWZODoCiSzpxhTLNyzSKTsyQKozIFeNA5RWRA==}
     peerDependencies:
@@ -334,6 +395,16 @@ packages:
     peerDependencies:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
+
+  '@needle-tools/gltf-progressive@3.6.0-beta.2':
+    resolution: {integrity: sha512-rf0m54TPoRL6+1j0Y1dYemC2chp+xC66UNK14OEyL5nt0GF4QjVvpoubDpMShR+XtnhmAw0H2oo4ImBsq3w4ng==}
+    peerDependencies:
+      three: '>= 0.160.0'
+
+  '@needle-tools/three-animation-pointer@1.1.2':
+    resolution: {integrity: sha512-k0AEj7Mv90Okur+gYAxM1ry60oXxE7w+JTmgVTLCsGfHflOXjKIn3+f7+EMUVW+XafghuZyAnyuiCNLGJZvs2g==}
+    peerDependencies:
+      three: '>=0.165.0'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -350,9 +421,40 @@ packages:
   '@oxc-project/types@0.137.0':
     resolution: {integrity: sha512-WT+Gb24i8hmvo85AIv2oEYouEXkRlKAlT9WaCa3TfLgNCN+GhrJOGZuIlMouAh38Qe4QOx26eUOVsq70qXrywA==}
 
+  '@perplexdotgg/bounce@1.8.1':
+    resolution: {integrity: sha512-/a5brlrveYoxYaB+OfZJgrGAFMAMu82DVPWQOk6YIlIEQB8ZMyrLyjkO1C5IRROdnSy7XNB6NBU1HhWOGK5F1Q==}
+
+  '@petamoriken/float16@3.9.3':
+    resolution: {integrity: sha512-8awtpHXCx/bNpFt4mt2xdkgtgVvKqty8VbjHI/WWWQuEw+KLzFot3f4+LkQY9YmOtq7A5GdOnqoIC8Pdygjk2g==}
+
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  '@react-three/fiber@9.6.1':
+    resolution: {integrity: sha512-zF0rsKcVYpcJwbFEnv2HkHX9cvOEgsfQo/X8lwmR2dn13S4qEQJXir9fxf5js2LQFoXqxOY7MDkOkYx2uZ4gSg==}
+    peerDependencies:
+      expo: '>=43.0'
+      expo-asset: '>=8.4'
+      expo-file-system: '>=11.0'
+      expo-gl: '>=11.0'
+      react: '>=19 <19.3'
+      react-dom: '>=19 <19.3'
+      react-native: '>=0.78'
+      three: '>=0.156'
+    peerDependenciesMeta:
+      expo:
+        optional: true
+      expo-asset:
+        optional: true
+      expo-file-system:
+        optional: true
+      expo-gl:
+        optional: true
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
 
   '@rolldown/binding-android-arm64@1.1.3':
     resolution: {integrity: sha512-DT6Z3PhvioeHMvxo+xHc3KtqggrI7CCTXCmC2h/5zUlp5jVitv7XEy+9q5/7v8IolhlioawpMo8Kg0EEBy7J0g==}
@@ -599,6 +701,67 @@ packages:
     resolution: {integrity: sha512-8qJ1WIBXaJu8HjnJAjYniE0kYcr0kCe5Hp7kDzYiGVvvd7zyrOBwbF5imoW5mvwx1Qba0hxGEK5R9jEoaHKJFA==}
     engines: {node: '>=16', pnpm: '>=8'}
 
+  '@takram/three-atmosphere@0.19.1':
+    resolution: {integrity: sha512-k/QAgED7bMkjVzHiBu2QD1Cqg5lcgHLc8vxVeiTTzUE+glZcZOXTjjvi74yjb+eKQHW5wh1WL/DjxVvluAQU0Q==}
+    peerDependencies:
+      '@react-three/drei': '>=10.0.2'
+      '@react-three/fiber': '>=9.0.4'
+      '@react-three/postprocessing': '>=3.0.4'
+      postprocessing: '>=6.36.7'
+      react: '>=19.0'
+      three: '>=0.170.0'
+    peerDependenciesMeta:
+      '@react-three/drei':
+        optional: true
+      '@react-three/fiber':
+        optional: true
+      '@react-three/postprocessing':
+        optional: true
+      react:
+        optional: true
+
+  '@takram/three-clouds@0.7.6':
+    resolution: {integrity: sha512-cfoEI3W5NJuYUL1Pd4k5UXLlb7rLThh3dNIOO+/EPw8cbuRUgiIVEVtNPmA+v5KRJf87gPI+rjuxgK0huAajDw==}
+    peerDependencies:
+      '@react-three/drei': '*'
+      '@react-three/fiber': '>=9.0.4'
+      '@react-three/postprocessing': '>=3.0.4'
+      postprocessing: '>=6.36.7'
+      react: '>=19.0'
+      three: '>=0.170.0'
+    peerDependenciesMeta:
+      '@react-three/drei':
+        optional: true
+      '@react-three/fiber':
+        optional: true
+      '@react-three/postprocessing':
+        optional: true
+      react:
+        optional: true
+
+  '@takram/three-geospatial-effects@0.6.4':
+    resolution: {integrity: sha512-Ufgap/N30j4Go5fyI9qdax9RiVK69OY+UuGCsYeuvGyihbfN5zh8ChHfu1c8vjIkz1Czz8zP8+6OvjD9+QxkMw==}
+    peerDependencies:
+      '@react-three/fiber': '>=9.0.4'
+      '@react-three/postprocessing': '>=3.0.4'
+      postprocessing: '>=6.36.4'
+      react: '>=19.0'
+      three: '>=0.170.0'
+    peerDependenciesMeta:
+      '@react-three/fiber':
+        optional: true
+      '@react-three/postprocessing':
+        optional: true
+      react:
+        optional: true
+
+  '@takram/three-geospatial@0.9.1':
+    resolution: {integrity: sha512-fB7DAW0afN87e0/CcgZYVkF76yI0SXaRcVuT7M6+5vLZ8ySfJ7br2ceni37GVyY7zO1sLMBtoaMCH1mal/Zf9Q==}
+    peerDependencies:
+      '@react-three/fiber': '>=9.0.4'
+      react: '>=19.0'
+      three: '>=0.170.0'
+
   '@theatre/core@0.7.2':
     resolution: {integrity: sha512-IDQa/6WY7mIJAtsSd4EgNcM0IUZkl+FrqZ8DdYiCVTFap9ARDNmrngJOeFjJOsnnaHlc5GdEB/jj7fsjbIrAzQ==}
 
@@ -609,6 +772,16 @@ packages:
     resolution: {integrity: sha512-p6LTKzJWVlcHkpGzIlNHh9AkGbB3E+0q9Pjxv+OJoTDe1IK+CMKW695Wp+1//lB4vfC9qShe4z/p+Zaj1q8KtA==}
     peerDependencies:
       '@theatre/core': '*'
+
+  '@three.ez/batched-mesh-extensions@0.0.12':
+    resolution: {integrity: sha512-AgQdqZOVaatuWDDfPi8sxxB0gmlYZbeSGXMcBzVE+nLxDYyP5Z/WmAO8LMpHn0aCyWkELpn3ausL+cTeq5ynaQ==}
+    peerDependencies:
+      three: '>=0.159.0'
+
+  '@three.ez/simplify-geometry@0.0.1':
+    resolution: {integrity: sha512-qc6L2PhuskrmDpTn6oj9vGxpkyOj+tKkX4W8zqO9uh1bIbM85nR+I+abf0YZi9TxoTUAQBEBdB6DVLRR/lh8dA==}
+    peerDependencies:
+      three: '>=0.159.0'
 
   '@turf/boolean-point-in-polygon@7.3.5':
     resolution: {integrity: sha512-ba7+B0wzaS9GtERZOoXUZ6oW8IcIJHNQZf3c+tiD9ESjcsPO1Q/4qIJGTKl92nBLhhracHJxMWBM/U6hAVkaRg==}
@@ -643,8 +816,19 @@ packages:
   '@types/node@26.0.1':
     resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
 
+  '@types/react-reconciler@0.28.9':
+    resolution: {integrity: sha512-HHM3nxyUZ3zAylX8ZEyrDNd2XZOnQ0D5XfunJF5FLQnZbHHYq4UWvW1QfelQNXv1ICNkwYhfxjwfnqivYB6bFg==}
+    peerDependencies:
+      '@types/react': '*'
+
+  '@types/react@19.2.17':
+    resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
+
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
+  '@types/webxr@0.5.24':
+    resolution: {integrity: sha512-h8fgEd/DpoS9CBrjEQXR+dIDraopAEfu4wYVNY2tEPwk60stPWhvZMf4Foo5FakuQ7HFZoa8WceaWFervK2Ovg==}
 
   '@typescript-eslint/eslint-plugin@8.62.0':
     resolution: {integrity: sha512-o+mpz7EYiMzXoySXiKmzlabIvTVqUuK5yLrAedRPRDA0IpPFMUV1IXt6OqljIxX/kumN6EjUYp41Hqelh6p/Dw==}
@@ -841,6 +1025,9 @@ packages:
     resolution: {integrity: sha512-IJdzo2vLiElBxKzwS36VsCue/62d6IdWjnPB2v3nuPKeWGynp6FF/CYoLa5i/3jXH/z97ZDdsXz6abpgM6w07A==}
     engines: {node: '>=20.19.0'}
 
+  astronomy-engine@2.1.19:
+    resolution: {integrity: sha512-8yWKNf7UeNbH458h3sAJ6ZgAjE5jTXp/mNNRFoC20j2SHwZIjAQeEsBB2Q3uCFRaTCCJRv33K2XhkhZQMXoX6w==}
+
   autolinker@4.1.5:
     resolution: {integrity: sha512-vEfYZPmvVOIuE567XBVCsx8SBgOYtjB2+S1iAaJ+HgH+DNjAcrHem2hmAeC9yaNGWayicv4yR+9UaJlkF3pvtw==}
     engines: {pnpm: '>=10.10.0'}
@@ -848,6 +1035,9 @@ packages:
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
+
+  base64-js@1.5.1:
+    resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
   birpc@2.9.0:
     resolution: {integrity: sha512-KrayHS5pBi69Xi9JmvoqrIgYGDkD6mcSe/i6YKi3w5kekCLzrX4+nawcXqrj2tIp50Kw/mT/s3p+GVK0A0sKxw==}
@@ -865,6 +1055,12 @@ packages:
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
+
+  buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+
+  bvh.js@0.0.13:
+    resolution: {integrity: sha512-7jVxKGyyATOwEoqFvghXoStJXkkmqf7JIXYEG44eMtMXQoeCwZL2n1z5/kZogFKvCaN7XweS2TKnqdyDrd0DJA==}
 
   cannon-es@0.20.0:
     resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
@@ -1279,6 +1475,9 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
+  ieee754@1.2.1:
+    resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
+
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
@@ -1326,6 +1525,11 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  its-fine@2.0.0:
+    resolution: {integrity: sha512-KLViCmWx94zOvpLwSlsx6yOCeMhZYaxrJV87Po5k/FoZzcPSahvK5qJ7fYhS61sZi5ikmh2S3Hz55A2l3U69ng==}
+    peerDependencies:
+      react: ^19.0.0
 
   jsep@1.4.0:
     resolution: {integrity: sha512-B7qPcEVE3NVkmSJbaYxvv4cHkVW7DQsZz13pUMrfS8z8Q/BuShN+gcTXrUlPiGqM2/t/EEaI030bpxMqY8gMlw==}
@@ -1464,6 +1668,9 @@ packages:
   long@5.3.2:
     resolution: {integrity: sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==}
 
+  lottie-web@5.13.0:
+    resolution: {integrity: sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ==}
+
   magic-string-ast@1.0.3:
     resolution: {integrity: sha512-CvkkH1i81zl7mmb94DsRiFeG9V2fR2JeuK8yDgS8oiZSFa++wWLEgZ5ufEOyLHbvSbD1gTRKv9NdX69Rnvr9JA==}
     engines: {node: '>=20.19.0'}
@@ -1477,6 +1684,9 @@ packages:
 
   mersenne-twister@1.1.0:
     resolution: {integrity: sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==}
+
+  meshoptimizer@0.23.0:
+    resolution: {integrity: sha512-zAZcfhHE3wBbwEN8MfCMI9PKRyOpz8491wcR2dxkv3IlNwDZrq2hEs5JZVtzfBrmjWhBZZtZZUO0OBSNFq5iUQ==}
 
   meshoptimizer@1.1.1:
     resolution: {integrity: sha512-oRFNWJRDA/WTrVj7NWvqa5HqE1t9MYDj2VaWirQCzCCrAd2GHrqR/sQezCxiWATPNlKTcRaPRHPJwIRoPBAp5g==}
@@ -1494,6 +1704,9 @@ packages:
 
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
+
+  monomorph@2.3.1:
+    resolution: {integrity: sha512-kACbfiM0x7viZ00Ofgwy9HmElqqqY21w0S45hbH+W6BQUFhvs9mHIAmKEgBKo5hF5w4OUgRtABRgftDDVc5zFw==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -1651,6 +1864,27 @@ packages:
   rbush@4.0.1:
     resolution: {integrity: sha512-IP0UpfeWQujYC8Jg162rMNc01Rf0gWMMAb2Uxus/Q0qOFw4lCcq6ZnQEZwUoJqWyUGJ9th7JjwI4yIWo+uvoAQ==}
 
+  react-merge-refs@3.0.2:
+    resolution: {integrity: sha512-MSZAfwFfdbEvwkKWP5EI5chuLYnNUxNS7vyS0i1Jp+wtd8J4Ga2ddzhaE68aMol2Z4vCnRM/oGOo1a3V75UPlw==}
+    peerDependencies:
+      react: '>=16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+
+  react-use-measure@2.1.7:
+    resolution: {integrity: sha512-KrvcAo13I/60HpwGO5jpW7E9DfusKyLPLvuHlUyP5zqnmAPhNc6qTRjUQrdTADl0lpPpDVU2/Gg51UlOGHXbdg==}
+    peerDependencies:
+      react: '>=16.13'
+      react-dom: '>=16.13'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
+  react@19.2.7:
+    resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+    engines: {node: '>=0.10.0'}
+
   readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
 
@@ -1696,6 +1930,9 @@ packages:
   satellite.js@7.0.1:
     resolution: {integrity: sha512-43hMdoom4miUvwX7FkroaHGq4JHIFQRNcUx570xD9KkZjsVssoWxHp8uk6KwDm+lmrW6GTuP2+G4PwvtHfr62A==}
 
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
+
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
@@ -1736,9 +1973,24 @@ packages:
     resolution: {integrity: sha512-H+ue8Zo4vJmV2nRjpx86P35lzwDT3nItnIsocgumgr0hHMQ+ZGq5vrERg9kJBo5AWGmxZDhzDo+WVIJqkB0cGA==}
     engines: {node: '>=16'}
 
+  suspend-react@0.1.3:
+    resolution: {integrity: sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==}
+    peerDependencies:
+      react: '>=17.0'
+
   synckit@0.11.13:
     resolution: {integrity: sha512-eNRKgb3z66Yp3D2CixVujOUvXLFUTij/zVnV8KRyvFdQwpz7I5DS8UfRkTeLzb64u+dkzDSdelE24izu+zSSUg==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  tagged-tag@1.0.0:
+    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
+    engines: {node: '>=20'}
+
+  three-bvh-csg@0.0.18:
+    resolution: {integrity: sha512-M3GCZMmGFgASGuDf+YMamM83nVlD/vdwzVHcYbFxgW+g1S7/nKPiuY00YVHOMbjmJPh8mLevGZL65ItHUuGt2w==}
+    peerDependencies:
+      three: '>=0.179.0'
+      three-mesh-bvh: '>=0.9.7'
 
   three-conic-polygon-geometry@2.1.3:
     resolution: {integrity: sha512-7KYcgd7rYg91L8AnCEddeyhw4qlv9+8NAI0luHq7QGt26icWUGNCsvLyD+u6FPKjP+un3zGBi4JGzqgGpmBSWA==}
@@ -1758,6 +2010,32 @@ packages:
     peerDependencies:
       three: '>=0.154'
 
+  three-good-godrays@0.12.0:
+    resolution: {integrity: sha512-2gPLtVgmHnpjuQNKfXqRw/2dc/IiOm14RqW6RTR12VRorzPp7BUPnM5cO9Ah3g3PzZNgW/QW34bj+8iRDHdjwA==}
+    engines: {node: '>= 0.13.2'}
+    peerDependencies:
+      '@types/three': '>= 0.125.0'
+      postprocessing: ^6.33.4
+      three: '>= 0.125.0 <= 0.182.0'
+    peerDependenciesMeta:
+      '@types/three':
+        optional: true
+
+  three-gpu-pathtracer@0.0.24:
+    resolution: {integrity: sha512-fHQ7g7ywvSwRAQywhsfech2/kspQKinfFNOcNDTJS2Q34CzcF1kpESlOVvJH8kX/bGlCnxMI+Qo16kWGAy7zCA==}
+    peerDependencies:
+      three: '>=0.180.0'
+      three-mesh-bvh: '>=0.7.4'
+      xatlas-web: ^0.1.0
+
+  three-html-render@0.1.2:
+    resolution: {integrity: sha512-JHx6x006LuLcHMRg+X3DyrrbPVsXklhFJGBtpTULFhbnpK7DidgGr6dJ6aTEaN9sc6uFgwI0VHExEYo4qwVSug==}
+    peerDependencies:
+      three: '>=0.150.0'
+    peerDependenciesMeta:
+      three:
+        optional: true
+
   three-mesh-bvh@0.9.10:
     resolution: {integrity: sha512-UOlTgPIeqUURcwaG8knxvBaruwZlC4X3/WSHEFO7rYvMVv/YNUrkfFEszvfj36pXV88dCHoHNnIp0PifkirnTQ==}
     peerDependencies:
@@ -1769,6 +2047,11 @@ packages:
     peerDependencies:
       three: '>=0.154'
 
+  three-subdivide@1.1.5:
+    resolution: {integrity: sha512-eEWMevrsHIMnC1xbsZSQZIB8QBr8XeXZhTSAdYrLm3ZC/yTdR4ocOZ2Qi+gEyPJFOt3iirQ+SQR0jCamk7e6FQ==}
+    peerDependencies:
+      three: '>= 0.125.0'
+
   three-tile@0.11.14:
     resolution: {integrity: sha512-Bpg43DiUqcZQ4RLFLEzhjwaIm1MORFgSxHfyJ6PrkrmziL+SN6NL46VJl21r/TGsSu/6XfdPaRne8xaeZox3iw==}
     peerDependencies:
@@ -1776,6 +2059,9 @@ packages:
 
   three@0.185.0:
     resolution: {integrity: sha512-+yRrcRO2iZa8uzvNNl0d7cL4huhgKgBvVJ0njcTe8xFqZ6DMAFZdCKDP91SEAuj25bNAj7k1QQdf+srZywVK6w==}
+
+  tiny-invariant@1.3.3:
+    resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
   tinycolor2@1.6.0:
     resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
@@ -1810,6 +2096,10 @@ packages:
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
+
+  type-fest@5.7.0:
+    resolution: {integrity: sha512-1URUxUqfHFM1c+zfSPsa3gnkO7Aq21qyH75SIduNYz4SzY964rn1X2vCMQaHSHhktiw+0kPa2iyb6PUpXqB6Vg==}
+    engines: {node: '>=20'}
 
   typescript-eslint@8.62.0:
     resolution: {integrity: sha512-8QxXi+ZACKX0kaqO4gY8kn0RSD9gFfaHDWwjqtEN48aWCBkX4MJaufWN+c3BzlrXLOxfywDL8CaoqUwcRq4j4Q==}
@@ -1871,6 +2161,15 @@ packages:
 
   urijs@1.19.11:
     resolution: {integrity: sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==}
+
+  url-join@5.0.0:
+    resolution: {integrity: sha512-n2huDr9h9yzd6exQVnH/jU5mr+Pfx08LRXXZhkLLetAMESRj+anQsTAh940iMrIetKAmry9coFuZQ2jY8/p3WA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  use-sync-external-store@1.6.0:
+    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -1959,6 +2258,9 @@ packages:
       typescript:
         optional: true
 
+  web-ifc@0.0.77:
+    resolution: {integrity: sha512-VzQ0W/Iiqbidxn1ECUvz6qJ6p2sXBVNcOsUOBCETzy77psAH6yFLKQm74aXabkx3JH4OvFVHe8k1qS6+Z2zl1w==}
+
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
@@ -1970,6 +2272,9 @@ packages:
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
+
+  xatlas-web@0.1.0:
+    resolution: {integrity: sha512-PprVfuXbaIskxLTLBUQRaWfgSy9xUQqAMIRooOw0P6NYqwgh6T0voeer6+Z5M7AFt5SGXUybuww/uDGs1yw8vQ==}
 
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
@@ -1987,14 +2292,34 @@ packages:
   zrender@6.1.0:
     resolution: {integrity: sha512-oEGMDB6pOP2S6OwRR4PdVv610zrjnA3Bh+JnSG12fYJlBKjtNAoEb5fSUoCOOINlH96I2fU38/A2UpRKs67xYQ==}
 
+  zustand@5.0.14:
+    resolution: {integrity: sha512-/8tAspM5LMPr28b3fwLYrtdj77ECpfZviaP75CMTnwO8ISyaE4GDIG/9rDDYq/cH9D2Xw2A2RXglLInmVBQB/g==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
 snapshots:
 
-  3d-tiles-renderer@0.4.28(three@0.185.0):
+  3d-tiles-renderer@0.4.28(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0):
     dependencies:
       '@mapbox/vector-tile': 2.0.5
       pbf: 4.0.2
       pmtiles: 4.4.1
     optionalDependencies:
+      '@react-three/fiber': 9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)
+      react: 19.2.7
       three: 0.185.0
 
   '@babel/generator@8.0.0':
@@ -2021,6 +2346,8 @@ snapshots:
   '@babel/parser@8.0.0':
     dependencies:
       '@babel/types': 8.0.0
+
+  '@babel/runtime@7.29.7': {}
 
   '@babel/types@7.29.7':
     dependencies:
@@ -2158,6 +2485,8 @@ snapshots:
       '@types/geojson': 7946.0.16
       pbf: 4.0.2
 
+  '@mediapipe/tasks-vision@0.10.35': {}
+
   '@mkkellogg/gaussian-splats-3d@0.4.7(three@0.185.0)':
     dependencies:
       three: 0.185.0
@@ -2168,6 +2497,14 @@ snapshots:
       '@emnapi/runtime': 1.11.1
       '@tybys/wasm-util': 0.10.3
     optional: true
+
+  '@needle-tools/gltf-progressive@3.6.0-beta.2(three@0.185.0)':
+    dependencies:
+      three: 0.185.0
+
+  '@needle-tools/three-animation-pointer@1.1.2(three@0.185.0)':
+    dependencies:
+      three: 0.185.0
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2183,7 +2520,31 @@ snapshots:
 
   '@oxc-project/types@0.137.0': {}
 
+  '@perplexdotgg/bounce@1.8.1':
+    dependencies:
+      monomorph: 2.3.1
+
+  '@petamoriken/float16@3.9.3': {}
+
   '@pkgr/core@0.3.6': {}
+
+  '@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@types/webxr': 0.5.24
+      base64-js: 1.5.1
+      buffer: 6.0.3
+      its-fine: 2.0.0(@types/react@19.2.17)(react@19.2.7)
+      react: 19.2.7
+      react-use-measure: 2.1.7(react@19.2.7)
+      scheduler: 0.27.0
+      suspend-react: 0.1.3(react@19.2.7)
+      three: 0.185.0
+      use-sync-external-store: 1.6.0(react@19.2.7)
+      zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
 
   '@rolldown/binding-android-arm64@1.1.3':
     optional: true
@@ -2318,6 +2679,49 @@ snapshots:
 
   '@spz-loader/core@0.3.1': {}
 
+  '@takram/three-atmosphere@0.19.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)':
+    dependencies:
+      '@takram/three-geospatial': 0.9.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      astronomy-engine: 2.1.19
+      postprocessing: 6.39.1(three@0.185.0)
+      react-merge-refs: 3.0.2(react@19.2.7)
+      three: 0.185.0
+      tiny-invariant: 1.3.3
+      url-join: 5.0.0
+    optionalDependencies:
+      '@react-three/fiber': 9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)
+      react: 19.2.7
+
+  '@takram/three-clouds@0.7.6(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)':
+    dependencies:
+      '@takram/three-atmosphere': 0.19.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      '@takram/three-geospatial': 0.9.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      postprocessing: 6.39.1(three@0.185.0)
+      three: 0.185.0
+      tiny-invariant: 1.3.3
+      type-fest: 5.7.0
+    optionalDependencies:
+      '@react-three/fiber': 9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)
+      react: 19.2.7
+
+  '@takram/three-geospatial-effects@0.6.4(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(postprocessing@6.39.1(three@0.185.0))(react@19.2.7)(three@0.185.0)':
+    dependencies:
+      '@takram/three-geospatial': 0.9.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)
+      postprocessing: 6.39.1(three@0.185.0)
+      three: 0.185.0
+    optionalDependencies:
+      '@react-three/fiber': 9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)
+      react: 19.2.7
+
+  '@takram/three-geospatial@0.9.1(@react-three/fiber@9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0))(react@19.2.7)(three@0.185.0)':
+    dependencies:
+      '@petamoriken/float16': 3.9.3
+      '@react-three/fiber': 9.6.1(@types/react@19.2.17)(react@19.2.7)(three@0.185.0)
+      react: 19.2.7
+      three: 0.185.0
+      tiny-invariant: 1.3.3
+      type-fest: 5.7.0
+
   '@theatre/core@0.7.2':
     dependencies:
       '@theatre/dataverse': 0.7.2
@@ -2330,6 +2734,16 @@ snapshots:
     dependencies:
       '@theatre/core': 0.7.2
       '@theatre/dataverse': 0.7.2
+
+  '@three.ez/batched-mesh-extensions@0.0.12(three@0.185.0)':
+    dependencies:
+      bvh.js: 0.0.13
+      three: 0.185.0
+
+  '@three.ez/simplify-geometry@0.0.1(three@0.185.0)':
+    dependencies:
+      meshoptimizer: 0.23.0
+      three: 0.185.0
 
   '@turf/boolean-point-in-polygon@7.3.5':
     dependencies:
@@ -2371,8 +2785,18 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/react-reconciler@0.28.9(@types/react@19.2.17)':
+    dependencies:
+      '@types/react': 19.2.17
+
+  '@types/react@19.2.17':
+    dependencies:
+      csstype: 3.2.3
+
   '@types/trusted-types@2.0.7':
     optional: true
+
+  '@types/webxr@0.5.24': {}
 
   '@typescript-eslint/eslint-plugin@8.62.0(@typescript-eslint/parser@8.62.0(eslint@10.6.0)(typescript@6.0.3))(eslint@10.6.0)(typescript@6.0.3)':
     dependencies:
@@ -2644,11 +3068,15 @@ snapshots:
       '@babel/types': 7.29.7
       ast-kit: 2.2.0
 
+  astronomy-engine@2.1.19: {}
+
   autolinker@4.1.5:
     dependencies:
       tslib: 2.8.1
 
   balanced-match@4.0.4: {}
+
+  base64-js@1.5.1: {}
 
   birpc@2.9.0: {}
 
@@ -2663,6 +3091,13 @@ snapshots:
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
+
+  buffer@6.0.3:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+
+  bvh.js@0.0.13: {}
 
   cannon-es@0.20.0: {}
 
@@ -3082,6 +3517,8 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  ieee754@1.2.1: {}
+
   ignore@5.3.2: {}
 
   ignore@7.0.5: {}
@@ -3109,6 +3546,13 @@ snapshots:
   isarray@1.0.0: {}
 
   isexe@2.0.0: {}
+
+  its-fine@2.0.0(@types/react@19.2.17)(react@19.2.7):
+    dependencies:
+      '@types/react-reconciler': 0.28.9(@types/react@19.2.17)
+      react: 19.2.7
+    transitivePeerDependencies:
+      - '@types/react'
 
   jsep@1.4.0: {}
 
@@ -3215,6 +3659,8 @@ snapshots:
 
   long@5.3.2: {}
 
+  lottie-web@5.13.0: {}
+
   magic-string-ast@1.0.3:
     dependencies:
       magic-string: 0.30.21
@@ -3226,6 +3672,8 @@ snapshots:
   merge2@1.4.1: {}
 
   mersenne-twister@1.1.0: {}
+
+  meshoptimizer@0.23.0: {}
 
   meshoptimizer@1.1.1: {}
 
@@ -3246,6 +3694,8 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 1.3.1
       ufo: 1.6.4
+
+  monomorph@2.3.1: {}
 
   ms@2.1.3: {}
 
@@ -3382,6 +3832,16 @@ snapshots:
     dependencies:
       quickselect: 3.0.0
 
+  react-merge-refs@3.0.2(react@19.2.7):
+    optionalDependencies:
+      react: 19.2.7
+
+  react-use-measure@2.1.7(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+
+  react@19.2.7: {}
+
   readable-stream@2.3.8:
     dependencies:
       core-util-is: 1.0.3
@@ -3469,6 +3929,8 @@ snapshots:
 
   satellite.js@7.0.1: {}
 
+  scheduler@0.27.0: {}
+
   scule@1.3.0: {}
 
   semver@7.8.5: {}
@@ -3497,9 +3959,20 @@ snapshots:
     dependencies:
       copy-anything: 4.0.5
 
+  suspend-react@0.1.3(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+
   synckit@0.11.13:
     dependencies:
       '@pkgr/core': 0.3.6
+
+  tagged-tag@1.0.0: {}
+
+  three-bvh-csg@0.0.18(three-mesh-bvh@0.9.10(three@0.185.0))(three@0.185.0):
+    dependencies:
+      three: 0.185.0
+      three-mesh-bvh: 0.9.10(three@0.185.0)
 
   three-conic-polygon-geometry@2.1.3(three@0.185.0):
     dependencies:
@@ -3540,6 +4013,21 @@ snapshots:
       three-slippy-map-globe: 1.0.6(three@0.185.0)
       tinycolor2: 1.6.0
 
+  three-good-godrays@0.12.0(postprocessing@6.39.1(three@0.185.0))(three@0.185.0):
+    dependencies:
+      postprocessing: 6.39.1(three@0.185.0)
+      three: 0.185.0
+
+  three-gpu-pathtracer@0.0.24(three-mesh-bvh@0.9.10(three@0.185.0))(three@0.185.0)(xatlas-web@0.1.0):
+    dependencies:
+      three: 0.185.0
+      three-mesh-bvh: 0.9.10(three@0.185.0)
+      xatlas-web: 0.1.0
+
+  three-html-render@0.1.2(three@0.185.0):
+    optionalDependencies:
+      three: 0.185.0
+
   three-mesh-bvh@0.9.10(three@0.185.0):
     dependencies:
       three: 0.185.0
@@ -3551,11 +4039,17 @@ snapshots:
       d3-scale: 4.0.2
       three: 0.185.0
 
+  three-subdivide@1.1.5(three@0.185.0):
+    dependencies:
+      three: 0.185.0
+
   three-tile@0.11.14(three@0.185.0):
     dependencies:
       three: 0.185.0
 
   three@0.185.0: {}
+
+  tiny-invariant@1.3.3: {}
 
   tinycolor2@1.6.0: {}
 
@@ -3585,6 +4079,10 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
+
+  type-fest@5.7.0:
+    dependencies:
+      tagged-tag: 1.0.0
 
   typescript-eslint@8.62.0(eslint@10.6.0)(typescript@6.0.3):
     dependencies:
@@ -3623,6 +4121,12 @@ snapshots:
       punycode: 2.3.1
 
   urijs@1.19.11: {}
+
+  url-join@5.0.0: {}
+
+  use-sync-external-store@1.6.0(react@19.2.7):
+    dependencies:
+      react: 19.2.7
 
   util-deprecate@1.0.2: {}
 
@@ -3702,6 +4206,8 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
+  web-ifc@0.0.77: {}
+
   webpack-virtual-modules@0.6.2: {}
 
   which@2.0.2:
@@ -3709,6 +4215,8 @@ snapshots:
       isexe: 2.0.0
 
   word-wrap@1.2.5: {}
+
+  xatlas-web@0.1.0: {}
 
   xml-name-validator@4.0.0: {}
 
@@ -3719,3 +4227,9 @@ snapshots:
   zrender@6.1.0:
     dependencies:
       tslib: 2.3.0
+
+  zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
+    optionalDependencies:
+      '@types/react': 19.2.17
+      react: 19.2.7
+      use-sync-external-store: 1.6.0(react@19.2.7)

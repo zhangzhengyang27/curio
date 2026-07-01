@@ -4,7 +4,7 @@
     :camera-position="[0, 0, 2]"
     :clear-color="0x00acec"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

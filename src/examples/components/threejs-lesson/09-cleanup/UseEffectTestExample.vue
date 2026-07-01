@@ -1,5 +1,5 @@
 <template>
-  <ExampleScene ></ExampleScene>
+  <ExampleScene />
 </template>
 
 <script setup>

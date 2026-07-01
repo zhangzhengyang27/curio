@@ -6,7 +6,7 @@
     :clear-color="0x666666"
     :shadow-map="true"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>

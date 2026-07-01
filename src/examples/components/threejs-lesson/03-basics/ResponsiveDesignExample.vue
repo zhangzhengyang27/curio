@@ -4,7 +4,7 @@
     :camera-position="[0, 0, 5]"
     :max-pixel-ratio="1"
     @ready="onReady"
-  ></ExampleScene>
+  />
 </template>
 
 <script setup>
