@@ -54,6 +54,16 @@ export default tseslint.config(
     },
   },
 
+  // 由 HTML 自动转换的 WebGL 示例：保留原始代码风格，关闭对转换产物过于严格的规则
+  {
+    files: ['src/examples/components/webgl/**/*.vue', 'src/examples/jsm-compat/webgl/**/*.js'],
+    rules: {
+      'no-useless-assignment': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+    },
+  },
+
   // Config/env files — relaxed
   {
     files: ['*.config.*', 'env.d.ts'],

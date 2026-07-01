@@ -4,8 +4,9 @@ import threejsLesson from './threejsLesson.js'
 import earthLessons from './earthLessons.js'
 import threejsOfficialExamples from './threejsOfficialExamples.js'
 import granary3dExamples from './granary3dExamples.js'
+import webglExamples from './webglExamples.js'
 
-const registries = [threeCesiumExamples, cesiumExamples, threejsLesson, earthLessons, threejsOfficialExamples, granary3dExamples]
+const registries = [threeCesiumExamples, cesiumExamples, threejsLesson, earthLessons, threejsOfficialExamples, granary3dExamples, webglExamples]
 
 export function getAllExamples() {
   const list = []

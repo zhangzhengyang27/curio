@@ -1,0 +1,64 @@
+<template>
+  <WebGLExampleScene @ready="onReady" />
+</template>
+
+<script setup>
+import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
+import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/04-矩阵变换/jsm/Utils.js'
+const vertexShader = `attribute vec4 a_Position;
+    float tx=0.4;
+    float ty=0.3;
+    float tz=0.2;
+    //列主序
+    mat4 m4=mat4(
+      1.0, 0.0, 0.0,0.0,
+      0.0, 1.0, 0.0,0.0,
+      0.0, 0.0, 1.0,0.0,
+      tx,  ty,  tz ,1.0
+    );
+    void main(){
+      gl_Position = m4*a_Position;
+    }`
+
+const fragmentShader = `void main(){
+      gl_FragColor=vec4(1.0,1.0,0.0,1.0);
+    }`
+
+async function onReady({ canvas, container, addUpdateCallback, resize }) {
+  
+  
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const gl = canvas.getContext('webgl');
+  
+      const vsSource = vertexShader;
+      const fsSource = fragmentShader;
+      initShaders(gl, vsSource, fsSource);
+  
+      const vertices = new Float32Array([
+        0.0, 0.1,
+        -0.1, -0.1,
+        0.1, -0.1
+      ])
+  
+      const vertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+      gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(a_Position);
+  
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+  
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+</script>
+
+<style scoped>
+.webgl-example-scene {
+      margin: 0;
+      overflow: hidden
+    }
+</style>
