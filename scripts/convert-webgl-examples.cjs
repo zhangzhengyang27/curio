@@ -1,14 +1,60 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs')
 const path = require('path')
 
 const SOURCE_DIR = '/Users/zhangzhengyang/Desktop/Code/数据可视化/data-visualization/webgl'
-const PUBLIC_DIR = '/Users/zhangzhengyang/Desktop/Code/数据可视化/earth-app/public/webgl'
+const _PUBLIC_DIR = '/Users/zhangzhengyang/Desktop/Code/数据可视化/earth-app/public/webgl'
 const VUE_OUT_DIR = '/Users/zhangzhengyang/Desktop/Code/数据可视化/earth-app/src/examples/components/webgl'
 const JSM_COMPAT_OUT = '/Users/zhangzhengyang/Desktop/Code/数据可视化/earth-app/src/examples/jsm-compat/webgl'
 const REGISTRY_OUT = '/Users/zhangzhengyang/Desktop/Code/数据可视化/earth-app/src/examples/registry/webglExamples.js'
 
 const SUB_SOURCES = ['kaikeba-webgl', 'study-webgl']
 const ASSET_DIRS = ['images', 'audio', 'video']
+
+// 冗余示例：内容重复或可被更完整的示例覆盖，跳过生成
+const SKIP_FILES = [
+  // study-webgl/1-base：动态绘制点重复；移动/旋转/缩放合并为“变换综合”
+  'study-webgl/1-base/2-动态绘制点.html',
+  'study-webgl/1-base/7-旋转.html',
+  'study-webgl/1-base/9-旋转.html',
+  'study-webgl/1-base/10-移动.html',
+  'study-webgl/1-base/11-缩放.html',
+  'study-webgl/1-base/12-使用框架实现旋转.html',
+  'study-webgl/1-base/13-使用框架实现移动.html',
+  'study-webgl/1-base/14-使用框架实现缩放.html',
+  // study-webgl/3-三维世界与光照：立方体递进重复、环境光/逐顶点可被覆盖
+  'study-webgl/3-三维世界与光照/11-绘制不穿衣服的正方体.html',
+  'study-webgl/3-三维世界与光照/12-绘制穿简陋衣服的正方体.html',
+  'study-webgl/3-三维世界与光照/17-环境光.html',
+  'study-webgl/3-三维世界与光照/18-逐顶点光照.html',
+  // kaikeba-webgl/01-webgl 入门：重复的刷底色
+  'kaikeba-webgl/01-webgl 入门/webgl/2-刷底色.html',
+  // kaikeba-webgl/04-矩阵变换：平移/旋转/缩放及 JS 版本合并为“矩阵变换综合”
+  'kaikeba-webgl/04-矩阵变换/1-位移.html',
+  'kaikeba-webgl/04-矩阵变换/2-js位移图形.html',
+  'kaikeba-webgl/04-矩阵变换/3-旋转.html',
+  'kaikeba-webgl/04-矩阵变换/4-js旋转图形.html',
+  'kaikeba-webgl/04-矩阵变换/5-缩放.html',
+  'kaikeba-webgl/04-矩阵变换/6-js缩放图形.html',
+  'kaikeba-webgl/04-矩阵变换/11-矩阵平移.html',
+  'kaikeba-webgl/04-矩阵变换/12-矩阵缩放.html',
+]
+
+// 手工合并示例：不对应某个 HTML，但替代上面被合并删除的一组示例
+const MANUAL_EXAMPLES = [
+  {
+    id: 'transform-composite',
+    category: 'study-webgl/1-base',
+    categoryLabel: '1-base',
+    title: '变换综合（移动/旋转/缩放）',
+  },
+  {
+    id: 'matrix-transform-composite',
+    category: 'kaikeba-webgl/04-矩阵变换',
+    categoryLabel: '04-矩阵变换',
+    title: '矩阵变换综合（平移/旋转/缩放）',
+  },
+]
 
 function toPascalCase(str) {
   return str
@@ -63,6 +109,20 @@ function copyJsmFiles() {
             /from\s+['"]https:\/\/unpkg\.com\/three\/build\/three\.module\.js['"]/g,
             "from 'three'"
           )
+
+          // 修复 kaikeba Texture.js 中 defAttr 引用了未定义变量的问题
+          content = content.replace(
+            /const defAttr = \(\) => \(\{\s*image,\s*wrapS,\s*wrapT,\s*magFilter,\s*minFilter,\s*format,\s*\}\)/,
+            `const defAttr = () => ({
+  image: undefined,
+  wrapS: undefined,
+  wrapT: undefined,
+  magFilter: undefined,
+  minFilter: undefined,
+  format: undefined,
+})`
+          )
+
           fs.writeFileSync(outPath, content, 'utf-8')
         }
       }
@@ -239,6 +299,12 @@ function cleanScriptBody(body) {
     ''
   )
   body = body.replace(/\brequestAnimFrame\b/g, 'requestAnimationFrame')
+
+  // 修复部分 HTML 中遗漏 let 声明的属性变量
+  body = body.replace(/\b(attribOutUV)\s*=\s*(webgl\.getAttribLocation)/g, 'let $1 = $2')
+
+  // 部分示例调用未定义的 initEvent()，直接移除该空调用
+  body = body.replace(/\binitEvent\s*\([^)]*\)\s*;?/g, '')
 
   return body
 }
@@ -452,6 +518,10 @@ function walkHtmlFiles(dir, relDir, files = []) {
     if (entry.isDirectory()) {
       walkHtmlFiles(fullPath, relPath, files)
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      if (SKIP_FILES.includes(relPath)) {
+        console.log(`Skipped (redundant): ${relPath}`)
+        continue
+      }
       const content = fs.readFileSync(fullPath, 'utf-8')
       if (hasExternalMediaResource(content)) {
         console.log(`Skipped (external media): ${relPath}`)
@@ -463,7 +533,39 @@ function walkHtmlFiles(dir, relDir, files = []) {
   return files
 }
 
-function generateRegistry(examples) {
+function removeSkippedComponents() {
+  for (const subSource of SUB_SOURCES) {
+    const subDir = path.join(SOURCE_DIR, subSource)
+    if (!fs.existsSync(subDir)) continue
+
+    function walk(dir, relDir) {
+      const entries = fs.readdirSync(dir, { withFileTypes: true })
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name)
+        const relPath = path.posix.join(relDir, entry.name)
+        if (entry.isDirectory()) {
+          walk(fullPath, relPath)
+        } else if (entry.isFile() && entry.name.endsWith('.html')) {
+          if (!SKIP_FILES.includes(relPath)) continue
+          const htmlRelDir = path.posix.dirname(relPath)
+          const categoryDir = sanitizeCategory(path.posix.relative(subSource, htmlRelDir))
+          const category = `${subSource}/${categoryDir}`
+          const id = sanitizeId(path.basename(fullPath, '.html'))
+          const componentName = toPascalCase(id) + 'Example'
+          const outPath = path.join(VUE_OUT_DIR, category, `${componentName}.vue`)
+          if (fs.existsSync(outPath)) {
+            fs.unlinkSync(outPath)
+            console.log(`Removed redundant component: ${outPath}`)
+          }
+        }
+      }
+    }
+
+    walk(subDir, subSource)
+  }
+}
+
+function generateRegistry(examples, manualExamples = []) {
   const registryExamples = examples.map(ex => ({
     id: ex.id,
     category: ex.category,
@@ -473,6 +575,18 @@ function generateRegistry(examples) {
     tags: ['webgl', ex.subSource, ex.category],
     runner: 'vue',
   }))
+
+  for (const m of manualExamples) {
+    registryExamples.push({
+      id: m.id,
+      category: m.category,
+      categoryLabel: m.categoryLabel,
+      title: m.title,
+      description: m.title,
+      tags: ['webgl', ...m.category.split('/')],
+      runner: 'vue',
+    })
+  }
 
   return `// 由 scripts/convert-webgl-examples.cjs 自动生成，请勿手动修改
 
@@ -487,6 +601,7 @@ export default {
 function main() {
   ensureDir(VUE_OUT_DIR)
   copyJsmFiles()
+  removeSkippedComponents()
 
   const examples = []
 
@@ -522,9 +637,10 @@ function main() {
     }
   }
 
-  fs.writeFileSync(REGISTRY_OUT, generateRegistry(examples), 'utf-8')
+  fs.writeFileSync(REGISTRY_OUT, generateRegistry(examples, MANUAL_EXAMPLES), 'utf-8')
   console.log(`Registry: ${REGISTRY_OUT}`)
-  console.log(`Total examples: ${examples.length}`)
+  console.log(`Total generated examples: ${examples.length}`)
+  console.log(`Total registered examples: ${examples.length + MANUAL_EXAMPLES.length}`)
 }
 
 main()

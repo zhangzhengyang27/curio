@@ -18,19 +18,6 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "2-刷底色",
-    "category": "kaikeba-webgl/01-webgl-入门-webgl",
-    "categoryLabel": "webgl",
-    "title": "刷底色",
-    "description": "刷底色",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/01-webgl-入门-webgl"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "3-多姿多彩的画布",
     "category": "kaikeba-webgl/01-webgl-入门-webgl",
     "categoryLabel": "webgl",
@@ -421,19 +408,6 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "1-位移",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "位移",
-    "description": "位移",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "10-js建立四维矩阵",
     "category": "kaikeba-webgl/04-矩阵变换",
     "categoryLabel": "04-矩阵变换",
@@ -447,102 +421,11 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "11-矩阵平移",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "矩阵平移",
-    "description": "矩阵平移",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "12-矩阵缩放",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "矩阵缩放",
-    "description": "矩阵缩放",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "13-矩阵库",
     "category": "kaikeba-webgl/04-矩阵变换",
     "categoryLabel": "04-矩阵变换",
     "title": "矩阵库",
     "description": "矩阵库",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "2-js位移图形",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "js位移图形",
-    "description": "js位移图形",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "3-旋转",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "旋转",
-    "description": "旋转",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "4-js旋转图形",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "js旋转图形",
-    "description": "js旋转图形",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "5-缩放",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "缩放",
-    "description": "缩放",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/04-矩阵变换"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "6-js缩放图形",
-    "category": "kaikeba-webgl/04-矩阵变换",
-    "categoryLabel": "04-矩阵变换",
-    "title": "js缩放图形",
-    "description": "js缩放图形",
     "tags": [
       "webgl",
       "kaikeba-webgl",
@@ -1487,89 +1370,11 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "10-移动",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "移动",
-    "description": "移动",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "11-缩放",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "缩放",
-    "description": "缩放",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "12-使用框架实现旋转",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "使用框架实现旋转",
-    "description": "使用框架实现旋转",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "13-使用框架实现移动",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "使用框架实现移动",
-    "description": "使用框架实现移动",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "14-使用框架实现缩放",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "使用框架实现缩放",
-    "description": "使用框架实现缩放",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "15-使用框架实现时钟",
     "category": "study-webgl/1-base",
     "categoryLabel": "1-base",
     "title": "使用框架实现时钟",
     "description": "使用框架实现时钟",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "2-动态绘制点",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "动态绘制点",
-    "description": "动态绘制点",
     "tags": [
       "webgl",
       "study-webgl",
@@ -1630,37 +1435,11 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "7-旋转",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "旋转",
-    "description": "旋转",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "8-贪吃蛇案例",
     "category": "study-webgl/1-base",
     "categoryLabel": "1-base",
     "title": "贪吃蛇案例",
     "description": "贪吃蛇案例",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/1-base"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "9-旋转",
-    "category": "study-webgl/1-base",
-    "categoryLabel": "1-base",
-    "title": "旋转",
-    "description": "旋转",
     "tags": [
       "webgl",
       "study-webgl",
@@ -1747,32 +1526,6 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "11-绘制不穿衣服的正方体",
-    "category": "study-webgl/3-三维世界与光照",
-    "categoryLabel": "3-三维世界与光照",
-    "title": "绘制不穿衣服的正方体",
-    "description": "绘制不穿衣服的正方体",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/3-三维世界与光照"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "12-绘制穿简陋衣服的正方体",
-    "category": "study-webgl/3-三维世界与光照",
-    "categoryLabel": "3-三维世界与光照",
-    "title": "绘制穿简陋衣服的正方体",
-    "description": "绘制穿简陋衣服的正方体",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/3-三维世界与光照"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "13-绘制穿衣服的正方体",
     "category": "study-webgl/3-三维世界与光照",
     "categoryLabel": "3-三维世界与光照",
@@ -1817,32 +1570,6 @@ export default {
     "categoryLabel": "3-三维世界与光照",
     "title": "点光源",
     "description": "点光源",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/3-三维世界与光照"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "17-环境光",
-    "category": "study-webgl/3-三维世界与光照",
-    "categoryLabel": "3-三维世界与光照",
-    "title": "环境光",
-    "description": "环境光",
-    "tags": [
-      "webgl",
-      "study-webgl",
-      "study-webgl/3-三维世界与光照"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "18-逐顶点光照",
-    "category": "study-webgl/3-三维世界与光照",
-    "categoryLabel": "3-三维世界与光照",
-    "title": "逐顶点光照",
-    "description": "逐顶点光照",
     "tags": [
       "webgl",
       "study-webgl",
@@ -1990,6 +1717,32 @@ export default {
       "webgl",
       "study-webgl",
       "study-webgl/4-层次模型"
+    ],
+    "runner": "vue"
+  },
+  {
+    "id": "transform-composite",
+    "category": "study-webgl/1-base",
+    "categoryLabel": "1-base",
+    "title": "变换综合（移动/旋转/缩放）",
+    "description": "变换综合（移动/旋转/缩放）",
+    "tags": [
+      "webgl",
+      "study-webgl",
+      "1-base"
+    ],
+    "runner": "vue"
+  },
+  {
+    "id": "matrix-transform-composite",
+    "category": "kaikeba-webgl/04-矩阵变换",
+    "categoryLabel": "04-矩阵变换",
+    "title": "矩阵变换综合（平移/旋转/缩放）",
+    "description": "矩阵变换综合（平移/旋转/缩放）",
+    "tags": [
+      "webgl",
+      "kaikeba-webgl",
+      "04-矩阵变换"
     ],
     "runner": "vue"
   }
