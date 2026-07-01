@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>绘图原理</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <!-- 顶点着色器 -->
+  <script id="vertexShader" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      void main(){
+          //点位
+          gl_Position=a_Position;
+          //尺寸
+          gl_PointSize=50.0;
+      }
+    </script>
+  <!-- 片元着色器 -->
+  <script id="fragmentShader" type="x-shader/x-fragment">
+      void main(){
+          gl_FragColor=vec4(1,1,0,1);
+      }
+    </script>
+  <script type="module">
+    import { initShaders } from "./jsm/Utils.js";
+
+    const canvas = document.querySelector("#canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const vsSource = document.querySelector("#vertexShader").innerText;
+    const fsSource = document.querySelector("#fragmentShader").innerText;
+
+    const gl = canvas.getContext("webgl");
+
+    initShaders(gl, vsSource, fsSource);
+
+    //设置attribute 变量
+    const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+
+    //声明颜色 rgba
+    gl.clearColor(0, 0, 0, 1);
+    //刷底色
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // 存储顶点数据的数组
+    const a_points = [
+      { x: -0.3, y: 0 },
+      { x: 0.3, y: 0 },
+    ];
+
+    render();
+
+    setTimeout(() => {
+      a_points.push({ x: 0, y: 0 });
+      render();
+    }, 1000);
+
+    // 渲染方法
+    function render() {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      a_points.forEach(({ x, y }) => {
+        gl.vertexAttrib2f(a_Position, x, y);
+        gl.drawArrays(gl.POINTS, 0, 1);
+      });
+    }
+  </script>
+</body>
+
+</html>
