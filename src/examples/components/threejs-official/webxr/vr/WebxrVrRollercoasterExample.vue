@@ -1,0 +1,246 @@
+<template>
+  <WebXRExampleScene
+    camera="perspective"
+    antialias
+    :camera-options="{ fov: 50, near: 0.1, far: 500 }"
+    @ready="onReady"
+  />
+</template>
+
+<script setup>
+import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
+import * as THREE from 'three';
+import {
+RollerCoasterGeometry,
+RollerCoasterShadowGeometry,
+RollerCoasterLiftersGeometry,
+TreesGeometry,
+SkyGeometry
+} from 'three/examples/jsm/misc/RollerCoaster.js';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+
+const props = defineProps({
+  example: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+function onReady(__stage) {
+  const scene = __stage.scene
+  const camera = __stage.camera
+  const renderer = __stage.renderer
+  const controls = __stage.controls
+
+  
+  
+  
+  
+  
+  			let mesh, material, geometry;
+  
+  
+  
+  
+  			renderer.xr.setReferenceSpaceType( 'local' );
+  
+  
+  			//
+  
+  
+  			scene.background = new THREE.Color( 0xf0f0ff );
+  
+  			const light = new THREE.HemisphereLight( 0xfff0f0, 0x60606, 3 );
+  			light.position.set( 1, 1, 1 );
+  			scene.add( light );
+  
+  			const train = new THREE.Object3D();
+  			scene.add( train );
+  
+  
+  			train.add( camera );
+  
+  			// environment
+  
+  			geometry = new THREE.PlaneGeometry( 500, 500, 15, 15 );
+  			geometry.rotateX( - Math.PI / 2 );
+  
+  			const positions = geometry.attributes.position.array;
+  			const vertex = new THREE.Vector3();
+  
+  			for ( let i = 0; i < positions.length; i += 3 ) {
+  
+  				vertex.fromArray( positions, i );
+  
+  				vertex.x += Math.random() * 10 - 5;
+  				vertex.z += Math.random() * 10 - 5;
+  
+  				const distance = ( vertex.distanceTo( scene.position ) / 5 ) - 25;
+  				vertex.y = Math.random() * Math.max( 0, distance );
+  
+  				vertex.toArray( positions, i );
+  
+  			}
+  
+  			geometry.computeVertexNormals();
+  
+  			material = new THREE.MeshLambertMaterial( {
+  				color: 0x407000
+  			} );
+  
+  			mesh = new THREE.Mesh( geometry, material );
+  			scene.add( mesh );
+  
+  			geometry = new TreesGeometry( mesh );
+  			material = new THREE.MeshBasicMaterial( {
+  				side: THREE.DoubleSide, vertexColors: true
+  			} );
+  			mesh = new THREE.Mesh( geometry, material );
+  			scene.add( mesh );
+  
+  			geometry = new SkyGeometry();
+  			material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+  			mesh = new THREE.Mesh( geometry, material );
+  			scene.add( mesh );
+  
+  			//
+  
+  			const PI2 = Math.PI * 2;
+  
+  			const curve = ( function () {
+  
+  				const vector = new THREE.Vector3();
+  				const vector2 = new THREE.Vector3();
+  
+  				return {
+  
+  					getPointAt: function ( t ) {
+  
+  						t = t * PI2;
+  
+  						const x = Math.sin( t * 3 ) * Math.cos( t * 4 ) * 50;
+  						const y = Math.sin( t * 10 ) * 2 + Math.cos( t * 17 ) * 2 + 5;
+  						const z = Math.sin( t ) * Math.sin( t * 4 ) * 50;
+  
+  						return vector.set( x, y, z ).multiplyScalar( 2 );
+  
+  					},
+  
+  					getTangentAt: function ( t ) {
+  
+  						const delta = 0.0001;
+  						const t1 = Math.max( 0, t - delta );
+  						const t2 = Math.min( 1, t + delta );
+  
+  						return vector2.copy( this.getPointAt( t2 ) )
+  							.sub( this.getPointAt( t1 ) ).normalize();
+  
+  					}
+  
+  				};
+  
+  			} )();
+  
+  			geometry = new RollerCoasterGeometry( curve, 1500 );
+  			material = new THREE.MeshPhongMaterial( {
+  				vertexColors: true
+  			} );
+  			mesh = new THREE.Mesh( geometry, material );
+  			scene.add( mesh );
+  
+  			geometry = new RollerCoasterLiftersGeometry( curve, 100 );
+  			material = new THREE.MeshPhongMaterial();
+  			mesh = new THREE.Mesh( geometry, material );
+  			mesh.position.y = 0.1;
+  			scene.add( mesh );
+  
+  			geometry = new RollerCoasterShadowGeometry( curve, 500 );
+  			material = new THREE.MeshBasicMaterial( {
+  				color: 0x305000, depthWrite: false, transparent: true
+  			} );
+  			mesh = new THREE.Mesh( geometry, material );
+  			mesh.position.y = 0.1;
+  			scene.add( mesh );
+  
+  			const funfairs = [];
+  
+  			//
+  
+  			geometry = new THREE.CylinderGeometry( 10, 10, 5, 15 );
+  			material = new THREE.MeshLambertMaterial( {
+  				color: 0xff8080
+  			} );
+  			mesh = new THREE.Mesh( geometry, material );
+  			mesh.position.set( - 80, 10, - 70 );
+  			mesh.rotation.x = Math.PI / 2;
+  			scene.add( mesh );
+  
+  			funfairs.push( mesh );
+  
+  			geometry = new THREE.CylinderGeometry( 5, 6, 4, 10 );
+  			material = new THREE.MeshLambertMaterial( {
+  				color: 0x8080ff
+  			} );
+  			mesh = new THREE.Mesh( geometry, material );
+  			mesh.position.set( 50, 2, 30 );
+  			scene.add( mesh );
+  
+  			funfairs.push( mesh );
+  
+  			//
+  
+  			
+  
+  			
+  
+  			//
+  
+  			const position = new THREE.Vector3();
+  			const tangent = new THREE.Vector3();
+  
+  			const lookAt = new THREE.Vector3();
+  
+  			const tangent1 = new THREE.Vector3();
+  			const tangent2 = new THREE.Vector3();
+  			const bankQuaternion = new THREE.Quaternion();
+  
+  			let velocity = 0;
+  			let progress = 0;
+  
+  			let prevTime = performance.now();
+  
+  			__stage.addUpdateCallback((_delta, _elapsed) => {
+    const time = performance.now();
+    				const delta = time - prevTime;
+    				for ( let i = 0; i < funfairs.length; i ++ ) {
+    					funfairs[ i ].rotation.y = time * 0.0004;
+    				}
+    				//
+    				progress += velocity;
+    				progress = progress % 1;
+    				position.copy( curve.getPointAt( progress ) );
+    				position.y += 0.3;
+    				train.position.copy( position );
+    				tangent.copy( curve.getTangentAt( progress ) );
+    				velocity -= tangent.y * 0.0000001 * delta;
+    				velocity = Math.max( 0.00004, Math.min( 0.0002, velocity ) );
+    				// banking
+    				const bankDelta = 0.01;
+    				const t1 = ( ( progress - bankDelta ) % 1 + 1 ) % 1;
+    				const t2 = ( progress + bankDelta ) % 1;
+    				tangent1.copy( curve.getTangentAt( t1 ) );
+    				tangent2.copy( curve.getTangentAt( t2 ) );
+    				let headingChange = Math.atan2( tangent2.x, tangent2.z ) - Math.atan2( tangent1.x, tangent1.z );
+    				if ( headingChange > Math.PI ) headingChange -= Math.PI * 2;
+    				if ( headingChange < -Math.PI ) headingChange += Math.PI * 2;
+    				train.up.set( 0, 1, 0 );
+    				bankQuaternion.setFromAxisAngle( tangent, - Math.atan( headingChange * 8 ) * 0.5 );
+    				train.up.applyQuaternion( bankQuaternion );
+    				train.lookAt( lookAt.copy( position ).sub( tangent ) );
+    				//
+    				prevTime = time;
+  })
+  
+  		
+}
+</script>

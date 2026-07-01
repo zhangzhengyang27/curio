@@ -1,0 +1,7 @@
+- [x] three-globe 整体架构（Kapsule 组合、图层注册、依赖关系）已梳理清楚
+- [x] Globe Layer 可借鉴项（纹理、bump、大气、网格）已整理并对比当前项目
+- [x] Points / Arcs / Rings / Paths / Polygons / HexBin / Heatmaps 各图层核心实现已分析
+- [x] 动画系统（TweenGroup、FrameTicker）、数据绑定（ThreeDigest）、内存回收（gc）已分析
+- [x] 坐标转换、颜色/Shader 工具、大气光晕与圆环几何已实现原理已记录
+- [x] 参考借鉴清单已按优先级映射到 earth-app 各可视化模式
+- [x] 最终分析文档已输出并可指导后续迭代

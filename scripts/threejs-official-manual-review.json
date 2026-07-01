@@ -1,0 +1,1850 @@
+[
+  {
+    "id": "webgl_geometry_spline_editor",
+    "category": "webgl/geometry",
+    "title": "three.js webgl - geometry - catmull spline editor",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "webgl_animation_skinning_ik",
+    "category": "webgl/animation",
+    "title": "three.js webgl - animation - skinning - ik",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "webgl_loader_pdb",
+    "category": "webgl/loader",
+    "title": "three.js webgl - molecules",
+    "reason": "forbidden-pattern",
+    "note": "uses CSS2DRenderer"
+  },
+  {
+    "id": "webgl_shadowmap_progressive",
+    "category": "webgl/shadowmap",
+    "title": "three.js webgl - progressive lightmap accumulation",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "webgl_modifier_curve",
+    "category": "webgl/modifier",
+    "title": "three.js webgl - curve modifier",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "webgl_modifier_curve_instanced",
+    "category": "webgl/modifier",
+    "title": "three.js webgl - curve modifier - instanced",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "webgl_worker_offscreencanvas",
+    "category": "webgl/worker",
+    "title": "three.js webgl - worker - offscreen canvas",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer/CSS3DRenderer/SVGRenderer found"
+  },
+  {
+    "id": "css2d_label",
+    "category": "css2d",
+    "title": "three.js css2d - label",
+    "reason": "forbidden-pattern",
+    "note": "uses CSS2DRenderer"
+  },
+  {
+    "id": "css3d_mixed",
+    "category": "css3d",
+    "title": "three.js css3d - mixed",
+    "reason": "forbidden-pattern",
+    "note": "uses CSS3DObject"
+  },
+  {
+    "id": "css3d_molecules",
+    "category": "css3d",
+    "title": "three.js css3d - molecules",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "css3d_orthographic",
+    "category": "css3d",
+    "title": "three.js css3d - orthographic",
+    "reason": "forbidden-pattern",
+    "note": "uses CSS3DObject"
+  },
+  {
+    "id": "css3d_periodictable",
+    "category": "css3d",
+    "title": "three.js css3d - periodic table",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "css3d_sandbox",
+    "category": "css3d",
+    "title": "three.js css3d - sandbox",
+    "reason": "forbidden-pattern",
+    "note": "uses CSS3DObject"
+  },
+  {
+    "id": "css3d_sprites",
+    "category": "css3d",
+    "title": "three.js css3d - sprites",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "css3d_youtube",
+    "category": "css3d",
+    "title": "three.js css3d - youtube",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "misc_controls_fly",
+    "category": "misc/controls",
+    "title": "three.js webgpu - fly controls - earth",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer found"
+  },
+  {
+    "id": "misc_controls_pointerlock",
+    "category": "misc/controls",
+    "title": "three.js - pointerlock controls",
+    "reason": "forbidden-pattern",
+    "note": "uses PointerLockControls"
+  },
+  {
+    "id": "misc_controls_transform",
+    "category": "misc/controls",
+    "title": "three.js webgl - transform controls",
+    "reason": "forbidden-pattern",
+    "note": "uses TransformControls"
+  },
+  {
+    "id": "misc_raycaster_helper",
+    "category": "misc/raycaster",
+    "title": "three.js misc - raycaster - helper",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer found"
+  },
+  {
+    "id": "misc_uv_tests",
+    "category": "misc/uv",
+    "title": "three.js - uv mapping tests",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer/CSS3DRenderer/SVGRenderer found"
+  },
+  {
+    "id": "physics_jolt_instancing",
+    "category": "physics/jolt",
+    "title": "three.js physics - jolt instancing",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer found"
+  },
+  {
+    "id": "svg_lines",
+    "category": "svg",
+    "title": "three.js svg - lines",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "svg_sandbox",
+    "category": "svg",
+    "title": "three.js svg - sandbox",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer found"
+  },
+  {
+    "id": "webgpu_animation_retargeting",
+    "category": "webgpu/animation",
+    "title": "three.js webgpu - animation retargeting",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_animation_retargeting_readyplayer",
+    "category": "webgpu/animation",
+    "title": "three.js webgpu - animation retargeting",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_backdrop",
+    "category": "webgpu/backdrop",
+    "title": "three.js - WebGPU - Backdrop",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_backdrop_area",
+    "category": "webgpu/backdrop",
+    "title": "three.js - WebGPU - Backdrop Area",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_backdrop_water",
+    "category": "webgpu/backdrop",
+    "title": "three.js webgpu - backdrop water",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_camera",
+    "category": "webgpu/camera",
+    "title": "three.js webgpu - cameras",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_camera_array",
+    "category": "webgpu/camera",
+    "title": "three.js webgpu - arraycamera",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_camera_logarithmicdepthbuffer",
+    "category": "webgpu/camera",
+    "title": "three.js webgpu - logarithmic depth buffer",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_caustics",
+    "category": "webgpu/caustics",
+    "title": "three.js webgpu - caustics",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_centroid_sampling",
+    "category": "webgpu/centroid",
+    "title": "three.js webgpu - centroid sampling",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_clearcoat",
+    "category": "webgpu/clearcoat",
+    "title": "three.js webgpu - materials - clearcoat",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_clipping",
+    "category": "webgpu/clipping",
+    "title": "three.js webgpu - clipping planes",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compile_async",
+    "category": "webgpu/compile",
+    "title": "three.js webgpu - async node compilation",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_audio",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - audio processing",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_birds",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute birds",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_cloth",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute cloth",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_geometry",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute geometry",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_particles",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute particles",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_particles_fluid",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute fluid particles",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_particles_rain",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute particles rain",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_particles_snow",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute snow",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_points",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_rasterizer",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute rasterizer",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_rasterizer_ibl",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute rasterizer ibl",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_reduce",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute reduction",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_sort_bitonic",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - storage pbo external element",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_texture",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute texture",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_texture_3d",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute texture 3D",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_texture_pingpong",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute ping/pong texture",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_compute_water",
+    "category": "webgpu/compute",
+    "title": "three.js webgpu - compute water",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_cubemap_adjustments",
+    "category": "webgpu/cubemap",
+    "title": "three.js webgpu - envmap adjustments",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_cubemap_dynamic",
+    "category": "webgpu/cubemap",
+    "title": "three.js webgpu - dynamic cube reflection",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_cubemap_mix",
+    "category": "webgpu/cubemap",
+    "title": "three.js webgpu - cubemap mix",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_custom_fog",
+    "category": "webgpu/custom",
+    "title": "three.js webgpu - custom fog",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_custom_fog_background",
+    "category": "webgpu/custom",
+    "title": "three.js webgpu - custom fog background",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_custom_fog_scattering",
+    "category": "webgpu/custom",
+    "title": "three.js webgpu - fog - scattering",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_depth_texture",
+    "category": "webgpu/depth",
+    "title": "three.js webgpu - depth texture",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_display_stereo",
+    "category": "webgpu/display",
+    "title": "three.js webgpu - stereo effects",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_equirectangular",
+    "category": "webgpu/equirectangular",
+    "title": "three.js webgpu - equirectangular",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_fog_height",
+    "category": "webgpu/fog",
+    "title": "three.js webgpu - height fog",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_furnace_test",
+    "category": "webgpu/furnace",
+    "title": "three.js webgpu - white furnace test",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_generator_building",
+    "category": "webgpu/generator",
+    "title": "three.js webgpu - building generator",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_generator_city",
+    "category": "webgpu/generator",
+    "title": "three.js webgpu - city generator",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_geometry_loft",
+    "category": "webgpu/geometry",
+    "title": "three.js webgpu - loft geometry",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_hdr",
+    "category": "webgpu/hdr",
+    "title": "three.js webgpu - HDR Draw",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instance_mesh",
+    "category": "webgpu/instance",
+    "title": "three.js webgpu - instance mesh",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instance_path",
+    "category": "webgpu/instance",
+    "title": "three.js webgpu - instance path",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instance_points",
+    "category": "webgpu/instance",
+    "title": "three.js webgpu - points instanced",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instance_sprites",
+    "category": "webgpu/instance",
+    "title": "three.js webgpu - instance sprites",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instance_uniform",
+    "category": "webgpu/instance",
+    "title": "three.js webgpu - instance uniform",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_instancing_morph",
+    "category": "webgpu/instancing",
+    "title": "three.js webgpu - instancing morph target animations",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_layers",
+    "category": "webgpu/layers",
+    "title": "three.js webgpu - layers",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lensflares",
+    "category": "webgpu/lensflares",
+    "title": "three.js webgpu - lens flares",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lightprobe",
+    "category": "webgpu/lightprobe",
+    "title": "three.js webgpu - light probe",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lightprobe_cubecamera",
+    "category": "webgpu/lightprobe",
+    "title": "three.js webgpu - light probe from cube camera",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_clustered",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - clustered lighting",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_custom",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - custom lighting model",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_dynamic",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - dynamic lights",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_ies_spotlight",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - ies spotlight",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_phong",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - phong lighting model",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_physical",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - physical lights",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_pointlights",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - point lights",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_projector",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - projector light",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_rectarealight",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - rect area light",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_selective",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - selective lights",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lights_spotlight",
+    "category": "webgpu/lights",
+    "title": "three.js webgpu - spotlight",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lines_fat",
+    "category": "webgpu/lines",
+    "title": "three.js webgpu - fat lines",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lines_fat_raycasting",
+    "category": "webgpu/lines",
+    "title": "three.js webgpu - fat lines",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_lines_fat_wireframe",
+    "category": "webgpu/lines",
+    "title": "three.js webgpu - fat wireframe",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - gltf loader",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_anisotropy",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - glTF + anisotropy",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_compressed",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - glTF + compressed",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_dispersion",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - glTF + dispersion",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_iridescence",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - glTF + iridescence",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_sheen",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - sheen",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_gltf_transmission",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - glTF + transmission",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_materialx",
+    "category": "webgpu/loader",
+    "title": "three.js webgpu - materialx loader",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_loader_texture_ktx2",
+    "category": "webgpu/loader",
+    "title": "three.js WebGPU - KTX2 texture loader",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - materials",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_alphahash",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - alpha hash",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_arrays",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - materials arrays and geometry groups",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_basic",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - basic material",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_cubemap_mipmaps",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - cubemap mipmaps",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_displacementmap",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - displacement map",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_envmaps",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - environment maps",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_envmaps_bpcem",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - bpcem",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_envmaps_groundprojected",
+    "category": "webgpu/materials",
+    "title": "threejs webgpu - materials - ground projected environment mapping",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_lightmap",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - lightmap",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_matcap",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - matcap material",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_sss",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - sss",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_texture_html",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - materials - html texture",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_texture_manualmipmap",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - manual mipmaping",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_toon",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - toon material",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_transmission",
+    "category": "webgpu/materials",
+    "title": "threejs webgpu - transmission",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materials_video",
+    "category": "webgpu/materials",
+    "title": "three.js webgpu - video material",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_materialx_noise",
+    "category": "webgpu/materialx",
+    "title": "three.js webgpu - materialx noise",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_mesh_batch",
+    "category": "webgpu/mesh",
+    "title": "three.js webgpu - batch mesh",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_mirror",
+    "category": "webgpu/mirror",
+    "title": "three.js webgpu - mirror",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_modifier_curve",
+    "category": "webgpu/modifier",
+    "title": "three.js webgpu - curve modifier",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_morphtargets",
+    "category": "webgpu/morphtargets",
+    "title": "three.js webgpu - morph targets",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_morphtargets_face",
+    "category": "webgpu/morphtargets",
+    "title": "three.js webgpu - morph face targets",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_mrt",
+    "category": "webgpu/mrt",
+    "title": "three.js webgpu - mrt",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_mrt_mask",
+    "category": "webgpu/mrt",
+    "title": "three.js webgpu - mrt mask",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_multiple_canvas",
+    "category": "webgpu/multiple",
+    "title": "three.js webgpu - multiple canvas",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_multiple_elements",
+    "category": "webgpu/multiple",
+    "title": "three.js webgpu - multiple elements",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_multiple_rendertargets",
+    "category": "webgpu/multiple",
+    "title": "three.js webgpu - multiple render targets",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_multiple_rendertargets_readback",
+    "category": "webgpu/multiple",
+    "title": "three.js webgpu - mrt readback",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_multisampled_renderbuffers",
+    "category": "webgpu/multisampled",
+    "title": "three.js webgpu - multisampled renderbuffers",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_occlusion",
+    "category": "webgpu/occlusion",
+    "title": "three.js webgpu - occlusion",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_ocean",
+    "category": "webgpu/ocean",
+    "title": "three.js webgpu - ocean",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_parallax_uv",
+    "category": "webgpu/parallax",
+    "title": "three.js webgpu - parallax uv",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_particles",
+    "category": "webgpu/particles",
+    "title": "three.js webgpu - particles",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_particles_soft",
+    "category": "webgpu/particles",
+    "title": "three.js webgpu - particles - soft",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_performance",
+    "category": "webgpu/performance",
+    "title": "three.js webgpu - performance",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_performance_renderbundle",
+    "category": "webgpu/performance",
+    "title": "three.js webgpu - Render Bundle",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_pmrem_cubemap",
+    "category": "webgpu/pmrem",
+    "title": "three.js webgpu - pmrem cubemap",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_pmrem_equirectangular",
+    "category": "webgpu/pmrem",
+    "title": "three.js webgpu - pmrem equirectangular",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_pmrem_scene",
+    "category": "webgpu/pmrem",
+    "title": "three.js webgpu - pmrem scene",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_pmrem_test",
+    "category": "webgpu/pmrem",
+    "title": "three.js webgpu - PMREM directional light test",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_portal",
+    "category": "webgpu/portal",
+    "title": "three.js webgpu - portal",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_3dlut",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - 3d luts",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_afterimage",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing afterimage",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_anamorphic",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing anamorphic",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ao",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - ambient occlusion",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_bloom",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing - bloom",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_bloom_emissive",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - bloom emissive",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_bloom_selective",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - bloom selective",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ca",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - chromatic aberration",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_difference",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - frame difference",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_dof",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing dof",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_dof_basic",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing dof - basic",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_fxaa",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - FXAA",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_godrays",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing - godrays",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_lensflare",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing lensflares",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_masking",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - masking",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_motion_blur",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - motion blur",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_outline",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - post processing - Outline Pass",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_pixel",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing pixel",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_radial_blur",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - radial blur",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_retro",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - retro",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_smaa",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing smaa",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_sobel",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing sobel",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ssaa",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing ssaa",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ssgi",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - SSGI",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ssgi_ballpool",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - SSGI Ball Pool",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ssr",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing - Screen Space Reflections (SSR)",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_ssr_denoise",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing - Screen Space Reflections (SSR) + denoise",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_sss",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - SSS",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_traa",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - postprocessing traa",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_postprocessing_transition",
+    "category": "webgpu/postprocessing",
+    "title": "three.js webgpu - scenes transition",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_procedural_texture",
+    "category": "webgpu/procedural",
+    "title": "three.js webgpu - procedural texture",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_reflection",
+    "category": "webgpu/reflection",
+    "title": "three.js webgpu - reflection",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_reflection_blurred",
+    "category": "webgpu/reflection",
+    "title": "three.js webgpu - blurred reflection",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_reflection_roughness",
+    "category": "webgpu/reflection",
+    "title": "three.js webgpu - roughness reflection",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_refraction",
+    "category": "webgpu/refraction",
+    "title": "three.js webgpu - refraction",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_rendertarget_2d-array_3d",
+    "category": "webgpu/rendertarget",
+    "title": "three.js webgpu - RenderTargetArray and RenderTarget3D",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_reversed_depth_buffer",
+    "category": "webgpu/reversed",
+    "title": "three.js webgpu - reverse depth buffer",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_rtt",
+    "category": "webgpu/rtt",
+    "title": "three.js webgpu - rtt",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_sandbox",
+    "category": "webgpu/sandbox",
+    "title": "three.js webgpu - sandbox",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer found"
+  },
+  {
+    "id": "webgpu_shadertoy",
+    "category": "webgpu/shadertoy",
+    "title": "three.js webgpu - shadertoy",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadow_contact",
+    "category": "webgpu/shadow",
+    "title": "three.js webgpu - contact shadows",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - shadow map",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_array",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - shadow map array tile demo",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_csm",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - cascaded shadow maps",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_opacity",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - shadowmap + opacity",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_pointlight",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - point light shadow-map",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_progressive",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - progressive lightmap accumulation",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_shadowmap_vsm",
+    "category": "webgpu/shadowmap",
+    "title": "three.js webgpu - vsm shadows example",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_skinning",
+    "category": "webgpu/skinning",
+    "title": "three.js webgpu - skinning",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_skinning_instancing",
+    "category": "webgpu/skinning",
+    "title": "three.js webgpu - skinning instancing",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_skinning_instancing_individual",
+    "category": "webgpu/skinning",
+    "title": "three.js webgpu - skinning individual instancing",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_skinning_points",
+    "category": "webgpu/skinning",
+    "title": "three.js webgpu - skinning points",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_sky",
+    "category": "webgpu/sky",
+    "title": "three.js webgpu - sky",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_sprites",
+    "category": "webgpu/sprites",
+    "title": "three.js webgpu - sprites",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_storage_buffer",
+    "category": "webgpu/storage",
+    "title": "three.js webgpu - storage pbo external element",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_struct_drawindirect",
+    "category": "webgpu/struct",
+    "title": "three.js webgpu - struct drawIndirect",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_test_memory",
+    "category": "webgpu/test",
+    "title": "three.js webgpu - memory test I",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_texturegather",
+    "category": "webgpu/texturegather",
+    "title": "three.js webgpu - texture gather",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_texturegrad",
+    "category": "webgpu/texturegrad",
+    "title": "three.js webgpu - texture gradient",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_textures_2d-array",
+    "category": "webgpu/textures",
+    "title": "three.js webgpu - 2d texture array",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_textures_2d-array_compressed",
+    "category": "webgpu/textures",
+    "title": "three.js webgpu - 2D compressed texture array",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_textures_anisotropy",
+    "category": "webgpu/textures",
+    "title": "three.js webgpu - anisotropic texture filtering",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_textures_partialupdate",
+    "category": "webgpu/textures",
+    "title": "three.js webgl - webgpu partial texture update",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tonemapping",
+    "category": "webgpu/tonemapping",
+    "title": "three.js webgpu - tone mapping",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_angular_slicing",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - angular slicing",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_compute_attractors_particles",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - attractors particles",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_earth",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - earth",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_editor",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - tsl editor",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_galaxy",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - galaxy",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_graph",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - tsl graph",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_halftone",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - halftone",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_interoperability",
+    "category": "webgpu/tsl",
+    "title": "three.js - wgsl/tsl interoperability",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_procedural_terrain",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - procedural terrain",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_raging_sea",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - raging sea",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_transpiler",
+    "category": "webgpu/tsl",
+    "title": "three.js - webgpu - tsl transpiler",
+    "reason": "no-renderer",
+    "note": "no WebGLRenderer/WebGPURenderer/CSS3DRenderer/SVGRenderer found"
+  },
+  {
+    "id": "webgpu_tsl_vfx_flames",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - vfx flames",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_vfx_linkedparticles",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - vfx linked particles",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_vfx_tornado",
+    "category": "webgpu/tsl",
+    "title": "three.js webgpu - vfx tornado",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_tsl_wood",
+    "category": "webgpu/tsl",
+    "title": "Three.js webgpu - procedural wood materials",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_upscaling_fsr1",
+    "category": "webgpu/upscaling",
+    "title": "three.js webgpu - fsr1",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_upscaling_taau",
+    "category": "webgpu/upscaling",
+    "title": "three.js webgpu - postprocessing taau",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_video_frame",
+    "category": "webgpu/video",
+    "title": "three.js webgpu - video frames",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_video_panorama",
+    "category": "webgpu/video",
+    "title": "three.js webgpu - video panorama",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_caustics",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric caustics",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_cloud",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric cloud",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_fire",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric fire simulation",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_lighting",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric lighting",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_lighting_rectarea",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric lighting rect area",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_lighting_traa",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric lighting using TRAA",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_volume_perlin",
+    "category": "webgpu/volume",
+    "title": "three.js webgpu - volumetric perlin",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_water",
+    "category": "webgpu/water",
+    "title": "three.js webgpu - water",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_xr_cubes",
+    "category": "webgpu/xr",
+    "title": "three.js xr - cubes",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_xr_native_layers",
+    "category": "webgpu/xr",
+    "title": "three.js vr - xr layers",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webgpu_xr_rollercoaster",
+    "category": "webgpu/xr",
+    "title": "three.js vr - roller coaster",
+    "reason": "special-category",
+    "note": "webgpu examples require special renderer"
+  },
+  {
+    "id": "webxr_ar_camera_access",
+    "category": "webxr/ar",
+    "title": "three.js ar - camera access",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_ar_cones",
+    "category": "webxr/ar",
+    "title": "three.js ar - cones",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_ar_hittest",
+    "category": "webxr/ar",
+    "title": "three.js ar - hit test",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_ar_lighting",
+    "category": "webxr/ar",
+    "title": "three.js ar - lighting estimation",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_ar_plane_detection",
+    "category": "webxr/ar",
+    "title": "three.js ar - plane detection",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput",
+    "category": "webxr/vr",
+    "title": "three.js vr - handinput",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput_cubes",
+    "category": "webxr/vr",
+    "title": "three.js vr - handinput - cubes",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput_pointerclick",
+    "category": "webxr/vr",
+    "title": "three.js vr - handinput - point and click",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput_pointerdrag",
+    "category": "webxr/vr",
+    "title": "three.js ve - handinput - point and drag",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput_pressbutton",
+    "category": "webxr/vr",
+    "title": "three.js vr - handinput - press button",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_handinput_profiles",
+    "category": "webxr/vr",
+    "title": "three.js vr - handinput - profiles",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_layers",
+    "category": "webxr/vr",
+    "title": "three.js vr - layers",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_panorama",
+    "category": "webxr/vr",
+    "title": "three.js vr - panorama",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_panorama_depth",
+    "category": "webxr/vr",
+    "title": "three.js vr - panorama with depth",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_rollercoaster",
+    "category": "webxr/vr",
+    "title": "three.js vr - roller coaster",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_sandbox",
+    "category": "webxr/vr",
+    "title": "three.js vr - sandbox",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_teleport",
+    "category": "webxr/vr",
+    "title": "three.js vr - teleport",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_vr_video",
+    "category": "webxr/vr",
+    "title": "three.js vr - 360 stereo video",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_ballshooter",
+    "category": "webxr/xr",
+    "title": "three.js xr - ball shooter",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_controls_transform",
+    "category": "webxr/xr",
+    "title": "three.js xr - controls - transform",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_cubes",
+    "category": "webxr/xr",
+    "title": "three.js xr - cubes",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_dragging",
+    "category": "webxr/xr",
+    "title": "three.js xr - dragging",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_dragging_custom_depth",
+    "category": "webxr/xr",
+    "title": "three.js xr - dragging with custom depth shader",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_haptics",
+    "category": "webxr/xr",
+    "title": "three.js xr - haptics",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_marchingcubes",
+    "category": "webxr/xr",
+    "title": "three.js xr - marching cubes",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  },
+  {
+    "id": "webxr_xr_paint",
+    "category": "webxr/xr",
+    "title": "three.js xr - paint",
+    "reason": "special-category",
+    "note": "webxr examples require special renderer"
+  }
+]

@@ -1,0 +1,70 @@
+import {
+	AdditiveBlending,
+	Mesh,
+	MeshBasicMaterial,
+} from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import Stage from '../component/Stage.js'
+
+/* 快速初始化项目 */
+const stage = new Stage(20, 30, 40)
+const { scene, camera, renderer } = stage
+renderer.localClippingEnabled = true
+renderer.shadowMap.enabled = true
+// 背景色
+renderer.setClearColor(0x666666)
+
+// 高亮材质
+const highlightMat = new MeshBasicMaterial({
+	color: 0xff0000,
+	opacity: 0,
+	blending: AdditiveBlending,
+	transparent: true,
+	polygonOffset: true,
+	polygonOffsetFactor: 0,
+	polygonOffsetUnits: -1,
+})
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.loadAsync('/external-examples/threejs-lesson/06-materials/public/models/gltf/cabinet.glb').then((model) => {
+	init(model.scene.children[0])
+})
+
+const row = 2
+const col = 4
+const rowSize = 2.85
+const colSize = 9
+function init(mesh) {
+	const material = mesh.material
+	const { map } = material
+	if (!map) {
+		return
+	}
+
+	const { geometry } = mesh
+
+	for (let z = -row; z < row; z++) {
+		for (let x = -col; x < col; x++) {
+			const mesh = new Mesh(
+				geometry,
+				new MeshBasicMaterial({
+					map,
+				})
+			)
+			mesh.position.x = x * rowSize
+			mesh.position.z = z * colSize
+			scene.add(mesh)
+		}
+	}
+
+	/* 高亮材质 */
+	const highlightMesh = new Mesh(mesh.geometry, highlightMat)
+	scene.add(highlightMesh)
+}
+
+/* 预警动画 */
+stage.beforeRender = function (time = 0) {
+	highlightMat.opacity = (Math.sin(time * 0.005) * 0.5 + 0.5) * 0.4 + 0.1
+}
+
+stage.animate()

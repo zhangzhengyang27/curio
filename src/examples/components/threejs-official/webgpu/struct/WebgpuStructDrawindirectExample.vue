@@ -1,0 +1,238 @@
+<template>
+  <WebGPUExampleScene
+    camera="perspective"
+    antialias
+    :clear-color="0x000000"
+    :camera-position="[1, 1, 1]"
+    :camera-options="{ fov: 50, near: 0.1, far: 10000 }"
+    @ready="onReady">
+    <template #default>
+      <div class="example-info" v-html="infoHtml" />
+    </template>
+  </WebGPUExampleScene>
+</template>
+
+<script setup>
+import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
+import * as THREE from 'three/webgpu';
+import { struct, storage, sin, cross, normalize, abs, mix, Fn, vec4, max, pow, time, varyingProperty, attribute, uint, atomicStore } from 'three/tsl';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+
+const props = defineProps({
+  example: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Draw Indirect</span>"
+function onReady(__stage) {
+  const scene = __stage.scene
+  const camera = __stage.camera
+  const renderer = __stage.renderer
+  const controls = __stage.controls
+
+  
+  
+  
+  
+  
+  			if ( WebGPU.isAvailable() === false ) {
+  
+  				document.body.appendChild( WebGPU.getErrorMessage() );
+  
+  				throw new Error( 'No WebGPU support' );
+  
+  			}
+  
+  
+  
+  			renderer.outputColorSpace = THREE.SRGBColorSpace;
+  
+  
+  			renderer.setClearColor( 0x000000 );
+  			renderer.setClearAlpha( 0 );
+  
+  
+  			const aspect = (__stage.container?.clientWidth || window.innerWidth) / (__stage.container?.clientHeight || window.innerHeight);
+  
+  
+  
+  
+  			scene.background = new THREE.Color( 0x00001f );
+  
+  
+  
+  			let computeDrawBuffer, computeInitDrawBuffer;
+  
+  			
+  			async 
+  
+  
+  				// geometry
+  
+  				const vector = new THREE.Vector4();
+  
+  				const instances = 100000;
+  
+  				const positions = [];
+  				const offsets = [];
+  				const colors = [];
+  				const orientationsStart = [];
+  				const orientationsEnd = [];
+  
+  				positions.push( 0.025, - 0.025, 0 );
+  				positions.push( - 0.025, 0.025, 0 );
+  				positions.push( 0, 0, 0.025 );
+  
+  				// instanced attributes
+  
+  				for ( let i = 0; i < instances; i ++ ) {
+  
+  					// offsets
+  
+  					offsets.push( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
+  
+  					// colors
+  
+  					colors.push( Math.random(), Math.random(), Math.random(), Math.random() );
+  
+  					// orientation start
+  
+  					vector.set( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 );
+  					vector.normalize();
+  
+  					orientationsStart.push( vector.x, vector.y, vector.z, vector.w );
+  
+  					// orientation end
+  
+  					vector.set( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 );
+  					vector.normalize();
+  
+  					orientationsEnd.push( vector.x, vector.y, vector.z, vector.w );
+  
+  				}
+  
+  				const geometry = new THREE.InstancedBufferGeometry();
+  				geometry.instanceCount = instances;
+  
+  				geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+  				geometry.setAttribute( 'offset', new THREE.InstancedBufferAttribute( new Float32Array( offsets ), 3 ) );
+  				geometry.setAttribute( 'color', new THREE.InstancedBufferAttribute( new Float32Array( colors ), 4 ) );
+  				geometry.setAttribute( 'orientationStart', new THREE.InstancedBufferAttribute( new Float32Array( orientationsStart ), 4 ) );
+  				geometry.setAttribute( 'orientationEnd', new THREE.InstancedBufferAttribute( new Float32Array( orientationsEnd ), 4 ) );
+  
+  				const drawBuffer = new THREE.IndirectStorageBufferAttribute( new Uint32Array( 5 ), 5 );
+  				geometry.setIndirect( drawBuffer );
+  
+  				const drawBufferStruct = struct( {
+  					vertexCount: 'uint',
+  					instanceCount: { type: 'uint', atomic: true },
+  					firstVertex: 'uint',
+  					firstInstance: 'uint',
+  					offset: 'uint'
+  				}, 'DrawBuffer' );
+  
+  				const drawStorage = storage( drawBuffer, drawBufferStruct, drawBuffer.count );
+  
+  				computeDrawBuffer = Fn( () => {
+  
+  					const halfTime = sin( time.mul( 0.5 ) );
+  
+  					const instanceCount = max( ( pow( halfTime.add( 1 ), 4.0 ) ).mul( instances ), 100 ).toVar( 'instanceCount' );
+  					atomicStore( drawStorage.get( 'instanceCount' ), instanceCount );
+  			
+  				} )().compute( instances );
+  
+  				computeInitDrawBuffer = Fn( () => {
+  
+  					const drawInfo = drawStorage;
+  			
+  					drawInfo.get( 'vertexCount' ).assign( 3 );
+  					atomicStore( drawInfo.get( 'instanceCount' ), uint( 0 ) );
+  					drawInfo.get( 'firstVertex' ).assign( 0 );
+  					drawInfo.get( 'firstInstance' ).assign( 0 );
+  					drawInfo.get( 'offset' ).assign( 0 );
+  
+  				} )().compute( 1 );
+  			
+  
+    			const vPosition = varyingProperty( 'vec3', 'vPosition' );
+    			const vColor = varyingProperty( 'vec4', 'vColor' );
+  
+    			const positionShaderParams = {
+  					position: attribute( 'position' ),
+  					offset: attribute( 'offset' ),
+  					color: attribute( 'color' ),
+  					orientationStart: attribute( 'orientationStart' ),
+  					orientationEnd: attribute( 'orientationEnd' ),
+  					time: time
+  				};
+  			
+  			
+  				const positionFn = Fn( () => {
+  
+  					const { position, offset, color, orientationStart, orientationEnd } = positionShaderParams;
+  
+  					const halfTime = sin( time.mul( 0.5 ) );
+  
+  					// Convert slowed sign range of (-1 to 1) to range of (1 -> 0 / 0.5 -> 3)
+  					const oscilationRange = max( abs( halfTime.mul( 2.0 ).add( 1.0 ) ), 0.5 );
+  
+  					const sphereOscilation = offset.mul( oscilationRange ).add( position ).toVar();
+  
+  					const orientation = normalize( mix( orientationStart, orientationEnd, halfTime ) );
+  					const vcV = cross( orientation.xyz, sphereOscilation );
+  					const crossvcV = cross( orientation.xyz, vcV );
+  
+  					vPosition.assign( vcV.mul( orientation.w.mul( 2.0 ) ).add( crossvcV.mul( 2.0 ).add( sphereOscilation ) ) );
+  					vColor.assign( color );
+  
+  					return vPosition;
+  
+  				} )();
+  
+  				const fragmentFn = Fn( () => {
+  
+  					const color = vec4( vColor ).toVar();
+  
+  					color.r.addAssign( sin( vPosition.x.mul( 10.0 ).add( time ) ).mul( 0.5 ) );
+  
+  					return color;
+  
+  				} )();
+  
+  				const material = new THREE.MeshBasicNodeMaterial( {
+  					side: THREE.DoubleSide,
+  					forceSinglePass: true,
+  					transparent: true
+  				} );
+  
+  				material.positionNode = positionFn;
+  				material.fragmentNode = fragmentFn;
+  
+  				const mesh = new THREE.Mesh( geometry, material );
+  				scene.add( mesh );
+  
+  				window.addEventListener( 'resize', onWindowResize, false );
+  
+  			
+  
+  
+  			__stage.addUpdateCallback((_delta, _elapsed) => {
+    renderer.compute( computeInitDrawBuffer );
+    				renderer.compute( computeDrawBuffer );
+  })
+  
+  			function onWindowResize() {
+  
+  				camera.aspect = (__stage.container?.clientWidth || window.innerWidth) / (__stage.container?.clientHeight || window.innerHeight);
+  				camera.updateProjectionMatrix();
+  
+  
+  			}
+  
+  		
+}
+</script>

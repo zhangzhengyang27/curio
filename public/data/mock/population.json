@@ -1,0 +1,842 @@
+{
+  "阿富汗": {
+    "population": 175308384,
+    "area": 6561590,
+    "density": 26.7
+  },
+  "安哥拉": {
+    "population": 902141079,
+    "area": 16144887,
+    "density": 55.9
+  },
+  "阿尔巴尼亚": {
+    "population": 982709106,
+    "area": 10388025,
+    "density": 94.6
+  },
+  "阿拉伯联合酋长国": {
+    "population": 1180008968,
+    "area": 711591,
+    "density": 1658.3
+  },
+  "阿根廷": {
+    "population": 242676022,
+    "area": 9528862,
+    "density": 25.5
+  },
+  "亚美尼亚": {
+    "population": 439358422,
+    "area": 11911189,
+    "density": 36.9
+  },
+  "法国": {
+    "population": 339065590,
+    "area": 3001778,
+    "density": 113
+  },
+  "澳大利亚": {
+    "population": 210590266,
+    "area": 9331851,
+    "density": 22.6
+  },
+  "奥地利": {
+    "population": 193370011,
+    "area": 12049815,
+    "density": 16
+  },
+  "阿塞拜疆": {
+    "population": 247440248,
+    "area": 9271433,
+    "density": 26.7
+  },
+  "布隆迪": {
+    "population": 652435350,
+    "area": 2137169,
+    "density": 305.3
+  },
+  "比利时": {
+    "population": 99383369,
+    "area": 15339998,
+    "density": 6.5
+  },
+  "贝宁": {
+    "population": 903557406,
+    "area": 12035906,
+    "density": 75.1
+  },
+  "布基纳法索": {
+    "population": 744520009,
+    "area": 4425478,
+    "density": 168.2
+  },
+  "孟加拉国": {
+    "population": 70497585,
+    "area": 3378246,
+    "density": 20.9
+  },
+  "保加利亚": {
+    "population": 308058879,
+    "area": 14859480,
+    "density": 20.7
+  },
+  "巴哈马": {
+    "population": 1286514089,
+    "area": 9362233,
+    "density": 137.4
+  },
+  "波斯尼亚和黑塞哥维那": {
+    "population": 987481030,
+    "area": 3235882,
+    "density": 305.2
+  },
+  "白俄罗斯": {
+    "population": 491264616,
+    "area": 9107114,
+    "density": 53.9
+  },
+  "伯利兹": {
+    "population": 1084611313,
+    "area": 10028516,
+    "density": 108.2
+  },
+  "玻利维亚": {
+    "population": 677330788,
+    "area": 3421636,
+    "density": 198
+  },
+  "巴西": {
+    "population": 212735347,
+    "area": 7046543,
+    "density": 30.2
+  },
+  "文莱达鲁萨兰国": {
+    "population": 1171622359,
+    "area": 6029352,
+    "density": 194.3
+  },
+  "不丹": {
+    "population": 292223837,
+    "area": 14471211,
+    "density": 20.2
+  },
+  "博茨瓦纳": {
+    "population": 1282058132,
+    "area": 4415259,
+    "density": 290.4
+  },
+  "中非共和国": {
+    "population": 916269234,
+    "area": 14067271,
+    "density": 65.1
+  },
+  "加拿大": {
+    "population": 1147749674,
+    "area": 8435261,
+    "density": 136.1
+  },
+  "瑞士": {
+    "population": 1095259507,
+    "area": 9193653,
+    "density": 119.1
+  },
+  "智利": {
+    "population": 885423878,
+    "area": 16546256,
+    "density": 53.5
+  },
+  "中国": {
+    "population": 59279631,
+    "area": 5059095,
+    "density": 11.7
+  },
+  "科特迪瓦": {
+    "population": 43609459,
+    "area": 7110404,
+    "density": 6.1
+  },
+  "喀麦隆": {
+    "population": 392101730,
+    "area": 12262454,
+    "density": 32
+  },
+  "刚果（金）": {
+    "population": 91104701,
+    "area": 2803767,
+    "density": 32.5
+  },
+  "刚果（布）": {
+    "population": 88442751,
+    "area": 12315249,
+    "density": 7.2
+  },
+  "哥伦比亚": {
+    "population": 1353733823,
+    "area": 2750048,
+    "density": 492.3
+  },
+  "哥斯达黎加": {
+    "population": 538300936,
+    "area": 1008124,
+    "density": 534
+  },
+  "古巴": {
+    "population": 726949168,
+    "area": 10455727,
+    "density": 69.5
+  },
+  "塞浦路斯": {
+    "population": 1209334693,
+    "area": 8853469,
+    "density": 136.6
+  },
+  "捷克共和国": {
+    "population": 75757435,
+    "area": 948697,
+    "density": 79.9
+  },
+  "德国": {
+    "population": 343683352,
+    "area": 9732926,
+    "density": 35.3
+  },
+  "吉布提": {
+    "population": 900251888,
+    "area": 3659500,
+    "density": 246
+  },
+  "丹麦": {
+    "population": 264361941,
+    "area": 4136112,
+    "density": 63.9
+  },
+  "多米尼加共和国": {
+    "population": 357718086,
+    "area": 3983582,
+    "density": 89.8
+  },
+  "阿尔及利亚": {
+    "population": 686619382,
+    "area": 7917477,
+    "density": 86.7
+  },
+  "厄瓜多尔": {
+    "population": 264160708,
+    "area": 2370561,
+    "density": 111.4
+  },
+  "阿拉伯埃及共和国": {
+    "population": 134083678,
+    "area": 3947627,
+    "density": 34
+  },
+  "厄立特里亚": {
+    "population": 487246035,
+    "area": 4064894,
+    "density": 119.9
+  },
+  "西班牙": {
+    "population": 1057791769,
+    "area": 10066557,
+    "density": 105.1
+  },
+  "爱沙尼亚": {
+    "population": 566344873,
+    "area": 2723533,
+    "density": 207.9
+  },
+  "埃塞俄比亚": {
+    "population": 214934040,
+    "area": 1324370,
+    "density": 162.3
+  },
+  "芬兰": {
+    "population": 598946315,
+    "area": 14271404,
+    "density": 42
+  },
+  "斐济": {
+    "population": 41339104,
+    "area": 264037,
+    "density": 156.6
+  },
+  "英国": {
+    "population": 571142747,
+    "area": 1995734,
+    "density": 286.2
+  },
+  "加蓬": {
+    "population": 127110339,
+    "area": 6399721,
+    "density": 19.9
+  },
+  "格鲁吉亚": {
+    "population": 815060319,
+    "area": 8502952,
+    "density": 95.9
+  },
+  "加纳": {
+    "population": 888691448,
+    "area": 14055605,
+    "density": 63.2
+  },
+  "几内亚": {
+    "population": 475562304,
+    "area": 2388707,
+    "density": 199.1
+  },
+  "冈比亚": {
+    "population": 188603381,
+    "area": 5481754,
+    "density": 34.4
+  },
+  "几内亚比绍共和国": {
+    "population": 414517976,
+    "area": 6279161,
+    "density": 66
+  },
+  "赤道几内亚": {
+    "population": 591296857,
+    "area": 211706,
+    "density": 2793
+  },
+  "希腊": {
+    "population": 1060202518,
+    "area": 13462860,
+    "density": 78.8
+  },
+  "危地马拉": {
+    "population": 576848405,
+    "area": 8357050,
+    "density": 69
+  },
+  "圭亚那": {
+    "population": 639155504,
+    "area": 14291955,
+    "density": 44.7
+  },
+  "洪都拉斯": {
+    "population": 1187527066,
+    "area": 15318219,
+    "density": 77.5
+  },
+  "克罗地亚": {
+    "population": 574177559,
+    "area": 6567927,
+    "density": 87.4
+  },
+  "海地": {
+    "population": 202508418,
+    "area": 9391974,
+    "density": 21.6
+  },
+  "匈牙利": {
+    "population": 998189282,
+    "area": 12970377,
+    "density": 77
+  },
+  "印度尼西亚": {
+    "population": 837315137,
+    "area": 7501009,
+    "density": 111.6
+  },
+  "印度": {
+    "population": 1195178667,
+    "area": 11185121,
+    "density": 106.9
+  },
+  "爱尔兰": {
+    "population": 79525225,
+    "area": 14555250,
+    "density": 5.5
+  },
+  "伊朗伊斯兰共和国": {
+    "population": 257490500,
+    "area": 1152071,
+    "density": 223.5
+  },
+  "伊拉克": {
+    "population": 1335048552,
+    "area": 1862981,
+    "density": 716.6
+  },
+  "冰岛": {
+    "population": 224215708,
+    "area": 14715946,
+    "density": 15.2
+  },
+  "以色列": {
+    "population": 98101036,
+    "area": 3054483,
+    "density": 32.1
+  },
+  "意大利": {
+    "population": 1072169754,
+    "area": 16609317,
+    "density": 64.6
+  },
+  "牙买加": {
+    "population": 145310080,
+    "area": 5640146,
+    "density": 25.8
+  },
+  "约旦": {
+    "population": 1171164066,
+    "area": 16498798,
+    "density": 71
+  },
+  "日本": {
+    "population": 1275535572,
+    "area": 16410515,
+    "density": 77.7
+  },
+  "克什米尔": {
+    "population": 102760374,
+    "area": 16123144,
+    "density": 6.4
+  },
+  "哈萨克斯坦": {
+    "population": 197449960,
+    "area": 1718632,
+    "density": 114.9
+  },
+  "肯尼亚": {
+    "population": 94424731,
+    "area": 3947305,
+    "density": 23.9
+  },
+  "吉尔吉斯斯坦": {
+    "population": 783019494,
+    "area": 12334387,
+    "density": 63.5
+  },
+  "柬埔寨": {
+    "population": 299562718,
+    "area": 1234508,
+    "density": 242.7
+  },
+  "大韩民国": {
+    "population": 721946959,
+    "area": 340469,
+    "density": 2120.4
+  },
+  "科索沃": {
+    "population": 711381961,
+    "area": 2237769,
+    "density": 317.9
+  },
+  "科威特": {
+    "population": 1207690054,
+    "area": 7036956,
+    "density": 171.6
+  },
+  "老挝": {
+    "population": 475566265,
+    "area": 7017082,
+    "density": 67.8
+  },
+  "黎巴嫩": {
+    "population": 194223793,
+    "area": 10741118,
+    "density": 18.1
+  },
+  "利比里亚": {
+    "population": 720228133,
+    "area": 10064098,
+    "density": 71.6
+  },
+  "利比亚": {
+    "population": 1080655315,
+    "area": 1106778,
+    "density": 976.4
+  },
+  "斯里兰卡": {
+    "population": 236948306,
+    "area": 4658843,
+    "density": 50.9
+  },
+  "莱索托": {
+    "population": 166884527,
+    "area": 15498545,
+    "density": 10.8
+  },
+  "立陶宛": {
+    "population": 216799724,
+    "area": 1780849,
+    "density": 121.7
+  },
+  "卢森堡": {
+    "population": 424661816,
+    "area": 14222579,
+    "density": 29.9
+  },
+  "拉脱维亚": {
+    "population": 343233637,
+    "area": 6546814,
+    "density": 52.4
+  },
+  "摩洛哥": {
+    "population": 519905932,
+    "area": 14601923,
+    "density": 35.6
+  },
+  "摩尔多瓦": {
+    "population": 121956312,
+    "area": 7283582,
+    "density": 16.7
+  },
+  "马达加斯加": {
+    "population": 1391414339,
+    "area": 8413233,
+    "density": 165.4
+  },
+  "墨西哥": {
+    "population": 877606939,
+    "area": 10340734,
+    "density": 84.9
+  },
+  "马其顿": {
+    "population": 1267989211,
+    "area": 14502153,
+    "density": 87.4
+  },
+  "马里": {
+    "population": 1276974019,
+    "area": 13612751,
+    "density": 93.8
+  },
+  "缅甸": {
+    "population": 1069690537,
+    "area": 11662910,
+    "density": 91.7
+  },
+  "黑山": {
+    "population": 80639989,
+    "area": 931672,
+    "density": 86.6
+  },
+  "蒙古": {
+    "population": 1034453961,
+    "area": 1586354,
+    "density": 652.1
+  },
+  "莫桑比克": {
+    "population": 1115485718,
+    "area": 8684759,
+    "density": 128.4
+  },
+  "毛里塔尼亚": {
+    "population": 424657074,
+    "area": 10607629,
+    "density": 40
+  },
+  "马拉维": {
+    "population": 924790320,
+    "area": 2080671,
+    "density": 444.5
+  },
+  "马来西亚": {
+    "population": 697355237,
+    "area": 8728002,
+    "density": 79.9
+  },
+  "纳米比亚": {
+    "population": 213204887,
+    "area": 4725575,
+    "density": 45.1
+  },
+  "尼日尔": {
+    "population": 194354606,
+    "area": 9001469,
+    "density": 21.6
+  },
+  "尼日利亚": {
+    "population": 299243327,
+    "area": 10571195,
+    "density": 28.3
+  },
+  "尼加拉瓜": {
+    "population": 1178040755,
+    "area": 842872,
+    "density": 1397.7
+  },
+  "荷兰": {
+    "population": 415759105,
+    "area": 11877077,
+    "density": 35
+  },
+  "挪威": {
+    "population": 459137141,
+    "area": 1225566,
+    "density": 374.6
+  },
+  "尼泊尔": {
+    "population": 1310458458,
+    "area": 5930286,
+    "density": 221
+  },
+  "新西兰": {
+    "population": 494140333,
+    "area": 15671254,
+    "density": 31.5
+  },
+  "阿曼": {
+    "population": 1036061953,
+    "area": 11976903,
+    "density": 86.5
+  },
+  "巴基斯坦": {
+    "population": 233153037,
+    "area": 14422696,
+    "density": 16.2
+  },
+  "巴拿马": {
+    "population": 1113396103,
+    "area": 14120437,
+    "density": 78.8
+  },
+  "秘鲁": {
+    "population": 614537244,
+    "area": 4110724,
+    "density": 149.5
+  },
+  "菲律宾": {
+    "population": 43955978,
+    "area": 526815,
+    "density": 83.4
+  },
+  "巴布亚新几内亚": {
+    "population": 894329570,
+    "area": 4875178,
+    "density": 183.4
+  },
+  "波兰": {
+    "population": 705521837,
+    "area": 14673159,
+    "density": 48.1
+  },
+  "美国": {
+    "population": 1379338569,
+    "area": 16180471,
+    "density": 85.2
+  },
+  "朝鲜民主主义人民共和国": {
+    "population": 227539858,
+    "area": 7587789,
+    "density": 30
+  },
+  "葡萄牙": {
+    "population": 282081815,
+    "area": 6306465,
+    "density": 44.7
+  },
+  "巴拉圭": {
+    "population": 487532943,
+    "area": 12582570,
+    "density": 38.7
+  },
+  "卡塔尔": {
+    "population": 845050155,
+    "area": 10603774,
+    "density": 79.7
+  },
+  "罗马尼亚": {
+    "population": 988497691,
+    "area": 9777240,
+    "density": 101.1
+  },
+  "俄罗斯联邦": {
+    "population": 531089819,
+    "area": 11527600,
+    "density": 46.1
+  },
+  "卢旺达": {
+    "population": 572082849,
+    "area": 7699606,
+    "density": 74.3
+  },
+  "西撒哈拉": {
+    "population": 41918412,
+    "area": 12331312,
+    "density": 3.4
+  },
+  "沙特阿拉伯": {
+    "population": 63924838,
+    "area": 13566704,
+    "density": 4.7
+  },
+  "苏丹": {
+    "population": 207175199,
+    "area": 6266803,
+    "density": 33.1
+  },
+  "南苏丹": {
+    "population": 1389847273,
+    "area": 7740003,
+    "density": 179.6
+  },
+  "塞内加尔": {
+    "population": 1374786375,
+    "area": 3745450,
+    "density": 367.1
+  },
+  "所罗门群岛": {
+    "population": 1317928064,
+    "area": 11788033,
+    "density": 111.8
+  },
+  "塞拉利昂": {
+    "population": 143824465,
+    "area": 15206505,
+    "density": 9.5
+  },
+  "萨尔瓦多": {
+    "population": 221762937,
+    "area": 10547001,
+    "density": 21
+  },
+  "索马里": {
+    "population": 672218595,
+    "area": 1467304,
+    "density": 458.1
+  },
+  "塞尔维亚": {
+    "population": 1015540741,
+    "area": 10553816,
+    "density": 96.2
+  },
+  "苏里南": {
+    "population": 354936292,
+    "area": 5882969,
+    "density": 60.3
+  },
+  "斯洛伐克共和国": {
+    "population": 640711401,
+    "area": 1004529,
+    "density": 637.8
+  },
+  "斯洛文尼亚": {
+    "population": 531827862,
+    "area": 15209125,
+    "density": 35
+  },
+  "瑞典": {
+    "population": 852024371,
+    "area": 5025517,
+    "density": 169.5
+  },
+  "斯威士兰": {
+    "population": 1365512560,
+    "area": 1584299,
+    "density": 861.9
+  },
+  "阿拉伯叙利亚共和国": {
+    "population": 136850596,
+    "area": 10758266,
+    "density": 12.7
+  },
+  "乍得": {
+    "population": 275910670,
+    "area": 7315643,
+    "density": 37.7
+  },
+  "多哥": {
+    "population": 528532257,
+    "area": 535315,
+    "density": 987.3
+  },
+  "泰国": {
+    "population": 279593153,
+    "area": 11446049,
+    "density": 24.4
+  },
+  "塔吉克斯坦": {
+    "population": 188097608,
+    "area": 3076106,
+    "density": 61.1
+  },
+  "土库曼斯坦": {
+    "population": 443486283,
+    "area": 2414915,
+    "density": 183.6
+  },
+  "东帝汶": {
+    "population": 898732918,
+    "area": 8246978,
+    "density": 109
+  },
+  "特立尼达和多巴哥": {
+    "population": 252299476,
+    "area": 14869091,
+    "density": 17
+  },
+  "突尼斯": {
+    "population": 1213112085,
+    "area": 15067662,
+    "density": 80.5
+  },
+  "土耳其": {
+    "population": 219283668,
+    "area": 3176450,
+    "density": 69
+  },
+  "坦桑尼亚": {
+    "population": 1243272848,
+    "area": 7152603,
+    "density": 173.8
+  },
+  "乌干达": {
+    "population": 1035726645,
+    "area": 12184738,
+    "density": 85
+  },
+  "乌克兰": {
+    "population": 304854213,
+    "area": 1177748,
+    "density": 258.8
+  },
+  "乌拉圭": {
+    "population": 1350184350,
+    "area": 4639432,
+    "density": 291
+  },
+  "乌兹别克斯坦": {
+    "population": 1132014466,
+    "area": 2981192,
+    "density": 379.7
+  },
+  "委内瑞拉玻利瓦尔共和国": {
+    "population": 366940994,
+    "area": 12105412,
+    "density": 30.3
+  },
+  "越南": {
+    "population": 620154204,
+    "area": 12380128,
+    "density": 50.1
+  },
+  "瓦努阿图": {
+    "population": 85180591,
+    "area": 10177514,
+    "density": 8.4
+  },
+  "也门共和国": {
+    "population": 91334034,
+    "area": 1866492,
+    "density": 48.9
+  },
+  "南非": {
+    "population": 167866778,
+    "area": 7537962,
+    "density": 22.3
+  },
+  "赞比亚": {
+    "population": 940111846,
+    "area": 958290,
+    "density": 981
+  },
+  "津巴布韦": {
+    "population": 956423027,
+    "area": 1752705,
+    "density": 545.7
+  }
+}
