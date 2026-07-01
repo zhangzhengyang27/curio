@@ -300,11 +300,12 @@ function cleanScriptBody(body) {
   )
   body = body.replace(/\brequestAnimFrame\b/g, 'requestAnimationFrame')
 
-  // 修复部分 HTML 中遗漏 let 声明的属性变量
-  body = body.replace(/\b(attribOutUV)\s*=\s*(webgl\.getAttribLocation)/g, 'let $1 = $2')
+  // 修复部分 HTML 中遗漏 let 声明的属性变量（避免重复添加 let）
+  body = body.replace(/\b(?<!let\s)(attribOutUV)\s*=\s*(webgl\.getAttribLocation)/g, 'let $1 = $2')
 
   // 部分示例调用未定义的 initEvent()，直接移除该空调用
-  body = body.replace(/\binitEvent\s*\([^)]*\)\s*;?/g, '')
+  // 注意：不能误伤函数声明 `function initEvent() { ... }`
+  body = body.replace(/(?<!function\s)\binitEvent\s*\([^)]*\)\s*;?/g, '')
 
   return body
 }

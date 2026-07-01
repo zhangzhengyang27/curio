@@ -1,4 +1,4 @@
-import {Vector3} from 'three';
+import {mat4, vec3} from 'gl-matrix';
 
 function initShaders(gl, vsSource, fsSource) {
     //创建程序对象
@@ -137,15 +137,17 @@ const isPC = () => !navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iP
 function worldPos({clientX, clientY}, canvas, pvMatrix) {
     const [hw, hh] = [canvas.width / 2, canvas.height / 2]
     // 裁剪空间位
-    const cp = new Vector3(
+    const cp = vec3.fromValues(
         (clientX - hw) / hw,
         -(clientY - hh) / hh,
         0
     )
     // 鼠标在世界坐标系中的位置
-    return cp.applyMatrix4(
-        pvMatrix.clone().invert()
-    )
+    const invPvMatrix = mat4.create()
+    mat4.invert(invPvMatrix, pvMatrix)
+    const world = vec3.create()
+    vec3.transformMat4(world, cp, invPvMatrix)
+    return world
 }
 
 export {

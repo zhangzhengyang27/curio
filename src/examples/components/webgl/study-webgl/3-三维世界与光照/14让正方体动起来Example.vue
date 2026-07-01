@@ -46,9 +46,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               initWebgl();
               initShader();
               initBuffer();
-              initEvent()
-  
-          }
+              }
   
           function initEvent() {
               document.onmousedown = mouseDown;

@@ -4,9 +4,9 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 async function onReady({ canvas, container, addUpdateCallback, resize }) {
-  await loadGlMatrixLegacy("/webgl/study-webgl/libs/glMatrix-0.9.6.min.js");
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   let vertexstring = `
           attribute vec4 a_position;
           uniform   mat4    proj;
@@ -30,7 +30,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
             gl_FragColor = color1;
           }
           `;
-          var projMat4 = mat4.create();
+          var projMat4 = glMatrix.mat4.create();
           var webgl;
           var uniformTexture = 0;
           var uniformTexture1 = 0;
@@ -60,7 +60,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               let webglDiv = canvas;
               webgl = webglDiv.getContext("webgl");
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
-              mat4.ortho(0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0, projMat4)
+              glMatrix.mat4.ortho(projMat4, 0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0)
           }
   
           function initShader() {

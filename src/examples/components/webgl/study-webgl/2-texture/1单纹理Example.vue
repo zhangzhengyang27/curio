@@ -4,13 +4,13 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 async function onReady({ canvas, container, addUpdateCallback, resize }) {
-  await loadGlMatrixLegacy("/webgl/study-webgl/libs/glMatrix-0.9.6.min.js");
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
           var webgl = null;
           // 定义 顶点数组
-          var projMat4 = mat4.create();
+          var projMat4 = glMatrix.mat4.create();
           var uniformTexture = 0;
           var textureHandle;
   
@@ -51,7 +51,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               // 设置投影矩阵
-              mat4.ortho(0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0, projMat4)
+              glMatrix.mat4.ortho(projMat4, 0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0)
           }
   
           // 初始化着色器，shader 供 gpu 使用的

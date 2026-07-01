@@ -4,9 +4,9 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 async function onReady({ canvas, container, addUpdateCallback, resize }) {
-  await loadGlMatrixLegacy("/webgl/study-webgl/libs/glMatrix-0.9.6.min.js");
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   let vertexstring = `
           attribute vec4 a_position;
           uniform mat4 u_formMatrix;
@@ -20,7 +20,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
             gl_FragColor =vec4(1.0,1.0,0.0,1.0);
           }
           `;
-          var projMat4 = mat4.create();
+          var projMat4 = glMatrix.mat4.create();
           var webgl;
           var count = 0;
   
@@ -47,7 +47,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               let webglDiv = canvas;
               webgl = webglDiv.getContext("webgl");
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
-              //mat4.ortho(0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0, projMat4)
+              //glMatrix.mat4.ortho(projMat4, 0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0)
           }
   
           function initShader() {
@@ -82,13 +82,13 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initBuffer1() {
   
-              let modelView = mat4.create();
-              mat4.identity(modelView);
-              mat4.scale(modelView, [1, 1, 1]);
+              let modelView = glMatrix.mat4.create();
+              glMatrix.mat4.identity(modelView);
+              glMatrix.mat4.scale(modelView, modelView, [1, 1, 1]);
               //一分钟 转0.5度
               // (Math.PI/180) (0.5/60)  *count
               let angle = -Math.PI / 1800 * count * 5 / 60;
-              mat4.rotate(modelView, angle, [0, 0, 1])
+              glMatrix.mat4.rotate(modelView, modelView, angle, [0, 0, 1])
   
               let arr = [
                   0, 0, 0, 1,
@@ -121,11 +121,11 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function initBuffer2() {
-              let modelView1 = mat4.create();
-              mat4.identity(modelView1);
-              mat4.scale(modelView1, [1, 1, 1]);
+              let modelView1 = glMatrix.mat4.create();
+              glMatrix.mat4.identity(modelView1);
+              glMatrix.mat4.scale(modelView1, modelView1, [1, 1, 1]);
               let angle = -Math.PI / 1800 * count;
-              mat4.rotate(modelView1, angle, [0, 0, 1])
+              glMatrix.mat4.rotate(modelView1, modelView1, angle, [0, 0, 1])
               let arr = [
                   0, 0, 0, 1,
                   0, 0.05, 0, 1,
@@ -153,12 +153,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function initBuffer3() {
-              let modelView1 = mat4.create();
-              mat4.identity(modelView1);
-              mat4.scale(modelView1, [1, 1, 1]);
+              let modelView1 = glMatrix.mat4.create();
+              glMatrix.mat4.identity(modelView1);
+              glMatrix.mat4.scale(modelView1, modelView1, [1, 1, 1]);
               let angle = -Math.PI / 30 * count;
-  
-              mat4.rotate(modelView1, angle, [0, 0, 1])
+
+              glMatrix.mat4.rotate(modelView1, modelView1, angle, [0, 0, 1])
               let arr = [
                   0, 0, 0, 1,
                   0, 0.05, 0, 1,

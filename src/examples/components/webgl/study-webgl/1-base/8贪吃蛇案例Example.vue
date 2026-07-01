@@ -4,9 +4,9 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 async function onReady({ canvas, container, addUpdateCallback, resize }) {
-  await loadGlMatrixLegacy("/webgl/study-webgl/libs/glMatrix-0.9.6.min.js");
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
           var webgl = null;
           var angley = 0;
@@ -34,7 +34,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               initWebgl();
               initShader();
               initBuffer();
-              initEvent();
+              
               draw();
           }
   

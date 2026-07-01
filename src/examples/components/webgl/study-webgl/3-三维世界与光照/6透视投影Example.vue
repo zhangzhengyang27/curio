@@ -36,7 +36,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               initBuffer();
               draw();
               inittext(angle)
-              initEvent();
+              
           }
   
           function inittext(angle) {

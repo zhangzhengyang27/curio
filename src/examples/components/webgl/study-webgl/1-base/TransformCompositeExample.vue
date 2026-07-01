@@ -4,10 +4,10 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 
 async function onReady({ canvas, addUpdateCallback }) {
-  await loadGlMatrixLegacy('/webgl/study-webgl/libs/glMatrix-0.9.6.min.js')
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js')
 
   const vertexstring = `
     attribute vec4 a_position;
@@ -61,13 +61,13 @@ async function onReady({ canvas, addUpdateCallback }) {
 
   addUpdateCallback((time) => {
     const t = time * 0.001
-    const model = mat4.create()
+    const model = glMatrix.mat4.create()
 
     // 缩放 -> 旋转 -> 移动，物体在原地旋转缩放后再整体移动
     const s = 1.0 + Math.sin(t * 2) * 0.3
-    mat4.scale(model, [s, s, 1])
-    mat4.rotateZ(model, t)
-    mat4.translate(model, [Math.sin(t) * 0.3, Math.cos(t) * 0.2, 0])
+    glMatrix.mat4.scale(model, model, [s, s, 1])
+    glMatrix.mat4.rotateZ(model, model, t)
+    glMatrix.mat4.translate(model, model, [Math.sin(t) * 0.3, Math.cos(t) * 0.2, 0])
 
     webgl.uniformMatrix4fv(uniformMatrix, false, model)
 

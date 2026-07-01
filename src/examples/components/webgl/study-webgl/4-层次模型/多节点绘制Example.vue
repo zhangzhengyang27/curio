@@ -56,7 +56,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               //初始化数据
               initBuffer();
               //初始化事件
-              initEvent();
+              
               //清空画板
               //创建光源
               //绘制图形

@@ -4,9 +4,9 @@
 
 <script setup>
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixLegacy } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
 async function onReady({ canvas, container, addUpdateCallback, resize }) {
-  await loadGlMatrixLegacy("/webgl/study-webgl/libs/glMatrix-0.9.6.min.js");
+  await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   let vertexstring = `
           attribute vec4 a_position;
           uniform mat4 u_formMatrix;
@@ -45,7 +45,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function init() {
               initWebgl();
               initShader();
-              initEvent();
+              
           }
   
           function handleKeyDown(event) {
@@ -103,19 +103,20 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function initBuffer() {
-              let ModelMatrix = mat4.create();
-              mat4.identity(ModelMatrix);
+              let ModelMatrix = glMatrix.mat4.create();
+              glMatrix.mat4.identity(ModelMatrix);
               let angle = Math.PI / 180 * count;
               console.log(angle);
-              mat4.rotate(ModelMatrix, angle, [0, 0, 1])
+              glMatrix.mat4.rotate(ModelMatrix, ModelMatrix, angle, [0, 0, 1])
   
   
-              let ViewMatrix = mat4.create();
-              mat4.identity(ViewMatrix);
-              ViewMatrix = mat4.lookAt([anglex, angley, 0.2], [0, 0, 0], [0, 1, 0], ViewMatrix);
+              let ViewMatrix = glMatrix.mat4.create();
+              glMatrix.mat4.identity(ViewMatrix);
+              glMatrix.mat4.lookAt(ViewMatrix, [anglex, angley, 0.2], [0, 0, 0], [0, 1, 0]);
               console.log(ViewMatrix);
   
-              let mvMatrix = mat4.multiply(ViewMatrix, ModelMatrix)
+              let mvMatrix = glMatrix.mat4.create();
+              glMatrix.mat4.multiply(mvMatrix, ViewMatrix, ModelMatrix)
   
               let arr = [
                   0.0, 0.5, -0.4, 1, 0.4, 1.0, 0.4, 1,
