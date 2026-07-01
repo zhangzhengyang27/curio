@@ -9,6 +9,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const gContainer = ref(null)
 const cleanupFns = []
+const gfxLoadedScripts = []
 
 async function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -17,6 +18,7 @@ async function loadScript(src) {
     s.onload = resolve
     s.onerror = reject
     document.head.appendChild(s)
+    gfxLoadedScripts.push(s)
   })
 }
 
@@ -43,6 +45,32 @@ function installCleanupHooks() {
     rafIds.forEach(id => origCancelRaf(id))
     window.requestAnimationFrame = origRaf
     window.cancelAnimationFrame = origCancelRaf
+  })
+
+  const timeouts = []
+  const origSetTimeout = window.setTimeout
+  const origSetInterval = window.setInterval
+  const origClearTimeout = window.clearTimeout
+  const origClearInterval = window.clearInterval
+  window.setTimeout = (fn, delay, ...args) => {
+    const id = origSetTimeout(fn, delay, ...args)
+    timeouts.push(['timeout', id])
+    return id
+  }
+  window.setInterval = (fn, delay, ...args) => {
+    const id = origSetInterval(fn, delay, ...args)
+    timeouts.push(['interval', id])
+    return id
+  }
+  cleanupFns.push(() => {
+    timeouts.forEach(([kind, id]) => {
+      if (kind === 'timeout') origClearTimeout(id)
+      else origClearInterval(id)
+    })
+    window.setTimeout = origSetTimeout
+    window.setInterval = origSetInterval
+    window.clearTimeout = origClearTimeout
+    window.clearInterval = origClearInterval
   })
 
   const listeners = []
@@ -80,12 +108,14 @@ function installCleanupHooks() {
       if (ext) ext.loseContext()
     })
     HTMLCanvasElement.prototype.getContext = origGetContext
+    gfxLoadedScripts.forEach(s => s.remove())
   })
 }
 
 async function initGraphicsExample() {
+  const container = gContainer.value.querySelector('#container')
   await loadScript("/graphics/assets/external/d3.js");
-  // TODO: failed to localize external script https://lib.baomitu.com/spritejs/3.7.22/spritejs.js: certificate has expired
+  await loadScript("/graphics/assets/external/spritejs.js");
   {
     const {Scene, Sprite} = spritejs;
         const container = gContainer.value.querySelector('#container');

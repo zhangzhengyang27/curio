@@ -15,6 +15,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const gContainer = ref(null)
 const cleanupFns = []
+const gfxLoadedScripts = []
 
 
 function installCleanupHooks() {
@@ -39,6 +40,32 @@ function installCleanupHooks() {
     rafIds.forEach(id => origCancelRaf(id))
     window.requestAnimationFrame = origRaf
     window.cancelAnimationFrame = origCancelRaf
+  })
+
+  const timeouts = []
+  const origSetTimeout = window.setTimeout
+  const origSetInterval = window.setInterval
+  const origClearTimeout = window.clearTimeout
+  const origClearInterval = window.clearInterval
+  window.setTimeout = (fn, delay, ...args) => {
+    const id = origSetTimeout(fn, delay, ...args)
+    timeouts.push(['timeout', id])
+    return id
+  }
+  window.setInterval = (fn, delay, ...args) => {
+    const id = origSetInterval(fn, delay, ...args)
+    timeouts.push(['interval', id])
+    return id
+  }
+  cleanupFns.push(() => {
+    timeouts.forEach(([kind, id]) => {
+      if (kind === 'timeout') origClearTimeout(id)
+      else origClearInterval(id)
+    })
+    window.setTimeout = origSetTimeout
+    window.setInterval = origSetInterval
+    window.clearTimeout = origClearTimeout
+    window.clearInterval = origClearInterval
   })
 
   const listeners = []
@@ -76,6 +103,7 @@ function installCleanupHooks() {
       if (ext) ext.loseContext()
     })
     HTMLCanvasElement.prototype.getContext = origGetContext
+    gfxLoadedScripts.forEach(s => s.remove())
   })
 }
 

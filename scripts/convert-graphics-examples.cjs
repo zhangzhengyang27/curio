@@ -121,20 +121,28 @@ const EXTERNAL_URL_SKIP_LIST = [
   /stackoverflow\.com/i,
   /developer\.mozilla\.org/i,
   /tc39\.github\.io\/ecma262/i,
+  /tc39\.github\.io\/proposal-setmap-offrom/i,
   /code\.visualstudio\.com/i,
   /wiki\.whatwg\.org/i,
   /bugzilla\.mozilla\.org/i,
   /ietf\.org\/rfc/i,
   /tools\.ietf\.org\/html/i,
   /drafts\.csswg\.org/i,
+  /\.spec\.whatwg\.org/i,
   /www\.bing\.com\/webmaster/i,
   /go\.microsoft\.com\/fwlink/i,
   /support\.google\.com/i,
   /developers\.google\.com/i,
   /www\.iana\.org/i,
   /en\.wikipedia\.org/i,
+  /math\.stackexchange\.com/i,
   /git\.corp\.qihoo\.net/i,
   /github\.com\/[\w-]+\/[\w-]+\/?$/i,
+  /github\.com\/.*\/commit\//i,
+  /bugs\.chromium\.org/i,
+  /jsperf\.lnkit\.com/i,
+  /jsperf\.com/i,
+  /codeandweb\.com\/texturepacker/i,
   /\.html(?:[?#]|$)/i,
   /[^a-zA-Z0-9]$/,
   /^https?:\/\/$/,
@@ -144,13 +152,25 @@ function shouldSkipExternalUrl(url) {
   return EXTERNAL_URL_SKIP_LIST.some(pattern => pattern.test(url))
 }
 
+// 匹配真正的 URL：要求 // 后至少有一个点的合法主机名，避免把 //word 注释当 URL
+const URL_REGEX = /(?:https?:)?\/\/(?:(?:[a-zA-Z0-9][-a-zA-Z0-9.]*\.[a-zA-Z][-a-zA-Z0-9]*)|localhost)(?::\d+)?(?:[/?#][^"'\s`)+]*)?/g
+
+const VALID_EXTENSIONS = new Set([
+  'js', 'mjs', 'css', 'json', 'xml',
+  'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'tif', 'tiff',
+  'mp4', 'webm', 'ogg', 'ogv', 'mp3', 'wav',
+  'glb', 'gltf', 'obj', 'mtl', 'drc', 'fbx', 'bin', 'dat', 'wasm',
+  'hdr', 'exr', 'tga', 'ktx', 'ktx2', 'dds',
+])
+
 function urlToFileName(url) {
   const urlObj = new URL(url)
   let name = path.basename(urlObj.pathname) || 'resource'
   // 去掉 query/hash，保留干净文件名
   name = name.split(/[?#]/)[0]
-  // 没有扩展名时根据 URL 特征补一个
-  if (!path.extname(name)) {
+  const ext = path.extname(name).toLowerCase().replace(/^\./, '')
+  // 没有合法扩展名时根据 URL 特征补一个
+  if (!ext || !VALID_EXTENSIONS.has(ext)) {
     if (/\.(js|mjs)(\?|$)/i.test(url)) name += '.js'
     else if (/\.(jpg|jpeg)(\?|$)/i.test(url)) name += '.jpg'
     else if (/\.(png)(\?|$)/i.test(url)) name += '.png'
@@ -160,24 +180,42 @@ function urlToFileName(url) {
   return name
 }
 
+function safeUnlink(filePath) {
+  try {
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+  } catch {
+    // ignore
+  }
+}
+
+function simpleHash(str) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash).toString(36)
+}
+
 function downloadExternal(inputUrl) {
   inputUrl = normalizeUrl(inputUrl)
   if (downloadPromises.has(inputUrl)) return downloadPromises.get(inputUrl)
 
   const fileName = urlToFileName(inputUrl)
   const outPath = path.join(EXTERNAL_ASSETS_DIR, fileName)
+  const tmpPath = outPath + '.' + simpleHash(inputUrl) + '.tmp'
   ensureDir(path.dirname(outPath))
   const localUrl = '/graphics/assets/external/' + fileName
   const fetchUrl = encodeUrlForFetch(inputUrl)
 
   const promise = new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(outPath)
+    const file = fs.createWriteStream(tmpPath)
     const client = fetchUrl.startsWith('https:') ? https : http
     const req = client.get(fetchUrl, { timeout: 30000 }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         // 跟随重定向（支持相对路径）
         file.close()
-        if (fs.existsSync(outPath)) fs.unlinkSync(outPath)
+        safeUnlink(tmpPath)
         const redirectUrl = new URL(res.headers.location, inputUrl).href
         downloadExternal(redirectUrl).then((redirectLocalUrl) => {
           localUrlMap.set(inputUrl, redirectLocalUrl)
@@ -187,22 +225,32 @@ function downloadExternal(inputUrl) {
       }
       if (res.statusCode !== 200) {
         file.close()
+        safeUnlink(tmpPath)
         reject(new Error(`Download failed: ${inputUrl} status ${res.statusCode}`))
         return
       }
       res.pipe(file)
       file.on('finish', () => {
         file.close()
+        try {
+          fs.renameSync(tmpPath, outPath)
+        } catch (err) {
+          safeUnlink(tmpPath)
+          reject(err)
+          return
+        }
         localUrlMap.set(inputUrl, localUrl)
         resolve(localUrl)
       })
     })
     req.on('error', (err) => {
       file.close()
+      safeUnlink(tmpPath)
       reject(err)
     })
     req.on('timeout', () => {
       file.close()
+      safeUnlink(tmpPath)
       req.destroy()
       reject(new Error(`Download timeout: ${inputUrl}`))
     })
@@ -230,6 +278,29 @@ function isValidUrl(url) {
   }
 }
 
+function isLikelyBundledJs(fileName) {
+  const lower = fileName.toLowerCase()
+  return (
+    lower.endsWith('.min.js') ||
+    lower.includes('.bundle.') ||
+    lower.includes('-vendors') ||
+    lower.startsWith('chunk-') ||
+    /^\d+\.[a-f0-9]+\.chunk\.js$/.test(fileName)
+  )
+}
+
+function isSketchyResourceName(name) {
+  // 过滤掉明显是从代码/注释里误抓的伪 URL（如 commit hash、issue id、代码片段）
+  const base = path.basename(name).split(/[?#]/)[0]
+  if (!base || base.length < 2) return true
+  if (/^\d+\.bin$/.test(base)) return false // 允许纯数字 .bin
+  if (/^[a-f0-9]{7,}$/i.test(base)) return true // commit hash
+  if (/[;<>{}()[\]|`~]/.test(base)) return true // 代码符号
+  if (/\.(prototype|of|from)/.test(base)) return true
+  if (/^(detail|editor|monaco-editor|texturepacker|workbench-colors)$/.test(base)) return true
+  return false
+}
+
 function findExternalUrls(dir) {
   const urls = new Set()
   function walk(currentDir) {
@@ -239,13 +310,23 @@ function findExternalUrls(dir) {
       if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue
       if (entry.isDirectory()) {
         walk(fullPath)
-      } else if (entry.isFile() && (entry.name.endsWith('.html') || entry.name.endsWith('.js'))) {
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
         const content = fs.readFileSync(fullPath, 'utf-8')
-        const matches = content.match(/(?:https?:)?\/\/[^"'\s`)+]+/g) || []
+        const matches = content.match(URL_REGEX) || []
         matches.forEach(url => {
           const normalized = normalizeUrl(url)
           if (!isValidUrl(normalized)) return
           if (!shouldSkipExternalUrl(normalized)) urls.add(normalized)
+        })
+      } else if (entry.isFile() && entry.name.endsWith('.js') && !isLikelyBundledJs(entry.name)) {
+        const content = fs.readFileSync(fullPath, 'utf-8')
+        const matches = content.match(URL_REGEX) || []
+        matches.forEach(url => {
+          const normalized = normalizeUrl(url)
+          if (!isValidUrl(normalized)) return
+          if (shouldSkipExternalUrl(normalized)) return
+          if (isSketchyResourceName(urlToFileName(normalized))) return
+          urls.add(normalized)
         })
       }
     }
@@ -255,7 +336,7 @@ function findExternalUrls(dir) {
 }
 
 function localizeExternalUrls(text) {
-  return text.replace(/(?:https?:)?\/\/[^"'\s`)+]+/g, (url) => {
+  return text.replace(URL_REGEX, (url) => {
     if (shouldSkipExternalUrl(url)) return url
     const normalized = normalizeUrl(url)
     if (!isValidUrl(normalized)) return url
@@ -409,6 +490,45 @@ function rewriteDomQueries(text) {
   return text
 }
 
+function extractElementIds(bodyHtml) {
+  const ids = new Set()
+  const regex = /\bid=["']([^"']+)["']/g
+  let m
+  while ((m = regex.exec(bodyHtml)) !== null) {
+    ids.add(m[1])
+  }
+  return Array.from(ids)
+}
+
+function generateIdElementVars(bodyHtml) {
+  const ids = extractElementIds(bodyHtml)
+  if (!ids.length) return ''
+  return ids.map(id => `  const ${id} = gContainer.value.querySelector('#${id}')`).join('\n') + '\n'
+}
+
+function rewriteWorkerUrls(text, htmlRelDir) {
+  return text.replace(
+    /new\s+Worker\(\s*(["'])(\.\.?\/[^"']*)\1\s*\)/g,
+    (match, quote, relPath) => {
+      const resolved = path.posix.normalize(path.posix.join('/graphics', htmlRelDir, relPath))
+      return `new Worker(${quote}${resolved}${quote})`
+    }
+  )
+}
+
+function copyWorkerFiles(text, htmlDir, htmlRelDir) {
+  const matches = text.matchAll(/new\s+Worker\(\s*["'](\.\.?\/[^"']*)["']\s*\)/g)
+  for (const m of matches) {
+    const relPath = m[1]
+    const absPath = path.resolve(htmlDir, relPath)
+    if (!fs.existsSync(absPath)) continue
+    const rel = posixRel(SOURCE_DIR, absPath)
+    const outPath = path.join(PUBLIC_OUT, rel)
+    ensureDir(path.dirname(outPath))
+    fs.copyFileSync(absPath, outPath)
+  }
+}
+
 function cleanScriptBody(body) {
   body = body.replace(/debugger\s*;?/g, '')
   body = body.replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, ' ')
@@ -538,8 +658,12 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
   const outPath = path.join(outDir, `${componentName}.vue`)
 
   const bodyLines = parsed.bodyHtml.trim().split('\n').filter(Boolean)
+  // 去除 body 里原有的公共缩进，再统一缩进到 4 空格
+  const minIndent = bodyLines.length
+    ? Math.min(...bodyLines.filter(l => l.trim()).map(l => l.match(/^(\s*)/)[1].length))
+    : 0
   const bodyContent = bodyLines.length
-    ? '\n' + bodyLines.map(line => '    ' + line).join('\n') + '\n  '
+    ? '\n' + bodyLines.map(line => '    ' + line.slice(minIndent)).join('\n') + '\n  '
     : ''
   const template = `<template>
   <div class="graphics-root" ref="gContainer">${bodyContent}</div>
@@ -583,7 +707,9 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
         }
       }
     } else if (script.body) {
+      copyWorkerFiles(script.body, htmlDir, htmlRelDir)
       let body = cleanScriptBody(script.body)
+      body = rewriteWorkerUrls(body, htmlRelDir)
       body = rewriteAssetPaths(body, htmlRelDir)
       body = rewriteDomQueries(body)
       body = localizeExternalUrls(body)
@@ -614,6 +740,11 @@ async function generateVue(htmlPath, htmlRelDir, uniqueId) {
     }
   }
 
+  const idElementVars = generateIdElementVars(parsed.bodyHtml)
+  if (idElementVars) {
+    initLines.unshift(idElementVars.trimEnd())
+  }
+
   const initText = initLines.join('\n')
   const usedImports = filterUnusedImports(Array.from(topLevelImports), initText)
 
@@ -631,6 +762,7 @@ async function loadScript(src) {
     s.onload = resolve
     s.onerror = reject
     document.head.appendChild(s)
+    gfxLoadedScripts.push(s)
   })
 }
 `
@@ -641,6 +773,7 @@ ${importLines.join('\n')}
 
 const gContainer = ref(null)
 const cleanupFns = []
+const gfxLoadedScripts = []
 ${loadScriptDef}
 
 function installCleanupHooks() {
@@ -665,6 +798,32 @@ function installCleanupHooks() {
     rafIds.forEach(id => origCancelRaf(id))
     window.requestAnimationFrame = origRaf
     window.cancelAnimationFrame = origCancelRaf
+  })
+
+  const timeouts = []
+  const origSetTimeout = window.setTimeout
+  const origSetInterval = window.setInterval
+  const origClearTimeout = window.clearTimeout
+  const origClearInterval = window.clearInterval
+  window.setTimeout = (fn, delay, ...args) => {
+    const id = origSetTimeout(fn, delay, ...args)
+    timeouts.push(['timeout', id])
+    return id
+  }
+  window.setInterval = (fn, delay, ...args) => {
+    const id = origSetInterval(fn, delay, ...args)
+    timeouts.push(['interval', id])
+    return id
+  }
+  cleanupFns.push(() => {
+    timeouts.forEach(([kind, id]) => {
+      if (kind === 'timeout') origClearTimeout(id)
+      else origClearInterval(id)
+    })
+    window.setTimeout = origSetTimeout
+    window.setInterval = origSetInterval
+    window.clearTimeout = origClearTimeout
+    window.clearInterval = origClearInterval
   })
 
   const listeners = []
@@ -702,6 +861,7 @@ function installCleanupHooks() {
       if (ext) ext.loseContext()
     })
     HTMLCanvasElement.prototype.getContext = origGetContext
+    gfxLoadedScripts.forEach(s => s.remove())
   })
 }
 
