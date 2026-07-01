@@ -233,6 +233,13 @@ function cleanScriptBody(body) {
   // 把重复声明的 var err 改成 const err（它们通常在独立的 if 块内）
   body = body.replace(/\bvar\s+err\s*=/g, 'const err =')
 
+  // 移除 window.requestAnimFrame polyfill，使用标准 requestAnimationFrame
+  body = body.replace(
+    /window\.requestAnimFrame\s*=\s*\([\s\S]*?\)\s*\(\s*\)\s*;?/g,
+    ''
+  )
+  body = body.replace(/\brequestAnimFrame\b/g, 'requestAnimationFrame')
+
   return body
 }
 
@@ -377,7 +384,11 @@ function generateVue(htmlPath, htmlRelDir) {
     const combined = plainScripts
       .map(s => rewriteScriptBody(s.body, { htmlRelDir, shaders: parsed.shaders, canvasIds }))
       .join('\n\n')
-    mainBody = `${combined}\n\nif (typeof init === 'function') {\n  init()\n}`
+    mainBody = combined
+    // 仅在脚本中定义了 init 函数时才自动调用；未定义则避免产生 no-undef
+    if (/\bfunction\s+init\s*\(|\b(?:const|let|var)\s+init\s*=/.test(combined)) {
+      mainBody = `${combined}\n\nif (typeof init === 'function') {\n  init()\n}`
+    }
   }
 
   const styleBlock = parsed.styles.length
@@ -428,6 +439,11 @@ ${styleBlock ? '\n' + styleBlock : ''}
   return { id, componentName, title, vue }
 }
 
+function hasExternalMediaResource(content) {
+  // 跳过依赖外部图片/视频/音频资源的示例（无法离线运行）
+  return /(?:image|video|audio|new\s+Audio)\s*\.\s*src\s*=\s*['"]https?:\/\//.test(content)
+}
+
 function walkHtmlFiles(dir, relDir, files = []) {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
   for (const entry of entries) {
@@ -436,6 +452,11 @@ function walkHtmlFiles(dir, relDir, files = []) {
     if (entry.isDirectory()) {
       walkHtmlFiles(fullPath, relPath, files)
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      const content = fs.readFileSync(fullPath, 'utf-8')
+      if (hasExternalMediaResource(content)) {
+        console.log(`Skipped (external media): ${relPath}`)
+        continue
+      }
       files.push({ fullPath, relPath })
     }
   }

@@ -57,11 +57,27 @@ export default tseslint.config(
   // 由 HTML 自动转换的 WebGL 示例：保留原始代码风格，关闭对转换产物过于严格的规则
   {
     files: ['src/examples/components/webgl/**/*.vue', 'src/examples/jsm-compat/webgl/**/*.js'],
+    languageOptions: {
+      globals: {
+        mat4: 'readonly',
+        vec3: 'readonly',
+        vec4: 'readonly',
+        glMatrix: 'readonly',
+      },
+    },
     rules: {
       'no-useless-assignment': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
-      'no-implicit-globals': 'error',
+      'no-undef': 'error',
+    },
+  },
+
+  // WebGL 第三方库：UMD/IIFE 全局变量较多，关闭 no-undef
+  {
+    files: ['src/examples/jsm-compat/webgl/**/libs/*.js', 'src/examples/jsm-compat/webgl/**/libs/*.min.js'],
+    rules: {
+      'no-undef': 'off',
     },
   },
 

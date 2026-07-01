@@ -14,10 +14,6 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       gl.clearColor(1, 1, 0, 1);
       // 使用之前指定的颜色，清空绘图区
       gl.clear(gl.COLOR_BUFFER_BIT);
-  
-  if (typeof init === 'function') {
-    init()
-  }
 }
 </script>
 

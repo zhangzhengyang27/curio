@@ -31,10 +31,6 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       gl.clearColor(r, g, b, a);
       //刷底色
       gl.clear(gl.COLOR_BUFFER_BIT);
-  
-  if (typeof init === 'function') {
-    init()
-  }
 }
 </script>
 

@@ -967,32 +967,6 @@ export default {
     "runner": "vue"
   },
   {
-    "id": "20-跨域图像",
-    "category": "kaikeba-webgl/06-颜色与纹理",
-    "categoryLabel": "06-颜色与纹理",
-    "title": "跨域图像",
-    "description": "跨域图像",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/06-颜色与纹理"
-    ],
-    "runner": "vue"
-  },
-  {
-    "id": "21-视频贴图",
-    "category": "kaikeba-webgl/06-颜色与纹理",
-    "categoryLabel": "06-颜色与纹理",
-    "title": "视频贴图",
-    "description": "视频贴图",
-    "tags": [
-      "webgl",
-      "kaikeba-webgl",
-      "kaikeba-webgl/06-颜色与纹理"
-    ],
-    "runner": "vue"
-  },
-  {
     "id": "3-数据合一",
     "category": "kaikeba-webgl/06-颜色与纹理",
     "categoryLabel": "06-颜色与纹理",

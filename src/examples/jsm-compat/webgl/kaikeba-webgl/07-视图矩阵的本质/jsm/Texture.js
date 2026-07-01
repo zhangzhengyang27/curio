@@ -1,10 +1,10 @@
 const defAttr = () => ({
-  image,
-  wrapS,
-  wrapT,
-  magFilter,
-  minFilter,
-  format,
+  image: null,
+  wrapS: 'CLAMP_TO_EDGE',
+  wrapT: 'CLAMP_TO_EDGE',
+  magFilter: 'LINEAR',
+  minFilter: 'LINEAR',
+  format: 'RGBA',
 })
 
 export default class Texture{

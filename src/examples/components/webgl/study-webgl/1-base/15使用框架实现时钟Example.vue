@@ -197,16 +197,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               // webgl.drawArrays(webgl.TRIANGLES, 0, 6);
           }
   
-          window.requestAnimFrame = (function () {
-              return window.requestAnimationFrame ||
-                  window.webkitRequestAnimationFrame ||
-                  window.mozRequestAnimationFrame ||
-                  window.oRequestAnimationFrame ||
-                  window.msRequestAnimationFrame ||
-                  function (callback, element) {
-  
-                  };
-          })();
+          
   
   if (typeof init === 'function') {
     init()

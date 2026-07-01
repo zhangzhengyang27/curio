@@ -37,7 +37,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function tick() {
-              requestAnimFrame(tick);
+              requestAnimationFrame(tick);
               initBuffer();
               draw();
           }
@@ -160,15 +160,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.drawArrays(webgl.TRIANGLES, 0, 9);
           }
   
-          window.requestAnimFrame = (function () {
-              return window.requestAnimationFrame ||
-                  window.mozRequestAnimationFrame ||
-                  window.oRequestAnimationFrame ||
-                  window.msRequestAnimationFrame ||
-                  function (callback, element) {
-                      window.setTimeout(callback, 1000 / 60);
-                  };
-          })();
+          
   
   if (typeof init === 'function') {
     init()

@@ -41,7 +41,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               draw();
               initEvent()
           }
-  
+
+          function initEvent() {}
+
           function initWebgl() {
               let webglDiv = canvas;
               webgl = webglDiv.getContext("webgl");
