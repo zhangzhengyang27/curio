@@ -49,3 +49,7 @@ test-*.py
 tmp/
 build.log
 svg_sandbox.png
+test-results/
+playwright-report/
+playwright/.cache/
+scripts/*-summary.json

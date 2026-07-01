@@ -9,9 +9,11 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.ts --fix",
-    "format": "prettier --write \"src/**/*.{vue,js,ts,css}\""
+    "format": "prettier --write \"src/**/*.{vue,js,ts,css}\"",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "3d-tiles-renderer": "^0.4.28",
     "@mediapipe/tasks-vision": "^0.10.35",
     "@mkkellogg/gaussian-splats-3d": "^0.4.7",
     "@needle-tools/gltf-progressive": "^3.6.0-beta.2",
@@ -27,7 +29,6 @@
     "@three.ez/batched-mesh-extensions": "^0.0.12",
     "@three.ez/simplify-geometry": "^0.0.1",
     "@tweenjs/tween.js": "^25.0.0",
-    "3d-tiles-renderer": "^0.4.28",
     "animejs": "^4.5.0",
     "cannon-es": "^0.20.0",
     "cesium": "^1.142.0",
@@ -68,6 +69,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
     "@types/node": "^26.0.1",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/eslint-config-prettier": "^10.2.0",
