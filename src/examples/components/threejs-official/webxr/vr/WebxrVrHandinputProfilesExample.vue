@@ -57,8 +57,7 @@ function onReady(__stage) {
   
   
   				
-  				window.scene = scene;
-  				scene.background = new THREE.Color( 0x444444 );
+    				scene.background = new THREE.Color( 0x444444 );
   
   				
   

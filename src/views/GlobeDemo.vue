@@ -33,6 +33,7 @@ const loading = ref(true)
 const demoTitle = computed(() => exampleMeta[route.params.example]?.title || route.params.example)
 
 let renderer, scene, camera, controls, globe, animFrame
+let rafIds = []
 let cleanupFns = []
 
 const IMG_BASE = 'https://cdn.jsdelivr.net/npm/three-globe/example/img'
@@ -108,8 +109,10 @@ function startRender(postRender) {
 }
 
 function disposeGlobe() {
-  if (animFrame) cancelAnimationFrame(animFrame)
-  cleanupFns.forEach(fn => typeof fn === 'function' ? fn() : cancelAnimationFrame(fn))
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null }
+  rafIds.forEach(id => cancelAnimationFrame(id))
+  rafIds = []
+  cleanupFns.forEach(fn => fn())
   cleanupFns = []
   if (renderer) { renderer.dispose(); renderer.domElement.remove() }
   if (globe && scene) { scene.remove(globe); globe = null }
@@ -266,9 +269,9 @@ async function loadExample(exId) {
       })
       const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat)
       globe.add(cloudMesh)
-      cleanupFns.push(requestAnimationFrame(function rotate() {
+      rafIds.push(requestAnimationFrame(function rotate() {
         cloudMesh.rotation.y -= 0.006
-        if (!globe) return; cleanupFns.push(requestAnimationFrame(rotate))
+        if (!globe) return; rafIds.push(requestAnimationFrame(rotate))
       }))
       break
     }
@@ -282,10 +285,10 @@ async function loadExample(exId) {
       const light = new THREE.DirectionalLight(0xffffff, Math.PI * 0.7)
       scene.add(light)
       let angle = 0
-      cleanupFns.push(requestAnimationFrame(function rotate() {
+      rafIds.push(requestAnimationFrame(function rotate() {
         angle += 0.002
         light.position.set(600 * Math.cos(angle), 0, 600 * Math.sin(angle))
-        if (!globe) return; cleanupFns.push(requestAnimationFrame(rotate))
+        if (!globe) return; rafIds.push(requestAnimationFrame(rotate))
       }))
       break
     }
@@ -309,8 +312,8 @@ async function loadExample(exId) {
         }))
         .tilesTransitionDuration(0)
       scene.add(globe)
-      cleanupFns.push(requestAnimationFrame(function anim() {
-        if (!globe) return; cleanupFns.push(requestAnimationFrame(anim))
+      rafIds.push(requestAnimationFrame(function anim() {
+        if (!globe) return; rafIds.push(requestAnimationFrame(anim))
         dt += VELOCITY * 60 * 1000
         tile.pos = sunPosAt(dt)
         globe.tilesData([tile])
@@ -388,8 +391,8 @@ async function loadExample(exId) {
         .pointsData(sats.map(() => ({ lat: 0, lng: 0, alt: 0 })))
         .pointColor(() => '#ff4444').pointAltitude('alt').pointRadius(0.3)
       scene.add(globe)
-      cleanupFns.push(requestAnimationFrame(function update() {
-        if (!globe) return; cleanupFns.push(requestAnimationFrame(update))
+      rafIds.push(requestAnimationFrame(function update() {
+        if (!globe) return; rafIds.push(requestAnimationFrame(update))
         const now = new Date()
         const gmst = sat.gstime(now)
         const posData = sats.map(s => {
@@ -437,8 +440,8 @@ async function loadExample(exId) {
         ))
         .customThreeObjectUpdate((obj, d) => Object.assign(obj.position, globe.getCoords(d.lat, d.lng, d.alt)))
       scene.add(globe)
-      cleanupFns.push(requestAnimationFrame(function move() {
-        if (!globe) return; cleanupFns.push(requestAnimationFrame(move))
+      rafIds.push(requestAnimationFrame(function move() {
+        if (!globe) return; rafIds.push(requestAnimationFrame(move))
         gData.forEach(d => d.lat += 0.2)
         globe.customLayerData(gData)
       }))
