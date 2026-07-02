@@ -12,7 +12,7 @@
   const containerRef = shallowRef(null)
 
   // 使用 Three.js 场景组合
-  const { scene, camera, renderer, controls, startAnimation } = useThreeScene(containerRef, {
+  const { scene, startAnimation } = useThreeScene(containerRef, {
     fov: 90,
     cameraPosition: { x: 0, y: 0, z: 2 },
     enableControls: true,

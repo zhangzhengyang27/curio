@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -18,7 +17,7 @@
     speed: 1
   }
 
-  const { scene, camera, renderer, controls, startAnimation, dispose: baseDispose } =
+  const { scene, camera: _camera, renderer: _renderer, controls: _controls, startAnimation, dispose: baseDispose } =
     useThreeScene(containerRef, {
       fov: 50,
       cameraPosition: { x: 0, y: 1.5, z: 5 },
@@ -102,7 +101,6 @@
 
     initGUI()
     startAnimation(() => {
-      const delta = clock.getDelta()
       if (morphMesh && params.autoPlay) {
         const t = clock.elapsedTime * params.speed
         morphMesh.morphTargetInfluences[0] = (Math.sin(t) + 1) * 0.5

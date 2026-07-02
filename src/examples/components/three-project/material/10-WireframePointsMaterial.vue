@@ -11,7 +11,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -299,7 +299,7 @@
       if (!scene.value) return
 
       // 线框几何体旋转
-      wireframeMeshes.forEach((item, index) => {
+      wireframeMeshes.forEach((item, _index) => {
         item.mesh.rotation.x += 0.003
         item.mesh.rotation.y += 0.005
       })

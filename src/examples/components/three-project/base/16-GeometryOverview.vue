@@ -16,7 +16,8 @@
     })
 
   let gui!: GUI, meshes: THREE.Mesh[] = [], raycaster!: THREE.Raycaster, mouse!: THREE.Vector2
-  let selectedMesh: THREE.Mesh | null = null
+    let selectedMesh: THREE.Mesh | null = null
+    let clickListenerTimeout: ReturnType<typeof setTimeout> | null = null
 
   const colors = [
     0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6,
@@ -140,10 +141,14 @@
   })
 
   onMounted(() => {
-    setTimeout(() => window.addEventListener("click", handleClick), 100)
+    clickListenerTimeout = setTimeout(() => window.addEventListener("click", handleClick), 100)
   })
 
   onUnmounted(() => {
+    if (clickListenerTimeout) {
+      clearTimeout(clickListenerTimeout)
+      clickListenerTimeout = null
+    }
     window.removeEventListener("click", handleClick)
     meshes.forEach(m => {
       m.geometry.dispose()

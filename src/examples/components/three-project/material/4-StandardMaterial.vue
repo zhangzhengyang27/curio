@@ -14,7 +14,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -34,6 +34,7 @@
   let envMap: THREE.Texture | null = null
   let loadedModel: THREE.Group | null = null
   let aoMapTexture: THREE.Texture | null = null
+  let standardMaterialInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载 HDR 环境贴图（使用折射映射）
@@ -160,7 +161,7 @@
     infoFolder.add(info, "hasRoughnessMap").name("有粗糙度贴图").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    standardMaterialInterval = setInterval(() => {
       info.hasAOMap = !!stdMat.aoMap
     }, 100)
 
@@ -171,6 +172,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (standardMaterialInterval) {
+      clearInterval(standardMaterialInterval)
+      standardMaterialInterval = null
+    }
+
     // 清理环境贴图
     if (envMap) {
       envMap.dispose()

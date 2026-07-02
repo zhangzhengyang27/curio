@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -14,7 +13,7 @@
   let animate1 = null
 
   // 使用封装的场景
-  const { scene, camera, renderer, controls, startAnimation } = useThreeScene(containerRef, {
+  const { scene, camera: _camera, renderer: _renderer, controls: _controls, startAnimation } = useThreeScene(containerRef, {
     fov: 75,
     cameraPosition: { x: 0, y: 0, z: 10 },
     enableControls: true,

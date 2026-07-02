@@ -49,10 +49,21 @@
   const transitionDuration = 1.0 // 切换动画持续时间（秒）
 
   // 事件状态显示
-  let eventStatus = { status: "无事件" }
+    let eventStatus = { status: "无事件" }
 
-  /**
-   * 创建场景中的物体
+    // OrbitControls 事件监听
+    const onControlsStart = () => {
+      eventStatus.status = "start - 开始操作"
+    }
+    const onControlsChange = () => {
+      eventStatus.status = "change - 正在操作"
+    }
+    const onControlsEnd = () => {
+      eventStatus.status = "end - 操作结束"
+    }
+
+    /**
+     * 创建场景中的物体
    * 包含 3 个不同颜色和形状的几何体
    */
   const createObjects = () => {
@@ -300,19 +311,13 @@
     if (!controls.value) return
 
     // 开始拖拽事件
-    controls.value.addEventListener("start", () => {
-      eventStatus.status = "start - 开始操作"
-    })
+      controls.value.addEventListener("start", onControlsStart)
 
-    // 变化事件
-    controls.value.addEventListener("change", () => {
-      eventStatus.status = "change - 正在操作"
-    })
+      // 变化事件
+      controls.value.addEventListener("change", onControlsChange)
 
-    // 结束拖拽事件
-    controls.value.addEventListener("end", () => {
-      eventStatus.status = "end - 操作结束"
-    })
+      // 结束拖拽事件
+      controls.value.addEventListener("end", onControlsEnd)
   }
 
   /**
@@ -359,16 +364,23 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
-    // 清理 GUI
-    gui?.destroy()
-    gui = null
+      // 移除 OrbitControls 事件监听
+      if (controls.value) {
+        controls.value.removeEventListener("start", onControlsStart)
+        controls.value.removeEventListener("change", onControlsChange)
+        controls.value.removeEventListener("end", onControlsEnd)
+      }
 
-    // 清理引用
-    meshes = []
+      // 清理 GUI
+      gui?.destroy()
+      gui = null
 
-    // 调用基础清理函数
-    baseDispose()
-  }
+      // 清理引用
+      meshes = []
+
+      // 调用基础清理函数
+      baseDispose()
+    }
 
   // 场景准备好后初始化
   onSceneReady(() => {

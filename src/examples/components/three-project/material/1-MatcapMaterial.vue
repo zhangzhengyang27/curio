@@ -31,6 +31,7 @@
   let matcapTexture: THREE.Texture | null = null
   let originalMaterial: THREE.Material | null = null
   let loadedModel: THREE.Group | null = null
+  let matcapMaterialInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 获取鸭子网格的材质（单材质）
@@ -220,7 +221,7 @@
     infoFolder.add(info, "hasMatcap").name("是否使用 Matcap").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    matcapMaterialInterval = setInterval(() => {
       const mat = getDuckMaterial()
       if (mat) {
         info.materialType = mat.type
@@ -233,6 +234,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (matcapMaterialInterval) {
+      clearInterval(matcapMaterialInterval)
+      matcapMaterialInterval = null
+    }
+
     // 清理纹理
     if (matcapTexture) {
       matcapTexture.dispose()

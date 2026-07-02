@@ -11,7 +11,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -30,6 +30,7 @@
   let planeMesh: THREE.Mesh | null = null
   let planeMaterial: THREE.MeshBasicMaterial | null = null
   let texture: THREE.Texture | null = null
+  let textureFlipAlphaInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载纹理
@@ -184,7 +185,7 @@
     infoFolder.add(info, "magFilter").name("放大过滤").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    textureFlipAlphaInterval = setInterval(() => {
       if (texture) {
         info.flipY = texture.flipY
         info.premultiplyAlpha = texture.premultiplyAlpha
@@ -250,6 +251,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (textureFlipAlphaInterval) {
+      clearInterval(textureFlipAlphaInterval)
+      textureFlipAlphaInterval = null
+    }
+
     // 清理纹理
     if (texture) {
       texture.dispose()

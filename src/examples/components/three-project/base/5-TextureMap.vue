@@ -29,7 +29,6 @@
   let plane!: THREE.Mesh
   let planeMaterial!: THREE.MeshBasicMaterial
   let texture!: THREE.Texture // 保存纹理引用
-  let fog!: THREE.Fog // 保存雾引用
   let gui!: GUI
 
   /**
@@ -50,10 +49,10 @@
     const aoMap = textureLoader.load("/three-project/texture/waterCover/CityNewYork002_AO_1K.jpg")
 
     // 透明度贴图
-    const alphaMap = textureLoader.load("/three-project/texture/door/height.jpg")
+    textureLoader.load("/three-project/texture/door/height.jpg")
 
     // 光照贴图
-    const lightMap = textureLoader.load("/three-project/texture/colors.png")
+    textureLoader.load("/three-project/texture/colors.png")
 
     // 高光贴图
     const specularMap = textureLoader.load("/three-project/texture/waterCover/CityNewYork002_GLOSS_1K.jpg")
@@ -136,7 +135,7 @@
     gui.add(planeMaterial, "opacity").min(0).max(1).step(0.01).name("透明度")
 
     // 场景雾控制
-    const fogFolder = gui.addFolder("场景雾效果")
+    gui.addFolder("场景雾效果")
 
     // 平面位置控制
     const positionFolder = gui.addFolder("平面位置")

@@ -26,7 +26,9 @@ for (const { category, id } of examples) {
 
     await page.goto(`/examples/three-project/${category}/${id}`)
 
-    await page.waitForSelector('.page-container', { timeout: 15000 })
+    await page.waitForSelector('.page-container', {
+      timeout: 15000
+    })
 
     await page.waitForFunction(
       () => document.querySelector('canvas') !== null,

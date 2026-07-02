@@ -30,9 +30,17 @@
   })
 
   // PointerLockControls 引用
-  let pointerLockControls: PointerLockControls | null = null
+    let pointerLockControls: PointerLockControls | null = null
 
-  // 移动状态
+    // PointerLockControls 事件监听
+    const onPointerLock = () => {
+      isLocked = true
+    }
+    const onPointerUnlock = () => {
+      isLocked = false
+    }
+
+    // 移动状态
   let moveForward = false
   let moveBackward = false
   let moveLeft = false
@@ -51,7 +59,7 @@
   let isLocked = false
 
   // 时钟（用于帧率无关的物理计算）
-  const clock = new THREE.Clock()
+  const _clock = new THREE.Clock()
 
   // 场景中的碰撞物体（用于限制玩家移动）
   let collidableObjects: THREE.Mesh[] = []
@@ -235,15 +243,11 @@
     scene.value.add(pointerLockControls.object)
 
     // ====== 鼠标锁定事件 ======
-    // 锁定成功
-    pointerLockControls.addEventListener("lock", () => {
-      isLocked = true
-    })
+      // 锁定成功
+      pointerLockControls.addEventListener("lock", onPointerLock)
 
-    // 解锁
-    pointerLockControls.addEventListener("unlock", () => {
-      isLocked = false
-    })
+      // 解锁
+      pointerLockControls.addEventListener("unlock", onPointerUnlock)
 
     // ====== 键盘事件 ======
     const onKeyDown = (event: KeyboardEvent) => {
@@ -394,10 +398,12 @@
     }
 
     // 清理 PointerLockControls
-    if (pointerLockControls) {
-      pointerLockControls.dispose()
-      pointerLockControls = null
-    }
+      if (pointerLockControls) {
+        pointerLockControls.removeEventListener("lock", onPointerLock)
+        pointerLockControls.removeEventListener("unlock", onPointerUnlock)
+        pointerLockControls.dispose()
+        pointerLockControls = null
+      }
 
     // 清理引用
     collidableObjects = []

@@ -13,7 +13,7 @@
   let mouse: THREE.Vector2 | null = null
   let boxHelper: THREE.BoxHelper | null = null
   let gui: GUI | null = null
-  let clock: THREE.Clock | null = null
+  let _clock: THREE.Clock | null = null
   let animationId = 0
   let hoveredObject: THREE.Mesh | null = null
   let selectedObject: THREE.Mesh | null = null
@@ -379,7 +379,7 @@
   const initContent = () => {
     if (!scene.value) return
 
-    clock = new THREE.Clock()
+    _clock = new THREE.Clock()
     initRaycaster()
     addLights()
     addFloor()
@@ -430,7 +430,7 @@
     mouse = null
     boxHelper = null
     gui = null
-    clock = null
+    _clock = null
     hoveredObject = null
     selectedObject = null
     isDragging = false

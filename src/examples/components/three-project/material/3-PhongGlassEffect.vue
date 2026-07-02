@@ -13,7 +13,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -34,6 +34,7 @@
   let envMap: THREE.Texture | null = null
   let loadedModel: THREE.Group | null = null
   let originalMaterial: THREE.Material | null = null
+  let phongGlassEffectInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载 HDR 环境贴图（使用折射映射）
@@ -266,7 +267,7 @@
     infoFolder.add(info, "hasEnvMap").name("是否有环境贴图").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    phongGlassEffectInterval = setInterval(() => {
       if (glassMaterial) {
         info.materialType = glassMaterial.type
         info.hasEnvMap = !!glassMaterial.envMap
@@ -283,6 +284,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (phongGlassEffectInterval) {
+      clearInterval(phongGlassEffectInterval)
+      phongGlassEffectInterval = null
+    }
+
     // 清理环境贴图
     if (envMap) {
       envMap.dispose()

@@ -8,7 +8,7 @@
   const containerRef = shallowRef<HTMLDivElement | null>(null)
   let renderer!: THREE.WebGLRenderer, animationId: number | null = null
   const scenes: { scene: THREE.Scene; camera: THREE.Camera; left: number; bottom: number; width: number; height: number; update: () => void }[] = []
-  const cameras: THREE.Camera[] = []
+  const _cameras: THREE.Camera[] = []
 
   const init = () => {
     if (!containerRef.value) return

@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -22,7 +21,7 @@
     scene,
     camera,
     renderer,
-    controls,
+    controls: _controls,
     startAnimation,
     dispose: baseDispose
   } = useThreeScene(containerRef, {

@@ -11,7 +11,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -40,7 +40,7 @@
   const createOpenBox = (material: THREE.MeshStandardMaterial, position: THREE.Vector3) => {
     const group = new THREE.Group()
     const size = 1
-    const thickness = 0.02
+    const _thickness = 0.02
 
     // 底面
     const bottom = new THREE.Mesh(

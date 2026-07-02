@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { shallowRef, onMounted, onUnmounted } from "vue"
+  import { shallowRef, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
   import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
@@ -12,8 +12,8 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    camera,
-    renderer,
+    camera: _camera,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose

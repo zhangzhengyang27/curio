@@ -31,6 +31,7 @@
   let planeMaterial: THREE.MeshBasicMaterial | null = null
   let texture: THREE.Texture | null = null
   let maxAnisotropy: number = 0
+  let mipmapInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载纹理
@@ -224,7 +225,7 @@
     infoFolder.add(info, "format").name("纹理格式").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    mipmapInterval = setInterval(() => {
       if (texture) {
         // 过滤器映射
         const filterMap: Record<number, string> = {
@@ -328,6 +329,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (mipmapInterval) {
+      clearInterval(mipmapInterval)
+      mipmapInterval = null
+    }
+
     // 清理纹理
     if (texture) {
       texture.dispose()

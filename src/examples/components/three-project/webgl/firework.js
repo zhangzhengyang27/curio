@@ -121,7 +121,7 @@ export default class Fireworks {
     })
   }
   //   添加到场景
-  addScene(scene, camera) {
+  addScene(scene, _camera) {
     scene.add(this.startPoint)
     scene.add(this.fireworks)
     this.scene = scene

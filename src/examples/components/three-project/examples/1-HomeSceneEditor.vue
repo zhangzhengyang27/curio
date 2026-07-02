@@ -18,6 +18,7 @@
 
   // ==================== 场景对象引用 ====================
   let tControls: TransformControls | null = null
+  let orbitControls: OrbitControls | null = null
   let basicScene: THREE.Group | null = null
   let gui: GUI | null = null
   let gltfLoader: GLTFLoader | null = null
@@ -26,6 +27,25 @@
   let sceneMeshes: Array<{ name: string; path: string; icon: string; object3d: THREE.Group; instanceName: string }> = []
   let meshesNum: Record<string, number> = {}
   let meshesFolder: GUI | null = null
+
+  /**
+   * TransformControls 拖动事件：切换 OrbitControls 启用状态
+   */
+  const onTControlsDraggingChanged = (event: { value: unknown }) => {
+    if (orbitControls) {
+      orbitControls.enabled = !(event.value as boolean)
+    }
+  }
+
+  /**
+   * TransformControls 变化事件：吸附到地面
+   */
+  const onTControlsChange = () => {
+    if (tControls && eventObj.isClampGroup && tControls.object) {
+      // 将物体吸附到地面
+      tControls.object.position.y = 0
+    }
+  }
 
   // ==================== 配置对象 ====================
   interface EventObj {
@@ -58,7 +78,13 @@
     }
   ]
 
-  const { scene, camera, renderer, startAnimation } = useThreeScene(containerRef, {
+  const {
+    scene,
+    camera,
+    renderer,
+    startAnimation,
+    dispose: baseDispose
+  } = useThreeScene(containerRef, {
     fov: 45,
     cameraPosition: { x: 3, y: 2.5, z: 8 }, // 相机位置
     enableControls: false, // 禁用默认控制器，使用自定义
@@ -163,24 +189,15 @@
     tControls = new TransformControls(camera.value, renderer.value.domElement)
 
     // 监听拖动事件，禁用轨道控制器
-    tControls.addEventListener("dragging-changed", (event) => {
-      if (window.orbitControls) {
-        window.orbitControls.enabled = !event.value
-      }
-    })
+      tControls.addEventListener("dragging-changed", onTControlsDraggingChanged)
 
-    // 监听变化，实现吸附功能。如果isClampGroup为true，则将物体吸附到地面
-    tControls.addEventListener("change", () => {
-      if (tControls && eventObj.isClampGroup && tControls.object) {
-        // 将物体吸附到地面
-        tControls.object.position.y = 0
-      }
-    })
+      // 监听变化，实现吸附功能。如果isClampGroup为true，则将物体吸附到地面
+      tControls.addEventListener("change", onTControlsChange)
 
-    if (scene.value) {
-      scene.value.add((tControls as any)._root)
-    }
-    console.log("✅ 变换控制器创建完成")
+      if (scene.value) {
+        scene.value.add((tControls as any)._root)
+      }
+      console.log("✅ 变换控制器创建完成")
   }
 
   /**
@@ -418,13 +435,15 @@
 
       // 创建自定义轨道控制器
       if (!camera.value || !renderer.value) return
-      const orbitControls = new OrbitControls(camera.value, renderer.value.domElement)
+      orbitControls = new OrbitControls(camera.value, renderer.value.domElement)
       orbitControls.enableDamping = true // 启用阻尼
-      window.orbitControls = orbitControls // 将轨道控制器保存到window对象中
+      // 轨道控制器已在模块作用域中声明
 
       // 开始渲染循环
       startAnimation(() => {
-        orbitControls.update() // 更新轨道控制器
+        if (orbitControls) {
+          orbitControls.update() // 更新轨道控制器
+        }
       })
     }, 100)
   })
@@ -437,27 +456,50 @@
     // 销毁 GUI
     if (gui) {
       gui.destroy()
+      gui = null
     }
 
     // 清理变换控制器
     if (tControls) {
+      tControls.removeEventListener("dragging-changed", onTControlsDraggingChanged)
+      tControls.removeEventListener("change", onTControlsChange)
+      tControls.detach()
       tControls.dispose()
+      tControls = null
     }
 
     // 清理轨道控制器
-    if (window.orbitControls) {
-      window.orbitControls.dispose()
-      delete window.orbitControls
+    if (orbitControls) {
+      orbitControls.dispose()
+      orbitControls = null
     }
 
     // 清理加载器
     if (dracoLoader) {
       dracoLoader.dispose()
+      dracoLoader = null
+    }
+
+    // 移除并释放基础户型模型
+    if (basicScene) {
+      scene.value?.remove(basicScene)
+      basicScene.traverse((child) => {
+        if (child.geometry) child.geometry.dispose()
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => mat.dispose())
+          } else {
+            child.material.dispose()
+          }
+        }
+      })
+      basicScene = null
     }
 
     // 清理场景中的物体
     sceneMeshes.forEach((item) => {
       if (item.object3d) {
+        scene.value?.remove(item.object3d)
         item.object3d.traverse((child) => {
           if (child.geometry) child.geometry.dispose()
           if (child.material) {
@@ -470,6 +512,12 @@
         })
       }
     })
+    sceneMeshes = []
+    meshesNum = {}
+    meshesFolder = null
+
+    // 调用基础清理，释放 scene/renderer/camera/ResizeObserver
+    baseDispose()
   })
 </script>
 

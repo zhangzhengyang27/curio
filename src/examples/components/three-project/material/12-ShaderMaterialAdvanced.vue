@@ -11,7 +11,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -230,7 +230,7 @@
     if (!shaderMaterial || !shaderMesh) return
 
     // 保存当前的 uniform 值
-    const currentUniforms = {
+    const _currentUniforms = {
       uTime: shaderMaterial.uniforms.uTime.value,
       uColor1: shaderMaterial.uniforms.uColor1.value.clone(),
       uColor2: shaderMaterial.uniforms.uColor2.value.clone(),
@@ -268,8 +268,8 @@
     effectFolder
       .add(params, "effect", ["checkerboard", "noise", "stripe", "ring"])
       .name("着色器效果")
-      .onChange((value) => {
-        switchEffect(value as keyof typeof fragmentShaders)
+      .onChange((_value) => {
+        switchEffect(_value as keyof typeof fragmentShaders)
       })
     effectFolder.open()
 
@@ -278,7 +278,7 @@
     paramFolder
       .add(params, "speed", 0, 5, 0.1)
       .name("动画速度")
-      .onChange((value) => {
+      .onChange(() => {
         // 速度在 animate 中使用
       })
 

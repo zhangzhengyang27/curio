@@ -23,9 +23,10 @@
   let animationId = 0
 
   // 布料粒子物理体和渲染网格
-  let particles: CANNON.Body[][] = [] // CANNON.Body[]
-  let springs: CANNON.Spring[] = [] // CANNON.Spring[]
-  let clothMesh: THREE.Mesh | null = null
+    let particles: CANNON.Body[][] = [] // CANNON.Body[]
+    let springs: CANNON.Spring[] = [] // CANNON.Spring[]
+    const springListeners = new Map<CANNON.Spring, () => void>()
+    let clothMesh: THREE.Mesh | null = null
   let clothGeometry: THREE.PlaneGeometry | null = null
   let defaultMaterial: CANNON.Material | null = null
 
@@ -36,7 +37,7 @@
   let isDragging = false
   let dragParticle: CANNON.Body | null = null
   let dragIntersection = new THREE.Vector3()
-  let dragOffset = new THREE.Vector3()
+  let _dragOffset = new THREE.Vector3()
 
   // 设置
   const settings = {
@@ -184,20 +185,22 @@
    * 创建弹簧
    */
   const createSpring = (bodyA: any, bodyB: any, restLength: number, isBend = false) => {
-    if (!world) return
-    const spring = new CANNON.Spring(bodyA, bodyB, {
-      restLength: restLength,
-      stiffness: isBend ? settings.stiffness * 0.3 : settings.stiffness,
-      damping: 0.5
-    })
-    spring.addEventListener("postStep", () => {
-      const force = spring.getForce()
-      bodyA.applyForce(force, bodyA.position)
-      bodyB.applyForce(force.negate(), bodyB.position)
-    })
-    world.addSpring(spring)
-    springs.push(spring)
-  }
+      if (!world) return
+      const spring = new CANNON.Spring(bodyA, bodyB, {
+        restLength: restLength,
+        stiffness: isBend ? settings.stiffness * 0.3 : settings.stiffness,
+        damping: 0.5
+      })
+      const onPostStep = () => {
+        const force = spring.getForce()
+        bodyA.applyForce(force, bodyA.position)
+        bodyB.applyForce(force.negate(), bodyB.position)
+      }
+      spring.addEventListener("postStep", onPostStep)
+      springListeners.set(spring, onPostStep)
+      world.addSpring(spring)
+      springs.push(spring)
+    }
 
   /**
    * 添加地面和支架
@@ -527,11 +530,16 @@
     }
 
     // 清理物理弹簧
-    springs.forEach((spring) => {
-      world?.removeSpring(spring)
-    })
+      springs.forEach((spring) => {
+        const listener = springListeners.get(spring)
+        if (listener) {
+          spring.removeEventListener("postStep", listener)
+        }
+        world?.removeSpring(spring)
+      })
+      springListeners.clear()
 
-    // 清理物理体
+      // 清理物理体
     particles.flat().forEach((body) => {
       world?.removeBody(body)
     })

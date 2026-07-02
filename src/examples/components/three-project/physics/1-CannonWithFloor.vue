@@ -18,6 +18,7 @@
   let sphereWorldMaterial: CANNON.Material | null = null
   let clock: THREE.Clock | null = null
   let gui: GUI | null = null
+  let animationId: number | null = null
 
   // 使用公共的 Three.js 场景逻辑
   const {
@@ -193,7 +194,7 @@
     renderer.value.render(scene.value, camera.value)
 
     // 请求下一帧
-    requestAnimationFrame(customRender)
+    animationId = requestAnimationFrame(customRender)
   }
 
   /**
@@ -230,6 +231,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 取消自定义渲染循环
+    if (animationId) {
+      cancelAnimationFrame(animationId)
+      animationId = null
+    }
+
     // 清理物理世界
     if (world && sphereBody) {
       world.removeBody(sphereBody)
@@ -284,7 +291,7 @@
     initContent()
 
     // 启动自定义渲染循环
-    customRender()
+    animationId = requestAnimationFrame(customRender)
   })
 
   // 组件卸载时清理资源

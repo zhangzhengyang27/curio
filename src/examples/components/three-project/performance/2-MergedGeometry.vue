@@ -14,7 +14,7 @@
     scene,
     camera,
     renderer,
-    startAnimation,
+    startAnimation: _startAnimation,
     onSceneReady,
     dispose: baseDispose
   } = useThreeScene(containerRef, {

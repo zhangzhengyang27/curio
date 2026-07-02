@@ -17,7 +17,7 @@
     scene,
     camera,
     renderer,
-    controls,
+    controls: _controls,
     startAnimation,
     onSceneReady,
     dispose: baseDispose

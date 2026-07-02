@@ -12,7 +12,7 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    renderer,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose
@@ -38,6 +38,7 @@
   let normalTexture: THREE.Texture | null = null
   let dispTexture: THREE.Texture | null = null
   let aoTexture: THREE.Texture | null = null
+  let lambertPhongMaterialInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载 HDR 环境贴图
@@ -331,7 +332,7 @@
     infoFolder.add(info, "hasSpecularMap").name("是否有高光贴图").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    lambertPhongMaterialInterval = setInterval(() => {
       if (planeMaterial) {
         info.currentType = planeMaterial.type
         info.hasSpecularMap = planeMaterial.type === "MeshPhongMaterial"
@@ -343,6 +344,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (lambertPhongMaterialInterval) {
+      clearInterval(lambertPhongMaterialInterval)
+      lambertPhongMaterialInterval = null
+    }
+
     // 清理纹理
     const textures = [colorTexture, specularTexture, normalTexture, dispTexture, aoTexture, envMap]
     textures.forEach((texture) => {

@@ -1,5 +1,4 @@
 import * as THREE from "three"
-import { Pass } from "three/examples/jsm/postprocessing/Pass.js"
 
 declare module "three" {
   interface Object3D {
@@ -77,6 +76,7 @@ declare module "cannon-es" {
 
   interface Spring {
     addEventListener(type: string, listener: (...args: any[]) => void): void
+    removeEventListener(type: string, listener: (...args: any[]) => void): void
     getForce(): any
   }
 

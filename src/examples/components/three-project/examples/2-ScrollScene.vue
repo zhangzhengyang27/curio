@@ -16,8 +16,9 @@
   let cubeArr: THREE.Mesh[] = []
   let arrGroup: THREE.Group[] = []
   let raycaster: THREE.Raycaster | null = null
-  let clock: THREE.Clock | null = null
-  let currentPage = 0
+    let clock: THREE.Clock | null = null
+    let currentPage = 0
+    let animationId: number | null = null
 
   // 鼠标位置
   const mouse = new THREE.Vector2()
@@ -31,7 +32,7 @@
     scene,
     camera,
     renderer,
-    startAnimation,
+    startAnimation: _startAnimation,
     onSceneReady,
     dispose: baseDispose
   } = useThreeScene(containerRef, {
@@ -276,8 +277,8 @@
     renderer.value.render(scene.value, camera.value)
 
     // 请求下一帧
-    requestAnimationFrame(customRender)
-  }
+      animationId = requestAnimationFrame(customRender)
+    }
 
   /**
    * 初始化场景内容
@@ -311,9 +312,15 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
-    // 移除事件监听
-    window.removeEventListener("mousemove", handleMouseMove)
-    if (scrollContainerRef.value) {
+      // 取消自定义渲染循环
+      if (animationId) {
+        cancelAnimationFrame(animationId)
+        animationId = null
+      }
+
+      // 移除事件监听
+      window.removeEventListener("mousemove", handleMouseMove)
+      if (scrollContainerRef.value) {
       scrollContainerRef.value.removeEventListener("click", handleClick)
       scrollContainerRef.value.removeEventListener("scroll", handleScroll)
     }

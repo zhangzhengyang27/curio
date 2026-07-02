@@ -31,6 +31,7 @@
   let points: THREE.Points | null = null
   let pointsMaterial: THREE.PointsMaterial | null = null
   let particlesGeometry: THREE.BufferGeometry | null = null
+  let particleGalaxyInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 创建粒子星河
@@ -203,7 +204,7 @@
     infoFolder.add(info, "sizeAttenuation").name("深度衰减").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    particleGalaxyInterval = setInterval(() => {
       if (pointsMaterial) {
         info.sizeAttenuation = pointsMaterial.sizeAttenuation
         info.blending =
@@ -241,6 +242,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (particleGalaxyInterval) {
+      clearInterval(particleGalaxyInterval)
+      particleGalaxyInterval = null
+    }
+
     // 清理粒子系统
     if (points && scene.value) {
       scene.value.remove(points)

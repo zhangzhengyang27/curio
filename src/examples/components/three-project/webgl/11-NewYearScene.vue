@@ -109,7 +109,7 @@
     )
   }
 
-  const createFlyingLights = () => {
+  const __createFlyingLights = () => {
     gltfLoader.load(
       "/three-project/model/flyLight.glb",
       (gltf: any) => {

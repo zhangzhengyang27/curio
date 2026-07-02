@@ -31,7 +31,7 @@
   let gui: GUI | null = null
   let toonMeshes: { group: THREE.Group; material: THREE.MeshToonMaterial; label: string }[] = []
   let gradientTextures: THREE.DataTexture[] = []
-  let animationId: number = 0
+  let _animationId: number = 0
 
   /**
    * 创建不同阶数的渐变贴图（DataTexture）

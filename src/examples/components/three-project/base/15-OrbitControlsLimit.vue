@@ -3,9 +3,7 @@
   import * as THREE from "three"
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
   import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
-  import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
-  import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
-  import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js"
+
   import PageLayout from "@/examples/components/three-project/_shared/PageLayout.vue"
 
   // 容器引用
@@ -20,6 +18,7 @@
   let animationId: number | null = null
   let envMap: THREE.Texture | null = null
   let loadedModel: THREE.Object3D | null = null
+  let cameraInfo: any = null
 
   /**
    * 初始化场景
@@ -323,7 +322,7 @@
 
     // 💡 性能优化：在动画循环中更新信息，而不是使用 setInterval
     // 将 info 对象暴露给动画循环使用
-    window.__cameraInfo = info
+    cameraInfo = info
 
     infoFolder.open()
   }
@@ -340,8 +339,8 @@
     }
 
     // 💡 性能优化：在动画循环中更新 GUI 信息（而不是使用 setInterval）
-    if (camera && controls && window.__cameraInfo) {
-      const info = window.__cameraInfo
+    if (camera && controls && cameraInfo) {
+      const info = cameraInfo
       info.position = `${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}`
 
       // 计算相机到目标的距离
@@ -438,8 +437,8 @@
     }
 
     // 清理全局变量
-    if (window.__cameraInfo) {
-      delete window.__cameraInfo
+    if (cameraInfo) {
+      cameraInfo = null
     }
 
     // 移除事件监听

@@ -42,9 +42,9 @@
     scene,
     camera,
     renderer,
-    controls,
+    controls: _controls,
     startAnimation,
-    handleResize,
+    handleResize: _handleResize,
     dispose: baseDispose
   } = useThreeScene(containerRef, {
     fov: 45,

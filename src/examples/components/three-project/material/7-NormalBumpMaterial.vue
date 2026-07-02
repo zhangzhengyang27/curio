@@ -12,7 +12,7 @@
   const {
     scene,
     renderer,
-    controls,
+    controls: _controls,
     startAnimation,
     onSceneReady,
     dispose: baseDispose

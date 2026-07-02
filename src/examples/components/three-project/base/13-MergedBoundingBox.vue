@@ -29,6 +29,7 @@
   let spheres: THREE.Mesh[] = [] // 保存所有球体
   let boxHelper: THREE.Box3Helper | null = null // 合并后的包围盒辅助器
   let mergedBox: THREE.Box3 | null = null // 合并后的包围盒
+  let mergedBoundingBoxInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 创建三个小球
@@ -140,7 +141,7 @@
     gui = new GUI()
 
     // 球体控制
-    spheres.forEach((sphere, index) => {
+    spheres.forEach((sphere, _index) => {
       const folder = gui.addFolder(`${sphere.name}`)
 
       folder
@@ -217,7 +218,7 @@
     infoFolder.add(info, "sphereCount").name("球体数量")
 
     // 实时更新信息
-    setInterval(() => {
+    mergedBoundingBoxInterval = setInterval(() => {
       if (mergedBox) {
         const center = mergedBox.getCenter(new THREE.Vector3())
         const size = mergedBox.getSize(new THREE.Vector3())
@@ -231,6 +232,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (mergedBoundingBoxInterval) {
+      clearInterval(mergedBoundingBoxInterval)
+      mergedBoundingBoxInterval = null
+    }
+
     // 清理包围盒辅助器
     if (boxHelper) {
       scene.value?.remove(boxHelper)

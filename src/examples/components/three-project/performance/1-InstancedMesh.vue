@@ -44,7 +44,7 @@
   // GUI 信息对象
   const infoObj = {
     drawCalls: 0,
-    triangles: 0,
+    triangles: 0
   }
 
   /**
@@ -303,7 +303,10 @@
 </script>
 
 <template>
-  <PageLayout title="⚡ InstancedMesh 实例化渲染" description="学习如何使用 InstancedMesh 大幅减少 Draw Call，实现高效的大规模物体渲染">
+  <PageLayout
+    title="⚡ InstancedMesh 实例化渲染"
+    description="学习如何使用 InstancedMesh 大幅减少 Draw Call，实现高效的大规模物体渲染"
+  >
     <!-- 自定义内容插槽 -->
     <template #content>
       <div class="features">
@@ -344,12 +347,12 @@
         <p>🔧 核心代码：</p>
         <p><code>// 创建 InstancedMesh</code></p>
         <p><code>const mesh = new THREE.InstancedMesh(geometry, material, count)</code></p>
-        <br />
+        <br>
         <p><code>// 设置位置（使用 Object3D 辅助）</code></p>
         <p><code>dummy.position.set(x, y, z)</code></p>
         <p><code>dummy.updateMatrix()</code></p>
         <p><code>mesh.setMatrixAt(index, dummy.matrix)</code></p>
-        <br />
+        <br>
         <p><code>// 设置颜色</code></p>
         <p><code>mesh.setColorAt(index, color)</code></p>
         <p><code>mesh.instanceColor.needsUpdate = true</code></p>
@@ -390,7 +393,7 @@
     </template>
 
     <!-- Three.js 容器 -->
-    <div ref="containerRef"></div>
+    <div ref="containerRef" />
   </PageLayout>
 </template>
 

@@ -40,6 +40,7 @@
 
   // GUI 和控制器引用
   let gui: GUI | null = null
+  let dragStatusInterval: ReturnType<typeof setInterval> | null = null
   let dragControlsInstance: DragControls | null = null
 
   // 可拖拽的物体数组
@@ -374,7 +375,7 @@
     }, 100)
 
     // 保存 interval 引用以便清理
-    window.__dragStatusInterval = statusInterval as unknown as number
+    dragStatusInterval = statusInterval as any
   }
 
   /**
@@ -382,9 +383,9 @@
    */
   const extendedDispose = () => {
     // 清理状态更新定时器
-    if (window.__dragStatusInterval) {
-      clearInterval(window.__dragStatusInterval)
-      delete window.__dragStatusInterval
+    if (dragStatusInterval) {
+      clearInterval(dragStatusInterval)
+      dragStatusInterval = null
     }
 
     // 清理 DragControls

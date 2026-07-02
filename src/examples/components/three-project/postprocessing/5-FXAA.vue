@@ -22,7 +22,7 @@
     controls,
     startAnimation,
     onSceneReady,
-    handleResize,
+    handleResize: _handleResize,
     dispose: baseDispose
   } = useThreeScene(containerRef, {
     cameraPosition: { x: 3, y: 2, z: 5 },

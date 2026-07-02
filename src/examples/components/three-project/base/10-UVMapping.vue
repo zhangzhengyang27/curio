@@ -11,8 +11,8 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    camera,
-    renderer,
+    camera: _camera,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose

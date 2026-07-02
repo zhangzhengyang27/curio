@@ -30,6 +30,7 @@
   // Three.js 对象引用
   let gui!: GUI
   let loadedModels: THREE.Object3D[] = [] // 保存加载的模型引用
+  let gltfLoaderInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 加载 GLTF 模型
@@ -141,7 +142,7 @@
     sceneFolder.add(sceneInfo, "objectCount").name("对象数量").listen()
 
     // 更新场景信息
-    setInterval(() => {
+    gltfLoaderInterval = setInterval(() => {
       sceneInfo.objectCount = scene.value?.children.length || 0
     }, 1000)
   }
@@ -150,6 +151,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (gltfLoaderInterval) {
+      clearInterval(gltfLoaderInterval)
+      gltfLoaderInterval = null
+    }
+
     // 清理加载的模型
     loadedModels.forEach((model) => {
       model.traverse((child) => {

@@ -3,7 +3,6 @@
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
   import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
-  import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
   import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
   import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js"
   import PageLayout from "@/examples/components/three-project/_shared/PageLayout.vue"
@@ -29,6 +28,7 @@
 
   // GUI 和对象引用
   let gui!: GUI
+  let wireframeGeometryInterval: ReturnType<typeof setInterval> | null = null
   let edgesArray: { edges: THREE.LineSegments; originalMesh: THREE.Mesh }[] = [] // 保存所有边缘线段
   let loadedModel: THREE.Object3D | null = null // 保存加载的模型
   let currentMode: string = "edges" // 当前模式：edges 或 wireframe
@@ -230,7 +230,7 @@
     infoFolder.add(info, "mode").name("当前模式").listen()
 
     // 实时更新信息
-    setInterval(() => {
+    wireframeGeometryInterval = setInterval(() => {
       info.edgeCount = edgesArray.length
       info.mode = currentMode === "edges" ? "EdgesGeometry" : "WireframeGeometry"
     }, 100)
@@ -240,6 +240,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (wireframeGeometryInterval) {
+      clearInterval(wireframeGeometryInterval)
+      wireframeGeometryInterval = null
+    }
+
     // 清理边缘线段
     edgesArray.forEach((item) => {
       if (item.edges) {

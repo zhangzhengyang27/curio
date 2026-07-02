@@ -16,13 +16,13 @@
 
   // 门框相关
   let doorFrameBody: CANNON.Body | null = null
-  let doorFrameMesh: THREE.Group | null = null
+  let _doorFrameMesh: THREE.Group | null = null
 
   // 门（铰链约束）相关
   let doorBody: CANNON.Body | null = null
   let doorMesh: THREE.Mesh | null = null
   let doorHinge: CANNON.HingeConstraint | null = null
-  let doorMaterial: THREE.MeshStandardMaterial | null = null
+  let _doorMaterial: THREE.MeshStandardMaterial | null = null
 
   // 摆锤（距离约束）相关
   let pendulumBody: CANNON.Body | null = null
@@ -146,7 +146,7 @@
     doorMesh.castShadow = true
     scene.value.add(doorMesh)
 
-    doorMaterial = doorMat
+    _doorMaterial = doorMat
 
     doorBody = new CANNON.Body({
       mass: 2,
@@ -464,7 +464,7 @@
     clock = null
     gui = null
     doorFrameBody = null
-    doorFrameMesh = null
+    _doorFrameMesh = null
     doorBody = null
     doorMesh = null
     doorHinge = null

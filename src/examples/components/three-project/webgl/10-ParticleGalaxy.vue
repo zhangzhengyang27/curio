@@ -10,7 +10,7 @@
 
   const containerRef = shallowRef(null)
 
-  const { scene, camera, renderer, startAnimation } = useThreeScene(containerRef, {
+  const { scene, startAnimation } = useThreeScene(containerRef, {
     fov: 75,
     cameraPosition: { x: 0, y: 0, z: 5 },
     enableControls: true,

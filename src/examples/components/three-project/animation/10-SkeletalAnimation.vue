@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -13,7 +12,7 @@
   let gui = null
   let mixer = null
   let skeletonHelper = null
-  let loadedModel = null
+  let _loadedModel = null
   let animationActions = []
   let currentAction = null
 
@@ -23,7 +22,7 @@
     timeScale: 1
   }
 
-  const { scene, camera, renderer, controls, startAnimation, dispose: baseDispose } =
+  const { scene, camera, renderer, controls: _controls, startAnimation, dispose: baseDispose } =
     useThreeScene(containerRef, {
       fov: 45,
       cameraPosition: { x: 0, y: 2, z: 6 },
@@ -45,7 +44,7 @@
         if (!scene.value) return
         const model = gltf.scene
         scene.value.add(model)
-        loadedModel = model
+        _loadedModel = model
 
         // 遍历检查骨骼
         let hasSkeleton = false

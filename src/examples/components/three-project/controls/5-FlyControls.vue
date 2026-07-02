@@ -27,6 +27,8 @@
 
   // 飞行状态信息
   let flightInfo!: { posX: number; posY: number; posZ: number; speed: string }
+  let flyMoveInfo: any = null
+  let flyBoost = false
 
   // 使用公共的 Three.js 场景逻辑（禁用默认 OrbitControls）
   const {
@@ -285,7 +287,7 @@
     moveFolder.add(moveInfo, "right").name("右移 (D)").listen()
 
     // 保存 moveInfo 引用以便在键盘事件中更新
-    window._flyMoveInfo = moveInfo
+    flyMoveInfo = moveInfo
 
     // 视角重置
     const actionFolder = gui.addFolder("操作")
@@ -319,7 +321,7 @@
       flightInfo.posZ = camera.value.position.z
 
       // 检测 Shift 键状态来显示速度
-      flightInfo.speed = window._flyBoost ? "加速 ⚡" : "正常"
+      flightInfo.speed = flyBoost ? "加速 ⚡" : "正常"
     }
   }
 
@@ -329,7 +331,7 @@
   const onKeyDown = (event: KeyboardEvent) => {
     if (!flyControls) return
 
-    const moveInfo = window._flyMoveInfo
+    const moveInfo = flyMoveInfo
     if (!moveInfo) return
 
     switch (event.code) {
@@ -357,7 +359,7 @@
       case "ShiftRight":
         // Shift 加速：增大移动速度
         flyControls.movementSpeed = 5
-        window._flyBoost = true
+        flyBoost = true
         break
       case "KeyQ":
         // Q 下降
@@ -380,7 +382,7 @@
   const onKeyUp = (event: KeyboardEvent) => {
     if (!flyControls) return
 
-    const moveInfo = window._flyMoveInfo
+    const moveInfo = flyMoveInfo
     if (!moveInfo) return
 
     switch (event.code) {
@@ -408,7 +410,7 @@
       case "ShiftRight":
         // 松开 Shift 恢复正常速度
         flyControls.movementSpeed = 1
-        window._flyBoost = false
+        flyBoost = false
         break
     }
   }
@@ -422,8 +424,8 @@
     window.removeEventListener("keyup", onKeyUp)
 
     // 清理飞行状态
-    delete window._flyMoveInfo
-    delete window._flyBoost
+    flyMoveInfo = null
+    flyBoost = false
 
     // 清理 FlyControls
     flyControls?.dispose()

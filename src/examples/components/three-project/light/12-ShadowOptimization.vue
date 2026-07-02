@@ -35,7 +35,7 @@
   // FPS 计算
   let frameCount: number = 0
   let lastFPSTime: number = performance.now()
-  let currentFPS: number = 60
+  let _currentFPS: number = 60
 
   /**
    * 创建场景
@@ -146,7 +146,7 @@
     frameCount++
     const now = performance.now()
     if (now - lastFPSTime >= 1000) {
-      currentFPS = frameCount
+      _currentFPS = frameCount
       frameCount = 0
       lastFPSTime = now
 

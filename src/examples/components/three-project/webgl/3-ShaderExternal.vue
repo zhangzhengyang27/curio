@@ -29,9 +29,6 @@
   let shaderMaterial: THREE.ShaderMaterial | null = null
   // 平面网格
   let floor: THREE.Mesh | null = null
-  // 时钟
-  const clock = new THREE.Clock()
-
   /**
    * 创建着色器材质（使用外部 GLSL 文件）
    */
@@ -89,7 +86,6 @@
    * 动画循环
    */
   const animate = () => {
-    const elapsedTime = clock.getElapsedTime()
 
     // 这里可以添加基于时间的动画
   }

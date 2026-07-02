@@ -3,7 +3,6 @@
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
   import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
-  import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
   import { VertexNormalsHelper } from "three/examples/jsm/helpers/VertexNormalsHelper.js"
   import PageLayout from "@/examples/components/three-project/_shared/PageLayout.vue"
 
@@ -13,8 +12,8 @@
   // 使用公共的 Three.js 场景逻辑
   const {
     scene,
-    camera,
-    renderer,
+    camera: _camera,
+    renderer: _renderer,
     startAnimation,
     onSceneReady,
     dispose: baseDispose

@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -20,7 +19,7 @@
 
   const modeNames = ["🔥 上升", "💨 扩散", "🌀 旋涡"]
 
-  const { scene, camera, renderer, controls, startAnimation, dispose: baseDispose } =
+  const { scene, camera: _camera, renderer: _renderer, controls: _controls, startAnimation, dispose: baseDispose } =
     useThreeScene(containerRef, {
       fov: 60,
       cameraPosition: { x: 0, y: 5, z: 12 },
@@ -115,7 +114,6 @@
       }
 
       const x = positions[i * 3]
-      const y = positions[i * 3 + 1]
       const z = positions[i * 3 + 2]
 
       // 根据模式更新位置

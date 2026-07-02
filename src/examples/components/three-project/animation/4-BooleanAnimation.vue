@@ -24,7 +24,7 @@
     scene,
     camera,
     renderer,
-    controls,
+    controls: _controls,
     startAnimation,
     dispose: baseDispose
   } = useThreeScene(containerRef, {

@@ -236,7 +236,7 @@
 
     // 模型切换
     const modelFolder = gui.addFolder("📦 模型选择")
-    const modelNames = availableModels.map((m) => m.name)
+    const _modelNames = availableModels.map((m) => m.name)
     modelFolder
       .add(settings, "currentModelIndex", 0, availableModels.length - 1, 1)
       .name("模型")

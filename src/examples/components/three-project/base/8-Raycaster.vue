@@ -31,6 +31,7 @@
   let spheres: THREE.Mesh[] = [] // 保存球体引用
   let raycaster!: THREE.Raycaster // 射线投射器
   let mouse!: THREE.Vector2 // 鼠标位置
+  let raycasterInterval: ReturnType<typeof setInterval> | null = null
 
   /**
    * 创建三个球体
@@ -196,7 +197,7 @@
     infoFolder.add(info, "totalSpheres").name("球体总数")
 
     // 更新选中数量
-    setInterval(() => {
+    raycasterInterval = setInterval(() => {
       info.selectedCount = spheres.filter((s) => (s as any)._isSelect).length
     }, 100)
 
@@ -230,6 +231,12 @@
    * 扩展清理函数
    */
   const extendedDispose = () => {
+    // 清理定时器
+    if (raycasterInterval) {
+      clearInterval(raycasterInterval)
+      raycasterInterval = null
+    }
+
     // 移除点击事件监听
     window.removeEventListener("click", handleClick)
 

@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup>
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
@@ -29,7 +28,7 @@
     new THREE.Vector3(10, 3, -10)
   ]
 
-  const { scene, camera, renderer, controls, startAnimation, dispose: baseDispose } =
+  const { scene, camera, renderer, controls: _controls, startAnimation, dispose: baseDispose } =
     useThreeScene(containerRef, {
       fov: 60,
       cameraPosition: { x: 0, y: 2, z: 0 },

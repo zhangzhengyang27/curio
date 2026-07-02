@@ -220,7 +220,7 @@
     memFolder.add(memParams, "geometries").name("几何体数量").disable()
 
     // 每帧更新内存信息
-    const updateMemInfo = () => {
+    const _updateMemInfo = () => {
       if (renderer.value && gui) {
         const info = renderer.value.info
         memParams.textures = String(info.memory.textures)
