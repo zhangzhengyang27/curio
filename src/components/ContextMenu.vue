@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useInteractionStore } from '../stores/useInteractionStore.js'
 import { useEarthStore } from '../stores/useEarthStore.js'
 
@@ -85,10 +85,21 @@ function onToggleCompare() {
 }
 
 // 点击空白关闭
-if (typeof window !== 'undefined' && !window._ctxMenuListeners) {
-  window._ctxMenuListeners = true
-  window.addEventListener('click', () => interactionStore.closeContextMenu())
-}
+let clickOutsideHandler = null
+
+onMounted(() => {
+  if (typeof window !== 'undefined' && !clickOutsideHandler) {
+    clickOutsideHandler = () => interactionStore.closeContextMenu()
+    window.addEventListener('click', clickOutsideHandler)
+  }
+})
+
+onUnmounted(() => {
+  if (clickOutsideHandler) {
+    window.removeEventListener('click', clickOutsideHandler)
+    clickOutsideHandler = null
+  }
+})
 </script>
 
 <style scoped>

@@ -87,14 +87,6 @@ declare module "cannon-es" {
 }
 
 declare global {
-  interface Window {
-    __cameraInfo?: any
-    orbitControls?: any
-    __dragStatusInterval?: number
-    _flyMoveInfo?: { forward: boolean; backward: boolean; left: boolean; right: boolean }
-    _flyBoost?: boolean
-  }
-
   interface Performance {
     memory?: {
       usedJSHeapSize: number

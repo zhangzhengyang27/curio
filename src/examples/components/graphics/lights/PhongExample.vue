@@ -137,8 +137,7 @@ async function initGraphicsExample() {
         const camera = new Camera(gl, {fov: 35});
         camera.position.set(0, 1, 7);
         camera.lookAt([0, 0, 0]);
-        window.camera = camera;
-    
+
         const scene = new Transform();
         
         const sphereGeometry = new Sphere(gl, {widthSegments: 60});
@@ -319,9 +318,7 @@ async function initGraphicsExample() {
         const cylinder = new Mesh(gl, {geometry: cylinderGeometry, program: program4});
         cylinder.position.set(-1.3, 0, 0);
         cylinder.setParent(scene);
-    
-        window.program = program1;
-    
+
         requestAnimationFrame(update);
         function update() {
           requestAnimationFrame(update);
