@@ -7,45 +7,22 @@
     :clear-color="0xb9d3ff"
     :enable-controls="true"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
 <script setup>
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
+import { pushEarthLessonsBaseUrl, popEarthLessonsBaseUrl } from './useEarthLessonsBaseUrl.js'
 
 const baseUrl = '/external-examples/earth-lessons/05-country-borders/'
 const rotationSpeed = 0.001
 
-function resolveExampleUrl(url) {
-  if (typeof url !== 'string') return url
-  if (/^https?:\/\//.test(url) || url.startsWith('/')) return url
-  const base = window.__EXAMPLE_BASE_URL__ || baseUrl
-  const relative = url.startsWith('./') ? url.slice(2) : url
-  return base + relative
-}
-
-let loadersPatched = false
-function patchLoaders() {
-  if (loadersPatched) return
-  loadersPatched = true
-
-  const originalTextureLoad = THREE.TextureLoader.prototype.load
-  THREE.TextureLoader.prototype.load = function (url, onLoad, onProgress, onError) {
-    return originalTextureLoad.call(this, resolveExampleUrl(url), onLoad, onProgress, onError)
-  }
-
-  const originalFileLoad = THREE.FileLoader.prototype.load
-  THREE.FileLoader.prototype.load = function (url, onLoad, onProgress, onError) {
-    return originalFileLoad.call(this, resolveExampleUrl(url), onLoad, onProgress, onError)
-  }
-}
-
 async function onReady(ctx) {
-  patchLoaders()
-  window.__EXAMPLE_BASE_URL__ = baseUrl
+  pushEarthLessonsBaseUrl(baseUrl)
 
-  const { earth } = await import(/* @vite-ignore */ `${baseUrl}earth.js`)
+  const { earth } = await import(`${baseUrl}earth.js`)
   ctx.scene.add(earth)
 
   const dir1 = new THREE.DirectionalLight(0xffffff, 0.6)
@@ -62,5 +39,9 @@ async function onReady(ctx) {
   ctx.addUpdateCallback(() => {
     earth.rotation.y += rotationSpeed
   })
+}
+
+function onBeforeDispose() {
+  popEarthLessonsBaseUrl()
 }
 </script>
