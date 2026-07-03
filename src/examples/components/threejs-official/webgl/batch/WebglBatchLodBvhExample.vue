@@ -263,5 +263,6 @@ async function onReady(__stage) {
 function onBeforeDispose() {
   restorePrototype(THREE.Mesh, 'raycast')
   restorePrototype(THREE.BatchedMesh, 'computeBoundsTree')
+  document.removeEventListener('pointermove', onPointerMove)
 }
 </script>

@@ -1468,24 +1468,18 @@ function onReady(ctx) {
   });
   
   // 鼠标锁定和视角控制
-  document.addEventListener('click', () => document.body.requestPointerLock());
-  
-  document.addEventListener('mousemove', (event) => {
+  const _onPointerLockClick = () => document.body.requestPointerLock()
+  const _onMouseMove = (event) => {
     if (document.pointerLockElement !== document.body) return;
     
-    // 水平和垂直旋转
     state.view.yaw -= event.movementX * state.view.mouseSensitivity;
     state.view.pitch -= event.movementY * state.view.mouseSensitivity;
     
-    // 限制垂直视角
     state.view.pitch = Math.max(-state.view.pitchLimit, Math.min(state.view.pitchLimit, state.view.pitch));
     
-    // 更新角色旋转
     if (character) character.rotation.y = state.view.yaw + Math.PI;
-  });
-  
-  // 键盘输入处理
-  document.addEventListener('keydown', ({ key }) => {
+  };
+  const _onKeyDown = ({ key }) => {
     switch(key.toLowerCase()) {
       case 'w': state.keys.w = true; break;
       case 'a': state.keys.a = true; break;
@@ -1494,11 +1488,9 @@ function onReady(ctx) {
       case ' ': 
         state.keys.space = true;
         
-        // 喷气背包逻辑
         if (state.jetpack.enabled && state.jetpack.fuel > 0 && !state.jetpack.cooldown) {
           state.jetpack.active = true;
         } 
-        // 普通跳跃（喷气背包未启用或燃料不足时）
         else if (!state.physics.airborne && !state.jetpack.enabled) {
           state.physics.velocity.y = state.physics.jumpForce;
           state.physics.airborne = true;
@@ -1506,17 +1498,21 @@ function onReady(ctx) {
         break;
       case 'shift': state.keys.shift = true; break;
     }
-  });
-  
-  document.addEventListener('keyup', ({ key }) => {
+  };
+  const _onKeyUp = ({ key }) => {
     const k = key.toLowerCase();
     if (k === ' ') {
       state.keys.space = false;
-      state.jetpack.active = false; // 停止喷气背包
+      state.jetpack.active = false;
     } else if (k in state.keys) {
       state.keys[k] = false;
     }
-  });
+  };
+
+  document.addEventListener('click', _onPointerLockClick);
+  document.addEventListener('mousemove', _onMouseMove);
+  document.addEventListener('keydown', _onKeyDown);
+  document.addEventListener('keyup', _onKeyUp);
   
   // 改进的碰撞检测函数
   function checkCollision(position, velocity) {
@@ -2070,5 +2066,9 @@ function onReady(ctx) {
 
 function onBeforeDispose() {
   restorePrototype(THREE.Mesh, 'raycast')
+  document.removeEventListener('click', _onPointerLockClick)
+  document.removeEventListener('mousemove', _onMouseMove)
+  document.removeEventListener('keydown', _onKeyDown)
+  document.removeEventListener('keyup', _onKeyUp)
 }
 </script>
