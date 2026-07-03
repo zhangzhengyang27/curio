@@ -5,6 +5,7 @@
     :clear-color="0x333333"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -155,7 +156,13 @@ async function onReady(ctx) {
   gui.add(data, "blur", 0, 1, 0.001).name("虚化强度");
   gui.add(data, "blockSize", 2.0, 20.0, 4.0).name("虚化区块大小");
   
-  new ResizeObserver(() => {
+  let _resizeObserver = null
+  
+  function onBeforeDispose() {
+    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+  }
+  
+  _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;

@@ -5,6 +5,7 @@
     :clear-color="0xfafafa"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -430,7 +431,13 @@ async function onReady(ctx) {
   gui.addColor(data, "c_p").name("粒子颜色");
   gui.add(data, "p_s", 1, 20, 0.001).name("粒子大小");
   
-  new ResizeObserver(() => {
+  let _resizeObserver = null
+  
+  function onBeforeDispose() {
+    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+  }
+  
+  _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;

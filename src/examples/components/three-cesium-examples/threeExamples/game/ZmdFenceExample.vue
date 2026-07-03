@@ -5,6 +5,7 @@
     :clear-color="0x333333"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -637,7 +638,13 @@ function onReady(ctx) {
   gui.addColor(data, "color").name("围栏颜色");
   gui.add(data, "useSimp").name("启用简化");
   
-  new ResizeObserver(() => {
+  let _resizeObserver = null
+  
+  function onBeforeDispose() {
+    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+  }
+  
+  _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
