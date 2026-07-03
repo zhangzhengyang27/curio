@@ -4,6 +4,7 @@
     :camera-position="[0, 400, 400]"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -12,12 +13,21 @@ import * as THREE from "three";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -319,9 +329,10 @@ function onReady(ctx) {
               texture: props.example?.globals?.FILE_HOST + "threeExamples/application/flyLine/point.png"
           });
           let index = 0;
-          var time = setInterval(() => {
+          _intervalId = setInterval(() => {
               if (index >= 4000) {
-                  clearInterval(time)
+                  clearInterval(_intervalId)
+                  _intervalId = null
               }
               var x = 0;
               var z = 0;

@@ -3,6 +3,7 @@
     camera="perspective"
     :camera-options="{ fov: 40, near: 1, far: 10000 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -23,6 +24,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - memory test II"
 function onReady(__stage) {
@@ -46,7 +49,7 @@ function onReady(__stage) {
   			let fragmentShader, vertexShader;
   
   			
-  			setInterval( render, 1000 / 60 );
+  			_intervalId = setInterval( render, 1000 / 60 );
   
   			
   
@@ -120,4 +123,5 @@ function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

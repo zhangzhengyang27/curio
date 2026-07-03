@@ -3,6 +3,7 @@
     camera="perspective"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -12,6 +13,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { MeshBVH, acceleratedRaycast, computeBoundsTree } from 'three-mesh-bvh';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -28,7 +30,7 @@ function onReady(ctx) {
   const controls = ctx.controls
 
   // 启用 BVH 加速光线投射
-  THREE.Mesh.prototype.raycast = acceleratedRaycast;
+  patchPrototype(THREE.Mesh, 'raycast', acceleratedRaycast);
   
   // 初始化场景、相机和渲染器
   
@@ -2064,5 +2066,9 @@ function onReady(ctx) {
   
   // 显示操作提示
   GLOBAL_CONFIG.ElMessage('🚀 WASD移动，鼠标视角，空格喷气飞行，Shift加速。喷气背包已启用！赛博朋克城市等你探索！💡 新增：体积光聚光灯、霓虹灯点光源、神光效果、大气发光、闪电效果等多种动态光效着色器！碰撞会触发眩晕效果。')
+}
+
+function onBeforeDispose() {
+  restorePrototype(THREE.Mesh, 'raycast')
 }
 </script>

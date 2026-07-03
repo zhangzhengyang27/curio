@@ -4,6 +4,7 @@
     alpha
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -14,12 +15,21 @@ import {  DirectionalLight, AmbientLight, Mesh, PlaneGeometry, MeshLambertMateri
 import { gsap } from 'gsap';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -185,7 +195,7 @@ function onReady(ctx) {
   };
   init_scene();
   load_terrain();
-  setInterval(() => {
+  _intervalId = setInterval(() => {
       new_fun();
   }, 2000);
   render();

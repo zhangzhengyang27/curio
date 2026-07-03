@@ -3,6 +3,7 @@
     camera="perspective"
     :camera-position="[0, 0, 20]"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -11,12 +12,21 @@ import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -131,18 +141,18 @@ function onReady(ctx) {
   scene.add(plane)
   
   /* 循环 */
-  setInterval(() => {
-  
+  _intervalId = setInterval(() => {
+
       arr.pop()
-  
+
       arr.unshift(new THREE.Vector3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 10))
-  
+
       uniforms.PointsCount.value = arr.length
-  
+
       shaderMaterial.fragmentShader = getFragmentShader()
-  
+
       shaderMaterial.needsUpdate = true
-  
+
   }, 200)
 }
 </script>

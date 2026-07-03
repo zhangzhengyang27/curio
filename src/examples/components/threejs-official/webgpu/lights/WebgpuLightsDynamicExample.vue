@@ -5,6 +5,7 @@
     :camera-position="[0, 15, 30]"
     :camera-options="{ fov: 50, near: 0.1, far: 200 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -30,6 +31,8 @@ const props = defineProps({
   }
 })
 
+let autoAddInterval = null
+
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Dynamic Lights</span>"
 function onReady(__stage) {
   let scene = __stage.scene
@@ -43,10 +46,9 @@ function onReady(__stage) {
   
   
   			let timer, stats;
-  
+
   			const pointLights = [];
-  			let autoAddInterval = null;
-  
+
   			const params = {
   				dynamic: true,
   				autoAdd: false,
@@ -308,4 +310,5 @@ function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (autoAddInterval) { clearInterval(autoAddInterval); autoAddInterval = null } }
 </script>

@@ -6,6 +6,7 @@
     :camera-look-at="[0, 0.5, 0]"
     :camera-options="{ fov: 50, near: 0.1, far: 100 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -29,6 +30,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - ammo.js instancing"
 async function onReady(__stage) {
@@ -151,7 +154,7 @@ async function onReady(__stage) {
   				controls.target.y = 0.5;
   				controls.update();
   
-  				setInterval( () => {
+  				_intervalId = setInterval( () => {
   
   					let index = Math.floor( Math.random() * boxes.count );
   
@@ -176,4 +179,5 @@ async function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

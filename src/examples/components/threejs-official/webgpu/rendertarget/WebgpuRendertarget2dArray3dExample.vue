@@ -6,6 +6,7 @@
     :camera-options="{ fov: 50, near: 0.1, far: 100 }"
     custom-render
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -30,6 +31,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>RenderTarget Array/3D</span>"
 function onReady(__stage) {
@@ -234,8 +237,9 @@ function onReady(__stage) {
   
   							if ( j === size.depth ) {
   
-  								clearInterval( interval );
-  								return;
+  								clearInterval( _intervalId );
+								_intervalId = null;
+								return;
   
   							}
   
@@ -260,7 +264,7 @@ function onReady(__stage) {
   
   						};
   
-  						const interval = setInterval( loop, 50 );
+  						_intervalId = setInterval( loop, 50 );
   
   						loop();
   
@@ -291,4 +295,5 @@ function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

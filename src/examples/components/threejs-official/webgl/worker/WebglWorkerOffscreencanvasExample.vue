@@ -125,9 +125,13 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if (interval) clearInterval(interval)
+  onBeforeDispose()
   if (worker) worker.terminate()
 })
+
+function onBeforeDispose() { if (interval) { clearInterval(interval); interval = null } }
+
+defineExpose({ onBeforeDispose })
 </script>
 
 <style scoped>

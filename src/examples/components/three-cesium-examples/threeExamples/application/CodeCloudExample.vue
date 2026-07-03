@@ -5,6 +5,7 @@
     :clear-color="0x000000"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -13,12 +14,21 @@ import * as THREE from "three";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -83,12 +93,10 @@ function onReady(ctx) {
           plane.userData.pos = pos
           cloud.add(plane)
       }
-      setInterval(() => {
+      _intervalId = setInterval(() => {
           if (cloud) {
               cloud.children.map(plane => {
                   plane.material.uniforms.random.value = Math.random()
-                  // let s = Math.floor(Math.random()*1000) + 1
-                  // plane.geometry.attributes.uv.array = plane.geometry.attributes.uv.array.map(e => e=s)
               })
           }
       }, 100)

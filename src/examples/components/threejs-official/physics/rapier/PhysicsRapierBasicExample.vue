@@ -5,6 +5,7 @@
     :camera-position="[0, 3, 10]"
     :camera-options="{ fov: 60, near: 0.1, far: 100 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -30,6 +31,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> basic"
 async function onReady(__stage) {
@@ -134,7 +137,7 @@ async function onReady(__stage) {
   				physicsHelper = new RapierHelper( physics.world );
   				scene.add( physicsHelper );
   
-  				setInterval( addBody, 1000 );
+  				_intervalId = setInterval( addBody, 1000 );
   
   			}
   
@@ -185,4 +188,5 @@ async function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

@@ -6,6 +6,7 @@
     :camera-options="{ fov: 50, near: 0.1, far: 1000 }"
     :enable-controls="false"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -26,6 +27,7 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { acceleratedRaycast, computeBatchedBoundsTree } from 'three-mesh-bvh';
 import { createRadixSort, extendBatchedMeshPrototype, getBatchedMeshLODCount } from '@three.ez/batched-mesh-extensions';
 import { performanceRangeLOD, simplifyGeometriesByErrorLOD } from '@three.ez/simplify-geometry';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
 
 const props = defineProps({
   example: {
@@ -47,12 +49,10 @@ async function onReady(__stage) {
   
   
   
-  			// add and override BatchedMesh methods ( @three.ez/batched-mesh-extensions )
   			extendBatchedMeshPrototype();
   
-  			// add the extension functions ( three-mesh-bvh )
-  			THREE.Mesh.prototype.raycast = acceleratedRaycast;
-  			THREE.BatchedMesh.prototype.computeBoundsTree = computeBatchedBoundsTree;
+			patchPrototype(THREE.Mesh, 'raycast', acceleratedRaycast);
+			patchPrototype(THREE.BatchedMesh, 'computeBoundsTree', computeBatchedBoundsTree);
   
   			let stats;
   
@@ -257,7 +257,11 @@ async function onReady(__stage) {
     stats.begin();
     				stats.end();
   })
-  
-  		
+
+}
+
+function onBeforeDispose() {
+  restorePrototype(THREE.Mesh, 'raycast')
+  restorePrototype(THREE.BatchedMesh, 'computeBoundsTree')
 }
 </script>

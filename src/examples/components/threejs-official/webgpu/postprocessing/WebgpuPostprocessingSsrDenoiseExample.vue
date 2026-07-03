@@ -4,6 +4,7 @@
     :camera-position="[0.9210513838983053, 0.16195074025403253, 0.431687274895316]"
     :camera-options="{ fov: 35, near: 0.1, far: 8 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -27,6 +28,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
 
 const props = defineProps({
   example: {
@@ -53,7 +55,7 @@ async function onReady(__stage) {
   		// (irradiance) is left untouched. Equivalent to zeroing EnvironmentNode contributions,
   		// but scoped to this example rather than modifying the core library.
   		const _indirectSpecular = THREE.PhysicalLightingModel.prototype.indirectSpecular;
-  		THREE.PhysicalLightingModel.prototype.indirectSpecular = function ( builder ) {
+		patchPrototype(THREE.PhysicalLightingModel, 'indirectSpecular', function ( builder ) {
   
   			builder.context.radiance = vec3( 0 );
   
@@ -65,7 +67,7 @@ async function onReady(__stage) {
   
   			_indirectSpecular.call( this, builder );
   
-  		};
+  	});
   
   		const OUTPUT_COMPARE_DENOISE = 8;
   		const OUTPUT_COMPARE_SSR = 9;
@@ -529,7 +531,10 @@ async function onReady(__stage) {
   		__stage.addUpdateCallback((_delta, _elapsed) => {
     postProcessing.render();
   })
-  
-  	
+
+}
+
+function onBeforeDispose() {
+  restorePrototype(THREE.PhysicalLightingModel, 'indirectSpecular')
 }
 </script>

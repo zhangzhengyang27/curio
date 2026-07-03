@@ -4,6 +4,7 @@
     :camera-position="[0, 0, 2]"
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -12,12 +13,21 @@ import * as THREE from "three";
 import gsap from "gsap";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -257,7 +267,7 @@ function onReady(ctx) {
     createFireWork(count, position, size, texture, radius, color);
   };
   
-  setInterval(radomCreateFireWork, 600);
+  _intervalId = setInterval(radomCreateFireWork, 600);
   
   scene.add(camera);
   

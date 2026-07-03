@@ -3,6 +3,7 @@
     camera="perspective"
     :camera-options="{ fov: 27, near: 5, far: 3500 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -24,6 +25,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - buffergeometry - custom VBOs"
 function onReady(__stage) {
@@ -114,7 +117,7 @@ function onReady(__stage) {
   				const posAttr2 = new THREE.GLBufferAttribute( pos2, gl.FLOAT, 3, 4, particles );
   				geometry.setAttribute( 'position', posAttr1 );
   
-  				setInterval( function () {
+  				_intervalId = setInterval( function () {
   
   					const attr = geometry.getAttribute( 'position' );
   
@@ -161,4 +164,5 @@ function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

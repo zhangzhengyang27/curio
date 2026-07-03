@@ -5,6 +5,7 @@
     alpha
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -14,12 +15,21 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -230,18 +240,18 @@ function onReady(ctx) {
           smoothstepEdges: { min: 0.0, max: 1.0 }
       });
   
-      setInterval(() => {
-  
+      _intervalId = setInterval(() => {
+
           dataPoints.pop()
-  
+
           dataPoints.unshift(getPoint())
-  
+
           dataValues.pop()
-  
+
           dataValues.unshift(Math.random())
-  
+
           material.updateData(dataPoints, dataValues)
-  
+
       }, 200)
   
       // GUI 控制

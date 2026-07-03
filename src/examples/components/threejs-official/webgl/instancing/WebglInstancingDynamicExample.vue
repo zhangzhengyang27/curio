@@ -6,6 +6,7 @@
     :camera-look-at="[0, 0, 0]"
     :camera-options="{ fov: 60, near: 0.1, far: 100 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -28,6 +29,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - instancing - dynamic<br/>\n\t\t\tBased on <a href=\"https://oosmoxiecode.com/archive/js_webgl/cubescape/\" target=\"_blank\" rel=\"noopener\">Cubescape</a>\n\t\t\tby <a href=\"https://github.com/oosmoxiecode\" target=\"_blank\" rel=\"noopener\">oosmoxiecode</a>"
 function onReady(__stage) {
@@ -117,7 +120,7 @@ function onReady(__stage) {
   
   				
   
-  				setInterval( startTween, 3000 );
+  				_intervalId = setInterval( startTween, 3000 );
   
   			
   
@@ -187,4 +190,5 @@ function onReady(__stage) {
   
   		
 }
+function onBeforeDispose() { if (_intervalId) { clearInterval(_intervalId); _intervalId = null } }
 </script>

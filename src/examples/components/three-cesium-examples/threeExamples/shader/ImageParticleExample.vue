@@ -3,6 +3,7 @@
     camera="perspective"
     :camera-position="[0, 0, 300]"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -10,12 +11,21 @@
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -149,7 +159,7 @@ function onReady(ctx) {
   }));
   
   // 循环
-  setInterval(() => {
+  _intervalId = setInterval(() => {
       startTime = Date.now();
       progress = 0;
       bufferGeometry.faceAnimateArr.forEach((face) => {

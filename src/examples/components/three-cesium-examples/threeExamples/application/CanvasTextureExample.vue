@@ -5,6 +5,7 @@
     alpha
     antialias
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   />
 </template>
 
@@ -13,12 +14,21 @@ import * as THREE from 'three'
 import * as echarts from 'echarts'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
+let _intervalId = null
+
 const props = defineProps({
   example: {
     type: Object,
     default: () => ({})
   }
 })
+
+function onBeforeDispose() {
+  if (_intervalId) {
+    clearInterval(_intervalId)
+    _intervalId = null
+  }
+}
 
 function onReady(ctx) {
   const scene = ctx.scene
@@ -110,7 +120,7 @@ function onReady(ctx) {
       ]
   }
   myChart.setOption(option)
-  setInterval(() => {
+  _intervalId = setInterval(() => {
       data.forEach((item, index) => {
           data[index] = Math.floor(Math.random() * 1000)
       })

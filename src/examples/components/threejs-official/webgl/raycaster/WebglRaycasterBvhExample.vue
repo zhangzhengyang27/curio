@@ -4,6 +4,7 @@
     antialias
     :camera-options="{ fov: 50, near: 1, far: 100 }"
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -18,6 +19,7 @@
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast, BVHHelper } from 'three-mesh-bvh';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -41,10 +43,9 @@ function onReady(__stage) {
   
   
   
-  			// Add the extension functions
-  			THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-  			THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
-  			THREE.Mesh.prototype.raycast = acceleratedRaycast;
+  			patchPrototype(THREE.BufferGeometry, 'computeBoundsTree', computeBoundsTree);
+			patchPrototype(THREE.BufferGeometry, 'disposeBoundsTree', disposeBoundsTree);
+			patchPrototype(THREE.Mesh, 'raycast', acceleratedRaycast);
   
   			let stats;
   
@@ -310,7 +311,7 @@ function onReady(__stage) {
     				stats.update();
   })
   
-  			function render() {
+  		function render() {
   
   				if ( helper ) {
   
@@ -331,6 +332,11 @@ function onReady(__stage) {
   
   			}
   
-  		
+}
+
+function onBeforeDispose() {
+  restorePrototype(THREE.BufferGeometry, 'computeBoundsTree')
+  restorePrototype(THREE.BufferGeometry, 'disposeBoundsTree')
+  restorePrototype(THREE.Mesh, 'raycast')
 }
 </script>
