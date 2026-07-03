@@ -35,9 +35,21 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    chunkSizeWarningLimit: 5120,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      external: ['node:module', 'node:worker_threads']
+      external: ['node:module', 'node:worker_threads'],
+      output: {
+        manualChunks(id) {
+          if (id.includes('echarts')) return 'vendor-echarts'
+          if (id.includes('three-globe')) return 'vendor-three-globe'
+          if (id.includes('cannon-es')) return 'vendor-cannon-es'
+          if (id.includes('gsap') && !id.includes('node_modules')) return
+          if (id.includes('gsap')) return 'vendor-gsap'
+          if (id.includes('/dat.gui/')) return 'vendor-dat-gui'
+          if (id.includes('tweakpane')) return 'vendor-tweakpane'
+          if (id.includes('chart.js') || id.includes('chartjs')) return 'vendor-chart'
+        }
+      }
     }
   },
   worker: {

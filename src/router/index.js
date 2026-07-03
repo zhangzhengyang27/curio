@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import EarthView from '../views/EarthView.vue'
-import ThreeGlobeGallery from '../views/ThreeGlobeGallery.vue'
-import GlobeDemo from '../views/GlobeDemo.vue'
-import ExampleGallery from '../examples/views/ExampleGallery.vue'
-import ExampleDemo from '../examples/views/ExampleDemo.vue'
+
+const EarthView = () => import('../views/EarthView.vue')
+const ThreeGlobeGallery = () => import('../views/ThreeGlobeGallery.vue')
+const GlobeDemo = () => import('../views/GlobeDemo.vue')
+const ExampleGallery = () => import('../examples/views/ExampleGallery.vue')
+const ExampleDemo = () => import('../examples/views/ExampleDemo.vue')
 
 const routes = [
   { path: '/', name: 'earth', component: EarthView },
