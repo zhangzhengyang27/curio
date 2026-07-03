@@ -8,6 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
+import { TDT_TOKEN } from '@/examples/components/cesium-examples/cesiumConstants.js'
 
 
 const props = defineProps({

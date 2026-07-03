@@ -8,6 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
+import { TDT_TOKEN } from '@/examples/components/cesium-examples/cesiumConstants.js'
 
 
 const props = defineProps({
@@ -55,7 +56,7 @@ function onReady(ctx) {
 
   // 加载天地图wmts
   var _layer = 'vec';
-  var token = 'bcc62222fc634ec736589c483de933e6';
+  var token = TDT_TOKEN;
   var maxLevel = 18;
   var matrixIds = new Array(maxLevel);
   for (var z = 0; z <= maxLevel; z++) {

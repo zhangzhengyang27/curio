@@ -9,6 +9,7 @@
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import * as THREE from 'three'
+import { TDT_TOKEN } from '@/examples/components/cesium-examples/cesiumConstants.js'
 
 const props = defineProps({
   example: {
@@ -45,7 +46,7 @@ function onReady(ctx) {
 
   viewer.imageryLayers.addImageryProvider(
     new Cesium.WebMapTileServiceImageryProvider({
-      url: "https://t0.tianditu.gov.cn/img_w/wmts?tk=c4e3a9d54b4a79e885fff9da0fca712a",
+      url: `https://t0.tianditu.gov.cn/img_w/wmts?tk=${TDT_TOKEN}`,
       layer: "img",
       style: "default",
       format: "tiles",
