@@ -190,8 +190,10 @@ export function useThreeScene(containerRef: ShallowRef<HTMLDivElement | null>, o
             (k) => k.toLowerCase().includes("texture") || k.toLowerCase().includes("map")
           )
           texKeys.forEach((key) => {
-            const tex = (mat as unknown as Record<string, unknown>)[key] as THREE.Texture | undefined
-            if (tex) tex.dispose()
+            const tex = (mat as unknown as Record<string, unknown>)[key]
+            if (tex && typeof tex === 'object' && 'dispose' in tex && typeof tex.dispose === 'function') {
+              (tex as THREE.Texture).dispose()
+            }
           })
         })
       }
