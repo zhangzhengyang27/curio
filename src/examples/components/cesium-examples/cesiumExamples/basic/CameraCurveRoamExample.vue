@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 
 const props = defineProps({
   example: {
@@ -112,7 +112,7 @@ async function onReady(ctx) {
   }
   
   // 简化的GUI控制面板
-  const gui = new dat.GUI()
+  const gui = new GUI()
   gui.add(flyControls, 'speed').name('速度')
   gui.add(flyControls, 'loop').name('循环')
   gui.add(flyControls, 'start').name('开始')

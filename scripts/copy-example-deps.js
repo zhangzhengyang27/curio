@@ -35,7 +35,7 @@ const deps = [
   ['three/build/three.core.js', 'three/build/three.core.js'],
   ['three/build/three.module.js', 'three/build/three.module.js'],
   ['three/examples/jsm', 'three/examples/jsm'],
-  ['dat.gui/build/dat.gui.module.js', 'dat.gui/build/dat.gui.module.js'],
+  ['lil-gui/dist/lil-gui.esm.js', 'lil-gui/dist/lil-gui.esm.js'],
   ['gsap/index.js', 'gsap/index.js'],
   ['gsap/gsap-core.js', 'gsap/gsap-core.js'],
   ['gsap/CSSPlugin.js', 'gsap/CSSPlugin.js'],

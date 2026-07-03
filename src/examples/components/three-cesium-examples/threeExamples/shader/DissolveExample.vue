@@ -7,7 +7,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -25,7 +25,7 @@ function onReady(ctx) {
 
   /* GUI */
   
-  const gui = new dat.GUI()
+  const gui = new GUI()
   
   // Container
   

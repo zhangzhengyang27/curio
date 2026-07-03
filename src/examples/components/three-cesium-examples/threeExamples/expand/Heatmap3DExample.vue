@@ -10,7 +10,7 @@
 
 <script setup>
 import * as THREE from 'three';
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -87,6 +87,6 @@ function onReady(ctx) {
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
   
-  new dat.GUI().add(mesh.material.uniforms.heightRatio, "value", 1, 15).name("heightRatio")
+  new GUI().add(mesh.material.uniforms.heightRatio, "value", 1, 15).name("heightRatio")
 }
 </script>

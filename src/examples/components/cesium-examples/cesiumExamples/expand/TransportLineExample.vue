@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 
 const props = defineProps({
   example: {
@@ -154,7 +154,7 @@ function onReady(ctx) {
       let scene = viewer.scene;
   
       // 创建GUI控制面板
-      const gui = new dat.GUI();
+      const gui = new GUI();
   
       // 效果控制参数
       const effectControls = {

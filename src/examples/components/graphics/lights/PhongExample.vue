@@ -7,7 +7,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Sphere, Box, Cylinder, Torus, Mesh, Orbit, Color} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
-import * as dat from '@/examples/jsm-compat/graphics/common/lib/dat.gui.js'
+import { GUI } from 'lil-gui'
 import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
 
 const gContainer = ref(null)
@@ -332,7 +332,7 @@ async function initGraphicsExample() {
           renderer.render({scene, camera});
         }
     
-        const gui = new dat.GUI();
+        const gui = new GUI();
         const palette = {
           light: '#FFFFFF',
           reflection1: '#0000FF',

@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 
 const props = defineProps({
   example: {
@@ -69,7 +69,7 @@ async function onReady(ctx) {
       u_height_offset: { value: 0.0, type: Cesium.UniformType.FLOAT }
   }
   
-  const gui = new dat.GUI()
+  const gui = new GUI()
   gui.addColor({ sweepColor: '#2ba7ff' }, 'sweepColor').onChange(v => {
       const hex = v.replace('#', '')
       const r = parseInt(hex.substring(0, 2), 16)

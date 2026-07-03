@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from "dat.gui";
+import { GUI } from 'lil-gui';
 
 const props = defineProps({
   example: {
@@ -458,7 +458,7 @@ function onReady(ctx) {
   
   function addWaterGui(waterSurface) {
       const params = waterSurface.params;
-      const gui = new dat.GUI({ name: "Dynamic Water" });
+      const gui = new GUI({ name: "Dynamic Water" });
   
       params.rebuildWater = () => {
           waterSurface.rebuild();

@@ -12,7 +12,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -65,29 +65,29 @@ function onReady(ctx) {
   
   )
   
-  const GUI = new dat.GUI()
+  const gui = new GUI()
   
   // 模型加载完成
   const createModeAnimates = model => {
   
       model.animations.forEach((_, k) => {
   
-          GUI.add({
-  
+          gui.add({
+
               fn: () => {
-  
+
                   model.actionIndexs.forEach((_, _k, arr) => arr[_k] = _k === k)
-  
+
                   modelAnimationPlay(model, model.animations)
-  
+
               }
-  
+
           }, 'fn').name(`单动画${k}`)
-  
+
       });
-  
+
       // 多动画
-      GUI.add({
+      gui.add({
   
           fn: () => {
   

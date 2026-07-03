@@ -12,7 +12,7 @@ import * as THREE from 'three'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -52,7 +52,7 @@ function onReady(ctx) {
   scene.add(cube)
   
   // 截图
-  new dat.GUI().add({ '截图': screenShot }, '截图')
+  new GUI().add({ '截图': screenShot }, '截图')
   
   function screenShot() {
   

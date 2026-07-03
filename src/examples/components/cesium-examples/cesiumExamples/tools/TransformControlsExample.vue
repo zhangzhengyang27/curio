@@ -9,7 +9,7 @@
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { CoordinateMode, Gizmo, GizmoMode } from 'cesium-transform-controls'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 
 const props = defineProps({
   example: {

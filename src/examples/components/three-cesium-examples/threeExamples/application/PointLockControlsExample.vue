@@ -12,7 +12,7 @@
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({

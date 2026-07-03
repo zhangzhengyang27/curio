@@ -14,7 +14,7 @@ import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
-import { GUI } from "dat.gui";
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({

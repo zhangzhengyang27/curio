@@ -19,7 +19,7 @@ import { ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import gsap from 'gsap'
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
@@ -143,7 +143,7 @@ function onCesiumReady(ctx) {
 
   const options = { cesium: true, three: false }
 
-  gui = new dat.GUI({ autoPlace: false })
+  gui = new GUI({ autoPlace: false })
   gui.domElement.style.position = 'absolute'
   gui.domElement.style.top = '10px'
   gui.domElement.style.right = '10px'

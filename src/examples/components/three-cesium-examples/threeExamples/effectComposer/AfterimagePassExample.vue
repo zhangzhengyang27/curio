@@ -16,7 +16,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as dat from 'dat.gui';
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -73,7 +73,7 @@ function onReady(ctx) {
   const params = {
       enable: true
   };
-  const gui = new dat.GUI({ name: 'Damp setting' });
+  const gui = new GUI({ name: 'Damp setting' });
   gui.add(afterimagePass.uniforms["damp"], 'value', 0, 1).step(0.001);
   gui.add(params, 'enable');
   

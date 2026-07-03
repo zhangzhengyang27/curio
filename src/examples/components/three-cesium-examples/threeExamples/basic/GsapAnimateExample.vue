@@ -10,7 +10,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import gsap from 'gsap'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -40,7 +40,7 @@ function onReady(ctx) {
   
   scene.add(boxMesh);
   
-  new dat.GUI().add({fn: () => {
+  new GUI().add({fn: () => {
   
       // 创建一个相机动画
       createGsapAnimation(camera.position, { x: 20, y: 20, z: 20 })

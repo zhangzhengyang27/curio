@@ -8,7 +8,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -77,9 +77,9 @@ async function onReady(ctx) {
   }
   
   // GUI 切换混合运算类型
-  const GUI = new dat.GUI()
+  const gui = new GUI()
   
-  GUI.add(shader.uniforms.calcType, 'value', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).name('混合运算类型');
+  gui.add(shader.uniforms.calcType, 'value', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).name('混合运算类型');
   
   // 动画
   

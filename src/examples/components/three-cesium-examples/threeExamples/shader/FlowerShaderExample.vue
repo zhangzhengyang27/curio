@@ -11,7 +11,7 @@
 <script setup>
 import * as THREE from "three";
 import gsap from "gsap";
-import * as dat from "dat.gui";
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -134,7 +134,7 @@ function onReady(ctx) {
     }
   }
   function createGUI() {
-    var gui = new dat.GUI();
+    var gui = new GUI();
     var configGUI = gui.addFolder('Setup');
     configGUI.add(options.perlin, 'speed', 0.0, 0.001);
     configGUI.add(options.cam, 'zoom', 0, 30);

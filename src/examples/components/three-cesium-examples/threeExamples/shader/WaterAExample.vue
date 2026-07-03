@@ -10,7 +10,7 @@
 
 <script setup>
 import * as THREE from "three";
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -26,7 +26,7 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const gui = new dat.GUI();
+  const gui = new GUI();
   
   // 假设typeState已经被定义
   const typeState = {
@@ -163,7 +163,7 @@ function onReady(ctx) {
     })
     .name("亮度");
   
-  // 创建流动速度控制器，dat.GUI不支持倒置的控制器，因此需要手动处理
+  // 创建流动速度控制器，GUI不支持倒置的控制器，因此需要手动处理
   const flowSpeedFolder = gui.addFolder("流动速度");
   const flowSpeedXController = flowSpeedFolder
     .add(typeState.flowSpeed, "x", 0.01, 0.6, 0.02)

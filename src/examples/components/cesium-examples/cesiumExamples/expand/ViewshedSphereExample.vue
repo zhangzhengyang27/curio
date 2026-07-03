@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from 'dat.gui';
+import { GUI } from 'lil-gui';
 
 const props = defineProps({
   example: {
@@ -96,7 +96,7 @@ async function onReady(ctx) {
   viewshed.update()
   
   const far = viewshed.far
-  const gui = new dat.GUI()
+  const gui = new GUI()
   const controls = {
       near: viewshedOptions.near,
       far,

@@ -14,7 +14,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js';
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js';
-import { GUI } from 'dat.gui';
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({

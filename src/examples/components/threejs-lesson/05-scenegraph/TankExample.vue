@@ -25,7 +25,7 @@ import {
   Vector2,
   Vector3,
 } from 'three'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '../../ExampleScene.vue'
 
 function onReady(ctx) {

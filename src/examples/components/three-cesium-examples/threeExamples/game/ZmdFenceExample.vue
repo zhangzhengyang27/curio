@@ -11,7 +11,7 @@
 
 <script setup>
 import * as THREE from "three";
-import { GUI } from "dat.gui";
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({

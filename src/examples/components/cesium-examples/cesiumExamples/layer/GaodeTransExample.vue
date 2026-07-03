@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import * as dat from 'dat.gui';
+import { GUI } from 'lil-gui';
 
 const props = defineProps({
   example: {
@@ -74,7 +74,7 @@ function onReady(ctx) {
   
   })
   
-  const gui = new dat.GUI();
+  const gui = new GUI();
   
   const mapParams = {
       mapType: '纠偏校正', // 默认使用纠偏后的高德地图

@@ -9,7 +9,7 @@
 
 <script setup>
 import { AxesHelper, GridHelper, Group, Mesh, MeshPhongMaterial, PointLight, SphereGeometry } from 'three'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '../../ExampleScene.vue'
 
 class AxesGridHelper {

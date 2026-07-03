@@ -12,7 +12,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { KawaseBlurPass } from "postprocessing"
-import { Pane } from 'tweakpane'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -376,10 +376,10 @@ function onReady(ctx) {
         material.update()
   })
   
-  const pane = new Pane();
-  pane.addBinding(reflectorProps, 'mixBlur', { min: 0, max: 20 });
-  pane.addBinding(reflectorProps, 'mixStrength', { min: 0, max: 20 });
-  pane.addBinding(reflectorProps, 'mirror', { min: 0, max: 1 });
-  pane.addBinding(reflectorProps, 'mixContrast', { min: 0, max: 5 });
+  const gui = new GUI();
+  gui.add(reflectorProps, 'mixBlur', 0, 20);
+  gui.add(reflectorProps, 'mixStrength', 0, 20);
+  gui.add(reflectorProps, 'mirror', 0, 1);
+  gui.add(reflectorProps, 'mixContrast', 0, 5);
 }
 </script>

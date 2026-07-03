@@ -8,7 +8,7 @@
 
 <script setup>
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 
 let Cesium = null
 let viewer = null

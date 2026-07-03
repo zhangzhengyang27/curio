@@ -8,7 +8,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import { Pane } from 'tweakpane'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -208,8 +208,8 @@ function onReady(ctx) {
       #include <fog_fragment>
   }`
   
-  const gui = new Pane()
-  
+  const gui = new GUI()
+
   const debugObject = {
       color: '#c4d6ff',
       crossColor: '#7a91df',
@@ -217,18 +217,18 @@ function onReady(ctx) {
       backgroundColor: '#e9f6f8',
       floorColor: '#ffffff',
   }
-  
+
   // Canvas
   const box = document.querySelector('#box')
-  
+
   // Scene
-  
+
   /**
    * Test mesh
    */
   // Geometry
   const geometry = new THREE.PlaneGeometry(10, 10, 32, 32)
-  
+
   // Material
   const material = new THREE.ShaderMaterial({
       vertexShader: baseVertexShader,
@@ -238,16 +238,16 @@ function onReady(ctx) {
       uniforms: {
           // Floor
           uFloorColor: { value: new THREE.Color(debugObject.floorColor) },
-  
+
           // Grid
           uGridThickness: { value: 0.02 },
           uGridColor: { value: new THREE.Color(debugObject.color) },
-  
+
           // Cross
           uCrossThickness: { value: 0.02 },
           uCross: { value: 0.2 },
           uCrossColor: { value: new THREE.Color(debugObject.crossColor) },
-  
+
           // Fog
           fogColor: { value: new THREE.Color(debugObject.fogColor) },
           fogNear: { value: 1 },
@@ -255,89 +255,59 @@ function onReady(ctx) {
       },
       fog: true,
   })
-  
-  const gridFolder = gui.addFolder({ title: '🌐 Grid Floor' })
-  gridFolder.addBinding(material.uniforms.uGridThickness, 'value', {
-      label: 'thickness',
-      min: 0,
-      max: 1,
-      step: 0.001,
-  })
+
+  const gridFolder = gui.addFolder('🌐 Grid Floor')
+  gridFolder.add(material.uniforms.uGridThickness, 'value', 0, 1, 0.001).name('thickness')
   gridFolder
-      .addBinding(debugObject, 'color', {
-          label: 'color',
-      })
-      .on('change', () => {
+      .add(debugObject, 'color')
+      .name('color')
+      .onChange(() => {
           material.uniforms.uGridColor.value.set(debugObject.color)
       })
-  
-  const crossFolder = gui.addFolder({ title: '❎ Cross Floor' })
-  crossFolder.addBinding(material.uniforms.uCrossThickness, 'value', {
-      label: 'thickness',
-      min: 0,
-      max: 1,
-      step: 0.001,
-  })
-  crossFolder.addBinding(material.uniforms.uCross, 'value', {
-      label: 'cross',
-      min: 0,
-      max: 1,
-      step: 0.01,
-  })
+
+  const crossFolder = gui.addFolder('❎ Cross Floor')
+  crossFolder.add(material.uniforms.uCrossThickness, 'value', 0, 1, 0.001).name('thickness')
+  crossFolder.add(material.uniforms.uCross, 'value', 0, 1, 0.01).name('cross')
   crossFolder
-      .addBinding(debugObject, 'crossColor', {
-          label: 'color',
-      })
-      .on('change', () => {
+      .add(debugObject, 'crossColor')
+      .name('color')
+      .onChange(() => {
           material.uniforms.uCrossColor.value.set(debugObject.crossColor)
       })
-  
+
   // Grid Floor
   const gridFloor = new THREE.Mesh(geometry, material)
   gridFloor.rotation.x = Math.PI * 0.5
   scene.add(gridFloor)
-  
+
   // Fog
   // color, density
   scene.fog = new THREE.Fog(debugObject.fogColor, 1, 10)
   scene.background = new THREE.Color(debugObject.backgroundColor)
-  
-  const fogFolder = gui.addFolder({ title: '💨 Fog' })
-  
-  fogFolder.addBinding(scene.fog, 'near', {
-      label: 'near',
-      min: -5,
-      max: 2,
-      step: 0.1,
-  })
-  fogFolder.addBinding(scene.fog, 'far', {
-      label: 'far',
-      min: 2,
-      max: 50,
-      step: 0.1,
-  })
+
+  const fogFolder = gui.addFolder('💨 Fog')
+
+  fogFolder.add(scene.fog, 'near', -5, 2, 0.1).name('near')
+  fogFolder.add(scene.fog, 'far', 2, 50, 0.1).name('far')
   fogFolder
-      .addBinding(debugObject, 'fogColor', {
-          label: 'color',
-      })
-      .on('change', () => {
+      .add(debugObject, 'fogColor')
+      .name('color')
+      .onChange(() => {
           scene.fog.color.set(debugObject.fogColor)
       })
-  
-  const envFolder = gui.addFolder({ title: '🏡 Environment' })
+
+  const envFolder = gui.addFolder('🏡 Environment')
   envFolder
-      .addBinding(debugObject, 'backgroundColor', {
-          label: 'sky',
-      })
-      .on('change', () => {
+      .add(debugObject, 'backgroundColor')
+      .name('sky')
+      .onChange(() => {
           scene.background = new THREE.Color(debugObject.backgroundColor)
       })
-  
+
   envFolder
-      .addBinding(debugObject, 'floorColor', {
-          label: 'Floor',
-      })
-      .on('change', () => {
+      .add(debugObject, 'floorColor')
+      .name('Floor')
+      .onChange(() => {
           material.uniforms.uFloorColor.value.set(debugObject.floorColor)
       })
   

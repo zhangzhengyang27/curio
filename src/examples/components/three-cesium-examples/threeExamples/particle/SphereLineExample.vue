@@ -10,7 +10,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -179,7 +179,7 @@ function onReady(ctx) {
         group.rotation.y += 0.001
   })
   
-  let gui = new dat.GUI()
+  let gui = new GUI()
   
   gui.add(effectController, "showDots").onChange(function (value) {
   

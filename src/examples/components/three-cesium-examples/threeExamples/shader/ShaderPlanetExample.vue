@@ -9,7 +9,7 @@
 <script setup>
 import * as THREE from "three";
 import noiseModuleUrl from '/external-examples/3d-file-server/js/wasm/three_noise.js?url'
-import { GUI } from "dat.gui";
+import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({

@@ -12,7 +12,7 @@
 <script setup>
 import * as THREE from 'three'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
-import { GUI } from 'dat.gui'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 let materialRef = null

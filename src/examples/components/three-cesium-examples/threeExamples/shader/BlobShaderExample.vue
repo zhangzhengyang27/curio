@@ -8,7 +8,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import * as dat from 'dat.gui'
+import { GUI } from 'lil-gui'
 import gsap from 'gsap'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -472,7 +472,7 @@ function onReady(ctx) {
   }
   
   function createGUI() {
-    var gui = new dat.GUI();
+    var gui = new GUI();
       
     var perlinGUI = gui.addFolder('Shape Setup');
     perlinGUI.add(options, 'perlinRandom').name('• Random Shape');

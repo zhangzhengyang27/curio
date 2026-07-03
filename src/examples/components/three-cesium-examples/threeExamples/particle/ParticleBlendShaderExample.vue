@@ -10,7 +10,7 @@
 
 <script setup>
 import * as THREE from 'three'
-import { Pane } from 'tweakpane'
+import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -315,24 +315,24 @@ function onReady(ctx) {
         uniforms.iTime.value += uniforms.speed.value
   })
   
-  const pane = new Pane()
-  
-  pane.addBinding(uniforms.intensity, 'value', { min: 0, max: 100, label: 'intensity' })
-  
-  pane.addBinding(uniforms.speed, 'value', { min: 0, max: 0.1, label: 'speed' })
-  
-  pane.addBinding(uniforms.mixRatio, 'value', { min: 0, max: 1, label: 'mixRatio' })
-  
-  pane.addBinding(uniforms.mixColor, 'value', { label: 'mixColor' })
-  
-  pane.addBinding(uniforms.hasUv, 'value', { label: 'hasUv' })
-  
-  pane.addBinding(_uniforms.size, 'value', { min: 0, max: 100, label: 'size' })
-  
-  pane.addBinding(_uniforms.discardVal, 'value', { min: 0, max: 1, label: 'discardVal' })
-  
-  pane.addBinding(_uniforms.opacity, 'value', { min: 0, max: 1, label: 'opacity' })
-  
-  pane.addBinding(_uniforms.isdecaySize, 'value', { label: 'isdecaySize' })
+  const gui = new GUI()
+
+  gui.add(uniforms.intensity, 'value', 0, 100).name('intensity')
+
+  gui.add(uniforms.speed, 'value', 0, 0.1).name('speed')
+
+  gui.add(uniforms.mixRatio, 'value', 0, 1).name('mixRatio')
+
+  gui.addColor(uniforms.mixColor, 'value').name('mixColor')
+
+  gui.add(uniforms.hasUv, 'value').name('hasUv')
+
+  gui.add(_uniforms.size, 'value', 0, 100).name('size')
+
+  gui.add(_uniforms.discardVal, 'value', 0, 1).name('discardVal')
+
+  gui.add(_uniforms.opacity, 'value', 0, 1).name('opacity')
+
+  gui.add(_uniforms.isdecaySize, 'value').name('isdecaySize')
 }
 </script>
