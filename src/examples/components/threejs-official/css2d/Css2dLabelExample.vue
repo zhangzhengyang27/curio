@@ -16,6 +16,8 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -224,4 +226,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

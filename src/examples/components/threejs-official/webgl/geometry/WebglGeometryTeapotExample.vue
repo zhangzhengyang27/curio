@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -136,7 +139,7 @@ function onReady(__stage) {
   					newShading: 'glossy'
   				};
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( effectController, 'newTess', [ 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40, 50 ] ).name( 'Tessellation Level' ).onChange( render );
   				gui.add( effectController, 'lid' ).name( 'display lid' ).onChange( render );
   				gui.add( effectController, 'body' ).name( 'display body' ).onChange( render );
@@ -213,4 +216,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

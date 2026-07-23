@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CSS3DExampleScene from '@/examples/components/CSS3DExampleScene.vue'
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
@@ -125,7 +128,7 @@ function onReady(__stage) {
   
   				//
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				gui.add( params, 'vizType', VIZ_TYPE ).onChange( changeVizType );
   				gui.add( params, 'molecule', MOLECULES ).onChange( loadMolecule );
@@ -424,4 +427,8 @@ function onReady(__stage) {
   
       
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

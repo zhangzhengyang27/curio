@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import gsap from 'gsap'
@@ -472,7 +475,7 @@ function onReady(ctx) {
   }
   
   function createGUI() {
-    var gui = new GUI();
+    gui = new GUI();
       
     var perlinGUI = gui.addFolder('Shape Setup');
     perlinGUI.add(options, 'perlinRandom').name('• Random Shape');
@@ -525,4 +528,8 @@ function onReady(ctx) {
   createGUI();
   createPrimitive();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

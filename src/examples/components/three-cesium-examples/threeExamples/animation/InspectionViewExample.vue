@@ -11,6 +11,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -86,7 +89,7 @@ function onReady(ctx) {
     scene.add(gltf.scene)
   })
 
-  const gui = new GUI()
+  gui = new GUI()
   const btns = { startRoam: autoRun, stopAutoRun }
   gui.add(btns, 'startRoam').name('开启漫游/巡检')
   gui.add(btns, 'stopAutoRun').name('结束漫游/巡检')
@@ -179,4 +182,8 @@ function onBeforeDispose() {
     rendererDomElement.removeEventListener('mouseleave', onMouseUp);
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -17,6 +17,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
@@ -277,7 +280,7 @@ async function onReady(__stage) {
   
   				updateLightPosition();
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value ) => {
   
   					if ( probes ) probes.visible = value;
@@ -395,4 +398,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

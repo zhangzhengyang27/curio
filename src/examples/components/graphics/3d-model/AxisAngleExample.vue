@@ -5,6 +5,8 @@
 </template>
 
 <script setup>
+
+let gui = null
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Geometry, Mesh, Orbit, Texture, Polyline, Color, Vec3, Quat} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
 import { GUI } from 'lil-gui'
@@ -118,7 +120,7 @@ async function initGraphicsExample() {
           axis.mesh.setParent(scene);
           renderer.render({scene, camera});
     
-          const gui = new GUI();
+          gui = new GUI();
           const palette = {
             alpha: 0,
             x: 0,
@@ -166,4 +168,8 @@ onMounted(() => {
 
 // cleanup is handled by useGraphicsCleanup
 // onUnmounted not needed
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three';
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -240,7 +243,7 @@ function onReady(ctx) {
   doorLight.position.set(0, 2.2, 2.7);
   house.add(doorLight);
   
-  const gui = new GUI({
+  gui = new GUI({
   	title: '控制面板',
   	width: '320',
   	closeFolders: true
@@ -318,4 +321,8 @@ function onReady(ctx) {
   
   // 尺寸改变，重新渲染
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

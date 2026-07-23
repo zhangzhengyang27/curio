@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -216,7 +219,7 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
-  				const gui = new GUI( { width: 285 } );
+  				gui = new GUI( { width: 285 } );
   
   				const folderGeometry = gui.addFolder( 'Geometry' );
   				folderGeometry.add( params, 'spline', Object.keys( splines ) ).onChange( function () {
@@ -363,4 +366,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

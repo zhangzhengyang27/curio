@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -59,7 +62,7 @@ function onReady(ctx) {
   
   }
   
-  const gui = new GUI()
+  gui = new GUI()
   
   gui.add(uniforms1.HEAT_MAX, 'value', 0, 10).name('HEAT_MAX')
   
@@ -161,4 +164,8 @@ function onReady(ctx) {
 
   }, 200)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

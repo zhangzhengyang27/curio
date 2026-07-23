@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -629,7 +632,7 @@ function onReady(ctx) {
       fence.setParams({ useSimp: v });
     },
   };
-  const gui = new GUI();
+  gui = new GUI();
   gui.add(data, "x", 50, 200, 0.001);
   gui.add(data, "y", 5, 20, 0.001);
   gui.add(data, "z", 50, 200, 0.001);
@@ -657,4 +660,8 @@ function onReady(ctx) {
   
   ani();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

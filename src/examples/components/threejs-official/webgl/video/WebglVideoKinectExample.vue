@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -93,7 +96,7 @@ function onReady(__stage) {
   				mesh = new THREE.Points( geometry, material );
   				scene.add( mesh );
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
   				gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
   				gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
@@ -133,4 +136,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

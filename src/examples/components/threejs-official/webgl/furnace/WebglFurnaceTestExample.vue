@@ -16,6 +16,8 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -157,4 +159,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

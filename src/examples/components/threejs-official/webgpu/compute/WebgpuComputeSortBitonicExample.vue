@@ -13,6 +13,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { storage, If, vec3, not, uniform, uv, uint, Fn, vec2, abs, int, uvec2, floor, instanceIndex } from 'three/tsl';
@@ -84,7 +87,7 @@ function onReady(__stage) {
   				'Display Mode': 'Swap Zone Highlight'
   			};
   
-  			const gui = new GUI();
+  			gui = new GUI();
   			gui.add( effectController, 'Display Mode', [ 'Elements', 'Swap Zone Highlight' ] ).onChange( () => {
   
   				if ( effectController[ 'Display Mode' ] === 'Elements' ) {
@@ -582,4 +585,8 @@ function onReady(__stage) {
   			}
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

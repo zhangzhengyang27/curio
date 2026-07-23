@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -207,7 +210,7 @@ function onReady(__stage) {
   				// into a layer as required. Hit testing and interaction is done using standard HTMLMesh
   				// behavior, but since the layer is in the same place as the invisible mesh, the user
   				// thinks they're directly interacting with the layer.
-  				const gui = new GUI( { width: 300 } );
+  				gui = new GUI( { width: 300 } );
   				gui.add( parameters, 'eyeChartDistanceFt', 1.0, 20.0 ).onChange( onChange );
   				gui.domElement.style.visibility = 'hidden';
   
@@ -439,4 +442,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

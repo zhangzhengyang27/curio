@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { Water } from 'three/examples/jsm/objects/Water.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -81,7 +84,7 @@ function onReady(ctx) {
   
   )
   
-  const gui = new GUI();
+  gui = new GUI();
   
   gui.addColor(water.material.uniforms['waterColor'], 'value').name('waterColor');
   
@@ -93,4 +96,8 @@ function onReady(ctx) {
     water.material.uniforms['time'].value += 1.0 / 60.0;
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

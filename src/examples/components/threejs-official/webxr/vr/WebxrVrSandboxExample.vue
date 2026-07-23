@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
@@ -153,7 +156,7 @@ function onReady(__stage) {
   
   				}
   
-  				const gui = new GUI( { width: 300 } );
+  				gui = new GUI( { width: 300 } );
   				gui.add( parameters, 'radius', 0.0, 1.0 ).onChange( onChange );
   				gui.add( parameters, 'tube', 0.0, 1.0 ).onChange( onChange );
   				gui.add( parameters, 'tubularSegments', 10, 150, 1 ).onChange( onChange );
@@ -209,4 +212,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

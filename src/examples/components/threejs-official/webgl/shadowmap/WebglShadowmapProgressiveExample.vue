@@ -17,6 +17,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -192,7 +195,7 @@ function onReady(__stage) {
   
   			function createGUI() {
   
-  				const gui = new GUI( { title: 'Accumulation Settings' } );
+  				gui = new GUI( { title: 'Accumulation Settings' } );
   				gui.add( params, 'Enable' );
   				gui.add( params, 'Blur Edges' );
   				gui.add( params, 'Blend Window', 1, 500 ).step( 1 );
@@ -238,4 +241,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

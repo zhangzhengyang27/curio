@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -204,4 +207,8 @@ function onReady(ctx) {
     composer.passes[1].radius = params.bloomRadius;
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

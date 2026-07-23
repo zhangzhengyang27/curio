@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -163,7 +166,7 @@ function onReady(ctx) {
      #include <fog_fragment>
   }`
   
-  const gui = new GUI({ closed: false, width: 340 });
+  gui = new GUI({ closed: false, width: 340 });
   const bigWavesFolder = gui.addFolder("Large Waves");
   const smallWavesFolder = gui.addFolder("Small Waves");
   const colorFolder = gui.addFolder("Colors");
@@ -325,4 +328,8 @@ function onReady(ctx) {
   
   tick();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

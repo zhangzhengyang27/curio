@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -112,7 +115,7 @@ async function onReady(__stage) {
   					},
   				};
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( formData, 'srcLayer', 0, spiritedaway.image.depth - 1, 1 );
   				gui.add( formData, 'destLayer', 0, textureArray.image.depth - 1, 1 );
   				gui.add( formData, 'transfer' );
@@ -161,4 +164,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

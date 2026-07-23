@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -95,7 +98,7 @@ function onReady(__stage) {
   					metalness: 1
   				} );
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( material, 'roughness', 0, 1 );
   				gui.add( material, 'metalness', 0, 1 );
   				gui.add( renderer, 'toneMappingExposure', 0, 2 ).name( 'exposure' );
@@ -162,4 +165,8 @@ function onReady(__stage) {
   		
   __stage.setCamera(camera)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

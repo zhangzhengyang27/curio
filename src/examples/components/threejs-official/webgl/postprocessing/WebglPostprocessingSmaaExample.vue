@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -100,7 +103,7 @@ function onReady(__stage) {
   
   				
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				const smaaFolder = gui.addFolder( 'SMAA' );
   				smaaFolder.add( params, 'enabled' );
@@ -129,4 +132,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

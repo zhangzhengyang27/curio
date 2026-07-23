@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -66,10 +69,14 @@ function onReady(ctx) {
   
   renderer.localClippingEnabled = true
   
-  const gui = new GUI()
+  gui = new GUI()
   
   gui.add({ play: () => { gsap.to(plane, { constant: 2, duration: 2 })} }, 'play')
   
   gui.add({ restore: () => { gsap.to(plane, { constant: -2, duration: 2 })} }, 'restore')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

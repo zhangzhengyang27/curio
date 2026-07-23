@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -126,7 +129,7 @@ function onReady(ctx) {
   }
   
   // GUI 控制
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(params, 'baseInfluenceRadius', 1, 50).name('影响半径').onChange(v => uniforms.baseInfluenceRadius.value = v)
   gui.add(params, 'heightToRadiusRatio', 0, 10).name('高度放大系数').onChange(v => uniforms.heightToRadiusRatio.value = v)
   gui.add(params, 'falloffPower', 0.1, 10).name('衰减指数').onChange(v => uniforms.falloffPower.value = v)
@@ -169,4 +172,8 @@ function onReady(ctx) {
         }
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

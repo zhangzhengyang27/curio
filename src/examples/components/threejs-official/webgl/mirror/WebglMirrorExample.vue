@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -178,7 +181,7 @@ function onReady(__stage) {
   					resolution: resolutionScale,
   				};
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				const folder = gui.addFolder( 'Mirrors' );
   
@@ -213,4 +216,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

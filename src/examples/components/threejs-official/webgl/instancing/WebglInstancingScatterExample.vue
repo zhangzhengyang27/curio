@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js';
@@ -150,7 +153,7 @@ function onReady(__stage) {
   
   				//
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( api, 'count', 0, count ).onChange( function () {
   
   					stemMesh.count = api.count;
@@ -324,4 +327,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

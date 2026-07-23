@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -218,11 +221,15 @@ function onReady(ctx) {
       ground_mat.uniforms.c_l_1.value.set(v);
     },
   };
-  const gui = new GUI();
+  gui = new GUI();
   gui.add(data, "lw", 0.01, 0.2, 0.001).name("宽度");
   gui.addColor(data, "c_l_0").name("颜色0");
   gui.addColor(data, "c_l_1").name("颜色1");
   
   ani();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

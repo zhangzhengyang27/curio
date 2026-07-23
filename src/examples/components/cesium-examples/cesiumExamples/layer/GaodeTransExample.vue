@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -74,7 +77,7 @@ function onReady(ctx) {
   
   })
   
-  const gui = new GUI();
+  gui = new GUI();
   
   const mapParams = {
       mapType: '纠偏校正', // 默认使用纠偏后的高德地图
@@ -137,4 +140,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

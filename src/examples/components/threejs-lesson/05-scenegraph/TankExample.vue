@@ -11,6 +11,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import {
   BoxGeometry,
   CylinderGeometry,
@@ -151,7 +154,7 @@ function onReady(ctx) {
   const tankTarget = new Vector2()
   const targetPosition = new Vector3()
 
-  const gui = new GUI({ autoPlace: false })
+  gui = new GUI({ autoPlace: false })
   const cameras = new Map([
     ['camera', camera],
     ['barrelCamera', barrelCamera],
@@ -202,4 +205,8 @@ function makeCamera(fov = 40) {
   const zFar = 1000
   return new PerspectiveCamera(fov, aspect, zNear, zFar)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

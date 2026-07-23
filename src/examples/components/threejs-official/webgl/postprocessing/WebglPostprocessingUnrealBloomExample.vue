@@ -17,6 +17,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -126,7 +129,7 @@ async function onReady(__stage) {
   
   				//
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				const bloomFolder = gui.addFolder( 'bloom' );
   
@@ -173,4 +176,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

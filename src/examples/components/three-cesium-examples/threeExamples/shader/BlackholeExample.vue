@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 import { GUI } from 'lil-gui'
@@ -223,7 +226,7 @@ function onReady(ctx) {
     set color(v) { material.uniforms.color.value.set(v) }
   }
 
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(data, 'rs', 0.02, 0.1, 0.001).name('史瓦西半径')
   gui.add(data, 'max_steps', 500, 2000, 1).name('最大步进步数')
   gui.add(data, 'step_size', 0.005, 0.05, 0.0001).name('步进步长')
@@ -243,4 +246,8 @@ function onResize({ width, height }) {
   materialRef.uniforms.resolution.value.set(width, height)
   materialRef.uniforms.camera.value.proj_inv.copy(cameraRef.projectionMatrixInverse)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

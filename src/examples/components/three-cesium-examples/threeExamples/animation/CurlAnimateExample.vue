@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GUI } from 'lil-gui'
@@ -169,7 +172,7 @@ function onReady(ctx) {
   }
   
   // GUI
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(params, 'speed', 0.1, 5).name('速度')
   gui.add(params, 'coreRadius', 0.5, 4).name('卷芯半径').onChange(v => {
       core.geometry.dispose()
@@ -198,4 +201,8 @@ function onReady(ctx) {
         core.rotation.y = -totalAngle
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

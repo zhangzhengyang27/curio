@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -42,7 +45,7 @@ function onReady(ctx) {
   }
   
   // 设置UI
-  const gui = new GUI();
+  gui = new GUI();
   const particleFolder = gui.addFolder('粒子系统');
   particleFolder.add(params, 'maxParticles').name('最大粒子数').onChange(value => {
       scene.remove(emitter.points);
@@ -179,4 +182,8 @@ function onReady(ctx) {
     emitter.update(clock.getDelta())
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast, BVHHelper } from 'three-mesh-bvh';
@@ -144,7 +147,7 @@ function onReady(__stage) {
   				controls.maxDistance = 75;
   
   				// set up gui
-  				const gui = new GUI();
+  				gui = new GUI();
   				const rayFolder = gui.addFolder( 'Raycasting' );
   				rayFolder.add( params, 'count', 1, MAX_RAYS, 1 );
   				rayFolder.add( params, 'firstHitOnly' );
@@ -339,4 +342,8 @@ function onBeforeDispose() {
   restorePrototype(THREE.BufferGeometry, 'disposeBoundsTree')
   restorePrototype(THREE.Mesh, 'raycast')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

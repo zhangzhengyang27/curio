@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -177,7 +180,7 @@ function onReady(__stage) {
   
   				}
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( controller, 'shape', { 'Dot': 1, 'Ellipse': 2, 'Line': 3, 'Square': 4, 'Diamond': 5 } ).onChange( onGUIChange );
   				gui.add( controller, 'radius', 1, 25 ).onChange( onGUIChange );
   				gui.add( controller, 'rotateR', 0, 90 ).onChange( onGUIChange );
@@ -202,4 +205,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

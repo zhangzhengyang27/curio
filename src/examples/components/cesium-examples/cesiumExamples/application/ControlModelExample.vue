@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -68,7 +71,7 @@ function onReady(ctx) {
    * 创建GUI控制面板
    * @type {GUI}
    */
-  const gui = new GUI();
+  gui = new GUI();
   
   /** 
    * 定义图形绘制操作对象
@@ -296,4 +299,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

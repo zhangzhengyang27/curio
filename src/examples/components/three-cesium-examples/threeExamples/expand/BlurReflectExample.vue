@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { KawaseBlurPass } from "postprocessing"
@@ -376,10 +379,14 @@ function onReady(ctx) {
         material.update()
   })
   
-  const gui = new GUI();
+  gui = new GUI();
   gui.add(reflectorProps, 'mixBlur', 0, 20);
   gui.add(reflectorProps, 'mixStrength', 0, 20);
   gui.add(reflectorProps, 'mirror', 0, 1);
   gui.add(reflectorProps, 'mixContrast', 0, 5);
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

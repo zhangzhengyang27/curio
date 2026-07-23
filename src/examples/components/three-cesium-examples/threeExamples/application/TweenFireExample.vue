@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 import { GUI } from 'lil-gui'
@@ -90,7 +93,7 @@ function onReady(ctx) {
       alphaTest: 0.01
   });
   
-  const gui = new GUI();
+  gui = new GUI();
   
   const config = {
       r_p: 20,
@@ -147,4 +150,8 @@ function onReady(ctx) {
   
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

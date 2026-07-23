@@ -6,6 +6,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -138,8 +141,12 @@ function onReady(ctx) {
     }
   }
 
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(controlsGui, 'play')
   gui.add(controlsGui, 'pause')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

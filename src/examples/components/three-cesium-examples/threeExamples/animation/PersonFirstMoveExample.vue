@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -1882,7 +1885,7 @@ function onReady(ctx) {
   
   // GUI控制面板
   function setupGUI() {
-    const gui = new GUI({ width: 280 });
+    gui = new GUI({ width: 280 });
     
     // 应用科技风格样式
     const style = document.createElement('style');
@@ -2071,4 +2074,8 @@ function onBeforeDispose() {
   document.removeEventListener('keydown', _onKeyDown)
   document.removeEventListener('keyup', _onKeyUp)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

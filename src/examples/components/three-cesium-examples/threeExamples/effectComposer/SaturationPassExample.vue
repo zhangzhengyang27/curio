@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
@@ -93,7 +96,7 @@ function onReady(ctx) {
   const finalPass = new ShaderPass(finalMaterial)
   composer.addPass(finalPass)
 
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(finalMaterial.uniforms.saturation, 'value', 0, 1, 0.01).name('饱和度')
   gui.add(finalMaterial.uniforms.brightness, 'value', 0, 1, 0.01).name('亮度')
 
@@ -112,4 +115,8 @@ function onReady(ctx) {
     composer.render()
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

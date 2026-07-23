@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GUI } from 'lil-gui';
@@ -152,7 +155,7 @@ async function onReady(ctx) {
       modelMaterialUniforms.blockSize = v;
     },
   };
-  const gui = new GUI();
+  gui = new GUI();
   gui.add(data, "blur", 0, 1, 0.001).name("虚化强度");
   gui.add(data, "blockSize", 2.0, 20.0, 4.0).name("虚化区块大小");
   
@@ -175,4 +178,8 @@ async function onReady(ctx) {
   
   ani();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -167,7 +170,7 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild(stats.dom)
   
   				// gui
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( api, 'count', 1, pointLightsMax ).step( 1 ).onChange( function () {
   
   					lightingUniformsGroup.uniforms[ 2 ].value = api.count;
@@ -211,4 +214,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

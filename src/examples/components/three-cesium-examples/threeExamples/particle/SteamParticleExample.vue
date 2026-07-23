@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -129,7 +132,7 @@ function onReady(ctx) {
   scene.add(steam)
   
   // GUI
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(config, 'height', 5, 30).name('上升高度').onChange(v => uniforms.height.value = v)
   gui.add(config, 'turbulence', 0, 1).name('湍流强度').onChange(v => uniforms.turbulence.value = v)
   gui.add(config, 'density', 0.1, 1).name('浓度').onChange(v => uniforms.density.value = v)
@@ -147,4 +150,8 @@ function onReady(ctx) {
     uniforms.time.value = clock.getElapsedTime()
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
@@ -101,10 +104,14 @@ function onReady(ctx) {
       window.removeEventListener('keyup', onKeyUp)
   })
   
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(pointLockControls, 'isLocked').onChange((v) => v ? pointLockControls.lock() : pointLockControls.unlock()).name('漫游').listen()
   gui.add(pointLockControls, 'speed').name('漫游速度')
   
   GLOBAL_CONFIG.ElMessage('键盘事件：WASD移动, esc退出')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

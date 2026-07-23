@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import { AxesHelper, GridHelper, Group, Mesh, MeshPhongMaterial, PointLight, SphereGeometry } from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '../../ExampleScene.vue'
@@ -93,7 +96,7 @@ function onReady(ctx) {
     })
   })
 
-  const gui = new GUI({ autoPlace: false })
+  gui = new GUI({ autoPlace: false })
   makeAxesGrid(solarSystem, 'solarSystem')
   makeAxesGrid(earthSystem, 'earthSystem')
   makeAxesGrid(moonSystem, 'moonSystem')
@@ -104,4 +107,8 @@ function onReady(ctx) {
 
   overlay.appendChild(gui.domElement)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

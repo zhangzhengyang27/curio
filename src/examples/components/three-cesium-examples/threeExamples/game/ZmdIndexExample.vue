@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -424,7 +427,7 @@ async function onReady(ctx) {
       ground.material.uniforms.size.value = value;
     },
   };
-  const gui = new GUI();
+  gui = new GUI();
   gui.add(data, "faultStrength", 0, 5).step(0.001).name("故障强度");
   gui.add(data, "useStripe").name("启用条纹");
   gui.addColor(data, "c_0").name("logo颜色");
@@ -453,4 +456,8 @@ async function onReady(ctx) {
   
   ani();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

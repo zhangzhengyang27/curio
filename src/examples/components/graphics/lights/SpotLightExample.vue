@@ -5,6 +5,8 @@
 </template>
 
 <script setup>
+
+let gui = null
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Sphere, Box, Cylinder, Torus, Mesh, Orbit, Color} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
 import { GUI } from 'lil-gui'
@@ -183,7 +185,7 @@ async function initGraphicsExample() {
           renderer.render({scene, camera});
         }
     
-        const gui = new GUI();
+        gui = new GUI();
         const palette = {
           light: '#FFFFFF',
           reflection1: '#0000FF',
@@ -221,4 +223,8 @@ onMounted(() => {
 
 // cleanup is handled by useGraphicsCleanup
 // onUnmounted not needed
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

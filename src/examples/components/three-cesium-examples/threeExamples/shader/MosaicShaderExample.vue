@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -63,7 +66,11 @@ function onReady(ctx) {
   
   scene.add(mesh);
   
-  var gui = new GUI();
+  gui = new GUI();
   gui.add(uniforms['fMosaicScale'], 'value', 1.0, 100.0).step(1.0).name('mosaicScale');
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

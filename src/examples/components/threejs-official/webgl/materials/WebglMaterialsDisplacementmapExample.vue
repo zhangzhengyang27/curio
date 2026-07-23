@@ -13,6 +13,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -68,7 +71,7 @@ function onReady(__stage) {
   			// Init gui
   			function initGui() {
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				//let gui = gui.addFolder( "Material" );
   				gui.add( settings, 'metalness' ).min( 0 ).max( 1 ).onChange( function ( value ) {
   
@@ -249,4 +252,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

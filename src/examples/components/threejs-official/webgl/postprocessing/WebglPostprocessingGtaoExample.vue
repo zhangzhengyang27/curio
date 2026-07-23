@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -115,7 +118,7 @@ function onReady(__stage) {
   				}, undefined, ( e ) => console.error( e ) );
   
   				// Init gui
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				gui.add( gtaoPass, 'output', {
   					'Default': GTAOPass.OUTPUT.Default,
@@ -186,4 +189,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

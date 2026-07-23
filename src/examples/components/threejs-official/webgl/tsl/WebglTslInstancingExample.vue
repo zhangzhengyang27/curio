@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { WebGLNodesHandler } from 'three/examples/jsm/tsl/WebGLNodesHandler.js';
@@ -352,4 +355,8 @@ function onReady(__stage) {
   
   	
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -83,7 +86,7 @@ function onReady(__stage) {
   				
   
   				//
-  				const gui = new GUI( { width: 300 } );
+  				gui = new GUI( { width: 300 } );
   
   				gui.add( params, 'format', formats ).onChange( setupRenderTarget );
   				gui.add( params, 'type', types ).onChange( setupRenderTarget );
@@ -185,4 +188,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

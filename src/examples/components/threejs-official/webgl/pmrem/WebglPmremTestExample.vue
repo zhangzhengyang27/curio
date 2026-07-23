@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -96,7 +99,7 @@ function onReady(__stage) {
   				// angle of the pixel in steradians. This image is 1024 x 512,
   				// so the value is 1 / ( sin( phi ) * ( pi / 512 ) ^ 2 ) = 27,490 nits.
   
-  				const gui = new GUI();
+  				gui = new GUI();
   				gui.add( { enabled: true }, 'enabled' )
   					.name( 'PMREM' )
   					.onChange( value => {
@@ -189,4 +192,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

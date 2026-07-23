@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
@@ -118,8 +121,12 @@ function onReady(ctx) {
   }
   
   function createGUI() {
-      var gui = new GUI();
+      gui = new GUI();
       gui.add(cubeMaterial.uniforms['fScale'], 'value', 50.0, 500.0).step(1.0).name('fScale');
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

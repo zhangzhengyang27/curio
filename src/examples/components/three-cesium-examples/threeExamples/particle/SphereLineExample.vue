@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -179,7 +182,7 @@ function onReady(ctx) {
         group.rotation.y += 0.001
   })
   
-  let gui = new GUI()
+  gui = new GUI()
   
   gui.add(effectController, "showDots").onChange(function (value) {
   
@@ -201,4 +204,8 @@ function onReady(ctx) {
   
   });
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -120,7 +123,7 @@ async function onReady(__stage) {
   
   				if ( isIOS === false ) {
   
-  					const gui = new GUI();
+  					gui = new GUI();
   
   					gui.add( params, 'exportUSDZ' ).name( 'Export USDZ' );
   					gui.open();
@@ -149,4 +152,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

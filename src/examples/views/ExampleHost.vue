@@ -35,6 +35,24 @@ function disposeCanvasContexts(el) {
   el.querySelectorAll('canvas').forEach(releaseCanvas)
 }
 
+// 示例里大量用 `new GUI()` 创建面板，但多数不保存引用、也不在卸载时销毁。
+// lil-gui / dat.gui 默认把面板挂到 document.body，返回列表页时残留在页面上。
+// 这里在宿主卸载时兜底移除由这些 GUI 库创建的容器（含宿主子树内与 body 上的）。
+function disposeGUI(el) {
+  try {
+    const selectors = ['.lil-gui', '.dg.ac', '.dg.main']
+    if (el && typeof el.querySelectorAll === 'function') {
+      selectors.forEach(sel => el.querySelectorAll(sel).forEach(node => node.remove()))
+    }
+    // 全局兜底：GUI 面板默认挂在 body 上，不在宿主子树内
+    selectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(node => node.remove())
+    })
+  } catch {
+    /* 忽略清理异常 */
+  }
+}
+
 onBeforeUnmount(() => {
   // 1) 当前 host 子树内的 canvas
   disposeCanvasContexts(root.value)
@@ -49,6 +67,8 @@ onBeforeUnmount(() => {
   } catch {
     /* 忽略全局扫描异常 */
   }
+  // 3) 兜底：清理残留的 GUI 控制面板，避免返回列表页后控件不消失
+  disposeGUI(root.value)
 })
 </script>
 

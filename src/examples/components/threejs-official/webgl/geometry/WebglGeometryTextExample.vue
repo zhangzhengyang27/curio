@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
@@ -208,7 +211,7 @@ function onReady(__stage) {
   
   				//
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				gui.add( params, 'changeColor' ).name( 'change color' );
   				gui.add( params, 'changeFont' ).name( 'change font' );
@@ -386,4 +389,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

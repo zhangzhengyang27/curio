@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -110,7 +113,7 @@ function onReady(ctx) {
       });
   };
   
-  const gui = new GUI()
+  gui = new GUI()
   
   gui.add({
   
@@ -139,4 +142,8 @@ function onReady(ctx) {
   
   }, '还原动画')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

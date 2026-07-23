@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import noiseModuleUrl from '/external-examples/3d-file-server/js/wasm/three_noise.js?url'
 import { GUI } from 'lil-gui';
@@ -138,10 +141,14 @@ async function onReady(ctx) {
       showTerrain:false
   }
   const add_gui = ()=>{
-      const gui = new GUI()
+      gui = new GUI()
       gui.add(params,'showTerrain').onChange(change_material)
   }
   await add_sky_sphere();
   add_gui()
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

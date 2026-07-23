@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { LoopSubdivision } from 'three-subdivide';
@@ -114,7 +117,7 @@ function onReady(__stage) {
   
   				const geomTypes = [ 'Box', 'Capsule', 'Circle', 'Cone', 'Cylinder', 'Dodecahedron', 'Icosahedron', 'Lathe', 'Octahedron', 'Plane', 'Ring', 'Sphere', 'Tetrahedron', 'Torus', 'TorusKnot' ];
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				const folder1 = gui.addFolder( 'Subdivide Params' );
   				const geomController = folder1.add( params, 'geometry', geomTypes ).onFinishChange( () => {
@@ -320,4 +323,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

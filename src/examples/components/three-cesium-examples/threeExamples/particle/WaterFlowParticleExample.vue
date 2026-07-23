@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -142,7 +145,7 @@ const ctx = c.getContext("2d");const g = ctx.createRadialGradient(16, 16, 0, 16,
   scene.add(particles)
   
   // GUI
-  const gui = new GUI()
+  gui = new GUI()
   gui.add(config, 'nozzleX', -5, 5).name('喷嘴X').onChange(v => uniforms.nozzlePos.value.x = v)
   gui.add(config, 'nozzleY', 0, 10).name('喷嘴高度').onChange(v => uniforms.nozzlePos.value.y = v)
   gui.add(config, 'velocityX', -5, 5).name('水平速度').onChange(v => uniforms.velocity.value.x = v)
@@ -165,4 +168,8 @@ const ctx = c.getContext("2d");const g = ctx.createRadialGradient(16, 16, 0, 16,
     uniforms.time.value = clock.getElapsedTime()
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

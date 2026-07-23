@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -84,7 +87,7 @@ function onReady(ctx) {
       transparent: true
   })
   
-  const gui = new GUI()
+  gui = new GUI()
   const color1Debug = { value: '#dbb8ff' }
   gui.addColor(color1Debug, 'value').name('Color 1').onChange((v) => {
       material.uniforms.color1.value.set(v)
@@ -173,4 +176,8 @@ function onReady(ctx) {
     material.uniforms.time.value += 0.01
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

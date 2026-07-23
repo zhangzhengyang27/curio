@@ -6,6 +6,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import { BufferAttribute, Clock, Color, PerspectiveCamera, PlaneGeometry, Points, Scene, ShaderMaterial, WebGLRenderer } from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -86,7 +89,7 @@ function onReady(ctx) {
   plane.rotation.x = - Math.PI * 0.4
   scene.add(plane)
   
-  const gui = new GUI()
+  gui = new GUI()
   const planeFolder = gui.addFolder('Plane')
   planeFolder.addColor(planeMaterial.uniforms.ucolor, 'value').name('Color')
   planeFolder.add(planeMaterial.uniforms.bsize, 'value').min(0).max(10).step(0.001).name('Size')
@@ -100,4 +103,8 @@ function onReady(ctx) {
   
   animate()
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

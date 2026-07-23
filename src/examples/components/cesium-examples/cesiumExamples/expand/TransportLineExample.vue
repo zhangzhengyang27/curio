@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -154,7 +157,7 @@ function onReady(ctx) {
       let scene = viewer.scene;
   
       // 创建GUI控制面板
-      const gui = new GUI();
+      gui = new GUI();
   
       // 效果控制参数
       const effectControls = {
@@ -236,4 +239,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

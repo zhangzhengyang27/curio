@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -60,7 +63,7 @@ function onReady(ctx) {
   
   });
   
-  const gui = new GUI()
+  gui = new GUI()
   const colorDebug = { value: '#ffffff' }
   gui.addColor(colorDebug, 'value').name('color').onChange((v) => {
       material.uniforms.color.value.set(v)
@@ -175,4 +178,8 @@ function onReady(ctx) {
   
   scene.background = new THREE.CubeTextureLoader().load([0, 1, 2, 3, 4, 5].map(k => ('/external-examples/3d-file-server/files/sky/skyBox0/' + (k + 1) + '.png')));
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

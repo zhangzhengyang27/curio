@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -458,7 +461,7 @@ function onReady(ctx) {
   
   function addWaterGui(waterSurface) {
       const params = waterSurface.params;
-      const gui = new GUI({ name: "Dynamic Water" });
+      gui = new GUI({ name: "Dynamic Water" });
   
       params.rebuildWater = () => {
           waterSurface.rebuild();
@@ -892,4 +895,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

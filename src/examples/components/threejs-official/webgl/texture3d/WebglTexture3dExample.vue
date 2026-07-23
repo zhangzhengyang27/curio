@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -76,7 +79,7 @@ function onReady(__stage) {
   
   			// The gui for interaction
   			volconfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: 0.15, colormap: 'viridis' };
-  			const gui = new GUI();
+  			gui = new GUI();
   			gui.add( volconfig, 'clim1', 0, 1, 0.01 ).onChange( updateUniforms );
   			gui.add( volconfig, 'clim2', 0, 1, 0.01 ).onChange( updateUniforms );
   			gui.add( volconfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( updateUniforms );
@@ -159,4 +162,8 @@ function onReady(__stage) {
   
   	
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

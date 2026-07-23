@@ -18,6 +18,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -176,7 +179,7 @@ async function onReady(__stage) {
   				const lods = batchedMesh._geometryInfo.map( x => x.LOD );
   				const onBeforeRender = batchedMesh.onBeforeRender;
   			
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				gui.add( batchedMesh, 'instanceCount' ).disable();
   			
@@ -265,4 +268,8 @@ function onBeforeDispose() {
   restorePrototype(THREE.BatchedMesh, 'computeBoundsTree')
   document.removeEventListener('pointermove', onPointerMove)
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

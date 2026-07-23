@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'lil-gui'
@@ -53,7 +56,7 @@ function onReady(ctx) {
   
   })
   
-  const gui = new GUI()
+  gui = new GUI()
   
   let shakeAnimation;
   
@@ -123,4 +126,8 @@ function onReady(ctx) {
     }
   }, 'fn').name('整体跳跃');
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

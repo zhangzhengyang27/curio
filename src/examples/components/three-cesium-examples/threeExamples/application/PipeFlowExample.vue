@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { GUI } from 'lil-gui'
@@ -48,7 +51,7 @@ function onReady(ctx) {
   const pipe = addAndGetPipe(FILE_HOST)
   scene.add(pipe)
 
-  const gui = new GUI()
+  gui = new GUI()
   gui.add({ startFlow: () => pipe.startFlow() }, 'startFlow').name('开始流动')
   gui.add({ stopFlow: () => pipe.stopFlow() }, 'stopFlow').name('停止流动')
 
@@ -130,4 +133,8 @@ class DemoPipe extends THREE.Mesh {
     this.material.map = null
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

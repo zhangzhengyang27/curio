@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -61,7 +64,7 @@ function onReady(__stage) {
   				directionalLight.position.set( 0, 1, 1 );
   				scene.add( directionalLight );
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				let h = gui.addFolder( 'Geometry Selection' );
   				h.add( params, 'addTriangle' ).name( 'Triangle' );
@@ -255,4 +258,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

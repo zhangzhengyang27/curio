@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -33,7 +36,7 @@ async function onReady(ctx) {
   scene.add(mesh);
   
   // GUI 对象
-  const gui = new GUI()
+  gui = new GUI()
   
   const fileList = new Array(6).fill().map((_, i) => props.example?.globals?.FILE_HOST + `files/glsl/${i}.frag`)
   
@@ -108,4 +111,8 @@ async function onReady(ctx) {
   
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

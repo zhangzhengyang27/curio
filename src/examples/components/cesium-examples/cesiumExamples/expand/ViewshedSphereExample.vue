@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -96,7 +99,7 @@ async function onReady(ctx) {
   viewshed.update()
   
   const far = viewshed.far
-  const gui = new GUI()
+  gui = new GUI()
   const controls = {
       near: viewshedOptions.near,
       far,
@@ -158,4 +161,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

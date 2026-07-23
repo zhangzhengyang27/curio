@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { GUI } from 'lil-gui'
@@ -76,7 +79,7 @@ function onReady(ctx) {
   tween.pause() // 停止
   // tween.paused(true) // 也可以这样停止 获取或设置动画的暂停状态
   
-  const gui = new GUI()
+  gui = new GUI()
   
   const folder = gui.addFolder('动画类型')
   folder.add({ fn: () => gsap.from(mesh.position, { y: 30, duration: 2 }) }, 'fn').name('from从指定值到当前值')
@@ -375,4 +378,8 @@ function onReady(ctx) {
   
   }).name('9-综合实战表演')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

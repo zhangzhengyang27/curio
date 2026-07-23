@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -109,7 +112,7 @@ function onReady(ctx) {
           edgeFalloff: { value: 2.0, type: 'number', unit: 'float' } // 边缘衰减参数
       }
   
-      const gui = new GUI()
+      gui = new GUI()
       gui.add(uniforms1.HEAT_MAX, 'value', 0, 10).name('HEAT_MAX')
       gui.add(uniforms1.PointRadius, 'value', 0, 1).name('PointRadius')
       gui.add(uniforms1.intensity, 'value', 0, 10).name('intensity')
@@ -206,4 +209,8 @@ function onReady(ctx) {
       scene.add(mesh)
   }
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

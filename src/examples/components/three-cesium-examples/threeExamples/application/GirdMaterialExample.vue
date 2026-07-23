@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -80,7 +83,7 @@ function onReady(ctx) {
   scene.add(mesh)
   
   // GUI 控制
-  const gui = new GUI()
+  gui = new GUI()
   const params = { geometry: 'TorusKnot', color: '#00ffff' }
   
   gui.add(params, 'geometry', Object.keys(geometries)).name('几何体').onChange(v => mesh.geometry = geometries[v])
@@ -89,4 +92,8 @@ function onReady(ctx) {
   gui.add(gridMaterial.uniforms.lineWidth, 'value', 0.1, 5).name('线条粗细')
   gui.addColor(params, 'color').name('颜色').onChange(v => gridMaterial.uniforms.color.value.set(v))
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

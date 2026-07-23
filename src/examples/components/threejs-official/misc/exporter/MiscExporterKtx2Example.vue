@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -93,7 +96,7 @@ async function onReady(__stage) {
   
   				
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				gui.add( params, 'target' ).options( [ 'pmrem', 'data-texture' ] ).onChange( swapScene );
   				gui.add( params, 'export' ).name( 'Export KTX2' );
@@ -203,4 +206,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec4 } from 'three/tsl';
@@ -197,7 +200,7 @@ async function onReady(__stage) {
   
   					// gui
   
-  					const gui = new GUI();
+  					gui = new GUI();
   
   					gui.add( options, 'output', [ 'WGSL', 'GLSL ES 3.0' ] ).onChange( build );
   					gui.add( options, 'shader', [ 'vertex', 'fragment' ] ).onChange( showCode );
@@ -223,4 +226,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

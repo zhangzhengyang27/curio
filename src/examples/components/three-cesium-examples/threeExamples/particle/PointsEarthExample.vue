@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -24,7 +27,7 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  let gui = new GUI();
+  gui = new GUI();
   // 初始化场景、相机和渲染器
   const gl = {
       clearColor: '#332148',
@@ -236,4 +239,8 @@ function onReady(ctx) {
         group.rotation.y += 0.002;
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

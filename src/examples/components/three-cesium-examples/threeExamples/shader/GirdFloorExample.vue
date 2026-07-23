@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -208,7 +211,7 @@ function onReady(ctx) {
       #include <fog_fragment>
   }`
   
-  const gui = new GUI()
+  gui = new GUI()
 
   const debugObject = {
       color: '#c4d6ff',
@@ -348,4 +351,8 @@ function onReady(ctx) {
   
   tick()
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

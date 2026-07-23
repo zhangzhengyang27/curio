@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -87,7 +90,7 @@ async function onReady(ctx) {
   
   })
   
-  const gui = new GUI()
+  gui = new GUI()
   
   // viewer.flyTo viewer.zoomTo viewer.trackedEntity view.camera.setView  viewer.camera.lookAt 
   
@@ -146,4 +149,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

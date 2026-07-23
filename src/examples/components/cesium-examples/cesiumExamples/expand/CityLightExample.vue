@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -69,7 +72,7 @@ async function onReady(ctx) {
       u_height_offset: { value: 0.0, type: Cesium.UniformType.FLOAT }
   }
   
-  const gui = new GUI()
+  gui = new GUI()
   gui.addColor({ sweepColor: '#2ba7ff' }, 'sweepColor').onChange(v => {
       const hex = v.replace('#', '')
       const r = parseInt(hex.substring(0, 2), 16)
@@ -147,4 +150,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

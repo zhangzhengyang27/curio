@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -48,7 +51,7 @@ function onReady(ctx) {
       
   
       // Create GUI
-      const gui = new GUI({ container: root });
+      gui = new GUI({ container: root });
   
       const stats = new Stats();
       stats.showPanel(0);
@@ -183,4 +186,8 @@ function onReady(ctx) {
   
   init(document.getElementById('box'));
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
@@ -462,7 +465,7 @@ function onReady(__stage) {
   				guiCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
   				guiScene.add( guiCamera );
   
-  				const gui = new GUI( { width: 300 } );
+  				gui = new GUI( { width: 300 } );
   				gui.add( parameters, 'radius', 0.0, 1.0 ).onChange( onChange );
   				gui.add( parameters, 'tube', 0.0, 1.0 ).onChange( onChange );
   				gui.add( parameters, 'tubularSegments', 10, 150, 1 ).onChange( onChange );
@@ -676,4 +679,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

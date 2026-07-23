@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -41,7 +44,7 @@ function onReady(ctx) {
   
   let timeS = 0, fps = 60, renderT = 1 / fps
   
-  let gui = new GUI()
+  gui = new GUI()
      
   gui.add({ fps }, 'fps', 1, 300).onFinishChange(v => {
   
@@ -85,4 +88,8 @@ function onReady(ctx) {
   
   )
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

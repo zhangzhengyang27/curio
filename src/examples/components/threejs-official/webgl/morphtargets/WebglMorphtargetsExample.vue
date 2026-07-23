@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -136,7 +139,7 @@ function onReady(__stage) {
   					Spherify: 0,
   					Twist: 0,
   				};
-  				const gui = new GUI( { title: 'Morph Targets' } );
+  				gui = new GUI( { title: 'Morph Targets' } );
   
   				gui.add( params, 'Spherify', 0, 1, 0.01 ).onChange( function ( value ) {
   
@@ -155,4 +158,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Polyslice from 'https://cdn.jsdelivr.net/npm/@jgphilpott/polyslice@26.4.0/dist/index.browser.esm.js';
@@ -90,7 +93,7 @@ function onReady(__stage) {
   				gridHelper.rotation.x = - Math.PI / 2; // rotate from XZ to XY
   				scene.add( gridHelper );
   
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				let h = gui.addFolder( 'Printer & Filament' );
   				h.add( params, 'printer', PRINTER_OPTIONS ).name( 'Printer' );
@@ -293,4 +296,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

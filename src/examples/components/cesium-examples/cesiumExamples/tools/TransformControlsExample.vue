@@ -7,6 +7,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { CoordinateMode, Gizmo, GizmoMode } from 'cesium-transform-controls'
 import { GUI } from 'lil-gui'
@@ -114,7 +117,7 @@ async function onReady(ctx) {
   gizmo.coordinateMode = CoordinateMode.local
   
   // 创建 GUI 控制面板
-  const gui = new GUI({ name: '变换控制器' })
+  gui = new GUI({ name: '变换控制器' })
   
   /** 坐标模式控制器引用（用于在 scale 模式时禁用） */
   let translateModeController = null
@@ -491,4 +494,8 @@ function onBeforeDispose() {
   Cesium = null
   viewer = null
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

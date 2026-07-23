@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -52,7 +55,7 @@ function onReady(__stage) {
   				initMisc();
   
   				// Init gui
-  				const gui = new GUI();
+  				gui = new GUI();
   
   				const config = {
   					spotlightRadius: 4,
@@ -235,4 +238,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

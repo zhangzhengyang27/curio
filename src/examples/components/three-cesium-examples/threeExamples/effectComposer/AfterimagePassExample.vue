@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -73,7 +76,7 @@ function onReady(ctx) {
   const params = {
       enable: true
   };
-  const gui = new GUI({ name: 'Damp setting' });
+  gui = new GUI({ name: 'Damp setting' });
   gui.add(afterimagePass.uniforms["damp"], 'value', 0, 1).step(0.001);
   gui.add(params, 'enable');
   
@@ -95,4 +98,8 @@ function onReady(ctx) {
         }
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

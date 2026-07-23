@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -111,7 +114,7 @@ function onReady(__stage) {
   					syncMaterial: false
   				};
   
-  				const gui = new GUI( { width: 300 } );
+  				gui = new GUI( { width: 300 } );
   				gui.add( params, 'Cube' );
   				gui.add( params, 'Equirectangular' );
   				gui.add( params, 'Refraction' ).onChange( function ( value ) {
@@ -163,4 +166,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

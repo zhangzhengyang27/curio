@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import gsap from "gsap";
 import { GUI } from 'lil-gui';
@@ -134,7 +137,7 @@ function onReady(ctx) {
     }
   }
   function createGUI() {
-    var gui = new GUI();
+    gui = new GUI();
     var configGUI = gui.addFolder('Setup');
     configGUI.add(options.perlin, 'speed', 0.0, 0.001);
     configGUI.add(options.cam, 'zoom', 0, 30);
@@ -417,4 +420,8 @@ function onReady(ctx) {
   createPrimitive();
   createGUI();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

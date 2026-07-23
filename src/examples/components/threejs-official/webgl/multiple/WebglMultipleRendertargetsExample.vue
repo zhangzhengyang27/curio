@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -44,7 +47,7 @@ function onReady(__stage) {
   				wireframe: false
   			};
   
-  			const gui = new GUI();
+  			gui = new GUI();
   			gui.add( parameters, 'samples', 0, 4 ).step( 1 );
   			gui.add( parameters, 'wireframe' );
   			gui.onChange( render );
@@ -160,4 +163,8 @@ function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

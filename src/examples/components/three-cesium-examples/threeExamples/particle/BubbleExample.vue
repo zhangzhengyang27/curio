@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -287,7 +290,7 @@ function onReady(ctx) {
   }
   
   let orbit;
-  let gui = new GUI();
+  gui = new GUI();
   let bubble;
 
   init();
@@ -354,4 +357,8 @@ function onReady(ctx) {
     orbit.update();
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

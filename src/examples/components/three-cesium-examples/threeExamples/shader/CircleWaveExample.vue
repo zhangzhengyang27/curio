@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -119,7 +122,7 @@ function onReady(ctx) {
   scene.add(mesh);
   
   // 创建GUI
-  const gui = new GUI()
+  gui = new GUI()
   const params = {
     uScanColor: '#00ffff',
     uScanColorDark: '#0088ff'
@@ -137,4 +140,8 @@ function onReady(ctx) {
     material.uniforms.uTime.value += 0.005;
   })
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

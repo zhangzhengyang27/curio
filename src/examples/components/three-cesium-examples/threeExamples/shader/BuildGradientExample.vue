@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -148,7 +151,7 @@ function onReady(ctx) {
   })
   
   // 扩展GUI控制 - 移除彩虹选项
-  const gui = new GUI()
+  gui = new GUI()
   const colorFolder = gui.addFolder('颜色设置')
   colorFolder.addColor(shaderMaterial.uniforms.uColorBottom, 'value').name('底部颜色')
   colorFolder.addColor(shaderMaterial.uniforms.uColorTop, 'value').name('顶部颜色')
@@ -164,4 +167,8 @@ function onReady(ctx) {
   effectsFolder.add(shaderMaterial.uniforms.uScanWidth, 'value', 0.001, 0.3).name('扫描宽度')
   effectsFolder.add(shaderMaterial.uniforms.uScanSoftness, 'value', 0.1, 1.0).name('扫描柔和度')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

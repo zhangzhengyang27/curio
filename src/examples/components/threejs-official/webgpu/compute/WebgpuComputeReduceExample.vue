@@ -13,6 +13,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { instancedArray, Loop, If, vec3, dot, clamp, storage, uvec4, subgroupAdd, uniform, uv, uint, float, Fn, vec2, invocationLocalIndex, invocationSubgroupIndex, uvec2, floor, instanceIndex, workgroupId, workgroupBarrier, workgroupArray, subgroupSize, select, countTrailingZeros } from 'three/tsl';
@@ -251,7 +254,7 @@ async function onReady(__stage) {
   			const leftDisplayColorNodes = {};
   			const rightDisplayColorNodes = {};
   
-  			const gui = new GUI();
+  			gui = new GUI();
   
   			gui.add( leftEffectController, 'algo', algorithms ).onChange( () => {
   
@@ -1212,4 +1215,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

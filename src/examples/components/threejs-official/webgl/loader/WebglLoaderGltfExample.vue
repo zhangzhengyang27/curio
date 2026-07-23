@@ -16,6 +16,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -70,7 +73,7 @@ async function onReady(__stage) {
   							.then( response => response.json() )
   							.then( models => {
   
-  								const gui = new GUI();
+  								gui = new GUI();
   								const modelNames = models.map( m => m.name );
   								const params = { model: 'DamagedHelmet' };
   
@@ -212,4 +215,8 @@ async function onReady(__stage) {
   
   		
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

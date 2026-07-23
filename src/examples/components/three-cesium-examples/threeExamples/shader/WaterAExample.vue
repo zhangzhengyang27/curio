@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -26,7 +29,7 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const gui = new GUI();
+  gui = new GUI();
   
   // 假设typeState已经被定义
   const typeState = {
@@ -178,4 +181,8 @@ function onReady(ctx) {
       material.uniforms.flowSpeed.value.y = value;
     });
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

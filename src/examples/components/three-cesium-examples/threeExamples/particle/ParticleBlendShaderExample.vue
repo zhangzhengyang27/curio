@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -315,7 +318,7 @@ function onReady(ctx) {
         uniforms.iTime.value += uniforms.speed.value
   })
   
-  const gui = new GUI()
+  gui = new GUI()
 
   gui.add(uniforms.intensity, 'value', 0, 100).name('intensity')
 
@@ -338,4 +341,8 @@ function onReady(ctx) {
 
   gui.add(_uniforms.isdecaySize, 'value').name('isdecaySize')
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>

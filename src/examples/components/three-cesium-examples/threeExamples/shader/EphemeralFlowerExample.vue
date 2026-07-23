@@ -8,6 +8,9 @@
 </template>
 
 <script setup>
+import { onUnmounted } from 'vue'
+
+let gui = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -204,10 +207,14 @@ function onReady(ctx) {
   let o = new THREE.Mesh(g, m);
   scene.add(o);
   
-  let gui = new GUI();
+  gui = new GUI();
   gui.addColor(gu.color1, "value").name("Color 1");
   gui.addColor(gu.color2, "value").name("Color 2");
   
   let clock = new THREE.Clock();
 }
+
+onUnmounted(() => {
+  gui?.destroy()
+})
 </script>
