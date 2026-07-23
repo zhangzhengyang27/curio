@@ -4,6 +4,8 @@ export default {
   "examples": [
     {
       "id": "Metaball",
+
+      "thumbnail": "/example-thumbs/city-realtime-webgl/city-realtime/Metaball.jpg",
       "category": "city-realtime",
       "categoryLabel": "City Realtime",
       "title": "元球融合",
@@ -18,6 +20,8 @@ export default {
     },
     {
       "id": "BlindsTransition",
+
+      "thumbnail": "/example-thumbs/city-realtime-webgl/city-realtime/BlindsTransition.jpg",
       "category": "city-realtime",
       "categoryLabel": "City Realtime",
       "title": "百叶窗过渡",

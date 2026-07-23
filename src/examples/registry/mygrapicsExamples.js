@@ -6,6 +6,8 @@ export default {
   "examples": [
     {
       "id": "cube",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-basic/cube.jpg",
       "category": "3d-basic",
       "categoryLabel": "3d-basic",
       "title": "立方体",
@@ -18,6 +20,8 @@ export default {
     },
     {
       "id": "cylinder-3d-basic",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-basic/cylinder-3d-basic.jpg",
       "category": "3d-basic",
       "categoryLabel": "3d-basic",
       "title": "基础",
@@ -30,6 +34,8 @@ export default {
     },
     {
       "id": "cylinder-clip",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-camera/cylinder-clip.jpg",
       "category": "3d-camera",
       "categoryLabel": "3d-camera",
       "title": "裁剪",
@@ -42,6 +48,8 @@ export default {
     },
     {
       "id": "cylinder-ortho",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-camera/cylinder-ortho.jpg",
       "category": "3d-camera",
       "categoryLabel": "3d-camera",
       "title": "正交",
@@ -54,6 +62,8 @@ export default {
     },
     {
       "id": "cylinder-perspective",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-camera/cylinder-perspective.jpg",
       "category": "3d-camera",
       "categoryLabel": "3d-camera",
       "title": "透视",
@@ -66,6 +76,8 @@ export default {
     },
     {
       "id": "cylinder-3d-camera",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-camera/cylinder-3d-camera.jpg",
       "category": "3d-camera",
       "categoryLabel": "3d-camera",
       "title": "相机",
@@ -78,6 +90,8 @@ export default {
     },
     {
       "id": "ogl-basic",
+
+      "thumbnail": "/example-thumbs/mygrapics/3d-camera/ogl-basic.jpg",
       "category": "3d-camera",
       "categoryLabel": "3d-camera",
       "title": "基础",
@@ -89,6 +103,8 @@ export default {
     },
     {
       "id": "animate-delta",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/animate-delta.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "Document",
@@ -100,6 +116,8 @@ export default {
     },
     {
       "id": "animate-time",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/animate-time.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "Document",
@@ -111,6 +129,8 @@ export default {
     },
     {
       "id": "animator",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/animator.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "Document",
@@ -122,6 +142,8 @@ export default {
     },
     {
       "id": "frame-animate-animate",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/frame-animate-animate.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "帧动画",
@@ -133,6 +155,8 @@ export default {
     },
     {
       "id": "lerp-bezier-css",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/lerp-bezier-css.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "贝塞尔",
@@ -144,6 +168,8 @@ export default {
     },
     {
       "id": "lerp-bezier",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/lerp-bezier.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "贝塞尔",
@@ -155,6 +181,8 @@ export default {
     },
     {
       "id": "lerp-animate",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate/lerp-animate.jpg",
       "category": "animate",
       "categoryLabel": "animate",
       "title": "Document",
@@ -166,6 +194,8 @@ export default {
     },
     {
       "id": "bezier-easing",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/bezier-easing.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -178,6 +208,8 @@ export default {
     },
     {
       "id": "cellular-animation",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/cellular-animation.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "噪声",
@@ -190,6 +222,8 @@ export default {
     },
     {
       "id": "fragment-rotation-animator",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/fragment-rotation-animator.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -202,6 +236,8 @@ export default {
     },
     {
       "id": "fragment-rotation-animator2",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/fragment-rotation-animator2.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -214,6 +250,8 @@ export default {
     },
     {
       "id": "frame-animate-animate-webgl",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/frame-animate-animate-webgl.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "帧动画",
@@ -226,6 +264,8 @@ export default {
     },
     {
       "id": "lerp-animate-webgl",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/lerp-animate-webgl.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -238,6 +278,8 @@ export default {
     },
     {
       "id": "lerp-easing",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/lerp-easing.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -250,6 +292,8 @@ export default {
     },
     {
       "id": "particle-animate-webgl",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/particle-animate-webgl.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -262,6 +306,8 @@ export default {
     },
     {
       "id": "vertex-move-animator",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/vertex-move-animator.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -274,6 +320,8 @@ export default {
     },
     {
       "id": "vertex-move-easing",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/vertex-move-easing.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -286,6 +334,8 @@ export default {
     },
     {
       "id": "vertex-rotation",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/vertex-rotation.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -298,6 +348,8 @@ export default {
     },
     {
       "id": "vertex-rotation-animator",
+
+      "thumbnail": "/example-thumbs/mygrapics/animate_webgl/vertex-rotation-animator.jpg",
       "category": "animate_webgl",
       "categoryLabel": "animate_webgl",
       "title": "shader动画",
@@ -310,6 +362,8 @@ export default {
     },
     {
       "id": "cubic",
+
+      "thumbnail": "/example-thumbs/mygrapics/bezier/cubic.jpg",
       "category": "bezier",
       "categoryLabel": "bezier",
       "title": "贝塞尔曲线",
@@ -321,6 +375,8 @@ export default {
     },
     {
       "id": "quadratic",
+
+      "thumbnail": "/example-thumbs/mygrapics/bezier/quadratic.jpg",
       "category": "bezier",
       "categoryLabel": "bezier",
       "title": "贝塞尔曲线",
@@ -332,6 +388,8 @@ export default {
     },
     {
       "id": "index-basic",
+
+      "thumbnail": "/example-thumbs/mygrapics/canvas/basic/index-basic.jpg",
       "category": "canvas/basic",
       "categoryLabel": "basic",
       "title": "基础",
@@ -343,6 +401,8 @@ export default {
     },
     {
       "id": "index-hierarchy",
+
+      "thumbnail": "/example-thumbs/mygrapics/canvas/hierarchy/index-hierarchy.jpg",
       "category": "canvas/hierarchy",
       "categoryLabel": "hierarchy",
       "title": "Hierarchy render by canvas",
@@ -354,6 +414,8 @@ export default {
     },
     {
       "id": "test",
+
+      "thumbnail": "/example-thumbs/mygrapics/canvas/test.jpg",
       "category": "canvas",
       "categoryLabel": "canvas",
       "title": "画布",
@@ -365,6 +427,8 @@ export default {
     },
     {
       "id": "color-cubehelix",
+
+      "thumbnail": "/example-thumbs/mygrapics/color-hints/color-cubehelix.jpg",
       "category": "color-hints",
       "categoryLabel": "color-hints",
       "title": "颜色",
@@ -376,6 +440,8 @@ export default {
     },
     {
       "id": "color-hints-hsl",
+
+      "thumbnail": "/example-thumbs/mygrapics/color-hints/color-hints-hsl.jpg",
       "category": "color-hints",
       "categoryLabel": "color-hints",
       "title": "颜色",
@@ -387,6 +453,8 @@ export default {
     },
     {
       "id": "color-hints-rgb",
+
+      "thumbnail": "/example-thumbs/mygrapics/color-hints/color-hints-rgb.jpg",
       "category": "color-hints",
       "categoryLabel": "color-hints",
       "title": "颜色",
@@ -398,6 +466,8 @@ export default {
     },
     {
       "id": "color-hsl-problem",
+
+      "thumbnail": "/example-thumbs/mygrapics/color-hints/color-hsl-problem.jpg",
       "category": "color-hints",
       "categoryLabel": "color-hints",
       "title": "颜色",
@@ -409,6 +479,8 @@ export default {
     },
     {
       "id": "color-lab",
+
+      "thumbnail": "/example-thumbs/mygrapics/color-hints/color-lab.jpg",
       "category": "color-hints",
       "categoryLabel": "color-hints",
       "title": "颜色",
@@ -420,6 +492,8 @@ export default {
     },
     {
       "id": "index-coordinates",
+
+      "thumbnail": "/example-thumbs/mygrapics/coordinates/index-coordinates.jpg",
       "category": "coordinates",
       "categoryLabel": "coordinates",
       "title": "坐标系",
@@ -431,6 +505,8 @@ export default {
     },
     {
       "id": "basic-noise",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/basic-noise.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "造型函数",
@@ -443,6 +519,8 @@ export default {
     },
     {
       "id": "cellular-noise",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/cellular-noise.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -455,6 +533,8 @@ export default {
     },
     {
       "id": "clouds",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/clouds.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -467,6 +547,8 @@ export default {
     },
     {
       "id": "gradient-noise",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/gradient-noise.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -479,6 +561,8 @@ export default {
     },
     {
       "id": "noise-lines",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/noise-lines.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -491,6 +575,8 @@ export default {
     },
     {
       "id": "noise-sdf",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/noise-sdf.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -503,6 +589,8 @@ export default {
     },
     {
       "id": "noise-sky",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/noise-sky.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -515,6 +603,8 @@ export default {
     },
     {
       "id": "noise2d",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/noise2d.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -527,6 +617,8 @@ export default {
     },
     {
       "id": "simplex-noise",
+
+      "thumbnail": "/example-thumbs/mygrapics/noise/simplex-noise.jpg",
       "category": "noise",
       "categoryLabel": "noise",
       "title": "噪声",
@@ -539,6 +631,8 @@ export default {
     },
     {
       "id": "index-parametric",
+
+      "thumbnail": "/example-thumbs/mygrapics/parametric/index-parametric.jpg",
       "category": "parametric",
       "categoryLabel": "parametric",
       "title": "参数方程",
@@ -550,6 +644,8 @@ export default {
     },
     {
       "id": "index-parametric-polar",
+
+      "thumbnail": "/example-thumbs/mygrapics/parametric-polar/index-parametric-polar.jpg",
       "category": "parametric-polar",
       "categoryLabel": "parametric-polar",
       "title": "极坐标方程",
@@ -561,6 +657,8 @@ export default {
     },
     {
       "id": "index-parametric2",
+
+      "thumbnail": "/example-thumbs/mygrapics/parametric2/index-parametric2.jpg",
       "category": "parametric2",
       "categoryLabel": "parametric2",
       "title": "参数方程",
@@ -572,6 +670,8 @@ export default {
     },
     {
       "id": "bloom",
+
+      "thumbnail": "/example-thumbs/mygrapics/pass/bloom.jpg",
       "category": "pass",
       "categoryLabel": "pass",
       "title": "造型函数",
@@ -584,6 +684,8 @@ export default {
     },
     {
       "id": "blur",
+
+      "thumbnail": "/example-thumbs/mygrapics/pass/blur.jpg",
       "category": "pass",
       "categoryLabel": "pass",
       "title": "造型函数",
@@ -596,6 +698,8 @@ export default {
     },
     {
       "id": "smoke",
+
+      "thumbnail": "/example-thumbs/mygrapics/pass/smoke.jpg",
       "category": "pass",
       "categoryLabel": "pass",
       "title": "造型函数",
@@ -608,6 +712,8 @@ export default {
     },
     {
       "id": "index1",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index1.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -619,6 +725,8 @@ export default {
     },
     {
       "id": "index2-2",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index2-2.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -630,6 +738,8 @@ export default {
     },
     {
       "id": "index2-3",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index2-3.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -641,6 +751,8 @@ export default {
     },
     {
       "id": "index2",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index2.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -652,6 +764,8 @@ export default {
     },
     {
       "id": "index3",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index3.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -663,6 +777,8 @@ export default {
     },
     {
       "id": "index4",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index4.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -674,6 +790,8 @@ export default {
     },
     {
       "id": "index5",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index5.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -685,6 +803,8 @@ export default {
     },
     {
       "id": "index6",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index6.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -696,6 +816,8 @@ export default {
     },
     {
       "id": "index7",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels/index7.jpg",
       "category": "pixels",
       "categoryLabel": "pixels",
       "title": "像素处理",
@@ -707,6 +829,8 @@ export default {
     },
     {
       "id": "combine",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels-shader/combine.jpg",
       "category": "pixels-shader",
       "categoryLabel": "pixels-shader",
       "title": "加载纹理",
@@ -719,6 +843,8 @@ export default {
     },
     {
       "id": "particle-pixels-shader",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels-shader/particle-pixels-shader.jpg",
       "category": "pixels-shader",
       "categoryLabel": "pixels-shader",
       "title": "加载纹理",
@@ -731,6 +857,8 @@ export default {
     },
     {
       "id": "texture",
+
+      "thumbnail": "/example-thumbs/mygrapics/pixels-shader/texture.jpg",
       "category": "pixels-shader",
       "categoryLabel": "pixels-shader",
       "title": "加载纹理",
@@ -743,6 +871,8 @@ export default {
     },
     {
       "id": "bud",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/bud.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -755,6 +885,8 @@ export default {
     },
     {
       "id": "circle-polar-shader",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/circle-polar-shader.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -767,6 +899,8 @@ export default {
     },
     {
       "id": "clover",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/clover.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -779,6 +913,8 @@ export default {
     },
     {
       "id": "conic",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/conic.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -791,6 +927,8 @@ export default {
     },
     {
       "id": "hsvwheel",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/hsvwheel.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -803,6 +941,8 @@ export default {
     },
     {
       "id": "rose",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/rose.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -815,6 +955,8 @@ export default {
     },
     {
       "id": "rose2",
+
+      "thumbnail": "/example-thumbs/mygrapics/polar-shader/rose2.jpg",
       "category": "polar-shader",
       "categoryLabel": "polar-shader",
       "title": "造型函数",
@@ -827,6 +969,8 @@ export default {
     },
     {
       "id": "grids",
+
+      "thumbnail": "/example-thumbs/mygrapics/repeat-and-random/grids.jpg",
       "category": "repeat-and-random",
       "categoryLabel": "repeat-and-random",
       "title": "重复网格",
@@ -839,6 +983,8 @@ export default {
     },
     {
       "id": "mandelbrot",
+
+      "thumbnail": "/example-thumbs/mygrapics/repeat-and-random/mandelbrot.jpg",
       "category": "repeat-and-random",
       "categoryLabel": "repeat-and-random",
       "title": "重复网格",
@@ -851,6 +997,8 @@ export default {
     },
     {
       "id": "maze",
+
+      "thumbnail": "/example-thumbs/mygrapics/repeat-and-random/maze.jpg",
       "category": "repeat-and-random",
       "categoryLabel": "repeat-and-random",
       "title": "重复网格",
@@ -863,6 +1011,8 @@ export default {
     },
     {
       "id": "random",
+
+      "thumbnail": "/example-thumbs/mygrapics/repeat-and-random/random.jpg",
       "category": "repeat-and-random",
       "categoryLabel": "repeat-and-random",
       "title": "重复网格",
@@ -875,6 +1025,8 @@ export default {
     },
     {
       "id": "random2",
+
+      "thumbnail": "/example-thumbs/mygrapics/repeat-and-random/random2.jpg",
       "category": "repeat-and-random",
       "categoryLabel": "repeat-and-random",
       "title": "重复网格",
@@ -887,6 +1039,8 @@ export default {
     },
     {
       "id": "basic-shaping-functions",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/basic-shaping-functions.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -899,6 +1053,8 @@ export default {
     },
     {
       "id": "circle-repeat",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/circle-repeat.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -911,6 +1067,8 @@ export default {
     },
     {
       "id": "circle-shaping-functions",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/circle-shaping-functions.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -923,6 +1081,8 @@ export default {
     },
     {
       "id": "circle-particle",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/circle-particle.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "粒子效果",
@@ -935,6 +1095,8 @@ export default {
     },
     {
       "id": "clip",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/clip.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -947,6 +1109,8 @@ export default {
     },
     {
       "id": "line-mouse",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/line-mouse.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -959,6 +1123,8 @@ export default {
     },
     {
       "id": "line-repeat",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/line-repeat.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -971,6 +1137,8 @@ export default {
     },
     {
       "id": "line",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/line.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -983,6 +1151,8 @@ export default {
     },
     {
       "id": "lineseg-mouse",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/lineseg-mouse.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -995,6 +1165,8 @@ export default {
     },
     {
       "id": "progress",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/progress.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -1007,6 +1179,8 @@ export default {
     },
     {
       "id": "triangle-repeat",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/triangle-repeat.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -1019,6 +1193,8 @@ export default {
     },
     {
       "id": "triangles",
+
+      "thumbnail": "/example-thumbs/mygrapics/shaping-functions/triangles.jpg",
       "category": "shaping-functions",
       "categoryLabel": "shaping-functions",
       "title": "造型函数",
@@ -1031,6 +1207,8 @@ export default {
     },
     {
       "id": "index-basic-2",
+
+      "thumbnail": "/example-thumbs/mygrapics/svg/basic/index-basic-2.jpg",
       "category": "svg/basic",
       "categoryLabel": "basic",
       "title": "基础",
@@ -1042,6 +1220,8 @@ export default {
     },
     {
       "id": "index-hierarchy-2",
+
+      "thumbnail": "/example-thumbs/mygrapics/svg/hierarchy/index-hierarchy-2.jpg",
       "category": "svg/hierarchy",
       "categoryLabel": "hierarchy",
       "title": "Hierarchy render by canvas",
@@ -1053,6 +1233,8 @@ export default {
     },
     {
       "id": "polygon2d-collision",
+
+      "thumbnail": "/example-thumbs/mygrapics/triangluations/polygon2d-collision.jpg",
       "category": "triangluations",
       "categoryLabel": "triangluations",
       "title": "三角剖分",
@@ -1064,6 +1246,8 @@ export default {
     },
     {
       "id": "polygon2d",
+
+      "thumbnail": "/example-thumbs/mygrapics/triangluations/polygon2d.jpg",
       "category": "triangluations",
       "categoryLabel": "triangluations",
       "title": "三角剖分",
@@ -1075,6 +1259,8 @@ export default {
     },
     {
       "id": "trianglu-polygon",
+
+      "thumbnail": "/example-thumbs/mygrapics/triangluations/trianglu-polygon.jpg",
       "category": "triangluations",
       "categoryLabel": "triangluations",
       "title": "三角剖分",
@@ -1086,6 +1272,8 @@ export default {
     },
     {
       "id": "index-vector-draw",
+
+      "thumbnail": "/example-thumbs/mygrapics/vector_draw/index-vector-draw.jpg",
       "category": "vector_draw",
       "categoryLabel": "vector_draw",
       "title": "画正多边形",
@@ -1097,6 +1285,8 @@ export default {
     },
     {
       "id": "index-vector-tree",
+
+      "thumbnail": "/example-thumbs/mygrapics/vector_tree/index-vector-tree.jpg",
       "category": "vector_tree",
       "categoryLabel": "vector_tree",
       "title": "画树",
@@ -1108,6 +1298,8 @@ export default {
     },
     {
       "id": "hello-world",
+
+      "thumbnail": "/example-thumbs/mygrapics/webgl/hello-world.jpg",
       "category": "webgl",
       "categoryLabel": "webgl",
       "title": "WebGL Hello world",
@@ -1120,6 +1312,8 @@ export default {
     },
     {
       "id": "index-webgl-particles",
+
+      "thumbnail": "/example-thumbs/mygrapics/webgl_particles/index-webgl-particles.jpg",
       "category": "webgl_particles",
       "categoryLabel": "webgl_particles",
       "title": "粒子",

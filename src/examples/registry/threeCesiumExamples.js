@@ -5,11 +5,12 @@ export default {
   "examples": [
     {
       "id": "test",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/other/test.jpg",
       "category": "threeExamples/other",
       "title": "测试",
       "titleEn": "test",
       "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/other/test.js",
       "tags": [
@@ -23,11 +24,12 @@ export default {
     },
     {
       "id": "areaMap",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/other/areaMap.jpg",
       "category": "threeExamples/other",
       "title": "分级地图",
       "titleEn": "Area Map",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、线条/线框、射线拾取交互、CSS2D渲染 等 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/other/areaMap.js",
       "tags": [
@@ -212,11 +214,12 @@ export default {
     },
     {
       "id": "flyLine",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/application/flyLine.jpg",
       "category": "threeExamples/application",
       "title": "飞线效果",
       "titleEn": "Fly Line",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/flyLine.js",
       "tags": [
@@ -358,11 +361,12 @@ export default {
     },
     {
       "id": "smokeAir",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/application/smokeAir.jpg",
       "category": "threeExamples/application",
       "title": "烟雾效果",
       "titleEn": "Smoke Air",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、WebXR沉浸、KML 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/smokeAir.js",
       "tags": [
@@ -623,11 +627,12 @@ export default {
     },
     {
       "id": "3DCircle",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/application/3DCircle.jpg",
       "category": "threeExamples/application",
       "title": "扩散半球",
       "titleEn": "3D Circle",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、纹理加载 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/3DCircle.js",
       "tags": [
@@ -2253,11 +2258,12 @@ export default {
     },
     {
       "id": "dissolve",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/shader/dissolve.jpg",
       "category": "threeExamples/shader",
       "title": "溶解",
       "titleEn": "Dissolve",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/dissolve.js",
       "tags": [
@@ -3044,11 +3050,12 @@ export default {
     },
     {
       "id": "redRose",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/shader/redRose.jpg",
       "category": "threeExamples/shader",
       "title": "红玫瑰",
       "titleEn": "Red Rose",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/redRose.js",
       "tags": [
@@ -3106,11 +3113,12 @@ export default {
     },
     {
       "id": "bubble",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/particle/bubble.jpg",
       "category": "threeExamples/particle",
       "title": "粒子泡泡",
       "titleEn": "Bubble",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、自定义GLSL着色器、粒子/点云、GUI调试面板 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/bubble.js",
       "tags": [
@@ -3700,11 +3708,12 @@ export default {
     },
     {
       "id": "gsapBasic",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/animation/gsapBasic.jpg",
       "category": "threeExamples/animation",
       "title": "gsap使用",
       "titleEn": "GSAP Basic",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GUI调试面板 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/gsapBasic.js",
       "tags": [
@@ -4494,11 +4503,12 @@ export default {
     },
     {
       "id": "skeletonBone",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/basic/skeletonBone.jpg",
       "category": "threeExamples/basic",
       "title": "骨骼动画",
       "titleEn": "Skeleton Bone",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 骨骼蒙皮动画、GUI调试面板 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/skeletonBone.js",
       "tags": [
@@ -4663,11 +4673,12 @@ export default {
     },
     {
       "id": "fileChunks",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/basic/fileChunks.jpg",
       "category": "threeExamples/basic",
       "title": "文件分片(打包zip)",
       "titleEn": "File Chunks",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、立方体/全景环境 等 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/fileChunks.js",
       "tags": [
@@ -4850,11 +4861,12 @@ export default {
     },
     {
       "id": "点线",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/basic/%E7%82%B9%E7%BA%BF.jpg",
       "category": "threeExamples/basic",
       "title": "点、线",
       "titleEn": "Points Lines",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线条/线框 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/点线.js",
       "tags": [
@@ -5308,11 +5320,12 @@ export default {
     },
     {
       "id": "uvTransformation",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/effectComposer/uvTransformation.jpg",
       "category": "threeExamples/effectComposer",
       "title": "UV图像变换",
       "titleEn": "UV Transform",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、WebGPU后处理、纹理加载 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/uvTransformation.js",
       "tags": [
@@ -5373,11 +5386,12 @@ export default {
     },
     {
       "id": "EdgeBlurringEffect",
+
+      "thumbnail": "/example-thumbs/three-cesium-examples/threeExamples/effectComposer/EdgeBlurringEffect.jpg",
       "category": "threeExamples/effectComposer",
       "title": "边缘模糊效果",
       "titleEn": "Edge Blur",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
-      "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/EdgeBlurringEffect.js",
       "tags": [

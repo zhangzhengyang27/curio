@@ -4,6 +4,8 @@ export default {
   "examples": [
     {
       "id": "granary-3d",
+
+      "thumbnail": "/example-thumbs/granary-3d/scene/granary-3d.jpg",
       "category": "scene",
       "categoryLabel": "场景",
       "title": "粮仓 3D 可视化",
@@ -16,7 +18,6 @@ export default {
         "CSS2D渲染"
       ],
       "runner": "vue",
-      "thumbnail": ""
     }
   ]
 }

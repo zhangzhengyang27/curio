@@ -6,6 +6,8 @@ export default {
   "examples": [
     {
       "id": "05-country-borders",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/05-country-borders.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "球面国家边界线",
@@ -18,6 +20,8 @@ export default {
     },
     {
       "id": "09-railway-lines",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/09-railway-lines.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "铁路线数据可视化",
@@ -30,6 +34,8 @@ export default {
     },
     {
       "id": "11-airports",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/11-airports.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "全球机场标注",
@@ -42,6 +48,8 @@ export default {
     },
     {
       "id": "13-hotnews",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/13-hotnews.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "新闻热点标注",
@@ -54,6 +62,8 @@ export default {
     },
     {
       "id": "22-gdp-color",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/22-gdp-color.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "国家 GDP 颜色可视化",
@@ -66,6 +76,8 @@ export default {
     },
     {
       "id": "23-land-grid",
+
+      "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/23-land-grid.jpg",
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "地球陆地网格点阵特效",
