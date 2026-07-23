@@ -25,7 +25,7 @@ async function onReady(stageCtx) {
 
   scene.add(new THREE.AmbientLight(0xffffff, 3), new THREE.AxesHelper(1000))
   
-  const citys = await fetch('https://z2586300277.github.io/three-editor/dist/files/other/city.json').then(res => res.json()) // 获取城市数据
+  const citys = await fetch('/external-examples/3d-file-server/files/other/city.json').then(res => res.json()) // 获取城市数据
   
   const updateCanvasText = createCanvasText({ dpr: 1.4 }) // 创建canvas
   

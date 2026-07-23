@@ -92,7 +92,7 @@ async function onReady(ctx) {
   const sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
   
-  const font = await new Promise((resolve) => new FontLoader().load('https://z2586300277.github.io/three-editor/dist/files/font/cn1.json', (f) => resolve(f)))
+  const font = await new Promise((resolve) => new FontLoader().load('/external-examples/3d-file-server/files/font/cn1.json', (f) => resolve(f)))
   
   const totalCount = positions.length;
   

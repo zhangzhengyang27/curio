@@ -64,9 +64,9 @@ function onReady(ctx) {
       alert(instructions);
   }
   
-  /** 
+  /**
    * 创建GUI控制面板
-   * @type {dat.GUI}
+   * @type {GUI}
    */
   const gui = new GUI();
   

@@ -45,7 +45,7 @@ function onReady(ctx) {
       (err) => {
           console.error('纹理加载失败:', err);
           // 加载失败时使用默认材质
-          texture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png');
+          texture = new THREE.TextureLoader().load('/threejs-official/textures/sprites/disc.png');
       }
   );
   

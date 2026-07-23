@@ -40,24 +40,24 @@ const IMG_BASE = 'https://cdn.jsdelivr.net/npm/three-globe/example/img'
 const img = name => `${IMG_BASE}/${name}`
 
 const exampleMeta = {
-  basic: { title: 'Basic - 基础地球' },
-  arcs: { title: 'Arc Links - 弧线链接' },
-  polygons: { title: 'Country Polygons - 国家多边形' },
-  paths: { title: 'Path Lines - 路径线' },
-  heatmap: { title: 'Heatmap - 热力图' },
-  hexbin: { title: 'Hexagonal Binning - 六边形分箱' },
-  'hexed-polygons': { title: 'Hexed Polygons - 六边形化多边形' },
-  tiles: { title: 'Tiles - 瓦片' },
-  ripples: { title: 'Ripple Rings - 涟漪环' },
-  clouds: { title: 'Clouds - 云层' },
-  'day-night': { title: 'Day/Night Cycle - 昼夜循环' },
-  'solar-terminator': { title: 'Solar Terminator - 晨昏线' },
-  labels: { title: 'Labels - 标签' },
-  'html-markers': { title: 'HTML Markers - HTML 标记' },
-  satellites: { title: 'Satellites - 卫星轨道' },
-  'tile-engine': { title: 'Tiled Map Engine - 瓦片地图' },
-  'custom-material': { title: 'Custom Material - 自定义材质' },
-  'custom-layer': { title: 'Custom Layer - 自定义图层' },
+  basic: { title: '基础地球' },
+  arcs: { title: '弧线链接' },
+  polygons: { title: '国家多边形' },
+  paths: { title: '路径线' },
+  heatmap: { title: '热力图' },
+  hexbin: { title: '六边形分箱' },
+  'hexed-polygons': { title: '六边形化多边形' },
+  tiles: { title: '瓦片' },
+  ripples: { title: '涟漪环' },
+  clouds: { title: '云层' },
+  'day-night': { title: '昼夜循环' },
+  'solar-terminator': { title: '晨昏线' },
+  labels: { title: '标签' },
+  'html-markers': { title: 'HTML 标记' },
+  satellites: { title: '卫星轨道' },
+  'tile-engine': { title: '瓦片地图' },
+  'custom-material': { title: '自定义材质' },
+  'custom-layer': { title: '自定义图层' },
 }
 
 function randGeoData(n = 300) {
@@ -458,11 +458,13 @@ onUnmounted(() => disposeGlobe())
 </script>
 
 <style scoped>
-.demo-root { position: fixed; top: 40px; left: 0; right: 0; bottom: 0; background: #000; }
-.top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; height: 44px; padding: 0 16px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
-.back-btn { color: #4fc3f7; text-decoration: none; font-size: 13px; margin-right: 12px; }
-.back-btn:hover { color: #81d4fa; }
-.demo-title { color: #ccc; font-size: 14px; font-weight: 500; flex: 1; }
-.status { color: #ff8; font-size: 12px; }
+.demo-root { position: fixed; top: var(--tv-top-nav-height); left: 0; right: 0; bottom: 0; background: var(--tv-background); }
+.top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; height: 44px; padding: 0 var(--tv-md); background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--tv-outline-variant); }
+.back-btn { display: inline-flex; align-items: center; gap: var(--tv-xs); color: var(--tv-primary); text-decoration: none; font-size: 13px; font-weight: 500; margin-right: var(--tv-md); flex-shrink: 0; transition: color 0.2s; }
+.back-btn:hover { color: var(--tv-primary-container); }
+.demo-title { color: var(--tv-on-surface); font-size: 14px; font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status { color: var(--tv-secondary); font-size: 12px; font-weight: 500; }
 .globe-container { width: 100%; height: 100%; position: relative; }
+
+html.dark .top-bar { background: color-mix(in srgb, var(--tv-surface-container-lowest) 60%, transparent); }
 </style>

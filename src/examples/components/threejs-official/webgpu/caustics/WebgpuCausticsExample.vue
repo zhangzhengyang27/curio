@@ -182,7 +182,10 @@ async function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( causticOcclusion, 'value', 0, 20 ).name( 'caustic occlusion' );
-  				gui.addColor( duck.material, 'color' ).name( 'material color' );
+  				const duckColorDebug = { color: duck.material.color.getHex() };
+  				gui.addColor( duckColorDebug, 'color' ).name( 'material color' ).onChange( ( val ) => {
+  					duck.material.color.set( val );
+  				} );
   				gui.add( { model: 'duck' }, 'model', [
   					'duck',
   					'glass'

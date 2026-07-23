@@ -31,7 +31,7 @@ function onReady(ctx) {
   
   const plane = new THREE.PlaneGeometry(5,5)
   
-  const map = new THREE.TextureLoader().load('https://z2586300277.github.io/three-editor/dist/files/channels/texture.jpg')
+  const map = new THREE.TextureLoader().load('/external-examples/3d-file-server/files/channels/texture.jpg')
   
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, map , transparent: true })
   

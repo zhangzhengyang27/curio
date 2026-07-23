@@ -146,7 +146,7 @@ function onReady(ctx) {
    * Models
    */
   let suzanne = null;
-  gltfLoader.load("https://coderfmc.github.io/three.js-demo/suzanne.glb", (gltf) => {
+  gltfLoader.load("/external-examples/3d-file-server/threeExamples/coderfmc/suzanne.glb", (gltf) => {
     // Model
     gltf.scene.traverse((item) => {
       if (item.isMesh) {

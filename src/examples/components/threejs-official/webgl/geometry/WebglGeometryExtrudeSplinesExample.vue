@@ -216,8 +216,6 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
-  				// dat.GUI
-  
   				const gui = new GUI( { width: 285 } );
   
   				const folderGeometry = gui.addFolder( 'Geometry' );

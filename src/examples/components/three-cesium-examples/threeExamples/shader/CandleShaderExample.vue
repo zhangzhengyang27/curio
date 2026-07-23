@@ -135,7 +135,7 @@ function onReady(ctx) {
   // table
   var tableGeo = new THREE.CylinderGeometry(14, 14, 0.5, 64);
   tableGeo.translate(0, -0.25, 0);
-  var tableMat = new THREE.MeshStandardMaterial({ map: new THREE.TextureLoader().load("https://threejs.org/examples/textures/hardwood2_diffuse.jpg"), metalness: 0, roughness: 0.75 });
+  var tableMat = new THREE.MeshStandardMaterial({ map: new THREE.TextureLoader().load("/threejs-official/textures/hardwood2_diffuse.jpg"), metalness: 0, roughness: 0.75 });
   var tableMesh = new THREE.Mesh(tableGeo, tableMat);
   tableMesh.receiveShadow = true;
   

@@ -257,12 +257,20 @@ function onReady(ctx) {
       // GUI 控制
       const materialFolder = new GUI();
   
+      const colorLowDebug = { value: '#0000ff' }
       materialFolder
-          .addColor(material.uniforms.colorLow, "value")
-          .name("Color Low");
+          .addColor(colorLowDebug, "value")
+          .name("Color Low")
+          .onChange((v) => {
+              material.uniforms.colorLow.value.set(v)
+          });
+      const colorHighDebug = { value: '#ff0000' }
       materialFolder
-          .addColor(material.uniforms.colorHigh, "value")
-          .name("Color High");
+          .addColor(colorHighDebug, "value")
+          .name("Color High")
+          .onChange((v) => {
+              material.uniforms.colorHigh.value.set(v)
+          });
       materialFolder
           .add(material.uniforms.minValue, "value", 0, 1)
           .name("Min Value");

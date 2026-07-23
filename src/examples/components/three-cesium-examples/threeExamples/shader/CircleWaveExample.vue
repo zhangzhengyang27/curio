@@ -118,7 +118,7 @@ function onReady(ctx) {
   mesh.rotation.x = Math.PI / 2
   scene.add(mesh);
   
-  // 创建dat.GUI
+  // 创建GUI
   const gui = new GUI()
   const params = {
     uScanColor: '#00ffff',

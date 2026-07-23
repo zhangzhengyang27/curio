@@ -108,11 +108,11 @@ const vueComponent = computed(() => {
 <style scoped>
 .demo-root {
   position: fixed;
-  top: 40px;
+  top: var(--tv-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
-  background: #000;
+  background: var(--tv-background);
   display: flex;
   flex-direction: column;
 }
@@ -123,26 +123,31 @@ const vueComponent = computed(() => {
   display: flex;
   align-items: center;
   height: 44px;
-  padding: 0 16px;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 var(--tv-md);
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--tv-outline-variant);
 }
 
 .back-btn {
-  color: #4fc3f7;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tv-xs);
+  color: var(--tv-primary);
   text-decoration: none;
   font-size: 13px;
-  margin-right: 12px;
+  font-weight: 500;
+  margin-right: var(--tv-md);
   flex-shrink: 0;
+  transition: color 0.2s;
 }
 
 .back-btn:hover {
-  color: #81d4fa;
+  color: var(--tv-primary-container);
 }
 
 .demo-title {
-  color: #ccc;
+  color: var(--tv-on-surface);
   font-size: 14px;
   font-weight: 500;
   flex: 1;
@@ -154,16 +159,17 @@ const vueComponent = computed(() => {
 
 .demo-tags {
   display: flex;
-  gap: 6px;
+  gap: var(--tv-xs);
   flex-shrink: 0;
 }
 
 .tag {
-  background: rgba(79, 195, 247, 0.15);
-  color: #4fc3f7;
+  background: color-mix(in srgb, var(--tv-secondary-container) 20%, transparent);
+  color: var(--tv-on-secondary-container);
+  font-family: monospace;
   font-size: 10px;
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: var(--tv-radius-sm);
 }
 
 .demo-body {
@@ -178,8 +184,12 @@ const vueComponent = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff6b6b;
+  color: var(--tv-error);
   font-size: 14px;
-  background: #0a0a1a;
+  background: var(--tv-background);
+}
+
+html.dark .top-bar {
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 60%, transparent);
 }
 </style>

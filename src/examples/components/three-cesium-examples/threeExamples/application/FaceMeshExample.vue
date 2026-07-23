@@ -28,7 +28,7 @@ function onReady(stageCtx) {
   
   const atlasSize = new THREE.Vector2(2, 2)
   
-  const urls = [0, 1, 2, 3, 4, 5].map(k => ('https://z2586300277.github.io/three-editor/dist/files/scene/skyBox8/' + (k + 1) + '.png'));
+  const urls = [0, 1, 2, 3, 4, 5].map(k => ('/external-examples/3d-file-server/files/scene/skyBox8/' + (k + 1) + '.png'));
   
   const textureCube = new THREE.CubeTextureLoader().load(urls)
   

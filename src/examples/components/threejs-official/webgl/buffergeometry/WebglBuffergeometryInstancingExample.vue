@@ -94,7 +94,7 @@ function onReady(__stage) {
   			}
   
   			const geometry = new THREE.InstancedBufferGeometry();
-  			geometry.instanceCount = instances; // set so its initialized for dat.GUI, will be set in first draw otherwise
+  			geometry.instanceCount = instances;
   
   			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
   

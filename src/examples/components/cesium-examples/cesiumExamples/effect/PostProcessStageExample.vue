@@ -189,9 +189,9 @@ function onReady(ctx) {
       }
   };
   
-  /** 
+  /**
    * 创建GUI控制面板
-   * @type {dat.GUI}
+   * @type {GUI}
    */
   const gui = new GUI();
   // 将操作对象添加到GUI控制面板

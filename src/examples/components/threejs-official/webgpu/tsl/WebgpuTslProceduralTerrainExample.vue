@@ -299,16 +299,31 @@ function onReady(__stage) {
   				terrainGui.add( warpFrequency, 'value', 0, 20, 0.001 ).name( 'warpFrequency' );
   				terrainGui.add( warpStrength, 'value', 0, 2, 0.001 ).name( 'warpStrength' );
   
-  				terrainGui.addColor( { color: colorSand.value }, 'color' ).name( 'colorSand' );
-  				terrainGui.addColor( { color: colorGrass.value }, 'color' ).name( 'colorGrass' );
-  				terrainGui.addColor( { color: colorSnow.value }, 'color' ).name( 'colorSnow' );
-  				terrainGui.addColor( { color: colorRock.value }, 'color' ).name( 'colorRock' );
+  				const colorSandDebug = { color: colorSand.value.getHex() };
+  				terrainGui.addColor( colorSandDebug, 'color' ).name( 'colorSand' ).onChange( ( val ) => {
+  					colorSand.value.set( val );
+  				} );
+  				const colorGrassDebug = { color: colorGrass.value.getHex() };
+  				terrainGui.addColor( colorGrassDebug, 'color' ).name( 'colorGrass' ).onChange( ( val ) => {
+  					colorGrass.value.set( val );
+  				} );
+  				const colorSnowDebug = { color: colorSnow.value.getHex() };
+  				terrainGui.addColor( colorSnowDebug, 'color' ).name( 'colorSnow' ).onChange( ( val ) => {
+  					colorSnow.value.set( val );
+  				} );
+  				const colorRockDebug = { color: colorRock.value.getHex() };
+  				terrainGui.addColor( colorRockDebug, 'color' ).name( 'colorRock' ).onChange( ( val ) => {
+  					colorRock.value.set( val );
+  				} );
   
   				const waterGui = gui.addFolder( '💧 water' );
   
   				waterGui.add( water.material, 'roughness', 0, 1, 0.01 );
   				waterGui.add( water.material, 'ior', 1, 2, 0.001 );
-  				waterGui.addColor( { color: water.material.color }, 'color' ).name( 'color' );
+  				const waterColorDebug = { color: water.material.color.getHex() };
+  				waterGui.addColor( waterColorDebug, 'color' ).name( 'color' ).onChange( ( val ) => {
+  					water.material.color.set( val );
+  				} );
   
   				// events
   

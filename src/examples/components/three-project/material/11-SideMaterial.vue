@@ -210,9 +210,13 @@
         .listen()
         .disable()
 
+      const sideColorDebug = { color: (item.material.color as THREE.Color).getHexString() }
       folder
-        .addColor(item.material, "color")
+        .addColor(sideColorDebug, "color")
         .name("颜色")
+        .onChange((v) => {
+          (item.material.color as THREE.Color).set(v)
+        })
 
       folder.open()
     })

@@ -131,7 +131,7 @@ function onReady(__stage) {
   
   			function initGUI() {
   
-  				// Set up dat.GUI to control targets
+  				// Set up GUI to control targets
   				const params = {
   					Spherify: 0,
   					Twist: 0,

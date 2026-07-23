@@ -92,7 +92,7 @@ function onReady(__stage) {
   
   			} );
   
-  			loader.load( 'https://cloud.needle.tools/-/assets/Z23hmXB27L6Db-optimized/file', function ( gltf ) {
+  			loader.load( '/threejs-official/models/gltf-needle/Z23hmXB27L6Db-optimized.glb', function ( gltf ) {
   
   				const model = gltf.scene;
   				scene.add( model );

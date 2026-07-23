@@ -109,7 +109,11 @@
         pointsMaterial.needsUpdate = true
       })
 
-    materialFolder.addColor(pointsMaterial, "color").name("基础颜色")
+    const galaxyColorDebug = { color: (pointsMaterial.color as THREE.Color).getHexString() }
+    materialFolder.addColor(galaxyColorDebug, "color").name("基础颜色").onChange((v) => {
+      if (!pointsMaterial) return
+      (pointsMaterial.color as THREE.Color).set(v)
+    })
 
     materialFolder.open()
 

@@ -61,7 +61,10 @@ function onReady(ctx) {
   });
   
   const gui = new GUI()
-  gui.addColor(material.uniforms.color, 'value').name('color')
+  const colorDebug = { value: '#ffffff' }
+  gui.addColor(colorDebug, 'value').name('color').onChange((v) => {
+      material.uniforms.color.value.set(v)
+  })
   gui.add(material.uniforms.intensity, 'value').min(0).max(10).name('intensity')
   gui.add(material.uniforms.uvScale, 'value').min(0).max(1).name('uvScale')
   
@@ -170,6 +173,6 @@ function onReady(ctx) {
   
   });
   
-  scene.background = new THREE.CubeTextureLoader().load([0, 1, 2, 3, 4, 5].map(k => ('https://z2586300277.github.io/three-editor/dist/files/scene/skyBox0/' + (k + 1) + '.png')));
+  scene.background = new THREE.CubeTextureLoader().load([0, 1, 2, 3, 4, 5].map(k => ('/external-examples/3d-file-server/files/sky/skyBox0/' + (k + 1) + '.png')));
 }
 </script>

@@ -23,24 +23,6 @@ export default {
       }
     },
     {
-      "id": "css3d_mixed",
-      "category": "css3d",
-      "categoryLabel": "CSS3D",
-      "title": "three.js css3d - mixed",
-      "titleEn": "three.js css3d - mixed",
-      "description": "three.js css3d - mixed",
-      "thumbnail": "/threejs-official/screenshots/css3d_mixed.jpg",
-      "entry": "",
-      "runner": "vue",
-      "tags": [
-        "threejs-official",
-        "css3d"
-      ],
-      "globals": {
-        "ASSET_HOST": "/threejs-official/"
-      }
-    },
-    {
       "id": "css3d_molecules",
       "category": "css3d",
       "categoryLabel": "CSS3D",
@@ -120,24 +102,6 @@ export default {
       "titleEn": "three.js css3d - sprites",
       "description": "three.js css3d - sprites",
       "thumbnail": "/threejs-official/screenshots/css3d_sprites.jpg",
-      "entry": "",
-      "runner": "vue",
-      "tags": [
-        "threejs-official",
-        "css3d"
-      ],
-      "globals": {
-        "ASSET_HOST": "/threejs-official/"
-      }
-    },
-    {
-      "id": "css3d_youtube",
-      "category": "css3d",
-      "categoryLabel": "CSS3D",
-      "title": "three.js css3d - youtube",
-      "titleEn": "three.js css3d - youtube",
-      "description": "three.js css3d - youtube",
-      "thumbnail": "/threejs-official/screenshots/css3d_youtube.jpg",
       "entry": "",
       "runner": "vue",
       "tags": [

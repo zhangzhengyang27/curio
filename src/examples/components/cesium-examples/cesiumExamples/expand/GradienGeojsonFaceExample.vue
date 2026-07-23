@@ -128,7 +128,7 @@ async function onReady(ctx) {
 
   try {
     dataSource = await Cesium.GeoJsonDataSource.load(
-      'https://z2586300277.github.io/three-editor/dist/files/font/guangdong.json'
+      '/external-examples/3d-file-server/files/json/guangdong.json'
     )
 
     const entities = dataSource.entities.values

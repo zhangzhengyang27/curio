@@ -82,7 +82,7 @@ async function onReady(ctx) {
   addTdt('cva', 18)
   
   async function init() {
-      const geojson = await (await fetch('https://z2586300277.github.io/file-server/data/china_geo_bound.json')).json()
+      const geojson = await (await fetch('/external-examples/3d-file-server/cesium-examples/data/china_geo_bound.json')).json()
       const geom = geojson.features[0].geometry
       const ring = geom.type === 'Polygon' ? geom.coordinates[0] : geom.coordinates[0][0]
       const positions = ring.flatMap(([lng, lat]) => [lng, lat])

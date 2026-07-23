@@ -42,26 +42,6 @@ export default {
       }
     },
     {
-      "id": "thanksBibi",
-      "category": "threeExamples/application",
-      "title": "感谢来自BiBi的支持",
-      "titleEn": "Thanks BiBi",
-      "description": "感谢来自BiBi的支持",
-      "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/thanksBibi.jpg",
-      "tag": "tag: TEXTS['感谢BiBi'] + '-#ff69b4'",
-      "entry": "/external-examples/three-cesium-examples/threeExamples/application/thanksBibi.js",
-      "tags": [
-        "threeExamples",
-        "application",
-        "tag: TEXTS['感谢BiBi'] + '-#ff69b4'"
-      ],
-      "runner": "vue",
-      "globals": {
-        "HOST": "/external-examples/three-cesium-examples/",
-        "FILE_HOST": "/external-examples/3d-file-server/"
-      }
-    },
-    {
       "id": "2025Year",
       "category": "threeExamples/application",
       "title": "2025",

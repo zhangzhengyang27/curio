@@ -1,0 +1,196 @@
+:root {
+  /* Orbital Data / TerraVista 3D Design Tokens - Light Mode */
+  --tv-background: #f8f9ff;
+  --tv-surface: #f8f9ff;
+  --tv-surface-dim: #d7dae2;
+  --tv-surface-bright: #f8f9ff;
+  --tv-surface-container-lowest: #ffffff;
+  --tv-surface-container-low: #f1f3fc;
+  --tv-surface-container: #ebeef6;
+  --tv-surface-container-high: #e5e8f0;
+  --tv-surface-container-highest: #dfe2eb;
+  --tv-surface-variant: #dfe2eb;
+
+  --tv-on-surface: #181c22;
+  --tv-on-surface-variant: #414755;
+  --tv-inverse-surface: #2d3137;
+  --tv-inverse-on-surface: #eef1f9;
+
+  --tv-outline: #727786;
+  --tv-outline-variant: #c1c6d7;
+
+  --tv-primary: #0057c2;
+  --tv-on-primary: #ffffff;
+  --tv-primary-container: #006ef2;
+  --tv-on-primary-container: #fefcff;
+  --tv-inverse-primary: #afc6ff;
+  --tv-primary-fixed: #d9e2ff;
+  --tv-primary-fixed-dim: #afc6ff;
+  --tv-on-primary-fixed: #001a43;
+  --tv-on-primary-fixed-variant: #004398;
+
+  --tv-secondary: #00687b;
+  --tv-on-secondary: #ffffff;
+  --tv-secondary-container: #50dcff;
+  --tv-on-secondary-container: #005f71;
+  --tv-secondary-fixed: #afecff;
+  --tv-secondary-fixed-dim: #48d7f9;
+  --tv-on-secondary-fixed: #001f27;
+  --tv-on-secondary-fixed-variant: #004e5d;
+
+  --tv-tertiary: #9e3d00;
+  --tv-on-tertiary: #ffffff;
+  --tv-tertiary-container: #c64f00;
+  --tv-on-tertiary-container: #fffbff;
+  --tv-tertiary-fixed: #ffdbcc;
+  --tv-tertiary-fixed-dim: #ffb695;
+  --tv-on-tertiary-fixed: #351000;
+  --tv-on-tertiary-fixed-variant: #7c2e00;
+
+  --tv-error: #ba1a1a;
+  --tv-on-error: #ffffff;
+  --tv-error-container: #ffdad6;
+  --tv-on-error-container: #93000a;
+
+  --tv-surface-tint: #0059c7;
+
+  /* Spacing */
+  --tv-unit: 8px;
+  --tv-xs: 4px;
+  --tv-sm: 8px;
+  --tv-md: 16px;
+  --tv-lg: 24px;
+  --tv-xl: 32px;
+  --tv-gutter: 16px;
+  --tv-margin: 24px;
+
+  /* Radius */
+  --tv-radius-sm: 4px;
+  --tv-radius-md: 6px;
+  --tv-radius-lg: 12px;
+  --tv-radius-xl: 16px;
+  --tv-radius-full: 9999px;
+
+  /* Layout */
+  --tv-top-nav-height: 56px;
+  --tv-panel-width: 260px;
+  --tv-info-panel-width: 320px;
+}
+
+html.dark {
+  /* Dark Mode - Deep Space */
+  --tv-background: #0b0d14;
+  --tv-surface: rgba(20, 22, 35, 0.85);
+  --tv-surface-dim: #0b0d14;
+  --tv-surface-bright: #1a1c2c;
+  --tv-surface-container-lowest: rgba(11, 13, 20, 0.9);
+  --tv-surface-container-low: rgba(20, 22, 35, 0.8);
+  --tv-surface-container: rgba(27, 29, 45, 0.85);
+  --tv-surface-container-high: rgba(35, 37, 55, 0.85);
+  --tv-surface-container-highest: rgba(45, 47, 65, 0.85);
+  --tv-surface-variant: rgba(45, 47, 65, 0.6);
+
+  --tv-on-surface: #e8e9ed;
+  --tv-on-surface-variant: #8b909a;
+  --tv-inverse-surface: #eef1f9;
+  --tv-inverse-on-surface: #2d3137;
+
+  --tv-outline: rgba(255, 255, 255, 0.15);
+  --tv-outline-variant: rgba(255, 255, 255, 0.08);
+
+  --tv-primary: #4fc3f7;
+  --tv-on-primary: #0b0d14;
+  --tv-primary-container: #006ef2;
+  --tv-on-primary-container: #fefcff;
+  --tv-inverse-primary: #0057c2;
+  --tv-primary-fixed: #d9e2ff;
+  --tv-primary-fixed-dim: #afc6ff;
+  --tv-on-primary-fixed: #001a43;
+  --tv-on-primary-fixed-variant: #004398;
+
+  --tv-secondary: #00cccc;
+  --tv-on-secondary: #0b0d14;
+  --tv-secondary-container: #50dcff;
+  --tv-on-secondary-container: #005f71;
+  --tv-secondary-fixed: #afecff;
+  --tv-secondary-fixed-dim: #48d7f9;
+  --tv-on-secondary-fixed: #001f27;
+  --tv-on-secondary-fixed-variant: #004e5d;
+
+  --tv-tertiary: #ffb695;
+  --tv-on-tertiary: #0b0d14;
+  --tv-tertiary-container: #c64f00;
+  --tv-on-tertiary-container: #fffbff;
+  --tv-tertiary-fixed: #ffdbcc;
+  --tv-tertiary-fixed-dim: #ffb695;
+  --tv-on-tertiary-fixed: #351000;
+  --tv-on-tertiary-fixed-variant: #7c2e00;
+
+  --tv-error: #ff6b6b;
+  --tv-on-error: #0b0d14;
+  --tv-error-container: #ffdad6;
+  --tv-on-error-container: #93000a;
+
+  --tv-surface-tint: #4fc3f7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  min-width: 1280px;
+  overflow: auto;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--tv-background);
+  color: var(--tv-on-surface);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--tv-outline);
+  border-radius: 20px;
+  opacity: 0.3;
+}
+
+/* Utility classes */
+.tv-glass-panel {
+  background: var(--tv-surface-container-low);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--tv-outline-variant);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: var(--tv-radius-lg);
+}
+
+.tv-card-hover {
+  transition: all 0.3s ease;
+}
+.tv-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 87, 194, 0.15);
+  border-color: rgba(0, 110, 242, 0.4);
+}
+
+html.dark .tv-glass-panel {
+  background: var(--tv-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}

@@ -82,7 +82,7 @@ function onReady(ctx) {
   const geometry = new BoxGeometry(1, 1, 1)
   const loader = new TextureLoader()
   const texture = loader.load(
-    'https://threejs.org/manual/examples/resources/images/wall.jpg',
+    '/external-examples/threejs-lesson/09-cleanup/public/textures/wall.jpg',
   )
   texture.colorSpace = SRGBColorSpace
 

@@ -170,7 +170,7 @@ function onReady(ctx) {
   );
   dispanecment.glowImage = new Image();
   dispanecment.glowImage.crossOrigin = "Anonymous";
-  dispanecment.glowImage.src = "https://coderfmc.github.io/three.js-demo/glow.png";
+  dispanecment.glowImage.src = "/external-examples/3d-file-server/threeExamples/coderfmc/glow.png";
   // dispanecment.glowImage.onload = function () {
   //   dispanecment.ctx.drawImage(dispanecment.glowImage, 20, 20, 32, 32);
   // };
@@ -210,7 +210,7 @@ function onReady(ctx) {
   dispanecment.texture = new THREE.CanvasTexture(dispanecment.canvas);
   
   const texture = textureLoader.load(
-    "https://coderfmc.github.io/three.js-demo/picture-1.png"
+    "/external-examples/3d-file-server/threeExamples/coderfmc/picture-1.png"
   );
   
   //model

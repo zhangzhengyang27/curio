@@ -165,22 +165,17 @@ function onReady(ctx) {
   
   // 创建流动速度控制器，GUI不支持倒置的控制器，因此需要手动处理
   const flowSpeedFolder = gui.addFolder("流动速度");
-  const flowSpeedXController = flowSpeedFolder
+  flowSpeedFolder
     .add(typeState.flowSpeed, "x", 0.01, 0.6, 0.02)
     .onChange((value) => {
       console.log(`流动速度X值改变为: ${value}`);
       material.uniforms.flowSpeed.value.x = value;
     });
-  const flowSpeedYController = flowSpeedFolder
+  flowSpeedFolder
     .add(typeState.flowSpeed, "y", 0.01, 0.6, 0.02)
     .onChange((value) => {
       console.log(`流动速度Y值改变为: ${value}`);
       material.uniforms.flowSpeed.value.y = value;
     });
-  // 手动处理倒置逻辑
-  flowSpeedXController.__min = 0.6;
-  flowSpeedXController.__max = 0.01;
-  flowSpeedYController.__min = 0.6;
-  flowSpeedYController.__max = 0.01;
 }
 </script>

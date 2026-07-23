@@ -31,7 +31,7 @@ function onReady(ctx) {
   
   new GLTFLoader().load(
   
-      'https://z2586300277.github.io/three-editor/dist/files/resource/datacenter.glb',
+      '/external-examples/3d-file-server/files/resource/datacenter.glb',
   
       gltf => {
   
@@ -117,8 +117,14 @@ function onReady(ctx) {
       gui.add(uniforms1.uvX, 'value', 0, 1).name('uvX')
       gui.add(uniforms1.opacity, 'value', 0, 1).name('opacity')
       gui.add(uniforms1.edgeFalloff, 'value', 0.1, 5).name('边缘衰减')
-      gui.addColor(uniforms1.c1, 'value').name('冷色')
-      gui.addColor(uniforms1.c2, 'value').name('热色')
+      const c1Debug = { value: '#008000' }
+      gui.addColor(c1Debug, 'value').name('冷色').onChange((v) => {
+          uniforms1.c1.value.set(v)
+      })
+      const c2Debug = { value: '#ff0000' }
+      gui.addColor(c2Debug, 'value').name('热色').onChange((v) => {
+          uniforms1.c2.value.set(v)
+      })
   
       const uniforms2 = {
           Points: { value: arr, type: 'vec3-array', unit: 'vec3' }

@@ -8,42 +8,63 @@
     class="earth-view"
   >
     <EarthCanvas ref="earthCanvasRef" />
-    <SearchBox
-      class="search-box"
-      @select="onSearchSelect"
-    />
-    <InfoPanel />
-    <ContextMenu :on-fly-to="handleFlyTo" />
-    <Toolbar
-      :on-screenshot="handleScreenshot"
-      :on-cloud-toggle="handleCloudToggle"
-      :on-night-toggle="handleNightToggle"
-      :on-storm="handleStorm"
-      :on-terrain-toggle="handleTerrainToggle"
-      :on-split-screen="handleSplitScreen"
-      :on-record-gif="handleRecordGif"
-      :on-bloom-toggle="handleBloomToggle"
-      :on-realistic-earth-toggle="handleRealisticEarthToggle"
-    />
-    <LayerPanel
-      :layers="layerList"
-      :on-toggle="handleLayerToggle"
-      :on-opacity="handleLayerOpacity"
-    />
-    <ComparePanel />
-    <TimelineSlider />
-    <LegendBar />
-    <LoadingOverlay ref="loadingRef" />
-    <div class="visualization-bar">
+
+    <!-- Floating Centered Search -->
+    <div class="search-wrapper">
+      <SearchBox @select="onSearchSelect" />
+    </div>
+
+    <!-- Left Side Panel - Layers -->
+    <aside class="left-panel tv-glass-panel">
+      <LayerPanel
+        :layers="layerList"
+        :on-toggle="handleLayerToggle"
+        :on-opacity="handleLayerOpacity"
+      />
+    </aside>
+
+    <!-- Right Info Panel -->
+    <aside class="right-panel tv-glass-panel">
+      <InfoPanel />
+    </aside>
+
+    <!-- Right Floating Toolbar -->
+    <aside class="tools-panel tv-glass-panel">
+      <Toolbar
+        :on-screenshot="handleScreenshot"
+        :on-cloud-toggle="handleCloudToggle"
+        :on-night-toggle="handleNightToggle"
+        :on-storm="handleStorm"
+        :on-terrain-toggle="handleTerrainToggle"
+        :on-split-screen="handleSplitScreen"
+        :on-record-gif="handleRecordGif"
+        :on-bloom-toggle="handleBloomToggle"
+        :on-realistic-earth-toggle="handleRealisticEarthToggle"
+      />
+    </aside>
+
+    <!-- Bottom Visualization Switcher -->
+    <div class="bottom-bar tv-glass-panel">
       <button
         v-for="mode in vizModes"
         :key="mode.key"
         :class="['viz-btn', { active: earthStore.currentVisualization === mode.key }]"
         @click="mode.key === 'import' ? openFileImport() : switchViz(mode.key)"
       >
-        {{ mode.label }}
+        <span
+          v-if="mode.icon"
+          class="viz-icon"
+        >{{ mode.icon }}</span>
+        <span>{{ mode.label }}</span>
       </button>
     </div>
+
+    <ComparePanel />
+    <TimelineSlider />
+    <LegendBar />
+    <LoadingOverlay ref="loadingRef" />
+    <ContextMenu :on-fly-to="handleFlyTo" />
+
     <input
       ref="fileInput"
       type="file"
@@ -78,25 +99,24 @@ const fileInput = ref(null)
 const loadingRef = ref(null)
 
 const vizModes = [
-  { key: 'gdp', label: 'GDP' },
-  { key: 'population', label: '人口' },
-  { key: 'carbon', label: '碳排放' },
-  { key: 'trade', label: '贸易' },
-  { key: 'flights', label: '航班' },
-  { key: 'earthquake', label: '地震' },
-  { key: 'nightlights', label: '灯光' },
-  { key: 'china', label: '中国' },
-  { key: 'landmarks', label: '地标' },
-  { key: 'heatmap', label: '热力' },
-  { key: 'import', label: '导入' },
-  { key: 'default', label: '默认' }
+  { key: 'gdp', label: 'GDP', icon: '💰' },
+  { key: 'population', label: '人口', icon: '👥' },
+  { key: 'carbon', label: '碳排放', icon: '🏭' },
+  { key: 'trade', label: '贸易', icon: '🚢' },
+  { key: 'flights', label: '航班', icon: '✈️' },
+  { key: 'earthquake', label: '地震', icon: '🌊' },
+  { key: 'nightlights', label: '夜间灯光', icon: '💡' },
+  { key: 'china', label: '中国', icon: '🇨🇳' },
+  { key: 'landmarks', label: '地标', icon: '📍' },
+  { key: 'heatmap', label: '热力图', icon: '🔥' },
+  { key: 'import', label: '导入数据', icon: '📁' },
+  { key: 'default', label: '默认', icon: '🌍' }
 ]
 
 function switchViz(mode) {
   earthCanvasRef.value?.switchVisualization(mode)
 }
 
-// 图层数据
 const layerList = computed(() => layerStore.layers)
 
 function onSearchSelect(item) {
@@ -149,14 +169,13 @@ function handleSplitScreen() {
   splitMode.value = true
 }
 
-// ===== 键盘快捷键 =====
 function handleKeydown(e) {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return
   switch (e.key.toLowerCase()) {
     case ' ': e.preventDefault(); earthStore.isRotating = !earthStore.isRotating; break
     case 's': handleScreenshot(); break
     case 'c': earthStore.compareCountries = []; break
-    case 'r': earthCanvasRef.value?.flyTo(0, 20); break // 重置视角
+    case 'r': earthCanvasRef.value?.flyTo(0, 20); break
     case 'n': handleNightToggle(); break
     case 'f': {
       const sel = earthStore.selectedCountry
@@ -191,7 +210,6 @@ function handleRecordGif() {
 }
 
 function downloadFrames() {
-  // Download frames as individual images (simplified GIF)
   gifFrames.forEach((frame, i) => {
     setTimeout(() => {
       const link = document.createElement('a')
@@ -255,7 +273,6 @@ function handleRealisticEarthToggle() {
   return earthCanvasRef.value?.toggleRealisticEarth()
 }
 
-// URL hash 分享
 if (typeof window !== 'undefined') {
   const hash = window.location.hash.replace('#', '')
   if (hash && ['gdp','population','carbon','trade','flights','earthquake','nightlights','china','landmarks','heatmap'].includes(hash)) {
@@ -269,50 +286,144 @@ watch(() => earthStore.currentVisualization, (v) => {
 
 <style scoped>
 .earth-view {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-}
-.search-box {
   position: fixed;
-  top: 20px;
+  top: var(--tv-top-nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - var(--tv-top-nav-height));
+  overflow: hidden;
+}
+
+.search-wrapper {
+  position: absolute;
+  top: var(--tv-margin);
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 var(--tv-gutter);
+  pointer-events: none;
 }
-.visualization-bar {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+
+.search-wrapper > * {
+  pointer-events: auto;
+}
+
+.left-panel {
+  position: absolute;
+  left: var(--tv-margin);
+  top: var(--tv-margin);
+  bottom: var(--tv-margin);
+  width: var(--tv-panel-width);
+  z-index: 50;
+  overflow: hidden;
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-  background: rgba(20, 20, 40, 0.9);
-  padding: 8px 14px;
-  border-radius: 24px;
-  backdrop-filter: blur(10px);
+  flex-direction: column;
+}
+
+.right-panel {
+  position: absolute;
+  right: var(--tv-margin);
+  top: var(--tv-margin);
+  bottom: var(--tv-margin);
+  width: var(--tv-info-panel-width);
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tools-panel {
+  position: absolute;
+  right: calc(var(--tv-margin) + var(--tv-info-panel-width) + var(--tv-md));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--tv-md) var(--tv-sm);
+  border-radius: var(--tv-radius-full);
+  gap: var(--tv-sm);
+}
+
+.bottom-bar {
+  position: absolute;
+  bottom: var(--tv-margin);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
-  max-width: 95vw;
+  display: flex;
+  align-items: center;
+  gap: var(--tv-xs);
+  padding: var(--tv-sm) var(--tv-md);
+  border-radius: var(--tv-radius-full);
+  max-width: calc(100% - var(--tv-panel-width) - var(--tv-info-panel-width) - var(--tv-margin) * 4);
+  overflow-x: auto;
 }
+
 .viz-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-xs);
+  padding: var(--tv-xs) var(--tv-md);
+  border-radius: var(--tv-radius-full);
+  border: none;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #ccc;
-  padding: 5px 12px;
-  border-radius: 14px;
-  cursor: pointer;
+  color: var(--tv-on-surface-variant);
   font-size: 12px;
-  transition: all 0.2s;
+  font-weight: 500;
+  cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
+
 .viz-btn:hover {
-  border-color: rgba(0, 204, 204, 0.5);
+  color: var(--tv-primary);
+  background: var(--tv-surface-container);
 }
+
 .viz-btn.active {
-  background: rgba(0, 204, 204, 0.3);
-  border-color: #00cccc;
-  color: #fff;
+  background: var(--tv-primary);
+  color: var(--tv-on-primary);
+}
+
+.viz-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+@media (max-width: 1200px) {
+  .right-panel {
+    width: 280px;
+  }
+  .tools-panel {
+    right: calc(var(--tv-margin) + 280px + var(--tv-md));
+  }
+}
+
+@media (max-width: 992px) {
+  .right-panel,
+  .tools-panel {
+    display: none;
+  }
+  .left-panel {
+    width: 220px;
+  }
+  .bottom-bar {
+    max-width: calc(100% - 220px - var(--tv-margin) * 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .left-panel {
+    display: none;
+  }
+  .bottom-bar {
+    max-width: calc(100% - var(--tv-margin) * 2);
+  }
 }
 </style>

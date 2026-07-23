@@ -37,7 +37,7 @@ const DEFAULT_IMPORT_MAP = {
     'three/examples/jsm/': '/node_modules/three/examples/jsm/',
     gsap: '/node_modules/gsap/index.js',
     'gsap/': '/node_modules/gsap/',
-    'dat.gui': '/node_modules/dat.gui/build/dat.gui.module.js',
+    'lil-gui': '/node_modules/lil-gui/dist/lil-gui.esm.js',
     animejs: '/node_modules/animejs/dist/modules/index.js',
     '@tweenjs/tween.js': '/node_modules/@tweenjs/tween.js/dist/tween.esm.js',
     'three-mesh-bvh': '/node_modules/three-mesh-bvh/src/index.js',

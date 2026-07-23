@@ -123,7 +123,7 @@ function onReady(__stage) {
   
   				}
   
-  				loadTexture( 'https://cdn.needle.tools/static/hdris/ballroom_2k.pmrem.ktx2' );
+  				loadTexture( '/threejs-official/textures/hdris/ballroom_2k.pmrem.ktx2' );
   
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
@@ -138,14 +138,14 @@ function onReady(__stage) {
   				const gui = new GUI();
   
   				gui.add( params, 'image', {
-  					'ballroom': 'https://cdn.needle.tools/static/hdris/ballroom_2k.pmrem.ktx2',
-  					'brown photostudio': 'https://cdn.needle.tools/static/hdris/brown_photostudio_02_2k.pmrem.ktx2',
-  					'cape hill': 'https://cdn.needle.tools/static/hdris/cape_hill_2k.pmrem.ktx2',
-  					'cannon': 'https://cdn.needle.tools/static/hdris/cannon_2k.pmrem.ktx2',
-  					'metro noord': 'https://cdn.needle.tools/static/hdris/metro_noord_2k.pmrem.ktx2',
-  					'the sky is on fire': 'https://cdn.needle.tools/static/hdris/the_sky_is_on_fire_2k.pmrem.ktx2',
-  					'studio small 09': 'https://cdn.needle.tools/static/hdris/studio_small_09_2k.pmrem.ktx2',
-  					'wide street 01': 'https://cdn.needle.tools/static/hdris/wide_street_01_2k.pmrem.ktx2'
+  					'ballroom': '/threejs-official/textures/hdris/ballroom_2k.pmrem.ktx2',
+					'brown photostudio': '/threejs-official/textures/hdris/brown_photostudio_02_2k.pmrem.ktx2',
+					'cape hill': '/threejs-official/textures/hdris/cape_hill_2k.pmrem.ktx2',
+					'cannon': '/threejs-official/textures/hdris/cannon_2k.pmrem.ktx2',
+					'metro noord': '/threejs-official/textures/hdris/metro_noord_2k.pmrem.ktx2',
+					'the sky is on fire': '/threejs-official/textures/hdris/the_sky_is_on_fire_2k.pmrem.ktx2',
+					'studio small 09': '/threejs-official/textures/hdris/studio_small_09_2k.pmrem.ktx2',
+					'wide street 01': '/threejs-official/textures/hdris/wide_street_01_2k.pmrem.ktx2'
   				} ).onChange( () => {
   
   					loadTexture( params.image );

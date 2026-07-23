@@ -45,8 +45,7 @@ export default defineConfig({
           if (id.includes('cannon-es')) return 'vendor-cannon-es'
           if (id.includes('gsap') && !id.includes('node_modules')) return
           if (id.includes('gsap')) return 'vendor-gsap'
-          if (id.includes('/dat.gui/')) return 'vendor-dat-gui'
-          if (id.includes('tweakpane')) return 'vendor-tweakpane'
+          if (id.includes('lil-gui')) return 'vendor-lil-gui'
           if (id.includes('chart.js') || id.includes('chartjs')) return 'vendor-chart'
         }
       }

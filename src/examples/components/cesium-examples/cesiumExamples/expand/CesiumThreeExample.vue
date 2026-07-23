@@ -256,7 +256,7 @@ function loadFusionModel(worldRoot, FILE_HOST) {
   new GLTFLoader()
     .setDRACOLoader(dracoLoader)
     .load(
-      'https://z2586300277.github.io/3d-file-server/' + 'files/model/LittlestTokyo.glb',
+      '/external-examples/3d-file-server/files/model/LittlestTokyo.glb',
       (gltf) => {
         const model = gltf.scene
         model.scale.setScalar(0.015)

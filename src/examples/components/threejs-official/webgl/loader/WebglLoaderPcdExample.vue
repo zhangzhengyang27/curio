@@ -76,7 +76,11 @@ function onReady(__stage) {
   						const gui = new GUI();
   
   						gui.add( points.material, 'size', 0.001, 0.01 ).onChange( render );
-  						gui.addColor( points.material, 'color' ).onChange( render );
+  						const pcdColorDebug = { color: points.material.color.getHex() }
+  						gui.addColor( pcdColorDebug, 'color' ).name( 'color' ).onChange( ( val) => {
+  							points.material.color.set( val );
+  							render();
+  						} );
   						gui.add( points, 'name', [
   							'ascii/simple.pcd',
   							'binary/Zaghetto.pcd',

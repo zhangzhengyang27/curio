@@ -85,9 +85,18 @@ function onReady(ctx) {
   })
   
   const gui = new GUI()
-  gui.addColor(material.uniforms.color1, 'value').name('Color 1')
-  gui.addColor(material.uniforms.color2, 'value').name('Color 2')
-  gui.addColor(material.uniforms.color3, 'value').name('Color 3')
+  const color1Debug = { value: '#dbb8ff' }
+  gui.addColor(color1Debug, 'value').name('Color 1').onChange((v) => {
+      material.uniforms.color1.value.set(v)
+  })
+  const color2Debug = { value: '#98d0fb' }
+  gui.addColor(color2Debug, 'value').name('Color 2').onChange((v) => {
+      material.uniforms.color2.value.set(v)
+  })
+  const color3Debug = { value: '#fdebbf' }
+  gui.addColor(color3Debug, 'value').name('Color 3').onChange((v) => {
+      material.uniforms.color3.value.set(v)
+  })
   
   const geometry = createThreeJSLogoGeometry()
   const mesh = new THREE.Mesh(geometry, material)

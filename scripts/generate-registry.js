@@ -69,7 +69,27 @@ function findLocalThumbnail(category, id) {
   return ''
 }
 
-function buildRegistry(sourceName, label, sourceKey) {
+/**
+ * 读取已存在的 registry 文件，解析其中的 examples（用于「合并保护」，避免重跑时丢失手工编辑）。
+ * 文件结构为 `export default {...}`，取 `export default ` 之后的 JSON 部分解析。
+ */
+function loadExistingExamples(name) {
+  const p = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.js`)
+  if (!fs.existsSync(p)) return null
+  const text = fs.readFileSync(p, 'utf-8')
+  const marker = 'export default '
+  const idx = text.indexOf(marker)
+  if (idx === -1) return null
+  const jsonText = text.slice(idx + marker.length).trim()
+  try {
+    const data = JSON.parse(jsonText)
+    return Array.isArray(data.examples) ? data.examples : []
+  } catch {
+    return null
+  }
+}
+
+function buildRegistry(name, sourceName, label, sourceKey) {
   const configFile = path.join(examplesRoot, 'config', `${sourceName.replace('Examples', '-examples')}.js`)
   // threeExamples -> three-examples.js
   // cesiumExamples -> cesium-examples.js
@@ -88,7 +108,7 @@ function buildRegistry(sourceName, label, sourceKey) {
     ex.entry = `/${path.relative(path.join(projectRoot, 'public'), jsPath).replace(/\\/g, '/')}`
     ex.thumbnail = findLocalThumbnail(ex.category, ex.id)
     ex.tags = [sourceName, ...ex.category.split('/').filter(Boolean).slice(1), ex.tag].filter(Boolean)
-    ex.runner = 'iframe'
+    ex.runner = 'vue'
     ex.globals = {
       HOST: '/external-examples/three-cesium-examples/',
       FILE_HOST: '/external-examples/3d-file-server/'
@@ -104,16 +124,42 @@ function buildRegistry(sourceName, label, sourceKey) {
     groups.get(ex.category).examples.push(ex)
   })
 
+  let examples = Array.from(groups.values()).flatMap(g => g.examples)
+
+  // 合并保护：重跑时尽量保留手工编辑过的字段，避免覆盖丢失
+  const existing = loadExistingExamples(name)
+  if (existing && existing.length) {
+    const genKeys = new Set(examples.map(e => `${e.category}::${e.id}`))
+    const byKey = new Map()
+    existing.forEach(e => byKey.set(`${e.category}::${e.id}`, e))
+    examples = examples.map(ex => {
+      const prev = byKey.get(`${ex.category}::${ex.id}`)
+      if (!prev) return ex
+      return {
+        ...ex,
+        title: prev.title ?? ex.title,
+        description: prev.description ?? ex.description,
+        thumbnail: prev.thumbnail ?? ex.thumbnail,
+        tags: prev.tags ?? ex.tags,
+      }
+    })
+    // 保留脚本未解析到、但旧 registry 中手动存在的示例（如手加项 / 暂未接入 config 的示例）
+    existing.forEach(e => {
+      if (!genKeys.has(`${e.category}::${e.id}`)) examples.push(e)
+    })
+  }
+
   return {
     source: sourceKey,
     label,
-    examples: Array.from(groups.values()).flatMap(g => g.examples),
+    examples,
   }
 }
 
 function writeRegistry(name, data) {
   const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.js`)
-  const content = `// 由 scripts/generate-registry.js 自动生成，请勿手动修改
+  const content = `// 由 scripts/generate-registry.js 生成（仅覆盖 three-cesium-examples 与 cesium-examples 两个源；其余 registry 需手动维护）。
+// 合并保护：重跑本脚本会从 public/external-examples 重新解析并覆盖本文件，title/description/thumbnail/tags 等手工改动会被尽量保留，但结构性改动仍可能丢失，建议重跑前先 git diff 确认。
 
 export default ${JSON.stringify(data, null, 2)}
 `
@@ -121,8 +167,10 @@ export default ${JSON.stringify(data, null, 2)}
   console.log(`已生成注册表: ${outputPath}，共 ${data.examples.length} 个示例`)
 }
 
-const threeRegistry = buildRegistry('threeExamples', 'Three.js 案例', 'three-cesium-examples')
+console.warn('[generate-registry] 即将覆盖并重新生成 registry 文件（仅 threeCesiumExamples.js 与 cesiumExamples.js）。重跑前请先 git diff/commit 确认，手工改动的条目会被「合并保护」尽量保留。')
+
+const threeRegistry = buildRegistry('threeCesiumExamples', 'threeExamples', 'Three.js 案例', 'three-cesium-examples')
 writeRegistry('threeCesiumExamples', threeRegistry)
 
-const cesiumRegistry = buildRegistry('cesiumExamples', 'Cesium 案例', 'cesium-examples')
+const cesiumRegistry = buildRegistry('cesiumExamples', 'cesiumExamples', 'Cesium 案例', 'cesium-examples')
 writeRegistry('cesiumExamples', cesiumRegistry)

@@ -958,5 +958,23 @@ export default {
     "tags": ["three-project","webgl","threejs"],
     "runner": "vue",
   },
+  {
+    "id": "CityRealtime",
+    "category": "city-realtime",
+    "categoryLabel": "智慧城市",
+    "title": "智慧城市可视化",
+    "description": "基于 Three.js 的实时城市场景：FBX 建筑模型、Shader 扫描特效、粒子天气、飞线光墙",
+    "tags": ["three-project","city-realtime","threejs","shader","fbx"],
+    "runner": "vue",
+  },
+  {
+    "id": "WaterWaveSprite",
+    "category": "particle",
+    "categoryLabel": "粒子效果",
+    "title": "水波粒子",
+    "description": "使用 Three.js Sprite 构建的正弦波动画，模拟水面起伏",
+    "tags": ["three-project","particle","threejs","sprite","wave"],
+    "runner": "vue",
+  },
   ],
 }

@@ -28,7 +28,7 @@ async function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const modelUrl = "https://ylfq.github.io/model/walk.fbx";
+  const modelUrl = "/external-examples/3d-file-server/threeExamples/ylfq/walk.fbx";
   
   const canvas = document.createElement("canvas");
   canvas.style.width = "100vw !important";

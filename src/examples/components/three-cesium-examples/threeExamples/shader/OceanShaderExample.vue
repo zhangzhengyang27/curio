@@ -61,7 +61,7 @@ function onReady(ctx) {
   
   scene.background = textureCube;
   
-  new GLTFLoader().load('https://z2586300277.github.io/3d-file-server/models/glb/wajueji.glb',
+  new GLTFLoader().load('/external-examples/3d-file-server/models/glb/wajueji.glb',
   
       gltf => {
   

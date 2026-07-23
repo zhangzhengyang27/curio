@@ -60,7 +60,7 @@ async function onReady(ctx) {
   
   
   // 加载geojson数据
-  const dataSource = setGeoPolygon(viewer, 'https://z2586300277.github.io/three-editor/dist/files/font/guangdong.json')
+  const dataSource = setGeoPolygon(viewer, '/external-examples/3d-file-server/files/json/guangdong.json')
   
   // 看向geojson数据
   viewer.flyTo(dataSource)

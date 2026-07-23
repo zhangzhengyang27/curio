@@ -37,7 +37,7 @@ function onReady(ctx) {
   
   const geometry = new THREE.ConeGeometry(3.5, 5.5, 4);
   const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load("https://g2657.github.io/examples-server/smartCity/demo/image/gradual_change_y_02.png");
+  const texture = textureLoader.load("/external-examples/3d-file-server/g2657/images/gradual_change_y_02.png");
   const material = new THREE.MeshBasicMaterial({
       map: texture
   })

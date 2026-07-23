@@ -57,7 +57,7 @@ async function onReady(ctx) {
    * @type {Cesium.Model}
    */
   const model = await Cesium.Model.fromGltfAsync({
-    url: 'https://cesium-transform-controls.netlify.app/luaz.glb',
+    url: '/external-examples/3d-file-server/cesium-examples/models/luaz.glb',
     modelMatrix: Cesium.Transforms.headingPitchRollToFixedFrame(
       Cesium.Cartesian3.fromDegrees(baseLon, baseLat, baseHeight),
       new Cesium.HeadingPitchRoll(

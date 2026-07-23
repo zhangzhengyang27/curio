@@ -114,7 +114,7 @@ function onReady(ctx) {
           this.geometry.setDrawRange(0, 0);
           this.material = new THREE.ShaderMaterial({
               uniforms: {
-                  pointTexture: { value: new THREE.TextureLoader().load('https://z2586300277.github.io/three-editor/dist/files/channels/snow.png') },
+                  pointTexture: { value: new THREE.TextureLoader().load('/external-examples/3d-file-server/images/channels/snow.png') },
                   color: { value: new THREE.Color(params.color) }
               },
               vertexShader: `

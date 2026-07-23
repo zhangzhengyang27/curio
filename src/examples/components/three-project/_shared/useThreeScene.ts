@@ -8,6 +8,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 export interface ThreeSceneOptions {
   /** 相机视角 */
   fov?: number
+  /** 相机近裁剪面 */
+  near?: number
+  /** 相机远裁剪面 */
+  far?: number
   /** 相机位置 */
   cameraPosition?: { x: number; y: number; z: number }
   /** 是否启用轨道控制器 */
@@ -30,6 +34,8 @@ export interface ThreeSceneOptions {
 export function useThreeScene(containerRef: ShallowRef<HTMLDivElement | null>, options: ThreeSceneOptions = {}) {
   const {
     fov = 45,
+    near = 0.1,
+    far = 1000,
     cameraPosition = { x: 2, y: 2, z: 5 },
     enableControls = true,
     controlsConfig = {
@@ -72,7 +78,7 @@ export function useThreeScene(containerRef: ShallowRef<HTMLDivElement | null>, o
     scene.value = new THREE.Scene()
 
     // 创建相机
-    camera.value = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000)
+    camera.value = new THREE.PerspectiveCamera(fov, width / height, near, far)
     camera.value.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
     camera.value.lookAt(0, 0, 0)
 

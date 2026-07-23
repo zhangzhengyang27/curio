@@ -48,9 +48,9 @@ function onReady(ctx) {
   // 隐藏Cesium Logo
   viewer._cesiumWidget._creditContainer.style.display = "none";
   
-  /** 
+  /**
    * 创建GUI控制面板
-   * @type {dat.GUI}
+   * @type {GUI}
    */
   const gui = new GUI();
   // 添加瓦片坐标信息

@@ -73,7 +73,7 @@ function onReady(stageCtx) {
   
   const sunDirection = new THREE.Vector3(0.4, 1.0, 0.2).normalize()
   const waterNormals = new THREE.TextureLoader().load(
-      'https://threejs.org/examples/textures/waternormals.jpg',
+      '/threejs-official/textures/waternormals.jpg',
       texture => {
           texture.wrapS = THREE.RepeatWrapping
           texture.wrapT = THREE.RepeatWrapping

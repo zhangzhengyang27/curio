@@ -54,7 +54,7 @@ async function onReady(ctx) {
   
   viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(116.3974, 39.9093, 18000000) }) // 设置视角
   
-  const citys = await fetch('https://z2586300277.github.io/three-editor/dist/files/other/city.json').then(res => res.json()) // 获取城市数据
+  const citys = await fetch('/external-examples/3d-file-server/files/other/city.json').then(res => res.json()) // 获取城市数据
   
   const points = Object.values(citys).map((val, k) => ({ type: 'Feature', pid: k + '-' + val[0] + '-' + val[1], geometry: { coordinates: val } }))
   
@@ -69,7 +69,7 @@ async function onReady(ctx) {
   
           position: Cesium.Cartesian3.fromDegrees(longitude, latitude),
   
-          image: 'https://z2586300277.github.io/three-editor/dist/site.png', // 你的图片路径
+          image: '/external-examples/3d-file-server/files/other/site.png',
   
           scale: 0.05,
   

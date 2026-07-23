@@ -90,7 +90,7 @@ function onReady(__stage) {
   
   				useNeedleProgressive( loader, renderer );
   
-  				loader.load( 'https://cloud.needle.tools/-/assets/Z23hmXBZ2sPRdk-world/file', function ( gltf ) {
+  				loader.load( '/threejs-official/models/gltf-needle/Z23hmXBZ2sPRdk-world.glb', function ( gltf ) {
   
   					const model = gltf.scene;
   
@@ -111,7 +111,7 @@ function onReady(__stage) {
   			
   				} );
   
-  				loader.load( 'https://cloud.needle.tools/-/assets/Z23hmXBZnlceI-ZnlceI-world/file', function ( gltf ) {
+  				loader.load( '/threejs-official/models/gltf-needle/Z23hmXBZnlceI-ZnlceI-world.glb', function ( gltf ) {
   
   					const model = gltf.scene;
   			
@@ -139,7 +139,7 @@ function onReady(__stage) {
   
   				} );
   
-  				loader.load( 'https://cloud.needle.tools/-/assets/Z23hmXBZ21QnG-Z21QnG-product/file', function ( gltf ) {
+  				loader.load( '/threejs-official/models/gltf-needle/Z23hmXBZ21QnG-Z21QnG-product.glb', function ( gltf ) {
   
   					const model = gltf.scene;
   			

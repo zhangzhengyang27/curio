@@ -71,9 +71,15 @@ function onReady(ctx) {
   
   gui.add(uniforms1.opacity, 'value', 0, 1).name('opacity')
   
-  gui.addColor(uniforms1.c1, 'value').name('c1')
+  const c1Debug = { value: '#000000' }
+  gui.addColor(c1Debug, 'value').name('c1').onChange((v) => {
+      uniforms1.c1.value.set(v)
+  })
   
-  gui.addColor(uniforms1.c2, 'value').name('c2')
+  const c2Debug = { value: '#000000' }
+  gui.addColor(c2Debug, 'value').name('c2').onChange((v) => {
+      uniforms1.c2.value.set(v)
+  })
   
   const uniforms2 = {
   

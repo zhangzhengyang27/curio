@@ -258,8 +258,7 @@ function onReady(ctx) {
 
   const gridFolder = gui.addFolder('🌐 Grid Floor')
   gridFolder.add(material.uniforms.uGridThickness, 'value', 0, 1, 0.001).name('thickness')
-  gridFolder
-      .add(debugObject, 'color')
+  gridFolder.addColor(debugObject, 'color')
       .name('color')
       .onChange(() => {
           material.uniforms.uGridColor.value.set(debugObject.color)
@@ -268,8 +267,7 @@ function onReady(ctx) {
   const crossFolder = gui.addFolder('❎ Cross Floor')
   crossFolder.add(material.uniforms.uCrossThickness, 'value', 0, 1, 0.001).name('thickness')
   crossFolder.add(material.uniforms.uCross, 'value', 0, 1, 0.01).name('cross')
-  crossFolder
-      .add(debugObject, 'crossColor')
+  crossFolder.addColor(debugObject, 'crossColor')
       .name('color')
       .onChange(() => {
           material.uniforms.uCrossColor.value.set(debugObject.crossColor)
@@ -289,23 +287,20 @@ function onReady(ctx) {
 
   fogFolder.add(scene.fog, 'near', -5, 2, 0.1).name('near')
   fogFolder.add(scene.fog, 'far', 2, 50, 0.1).name('far')
-  fogFolder
-      .add(debugObject, 'fogColor')
+  fogFolder.addColor(debugObject, 'fogColor')
       .name('color')
       .onChange(() => {
           scene.fog.color.set(debugObject.fogColor)
       })
 
   const envFolder = gui.addFolder('🏡 Environment')
-  envFolder
-      .add(debugObject, 'backgroundColor')
+  envFolder.addColor(debugObject, 'backgroundColor')
       .name('sky')
       .onChange(() => {
           scene.background = new THREE.Color(debugObject.backgroundColor)
       })
 
-  envFolder
-      .add(debugObject, 'floorColor')
+  envFolder.addColor(debugObject, 'floorColor')
       .name('Floor')
       .onChange(() => {
           material.uniforms.uFloorColor.value.set(debugObject.floorColor)

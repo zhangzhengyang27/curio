@@ -35,7 +35,7 @@ function onReady(ctx) {
   
   const sparklesGeometry = new THREE.BufferGeometry()
   
-  const sparklesMaterial = new THREE.PointsMaterial({ size: 6, alphaTest: 0.5, map: new THREE.TextureLoader().load(`https://z2586300277.github.io/three-editor/dist/files/channels/snow.png`), vertexColors: true })
+  const sparklesMaterial = new THREE.PointsMaterial({ size: 6, alphaTest: 0.5, map: new THREE.TextureLoader().load(`/external-examples/3d-file-server/images/channels/snow.png`), vertexColors: true })
   
   const points = new THREE.Points(sparklesGeometry, sparklesMaterial);
   

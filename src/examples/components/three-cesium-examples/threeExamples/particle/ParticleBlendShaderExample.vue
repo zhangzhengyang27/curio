@@ -39,7 +39,7 @@ function onReady(ctx) {
   
       maxVelocity: 30,
   
-      mapUrl: 'https://z2586300277.github.io/three-editor/dist/files/channels/snow.png',
+      mapUrl: '/external-examples/3d-file-server/images/channels/snow.png',
   
       sportType: '全随机',
   
@@ -323,7 +323,10 @@ function onReady(ctx) {
 
   gui.add(uniforms.mixRatio, 'value', 0, 1).name('mixRatio')
 
-  gui.addColor(uniforms.mixColor, 'value').name('mixColor')
+  const mixColorDebug = { value: '#ffffff' }
+  gui.addColor(mixColorDebug, 'value').name('mixColor').onChange((v) => {
+      uniforms.mixColor.value.set(v)
+  })
 
   gui.add(uniforms.hasUv, 'value').name('hasUv')
 
