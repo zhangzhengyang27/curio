@@ -60,10 +60,11 @@
           >
             <div class="card-media">
               <img
-                v-if="ex.thumbnail"
+                v-if="thumbOk(ex)"
                 :src="ex.thumbnail"
                 :alt="ex.title"
                 loading="lazy"
+                @error="onThumbError(ex)"
               >
               <div
                 v-else
@@ -287,6 +288,18 @@ const gradients = [
 function placeholderGradient(ex) {
   const idx = (ex.title.length + ex.category.length) % gradients.length
   return gradients[idx]
+}
+
+// 缩略图加载失败(文件缺失/网络错误)时回退到占位符，避免破图
+const failedThumbs = ref(new Set())
+function thumbKey(ex) {
+  return `${ex.source}/${ex.category}/${ex.id}`
+}
+function thumbOk(ex) {
+  return !!ex.thumbnail && !failedThumbs.value.has(thumbKey(ex))
+}
+function onThumbError(ex) {
+  failedThumbs.value.add(thumbKey(ex))
 }
 </script>
 
