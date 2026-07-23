@@ -1,6 +1,6 @@
 export default {
-  source: 'webgl',
-  label: 'WebGL 基础',
+  source: 'city-realtime-webgl',
+  label: '实时城市 WebGL',
   examples: [
     {
       id: 'Metaball',
