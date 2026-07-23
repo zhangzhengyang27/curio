@@ -38,6 +38,19 @@
           </div>
         </header>
 
+        <!-- 技术切换器 -->
+        <div class="tech-tabs">
+          <button
+            v-for="t in techTabs"
+            :key="t.key"
+            :class="['tech-tab', { active: currentTech === t.key }]"
+            @click="currentTech = t.key"
+          >
+            <span class="tech-tab-label">{{ t.label }}</span>
+            <span class="tech-tab-count">{{ t.count }}</span>
+          </button>
+        </div>
+
         <div class="card-grid">
           <router-link
             v-for="ex in paginatedExamples"
@@ -124,11 +137,12 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getAllExamples, getSources } from '../registry/index.js'
 import { techGroups, subCategoryDefinitions } from '../composables/useExampleFilters.js'
 
 const route = useRoute()
+const router = useRouter()
 
 const keyword = ref(route.query.search || '')
 const currentTech = ref('all')
@@ -137,6 +151,15 @@ const currentPage = ref(1)
 const pageSize = 16
 
 const allExamples = computed(() => getAllExamples())
+
+const techTabs = computed(() => {
+  return techGroups.map(t => {
+    const count = t.key === 'all'
+      ? allExamples.value.length
+      : allExamples.value.filter(ex => t.match(ex)).length
+    return { ...t, count }
+  })
+})
 
 watch([keyword, currentSubCategory], () => {
   currentPage.value = 1
@@ -158,6 +181,16 @@ function syncQueryToState() {
 
 onMounted(syncQueryToState)
 watch(() => route.query, syncQueryToState, { deep: true })
+
+// 状态 -> URL：切换技术 / 分类 / 搜索时写回 query，刷新可保持、可分享、可前进后退
+watch([currentTech, currentSubCategory, keyword], () => {
+  const query = {}
+  if (currentTech.value !== 'all') query.tech = currentTech.value
+  if (currentSubCategory.value !== 'all') query.sub = currentSubCategory.value
+  const kw = keyword.value.trim()
+  if (kw) query.search = kw
+  router.replace({ query })
+})
 
 const currentTechInfo = computed(() => techGroups.find(t => t.key === currentTech.value))
 const currentTechLabel = computed(() => currentTechInfo.value?.label || '全部技术')
@@ -477,6 +510,72 @@ function placeholderGradient(ex) {
   letter-spacing: 0.02em;
   color: var(--tv-outline);
   white-space: nowrap;
+}
+
+/* Tech tabs */
+.tech-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-sm);
+  margin-bottom: var(--tv-lg);
+}
+
+.tech-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--tv-outline-variant);
+  background: var(--tv-surface-container-low);
+  color: var(--tv-on-surface-variant);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.tech-tab:hover {
+  background: var(--tv-surface-container);
+  color: var(--tv-on-surface);
+}
+
+.tech-tab.active {
+  background: var(--tv-primary);
+  border-color: var(--tv-primary);
+  color: var(--tv-on-primary);
+  font-weight: 600;
+}
+
+.tech-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--tv-radius-md);
+  background: color-mix(in srgb, var(--tv-on-surface-variant) 15%, transparent);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.tech-tab.active .tech-tab-count {
+  background: color-mix(in srgb, var(--tv-on-primary) 22%, transparent);
+  color: var(--tv-on-primary);
+}
+
+html.dark .tech-tab.active {
+  background: var(--tv-secondary-fixed);
+  border-color: var(--tv-secondary-fixed);
+  color: var(--tv-on-secondary-fixed);
+}
+
+html.dark .tech-tab.active .tech-tab-count {
+  background: color-mix(in srgb, var(--tv-on-secondary-fixed) 22%, transparent);
+  color: var(--tv-on-secondary-fixed);
 }
 
 /* Card grid */
