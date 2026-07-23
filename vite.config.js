@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'node:path'
-import { existsSync, statSync, readFileSync } from 'node:fs'
+import { existsSync, statSync, createReadStream } from 'node:fs'
 
 const threeBuildDir = fileURLToPath(new URL('./src/examples/three-build-compat', import.meta.url))
 const nodeEmptyStub = fileURLToPath(new URL('./src/examples/jsm-compat/node-empty.js', import.meta.url))
@@ -38,6 +38,9 @@ function serveUnicodePublic() {
         if (req.method !== 'GET' && req.method !== 'HEAD') return next()
         const pathname = (req.url || '').split('?')[0]
         if (!pathname.startsWith('/')) return next()
+        // 只拦截受中文文件名 bug 影响的 public 子目录，避免对 vite 内部请求
+        // (/@vite/client、/src/*、/node_modules/*、SPA 路由等) 做无谓的 stat 系统调用。
+        if (!pathname.startsWith('/example-thumbs/') && !pathname.startsWith('/threejs-official/')) return next()
         let decoded
         try { decoded = decodeURIComponent(pathname) } catch { return next() }
         const full = path.resolve(publicDir, '.' + decoded)
@@ -47,9 +50,9 @@ function serveUnicodePublic() {
         if (!st.isFile()) return next()
         const ext = path.extname(full).toLowerCase()
         res.setHeader('Content-Type', extType[ext] || 'application/octet-stream')
-        res.setHeader('Cache-Control', 'public, max-age=0')
-        const buf = readFileSync(full)
-        res.end(req.method === 'HEAD' ? undefined : buf)
+        res.setHeader('Cache-Control', 'no-cache')
+        if (req.method === 'HEAD') { res.end(); return }
+        createReadStream(full).pipe(res)
       }
       server.middlewares.use(mw)
       // 顶到中间件栈最前，先于 vite 静态/SPA 兜底执行

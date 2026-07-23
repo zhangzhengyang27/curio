@@ -12,6 +12,12 @@ const ROOT = path.resolve(__dirname, '..')
 const BASE = process.env.SCREEN_BASE || 'http://localhost:5180'
 const OUT_DIR = path.join(ROOT, 'public', 'example-thumbs')
 
+// ⚠️ 刻意的「不对称」设计，勿改：
+//   thumbUrl —— 逐段 encodeURIComponent，写入 registry 的 URL 是编码串（如 .../%E7%82%B9.jpg）。
+//   absPathFor —— 直接用原始中文名写磁盘（.../点线.jpg）。
+// 二者不对称是正确且必要的：vite dev 下由 vite.config.js 的 serveUnicodePublic 插件
+// 按解码后的中文路径读取；production 由静态服务器解码 URL 命中中文名文件。
+// 若把 absPathFor 也改成编码名，dev 插件(先解码成中文再查盘)反而对不上 → 破图。
 function thumbUrl(source, category, id) {
   const segs = ['example-thumbs', source, ...category.split('/'), id + '.jpg'].map(s =>
     encodeURIComponent(s)

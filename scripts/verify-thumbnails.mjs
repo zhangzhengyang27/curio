@@ -27,7 +27,9 @@ for (const ex of all) {
     missing.push(`${ex.source}/${ex.category}/${ex.id} -> 非常规路径 "${t}"`)
     continue
   }
-  const p = join(PUBLIC, t)
+  // thumbnail 是 encodeURIComponent 后的 URL（如 /example-thumbs/.../%E7%82%B9.jpg），
+  // 而磁盘文件是中文名，必须解码后再拼 public 路径，否则中文路径会被误判为缺失。
+  const p = join(PUBLIC, decodeURIComponent(t))
   if (!existsSync(p) || statSync(p).size === 0) {
     missing.push(`${ex.source}/${ex.category}/${ex.id} -> ${t}`)
   }

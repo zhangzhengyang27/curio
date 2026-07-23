@@ -35,10 +35,11 @@ async function main() {
     if (!entries || !entries.length) continue
 
     let text = await readFile(path.join(REG, f), 'utf8')
-    // 预清理：删除已有的空 thumbnail 行。
-    // threeCesium/cesium 等源原本就带 "thumbnail": ""，若不先删，插入新 thumbnail 后
-    // 会出现重复键，JS 对象字面量后键覆盖前键导致 thumbnail 仍解析为空。
+    // 预清理：删除已有的 thumbnail 行，避免重跑产生重复键（JS 后键覆盖前键、数值虽同但冗余）。
+    // 1) 删空值：threeCesium/cesium 等源原本就带 "thumbnail": ""，不删则插入新值后重复键 → 仍解析为空。
+    // 2) 删本脚本之前写入的、指向 /example-thumbs/ 的非空 thumbnail（重跑安全网）。
     text = text.replace(/\n[ \t]*"thumbnail":\s*"",?/g, '')
+    text = text.replace(/\n[ \t]*"thumbnail":\s*"\/example-thumbs\/[^"]*",?/g, '')
     for (const e of entries) {
       const idRe = escapeRegExp(e.id)
       const catRe = escapeRegExp(e.category)
