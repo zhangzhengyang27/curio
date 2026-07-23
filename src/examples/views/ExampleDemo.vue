@@ -26,10 +26,10 @@
       >
         未找到示例：{{ examplePath }}
       </div>
-      <component
-        :is="vueComponent"
+      <ExampleHost
         v-else-if="example.runner === 'vue' && vueComponent"
         :key="exampleKey"
+        :comp="vueComponent"
         :example="example"
       />
       <div
@@ -58,6 +58,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getExampleById } from '../registry/index.js'
 import IframeRunner from '../runners/IframeRunner.vue'
+import ExampleHost from './ExampleHost.vue'
 import { loadExampleComponent } from '../components/index.js'
 
 const route = useRoute()
