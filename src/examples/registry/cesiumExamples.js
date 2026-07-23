@@ -8,13 +8,13 @@ export default {
       "category": "cesiumExamples/tools",
       "title": "测试",
       "titleEn": "test",
-      "description": "测试",
+      "description": "这是一个基于 Cesium 的示例。运用了 影像图层 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/tools/test.js",
       "tags": [
-        "cesiumExamples",
-        "tools"
+        "Cesium",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -27,13 +27,16 @@ export default {
       "category": "cesiumExamples/tools",
       "title": "计算新坐标",
       "titleEn": "computerNewPoint",
-      "description": "计算新坐标",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/tools/computerNewPoint.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/tools/computerNewPoint.js",
       "tags": [
-        "cesiumExamples",
-        "tools"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -46,13 +49,16 @@ export default {
       "category": "cesiumExamples/tools",
       "title": "计算方位角",
       "titleEn": "computerAngle",
-      "description": "计算方位角",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、影像图层、矢量几何 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/tools/computerAngle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/tools/computerAngle.js",
       "tags": [
-        "cesiumExamples",
-        "tools"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -65,13 +71,16 @@ export default {
       "category": "cesiumExamples/tools",
       "title": "Cesium 3D 变换控制器",
       "titleEn": "Cesium 3D Transform Controls",
-      "description": "Cesium 3D 变换控制器",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、3D Tiles、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/tools/transformControls.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/tools/transformControls.js",
       "tags": [
-        "cesiumExamples",
-        "tools"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles"
       ],
       "runner": "vue",
       "globals": {
@@ -84,13 +93,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "默认图层",
       "titleEn": "Default Layer",
-      "description": "默认图层",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/defaultLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/defaultLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "Cesium Viewer",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -103,13 +113,13 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "坐标参考",
       "titleEn": "Coordinate",
-      "description": "坐标参考",
+      "description": "这是一个基于 Cesium 的示例。运用了 影像图层 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/coordLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -122,13 +132,15 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "百度图层",
       "titleEn": "Baidu Layer",
-      "description": "百度图层",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/baiduLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/baiduLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -141,13 +153,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "arcgis图层",
       "titleEn": "ArcGIS Layer",
-      "description": "arcgis图层",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/arcgisLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/arcgisLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -160,13 +173,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "高德图层",
       "titleEn": "Gaode Layer",
-      "description": "高德图层",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/gaodeLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/gaodeLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -179,13 +193,15 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "地图滤镜",
       "titleEn": "Map Filter",
-      "description": "地图滤镜",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/mapfilterLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/mapfilterLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -198,13 +214,15 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "天地图",
       "titleEn": "Tianditu Layer",
-      "description": "天地图",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/tiandituLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/tiandituLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -217,13 +235,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "OGC- xyz服务",
       "titleEn": "OGC-XYZ",
-      "description": "OGC- xyz服务",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/xyz.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/xyz.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -236,13 +255,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "OGC- tms服务",
       "titleEn": "OGC-TMS",
-      "description": "OGC- tms服务",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/tms.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/tms.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -255,13 +275,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "OGC- wms服务",
       "titleEn": "OGC- WMS",
-      "description": "OGC- wms服务",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/wms.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/wms.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -274,13 +295,14 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "OGC- wmts服务",
       "titleEn": "OGC- WMTS",
-      "description": "OGC- wmts服务",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/wmts.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/wmts.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -293,13 +315,16 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "地形",
       "titleEn": "Terrain",
-      "description": "地形",
+      "description": "这是一个基于 Cesium 的示例。运用了 水面模拟、Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/terrainLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/terrainLayer.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "水面模拟",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -312,13 +337,16 @@ export default {
       "category": "cesiumExamples/layer",
       "title": "高德纠偏",
       "titleEn": "Gaode Transform",
-      "description": "高德纠偏",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/layer/gaodeTrans.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/gaodeTrans.js",
       "tags": [
-        "cesiumExamples",
-        "layer"
+        "Cesium",
+        "GUI调试面板",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -331,13 +359,14 @@ export default {
       "category": "cesiumExamples/offline",
       "title": "夜间",
       "titleEn": "Night Map",
-      "description": "夜间",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/day.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/day.js",
       "tags": [
-        "cesiumExamples",
-        "offline"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -350,13 +379,14 @@ export default {
       "category": "cesiumExamples/offline",
       "title": "影像",
       "titleEn": "Image Map",
-      "description": "影像",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/img.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/img.js",
       "tags": [
-        "cesiumExamples",
-        "offline"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -369,13 +399,14 @@ export default {
       "category": "cesiumExamples/offline",
       "title": "夜间",
       "titleEn": "Night Map",
-      "description": "夜间",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/night.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/night.js",
       "tags": [
-        "cesiumExamples",
-        "offline"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -388,13 +419,14 @@ export default {
       "category": "cesiumExamples/offline",
       "title": "内网百度",
       "titleEn": "Intranet Baidu",
-      "description": "内网百度",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/baiDu.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/baiDu.js",
       "tags": [
-        "cesiumExamples",
-        "offline"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -407,13 +439,14 @@ export default {
       "category": "cesiumExamples/offline",
       "title": "内网高德",
       "titleEn": "Intranet Gaode",
-      "description": "内网高德",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/gaode.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/gaode.js",
       "tags": [
-        "cesiumExamples",
-        "offline"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -426,13 +459,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "视角切换",
       "titleEn": "Switch View",
-      "description": "视角切换",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、3D Tiles、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/switchView.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/switchView.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles"
       ],
       "runner": "vue",
       "globals": {
@@ -445,13 +481,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "记录视角",
       "titleEn": "Camera View",
-      "description": "记录视角",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、影像图层、相机飞行、图元(Primitive) 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cameraView.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -464,13 +503,14 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "自动旋转",
       "titleEn": "Auto Rotate",
-      "description": "自动旋转",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、影像图层 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/autoRotate.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -483,13 +523,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "绘制文字",
       "titleEn": "Draw Text",
-      "description": "绘制文字",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 等 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cesiumText.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -502,13 +545,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "css2D元素",
       "titleEn": "CSS2D Element",
-      "description": "css2D元素",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/cssElement.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cssElement.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -521,13 +567,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "点击事件",
       "titleEn": "Click Event",
-      "description": "点击事件",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、相机飞行、矢量几何 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/clickEvent.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/clickEvent.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -540,13 +589,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "天空盒",
       "titleEn": "Sky Box",
-      "description": "天空盒",
+      "description": "这是一个基于 Cesium 的示例。运用了 天空盒、Cesium Viewer、实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/skyBox.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/skyBox.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "天空盒",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -559,13 +611,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "geojson面",
       "titleEn": "GeoJSON Face",
-      "description": "geojson面",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、相机飞行、GeoJSON 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/geojsonFace.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/geojsonFace.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -578,13 +633,15 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量点",
       "titleEn": "Multiple Points",
-      "description": "cesium大量点",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/multPoint.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multPoint.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "影像图层",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -597,13 +654,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量点聚合",
       "titleEn": "Points Cluster",
-      "description": "cesium大量点聚合",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multPointCluster.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -616,13 +676,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量面线",
       "titleEn": "Face & Line",
-      "description": "cesium大量面线",
+      "description": "这是一个基于 Cesium 的示例。运用了 线条/线框、Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/multFaceLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multFaceLine.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "线条/线框",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -635,13 +698,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量曲线",
       "titleEn": "Multiple Curves",
-      "description": "cesium大量曲线",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、线条/线框、Cesium Viewer、实体(Entity)、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/multCurve.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multCurve.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "线条/线框",
+        "Cesium Viewer",
+        "实体(Entity)"
       ],
       "runner": "vue",
       "globals": {
@@ -654,13 +720,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量文字",
       "titleEn": "Multiple Texts",
-      "description": "cesium大量文字",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、相机飞行、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/multText.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multText.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -673,13 +742,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "cesium大量立方体",
       "titleEn": "Multiple Cubes",
-      "description": "cesium大量立方体",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/multBox.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multBox.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -692,13 +764,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "加载模型",
       "titleEn": "Load Model",
-      "description": "加载模型",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、3D Tiles、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/loadModel.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/loadModel.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -711,13 +786,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "绘制线段",
       "titleEn": "Draw drawLine",
-      "description": "绘制线段",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/drawLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/drawLine.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -730,13 +808,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "键盘控制相机",
       "titleEn": "KeyboardRoam",
-      "description": "键盘控制相机",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/keyboardRoam.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/keyboardRoam.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -749,13 +830,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "官方点聚合",
       "titleEn": "Official Points Cluster",
-      "description": "官方点聚合",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、KML、GeoJSON 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/officialPointCluster.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/officialPointCluster.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "KML"
       ],
       "runner": "vue",
       "globals": {
@@ -768,13 +852,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "div元素绘制",
       "titleEn": "drawDivElement",
-      "description": "div元素绘制",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/drawDivElement.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/drawDivElement.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -787,13 +874,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "边界框",
       "titleEn": "Bound Border",
-      "description": "边界框",
+      "description": "这是一个基于 Cesium 的示例。运用了 雾化、Cesium Viewer、实体(Entity)、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/boundBorder.webp",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/boundBorder.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "雾化",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -806,13 +896,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "智慧城市着色器",
       "titleEn": "SmartCity",
-      "description": "智慧城市着色器",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、3D Tiles、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/tilesShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/tilesShader.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -825,13 +918,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "智慧城市光",
       "titleEn": "City Light",
-      "description": "智慧城市光",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、3D Tiles、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/smartCity.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/smartCity.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -844,13 +940,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "流动飞线运动",
       "titleEn": "Flowing Line",
-      "description": "流动飞线运动",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、相机飞行、矢量几何 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/flyLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/flyLine.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -863,13 +962,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "曲线管道",
       "titleEn": "Curve Pipe",
-      "description": "曲线管道",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、相机飞行、矢量几何 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/curvePipe.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/curvePipe.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -882,13 +984,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "路线导航",
       "titleEn": "Route Nav",
-      "description": "路线导航",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、矢量几何、运动轨迹 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/routeNavigation.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/routeNavigation.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "矢量几何"
       ],
       "runner": "vue",
       "globals": {
@@ -901,13 +1006,16 @@ export default {
       "category": "cesiumExamples/basic",
       "title": "曲线漫游",
       "titleEn": "Curve Roam",
-      "description": "曲线漫游",
+      "description": "这是一个基于 Cesium 的示例。运用了 飞行控制、粒子/点云、GUI调试面板、Cesium Viewer、实体(Entity) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/basic/cameraCurveRoam.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cameraCurveRoam.js",
       "tags": [
-        "cesiumExamples",
-        "basic"
+        "Cesium",
+        "飞行控制",
+        "粒子/点云",
+        "GUI调试面板",
+        "Cesium Viewer"
       ],
       "runner": "vue",
       "globals": {
@@ -920,13 +1028,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "粒子（火焰）",
       "titleEn": "Particle(Fire)",
-      "description": "粒子（火焰）",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/fire.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/fire.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -939,13 +1050,14 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "水波纹",
       "titleEn": "Ripple",
-      "description": "水波纹",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/ripple.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/ripple.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -958,13 +1070,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "使用Shadertoy",
       "titleEn": "Use Shadertoy",
-      "description": "使用Shadertoy",
+      "description": "这是一个基于 Cesium 的示例。运用了 雾化、Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumShadertoy.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumShadertoy.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "雾化",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -977,13 +1092,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "水波材质",
       "titleEn": "Water Material",
-      "description": "水波材质",
+      "description": "这是一个基于 Cesium 的示例。运用了 水面模拟、Cesium Viewer、实体(Entity)、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/waterMaterial.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/waterMaterial.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "水面模拟",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -996,13 +1114,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "雪景",
       "titleEn": "Snow Scene",
-      "description": "雪景",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、3D Tiles、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/snow.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/snow.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1015,13 +1136,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "下雨",
       "titleEn": "Rain",
-      "description": "下雨",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、3D Tiles、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/rain.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/rain.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1034,13 +1158,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "镜头光晕",
       "titleEn": "Lens Flare",
-      "description": "镜头光晕",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/lensFlare.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/lensFlare.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1053,13 +1180,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "城市光影",
       "titleEn": "City Light",
-      "description": "城市光影",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、3D Tiles、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/cityLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cityLight.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles"
       ],
       "runner": "vue",
       "globals": {
@@ -1072,13 +1202,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "cesium体积云",
       "titleEn": "volumetricCloud",
-      "description": "cesium体积云",
+      "description": "这是一个基于 Cesium 的示例。运用了 天空盒、Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/volumetricCloud.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/volumetricCloud.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "天空盒",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -1091,13 +1224,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "cesium动态体积水",
       "titleEn": "dynamicWater",
-      "description": "cesium动态体积水",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、水面模拟、GUI调试面板、Cesium Viewer、实体(Entity) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/dynamicWater.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/dynamicWater.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "粒子/点云",
+        "水面模拟",
+        "GUI调试面板",
+        "Cesium Viewer"
       ],
       "runner": "vue",
       "globals": {
@@ -1110,13 +1246,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "渐变行政区",
       "titleEn": "Gradient Area",
-      "description": "渐变行政区",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层、相机飞行、GeoJSON、矢量几何 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/gradienGeojsonFace.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/gradienGeojsonFace.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行",
+        "GeoJSON"
       ],
       "runner": "vue",
       "globals": {
@@ -1129,13 +1268,15 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "cesium融合three",
       "titleEn": "Cesium+Three",
-      "description": "cesium融合three",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumAndThree.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumAndThree.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -1148,13 +1289,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "cesium深度融合three",
       "titleEn": "Cesium && Three",
-      "description": "cesium深度融合three",
+      "description": "这是一个基于 Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载、水面模拟、射线拾取交互 等 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesium_three.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GLTF模型加载",
+        "水面模拟"
       ],
       "runner": "vue",
       "globals": {
@@ -1167,13 +1311,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "Cesium Three切换",
       "titleEn": "Cesium Switch",
-      "description": "Cesium Three切换",
+      "description": "这是一个基于 Cesium 的示例。运用了 轨道控制、GLTF模型加载、GUI调试面板、Cesium Viewer、实体(Entity) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumSwitch.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesiumSwitch.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "轨道控制",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "Cesium Viewer"
       ],
       "runner": "vue",
       "globals": {
@@ -1186,13 +1333,15 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "echarts飞线",
       "titleEn": "EchartsFlyLine",
-      "description": "echarts飞线",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/echartsFlyLine.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -1205,13 +1354,15 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "热力图",
       "titleEn": "Heat Map",
-      "description": "热力图",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/heatMap.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1224,13 +1375,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "3D热力图",
       "titleEn": "3D Heat Map",
-      "description": "3D热力图",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、相机飞行、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/3DheatMap.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/3DheatMap.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -1243,13 +1397,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "交通线路",
       "titleEn": "Transport Line",
-      "description": "交通线路",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、线条/线框、GUI调试面板、Cesium Viewer、实体(Entity) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/transportLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/transportLine.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "粒子/点云",
+        "线条/线框",
+        "GUI调试面板",
+        "Cesium Viewer"
       ],
       "runner": "vue",
       "globals": {
@@ -1262,13 +1419,16 @@ export default {
       "category": "cesiumExamples/expand",
       "title": "可视域分析-球面",
       "titleEn": "ViewshedSphere",
-      "description": "可视域分析-球面",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、3D Tiles、地形(Terrain) 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/expand/viewshedSphere.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/viewshedSphere.js",
       "tags": [
-        "cesiumExamples",
-        "expand"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "3D Tiles"
       ],
       "runner": "vue",
       "globals": {
@@ -1281,13 +1441,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "雷达扫描",
       "titleEn": "Radar Scan",
-      "description": "雷达扫描",
+      "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/radar.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/radar.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "粒子/点云",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -1300,13 +1463,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "雷达探测",
       "titleEn": "Radar Emission",
-      "description": "雷达探测",
+      "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层、相机飞行、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/radarEmission.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/radarEmission.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -1319,13 +1485,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "动态围墙",
       "titleEn": "Dynamic Wall",
-      "description": "动态围墙",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/dynamicWall.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/dynamicWall.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -1338,13 +1507,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "烟雾效果",
       "titleEn": "Smoke Effect",
-      "description": "烟雾效果",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/smokeEffect.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/smokeEffect.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1357,13 +1529,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "动态围墙(简易版)",
       "titleEn": "dynamicWall Simple",
-      "description": "动态围墙(简易版)",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/dynamicWallSimple.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/dynamicWallSimple.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1376,13 +1551,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "渐变色墙体",
       "titleEn": "Gradient Wall",
-      "description": "渐变色墙体",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/gradientWall.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/gradientWall.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1395,13 +1573,16 @@ export default {
       "category": "cesiumExamples/effect",
       "title": "cesium后期处理",
       "titleEn": "postProcessStage",
-      "description": "cesium后期处理",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/effect/postProcessStage.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/effect/postProcessStage.js",
       "tags": [
-        "cesiumExamples",
-        "effect"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -1414,13 +1595,16 @@ export default {
       "category": "cesiumExamples/application",
       "title": "实例化渲染",
       "titleEn": "Instance Render",
-      "description": "实例化渲染",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、影像图层、相机飞行、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/application/instanceRender.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/application/instanceRender.js",
       "tags": [
-        "cesiumExamples",
-        "application"
+        "Cesium",
+        "Cesium Viewer",
+        "影像图层",
+        "相机飞行",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -1433,13 +1617,16 @@ export default {
       "category": "cesiumExamples/application",
       "title": "地球贴图",
       "titleEn": "Globe Map",
-      "description": "地球贴图",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/application/globeMap.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/application/globeMap.js",
       "tags": [
-        "cesiumExamples",
-        "application"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -1452,13 +1639,16 @@ export default {
       "category": "cesiumExamples/application",
       "title": "键盘控制飞行",
       "titleEn": "controlModel",
-      "description": "键盘控制飞行",
+      "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、实体(Entity)、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/application/controlModel.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/application/controlModel.js",
       "tags": [
-        "cesiumExamples",
-        "application"
+        "Cesium",
+        "GUI调试面板",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {
@@ -1471,13 +1661,16 @@ export default {
       "category": "cesiumExamples/application",
       "title": "div随轨迹运动",
       "titleEn": "cssElementTrack",
-      "description": "div随轨迹运动",
+      "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/application/cssElementTrack.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/application/cssElementTrack.js",
       "tags": [
-        "cesiumExamples",
-        "application"
+        "Cesium",
+        "Cesium Viewer",
+        "实体(Entity)",
+        "地形(Terrain)",
+        "影像图层"
       ],
       "runner": "vue",
       "globals": {

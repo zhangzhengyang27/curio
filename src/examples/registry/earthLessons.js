@@ -9,12 +9,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "球面国家边界线",
-      "description": "球面国家边界线",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/05-country-borders/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "05-country-borders"
+        "地球可视化"
       ]
     },
     {
@@ -22,12 +21,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "铁路线数据可视化",
-      "description": "铁路线数据可视化",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/09-railway-lines/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "09-railway-lines"
+        "地球可视化"
       ]
     },
     {
@@ -35,12 +33,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "全球机场标注",
-      "description": "全球机场标注",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/11-airports/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "11-airports"
+        "地球可视化"
       ]
     },
     {
@@ -48,12 +45,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "新闻热点标注",
-      "description": "新闻热点标注",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/13-hotnews/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "13-hotnews"
+        "地球可视化"
       ]
     },
     {
@@ -61,12 +57,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "国家 GDP 颜色可视化",
-      "description": "国家 GDP 颜色可视化",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/22-gdp-color/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "22-gdp-color"
+        "地球可视化"
       ]
     },
     {
@@ -74,12 +69,11 @@ export default {
       "category": "earth-lessons",
       "categoryLabel": "地球可视化教程",
       "title": "地球陆地网格点阵特效",
-      "description": "地球陆地网格点阵特效",
+      "description": "这是一个基于 Cesium / Three.js 的示例。通过标准渲染流程呈现。",
       "entry": "/external-examples/earth-lessons/23-land-grid/index.js",
       "runner": "vue",
       "tags": [
-        "earth-lessons",
-        "23-land-grid"
+        "地球可视化"
       ]
     }
   ]

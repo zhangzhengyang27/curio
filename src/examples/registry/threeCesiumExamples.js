@@ -8,13 +8,12 @@ export default {
       "category": "threeExamples/other",
       "title": "测试",
       "titleEn": "test",
-      "description": "测试",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/other/test.js",
       "tags": [
-        "threeExamples",
-        "other"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -27,13 +26,16 @@ export default {
       "category": "threeExamples/other",
       "title": "分级地图",
       "titleEn": "Area Map",
-      "description": "分级地图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、线条/线框、射线拾取交互、CSS2D渲染 等 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/other/areaMap.js",
       "tags": [
-        "threeExamples",
-        "other"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "线条/线框",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -46,13 +48,16 @@ export default {
       "category": "threeExamples/application",
       "title": "2025",
       "titleEn": "2025 Year",
-      "description": "2025",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、着色器后处理、WebGPU后处理、线条/线框、环境反射(PBR) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/2025Year.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/2025Year.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "后处理管线",
+        "着色器后处理",
+        "WebGPU后处理",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -65,14 +70,15 @@ export default {
       "category": "threeExamples/application",
       "title": "1000stars留念",
       "titleEn": "1000stars",
-      "description": "1000stars留念",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 线框模式、雾化、地形(Terrain) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/700stars.jpg",
       "tag": "tag: TEXTS['共享'] + '-rgb(198,0,0)'",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/700stars.js",
       "tags": [
-        "threeExamples",
-        "application",
-        "tag: TEXTS['共享'] + '-rgb(198,0,0)'"
+        "Three.js+Cesium",
+        "线框模式",
+        "雾化",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -85,13 +91,16 @@ export default {
       "category": "threeExamples/application",
       "title": "优雅永不过时",
       "titleEn": "Elegant Always",
-      "description": "优雅永不过时",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、OBJ模型加载、纹理加载、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/z2586300277.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/z2586300277.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "OBJ模型加载",
+        "纹理加载",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -104,13 +113,16 @@ export default {
       "category": "threeExamples/application",
       "title": "魔法阵",
       "titleEn": "Magic Circle",
-      "description": "魔法阵",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、粒子/点云、纹理加载、实时阴影、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/magicCircle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/magicCircle.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "轨道控制",
+        "粒子/点云",
+        "纹理加载",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -123,13 +135,15 @@ export default {
       "category": "threeExamples/application",
       "title": "代码云",
       "titleEn": "Code Cloud",
-      "description": "代码云",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/codeCloud.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/codeCloud.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -142,13 +156,16 @@ export default {
       "category": "threeExamples/application",
       "title": "鬼屋",
       "titleEn": "Ghost House",
-      "description": "鬼屋",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、GUI调试面板、雾化、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/ghostHouse.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/ghostHouse.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载",
+        "GUI调试面板",
+        "雾化",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -161,13 +178,12 @@ export default {
       "category": "threeExamples/application",
       "title": "Canvas贴图",
       "titleEn": "Canvas Texture",
-      "description": "Canvas贴图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/canvasTexture.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/canvasTexture.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -180,13 +196,13 @@ export default {
       "category": "threeExamples/application",
       "title": "贴图飞线",
       "titleEn": "Flow Line",
-      "description": "贴图飞线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/flowLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/flowLine.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -199,13 +215,15 @@ export default {
       "category": "threeExamples/application",
       "title": "飞线效果",
       "titleEn": "Fly Line",
-      "description": "飞线效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/flyLine.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -218,13 +236,15 @@ export default {
       "category": "threeExamples/application",
       "title": "管道流动",
       "titleEn": "Pipe Flow",
-      "description": "管道流动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、线条/线框、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/pipeFlow.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/pipeFlow.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载",
+        "线条/线框",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -237,13 +257,16 @@ export default {
       "category": "threeExamples/application",
       "title": "建筑线条",
       "titleEn": "Building Line",
-      "description": "建筑线条",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、线条/线框、天空盒、立方体/全景环境 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/buildingLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/buildingLine.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "线条/线框",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -256,13 +279,16 @@ export default {
       "category": "threeExamples/application",
       "title": "模型视频材质",
       "titleEn": "Video Model",
-      "description": "模型视频材质",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、视频纹理、立方体/全景环境 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/videoModel.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/videoModel.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "视频纹理"
       ],
       "runner": "vue",
       "globals": {
@@ -275,13 +301,13 @@ export default {
       "category": "threeExamples/application",
       "title": "精灵文字",
       "titleEn": "Sprite Text",
-      "description": "精灵文字",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/spriteText.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/spriteText.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -294,13 +320,16 @@ export default {
       "category": "threeExamples/application",
       "title": "发散飞线",
       "titleEn": "Diffuse Line",
-      "description": "发散飞线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/diffuseLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/diffuseLine.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -313,13 +342,13 @@ export default {
       "category": "threeExamples/application",
       "title": "灯罩",
       "titleEn": "Lampshade",
-      "description": "灯罩",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/lampshade.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/lampshade.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -332,13 +361,16 @@ export default {
       "category": "threeExamples/application",
       "title": "烟雾效果",
       "titleEn": "Smoke Air",
-      "description": "烟雾效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、WebXR沉浸、KML 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/smokeAir.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "WebXR沉浸",
+        "KML"
       ],
       "runner": "vue",
       "globals": {
@@ -351,13 +383,14 @@ export default {
       "category": "threeExamples/application",
       "title": "亮光标记",
       "titleEn": "Light Icon",
-      "description": "亮光标记",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/lightIcon.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/lightIcon.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -370,13 +403,13 @@ export default {
       "category": "threeExamples/application",
       "title": "简单3d拓扑图",
       "titleEn": "3D Topology",
-      "description": "简单3d拓扑图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/topology.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/topology.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -389,13 +422,13 @@ export default {
       "category": "threeExamples/application",
       "title": "3D饼图",
       "titleEn": "3D Pie",
-      "description": "3D饼图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 3D文字 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/pieCharts.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/pieCharts.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "3D文字"
       ],
       "runner": "vue",
       "globals": {
@@ -408,13 +441,13 @@ export default {
       "category": "threeExamples/application",
       "title": "绘制面",
       "titleEn": "Draw Face",
-      "description": "绘制面",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/drawFace.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/drawFace.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -427,13 +460,16 @@ export default {
       "category": "threeExamples/application",
       "title": "道路流光",
       "titleEn": "Road Shader",
-      "description": "道路流光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、输出合成、自定义GLSL着色器、WebGPU后处理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/roadShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/roadShader.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "后处理管线",
+        "输出合成",
+        "自定义GLSL着色器",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -446,13 +482,16 @@ export default {
       "category": "threeExamples/application",
       "title": "测量",
       "titleEn": "Line Measure",
-      "description": "测量",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 变换控制(Gizmo)、粒子/点云、线条/线框、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/lineMeasure.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/lineMeasure.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "变换控制(Gizmo)",
+        "粒子/点云",
+        "线条/线框",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -465,13 +504,14 @@ export default {
       "category": "threeExamples/application",
       "title": "球体文字",
       "titleEn": "Text Sphere",
-      "description": "球体文字",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 3D文字、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/textSphere.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/textSphere.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "3D文字",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -484,13 +524,16 @@ export default {
       "category": "threeExamples/application",
       "title": "咖啡",
       "titleEn": "Coffee Mug",
-      "description": "咖啡",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GLTF模型加载、纹理加载、GUI调试面板、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/coffeeMug.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/coffeeMug.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GLTF模型加载",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -503,13 +546,14 @@ export default {
       "category": "threeExamples/application",
       "title": "光柱",
       "titleEn": "Light Bar",
-      "description": "光柱",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/lightBar.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/lightBar.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -522,13 +566,13 @@ export default {
       "category": "threeExamples/application",
       "title": "贴图网格地面",
       "titleEn": "Grid Floor",
-      "description": "贴图网格地面",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/gridFloor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/gridFloor.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -541,13 +585,13 @@ export default {
       "category": "threeExamples/application",
       "title": "花瓣雨",
       "titleEn": "Flower Rain",
-      "description": "花瓣雨",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/flowerRain.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/flowerRain.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -560,13 +604,16 @@ export default {
       "category": "threeExamples/application",
       "title": "第一人称房屋",
       "titleEn": "House Scene",
-      "description": "第一人称房屋",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 第一人称控制、FBX模型加载、纹理加载、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/houseScene.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/houseScene.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "第一人称控制",
+        "FBX模型加载",
+        "纹理加载",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -579,13 +626,14 @@ export default {
       "category": "threeExamples/application",
       "title": "扩散半球",
       "titleEn": "3D Circle",
-      "description": "扩散半球",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、纹理加载 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/3DCircle.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "轨道控制",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -598,13 +646,15 @@ export default {
       "category": "threeExamples/application",
       "title": "新年快乐",
       "titleEn": "Happy Year",
-      "description": "新年快乐",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/happyNewYear.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/happyNewYear.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -617,13 +667,15 @@ export default {
       "category": "threeExamples/application",
       "title": "风吹动画",
       "titleEn": "Wind Move",
-      "description": "风吹动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/windMove.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/windMove.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GLTF模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -636,13 +688,13 @@ export default {
       "category": "threeExamples/application",
       "title": "图片移动",
       "titleEn": "Image Move",
-      "description": "图片移动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/imageMove.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/imageMove.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -655,13 +707,14 @@ export default {
       "category": "threeExamples/application",
       "title": "VR 全景视频",
       "titleEn": "VR Video",
-      "description": "VR 全景视频",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 WebXR沉浸、视频纹理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/vrVideo.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/vrVideo.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "WebXR沉浸",
+        "视频纹理"
       ],
       "runner": "vue",
       "globals": {
@@ -674,13 +727,13 @@ export default {
       "category": "threeExamples/application",
       "title": "自定义网格",
       "titleEn": "Custom Grid",
-      "description": "自定义网格",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/customGrid.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/customGrid.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -693,13 +746,16 @@ export default {
       "category": "threeExamples/application",
       "title": "表情",
       "titleEn": "Face Mesh",
-      "description": "表情",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、立方体/全景环境、环境反射(PBR)、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/faceMesh.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/faceMesh.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "纹理加载",
+        "立方体/全景环境",
+        "环境反射(PBR)",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -712,13 +768,15 @@ export default {
       "category": "threeExamples/application",
       "title": "流动围栏",
       "titleEn": "Sport Fence",
-      "description": "流动围栏",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/sportFence.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/sportFence.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -731,13 +789,13 @@ export default {
       "category": "threeExamples/application",
       "title": "等值线",
       "titleEn": "Isoline",
-      "description": "等值线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 地形(Terrain) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/isoline.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/isoline.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "地形(Terrain)"
       ],
       "runner": "vue",
       "globals": {
@@ -750,13 +808,12 @@ export default {
       "category": "threeExamples/application",
       "title": "管道表面运动",
       "titleEn": "Flow Tube",
-      "description": "管道表面运动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/flowTube.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/flowTube.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -769,13 +826,13 @@ export default {
       "category": "threeExamples/application",
       "title": "视频碎片",
       "titleEn": "Video Effect",
-      "description": "视频碎片",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 视频纹理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/videoEffect.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/videoEffect.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "视频纹理"
       ],
       "runner": "vue",
       "globals": {
@@ -788,13 +845,15 @@ export default {
       "category": "threeExamples/application",
       "title": "绘制围栏",
       "titleEn": "Draw Fence",
-      "description": "绘制围栏",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/drawFence.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/drawFence.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -807,13 +866,12 @@ export default {
       "category": "threeExamples/application",
       "title": "朋克风",
       "titleEn": "Style Punk",
-      "description": "朋克风",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/punk.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/punk.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -826,13 +884,12 @@ export default {
       "category": "threeExamples/application",
       "title": "雷达扫描",
       "titleEn": "Radar Scan",
-      "description": "雷达扫描",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/radarScan.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/radarScan.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -845,13 +902,14 @@ export default {
       "category": "threeExamples/application",
       "title": "生成模型底座",
       "titleEn": "Model Base",
-      "description": "生成模型底座",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/model_base.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/model_base.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -864,13 +922,16 @@ export default {
       "category": "threeExamples/application",
       "title": "圆锥网格",
       "titleEn": "Cone Mesh",
-      "description": "圆锥网格",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、WebGPU后处理、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/coneMesh.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/coneMesh.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -883,13 +944,13 @@ export default {
       "category": "threeExamples/application",
       "title": "视频地板",
       "titleEn": "Video Floor",
-      "description": "视频地板",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 视频纹理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/videoFloor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/videoFloor.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "视频纹理"
       ],
       "runner": "vue",
       "globals": {
@@ -902,13 +963,15 @@ export default {
       "category": "threeExamples/application",
       "title": "下雨效果",
       "titleEn": "Rain Roof",
-      "description": "下雨效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/rainRoof.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/rainRoof.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -921,13 +984,16 @@ export default {
       "category": "threeExamples/application",
       "title": "采样波",
       "titleEn": "Samplex Wave",
-      "description": "采样波",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、WebGPU后处理、粒子/点云、射线拾取交互 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/samplexWave.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/samplexWave.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
@@ -940,13 +1006,14 @@ export default {
       "category": "threeExamples/application",
       "title": "精灵火花",
       "titleEn": "Tween Fire",
-      "description": "精灵火花",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/tweenFire.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/tweenFire.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -959,13 +1026,16 @@ export default {
       "category": "threeExamples/application",
       "title": "模型热力图",
       "titleEn": "Model Heatmap",
-      "description": "模型热力图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/modelHeatmap.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/modelHeatmap.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GLTF模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -978,13 +1048,16 @@ export default {
       "category": "threeExamples/application",
       "title": "几何合并",
       "titleEn": "Geometry Merge",
-      "description": "几何合并",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、立方体/全景环境 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/geometryMerge.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/geometryMerge.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -997,13 +1070,14 @@ export default {
       "category": "threeExamples/application",
       "title": "测量",
       "titleEn": "Measurement",
-      "description": "测量",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/measurement.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/measurement.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -1016,14 +1090,13 @@ export default {
       "category": "threeExamples/application",
       "title": "时间轴动画",
       "titleEn": "Gsap TimeLine",
-      "description": "时间轴动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/gsapTimeLine.jpg",
       "tag": "GSAP",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/gsapTimeLine.js",
       "tags": [
-        "threeExamples",
-        "application",
-        "GSAP"
+        "Three.js+Cesium",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -1036,13 +1109,15 @@ export default {
       "category": "threeExamples/application",
       "title": "模型边框",
       "titleEn": "Model Border",
-      "description": "模型边框",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、线条/线框、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/modelBorder.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/modelBorder.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "线条/线框",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -1055,13 +1130,16 @@ export default {
       "category": "threeExamples/application",
       "title": "模型粒子化",
       "titleEn": "Model Particle",
-      "description": "模型粒子化",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、GLTF模型加载、纹理加载、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/modelParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/modelParticle.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "GLTF模型加载",
+        "纹理加载",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -1074,13 +1152,16 @@ export default {
       "category": "threeExamples/application",
       "title": "动态管道",
       "titleEn": "Dynamic Tube",
-      "description": "动态管道",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、WebGPU后处理、粒子/点云、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/dynamicTube.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/dynamicTube.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
@@ -1093,13 +1174,14 @@ export default {
       "category": "threeExamples/application",
       "title": "网格材质",
       "titleEn": "Gird Material",
-      "description": "网格材质",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/girdMaterial.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/girdMaterial.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1112,13 +1194,16 @@ export default {
       "category": "threeExamples/application",
       "title": "跳跃动画",
       "titleEn": "Jump Animate",
-      "description": "跳跃动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/jumpAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/jumpAnimate.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1131,13 +1216,16 @@ export default {
       "category": "threeExamples/application",
       "title": "点云第一人称漫游,碰撞检测",
       "titleEn": "Point Cloud FPS Octree",
-      "description": "点云第一人称漫游,碰撞检测",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 指针锁定(FPS)控制、粒子/点云、线条/线框、射线拾取交互、八叉树碰撞 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/pointCloudFpsOctree.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/pointCloudFpsOctree.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "指针锁定(FPS)控制",
+        "粒子/点云",
+        "线条/线框",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -1150,13 +1238,16 @@ export default {
       "category": "threeExamples/application",
       "title": "风力涡轮机尾迹",
       "titleEn": "Wind Turbine Wake",
-      "description": "风力涡轮机尾迹",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、水面模拟、雾化、实时阴影 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/windTurbineWake.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/windTurbineWake.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "水面模拟",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -1169,14 +1260,13 @@ export default {
       "category": "threeExamples/application",
       "title": "动画合集",
       "titleEn": "GSAP",
-      "description": "动画合集",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/gsapCollection.jpg",
       "tag": "GSAP",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/gsapCollection.js",
       "tags": [
-        "threeExamples",
-        "application",
-        "GSAP"
+        "Three.js+Cesium",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -1189,13 +1279,16 @@ export default {
       "category": "threeExamples/application",
       "title": "第一人称漫游控制",
       "titleEn": "Person Move",
-      "description": "第一人称漫游控制",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 指针锁定(FPS)控制、FBX模型加载、纹理加载、天空盒、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/application/pointLockControls.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/application/pointLockControls.js",
       "tags": [
-        "threeExamples",
-        "application"
+        "Three.js+Cesium",
+        "指针锁定(FPS)控制",
+        "FBX模型加载",
+        "纹理加载",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1208,13 +1301,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "城市光效",
       "titleEn": "City Effect",
-      "description": "城市光效",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 FBX模型加载、纹理加载、线条/线框、天空盒、立方体/全景环境 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityEffect.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityEffect.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "FBX模型加载",
+        "纹理加载",
+        "线条/线框",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1227,13 +1323,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "草地着色器",
       "titleEn": "Grass Shader",
-      "description": "草地着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、天空盒、立方体/全景环境 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/grassShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/grassShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "天空盒",
+        "立方体/全景环境"
       ],
       "runner": "vue",
       "globals": {
@@ -1246,13 +1345,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "音乐可视化",
       "titleEn": "Audio visual",
-      "description": "音乐可视化",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、空间音频(WebAudio)、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/audioSolutions.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/audioSolutions.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "空间音频(WebAudio)",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -1265,13 +1366,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "城市混合扫光",
       "titleEn": "City Blend",
-      "description": "城市混合扫光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 FBX模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityBlendLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityBlendLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "FBX模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1284,13 +1385,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "海面",
       "titleEn": "Ocean Shader",
-      "description": "海面",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、水面模拟、天空盒、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/oceanShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/oceanShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "水面模拟",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1303,13 +1407,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "中国旗帜",
       "titleEn": "China Flag",
-      "description": "中国旗帜",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/chinaFlag.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/chinaFlag.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1322,13 +1427,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "圆波扫光",
       "titleEn": "Circle Wave",
-      "description": "圆波扫光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/circleWave.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/circleWave.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1341,13 +1449,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "围墙着色器",
       "titleEn": "Fence Wall",
-      "description": "围墙着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/fenceWall.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/fenceWall.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1360,13 +1468,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "透明渐变",
       "titleEn": "Trans Grad",
-      "description": "透明渐变",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、天空盒、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/transparentGradient.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/transparentGradient.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1379,13 +1490,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "围栏着色器",
       "titleEn": "Fence Shader",
-      "description": "围栏着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/fenceShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/fenceShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1398,13 +1510,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "爱心",
       "titleEn": "Love Shader",
-      "description": "爱心",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/loveShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/loveShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1417,13 +1531,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "城市混合Shader",
       "titleEn": "CityMixShader",
-      "description": "城市混合Shader",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 FBX模型加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityMixShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityMixShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "FBX模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1436,13 +1551,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "科技风地面",
       "titleEn": "TachnologyFloor",
-      "description": "科技风地面",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、雾化、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/tachnologyFloor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/tachnologyFloor.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "雾化",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1455,13 +1573,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "three.js Logo",
       "titleEn": "Three Logo",
-      "description": "three.js Logo",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/threeLogo.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/threeLogo.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1474,13 +1594,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "波涛海浪",
       "titleEn": "move Sea",
-      "description": "波涛海浪",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、水面模拟、GUI调试面板、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/raningSea.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/raningSea.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "水面模拟",
+        "GUI调试面板",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -1493,13 +1616,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "警告信息",
       "titleEn": "Warn Info",
-      "description": "警告信息",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GLTF模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/warnInfo.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/warnInfo.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GLTF模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1512,13 +1636,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "点星感谢",
       "titleEn": "Text Star",
-      "description": "点星感谢",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨迹球控制、自定义GLSL着色器、3D文字、线框模式、网格简化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/textStarShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/textStarShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "轨迹球控制",
+        "自定义GLSL着色器",
+        "3D文字",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1531,13 +1658,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "智慧城市扫光",
       "titleEn": "City Move",
-      "description": "智慧城市扫光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、FBX模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityMoveLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityMoveLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "FBX模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1550,13 +1678,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "城市光影",
       "titleEn": "City Light",
-      "description": "城市光影",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、FBX模型加载、Draco压缩、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "FBX模型加载",
+        "Draco压缩",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -1569,13 +1700,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "音乐舞动",
       "titleEn": "Audio Dance",
-      "description": "音乐舞动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板、空间音频(WebAudio) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/audioDance.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/audioDance.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板",
+        "空间音频(WebAudio)"
       ],
       "runner": "vue",
       "globals": {
@@ -1588,13 +1721,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "着色器天空",
       "titleEn": "Shader Sky",
-      "description": "着色器天空",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、天空盒 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/shaderSky.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/shaderSky.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1607,13 +1741,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "模型混合着色器",
       "titleEn": "Model Blend",
-      "description": "模型混合着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/modelBlendShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/modelBlendShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -1626,13 +1761,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "平面扫描",
       "titleEn": "Plane Scan",
-      "description": "平面扫描",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/planeScan.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/planeScan.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1645,13 +1780,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "城市线条",
       "titleEn": "City Line",
-      "description": "城市线条",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、FBX模型加载、线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cityLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cityLine.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "FBX模型加载",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -1664,13 +1801,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "扩散圆墙",
       "titleEn": "Wall Shader",
-      "description": "扩散圆墙",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/wallShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/wallShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1683,13 +1820,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "雷达着色器",
       "titleEn": "Radar Shader",
-      "description": "雷达着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/radarShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/radarShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1702,13 +1839,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "蜡烛",
       "titleEn": "Candle Shader",
-      "description": "蜡烛",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/candleShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/candleShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -1721,13 +1861,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "环形着色器",
       "titleEn": "Ring Shader",
-      "description": "环形着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/ringShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/ringShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1740,13 +1880,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "圆泡吸附",
       "titleEn": "Smoke Circle",
-      "description": "圆泡吸附",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 雾化、实时阴影、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/smokeCircle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/smokeCircle.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "雾化",
+        "实时阴影",
+        "图元(Primitive)"
       ],
       "runner": "vue",
       "globals": {
@@ -1759,13 +1901,12 @@ export default {
       "category": "threeExamples/shader",
       "title": "雷达扫描",
       "titleEn": "Radar Scan",
-      "description": "雷达扫描",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/radarScan.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/radarScan.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -1778,13 +1919,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "颗粒图像",
       "titleEn": "Image Part",
-      "description": "颗粒图像",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/imageParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/imageParticle.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -1797,13 +1938,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "高斯模糊",
       "titleEn": "Gaussian Blur",
-      "description": "高斯模糊",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/gaussianBlur.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/gaussianBlur.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1816,13 +1959,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "网格着色器",
       "titleEn": "Grid Shader",
-      "description": "网格着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/gridShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/gridShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1835,13 +1978,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "罗盘",
       "titleEn": "Compass Shader",
-      "description": "罗盘",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/compassShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/compassShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1854,13 +1997,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "半圆",
       "titleEn": "Half Circle",
-      "description": "半圆",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/halfCircle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/halfCircle.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1873,13 +2016,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "扭曲",
       "titleEn": "Vortex Shader",
-      "description": "扭曲",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/vortexShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/vortexShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1892,13 +2037,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "环彩虹着色器",
       "titleEn": "Rings Shader",
-      "description": "环彩虹着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/ringsShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/ringsShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1911,13 +2056,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "视频着色器",
       "titleEn": "Video Shader",
-      "description": "视频着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板、视频纹理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/videoShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/videoShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板",
+        "视频纹理"
       ],
       "runner": "vue",
       "globals": {
@@ -1930,13 +2077,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "蒸汽波太阳",
       "titleEn": "Steam Sun",
-      "description": "蒸汽波太阳",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/steamWaveSun.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/steamWaveSun.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -1949,13 +2096,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "毛玻璃",
       "titleEn": "Groundglass",
-      "description": "毛玻璃",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/groundglass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/groundglass.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -1968,13 +2117,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "无限网格",
       "titleEn": "Infinite Grid",
-      "description": "无限网格",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、天空盒 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/infiniteGrid.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/infiniteGrid.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -1987,13 +2137,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "蛛网箱子",
       "titleEn": "Cobweb Box",
-      "description": "蛛网箱子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cobwebBox.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cobwebBox.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2006,13 +2156,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "跳动的心",
       "titleEn": "Jump Heart",
-      "description": "跳动的心",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/jumpHeart.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/jumpHeart.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2025,13 +2175,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "栅格网格",
       "titleEn": "Raster Grid",
-      "description": "栅格网格",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/rasterGrid.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/rasterGrid.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2044,13 +2194,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "流光",
       "titleEn": "Flow Light",
-      "description": "流光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、输出合成、WebGPU后处理、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/flowLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/flowLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "输出合成",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -2063,13 +2216,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "灰度",
       "titleEn": "Gray Shader",
-      "description": "灰度",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/grayShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/grayShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2082,13 +2236,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "图像波动",
       "titleEn": "Wave Shader",
-      "description": "图像波动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/waveShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/waveShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2101,13 +2256,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "溶解",
       "titleEn": "Dissolve",
-      "description": "溶解",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/dissolve.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2120,13 +2277,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "切换ShaderToy",
       "titleEn": "shaderToy",
-      "description": "切换ShaderToy",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/changeShaderToy.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/changeShaderToy.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2139,13 +2297,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "波浪效果",
       "titleEn": "Water Effect",
-      "description": "波浪效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/waterA.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/waterA.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2158,13 +2317,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "浮雕图像",
       "titleEn": "Relief Image",
-      "description": "浮雕图像",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/reliefImage.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/reliefImage.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2177,13 +2338,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "花",
       "titleEn": "Flower Shader",
-      "description": "花",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板、线框模式、雾化 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/flowerShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/flowerShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2196,13 +2360,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "溶解动画",
       "titleEn": "Dissolve",
-      "description": "溶解动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/dissolveAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/dissolveAnimate.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2215,13 +2380,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "图片抖动",
       "titleEn": "Image Shake",
-      "description": "图片抖动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨迹球控制、自定义GLSL着色器、粒子/点云 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/imageShake.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/imageShake.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "轨迹球控制",
+        "自定义GLSL着色器",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
@@ -2234,13 +2401,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "心",
       "titleEn": "Heart Shader",
-      "description": "心",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、自定义GLSL着色器、WebGPU后处理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/heartShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/heartShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "自定义GLSL着色器",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -2253,13 +2423,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "方块着色器",
       "titleEn": "Shader Block",
-      "description": "方块着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/shaderBlock.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/shaderBlock.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2272,13 +2442,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "一团揉动",
       "titleEn": "Blob Shader",
-      "description": "一团揉动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板、实时阴影、图元(Primitive) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/blobShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/blobShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -2291,13 +2464,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "旋转的圆",
       "titleEn": "Circle Rotate",
-      "description": "旋转的圆",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/circleRotate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/circleRotate.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2310,13 +2483,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "着色器光效",
       "titleEn": "Shader Light",
-      "description": "着色器光效",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/shaderLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/shaderLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2329,13 +2503,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "白云",
       "titleEn": "White Cloud",
-      "description": "白云",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GLTF模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/whiteCloud.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/whiteCloud.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GLTF模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2348,13 +2523,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "水天一色",
       "titleEn": "Water Sky",
-      "description": "水天一色",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、水面模拟、天空盒 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/waterSky.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/waterSky.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "水面模拟",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -2367,13 +2544,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "天空云",
       "titleEn": "Cloud Shader",
-      "description": "天空云",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、实例化(Instancing)、纹理加载、GUI调试面板、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cloudShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cloudShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "实例化(Instancing)",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2386,13 +2566,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "乌云",
       "titleEn": "Dark Clouds",
-      "description": "乌云",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/darkClouds.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/darkClouds.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2405,13 +2585,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "细胞",
       "titleEn": "Cell Shader",
-      "description": "细胞",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/cellShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/cellShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2424,13 +2604,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "蘑菇",
       "titleEn": "Mushroom",
-      "description": "蘑菇",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/mushroom.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/mushroom.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2443,13 +2623,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "马赛克",
       "titleEn": "Mosaic Shader",
-      "description": "马赛克",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/mosaicShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/mosaicShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2462,13 +2644,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "着色器行星",
       "titleEn": "Shader Planet",
-      "description": "着色器行星",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板、线框模式、地形(Terrain) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/shader_planet.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/shader_planet.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2481,13 +2666,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "魔幻山体",
       "titleEn": "Contour",
-      "description": "魔幻山体",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/contour.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/contour.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -2500,13 +2686,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "柔光",
       "titleEn": "Soft Light",
-      "description": "柔光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/softLight.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/softLight.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2519,13 +2705,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "地球扫描",
       "titleEn": "Earth Scan",
-      "description": "地球扫描",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/earthScan.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/earthScan.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2538,13 +2726,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "波扫描",
       "titleEn": "Wave Scan",
-      "description": "波扫描",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/waveScan.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/waveScan.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2557,13 +2745,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "内发光",
       "titleEn": "Inner Glow",
-      "description": "内发光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/innerGlow.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/innerGlow.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2576,13 +2764,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "火焰",
       "titleEn": "Fire Shader",
-      "description": "火焰",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/fireShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/fireShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2595,13 +2783,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "发散着色器",
       "titleEn": "Emit Shader",
-      "description": "发散着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/emitShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/emitShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2614,13 +2802,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "幻影花烟",
       "titleEn": "Flower Smoke",
-      "description": "幻影花烟",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/ephemeralFlower.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/ephemeralFlower.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2633,13 +2822,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "鱼",
       "titleEn": "Fish",
-      "description": "鱼",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/fishShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/fishShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2652,13 +2842,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "能量球",
       "titleEn": "Energy Ball",
-      "description": "能量球",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/energyBallShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/energyBallShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2671,13 +2861,16 @@ export default {
       "category": "threeExamples/shader",
       "title": "网格地板",
       "titleEn": "Gird Floor",
-      "description": "网格地板",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、天空盒、GUI调试面板、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/girdFloor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/girdFloor.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "天空盒",
+        "GUI调试面板",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -2690,13 +2883,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "全息投影",
       "titleEn": "Hologram",
-      "description": "全息投影",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GLTF模型加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/hologram.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/hologram.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GLTF模型加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2709,13 +2904,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "燃烧烟雾",
       "titleEn": "Smoke",
-      "description": "燃烧烟雾",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载、WebXR沉浸 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/smoke.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/smoke.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载",
+        "WebXR沉浸"
       ],
       "runner": "vue",
       "globals": {
@@ -2728,13 +2925,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "火焰材质",
       "titleEn": "Fire Material",
-      "description": "火焰材质",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/fireMaterial.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/fireMaterial.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2745,15 +2944,15 @@ export default {
     {
       "id": "wifiShader",
       "category": "threeExamples/shader",
-      "title": "WiFi",
+      "title": "着色器",
       "titleEn": "WiFi Shader",
-      "description": "WiFi",
+      "description": "这是一个基于 Three.js / Cesium 的示例，演示着色器。运用了 实例化(Instancing) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/wifiShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/wifiShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "实例化(Instancing)"
       ],
       "runner": "vue",
       "globals": {
@@ -2766,13 +2965,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "建筑渐变",
       "titleEn": "Building Gradient",
-      "description": "建筑渐变",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GLTF模型加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/buildGradient.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/buildGradient.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GLTF模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2785,13 +2986,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "冰面",
       "titleEn": "Ice Floor",
-      "description": "冰面",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/iceFloor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/iceFloor.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -2804,13 +3006,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "黑洞",
       "titleEn": "Black Hole",
-      "description": "黑洞",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、WebGPU后处理、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/blackhole.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/blackhole.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "WebGPU后处理",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2823,13 +3027,14 @@ export default {
       "category": "threeExamples/shader",
       "title": "等高线",
       "titleEn": "Contour Line",
-      "description": "等高线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/contourLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/contourLine.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2842,13 +3047,13 @@ export default {
       "category": "threeExamples/shader",
       "title": "红玫瑰",
       "titleEn": "Red Rose",
-      "description": "红玫瑰",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/redRose.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -2861,13 +3066,15 @@ export default {
       "category": "threeExamples/shader",
       "title": "热力图",
       "titleEn": "Heatmap Shader",
-      "description": "热力图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/heatmapShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/shader/heatmapShader.js",
       "tags": [
-        "threeExamples",
-        "shader"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2880,13 +3087,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "优雅永不过时",
       "titleEn": "Elegant Always",
-      "description": "优雅永不过时",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、OBJ模型加载、纹理加载、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/z2586300277.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/z2586300277.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "OBJ模型加载",
+        "纹理加载",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2899,13 +3109,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子泡泡",
       "titleEn": "Bubble",
-      "description": "粒子泡泡",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、自定义GLSL着色器、粒子/点云、GUI调试面板 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/bubble.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "轨道控制",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2918,13 +3131,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子混合着色器",
       "titleEn": "BlendShader",
-      "description": "粒子混合着色器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particleBlendShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particleBlendShader.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -2937,13 +3153,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子聚散",
       "titleEn": "Scattered",
-      "description": "粒子聚散",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particleScattered.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particleScattered.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2956,13 +3174,14 @@ export default {
       "category": "threeExamples/particle",
       "title": "下雪",
       "titleEn": "Snow",
-      "description": "下雪",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/downSnow.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/downSnow.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2975,13 +3194,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "星系",
       "titleEn": "Galaxy Star",
-      "description": "星系",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/galaxyStar.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/galaxyStar.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -2994,13 +3216,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子地球",
       "titleEn": "Points Earth",
-      "description": "粒子地球",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、GUI调试面板、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/pointsEarth.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/pointsEarth.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3013,13 +3238,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "波浪粒子",
       "titleEn": "Wave",
-      "description": "波浪粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/waveParticleShader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/waveParticleShader.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3032,13 +3259,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子线条",
       "titleEn": "Line",
-      "description": "粒子线条",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、着色器后处理、WebGPU后处理、粒子/点云 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particleLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particleLine.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "着色器后处理",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -3051,13 +3281,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "球体线条",
       "titleEn": "Sphere Line",
-      "description": "球体线条",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线条/线框、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/sphereLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/sphereLine.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "线条/线框",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3070,13 +3303,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子线",
       "titleEn": "Wire",
-      "description": "粒子线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、线条/线框、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particleWire.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particleWire.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "线条/线框",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3089,13 +3325,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子烟花",
       "titleEn": "Fire",
-      "description": "粒子烟花",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particleFire.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particleFire.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3108,13 +3347,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子星空",
       "titleEn": "Starry Sky",
-      "description": "粒子星空",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、WebXR沉浸、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/starrySky.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/starrySky.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "WebXR沉浸",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -3127,13 +3368,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "科技粒子",
       "titleEn": "Technology",
-      "description": "科技粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/technologyParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/technologyParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3146,13 +3389,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "鼠标轨迹粒子",
       "titleEn": "ParticlesCursorAnimation",
-      "description": "鼠标轨迹粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载、纹理加载、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/particlesCursorAnimation.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/particlesCursorAnimation.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GLTF模型加载",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3165,13 +3411,14 @@ export default {
       "category": "threeExamples/particle",
       "title": "文字采集成粒子",
       "titleEn": "Text Particle",
-      "description": "文字采集成粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、3D文字 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/textParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/textParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "3D文字"
       ],
       "runner": "vue",
       "globals": {
@@ -3184,13 +3431,13 @@ export default {
       "category": "threeExamples/particle",
       "title": "雪花",
       "titleEn": "Snow",
-      "description": "雪花",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/snowParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/snowParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
@@ -3203,13 +3450,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "图片粒子",
       "titleEn": "Image Particle",
-      "description": "图片粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/imgParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/imgParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3222,13 +3471,12 @@ export default {
       "category": "threeExamples/particle",
       "title": "粒子火焰",
       "titleEn": "Fire Particles",
-      "description": "粒子火焰",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/fireParticles.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/fireParticles.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -3241,13 +3489,15 @@ export default {
       "category": "threeExamples/particle",
       "title": "真实火焰",
       "titleEn": "Real Fire",
-      "description": "真实火焰",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/realFire.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/realFire.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3260,13 +3510,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "地球粒子",
       "titleEn": "Globe Particle",
-      "description": "地球粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、着色器后处理、自定义GLSL着色器、WebGPU后处理 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/globeParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/globeParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "着色器后处理",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -3279,13 +3532,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "发散粒子",
       "titleEn": "Spread Partile",
-      "description": "发散粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、纹理加载、物理引擎模拟、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/spreadPartile.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/spreadPartile.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "纹理加载",
+        "物理引擎模拟"
       ],
       "runner": "vue",
       "globals": {
@@ -3298,13 +3554,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "水流粒子",
       "titleEn": "Water Leakage",
-      "description": "水流粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、物理引擎模拟、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/waterLeakage.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/waterLeakage.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "物理引擎模拟",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3317,13 +3576,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "喷泉水流",
       "titleEn": "Water Flow",
-      "description": "喷泉水流",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/waterFlowParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/waterFlowParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3336,13 +3598,16 @@ export default {
       "category": "threeExamples/particle",
       "title": "蒸汽粒子",
       "titleEn": "Steam Particle",
-      "description": "蒸汽粒子",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GUI调试面板、混合模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/steamParticle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/particle/steamParticle.js",
       "tags": [
-        "threeExamples",
-        "particle"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GUI调试面板",
+        "混合模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3355,13 +3620,16 @@ export default {
       "category": "threeExamples/game",
       "title": "终末地-登录入口",
       "titleEn": "EndField Index",
-      "description": "终末地-登录入口",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、WebGPU后处理、粒子/点云、骨骼蒙皮动画、FBX模型加载 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/game/zmdIndex.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/game/zmdIndex.js",
       "tags": [
-        "threeExamples",
-        "game"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "WebGPU后处理",
+        "粒子/点云",
+        "骨骼蒙皮动画"
       ],
       "runner": "vue",
       "globals": {
@@ -3374,13 +3642,15 @@ export default {
       "category": "threeExamples/game",
       "title": "人物虚化",
       "titleEn": "Character Blur",
-      "description": "人物虚化",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 FBX模型加载、GUI调试面板、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/game/characterBlur.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/game/characterBlur.js",
       "tags": [
-        "threeExamples",
-        "game"
+        "Three.js+Cesium",
+        "FBX模型加载",
+        "GUI调试面板",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -3393,13 +3663,14 @@ export default {
       "category": "threeExamples/game",
       "title": "终末地-据点围栏",
       "titleEn": "EndField Fence",
-      "description": "终末地-据点围栏",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/game/zmdFence.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/game/zmdFence.js",
       "tags": [
-        "threeExamples",
-        "game"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3412,13 +3683,14 @@ export default {
       "category": "threeExamples/animation",
       "title": "animejs使用",
       "titleEn": "Animejs Basic",
-      "description": "animejs使用",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/animejsBasic.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/animejsBasic.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "轨道控制",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3431,13 +3703,13 @@ export default {
       "category": "threeExamples/animation",
       "title": "gsap使用",
       "titleEn": "GSAP Basic",
-      "description": "gsap使用",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GUI调试面板 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/gsapBasic.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3450,13 +3722,13 @@ export default {
       "category": "threeExamples/animation",
       "title": "Theatrejs",
       "titleEn": "Theatre.js",
-      "description": "Theatrejs",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/Theatrejs.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/Theatrejs.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -3469,13 +3741,15 @@ export default {
       "category": "threeExamples/animation",
       "title": "裁剪动画",
       "titleEn": "Clip Animation",
-      "description": "裁剪动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、Draco压缩、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/clipAnimation.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/clipAnimation.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "Draco压缩",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3488,13 +3762,14 @@ export default {
       "category": "threeExamples/animation",
       "title": "点击第三人称移动",
       "titleEn": "Person Move",
-      "description": "点击第三人称移动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/personAnimation.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/personAnimation.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -3507,13 +3782,16 @@ export default {
       "category": "threeExamples/animation",
       "title": "第三人称移动",
       "titleEn": "Third Move",
-      "description": "第三人称移动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、立方体/全景环境、环境反射(PBR) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/personThirdMove.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/personThirdMove.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "立方体/全景环境"
       ],
       "runner": "vue",
       "globals": {
@@ -3526,13 +3804,16 @@ export default {
       "category": "threeExamples/animation",
       "title": "第一人称移动",
       "titleEn": "First Move",
-      "description": "第一人称移动",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载、FBX模型加载、物理引擎模拟 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/personFirstMove.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/personFirstMove.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "GLTF模型加载",
+        "FBX模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3545,13 +3826,16 @@ export default {
       "category": "threeExamples/animation",
       "title": "下钻动画",
       "titleEn": "Down Rotate",
-      "description": "下钻动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、粒子/点云、GLTF模型加载、线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/downRotate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/downRotate.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "轨道控制",
+        "粒子/点云",
+        "GLTF模型加载",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -3564,13 +3848,16 @@ export default {
       "category": "threeExamples/animation",
       "title": "卷曲动画",
       "titleEn": "Curl Animate",
-      "description": "卷曲动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、GUI调试面板、实时阴影、环境反射(PBR) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/curlAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/curlAnimate.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "轨道控制",
+        "GUI调试面板",
+        "实时阴影",
+        "环境反射(PBR)"
       ],
       "runner": "vue",
       "globals": {
@@ -3583,13 +3870,16 @@ export default {
       "category": "threeExamples/animation",
       "title": "巡检",
       "titleEn": "Inspection View",
-      "description": "巡检",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 指针锁定(FPS)控制、GLTF模型加载、Draco压缩、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/animation/inspectionView.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/animation/inspectionView.js",
       "tags": [
-        "threeExamples",
-        "animation"
+        "Three.js+Cesium",
+        "指针锁定(FPS)控制",
+        "GLTF模型加载",
+        "Draco压缩",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3602,13 +3892,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "模型拆解动画",
       "titleEn": "Model Unpack",
-      "description": "模型拆解动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、GLTF模型加载、Draco压缩、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelUnpack.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelUnpack.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "GLTF模型加载",
+        "Draco压缩",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3621,13 +3914,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "Mesh变换动画",
       "titleEn": "Transform Gsap",
-      "description": "Mesh变换动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、FBX模型加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/transformAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/transformAnimate.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "FBX模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3640,13 +3934,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "曲线动画",
       "titleEn": "Curve Animate",
-      "description": "曲线动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、粒子/点云、GLTF模型加载、线条/线框、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/curveAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/curveAnimate.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "粒子/点云",
+        "GLTF模型加载",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -3659,13 +3956,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "本地模型加载",
       "titleEn": "Local Model",
-      "description": "本地模型加载",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、立方体/全景环境 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/localModel.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/localModel.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -3678,13 +3978,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "人物模型动画案例",
       "titleEn": "Model Animate",
-      "description": "人物模型动画案例",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 骨骼蒙皮动画、GLTF模型加载、GUI调试面板、雾化、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelAnimation.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelAnimation.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "骨骼蒙皮动画",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -3697,13 +4000,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "gltf/fbx/obj模型加载",
       "titleEn": "Model Load",
-      "description": "gltf/fbx/obj模型加载",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、GLTF模型加载、FBX模型加载、OBJ模型加载、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelLoad.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelLoad.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "GLTF模型加载",
+        "FBX模型加载",
+        "OBJ模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3716,13 +4022,15 @@ export default {
       "category": "threeExamples/basic",
       "title": "模型阴影",
       "titleEn": "Model Shadow",
-      "description": "模型阴影",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、GUI调试面板、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelShadow.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelShadow.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -3735,14 +4043,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "天空盒",
       "titleEn": "Sky And Env",
-      "description": "天空盒",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、天空盒、立方体/全景环境、环境反射(PBR) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/skyAndEnv.jpg",
       "tag": "tag: TEXTS['skybox'] + '-#d265bb'",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/skyAndEnv.js",
       "tags": [
-        "threeExamples",
-        "basic",
-        "tag: TEXTS['skybox'] + '-#d265bb'"
+        "Three.js+Cesium",
+        "纹理加载",
+        "天空盒",
+        "立方体/全景环境",
+        "环境反射(PBR)"
       ],
       "runner": "vue",
       "globals": {
@@ -3755,13 +4065,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "相机属性",
       "titleEn": "Camera",
-      "description": "相机属性",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/cameraAttribute.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/cameraAttribute.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -3774,13 +4085,15 @@ export default {
       "category": "threeExamples/basic",
       "title": "轨道控制器",
       "titleEn": "Orbit Controls",
-      "description": "轨道控制器",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载、GUI调试面板、相机飞行 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/orbControls.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/orbControls.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "纹理加载",
+        "GUI调试面板",
+        "相机飞行"
       ],
       "runner": "vue",
       "globals": {
@@ -3793,13 +4106,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "模型天空",
       "titleEn": "Model Sky",
-      "description": "模型天空",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、天空盒 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelSky.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelSky.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -3812,13 +4126,15 @@ export default {
       "category": "threeExamples/basic",
       "title": "场景雾化",
       "titleEn": "Scene Fog",
-      "description": "场景雾化",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、GUI调试面板、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/sceneFog.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/sceneFog.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "雾化"
       ],
       "runner": "vue",
       "globals": {
@@ -3831,13 +4147,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "Opt解压(su7 模型)",
       "titleEn": "GLTF Opt",
-      "description": "Opt解压(su7 模型)",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、Meshopt优化、立方体/全景环境、环境反射(PBR) 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/gltfOptLoader.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/gltfOptLoader.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "Meshopt优化",
+        "立方体/全景环境",
+        "环境反射(PBR)"
       ],
       "runner": "vue",
       "globals": {
@@ -3850,13 +4169,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "加载动画",
       "titleEn": "Load Animate",
-      "description": "加载动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、Draco压缩 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/loadingAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/loadingAnimate.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -3869,13 +4189,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "轮廓光",
       "titleEn": "Outline Pass",
-      "description": "轮廓光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、描边高亮、输出合成、WebGPU后处理、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/outlinePass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/outlinePass.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "后处理管线",
+        "描边高亮",
+        "输出合成",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -3888,13 +4211,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "三维转屏幕坐标",
       "titleEn": "Screen Coord",
-      "description": "三维转屏幕坐标",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/screenCoord.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/screenCoord.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -3907,13 +4229,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "渐变三角形",
       "titleEn": "Triangle",
-      "description": "渐变三角形",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/gradientTriangle.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/gradientTriangle.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "线框模式"
       ],
       "runner": "vue",
       "globals": {
@@ -3926,13 +4249,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "扩散圈",
       "titleEn": "Diffusion circle",
-      "description": "扩散圈",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 纹理加载 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/扩散圈.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/扩散圈.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -3945,13 +4268,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "材质修改动画",
       "titleEn": "ChangeMaterial",
-      "description": "材质修改动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/changeMaterial.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/changeMaterial.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -3964,13 +4290,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "拖拽控制",
       "titleEn": "Transform Obj",
-      "description": "拖拽控制",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 变换控制(Gizmo)、GLTF模型加载、GUI调试面板、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/transformObject.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/transformObject.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "变换控制(Gizmo)",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -3983,13 +4312,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "变换Box3",
       "titleEn": "Transform Box3",
-      "description": "变换Box3",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 变换控制(Gizmo)、GLTF模型加载、GUI调试面板、立方体/全景环境、实时阴影 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/transformBox3.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/transformBox3.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "变换控制(Gizmo)",
+        "GLTF模型加载",
+        "GUI调试面板",
+        "立方体/全景环境"
       ],
       "runner": "vue",
       "globals": {
@@ -4002,13 +4334,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "单/多模型动画",
       "titleEn": "Model Animates",
-      "description": "单/多模型动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、GLTF模型加载、Draco压缩、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelAnimates.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelAnimates.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "GLTF模型加载",
+        "Draco压缩",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4021,13 +4356,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "GSAP动画",
       "titleEn": "GSAP Animate",
-      "description": "GSAP动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/gsapAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/gsapAnimate.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4040,13 +4375,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "精灵标签",
       "titleEn": "Sprite Text",
-      "description": "精灵标签",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/spriteTexture.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/spriteTexture.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4059,13 +4393,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "模型视图",
       "titleEn": "Model View",
-      "description": "模型视图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelView.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelView.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4078,14 +4413,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "CSS元素",
       "titleEn": "CSS Element",
-      "description": "CSS元素",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 CSS3D渲染、CSS2D渲染 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/cssElement.jpg",
       "tag": "DOM",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/cssElement.js",
       "tags": [
-        "threeExamples",
-        "basic",
-        "DOM"
+        "Three.js+Cesium",
+        "CSS3D渲染",
+        "CSS2D渲染"
       ],
       "runner": "vue",
       "globals": {
@@ -4098,13 +4433,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "DOM遮挡",
       "titleEn": "DOM Display",
-      "description": "DOM遮挡",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 射线拾取交互、CSS3D渲染 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/domDisplay.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/domDisplay.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "射线拾取交互",
+        "CSS3D渲染"
       ],
       "runner": "vue",
       "globals": {
@@ -4117,13 +4453,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "相机动画",
       "titleEn": "Camera Animate",
-      "description": "相机动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、GUI调试面板、立方体/全景环境 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/cameraAnimate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/cameraAnimate.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4136,13 +4475,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "截图",
       "titleEn": "Screen Shot",
-      "description": "截图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、WebGPU后处理、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/screenShot.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/screenShot.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4155,13 +4497,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "骨骼动画",
       "titleEn": "Skeleton Bone",
-      "description": "骨骼动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 骨骼蒙皮动画、GUI调试面板 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/skeletonBone.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "骨骼蒙皮动画",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4174,13 +4517,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "视图辅助",
       "titleEn": "View Helper",
-      "description": "视图辅助",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/viewHelper.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/viewHelper.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4193,13 +4535,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "帧率控制",
       "titleEn": "Render Frame",
-      "description": "帧率控制",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、GUI调试面板 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/renderFrame.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/renderFrame.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -4212,13 +4557,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "渲染贴图物体",
       "titleEn": "Render Target",
-      "description": "渲染贴图物体",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、GLTF模型加载、纹理加载、天空盒、立方体/全景环境 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/renderTarget.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/renderTarget.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒"
       ],
       "runner": "vue",
       "globals": {
@@ -4231,13 +4579,15 @@ export default {
       "category": "threeExamples/basic",
       "title": "场景剪切-后处理",
       "titleEn": "Scene Scissor",
-      "description": "场景剪切-后处理",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、WebGPU后处理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/sceneScissor.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/sceneScissor.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -4250,13 +4600,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "多轮廓光",
       "titleEn": "Mult Outline Pass",
-      "description": "多轮廓光",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、描边高亮、输出合成、WebGPU后处理 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/multOutlinePass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/multOutlinePass.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "后处理管线",
+        "描边高亮",
+        "输出合成",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -4269,13 +4622,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "渲染器配置",
       "titleEn": "Effect Composer",
-      "description": "渲染器配置",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、输出合成、WebGPU后处理、GLTF模型加载、Draco压缩 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/effectComposer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/effectComposer.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "后处理管线",
+        "输出合成",
+        "WebGPU后处理",
+        "GLTF模型加载"
       ],
       "runner": "vue",
       "globals": {
@@ -4288,13 +4644,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "模型导出",
       "titleEn": "Model Export",
-      "description": "模型导出",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 OBJ模型加载、纹理加载、天空盒、立方体/全景环境 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/modelExport.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/modelExport.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "OBJ模型加载",
+        "纹理加载",
+        "天空盒",
+        "立方体/全景环境"
       ],
       "runner": "vue",
       "globals": {
@@ -4307,13 +4666,16 @@ export default {
       "category": "threeExamples/basic",
       "title": "文件分片(打包zip)",
       "titleEn": "File Chunks",
-      "description": "文件分片(打包zip)",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、天空盒、Draco压缩、立方体/全景环境 等 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/fileChunks.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "天空盒",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -4326,13 +4688,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "入门",
       "titleEn": "Introduction",
-      "description": "入门",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/入门.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/入门.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4345,13 +4706,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "辅助线",
       "titleEn": "Helper Line",
-      "description": "辅助线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/辅助线.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/辅助线.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4364,13 +4724,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "光线",
       "titleEn": "Light",
-      "description": "光线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/光线.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/光线.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4383,13 +4742,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "相机控件",
       "titleEn": "Camera",
-      "description": "相机控件",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/相机控件.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/相机控件.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制"
       ],
       "runner": "vue",
       "globals": {
@@ -4402,13 +4761,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "动画",
       "titleEn": "Animation",
-      "description": "动画",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/动画.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/动画.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4421,13 +4779,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "全屏",
       "titleEn": "Fullscreen",
-      "description": "全屏",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/全屏.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/全屏.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4440,13 +4797,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "帧率",
       "titleEn": "Frame Rate",
-      "description": "帧率",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/帧率.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/帧率.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4459,13 +4815,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "阵列模型",
       "titleEn": "Array Model",
-      "description": "阵列模型",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/阵列模型.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/阵列模型.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制"
       ],
       "runner": "vue",
       "globals": {
@@ -4478,13 +4834,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "几何体",
       "titleEn": "Geometry",
-      "description": "几何体",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/几何体.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/几何体.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制"
       ],
       "runner": "vue",
       "globals": {
@@ -4497,13 +4853,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "点、线",
       "titleEn": "Points Lines",
-      "description": "点、线",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线条/线框 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/点线.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -4516,13 +4873,12 @@ export default {
       "category": "threeExamples/basic",
       "title": "网格",
       "titleEn": "Grid",
-      "description": "网格",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/网格.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/网格.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4535,13 +4891,14 @@ export default {
       "category": "threeExamples/basic",
       "title": "索引",
       "titleEn": "Index",
-      "description": "索引",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、线条/线框 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/索引.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/索引.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "线条/线框"
       ],
       "runner": "vue",
       "globals": {
@@ -4554,13 +4911,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "自带几何体顶点",
       "titleEn": "Vertices",
-      "description": "自带几何体顶点",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/自带几何体顶点.png",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/自带几何体顶点.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "轨道控制"
       ],
       "runner": "vue",
       "globals": {
@@ -4573,13 +4930,13 @@ export default {
       "category": "threeExamples/basic",
       "title": "顶点颜色",
       "titleEn": "Vertex Color",
-      "description": "顶点颜色",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/basic/顶点颜色.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/basic/顶点颜色.js",
       "tags": [
-        "threeExamples",
-        "basic"
+        "Three.js+Cesium",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
@@ -4592,13 +4949,13 @@ export default {
       "category": "threeExamples/physics",
       "title": "物理cannon使用",
       "titleEn": "Physics Mesh",
-      "description": "物理cannon使用",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 物理引擎模拟 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/physics/physicsMesh.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/physics/physicsMesh.js",
       "tags": [
-        "threeExamples",
-        "physics"
+        "Three.js+Cesium",
+        "物理引擎模拟"
       ],
       "runner": "vue",
       "globals": {
@@ -4611,13 +4968,13 @@ export default {
       "category": "threeExamples/physics",
       "title": "物理ammo使用",
       "titleEn": "Ammo Physics",
-      "description": "物理ammo使用",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 物理引擎模拟 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/physics/ammoPhysics.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/physics/ammoPhysics.js",
       "tags": [
-        "threeExamples",
-        "physics"
+        "Three.js+Cesium",
+        "物理引擎模拟"
       ],
       "runner": "vue",
       "globals": {
@@ -4630,13 +4987,14 @@ export default {
       "category": "threeExamples/physics",
       "title": "物理rapier使用",
       "titleEn": "Rapier Physics",
-      "description": "物理rapier使用",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 物理引擎模拟、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/physics/rapierPhysics.webp",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/physics/rapierPhysics.js",
       "tags": [
-        "threeExamples",
-        "physics"
+        "Three.js+Cesium",
+        "物理引擎模拟",
+        "实时阴影"
       ],
       "runner": "vue",
       "globals": {
@@ -4649,13 +5007,16 @@ export default {
       "category": "threeExamples/expand",
       "title": "加载3dtiles",
       "titleEn": "Load Tiles",
-      "description": "加载3dtiles",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、纹理加载、Draco压缩、3D Tiles 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/loadTiles.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/loadTiles.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "纹理加载",
+        "Draco压缩",
+        "3D Tiles"
       ],
       "runner": "vue",
       "globals": {
@@ -4668,13 +5029,15 @@ export default {
       "category": "threeExamples/expand",
       "title": "地理边界",
       "titleEn": "Geo Border",
-      "description": "地理边界",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、纹理加载、矢量几何 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/geoBorder.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/geoBorder.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium",
+        "粒子/点云",
+        "纹理加载",
+        "矢量几何"
       ],
       "runner": "vue",
       "globals": {
@@ -4687,14 +5050,14 @@ export default {
       "category": "threeExamples/expand",
       "title": "3D热力图",
       "titleEn": "Heatmap 3D",
-      "description": "3D热力图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/heatmap3D.jpg",
       "tag": "tag: TEXTS['normal'] + '-#e1d100'",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/heatmap3D.js",
       "tags": [
-        "threeExamples",
-        "expand",
-        "tag: TEXTS['normal'] + '-#e1d100'"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4707,13 +5070,16 @@ export default {
       "category": "threeExamples/expand",
       "title": "模型热力图",
       "titleEn": "Heatmap Model",
-      "description": "模型热力图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、OBJ模型加载、GUI调试面板 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/heatmapModel.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/heatmapModel.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium",
+        "自定义GLSL着色器",
+        "粒子/点云",
+        "OBJ模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4726,14 +5092,16 @@ export default {
       "category": "threeExamples/expand",
       "title": "模型反射效果",
       "titleEn": "Model Blend",
-      "description": "模型反射效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、自定义GLSL着色器、GLTF模型加载、Draco压缩、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/modelBlendReflector.jpg",
       "tag": "tag: TEXTS['模型反射'] + '--14'",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/modelBlendReflector.js",
       "tags": [
-        "threeExamples",
-        "expand",
-        "tag: TEXTS['模型反射'] + '--14'"
+        "Three.js+Cesium",
+        "轨道控制",
+        "自定义GLSL着色器",
+        "GLTF模型加载",
+        "Draco压缩"
       ],
       "runner": "vue",
       "globals": {
@@ -4746,13 +5114,12 @@ export default {
       "category": "threeExamples/expand",
       "title": "多浏览器窗口连接",
       "titleEn": "Mult Window",
-      "description": "多浏览器窗口连接",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/multWindowScene.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/multWindowScene.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4765,13 +5132,14 @@ export default {
       "category": "threeExamples/expand",
       "title": "Echarts结合",
       "titleEn": "Combine Echarts",
-      "description": "Echarts结合",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 GLTF模型加载、CSS3D渲染 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/combineEcharts.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/combineEcharts.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium",
+        "GLTF模型加载",
+        "CSS3D渲染"
       ],
       "runner": "vue",
       "globals": {
@@ -4784,13 +5152,12 @@ export default {
       "category": "threeExamples/expand",
       "title": "高斯溅射",
       "titleEn": "gaussianSplats3D",
-      "description": "高斯溅射",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/gaussianSplats3D.webp",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/gaussianSplats3D.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4803,13 +5170,12 @@ export default {
       "category": "threeExamples/expand",
       "title": "高斯sparkjs",
       "titleEn": "sparkjs",
-      "description": "高斯sparkjs",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/sparkjs.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/sparkjs.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4822,13 +5188,12 @@ export default {
       "category": "threeExamples/expand",
       "title": "瓦片地图",
       "titleEn": "Tiles Map",
-      "description": "瓦片地图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/tilesMap.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/tilesMap.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4841,13 +5206,12 @@ export default {
       "category": "threeExamples/expand",
       "title": "D3 svg与Three",
       "titleEn": "D3 SVG Three",
-      "description": "D3 svg与Three",
+      "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/d3Svg.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/d3Svg.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium"
       ],
       "runner": "vue",
       "globals": {
@@ -4860,13 +5224,16 @@ export default {
       "category": "threeExamples/expand",
       "title": "多视图",
       "titleEn": "Mult Views",
-      "description": "多视图",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、后处理管线、辉光(Bloom)、WebGPU后处理、GLTF模型加载 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/multViews.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/multViews.js",
       "tags": [
-        "threeExamples",
-        "expand"
+        "Three.js+Cesium",
+        "轨道控制",
+        "后处理管线",
+        "辉光(Bloom)",
+        "WebGPU后处理"
       ],
       "runner": "vue",
       "globals": {
@@ -4879,14 +5246,16 @@ export default {
       "category": "threeExamples/expand",
       "title": "模糊反射(drei转原生)",
       "titleEn": "Blur Reflect",
-      "description": "模糊反射(drei转原生)",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 WebGPU后处理、GLTF模型加载、纹理加载、GUI调试面板、实时阴影 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/expand/blurReflect.jpg",
       "tag": "tag: TEXTS['磨砂反射'] + '-#d265bb'",
       "entry": "/external-examples/three-cesium-examples/threeExamples/expand/blurReflect.js",
       "tags": [
-        "threeExamples",
-        "expand",
-        "tag: TEXTS['磨砂反射'] + '-#d265bb'"
+        "Three.js+Cesium",
+        "WebGPU后处理",
+        "GLTF模型加载",
+        "纹理加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4899,13 +5268,15 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "辉光-postprocessing",
       "titleEn": "Select Bloom",
-      "description": "辉光-postprocessing",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、WebGPU后处理、射线拾取交互 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/selectBloomPass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/selectBloomPass.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "WebGPU后处理",
+        "射线拾取交互"
       ],
       "runner": "vue",
       "globals": {
@@ -4918,13 +5289,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "自定义遮罩通道",
       "titleEn": "Custom Mask",
-      "description": "自定义遮罩通道",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、着色器后处理、WebGPU后处理、纹理加载、天空盒 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/customMaskPass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/customMaskPass.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "着色器后处理",
+        "WebGPU后处理",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -4937,13 +5311,15 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "UV图像变换",
       "titleEn": "UV Transform",
-      "description": "UV图像变换",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、WebGPU后处理、纹理加载 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/uvTransformation.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "WebGPU后处理",
+        "纹理加载"
       ],
       "runner": "vue",
       "globals": {
@@ -4956,13 +5332,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "残影效果",
       "titleEn": "Afterimage",
-      "description": "残影效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、WebGPU后处理、GLTF模型加载、GUI调试面板、雾化 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/afterimagePass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/afterimagePass.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "WebGPU后处理",
+        "GLTF模型加载",
+        "GUI调试面板"
       ],
       "runner": "vue",
       "globals": {
@@ -4975,13 +5354,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "饱和度(自定义Pass)",
       "titleEn": "Saturation",
-      "description": "饱和度(自定义Pass)",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、输出合成、着色器后处理、自定义GLSL着色器、WebGPU后处理 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/saturationPass.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/saturationPass.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "输出合成",
+        "着色器后处理",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -4994,13 +5376,13 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "边缘模糊效果",
       "titleEn": "Edge Blur",
-      "description": "边缘模糊效果",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 自定义GLSL着色器 技术。",
       "thumbnail": "",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/EdgeBlurringEffect.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -5013,13 +5395,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "官方选择辉光简化版",
       "titleEn": "Three Bloom",
-      "description": "官方选择辉光简化版",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 后处理管线、辉光(Bloom)、着色器后处理、自定义GLSL着色器、WebGPU后处理 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/threeSelectBloom.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/threeSelectBloom.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "后处理管线",
+        "辉光(Bloom)",
+        "着色器后处理",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -5032,13 +5417,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "延迟光照",
       "titleEn": "Deferred Lighting",
-      "description": "延迟光照",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、后处理管线、辉光(Bloom)、自定义GLSL着色器、WebGPU后处理 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/deferredLighting.webp",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/deferredLighting.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "轨道控制",
+        "后处理管线",
+        "辉光(Bloom)",
+        "自定义GLSL着色器"
       ],
       "runner": "vue",
       "globals": {
@@ -5051,13 +5439,16 @@ export default {
       "category": "threeExamples/effectComposer",
       "title": "场景雪",
       "titleEn": "sceneSnowEffect",
-      "description": "场景雪",
+      "description": "这是一个基于 Three.js / Cesium 的示例。运用了 轨道控制、自定义GLSL着色器、WebGPU后处理、粒子/点云、GLTF模型加载 等 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/effectComposer/sceneSnowEffect.webp",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/threeExamples/effectComposer/sceneSnowEffect.js",
       "tags": [
-        "threeExamples",
-        "effectComposer"
+        "Three.js+Cesium",
+        "轨道控制",
+        "自定义GLSL着色器",
+        "WebGPU后处理",
+        "粒子/点云"
       ],
       "runner": "vue",
       "globals": {
