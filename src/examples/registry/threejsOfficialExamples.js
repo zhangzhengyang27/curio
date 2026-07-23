@@ -9178,7 +9178,7 @@ export default {
       "title": "粒子",
       "titleEn": "three.js webgpu - particles - soft",
       "description": "这是一个基于 three.js 的示例，演示粒子。运用了 轨道控制、TSL节点着色器、纹理加载、雾化 技术。",
-      "thumbnail": "/threejs-official/screenshots/webgpu_particles_soft.jpg",
+      "thumbnail": "",
       "entry": "",
       "runner": "vue",
       "tags": [
