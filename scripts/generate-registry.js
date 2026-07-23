@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
@@ -71,25 +71,22 @@ function findLocalThumbnail(category, id) {
 
 /**
  * 读取已存在的 registry 文件，解析其中的 examples（用于「合并保护」，避免重跑时丢失手工编辑）。
- * 文件结构为 `export default {...}`，取 `export default ` 之后的 JSON 部分解析。
+ * 用动态 import() 解析，兼容 `export default {...}` 的纯 JSON 写法与 JS 对象字面量写法
+ * （如 webglExamples / graphicsExamples 等含单引号 / 无引号 key 的文件），避免 JSON.parse 抛错。
  */
-function loadExistingExamples(name) {
+async function loadExistingExamples(name) {
   const p = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.js`)
   if (!fs.existsSync(p)) return null
-  const text = fs.readFileSync(p, 'utf-8')
-  const marker = 'export default '
-  const idx = text.indexOf(marker)
-  if (idx === -1) return null
-  const jsonText = text.slice(idx + marker.length).trim()
   try {
-    const data = JSON.parse(jsonText)
-    return Array.isArray(data.examples) ? data.examples : []
+    const mod = await import(pathToFileURL(p).href)
+    const data = mod.default
+    return Array.isArray(data?.examples) ? data.examples : []
   } catch {
     return null
   }
 }
 
-function buildRegistry(name, sourceName, label, sourceKey) {
+async function buildRegistry(name, sourceName, label, sourceKey) {
   const configFile = path.join(examplesRoot, 'config', `${sourceName.replace('Examples', '-examples')}.js`)
   // threeExamples -> three-examples.js
   // cesiumExamples -> cesium-examples.js
@@ -127,7 +124,7 @@ function buildRegistry(name, sourceName, label, sourceKey) {
   let examples = Array.from(groups.values()).flatMap(g => g.examples)
 
   // 合并保护：重跑时尽量保留手工编辑过的字段，避免覆盖丢失
-  const existing = loadExistingExamples(name)
+  const existing = await loadExistingExamples(name)
   if (existing && existing.length) {
     const genKeys = new Set(examples.map(e => `${e.category}::${e.id}`))
     const byKey = new Map()
@@ -169,8 +166,10 @@ export default ${JSON.stringify(data, null, 2)}
 
 console.warn('[generate-registry] 即将覆盖并重新生成 registry 文件（仅 threeCesiumExamples.js 与 cesiumExamples.js）。重跑前请先 git diff/commit 确认，手工改动的条目会被「合并保护」尽量保留。')
 
-const threeRegistry = buildRegistry('threeCesiumExamples', 'threeExamples', 'Three.js 案例', 'three-cesium-examples')
-writeRegistry('threeCesiumExamples', threeRegistry)
+;(async () => {
+  const threeRegistry = await buildRegistry('threeCesiumExamples', 'threeExamples', 'Three.js 案例', 'three-cesium-examples')
+  writeRegistry('threeCesiumExamples', threeRegistry)
 
-const cesiumRegistry = buildRegistry('cesiumExamples', 'cesiumExamples', 'Cesium 案例', 'cesium-examples')
-writeRegistry('cesiumExamples', cesiumRegistry)
+  const cesiumRegistry = await buildRegistry('cesiumExamples', 'cesiumExamples', 'Cesium 案例', 'cesium-examples')
+  writeRegistry('cesiumExamples', cesiumRegistry)
+})()
