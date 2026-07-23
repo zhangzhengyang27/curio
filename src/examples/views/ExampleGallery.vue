@@ -147,7 +147,7 @@ const router = useRouter()
 const keyword = ref(route.query.search || '')
 const currentTech = ref('all')
 const currentSubCategory = ref('all')
-const currentPage = ref(1)
+const currentPage = ref(Number(route.query.page) || 1)
 const pageSize = 16
 
 const allExamples = computed(() => getAllExamples())
@@ -177,18 +177,20 @@ function syncQueryToState() {
   if (validTech) currentTech.value = tech
   if (validSub) currentSubCategory.value = sub
   keyword.value = search || ''
+  currentPage.value = Number(route.query.page) || 1
 }
 
 onMounted(syncQueryToState)
 watch(() => route.query, syncQueryToState, { deep: true })
 
 // 状态 -> URL：切换技术 / 分类 / 搜索时写回 query，刷新可保持、可分享、可前进后退
-watch([currentTech, currentSubCategory, keyword], () => {
+watch([currentTech, currentSubCategory, keyword, currentPage], () => {
   const query = {}
   if (currentTech.value !== 'all') query.tech = currentTech.value
   if (currentSubCategory.value !== 'all') query.sub = currentSubCategory.value
   const kw = keyword.value.trim()
   if (kw) query.search = kw
+  if (currentPage.value > 1) query.page = currentPage.value
   router.replace({ query })
 })
 
