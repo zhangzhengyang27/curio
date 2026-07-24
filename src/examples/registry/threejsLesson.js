@@ -78,20 +78,6 @@ export default {
       ]
     },
     {
-      "id": "responsiveDesign",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/responsiveDesign.jpg",
-      "category": "03-basics",
-      "categoryLabel": "基础",
-      "title": "响应式设计",
-      "description": "这是一个基于 Three.js 的基础示例。通过标准渲染流程呈现。",
-      "entry": "/external-examples/threejs-lesson/03-basics/responsiveDesign.js",
-      "runner": "vue",
-      "tags": [
-        "基础"
-      ]
-    },
-    {
       "id": "customGeo",
 
       "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/customGeo.jpg",

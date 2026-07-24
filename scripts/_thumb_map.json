@@ -225,14 +225,6 @@
   },
   {
     "source": "threejs-lesson",
-    "category": "03-basics",
-    "id": "responsiveDesign",
-    "thumbnail": "/example-thumbs/threejs-lesson/03-basics/responsiveDesign.jpg",
-    "ok": true,
-    "skipped": false
-  },
-  {
-    "source": "threejs-lesson",
     "category": "04-geometry",
     "id": "customGeo",
     "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/customGeo.jpg",

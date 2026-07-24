@@ -1902,14 +1902,14 @@ export default {
       }
     },
     {
-      "id": "radarScan",
+      "id": "radarScanShader",
       "category": "threeExamples/shader",
       "title": "雷达扫描",
       "titleEn": "Radar Scan",
       "description": "这是一个基于 Three.js / Cesium 的示例。通过标准渲染流程呈现。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/shader/radarScan.jpg",
       "tag": "",
-      "entry": "/external-examples/three-cesium-examples/threeExamples/shader/radarScan.js",
+      "entry": "/external-examples/three-cesium-examples/threeExamples/shader/radarScanShader.js",
       "tags": [
         "Three.js+Cesium"
       ],
@@ -3090,14 +3090,14 @@ export default {
       }
     },
     {
-      "id": "z2586300277",
+      "id": "z2586300277Particle",
       "category": "threeExamples/particle",
       "title": "优雅永不过时",
       "titleEn": "Elegant Always",
       "description": "这是一个基于 Three.js / Cesium 的示例。运用了 粒子/点云、OBJ模型加载、纹理加载、线框模式 技术。",
       "thumbnail": "/external-examples/three-cesium-examples/threeExamples/particle/z2586300277.jpg",
       "tag": "",
-      "entry": "/external-examples/three-cesium-examples/threeExamples/particle/z2586300277.js",
+      "entry": "/external-examples/three-cesium-examples/threeExamples/particle/z2586300277Particle.js",
       "tags": [
         "Three.js+Cesium",
         "粒子/点云",

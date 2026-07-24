@@ -428,11 +428,11 @@ export default [
                 image: HOST + 'threeExamples/shader/smokeCircle.jpg',
             },
             {
-                id: 'radarScan',
+                id: 'radarScanShader',
                 name: '雷达扫描',
                 name_en: 'Radar Scan',
                 author: 'z2586300277',
-                codeUrl: HOST + 'threeExamples/shader/radarScan.js',
+                codeUrl: HOST + 'threeExamples/shader/radarScanShader.js',
                 image: HOST + 'threeExamples/shader/radarScan.jpg',
             },
             {
@@ -1029,11 +1029,11 @@ export default [
         name_en: 'Particle',
         children: [
             {
-                id: 'z2586300277',
+                id: 'z2586300277Particle',
                 name: '优雅永不过时',
                 name_en: 'Elegant Always',
                 author: 'z2586300277',
-                codeUrl: HOST + 'threeExamples/particle/z2586300277.js',
+                codeUrl: HOST + 'threeExamples/particle/z2586300277Particle.js',
                 image: HOST + 'threeExamples/particle/z2586300277.jpg',
             },
             {
