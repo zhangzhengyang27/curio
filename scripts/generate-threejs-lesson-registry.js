@@ -21,7 +21,6 @@ function hasVueComponent(chapter, id) {
 
 // 章节中文标题映射
 const chapterLabels = {
-  '01-start': '起步',
   '02-machineroom': '机房',
   '03-basics': '基础',
   '04-geometry': '几何体',
@@ -34,7 +33,6 @@ const chapterLabels = {
 
 // 示例标题映射（未定义时使用文件名格式化）
 const titleMap = {
-  '01-start/box': '旋转立方体',
   '02-machineroom/machineRoom': '机房展示',
   '03-basics/renderStructure': '渲染结构',
   '03-basics/responsiveDesign': '响应式设计',
@@ -67,7 +65,6 @@ const titleMap = {
   '08-quaternion/rotate04': '旋转04',
   '09-cleanup/memory01': '内存管理01',
   '09-cleanup/memory02': '内存管理02',
-  '09-cleanup/memory03': '内存管理03',
   '09-cleanup/useEffectTest': 'useEffect 测试',
 }
 
@@ -110,7 +107,7 @@ function collectExamples() {
       }
     }
 
-    // 收集章节根目录下的示例 JS（如 01-start/box.js、03-basics/renderStructure.js）
+    // 收集章节根目录下的示例 JS（如 02-machineroom/machineRoom.js、03-basics/renderStructure.js）
     const rootFiles = fs.readdirSync(chapterDir).filter((f) => {
       if (!f.endsWith('.js')) return false
       // 排除构建/配置类文件

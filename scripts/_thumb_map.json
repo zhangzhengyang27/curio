@@ -185,14 +185,6 @@
   },
   {
     "source": "threejs-lesson",
-    "category": "01-start",
-    "id": "box",
-    "thumbnail": "/example-thumbs/threejs-lesson/01-start/box.jpg",
-    "ok": true,
-    "skipped": false
-  },
-  {
-    "source": "threejs-lesson",
     "category": "02-machineroom",
     "id": "machineRoom",
     "thumbnail": "/example-thumbs/threejs-lesson/02-machineroom/machineRoom.jpg",
@@ -428,14 +420,6 @@
     "category": "earth-lessons",
     "id": "05-country-borders",
     "thumbnail": "/example-thumbs/earth-lessons/earth-lessons/05-country-borders.jpg",
-    "ok": true,
-    "skipped": false
-  },
-  {
-    "source": "threejs-lesson",
-    "category": "09-cleanup",
-    "id": "memory03",
-    "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory03.jpg",
     "ok": true,
     "skipped": false
   },

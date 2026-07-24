@@ -5,20 +5,6 @@ export default {
   "label": "Three.js 课程",
   "examples": [
     {
-      "id": "box",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/01-start/box.jpg",
-      "category": "01-start",
-      "categoryLabel": "起步",
-      "title": "旋转立方体",
-      "description": "这是一个基于 Three.js 的起步示例。通过标准渲染流程呈现。",
-      "entry": "/external-examples/threejs-lesson/01-start/box.js",
-      "runner": "vue",
-      "tags": [
-        "起步"
-      ]
-    },
-    {
       "id": "machineRoom",
 
       "thumbnail": "/example-thumbs/threejs-lesson/02-machineroom/machineRoom.jpg",
@@ -449,22 +435,6 @@ export default {
       "title": "内存管理02",
       "description": "这是一个基于 Three.js 的资源释放示例。运用了 纹理加载、立方体/全景环境 技术。",
       "entry": "/external-examples/threejs-lesson/09-cleanup/src/view/memory02.js",
-      "runner": "vue",
-      "tags": [
-        "资源释放",
-        "纹理加载",
-        "立方体/全景环境"
-      ]
-    },
-    {
-      "id": "memory03",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory03.jpg",
-      "category": "09-cleanup",
-      "categoryLabel": "资源释放",
-      "title": "内存管理03",
-      "description": "这是一个基于 Three.js 的资源释放示例。运用了 纹理加载、立方体/全景环境 技术。",
-      "entry": "/external-examples/threejs-lesson/09-cleanup/src/view/memory03.js",
       "runner": "vue",
       "tags": [
         "资源释放",
