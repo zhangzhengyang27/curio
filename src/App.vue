@@ -53,41 +53,43 @@
       </div>
     </div>
 
-    <div v-if="isExamplesRoute" class="nav-search">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.35-4.35" />
-      </svg>
-      <input
-        v-model="exampleSearch"
-        type="text"
-        class="search-input"
-        placeholder="搜索示例..."
-        @input="updateSearchQuery"
-      >
-    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input
+          v-model="exampleSearch"
+          type="text"
+          class="search-input"
+          placeholder="搜索示例..."
+          @input="updateSearchQuery"
+        >
+      </div>
 
-    <div class="nav-actions">
-      <button class="action-btn" :title="themeStore.isDark ? '切换到浅色' : '切换到深色'" @click="themeStore.toggle">
-        <svg v-if="themeStore.isDark" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5" />
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-        </svg>
-        <svg v-else class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      </button>
-      <button class="action-btn" title="设置">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-      </button>
-      <div class="user-avatar">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+      <div class="nav-actions">
+        <button class="action-btn" :title="themeStore.isDark ? '切换到浅色' : '切换到深色'" @click="themeStore.toggle">
+          <svg v-if="themeStore.isDark" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+          <svg v-else class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <button class="action-btn" title="设置">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+        <div class="user-avatar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
       </div>
     </div>
   </nav>
@@ -95,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useThemeStore } from './stores/useThemeStore.js'
 import { useExampleFilters } from './examples/composables/useExampleFilters.js'
@@ -111,7 +113,7 @@ const showExamplesDropdown = ref(false)
 const examplesDropdownRef = ref(null)
 const exampleSearch = ref('')
 const exampleTechs = computed(() => techList.value.filter(t => t.key !== 'all'))
-const isExamplesRoute = computed(() => route.path === '/examples')
+const isExamplesRoute = computed(() => route.path === '/examples' || route.path.startsWith('/examples/'))
 
 watch(() => route.query.search, val => {
   exampleSearch.value = val || ''
@@ -128,15 +130,19 @@ function navigateToExamples(tech) {
   showExamplesDropdown.value = false
 }
 
+let searchTimer = null
 function updateSearchQuery() {
-  const query = { ...route.query }
-  const val = exampleSearch.value.trim()
-  if (val) {
-    query.search = val
-  } else {
-    delete query.search
-  }
-  router.push({ path: '/examples', query })
+  if (searchTimer) clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    const query = { ...route.query }
+    const val = exampleSearch.value.trim()
+    if (val) {
+      query.search = val
+    } else {
+      delete query.search
+    }
+    router.push({ path: '/examples', query })
+  }, 300)
 }
 
 function onClickOutside(e) {
@@ -148,6 +154,11 @@ function onClickOutside(e) {
 onMounted(() => {
   document.addEventListener('click', onClickOutside)
 })
+
+onUnmounted(() => {
+  document.removeEventListener('click', onClickOutside)
+  if (searchTimer) clearTimeout(searchTimer)
+})
 </script>
 
 <style scoped>
@@ -158,9 +169,9 @@ onMounted(() => {
   right: 0;
   z-index: 1000;
   height: var(--tv-top-nav-height);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 0 var(--tv-gutter);
   background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent);
   backdrop-filter: blur(12px);
@@ -172,6 +183,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: var(--tv-sm);
+  justify-self: start;
 }
 
 .brand-logo {
@@ -192,6 +204,7 @@ onMounted(() => {
   align-items: center;
   gap: var(--tv-lg);
   height: 100%;
+  justify-self: center;
 }
 
 .nav-links a {
@@ -235,6 +248,7 @@ onMounted(() => {
   padding-top: 2px;
   transition: color 0.2s, border-color 0.2s;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .dropdown-trigger:hover {
@@ -342,6 +356,13 @@ onMounted(() => {
   transform: translateX(-50%) translateY(-6px);
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  justify-self: end;
+}
+
 .nav-search {
   display: flex;
   align-items: center;
@@ -350,8 +371,6 @@ onMounted(() => {
   padding: 0 var(--tv-md);
   height: 36px;
   min-width: 200px;
-  margin-left: auto;
-  margin-right: var(--tv-md);
 }
 
 .nav-search .search-icon {

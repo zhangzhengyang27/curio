@@ -1,25 +1,41 @@
 <template>
   <div class="demo-root">
-    <div class="top-bar">
-      <router-link
-        to="/examples"
-        class="back-btn"
-      >
-        ← 返回示例列表
-      </router-link>
-      <span class="demo-title">{{ example?.title || '示例' }}</span>
-      <span
-        v-if="example"
-        class="demo-tags"
-      >
-        <span
-          v-for="tag in example.tags"
-          :key="tag"
-          class="tag"
-        >{{ tag }}</span>
-      </span>
-    </div>
     <div class="demo-body">
+      <!-- 浮动元信息：Teleport 到 body，避免被 .demo-body overflow:hidden 或示例内部层叠上下文盖住 -->
+      <Teleport to="body">
+        <div
+          v-if="example"
+          class="demo-float-meta"
+        >
+          <div class="meta-top">
+          <button
+            type="button"
+            class="back-btn"
+            @click="goBackToList"
+          >
+            ← 返回示例列表
+          </button>
+            <span class="demo-title">{{ example?.title || '示例' }}</span>
+          </div>
+          <div class="meta-bottom">
+            <span class="demo-tags">
+              <span
+                v-for="tag in example.tags"
+                :key="tag"
+                class="tag"
+              >{{ tag }}</span>
+            </span>
+            <button
+              v-if="example.runner === 'vue'"
+              class="code-btn"
+              title="查看当前示例的源码"
+              @click="openCode"
+            >
+              &lt;/&gt; 查看代码
+            </button>
+          </div>
+        </div>
+      </Teleport>
       <div
         v-if="!example"
         class="error-tip"
@@ -50,18 +66,41 @@
         暂不支持的运行器：{{ example.runner }}
       </div>
     </div>
+
+    <Teleport to="body">
+      <CodeDrawer
+        :open="showCode"
+        :title="example?.title || '示例源码'"
+        :sections="codeSections"
+        :loading="codeLoading"
+        @close="showCode = false"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getExampleById } from '../registry/index.js'
 import IframeRunner from '../runners/IframeRunner.vue'
 import ExampleHost from './ExampleHost.vue'
-import { loadExampleComponent } from '../components/index.js'
+import { loadExampleComponent, loadExampleSource } from '../components/index.js'
+import CodeDrawer from '../../components/CodeDrawer.vue'
 
 const route = useRoute()
+const router = useRouter()
+
+// 返回示例列表：若是从画廊（带筛选/搜索/页码）点进来的，优先浏览器后退以完整保留
+// 画廊的 tech/sub/search/page 状态；若直接打开详情页（无历史），则回退到画廊首页。
+function goBackToList() {
+  const state = window.history.state
+  if (state && state.back) {
+    router.back()
+  } else {
+    router.push('/examples')
+  }
+}
 
 function normalizePathMatch(value) {
   if (Array.isArray(value)) return value.join('/')
@@ -104,6 +143,39 @@ const vueComponent = computed(() => {
   if (!source || !category || !id || example.value?.runner !== 'vue') return null
   return loadExampleComponent(source, category, id)
 })
+
+// 「查看代码」抽屉状态
+const showCode = ref(false)
+const codeLoading = ref(false)
+// 多节代码：第 1 节为主示例，后续为它引用的 ExampleScene 共享壳
+const codeSections = ref([])
+
+async function openCode() {
+  if (!example.value || example.value.runner !== 'vue') return
+  const { source, category, id } = parsed.value
+  showCode.value = true
+  codeLoading.value = true
+  codeSections.value = []
+  const result = await loadExampleSource(source, category, id)
+  const sections = []
+  if (result) {
+    // 用真实命中的 glob key 作为文件名（去掉 ./ 前缀），可能与约定名不一致
+    sections.push({ filename: result.path.replace(/^\.\//, ''), code: result.code })
+    for (const scene of result.scenes || []) {
+      sections.push({ filename: scene.path.replace(/^\.\//, ''), code: scene.code })
+    }
+  }
+  codeSections.value = sections
+  codeLoading.value = false
+}
+
+// 进入详情页时给 body 加标记，供全局样式把示例内的 lil-gui 面板下移到顶栏之下
+onMounted(() => {
+  document.body.classList.add('example-detail-active')
+})
+onBeforeUnmount(() => {
+  document.body.classList.remove('example-detail-active')
+})
 </script>
 
 <style scoped>
@@ -118,18 +190,6 @@ const vueComponent = computed(() => {
   flex-direction: column;
 }
 
-.top-bar {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 var(--tv-md);
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--tv-outline-variant);
-}
-
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -138,20 +198,58 @@ const vueComponent = computed(() => {
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
-  margin-right: var(--tv-md);
   flex-shrink: 0;
   transition: color 0.2s;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .back-btn:hover {
   color: var(--tv-primary-container);
 }
 
+/* 浮动元信息：固定在示例内容左上角，不占顶栏文档流空间。
+   用 position:fixed + 高 z-index 让它脱离 .demo-root 的层叠上下文，
+   避免被示例内部的全屏覆盖层、lil-gui 面板（默认 z-index:1001）等挡住点击。 */
+.demo-float-meta {
+  position: fixed;
+  top: calc(var(--tv-top-nav-height) + 12px);
+  left: 12px;
+  z-index: 1002;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-sm);
+  padding: var(--tv-sm) var(--tv-md);
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 68%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-md);
+  max-width: calc(100% - 24px);
+}
+
+.meta-top {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  min-width: 0;
+}
+
+.meta-bottom {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  flex-wrap: wrap;
+}
+
 .demo-title {
   color: var(--tv-on-surface);
-  font-size: 14px;
-  font-weight: 500;
-  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -160,8 +258,32 @@ const vueComponent = computed(() => {
 
 .demo-tags {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--tv-xs);
   flex-shrink: 0;
+  max-width: 64vw;
+}
+
+.code-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--tv-outline-variant);
+  background: transparent;
+  color: var(--tv-on-surface-variant);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.code-btn:hover {
+  color: var(--tv-primary);
+  border-color: var(--tv-primary);
+  background: var(--tv-surface-container);
 }
 
 .tag {
@@ -189,8 +311,15 @@ const vueComponent = computed(() => {
   font-size: 14px;
   background: var(--tv-background);
 }
+</style>
 
-html.dark .top-bar {
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 60%, transparent);
+<!-- 全局样式：示例内 autoPlace 的 lil-gui 面板默认 position:fixed; top:0; right:0，
+     会盖住全局顶栏(56px)+示例顶部栏(44px)。在详情页(body 带 example-detail-active)
+     时将其下移到两层顶栏之下，并压到代码抽屉(z-index:30)之下，避免遮挡。 -->
+<style>
+body.example-detail-active .lil-gui.root,
+body.example-detail-active .lil-gui.lil-root {
+  top: calc(var(--tv-top-nav-height) + 44px) !important;
+  z-index: 20 !important;
 }
 </style>

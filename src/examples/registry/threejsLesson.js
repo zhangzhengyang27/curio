@@ -19,20 +19,6 @@ export default {
       ]
     },
     {
-      "id": "helloWorld",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/01-start/helloWorld.jpg",
-      "category": "01-start",
-      "categoryLabel": "起步",
-      "title": "Hello World",
-      "description": "这是一个基于 Three.js 的起步示例。通过标准渲染流程呈现。",
-      "entry": "/external-examples/threejs-lesson/01-start/helloWorld.js",
-      "runner": "vue",
-      "tags": [
-        "起步"
-      ]
-    },
-    {
       "id": "machineRoom",
 
       "thumbnail": "/example-thumbs/threejs-lesson/02-machineroom/machineRoom.jpg",

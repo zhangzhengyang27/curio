@@ -15,7 +15,7 @@
               v-for="cat in availableSubCategories"
               :key="cat.key"
               :class="['category-item', { active: currentSubCategory === cat.key }]"
-              @click="currentSubCategory = cat.key"
+              @click="selectCategory(cat.key)"
             >
               <span class="item-label">{{ cat.label }}</span>
               <span class="item-count">{{ cat.count }}</span>
@@ -44,7 +44,7 @@
             v-for="t in techTabs"
             :key="t.key"
             :class="['tech-tab', { active: currentTech === t.key }]"
-            @click="currentTech = t.key"
+            @click="selectTech(t.key)"
           >
             <span class="tech-tab-label">{{ t.label }}</span>
             <span class="tech-tab-count">{{ t.count }}</span>
@@ -162,14 +162,22 @@ const techTabs = computed(() => {
   })
 })
 
-watch([keyword, currentSubCategory], () => {
-  currentPage.value = 1
-})
-
-watch(currentTech, () => {
+// 用户主动切换技术 / 子分类时，重置子分类与页码。
+// 注意：不再用 watch(currentTech) / watch([keyword, currentSubCategory]) 自动重置，
+// 否则在浏览器前进/后退（syncQueryToState 从 URL 还原状态）时也会触发重置，
+// 导致子分类与页码状态被冲掉、无法恢复。
+function selectTech(key) {
+  if (currentTech.value === key) return
+  currentTech.value = key
   currentSubCategory.value = 'all'
   currentPage.value = 1
-})
+}
+
+function selectCategory(key) {
+  if (currentSubCategory.value === key) return
+  currentSubCategory.value = key
+  currentPage.value = 1
+}
 
 function syncQueryToState() {
   const { tech, sub, search } = route.query
@@ -192,7 +200,15 @@ watch([currentTech, currentSubCategory, keyword, currentPage], () => {
   const kw = keyword.value.trim()
   if (kw) query.search = kw
   if (currentPage.value > 1) query.page = currentPage.value
-  router.replace({ query })
+  // 避免无实质变化时触发导航（防止 watch 循环）
+  const currentQuery = route.query
+  const isSame = JSON.stringify(query) === JSON.stringify({ ...currentQuery })
+  if (!isSame) router.replace({ query })
+})
+
+// 翻页时滚动到顶部
+watch(currentPage, () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 
 const currentTechInfo = computed(() => techGroups.find(t => t.key === currentTech.value))

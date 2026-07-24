@@ -2,7 +2,6 @@ const path=require('path')
 module.exports = {
   mode: 'development',
   entry: {
-    helloWorld: './src/helloWorld.ts',
     box:'./src/box.ts'
   },
   devtool: 'inline-source-map',
