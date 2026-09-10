@@ -8,9 +8,16 @@
     "build": "vite build && node scripts/copy-example-deps.js",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.ts --fix",
+    "typecheck:ts": "tsc --noEmit -p tsconfig.typecheck.json",
+    "lint": "eslint . --fix",
+    "lint:ci": "eslint .",
     "format": "prettier --write \"src/**/*.{vue,js,ts,css}\"",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "verify:registry": "node scripts/verify-registry.mjs",
+    "verify:thumbnails": "node scripts/verify-thumbnails.mjs",
+    "verify:three-compat": "node scripts/verify-three-compat.mjs",
+    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:thumbnails && npm run verify:three-compat"
   },
   "dependencies": {
     "3d-tiles-renderer": "^0.4.28",
