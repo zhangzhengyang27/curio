@@ -40,7 +40,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function inittext(angle) {
-              document.getElementById("text").innerHTML = "视角为:" + angle
+              if (!inittext._el) {
+                inittext._el = document.createElement('div');
+                inittext._el.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:14px;pointer-events:none;';
+                container.appendChild(inittext._el);
+              }
+              inittext._el.innerHTML = "视角为:" + angle
           }
   
           function initEvent() {

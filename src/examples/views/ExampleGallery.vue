@@ -9,7 +9,6 @@
         </div>
 
         <div class="filter-section">
-          <h3 class="section-label">分类</h3>
           <nav class="category-list">
             <button
               v-for="cat in availableSubCategories"
@@ -28,7 +27,9 @@
       <section class="content-area">
         <header class="content-header">
           <div>
-            <h1 class="content-title">示例中心</h1>
+            <h1 class="content-title">
+              示例中心
+            </h1>
             <p class="content-subtitle">
               整合 threejs-lesson、three-cesium-examples 等优质 Three.js 示例
             </p>
@@ -74,15 +75,22 @@
                 <span class="thumb-emoji">{{ ex.icon || '🧊' }}</span>
               </div>
               <div class="card-play">
-                <svg viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
                 </svg>
               </div>
               <span class="source-badge">{{ sourceLabel(ex.source) }}</span>
             </div>
             <div class="card-body">
-              <h3 class="card-title">{{ ex.title }}</h3>
-              <p class="card-desc">{{ ex.description || ex.title }}</p>
+              <h3 class="card-title">
+                {{ ex.title }}
+              </h3>
+              <p class="card-desc">
+                {{ ex.description || ex.title }}
+              </p>
               <div class="card-tags">
                 <span
                   v-for="tag in ex.tags.slice(0, 3)"
@@ -95,13 +103,21 @@
         </div>
 
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="pagination">
+        <div
+          v-if="totalPages > 1"
+          class="pagination"
+        >
           <button
             :disabled="currentPage === 1"
             class="page-btn"
             @click="currentPage--"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
@@ -119,7 +135,12 @@
             class="page-btn"
             @click="currentPage++"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="m9 18 6-6-6-6" />
             </svg>
           </button>
@@ -139,8 +160,9 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getAllExamples, getSources } from '../registry/index.js'
-import { techGroups, subCategoryDefinitions } from '../composables/useExampleFilters.js'
+import { getSources } from '../registry/index.js'
+import { techGroups, subCategoryDefinitions, ensureRegistryLoaded } from '../composables/useExampleFilters.js'
+import { shallowRef } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -151,7 +173,9 @@ const currentSubCategory = ref('all')
 const currentPage = ref(Number(route.query.page) || 1)
 const pageSize = 16
 
-const allExamples = computed(() => getAllExamples())
+const allExamplesList = shallowRef([])
+ensureRegistryLoaded().then(list => { allExamplesList.value = list })
+const allExamples = computed(() => allExamplesList.value)
 
 const techTabs = computed(() => {
   return techGroups.map(t => {
@@ -373,8 +397,10 @@ function onThumbError(ex) {
 /* Sidebar header */
 .sidebar-header {
   display: flex;
-  flex-direction: column;
-  gap: var(--tv-xs);
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--tv-sm);
   padding: var(--tv-md);
   margin-bottom: var(--tv-lg);
   background: linear-gradient(135deg, color-mix(in srgb, var(--tv-primary) 12%, transparent) 0%, color-mix(in srgb, var(--tv-primary) 4%, transparent) 100%);
@@ -393,23 +419,6 @@ function onThumbError(ex) {
   font-size: 12px;
   line-height: 18px;
   color: var(--tv-on-surface-variant);
-}
-
-.section-label {
-  font-size: 12px;
-  line-height: 18px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--tv-on-surface-variant);
-  margin-bottom: var(--tv-sm);
-  padding: 0 var(--tv-sm);
-}
-
-.section-icon {
-  width: 16px;
-  height: 16px;
-  color: var(--tv-primary);
 }
 
 /* Category list */

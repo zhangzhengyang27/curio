@@ -66,7 +66,7 @@ function onReady(__stage) {
   
   
   				const loader = new AMFLoader();
-  				loader.load( './models/amf/rook.amf', function ( amfobject ) {
+  				loader.load( ASSET_HOST + 'models/amf/rook.amf', function ( amfobject ) {
   
   					scene.add( amfobject );
   					render();

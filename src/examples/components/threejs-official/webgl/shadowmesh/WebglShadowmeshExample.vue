@@ -178,7 +178,12 @@ function onReady(__stage) {
   				pyramidShadow = new ShadowMesh( pyramid );
   				scene.add( pyramidShadow );
   
-  				document.getElementById( 'lightButton' ).addEventListener( 'click', lightButtonHandler );
+  				const lightButton = document.createElement( 'input' );
+  				lightButton.type = 'button';
+  				lightButton.value = 'Switch to PointLight';
+  				lightButton.style.cssText = 'position:absolute;top:10px;left:10px;padding:4px 8px;cursor:pointer;';
+  				__stage.overlay?.appendChild( lightButton );
+  				lightButton.addEventListener( 'click', lightButtonHandler );
   
   			
   
@@ -239,7 +244,7 @@ function onReady(__stage) {
   					lightSphere.visible = false;
   					lightHolder.visible = false;
   
-  					document.getElementById( 'lightButton' ).value = 'Switch to PointLight';
+  					lightButton.value = 'Switch to PointLight';
   
   				} else {
   
@@ -265,7 +270,7 @@ function onReady(__stage) {
   					lightSphere.visible = true;
   					lightHolder.visible = true;
   
-  					document.getElementById( 'lightButton' ).value = 'Switch to THREE.DirectionalLight';
+  					lightButton.value = 'Switch to THREE.DirectionalLight';
   
   				}
   

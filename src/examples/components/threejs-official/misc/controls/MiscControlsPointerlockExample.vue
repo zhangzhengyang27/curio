@@ -60,8 +60,13 @@ function onReady(__stage) {
   
   				const controls = new PointerLockControls( camera, document.body );
   
-  				const blocker = document.getElementById( 'blocker' );
-  				const instructions = document.getElementById( 'instructions' );
+  				const blocker = document.createElement( 'div' );
+  				blocker.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;';
+  				const instructions = document.createElement( 'div' );
+  				instructions.style.cssText = 'color:#fff;font-size:14px;text-align:center;cursor:pointer;';
+  				instructions.innerHTML = '<span style="font-size:36px">Click to play</span><br /><br />(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)';
+  				blocker.appendChild( instructions );
+  				__stage.overlay?.appendChild( blocker );
   
   				instructions.addEventListener( 'click', function () {
   

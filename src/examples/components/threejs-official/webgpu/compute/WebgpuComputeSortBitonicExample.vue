@@ -56,9 +56,16 @@ function onReady(__stage) {
   
   			};
   
+  			const timestampsDiv = document.createElement( 'div' );
+  			timestampsDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  			__stage.overlay?.appendChild( timestampsDiv );
+  			const localSwapEl = document.createElement( 'div' );
+  			const globalSwapEl = document.createElement( 'div' );
+  			timestampsDiv.appendChild( localSwapEl );
+  			timestampsDiv.appendChild( globalSwapEl );
   			const timestamps = {
-  				local_swap: document.getElementById( 'local_swap' ),
-  				global_swap: document.getElementById( 'global_swap' )
+  				local_swap: localSwapEl,
+  				global_swap: globalSwapEl
   			};
   
   			const localColors = [ 'rgb(203, 64, 203)', 'rgb(0, 215, 215)' ];

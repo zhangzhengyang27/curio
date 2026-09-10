@@ -58,7 +58,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   				camera.position.y = getY( worldHalfWidth, worldHalfDepth ) * 100 + 100;

@@ -50,7 +50,7 @@ function onReady(__stage) {
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
-  			const container = document.getElementById( 'container' );
+  			const container = __stage.container;
   
   			const stats = new Stats();
   			__stage.overlay?.appendChild(stats.dom)

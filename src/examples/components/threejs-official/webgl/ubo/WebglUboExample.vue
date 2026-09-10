@@ -27,6 +27,108 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Uniform Buffer Objects"
+
+const vertexShader1 = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  layout(std140) uniform ViewData {
+    mat4 projectionMatrix;
+    mat4 viewMatrix;
+  };
+
+  layout(std140) uniform LightingData {
+    vec3 lightPosition;
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+    float shininess;
+  };
+
+  uniform mat4 modelMatrix;
+  uniform mat3 normalMatrix;
+
+  in vec3 position;
+  in vec3 normal;
+
+  out vec3 vPosition;
+  out vec3 vNormal;
+
+  void main() {
+    vPosition = ( modelMatrix * vec4( position, 1.0 ) ).xyz;
+    vNormal = normalMatrix * normal;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShader1 = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  layout(std140) uniform LightingData {
+    vec3 lightPosition;
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+    float shininess;
+  };
+
+  uniform vec3 color;
+
+  in vec3 vPosition;
+  in vec3 vNormal;
+
+  out vec4 outColor;
+
+  void main() {
+    vec3 normal = normalize( vNormal );
+    vec3 lightDir = normalize( lightPosition - vPosition );
+    float diff = max( dot( normal, lightDir ), 0.0 );
+    vec3 viewDir = normalize( - vPosition );
+    vec3 reflectDir = reflect( - lightDir, normal );
+    float spec = pow( max( dot( viewDir, reflectDir ), 0.0 ), shininess );
+    vec3 result = ambientColor * color + diffuseColor * diff * color + specularColor * spec;
+    outColor = vec4( result, 1.0 );
+  }
+`;
+
+const vertexShader2 = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  layout(std140) uniform ViewData {
+    mat4 projectionMatrix;
+    mat4 viewMatrix;
+  };
+
+  uniform mat4 modelMatrix;
+
+  in vec3 position;
+  in vec2 uv;
+
+  out vec2 vUv;
+
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShader2 = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  uniform sampler2D diffuseMap;
+
+  in vec2 vUv;
+
+  out vec4 outColor;
+
+  void main() {
+    outColor = texture( diffuseMap, vUv );
+  }
+`;
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -42,7 +144,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				
   
   				
   
@@ -89,8 +191,8 @@ function onReady(__stage) {
   						normalMatrix: { value: null },
   						color: { value: null }
   					},
-  					vertexShader: document.getElementById( 'vertexShader1' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentShader1' ).textContent,
+  					vertexShader: vertexShader1,
+  					fragmentShader: fragmentShader1,
   					glslVersion: THREE.GLSL3
   				} );
   
@@ -99,8 +201,8 @@ function onReady(__stage) {
   						modelMatrix: { value: null },
   						diffuseMap: { value: null },
   					},
-  					vertexShader: document.getElementById( 'vertexShader2' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentShader2' ).textContent,
+  					vertexShader: vertexShader2,
+  					fragmentShader: fragmentShader2,
   					glslVersion: THREE.GLSL3
   				} );
   

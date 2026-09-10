@@ -42,7 +42,6 @@ async function onReady(__stage) {
   			};
   
   			
-  			async 
   
   
   				const { innerWidth, innerHeight } = window;

@@ -31,6 +31,29 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - 2D Compressed Texture Array Layer Updates<br />\n\t\t\tLoop from the movie Spirited away\n\t\t\tby the <a href=\"https://www.ghibli.jp/\" target=\"_blank\" rel=\"noopener\">Studio Ghibli</a><br />"
+
+const vsSource = /* glsl */`
+  uniform vec2 size;
+  out vec2 vUv;
+  void main() {
+    vUv = uv;
+    vec3 transformed = position;
+    transformed.xy *= size;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( transformed, 1.0 );
+  }
+`;
+
+const fsSource = /* glsl */`
+  precision highp sampler2DArray;
+  uniform sampler2DArray diffuse;
+  in vec2 vUv;
+  out vec4 outColor;
+  void main() {
+    vec4 color = texture( diffuse, vec3( vUv, float( gl_InstanceID ) ) );
+    outColor = color;
+  }
+`;
+
 async function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -48,7 +71,6 @@ async function onReady(__stage) {
   			const planeHeight = 10;
   
   			
-  			async 
   
   
   				
@@ -127,8 +149,8 @@ async function onReady(__stage) {
   						diffuse: { value: textureArray },
   						size: { value: new THREE.Vector2( planeWidth, planeHeight ) }
   					},
-  					vertexShader: document.getElementById( 'vs' ).textContent.trim(),
-  					fragmentShader: document.getElementById( 'fs' ).textContent.trim(),
+  					vertexShader: vsSource,
+  					fragmentShader: fsSource,
   					glslVersion: THREE.GLSL3
   				} );
   

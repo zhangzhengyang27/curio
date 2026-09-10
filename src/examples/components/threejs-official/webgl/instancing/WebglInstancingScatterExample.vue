@@ -85,7 +85,7 @@ function onReady(__stage) {
   
   			const loader = new GLTFLoader();
   
-  			loader.load( './models/gltf/Flower/Flower.glb', function ( gltf ) {
+  			loader.load( ASSET_HOST + 'models/gltf/Flower/Flower.glb', function ( gltf ) {
   
   				const _stemMesh = gltf.scene.getObjectByName( 'Stem' );
   				const _blossomMesh = gltf.scene.getObjectByName( 'Blossom' );

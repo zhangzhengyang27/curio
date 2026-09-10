@@ -1,6 +1,7 @@
 <template>
   <WebGPUExampleScene
     camera="perspective"
+    custom-render
     :camera-position="[0, 800, 3000]"
     :camera-options="{ fov: 50, near: 0.25, far: 1000000 }"
     :enable-controls="false"
@@ -146,7 +147,6 @@ async function onReady(__stage) {
   			};
   
   			
-  			async 
   
   
   				
@@ -299,7 +299,10 @@ async function onReady(__stage) {
   
   				const maxTrianglesPerInstance = lods[ 0 ].numTriangles;
   				const totalTriangles = instanceCount * maxTrianglesPerInstance;
-  				document.getElementById( 'triangleCount' ).innerText = new Intl.NumberFormat().format( totalTriangles );
+  				const triangleCountEl = document.createElement( 'div' );
+  				triangleCountEl.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  				__stage.overlay?.appendChild( triangleCountEl );
+  				triangleCountEl.innerText = new Intl.NumberFormat().format( totalTriangles );
   
   				const vertexArray = new Float32Array( totalVertices * 4 ); // vec4 padded
   				const normalArray = new Float32Array( totalVertices * 4 ); // vec4 padded

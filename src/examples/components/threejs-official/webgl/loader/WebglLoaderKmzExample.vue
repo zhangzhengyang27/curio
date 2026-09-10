@@ -63,7 +63,7 @@ function onReady(__stage) {
   
   
   				const loader = new KMZLoader();
-  				loader.load( './models/kmz/Box.kmz', function ( kmz ) {
+  				loader.load( ASSET_HOST + 'models/kmz/Box.kmz', function ( kmz ) {
   
   					kmz.scene.position.y = 0.5;
   					scene.add( kmz.scene );

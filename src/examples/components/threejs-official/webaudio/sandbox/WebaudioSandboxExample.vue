@@ -54,14 +54,14 @@ function onReady(__stage) {
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
-  			const startButton = document.getElementById( 'startButton' );
+  			const startButton = document.createElement( 'button' );
+  			startButton.textContent = 'Click to Start';
+  			startButton.style.cssText = 'padding:12px 24px;font-size:16px;cursor:pointer;';
+  			__stage.overlay?.appendChild( startButton );
   			startButton.addEventListener( 'click', init );
   
-  			
-  
-  
-  				const overlay = document.getElementById( 'overlay' );
-  				overlay.remove();
+  			function init() {
+  				startButton.remove();
   
   				
   
@@ -89,7 +89,8 @@ function onReady(__stage) {
   				scene.add( mesh1 );
   
   				const sound1 = new THREE.PositionalAudio( listener );
-  				const songElement = document.getElementById( 'song' );
+  				const songElement = new Audio( ASSET_HOST + 'sounds/358232_j_s_song.mp3' );
+  				songElement.loop = true;
   				sound1.setMediaElementSource( songElement );
   				sound1.setRefDistance( 20 );
   				songElement.play();
@@ -102,7 +103,8 @@ function onReady(__stage) {
   				scene.add( mesh2 );
   
   				const sound2 = new THREE.PositionalAudio( listener );
-  				const skullbeatzElement = document.getElementById( 'skullbeatz' );
+  				const skullbeatzElement = new Audio( ASSET_HOST + 'sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3' );
+  				skullbeatzElement.loop = true;
   				sound2.setMediaElementSource( skullbeatzElement );
   				sound2.setRefDistance( 20 );
   				skullbeatzElement.play();
@@ -133,7 +135,8 @@ function onReady(__stage) {
   				// global ambient audio
   
   				const sound4 = new THREE.Audio( listener );
-  				const utopiaElement = document.getElementById( 'utopia' );
+  				const utopiaElement = new Audio( ASSET_HOST + 'sounds/utopia.mp3' );
+  				utopiaElement.loop = true;
   				sound4.setMediaElementSource( utopiaElement );
   				sound4.setVolume( 0.5 );
   				utopiaElement.play();
@@ -223,7 +226,7 @@ function onReady(__stage) {
   				controls.lookVertical = false;
   
   				//
-  
+		}
   				
   
   			

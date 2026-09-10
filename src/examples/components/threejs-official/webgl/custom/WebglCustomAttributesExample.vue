@@ -26,6 +26,48 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - custom attributes example"
+
+const vertexShader = /* glsl */ `
+uniform float amplitude;
+
+attribute float displacement;
+
+varying vec3 vNormal;
+varying vec2 vUv;
+
+void main() {
+
+	vNormal = normal;
+	vUv = ( 0.5 + amplitude ) * uv + vec2( amplitude );
+
+	vec3 newPosition = position + amplitude * normal * vec3( displacement );
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+varying vec3 vNormal;
+varying vec2 vUv;
+
+uniform vec3 color;
+uniform sampler2D colorTexture;
+
+void main() {
+
+	vec3 light = vec3( 0.5, 0.2, 1.0 );
+	light = normalize( light );
+
+	float dProd = dot( vNormal, light ) * 0.5 + 0.5;
+
+	vec4 tcolor = texture2D( colorTexture, vUv );
+	vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
+
+	gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -65,8 +107,8 @@ function onReady(__stage) {
   				const shaderMaterial = new THREE.ShaderMaterial( {
   
   					uniforms: uniforms,
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader
   
   				} );
   
@@ -92,9 +134,9 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
-  
-  
+  				//
+  				
+  				
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   

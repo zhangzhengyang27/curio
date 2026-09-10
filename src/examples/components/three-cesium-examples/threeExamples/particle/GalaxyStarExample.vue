@@ -38,7 +38,7 @@ function onReady(ctx) {
     // Create renderer
     // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     controls.enableDamping = true;
-    root.appendChild(renderer.domElement);
+    // renderer.domElement already managed by ExampleScene
   
     const onWindowResize = () => {
       // Adjust camera and renderer on window resize
@@ -187,7 +187,7 @@ function onReady(ctx) {
     tick();
   };
   
-  init(document.getElementById('box'));
+  init(ctx.container);
 }
 
 onUnmounted(() => {

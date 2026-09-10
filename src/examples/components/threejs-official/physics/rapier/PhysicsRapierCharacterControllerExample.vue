@@ -46,7 +46,6 @@ async function onReady(__stage) {
   			let player, movement;
   
   			
-  			async 
   
   
   				

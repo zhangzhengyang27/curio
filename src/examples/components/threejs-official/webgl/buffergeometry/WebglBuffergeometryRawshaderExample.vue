@@ -26,6 +26,44 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - raw shader demo"
+
+const vertexShader = /* glsl */`
+  precision mediump float;
+  precision mediump int;
+
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform float time;
+
+  attribute vec3 position;
+  attribute vec4 color;
+
+  varying vec3 vPosition;
+  varying vec4 vColor;
+
+  void main() {
+    vPosition = position;
+    vColor = vec4( position.x + 0.5, position.y + 0.5, position.z + 0.5, 1.0 );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShader = /* glsl */`
+  precision mediump float;
+  precision mediump int;
+
+  uniform float time;
+
+  varying vec3 vPosition;
+  varying vec4 vColor;
+
+  void main() {
+    vec4 color = vec4( vColor );
+    color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
+    gl_FragColor = color;
+  }
+`;
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,7 +80,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   				camera.position.z = 2;
@@ -89,8 +127,8 @@ function onReady(__stage) {
   					uniforms: {
   						time: { value: 1.0 }
   					},
-  					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					side: THREE.DoubleSide,
   					transparent: true
   

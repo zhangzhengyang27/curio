@@ -58,7 +58,6 @@ function onReady(__stage) {
   			let isOrbitControlsActive;
   
   			
-  			async 
   
   
   				const { innerWidth, innerHeight } = window;

@@ -30,6 +30,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Selective Lights</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -59,11 +61,11 @@ function onReady(__stage) {
   
   				const textureLoader = new THREE.TextureLoader();
   
-  				const normalMapTexture = textureLoader.load( './textures/water/Water_1_M_Normal.jpg' );
+  				const normalMapTexture = textureLoader.load( ASSET_HOST + 'textures/water/Water_1_M_Normal.jpg' );
   				normalMapTexture.wrapS = THREE.RepeatWrapping;
   				normalMapTexture.wrapT = THREE.RepeatWrapping;
   
-  				const alphaTexture = textureLoader.load( './textures/roughness_map.jpg' );
+  				const alphaTexture = textureLoader.load( ASSET_HOST + 'textures/roughness_map.jpg' );
   				alphaTexture.wrapS = THREE.RepeatWrapping;
   				alphaTexture.wrapT = THREE.RepeatWrapping;
   

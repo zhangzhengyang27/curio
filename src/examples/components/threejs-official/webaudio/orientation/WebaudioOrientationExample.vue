@@ -39,16 +39,16 @@ function onReady(__stage) {
 
   
   
-  		const startButton = document.getElementById( 'startButton' );
+  		const startButton = document.createElement( 'button' );
+  		startButton.textContent = 'Click to Start';
+  		startButton.style.cssText = 'padding:12px 24px;font-size:16px;cursor:pointer;';
+  		__stage.overlay?.appendChild( startButton );
   		startButton.addEventListener( 'click', init );
   
-  		
+  		function init() {
+  			startButton.remove();
   
-  
-  			const overlay = document.getElementById( 'overlay' );
-  			overlay.remove();
-  
-  			const container = document.getElementById( 'container' );
+  			const container = __stage.container;
   
   			//
   
@@ -97,7 +97,8 @@ function onReady(__stage) {
   			const listener = new THREE.AudioListener();
   			camera.add( listener );
   
-  			const audioElement = document.getElementById( 'music' );
+  			const audioElement = new Audio( ASSET_HOST + 'sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3' );
+  			audioElement.loop = true;
   			audioElement.play();
   
   			const positionalAudio = new THREE.PositionalAudio( listener );
@@ -162,7 +163,7 @@ function onReady(__stage) {
   			controls.maxPolarAngle = 0.5 * Math.PI;
   
   			//
-  
+		}
   			
   
   		

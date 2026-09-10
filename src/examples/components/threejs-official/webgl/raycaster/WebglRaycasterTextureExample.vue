@@ -183,7 +183,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   				scene.background = new THREE.Color( 0xeeeeee );

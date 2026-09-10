@@ -41,7 +41,7 @@ function onReady(__stage) {
   			const crtWidthUniform = uniform( 1608 );
   			const crtHeightUniform = uniform( 1608 );
   
-  			const canvas = document.getElementById( 'c' );
+  			const canvas = renderer.domElement;
   
   			
   

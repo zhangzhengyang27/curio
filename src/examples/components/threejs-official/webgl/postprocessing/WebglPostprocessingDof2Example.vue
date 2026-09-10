@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 70, near: 1, far: 3000 }"
     @ready="onReady"
   >

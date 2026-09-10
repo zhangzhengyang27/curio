@@ -95,7 +95,11 @@ function dispose() {
   }
 }
 
-onMounted(init)
+onMounted(() => {
+  init().catch((err) => {
+    console.warn('[CesiumExampleScene] init error:', err)
+  })
+})
 onUnmounted(dispose)
 
 defineExpose({

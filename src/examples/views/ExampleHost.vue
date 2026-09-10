@@ -1,11 +1,18 @@
 <template>
-  <div ref="root" class="example-host">
-    <component :is="comp" :example="example" />
+  <div
+    ref="root"
+    class="example-host"
+  >
+    <component
+      :is="comp"
+      :example="example"
+    />
   </div>
 </template>
 
 <script setup>
 import { onBeforeUnmount, ref } from 'vue'
+import { disposeAllGUI } from '../utils/guiTracker.js'
 
 const props = defineProps({
   comp: { type: [Object, Function], required: true },
@@ -54,15 +61,19 @@ function disposeGUI(el) {
 }
 
 onBeforeUnmount(() => {
+  // 0) 优先通过追踪注册表正确销毁 GUI 实例（含内部事件监听器清理）
+  disposeAllGUI()
   // 1) 当前 host 子树内的 canvas
   disposeCanvasContexts(root.value)
   // 2) 兜底：示例可能把 canvas 挂到 body（teleport / document.body.appendChild），
-  //    不在 host 子树内，需额外扫描。若 canvas 属于另一个仍存活的 example-host 则跳过。
+  //    不在 host 子树内，需额外扫描。仅释放明确属于某个 example-host 的 canvas，
+  //    避免误释放页面上其他组件的 WebGL 上下文。
   try {
     document.querySelectorAll('canvas').forEach(canvas => {
       const host = canvas.closest && canvas.closest('.example-host')
-      if (host && host !== root.value) return
-      releaseCanvas(canvas)
+      if (!host || host === root.value) {
+        releaseCanvas(canvas)
+      }
     })
   } catch {
     /* 忽略全局扫描异常 */

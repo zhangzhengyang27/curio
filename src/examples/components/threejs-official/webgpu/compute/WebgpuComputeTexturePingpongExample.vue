@@ -45,7 +45,6 @@ function onReady(__stage) {
   			const seed = uniform( new THREE.Vector2() );
   
   			
-  			async 
   
   
   				if ( WebGPU.isAvailable() === false ) {

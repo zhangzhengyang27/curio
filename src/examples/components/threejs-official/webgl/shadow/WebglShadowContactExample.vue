@@ -2,6 +2,7 @@
   <ExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-position="[0.5, 1, 2]"
     :camera-options="{ fov: 50, near: 0.1, far: 100 }"
     @ready="onReady"

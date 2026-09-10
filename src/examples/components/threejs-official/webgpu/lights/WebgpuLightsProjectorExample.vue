@@ -176,7 +176,11 @@ function onReady(__stage) {
   
   						if ( videoTexture === undefined ) {
   
-  							const video = document.getElementById( 'video' );
+  							const video = document.createElement( 'video' );
+  							video.muted = true;
+  							video.loop = true;
+  							video.playsInline = true;
+  							video.src = ASSET_HOST + 'textures/sintel.mp4';
   							video.play();
   
   							videoTexture = new THREE.VideoTexture( video );

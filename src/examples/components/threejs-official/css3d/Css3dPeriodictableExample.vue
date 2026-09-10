@@ -280,28 +280,33 @@ function onReady(__stage) {
   				controls.maxDistance = 6000;
   				controls.addEventListener( 'change', render );
   
-  				const buttonTable = document.getElementById( 'table' );
+  				const btnContainer = document.createElement( 'div' );
+  				btnContainer.style.cssText = 'position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;';
+  				__stage.overlay?.appendChild( btnContainer );
+  				const mkBtn = (label) => { const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'padding:6px 12px;cursor:pointer;'; btnContainer.appendChild(b); return b; };
+  
+  				const buttonTable = mkBtn( 'table' );
   				buttonTable.addEventListener( 'click', function () {
   
   					transform( targets.table, 2000 );
   
   				} );
   
-  				const buttonSphere = document.getElementById( 'sphere' );
+  				const buttonSphere = mkBtn( 'sphere' );
   				buttonSphere.addEventListener( 'click', function () {
   
   					transform( targets.sphere, 2000 );
   
   				} );
   
-  				const buttonHelix = document.getElementById( 'helix' );
+  				const buttonHelix = mkBtn( 'helix' );
   				buttonHelix.addEventListener( 'click', function () {
   
   					transform( targets.helix, 2000 );
   
   				} );
   
-  				const buttonGrid = document.getElementById( 'grid' );
+  				const buttonGrid = mkBtn( 'grid' );
   				buttonGrid.addEventListener( 'click', function () {
   
   					transform( targets.grid, 2000 );

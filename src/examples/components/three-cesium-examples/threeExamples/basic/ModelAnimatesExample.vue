@@ -31,8 +31,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  new OrbitControls(camera, renderer.domElement)
-  
   const mixerFrames = []
   
   ctx.addUpdateCallback(() => {

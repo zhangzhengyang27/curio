@@ -50,7 +50,6 @@ async function onReady(__stage) {
   			const windowHalfY = (__stage.container?.clientHeight || window.innerHeight) / 2;
   
   			
-  			async 
   
   
   				

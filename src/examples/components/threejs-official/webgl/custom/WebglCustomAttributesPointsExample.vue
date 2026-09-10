@@ -26,6 +26,40 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - custom attributes example - particles"
+
+const vertexShader = /* glsl */ `
+attribute float size;
+attribute vec3 customColor;
+
+varying vec3 vColor;
+
+void main() {
+
+	vColor = customColor;
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+	gl_PointSize = size * ( 300.0 / -mvPosition.z );
+
+	gl_Position = projectionMatrix * mvPosition;
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform vec3 color;
+uniform sampler2D pointTexture;
+
+varying vec3 vColor;
+
+void main() {
+
+	gl_FragColor = vec4( color * vColor, 1.0 );
+	gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -38,6 +72,8 @@ function onReady(__stage) {
   
   
   			let stats;
+
+  			let sphere;
   
   
   
@@ -98,8 +134,8 @@ function onReady(__stage) {
   						color: { value: new THREE.Color( 0xffffff ) },
   						pointTexture: { value: new THREE.TextureLoader().load( ASSET_HOST + 'textures/sprites/spark1.png' ) }
   					},
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   
   					blending: THREE.AdditiveBlending,
   					depthTest: false,
@@ -117,9 +153,9 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
-  
-  
+  				//
+  				
+  				
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   

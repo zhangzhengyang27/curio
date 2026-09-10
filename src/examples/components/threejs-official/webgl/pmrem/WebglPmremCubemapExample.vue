@@ -30,7 +30,6 @@ function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -53,7 +52,7 @@ function onReady(__stage) {
   				controls.update();
   
   				new HDRCubeTextureLoader()
-  					.setPath( './textures/cube/pisaHDR/' )
+  					.setPath( ASSET_HOST + 'textures/cube/pisaHDR/' )
   					.load( [ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ], function ( map ) {
   
   						const pmremGenerator = new THREE.PMREMGenerator( renderer );

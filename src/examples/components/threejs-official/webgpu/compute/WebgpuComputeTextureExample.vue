@@ -37,7 +37,6 @@ function onReady(__stage) {
   
   			init().then( render );
   
-  			async 
   
   
   				if ( WebGPU.isAvailable() === false ) {

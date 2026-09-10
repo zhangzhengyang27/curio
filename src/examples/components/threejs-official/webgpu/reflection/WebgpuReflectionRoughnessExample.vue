@@ -43,7 +43,6 @@ function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -69,7 +68,7 @@ function onReady(__stage) {
   				const uvMap = textureLoader.load( ASSET_HOST + 'textures/uv_grid_directx.jpg' );
   				uvMap.colorSpace = THREE.SRGBColorSpace;
   
-  				const perlinMap = textureLoader.load( './textures/noises/perlin/rgb-256x256.png' );
+  				const perlinMap = textureLoader.load( ASSET_HOST + 'textures/noises/perlin/rgb-256x256.png' );
   				perlinMap.wrapS = THREE.RepeatWrapping;
   				perlinMap.wrapT = THREE.RepeatWrapping;
   				perlinMap.colorSpace = THREE.SRGBColorSpace;

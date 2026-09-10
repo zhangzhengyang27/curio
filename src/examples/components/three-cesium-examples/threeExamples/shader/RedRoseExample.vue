@@ -220,7 +220,7 @@ function onReady(ctx) {
    */
   
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  document.getElementById("box").appendChild(renderer.domElement);
+  // renderer.domElement already managed by ExampleScene
   // Controls
   controls.enableDamping = true;
   

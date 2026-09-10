@@ -31,6 +31,31 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - materials - wireframe"
+
+const vertexShader = /* glsl */`
+  attribute vec3 center;
+  varying vec3 vCenter;
+
+  void main() {
+    vCenter = center;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShader = /* glsl */`
+  uniform float thickness;
+
+  varying vec3 vCenter;
+
+  void main() {
+    vec3 afwidth = fwidth( vCenter.xyz );
+    vec3 edge3 = smoothstep( ( thickness - 1.0 ) * afwidth, thickness * afwidth, vCenter.xyz );
+    float edge = 1.0 - min( min( edge3.x, edge3.y ), edge3.z );
+    gl_FragColor.rgb = gl_FrontFacing ? vec3( 0.9, 0.9, 1.0 ) : vec3( 0.4, 0.4, 0.5 );
+    gl_FragColor.a = edge;
+  }
+`;
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -93,8 +118,8 @@ function onReady(__stage) {
   					const material2 = new THREE.ShaderMaterial( {
   
   						uniforms: { 'thickness': { value: API.thickness } },
-  						vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  						fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+  						vertexShader: vertexShader,
+  						fragmentShader: fragmentShader,
   						side: THREE.DoubleSide,
   						alphaToCoverage: true // only works when WebGLRenderer's "antialias" is set to "true"
   

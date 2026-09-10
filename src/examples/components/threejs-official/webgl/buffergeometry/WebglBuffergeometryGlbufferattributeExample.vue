@@ -47,7 +47,7 @@ function onReady(__stage) {
   			const particles = 300000;
   			let drawCount = 10000;
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				//
   

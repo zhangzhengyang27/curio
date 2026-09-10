@@ -74,7 +74,11 @@ async function onReady(__stage) {
   
   		const GRADED_OUTPUTS = new Set( [ 0, 1, 3, 4, OUTPUT_COMPARE_DENOISE, OUTPUT_COMPARE_SSR ] );
   
-  		const compareHint = document.getElementById( 'compare-hint' );
+  		const compareHint = document.createElement( 'div' );
+  		compareHint.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);color:#fff;font-size:12px;';
+  		compareHint.textContent = 'Drag to compare';
+  		compareHint.hidden = true;
+  		__stage.overlay?.appendChild( compareHint );
   
   		function isCompareMode( output ) {
   
@@ -154,7 +158,6 @@ async function onReady(__stage) {
   		let gammaUniform, contrastUniform, saturationUniform;
   
   		
-  		async 
   
   
   			

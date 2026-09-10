@@ -31,6 +31,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Materials</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -70,11 +72,11 @@ function onReady(__stage) {
   
   				const textureLoader = new THREE.TextureLoader();
   
-  				const uvTexture = textureLoader.load( './textures/uv_grid_opengl.jpg' );
+  				const uvTexture = textureLoader.load( ASSET_HOST + 'textures/uv_grid_opengl.jpg' );
   				uvTexture.wrapS = THREE.RepeatWrapping;
   				uvTexture.wrapT = THREE.RepeatWrapping;
   
-  				const opacityTexture = textureLoader.load( './textures/alphaMap.jpg' );
+  				const opacityTexture = textureLoader.load( ASSET_HOST + 'textures/alphaMap.jpg' );
   				opacityTexture.wrapS = THREE.RepeatWrapping;
   				opacityTexture.wrapT = THREE.RepeatWrapping;
   

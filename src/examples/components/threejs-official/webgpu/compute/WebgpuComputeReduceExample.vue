@@ -41,9 +41,16 @@ async function onReady(__stage) {
   
   
   
+  			const panelDiv = document.createElement( 'div' );
+  			panelDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  			__stage.overlay?.appendChild( panelDiv );
+  			const leftDisplay = document.createElement( 'div' );
+  			const rightDisplay = document.createElement( 'div' );
+  			panelDiv.appendChild( leftDisplay );
+  			panelDiv.appendChild( rightDisplay );
   			const timestamps = {
-  				left_side_display: document.getElementById( 'left_side_display' ),
-  				right_side_display: document.getElementById( 'right_side_display' )
+  				left_side_display: leftDisplay,
+  				right_side_display: rightDisplay
   			};
   
   			const divRoundUp = ( size, part_size ) => {
@@ -55,10 +62,16 @@ async function onReady(__stage) {
   			const cssSubgroupSize = 4;
   			const cssWorkgroupSize = 16;
   
-  			const workgroupThreadsContainer = document.getElementById( 'workgroup_threads' );
-  			const subgroupReductionContainer = document.getElementById( 'subgroup_reduction' );
+  			const workgroupThreadsContainer = document.createElement( 'div' );
+  			workgroupThreadsContainer.style.cssText = 'display:flex;gap:4px;margin-top:8px;';
+  			panelDiv.appendChild( workgroupThreadsContainer );
+  			const subgroupReductionContainer = document.createElement( 'div' );
+  			subgroupReductionContainer.style.cssText = 'display:flex;gap:4px;margin-top:8px;';
+  			panelDiv.appendChild( subgroupReductionContainer );
   
-  			document.getElementById( 'panel-title' ).textContent += ` (Subgroup Size: ${cssSubgroupSize}, Workgroup Size: ${cssWorkgroupSize})`;
+  			const panelTitle = document.createElement( 'div' );
+  			panelTitle.textContent = `Reduce (Subgroup Size: ${cssSubgroupSize}, Workgroup Size: ${cssWorkgroupSize})`;
+  			panelDiv.prepend( panelTitle );
   
   			const createThreadWithData = ( data ) => {
   
@@ -109,7 +122,7 @@ async function onReady(__stage) {
   
   				subgroupDiv.classList.remove( 'anim' );
   
-  				const subgroupReductionBufferElement = document.getElementById( `subgroup_reduction_element_${idx}` ).querySelector( '.thread_data' );
+  				const subgroupReductionBufferElement = subgroupReductionContainer.querySelector( `#subgroup_reduction_element_${idx} .thread_data` );
   
   				subgroupReductionBufferElement.innerHTML = 0;
   
@@ -136,7 +149,7 @@ async function onReady(__stage) {
   
   					} );
   
-  					const subgroupReductionBufferElement = document.getElementById( `subgroup_reduction_element_${idx}` ).querySelector( '.thread_data' );
+  					const subgroupReductionBufferElement = subgroupReductionContainer.querySelector( `#subgroup_reduction_element_${idx} .thread_data` );
   
   					subgroupReductionBufferElement.innerHTML = total;
   
@@ -151,7 +164,7 @@ async function onReady(__stage) {
   
   			};
   
-  			document.getElementById( 'subgroup-reduction-stage' ).addEventListener( 'mouseenter', () => {
+  			subgroupReductionContainer.addEventListener( 'mouseenter', () => {
   
   				initialSubgroups.forEach( ( subgroupDiv, idx ) => {
   
@@ -161,7 +174,7 @@ async function onReady(__stage) {
   
   			} );
   
-  			document.getElementById( 'subgroup-reduction-stage' ).addEventListener( 'mouseleave', () => {
+  			subgroupReductionContainer.addEventListener( 'mouseleave', () => {
   
   				initialSubgroups.forEach( ( subgroupDiv, idx ) => {
   

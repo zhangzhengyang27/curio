@@ -50,7 +50,6 @@ async function onReady(__stage) {
   			};
   
   			
-  			async 
   
   
   				timer = new THREE.Timer();

@@ -30,6 +30,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>VFX Flames</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -52,8 +54,8 @@ function onReady(__stage) {
   
   				const textureLoader = new THREE.TextureLoader();
   
-  				const cellularTexture = textureLoader.load( './textures/noises/voronoi/grayscale-256x256.png' );
-  				const perlinTexture = textureLoader.load( './textures/noises/perlin/rgb-256x256.png' );
+  				const cellularTexture = textureLoader.load( ASSET_HOST + 'textures/noises/voronoi/grayscale-256x256.png' );
+  				const perlinTexture = textureLoader.load( ASSET_HOST + 'textures/noises/perlin/rgb-256x256.png' );
   
   				// gradient canvas
   

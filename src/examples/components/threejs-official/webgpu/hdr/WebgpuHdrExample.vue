@@ -52,7 +52,8 @@ function onReady(__stage) {
   			function updateHDRWarning() {
   
   				const displayIsHDR = hdrMediaQuery.matches;
-  				document.querySelector( '#no-hdr' ).style.display = displayIsHDR ? 'none' : '';
+  				const el = document.querySelector( '#no-hdr' );
+  								if ( el ) el.style.display = displayIsHDR ? 'none' : '';
   
   			}
   

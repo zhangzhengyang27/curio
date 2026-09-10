@@ -44,7 +44,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   				camera.position.z = 9000;

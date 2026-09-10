@@ -42,7 +42,6 @@ async function onReady(__stage) {
   
   			init().then( animate );
   
-  			async 
   
   
   				
@@ -127,21 +126,27 @@ async function onReady(__stage) {
   
   				}
   
-  				const normalContainer = document.getElementById( 'container_normal' );
+  				const normalContainer = document.createElement( 'div' );
+  				normalContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( normalContainer );
   				normalRenderer = new THREE.WebGPURenderer();
   				normalRenderer.setPixelRatio( window.devicePixelRatio );
   				normalRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				normalRenderer.domElement.style.position = 'relative';
   				normalContainer.appendChild( normalRenderer.domElement );
   
-  				const logarithmicContainer = document.getElementById( 'container_logarithmic' );
+  				const logarithmicContainer = document.createElement( 'div' );
+  				logarithmicContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( logarithmicContainer );
   				logarithmicRenderer = new THREE.WebGPURenderer( { logarithmicDepthBuffer: true } );
   				logarithmicRenderer.setPixelRatio( window.devicePixelRatio );
   				logarithmicRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				logarithmicRenderer.domElement.style.position = 'relative';
   				logarithmicContainer.appendChild( logarithmicRenderer.domElement );
   
-  				const reverseContainer = document.getElementById( 'container_reverse' );
+  				const reverseContainer = document.createElement( 'div' );
+  				reverseContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( reverseContainer );
   				reverseRenderer = new THREE.WebGPURenderer( { reversedDepthBuffer: true } );
   				reverseRenderer.setPixelRatio( window.devicePixelRatio );
   				reverseRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );

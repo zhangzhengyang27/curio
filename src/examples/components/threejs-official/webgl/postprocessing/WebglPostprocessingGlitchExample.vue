@@ -45,19 +45,18 @@ function onReady(__stage) {
   
   			let glitchPass;
   
-  			const button = document.querySelector( '#startButton' );
-  			button.addEventListener( 'click', function () {
-  
-  				const overlay = document.getElementById( 'overlay' );
-  				overlay.remove();
-  
-  				
-  			} );
+  			const wildGlitchCheckbox = document.createElement( 'input' );
+  			wildGlitchCheckbox.type = 'checkbox';
+  			wildGlitchCheckbox.id = 'wildGlitch';
+  			const wildGlitchLabel = document.createElement( 'label' );
+  			wildGlitchLabel.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;display:flex;align-items:center;gap:4px;';
+  			wildGlitchLabel.appendChild( wildGlitchCheckbox );
+  			wildGlitchLabel.appendChild( document.createTextNode( 'Wild Glitch' ) );
+  			__stage.overlay?.appendChild( wildGlitchLabel );
   
   			function updateOptions() {
   
-  				const wildGlitch = document.getElementById( 'wildGlitch' );
-  				glitchPass.goWild = wildGlitch.checked;
+  				glitchPass.goWild = wildGlitchCheckbox.checked;
   
   			}
   
@@ -126,8 +125,7 @@ function onReady(__stage) {
   
   				
   
-  				const wildGlitchOption = document.getElementById( 'wildGlitch' );
-  				wildGlitchOption.addEventListener( 'change', updateOptions );
+  				wildGlitchCheckbox.addEventListener( 'change', updateOptions );
   
   				updateOptions();
   

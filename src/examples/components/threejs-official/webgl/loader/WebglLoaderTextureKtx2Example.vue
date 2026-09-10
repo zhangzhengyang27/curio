@@ -90,10 +90,9 @@ async function onReady(__stage) {
   			];
   
   			
-  			async 
   
   
-  				canvas = document.getElementById( 'c' );
+  				canvas = renderer.domElement;
   
   				
   				renderer.setClearColor( 0xffffff, 1 );
@@ -105,7 +104,7 @@ async function onReady(__stage) {
   
   				const geometry = flipY( new THREE.PlaneGeometry( 1, 1 ) );
   
-  				const content = document.getElementById( 'content' );
+  				const content = __stage.container;
   
   				for ( const section of sections ) {
   

@@ -51,7 +51,7 @@ function onReady(__stage) {
   			const tweenParameters = {};
   
   			const loader = new ColladaLoader();
-  			loader.load( './models/collada/abb_irb52_7_120.dae', function ( collada ) {
+  			loader.load( ASSET_HOST + 'models/collada/abb_irb52_7_120.dae', function ( collada ) {
   
   				dae = collada.scene;
   

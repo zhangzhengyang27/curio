@@ -46,7 +46,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   
@@ -68,7 +68,7 @@ function onReady(__stage) {
   				// collada
   
   				const loader = new ColladaLoader( loadingManager );
-  				loader.load( './models/collada/elf/elf.dae', function ( collada ) {
+  				loader.load( ASSET_HOST + 'models/collada/elf/elf.dae', function ( collada ) {
   
   					elf = collada.scene;
   

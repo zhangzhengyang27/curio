@@ -80,7 +80,6 @@ function onReady(__stage) {
   			const turbFriction = uniform( 0.01 );
   
   			
-  			async 
   
   
   				if ( WebGPU.isAvailable() === false ) {

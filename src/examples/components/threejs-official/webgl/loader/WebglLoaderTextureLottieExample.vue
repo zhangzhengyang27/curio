@@ -124,7 +124,10 @@ function onReady(__stage) {
   				// There are a few undocumented properties:
   				// console.log( animation );
   
-  				const scrubber = document.getElementById( 'scrubber' );
+  				const scrubber = document.createElement( 'input' );
+  				scrubber.type = 'range';
+  				scrubber.style.cssText = 'position:absolute;bottom:10px;left:10px;width:200px;';
+  				__stage.overlay?.appendChild( scrubber );
   				scrubber.max = animation.totalFrames;
   
   				scrubber.addEventListener( 'pointerdown', function () {

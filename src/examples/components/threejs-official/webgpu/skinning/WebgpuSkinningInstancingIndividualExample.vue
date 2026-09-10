@@ -177,7 +177,6 @@ function onReady(__stage) {
   
   			}
   
-  			async 
   
   
   				if ( WebGPU.isAvailable() === false ) {

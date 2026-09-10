@@ -234,7 +234,7 @@ function onReady(__stage) {
   
   				// texture
   
-  				const noiseTexture = textureLoader.load( './textures/noises/perlin/128x128.png' );
+  				const noiseTexture = textureLoader.load( ASSET_HOST + 'textures/noises/perlin/128x128.png' );
   				noiseTexture.wrapS = THREE.RepeatWrapping;
   				noiseTexture.wrapT = THREE.RepeatWrapping;
   

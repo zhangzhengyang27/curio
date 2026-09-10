@@ -71,7 +71,6 @@ function onReady(__stage) {
   			let computeDrawBuffer, computeInitDrawBuffer;
   
   			
-  			async 
   
   
   				// geometry

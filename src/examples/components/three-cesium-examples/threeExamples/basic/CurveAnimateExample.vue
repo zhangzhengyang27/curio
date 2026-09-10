@@ -27,8 +27,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  new OrbitControls(camera, renderer.domElement)
-  
   scene.add(new THREE.AmbientLight(0xffffff, 4))
   
   scene.add(new THREE.AxesHelper(1000))

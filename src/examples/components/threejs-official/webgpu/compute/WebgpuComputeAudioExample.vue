@@ -43,7 +43,10 @@ async function onReady(__stage) {
   			const analyserBuffer = new Uint8Array( 1024 );
   
   
-  			const startButton = document.getElementById( 'startButton' );
+  			const startButton = document.createElement( 'button' );
+  			startButton.textContent = 'Click to Start';
+  			startButton.style.cssText = 'padding:12px 24px;font-size:16px;cursor:pointer;';
+  			__stage.overlay?.appendChild( startButton );
   			startButton.addEventListener( 'click', init );
   
   			async function playAudioBuffer() {
@@ -79,11 +82,9 @@ async function onReady(__stage) {
   
   			}
   
-  			async 
   
   
-  				const overlay = document.getElementById( 'overlay' );
-  				overlay.remove();
+  				startButton.remove();
   
   				// audio buffer
   

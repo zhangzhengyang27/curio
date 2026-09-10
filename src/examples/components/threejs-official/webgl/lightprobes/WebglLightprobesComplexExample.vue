@@ -44,11 +44,7 @@ async function onReady(__stage) {
   
   			let probesLeft, probesRight;
   			let probesHelperLeft, probesHelperRight;
-  
-  			
-  			async 
-  
-  
+
   				// Camera
   
   				

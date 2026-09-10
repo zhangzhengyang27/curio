@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     @ready="onReady"
   >
     <template #default>
@@ -24,7 +25,47 @@ const props = defineProps({
   }
 })
 
-const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> read linear-srgb float pixel data<br/>\n\t\t\t<span id=\"values\"></span>"
+const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> read linear-srgb float pixel data"
+
+const vertexShader = /* glsl */ `
+varying vec2 vUv;
+
+void main() {
+
+	vUv = uv;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+}
+`
+
+const fragmentShaderPass1 = /* glsl */ `
+varying vec2 vUv;
+uniform float time;
+
+void main() {
+
+	float r = vUv.x;
+	if( vUv.y < 0.5 ) r = 0.0;
+	float g = vUv.y;
+	if( vUv.x < 0.5 ) g = 0.0;
+
+	gl_FragColor = vec4( r, g, time, 1.0 );
+
+}
+`
+
+const fragmentShaderScreen = /* glsl */ `
+varying vec2 vUv;
+uniform sampler2D tDiffuse;
+
+void main() {
+
+	gl_FragColor = texture2D( tDiffuse, vUv );
+	#include <colorspace_fragment>
+
+}
+`
+
 function onReady(__stage) {
   const scene = __stage.scene
   const camera = __stage.camera
@@ -35,7 +76,7 @@ function onReady(__stage) {
   
   
   
-  			let container, stats;
+  			let stats;
   
   			let cameraRTT, sceneRTT, sceneScreen, zmesh1, zmesh2;
   
@@ -52,7 +93,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				//
   
   				cameraRTT = new THREE.OrthographicCamera( (__stage.container?.clientWidth || window.innerWidth) / - 2, (__stage.container?.clientWidth || window.innerWidth) / 2, (__stage.container?.clientHeight || window.innerHeight) / 2, (__stage.container?.clientHeight || window.innerHeight) / - 2, 1, 1000 );
   				cameraRTT.position.z = 500;
@@ -75,16 +116,16 @@ function onReady(__stage) {
   				material = new THREE.ShaderMaterial( {
   
   					uniforms: { 'time': { value: 0.0 } },
-  					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragment_shader_pass_1' ).textContent
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShaderPass1
   
   				} );
   
   				const materialScreen = new THREE.ShaderMaterial( {
   
   					uniforms: { 'tDiffuse': { value: rtTexture.texture } },
-  					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragment_shader_screen' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShaderScreen,
   
   					depthWrite: false
   
@@ -125,7 +166,8 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
-  				valueNode = document.getElementById( 'values' );
+  				valueNode = document.createElement( 'div' );
+  				__stage.overlay?.appendChild( valueNode );
   
   				document.addEventListener( 'mousemove', onDocumentMouseMove );
   
@@ -156,8 +198,10 @@ function onReady(__stage) {
     				// Render first scene into texture
     				renderer.setRenderTarget( rtTexture );
     				renderer.clear();
+    				renderer.render( sceneRTT, cameraRTT );
     				// Render full screen quad with generated texture
     				renderer.setRenderTarget( null );
+    				renderer.render( sceneScreen, cameraRTT );
     				const read = new Float32Array( 4 );
     				renderer.readRenderTargetPixels( rtTexture, windowHalfX + mouseX, windowHalfY - mouseY, 1, 1, read );
     				valueNode.innerHTML = 'r:' + read[ 0 ] + '<br/>g:' + read[ 1 ] + '<br/>b:' + read[ 2 ];

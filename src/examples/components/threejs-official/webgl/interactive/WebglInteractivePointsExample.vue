@@ -27,6 +27,44 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - interactive - particles"
+
+const vertexShader = /* glsl */ `
+attribute float size;
+attribute vec3 customColor;
+
+varying vec3 vColor;
+
+void main() {
+
+	vColor = customColor;
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+	gl_PointSize = size * ( 300.0 / -mvPosition.z );
+
+	gl_Position = projectionMatrix * mvPosition;
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform vec3 color;
+uniform sampler2D pointTexture;
+uniform float alphaTest;
+
+varying vec3 vColor;
+
+void main() {
+
+	gl_FragColor = vec4( color * vColor, 1.0 );
+
+	gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+
+	if ( gl_FragColor.a < alphaTest ) discard;
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -44,14 +82,16 @@ function onReady(__stage) {
   
   
   			const PARTICLE_SIZE = 20;
-  
+  			
+  			let particles;
+  			
   			let raycaster, intersects;
   			let pointer, INTERSECTED;
   
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				//
   
   				
   
@@ -101,8 +141,8 @@ function onReady(__stage) {
   						pointTexture: { value: new THREE.TextureLoader().load( ASSET_HOST + 'textures/sprites/disc.png' ) },
   						alphaTest: { value: 0.9 }
   					},
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader
   
   				} );
   

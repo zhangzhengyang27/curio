@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 70, near: 0.1, far: 50 }"
     @ready="onReady"
   >
@@ -30,6 +31,70 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\">threejs</a> webgl - Multiple RenderTargets"
+
+// G-Buffer shaders (GLSL3)
+const gbufferVertShader = /* glsl */`
+precision highp float;
+precision highp int;
+in vec3 position;
+in vec3 normal;
+in vec2 uv;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
+out vec3 vNormal;
+out vec2 vUv;
+void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const gbufferFragShader = /* glsl */`
+precision highp float;
+precision highp int;
+uniform sampler2D tDiffuse;
+uniform vec2 repeat;
+in vec3 vNormal;
+in vec2 vUv;
+layout(location = 0) out vec4 gColor;
+layout(location = 1) out vec4 gNormal;
+void main() {
+    gColor = texture(tDiffuse, vUv * repeat);
+    gNormal = vec4(normalize(vNormal), 1.0);
+}
+`
+
+// Post-processing shaders (GLSL3)
+const renderVertShader = /* glsl */`
+precision highp float;
+precision highp int;
+in vec3 position;
+in vec2 uv;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+out vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const renderFragShader = /* glsl */`
+precision highp float;
+precision highp int;
+uniform sampler2D tDiffuse;
+uniform sampler2D tNormal;
+in vec2 vUv;
+out vec4 fragColor;
+void main() {
+    vec4 diffuse = texture(tDiffuse, vUv);
+    vec4 normal = texture(tNormal, vUv);
+    fragColor = diffuse + normal * 0.5;
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -96,8 +161,8 @@ function onReady(__stage) {
   					new THREE.TorusKnotGeometry( 1, 0.3, 128, 32 ),
   					new THREE.RawShaderMaterial( {
   						name: 'G-Buffer Shader',
-  						vertexShader: document.querySelector( '#gbuffer-vert' ).textContent.trim(),
-  						fragmentShader: document.querySelector( '#gbuffer-frag' ).textContent.trim(),
+  						vertexShader: gbufferVertShader,
+  						fragmentShader: gbufferFragShader,
   						uniforms: {
   							tDiffuse: { value: diffuse },
   							repeat: { value: new THREE.Vector2( 5, 0.5 ) }
@@ -115,8 +180,8 @@ function onReady(__stage) {
   					new THREE.PlaneGeometry( 2, 2 ),
   					new THREE.RawShaderMaterial( {
   						name: 'Post-FX Shader',
-  						vertexShader: document.querySelector( '#render-vert' ).textContent.trim(),
-  						fragmentShader: document.querySelector( '#render-frag' ).textContent.trim(),
+  						vertexShader: renderVertShader,
+  						fragmentShader: renderFragShader,
   						uniforms: {
   							tDiffuse: { value: renderTarget.textures[ 0 ] },
   							tNormal: { value: renderTarget.textures[ 1 ] },

@@ -46,6 +46,7 @@ export function useCSS3DExampleStage(containerRef, overlayRef, options = {}) {
   let mounted = false
   let resizeObserver = null
   let gridHelper = null
+  const trackedListeners = []
 
   function getContainerSize() {
     if (fitContainer && containerRef?.value) {
@@ -179,11 +180,24 @@ export function useCSS3DExampleStage(containerRef, overlayRef, options = {}) {
     applySize()
   }
 
+  /**
+   * 追踪事件监听器，dispose 时自动移除。
+   */
+  function listen(target, type, fn, opts) {
+    target.addEventListener(type, fn, opts)
+    trackedListeners.push([target, type, fn, opts])
+  }
+
   function dispose() {
     if (!mounted) return
     mounted = false
 
     if (onBeforeDispose) onBeforeDispose(ctx)
+
+    trackedListeners.forEach(([target, type, fn, opts]) => {
+      try { target.removeEventListener(type, fn, opts) } catch { /* ignore */ }
+    })
+    trackedListeners.length = 0
 
     if (resizeObserver) {
       resizeObserver.disconnect()
@@ -241,7 +255,29 @@ export function useCSS3DExampleStage(containerRef, overlayRef, options = {}) {
     if (autoStart) renderLoop.start()
 
     isReady.value = true
-    if (onReady) onReady(ctx)
+    if (onReady) {
+      const origWinAdd = window.addEventListener
+      const origDocAdd = document.addEventListener
+      window.addEventListener = function (type, fn, opts) {
+        trackedListeners.push([window, type, fn, opts])
+        return origWinAdd.call(window, type, fn, opts)
+      }
+      document.addEventListener = function (type, fn, opts) {
+        trackedListeners.push([document, type, fn, opts])
+        return origDocAdd.call(document, type, fn, opts)
+      }
+      try {
+        const result = onReady(ctx)
+        if (result && typeof result.catch === 'function') {
+          result.catch((err) => {
+            console.warn('[useCSS3DExampleStage] onReady async error:', err)
+          })
+        }
+      } finally {
+        window.addEventListener = origWinAdd
+        document.addEventListener = origDocAdd
+      }
+    }
   }
 
   onMounted(mount)
@@ -265,6 +301,7 @@ export function useCSS3DExampleStage(containerRef, overlayRef, options = {}) {
     setCamera,
     renderOnce,
     resize,
+    listen,
     dispose,
   }
 

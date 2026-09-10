@@ -72,7 +72,7 @@ function onReady(__stage) {
   				// ASCII file
   
   				const loader = new STLLoader();
-  				loader.load( './models/stl/ascii/slotted_disk.stl', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/stl/ascii/slotted_disk.stl', function ( geometry ) {
   
   					const material = new THREE.MeshPhongMaterial( { color: 0xff9c7c, specular: 0x494949, shininess: 200 } );
   					const mesh = new THREE.Mesh( geometry, material );
@@ -93,7 +93,7 @@ function onReady(__stage) {
   
   				const material = new THREE.MeshPhongMaterial( { color: 0xd5d5d5, specular: 0x494949, shininess: 200 } );
   
-  				loader.load( './models/stl/binary/pr2_head_pan.stl', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/stl/binary/pr2_head_pan.stl', function ( geometry ) {
   
   					const mesh = new THREE.Mesh( geometry, material );
   
@@ -108,7 +108,7 @@ function onReady(__stage) {
   
   				} );
   
-  				loader.load( './models/stl/binary/pr2_head_tilt.stl', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/stl/binary/pr2_head_tilt.stl', function ( geometry ) {
   
   					const mesh = new THREE.Mesh( geometry, material );
   
@@ -124,7 +124,7 @@ function onReady(__stage) {
   				} );
   
   				// Colored binary STL
-  				loader.load( './models/stl/binary/colored.stl', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/stl/binary/colored.stl', function ( geometry ) {
   
   					let meshMaterial = material;
   

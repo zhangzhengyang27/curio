@@ -26,6 +26,39 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - buffergeometry custom attributes - particles"
+
+const vertexShader = /* glsl */ `
+attribute float size;
+
+varying vec3 vColor;
+
+void main() {
+
+	vColor = color;
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+	gl_PointSize = size * ( 300.0 / -mvPosition.z );
+
+	gl_Position = projectionMatrix * mvPosition;
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform sampler2D pointTexture;
+
+varying vec3 vColor;
+
+void main() {
+
+	gl_FragColor = vec4( vColor, 1.0 );
+
+	gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -60,8 +93,8 @@ function onReady(__stage) {
   				const shaderMaterial = new THREE.ShaderMaterial( {
   
   					uniforms: uniforms,
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   
   					blending: THREE.AdditiveBlending,
   					depthTest: false,
@@ -106,7 +139,7 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
+  				//
   
   
   				stats = new Stats();

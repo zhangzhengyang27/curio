@@ -26,6 +26,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - panorama with depth<br />\n\t\t\tCreated by <a href=\"https://orfleisher.com\" target=\"_blank\" rel=\"noopener\">@juniorxsound</a>. Panorama from <a href=\"https://krpano.com/examples/?depthmap\" target=\"_blank\" rel=\"noopener\">krpano</a>."
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,7 +42,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				timer = new THREE.Timer();
   				timer.connect( document );
@@ -70,7 +72,7 @@ function onReady(__stage) {
   				const manager = new THREE.LoadingManager();
   				const loader = new THREE.TextureLoader( manager );
   
-  				loader.load( './textures/kandao3.jpg', function ( texture ) {
+  				loader.load( ASSET_HOST + 'textures/kandao3.jpg', function ( texture ) {
   
   					texture.colorSpace = THREE.SRGBColorSpace;
   					texture.minFilter = THREE.NearestFilter;
@@ -79,7 +81,7 @@ function onReady(__stage) {
   
   				} );
   
-  				loader.load( './textures/kandao3_depthmap.jpg', function ( depth ) {
+  				loader.load( ASSET_HOST + 'textures/kandao3_depthmap.jpg', function ( depth ) {
   
   					depth.minFilter = THREE.NearestFilter;
   					depth.generateMipmaps = false;

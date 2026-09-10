@@ -42,7 +42,7 @@ function onReady(__stage) {
   
   			let mesh;
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				//
   

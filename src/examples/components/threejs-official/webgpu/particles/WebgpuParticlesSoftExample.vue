@@ -69,7 +69,7 @@ function onReady(__stage) {
   				//
   
   				const loader = new PLYLoader();
-  				loader.load( './models/ply/binary/Lucy100k.ply', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/ply/binary/Lucy100k.ply', function ( geometry ) {
   
   					geometry.computeVertexNormals();
   

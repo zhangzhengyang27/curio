@@ -219,7 +219,7 @@ function onReady(__stage) {
   
   				const gltfLoader = new GLTFLoader();
   				gltfLoader.load(
-  					'./models/gltf/Michelle.glb',
+  					ASSET_HOST + 'models/gltf/Michelle.glb',
   					( gltf ) => {
   
   						const model = gltf.scene;

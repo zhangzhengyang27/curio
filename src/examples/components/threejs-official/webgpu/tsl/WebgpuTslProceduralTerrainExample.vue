@@ -31,6 +31,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Procedural Terrain</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -58,7 +60,7 @@ function onReady(__stage) {
   				// environment
   
   				const hdrLoader = new HDRLoader();
-  				hdrLoader.load( './textures/equirectangular/pedestrian_overpass_1k.hdr', ( environmentMap ) => {
+  				hdrLoader.load( ASSET_HOST + 'textures/equirectangular/pedestrian_overpass_1k.hdr', ( environmentMap ) => {
   
   					environmentMap.mapping = THREE.EquirectangularReflectionMapping;
   

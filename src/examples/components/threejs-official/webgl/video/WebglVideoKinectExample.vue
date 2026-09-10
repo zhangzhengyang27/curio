@@ -22,7 +22,39 @@ const props = defineProps({
   }
 })
 
+const vsSource = /* glsl */`
+  uniform sampler2D map;
+  uniform float width;
+  uniform float height;
+  uniform float nearClipping;
+  uniform float farClipping;
+  uniform float pointSize;
+  uniform float zOffset;
+
+  varying vec2 vUv;
+
+  void main() {
+    vUv = vec2( position.x / width, position.y / height );
+    vec4 color = texture2D( map, vUv );
+    float depth = mix( nearClipping, farClipping, color.r );
+    vec3 pos = vec3( position.x - width / 2.0, position.y - height / 2.0, - depth + zOffset );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+    gl_PointSize = pointSize;
+  }
+`;
+
+const fsSource = /* glsl */`
+  uniform sampler2D map;
+  varying vec2 vUv;
+
+  void main() {
+    vec4 color = texture2D( map, vUv );
+    gl_FragColor = color;
+  }
+`;
+
 function onReady(__stage) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -49,7 +81,11 @@ function onReady(__stage) {
   				center = new THREE.Vector3();
   				center.z = - 1000;
   
-  				const video = document.getElementById( 'video' );
+  				const video = document.createElement( 'video' );
+  				video.src = ASSET_HOST + 'textures/kinect.webm';
+  				video.loop = true;
+  				video.muted = true;
+  				video.playsInline = true;
   
   				const texture = new THREE.VideoTexture( video );
   				texture.minFilter = THREE.NearestFilter;
@@ -85,8 +121,8 @@ function onReady(__stage) {
   						'zOffset': { value: 1000 }
   
   					},
-  					vertexShader: document.getElementById( 'vs' ).textContent,
-  					fragmentShader: document.getElementById( 'fs' ).textContent,
+  					vertexShader: vsSource,
+  					fragmentShader: fsSource,
   					blending: THREE.AdditiveBlending,
   					depthTest: false, depthWrite: false,
   					transparent: true

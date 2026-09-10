@@ -141,7 +141,7 @@ function onReady(__stage) {
   				const gltfLoader = new GLTFLoader();
   				gltfLoader.setDRACOLoader( dracoLoader );
   
-  				gltfLoader.load( './models/gltf/gears.glb', ( gltf ) => {
+  				gltfLoader.load( ASSET_HOST + 'models/gltf/gears.glb', ( gltf ) => {
   
   					const model = gltf.scene;
   

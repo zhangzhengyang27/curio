@@ -2,6 +2,7 @@
   <WebGPUExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-options="{ fov: 70, near: 0.1, far: 50 }"
     @ready="onReady"
   >

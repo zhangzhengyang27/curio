@@ -47,7 +47,9 @@ function onReady(__stage) {
   
   				
   
-  				video = document.getElementById( 'video' );
+  				const video = document.createElement( 'video' );
+  				video.muted = true;
+  				video.playsInline = true;
   
   				const texture = new THREE.VideoTexture( video );
   				texture.colorSpace = THREE.SRGBColorSpace;

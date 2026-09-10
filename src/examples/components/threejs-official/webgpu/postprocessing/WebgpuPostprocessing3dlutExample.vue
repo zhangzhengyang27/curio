@@ -116,7 +116,7 @@ async function onReady(__stage) {
   				// baked model
   
   				gltfLoader.load(
-  					'./models/gltf/coffeeMug.glb',
+  					ASSET_HOST + 'models/gltf/coffeeMug.glb',
   					( gltf ) => {
   
           				gltf.scene.getObjectByName( 'baked' ).material.map.anisotropy = 8;
@@ -133,7 +133,7 @@ async function onReady(__stage) {
   
   				// texture
   
-  				const noiseTexture = textureLoader.load( './textures/noises/perlin/128x128.png' );
+  				const noiseTexture = textureLoader.load( ASSET_HOST + 'textures/noises/perlin/128x128.png' );
   				noiseTexture.wrapS = THREE.RepeatWrapping;
   				noiseTexture.wrapT = THREE.RepeatWrapping;
   

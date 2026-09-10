@@ -63,7 +63,6 @@ async function onReady(__stage) {
   			const _center = new THREE.Vector3();
   
   			
-  			async 
   
   
   				timer = new THREE.Timer();
@@ -96,7 +95,10 @@ async function onReady(__stage) {
   				controls.movementSpeed = 2.0;
   				controls.lookSpeed = 0.16;
   
-  				const progressBar = document.getElementById( 'progressBar' );
+  				const progressBar = document.createElement( 'progress' );
+  				progressBar.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;';
+  				progressBar.max = 100;
+  				__stage.overlay?.appendChild( progressBar );
   
   				const manager = new THREE.LoadingManager();
   				manager.onProgress = function ( url, loaded, total ) {

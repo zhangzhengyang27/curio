@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 90, near: 0.01, far: 100 }"
     @ready="onReady"
   >
@@ -121,8 +122,6 @@ function onReady(__stage) {
     						currentVertex = 0;
     					}
   })
-  
-  				requestAnimationFrame( compute );
   
   			};
   

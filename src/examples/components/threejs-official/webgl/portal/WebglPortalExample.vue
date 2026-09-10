@@ -2,6 +2,7 @@
   <ExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-position="[0, 75, 160]"
     :camera-options="{ fov: 45, near: 1, far: 5000 }"
     @ready="onReady"
@@ -47,7 +48,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				// renderer
   				

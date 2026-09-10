@@ -44,7 +44,6 @@ async function onReady(__stage) {
   			let physics, pivot, physicsHelper;
   
   			
-  			async 
   
   
   				

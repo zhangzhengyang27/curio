@@ -56,7 +56,6 @@ function onReady(__stage) {
   			let computeSize;
   
   			
-  			async 
   
   
   				

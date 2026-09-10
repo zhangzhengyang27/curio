@@ -47,7 +47,6 @@ function onReady(__stage) {
   			let gui;
   
   			
-  			async 
   
   
   				

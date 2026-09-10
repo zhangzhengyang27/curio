@@ -191,6 +191,7 @@ const slotProps = computed(() => ({
   setCamera: stage.setCamera,
   renderOnce: stage.renderOnce,
   resize: stage.resize,
+  listen: stage.listen,
   dispose: stage.dispose,
 }))
 

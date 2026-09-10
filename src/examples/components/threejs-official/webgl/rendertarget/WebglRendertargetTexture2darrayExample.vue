@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 45, near: 0.1, far: 2000 }"
     @ready="onReady"
   >
@@ -31,6 +32,50 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">\n\t\t\t\tthree.js\n\t\t\t</a>\n\t\t\t- 2D Texture array framebuffer color attachment\n\t\t\t<br />\n\n\t\t\t<p>\n\t\t\t\tThis example shows how to render to an array of 2D texture.</br>\n\t\t\t\tWebGL2 allows to render to specific \"layers\" in 3D texture and array of textures.\n\t\t\t</p>\n\n\t\t\tScanned head data by\n\t\t\t<a href=\"https://www.codeproject.com/Articles/352270/Getting-started-with-Volume-Rendering\" target=\"_blank\" rel=\"noopener\">Divine Augustine</a><br />\n\t\t\tlicensed under\n\t\t\t<a href=\"https://www.codeproject.com/info/cpol10.aspx\" target=\"_blank\" rel=\"noopener\">CPOL</a>"
+
+const vertexPostprocess = /* glsl */`
+  in vec3 position;
+  void main() {
+    gl_Position = vec4( position, 1.0 );
+  }
+`;
+
+const fragmentPostprocess = /* glsl */`
+  precision highp sampler2DArray;
+  uniform sampler2DArray uTexture;
+  uniform int uDepth;
+  uniform float uIntensity;
+  out vec4 outColor;
+  void main() {
+    vec4 color = texelFetch( uTexture, ivec3( ivec2( gl_FragCoord.xy ), uDepth ), 0 );
+    outColor = vec4( color.r * uIntensity );
+  }
+`;
+
+const planeVertexShader = /* glsl */`
+  uniform vec2 size;
+  out vec2 vUv;
+  void main() {
+    vUv = uv;
+    vec3 transformed = position;
+    transformed.xy *= size;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( transformed, 1.0 );
+  }
+`;
+
+const planeFragmentShader = /* glsl */`
+  precision highp sampler2DArray;
+  uniform sampler2DArray diffuse;
+  uniform float depth;
+  in vec2 vUv;
+  out vec4 outColor;
+  void main() {
+    float d = depth / 109.0;
+    vec4 color = texture( diffuse, vec3( vUv, d ) );
+    outColor = vec4( color.r );
+  }
+`;
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -66,8 +111,8 @@ function onReady(__stage) {
   					uDepth: { value: 55 },
   					uIntensity: { value: 1.0 }
   				},
-  				vertexShader: document.getElementById( 'vertex-postprocess' ).textContent.trim(),
-  				fragmentShader: document.getElementById( 'fragment-postprocess' ).textContent.trim()
+  				vertexShader: vertexPostprocess,
+  				fragmentShader: fragmentPostprocess
   			} );
   
   			let depthStep = 0.4;
@@ -129,8 +174,8 @@ function onReady(__stage) {
   								depth: { value: 55 },
   								size: { value: new THREE.Vector2( planeWidth, planeHeight ) }
   							},
-  							vertexShader: document.getElementById( 'vs' ).textContent.trim(),
-  							fragmentShader: document.getElementById( 'fs' ).textContent.trim()
+  							vertexShader: planeVertexShader,
+  							fragmentShader: planeFragmentShader
   						} );
   
   						const geometry = new THREE.PlaneGeometry( planeWidth, planeHeight );

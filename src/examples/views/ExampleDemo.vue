@@ -8,13 +8,13 @@
           class="demo-float-meta"
         >
           <div class="meta-top">
-          <button
-            type="button"
-            class="back-btn"
-            @click="goBackToList"
-          >
-            ← 返回示例列表
-          </button>
+            <button
+              type="button"
+              class="back-btn"
+              @click="goBackToList"
+            >
+              ← 返回示例列表
+            </button>
             <span class="demo-title">{{ example?.title || '示例' }}</span>
           </div>
           <div class="meta-bottom">
@@ -83,6 +83,7 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getExampleById } from '../registry/index.js'
+import { ensureRegistryLoaded } from '../composables/useExampleFilters.js'
 import IframeRunner from '../runners/IframeRunner.vue'
 import ExampleHost from './ExampleHost.vue'
 import { loadExampleComponent, loadExampleSource } from '../components/index.js'
@@ -127,7 +128,11 @@ const parsed = computed(() => {
   return { source, category, id }
 })
 
+const registryReady = ref(false)
+ensureRegistryLoaded().then(() => { registryReady.value = true })
+
 const example = computed(() => {
+  if (!registryReady.value) return null
   const { source, category, id } = parsed.value
   if (!source || !category || !id) return null
   return getExampleById(source, category, id)

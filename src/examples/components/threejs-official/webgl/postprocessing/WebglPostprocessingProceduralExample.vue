@@ -29,6 +29,39 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Procedural Effects Example by <a href=\"https://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a><br/><br/>"
+
+const proceduralVertShader = /* glsl */`
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const noiseRandom1DFragShader = /* glsl */`
+#include <common>
+varying vec2 vUv;
+void main() {
+    gl_FragColor = vec4(vec3(rand(vUv.x)), 1.0);
+}
+`
+
+const noiseRandom2DFragShader = /* glsl */`
+#include <common>
+varying vec2 vUv;
+void main() {
+    gl_FragColor = vec4(vec3(rand(vUv)), 1.0);
+}
+`
+
+const noiseRandom3DFragShader = /* glsl */`
+#include <common>
+varying vec2 vUv;
+void main() {
+    gl_FragColor = vec4(rand(vec3(vUv, 1.0)), rand(vec3(vUv.yx, 1.0)), rand(vec3(vUv, vUv.x)), 1.0);
+}
+`
+
 function onReady(__stage) {
   const scene = __stage.scene
   const camera = __stage.camera
@@ -48,7 +81,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				
   
@@ -59,16 +92,16 @@ function onReady(__stage) {
   				// Setup post processing stage
   				postCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
   				noiseRandom1DMaterial = new THREE.ShaderMaterial( {
-  					vertexShader: document.querySelector( '#procedural-vert' ).textContent.trim(),
-  					fragmentShader: document.querySelector( '#noiseRandom1D-frag' ).textContent.trim()
+  					vertexShader: proceduralVertShader,
+  					fragmentShader: noiseRandom1DFragShader
   				} );
   				noiseRandom2DMaterial = new THREE.ShaderMaterial( {
-  					vertexShader: document.querySelector( '#procedural-vert' ).textContent.trim(),
-  					fragmentShader: document.querySelector( '#noiseRandom2D-frag' ).textContent.trim()
+  					vertexShader: proceduralVertShader,
+  					fragmentShader: noiseRandom2DFragShader
   				} );
   				noiseRandom3DMaterial = new THREE.ShaderMaterial( {
-  					vertexShader: document.querySelector( '#procedural-vert' ).textContent.trim(),
-  					fragmentShader: document.querySelector( '#noiseRandom3D-frag' ).textContent.trim()
+  					vertexShader: proceduralVertShader,
+  					fragmentShader: noiseRandom3DFragShader
   				} );
   				postMaterial = noiseRandom3DMaterial;
   				const postPlane = new THREE.PlaneGeometry( 2, 2 );

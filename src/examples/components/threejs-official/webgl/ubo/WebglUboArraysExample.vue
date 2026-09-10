@@ -33,6 +33,65 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Uniform Buffer Objects Arrays"
+
+const vertexShader = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  layout(std140) uniform ViewData {
+    mat4 projectionMatrix;
+    mat4 viewMatrix;
+  };
+
+  layout(std140) uniform LightingData {
+    vec4 lightPosition[ POINTLIGHTS_MAX ];
+    vec4 lightColor[ POINTLIGHTS_MAX ];
+    int pointLightsCount;
+  };
+
+  uniform mat4 modelMatrix;
+  uniform mat3 normalMatrix;
+
+  in vec3 position;
+  in vec3 normal;
+
+  out vec3 vPosition;
+  out vec3 vNormal;
+
+  void main() {
+    vPosition = position;
+    vNormal = normalMatrix * normal;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShader = /* glsl */`
+  precision highp float;
+  precision highp int;
+
+  layout(std140) uniform LightingData {
+    vec4 lightPosition[ POINTLIGHTS_MAX ];
+    vec4 lightColor[ POINTLIGHTS_MAX ];
+    int pointLightsCount;
+  };
+
+  in vec3 vPosition;
+  in vec3 vNormal;
+
+  out vec4 outColor;
+
+  void main() {
+    vec3 normal = normalize( vNormal );
+    vec3 color = vec3( 0.0 );
+    for ( int i = 0; i < pointLightsCount; i ++ ) {
+      vec3 lightDir = normalize( lightPosition[ i ].xyz - vPosition );
+      float diff = max( dot( normal, lightDir ), 0.0 );
+      color += lightColor[ i ].rgb * diff;
+    }
+    outColor = vec4( color, 1.0 );
+  }
+`;
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +106,7 @@ function onReady(__stage) {
   
   			let lightingUniformsGroup, lightCenters;
   
-  			const container = document.getElementById( 'container' );
+  			const container = __stage.container;
   
   			const pointLightsMax = 300;
   
@@ -113,8 +172,8 @@ function onReady(__stage) {
   					defines: {
   						POINTLIGHTS_MAX: pointLightsMax
   					},
-  					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					glslVersion: THREE.GLSL3
   				} );
   

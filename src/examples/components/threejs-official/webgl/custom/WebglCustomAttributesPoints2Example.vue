@@ -27,6 +27,29 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - custom attributes example - particles - billboards"
+
+const vertexShader = /* glsl */ `
+attribute float size;
+attribute vec3 ca;
+varying vec3 vColor;
+void main() {
+	vColor = ca;
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+	gl_PointSize = size * ( 150.0 / -mvPosition.z );
+	gl_Position = projectionMatrix * mvPosition;
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform vec3 color;
+uniform sampler2D pointTexture;
+varying vec3 vColor;
+void main() {
+	gl_FragColor = vec4( color * vColor, 1.0 );
+	gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -117,8 +140,8 @@ function onReady(__stage) {
   						color: { value: new THREE.Color( 0xffffff ) },
   						pointTexture: { value: texture }
   					},
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					transparent: true
   
   				} );
@@ -133,8 +156,7 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
-  
+  				//
   
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)

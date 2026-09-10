@@ -47,7 +47,7 @@ function onReady(__stage) {
   			
   
   
-  				canvas = document.getElementById( 'c' );
+  				canvas = renderer.domElement;
   
   				const geometries = [
   					new THREE.BoxGeometry( 1, 1, 1 ),
@@ -56,7 +56,7 @@ function onReady(__stage) {
   					new THREE.CylinderGeometry( 0.5, 0.5, 1, 12 )
   				];
   
-  				const content = document.getElementById( 'content' );
+  				const content = __stage.container;
   
   				for ( let i = 0; i < 40; i ++ ) {
   

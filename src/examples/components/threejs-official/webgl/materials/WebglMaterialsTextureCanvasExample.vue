@@ -68,7 +68,11 @@ function onReady(__stage) {
   
   				// get canvas and context
   
-  				const drawingCanvas = document.getElementById( 'drawing-canvas' );
+  				const drawingCanvas = document.createElement( 'canvas' );
+  				drawingCanvas.width = 128;
+  				drawingCanvas.height = 128;
+  				drawingCanvas.style.cssText = 'position:absolute;bottom:10px;left:10px;border:1px solid #fff;';
+  				__stage.overlay?.appendChild( drawingCanvas );
   				const drawingContext = drawingCanvas.getContext( '2d' );
   
   				// draw white background

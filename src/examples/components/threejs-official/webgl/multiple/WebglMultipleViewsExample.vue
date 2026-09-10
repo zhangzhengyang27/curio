@@ -102,7 +102,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				for ( let ii = 0; ii < views.length; ++ ii ) {
   

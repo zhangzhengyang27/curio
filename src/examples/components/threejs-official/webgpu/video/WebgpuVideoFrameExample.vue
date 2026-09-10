@@ -64,7 +64,7 @@ function onReady(__stage) {
   					}
   				} );
   
-  				new MP4Demuxer( './textures/sintel.mp4', {
+  				new MP4Demuxer( ASSET_HOST + 'textures/sintel.mp4', {
   					onConfig( config ) {
   
   						decoder.configure( config );

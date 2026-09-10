@@ -59,7 +59,7 @@ function onReady(__stage) {
   					'rgb(255,0,255)', 'rgb(255,0,127)', 'rgb(255,255,0)', 'rgb(0,255,127)'
   				];
   
-  				canvas = document.getElementById( 'c' );
+  				canvas = renderer.domElement;
   
   				
   

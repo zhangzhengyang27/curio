@@ -1,5 +1,21 @@
-import { computed } from 'vue'
-import { getAllExamples } from '../registry/index.js'
+import { computed, ref, shallowRef } from 'vue'
+import { getAllExamples, loadAllRegistries } from '../registry/index.js'
+
+// 全局响应式加载状态
+const registryReady = ref(false)
+const allExamplesList = shallowRef([])
+
+let _initPromise = null
+export function ensureRegistryLoaded() {
+  if (!_initPromise) {
+    _initPromise = loadAllRegistries().then(list => {
+      allExamplesList.value = list
+      registryReady.value = true
+      return list
+    })
+  }
+  return _initPromise
+}
 
 export const techGroups = [
   { key: 'all', label: '全部技术', match: () => true },
@@ -53,7 +69,8 @@ export function getSubCategoriesByTech(techKey) {
 }
 
 export function useExampleFilters() {
-  const allExamples = computed(() => getAllExamples())
+  ensureRegistryLoaded()
+  const allExamples = computed(() => allExamplesList.value)
 
   const techList = computed(() => {
     return techGroups.map(tech => {
@@ -68,6 +85,7 @@ export function useExampleFilters() {
     techGroups,
     subCategoryDefinitions,
     techList,
+    registryReady,
     getSubCategoriesByTech
   }
 }

@@ -25,13 +25,11 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  init(document.getElementById('box'))
+  init(ctx.container)
   
   function init(DOM) {
   
     scene.add(camera);
-  
-    DOM.appendChild(renderer.domElement)
   
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;

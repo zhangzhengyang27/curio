@@ -60,7 +60,7 @@ function onReady(__stage) {
   				
   				camera.position.z = 3;
   
-  				const path = './textures/cube/pisa/';
+  				const path = ASSET_HOST + 'textures/cube/pisa/';
   				const format = '.png';
   				const urls = [
   					path + 'px' + format, path + 'nx' + format,

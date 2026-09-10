@@ -104,15 +104,24 @@ function onReady(__stage) {
   				texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
   				texture2.repeat.set( 512, 512 );
   
+  				const valLeftEl = document.createElement( 'span' );
+  				const valRightEl = document.createElement( 'span' );
+  				const infoDiv = document.createElement( 'div' );
+  				infoDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  				infoDiv.appendChild( valLeftEl );
+  				infoDiv.appendChild( document.createTextNode( ' | ' ) );
+  				infoDiv.appendChild( valRightEl );
+  				__stage.overlay?.appendChild( infoDiv );
+  
   				if ( maxAnisotropy > 0 ) {
   
-  					document.getElementById( 'val_left' ).innerHTML = texture1.anisotropy;
-  					document.getElementById( 'val_right' ).innerHTML = texture2.anisotropy;
+  					valLeftEl.innerHTML = texture1.anisotropy;
+  					valRightEl.innerHTML = texture2.anisotropy;
   
   				} else {
   
-  					document.getElementById( 'val_left' ).innerHTML = 'not supported';
-  					document.getElementById( 'val_right' ).innerHTML = 'not supported';
+  					valLeftEl.innerHTML = 'not supported';
+  					valRightEl.innerHTML = 'not supported';
   
   				}
   

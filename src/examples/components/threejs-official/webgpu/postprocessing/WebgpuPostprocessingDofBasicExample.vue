@@ -55,7 +55,6 @@ async function onReady(__stage) {
   			const focusPointView = uniform( vec3() );
   
   			
-  			async 
   
   
   				

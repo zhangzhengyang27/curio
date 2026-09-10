@@ -66,7 +66,7 @@ function onReady(__stage) {
   
   				const loadPointCloud = function ( file ) {
   
-  					loader.load( './models/pcd/' + file, function ( points ) {
+  					loader.load( ASSET_HOST + 'models/pcd/' + file, function ( points ) {
   
   						points.geometry.center();
   						points.geometry.rotateX( Math.PI );

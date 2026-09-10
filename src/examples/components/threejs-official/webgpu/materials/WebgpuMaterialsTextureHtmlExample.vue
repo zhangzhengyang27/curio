@@ -50,7 +50,6 @@ function onReady(__stage) {
   			let mesh, interactions;
   
   			
-  			async 
   
   
   				

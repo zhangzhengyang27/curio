@@ -41,7 +41,7 @@ function onReady(__stage) {
   
   			let points;
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				//
   

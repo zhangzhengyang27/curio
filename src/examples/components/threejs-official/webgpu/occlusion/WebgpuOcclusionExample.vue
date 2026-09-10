@@ -70,7 +70,6 @@ function onReady(__stage) {
   			}
   
   			
-  			async 
   
   
   				

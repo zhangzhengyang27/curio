@@ -122,7 +122,6 @@ async function onReady(__stage) {
   
   			}
   
-  			async 
   
   
   				
@@ -431,7 +430,7 @@ async function onReady(__stage) {
   
   				// Models / Textures
   
-  				const hdrLoader = new HDRLoader().setPath( './textures/equirectangular/' );
+  				const hdrLoader = new HDRLoader().setPath( ASSET_HOST + 'textures/equirectangular/' );
    				const glbloader = new GLTFLoader().setPath( ASSET_HOST + 'models/gltf/' );
    				glbloader.setDRACOLoader( new DRACOLoader().setDecoderPath( DRACO_GLTF_CONFIG ) );
   

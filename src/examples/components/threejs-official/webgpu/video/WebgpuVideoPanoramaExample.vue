@@ -28,6 +28,7 @@ const props = defineProps({
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Video Panorama</span>"
 function onReady(__stage) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,17 +49,15 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
-  
-  				
-  
-  				
-  
   				const geometry = new THREE.SphereGeometry( 5, 60, 40 );
   				// invert the geometry on the x-axis so that all of the faces point inward
   				geometry.scale( - 1, 1, 1 );
   
-  				const video = document.getElementById( 'video' );
+  				const video = document.createElement( 'video' );
+  				video.muted = true;
+  				video.loop = true;
+  				video.playsInline = true;
+  				video.src = ASSET_HOST + 'textures/pano.webm';
   				video.play();
   
   				const texture = new THREE.VideoTexture( video );

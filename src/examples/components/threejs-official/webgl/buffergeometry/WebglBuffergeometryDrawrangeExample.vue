@@ -99,7 +99,7 @@ function onReady(__stage) {
   
   				initGUI();
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				
   				camera.position.z = 1750;

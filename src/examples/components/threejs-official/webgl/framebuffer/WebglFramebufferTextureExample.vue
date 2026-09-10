@@ -106,7 +106,7 @@ function onReady(__stage) {
   
   				//
   
-  				const selection = document.getElementById( 'selection' );
+  				const selection = null; // UI element not available in Vue component
   
   				controls.enablePan = false;
   

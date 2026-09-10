@@ -23,8 +23,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  new OrbitControls(camera, renderer.domElement)
-  
   initObject();
   function initObject() {
     let geometry = new THREE.BufferGeometry(); // 使用BufferGeometry

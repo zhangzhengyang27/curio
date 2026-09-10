@@ -33,6 +33,28 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl hemisphere light example<br/>\n\t\t\tflamingo by <a href=\"https://mirada.com/\" target=\"_blank\" rel=\"noopener\">mirada</a> from <a href=\"http://www.ro.me\" target=\"_blank\" rel=\"noopener\">ro.me</a>"
+
+const skyVertexShader = /* glsl */`
+  varying vec3 vWorldPosition;
+  void main() {
+    vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+    vWorldPosition = worldPosition.xyz;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const skyFragmentShader = /* glsl */`
+  uniform vec3 topColor;
+  uniform vec3 bottomColor;
+  uniform float offset;
+  uniform float exponent;
+  varying vec3 vWorldPosition;
+  void main() {
+    float h = normalize( vWorldPosition + offset ).y;
+    gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h, 0.0 ), exponent ), 0.0 ) ), 1.0 );
+  }
+`;
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -50,7 +72,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				
   
@@ -110,8 +132,8 @@ function onReady(__stage) {
   
   				// SKYDOME
   
-  				const vertexShader = document.getElementById( 'vertexShader' ).textContent;
-  				const fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
+  				const vertexShader = skyVertexShader;
+  				const fragmentShader = skyFragmentShader;
   				const uniforms = {
   					'topColor': { value: new THREE.Color( 0x0077ff ) },
   					'bottomColor': { value: new THREE.Color( 0xffffff ) },

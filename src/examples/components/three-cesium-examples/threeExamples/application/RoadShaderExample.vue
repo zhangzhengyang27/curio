@@ -35,7 +35,7 @@ function onReady(ctx) {
           this.container = el;
           
           
-          this.container.appendChild(renderer.domElement);
+          // renderer.domElement already managed by ExampleScene
           
           
           
@@ -240,7 +240,7 @@ function onReady(ctx) {
   }
   
   var road = new Road();
-  road.initThree(document.getElementById('box'));
+  road.initThree(ctx.container);
   road.createChart({
       lineWidth: 0.5,
       width: 48,

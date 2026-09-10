@@ -28,6 +28,22 @@ const props = defineProps({
 let _intervalId = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - memory test II"
+
+const vertexShaderSource = /* glsl */`
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  }
+`;
+
+const fragmentShaderSource = /* glsl */`
+  varying vec2 vUv;
+  void main() {
+    gl_FragColor = vec4( vUv, XXX, 1.0 );
+  }
+`;
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -54,8 +70,8 @@ function onReady(__stage) {
   			
   
   
-  				vertexShader = document.getElementById( 'vertexShader' ).textContent;
-  				fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
+  				vertexShader = vertexShaderSource;
+  				fragmentShader = fragmentShaderSource;
   
   				
   				camera.position.z = 2000;

@@ -47,7 +47,6 @@ async function onReady(__stage) {
   			let groundPlane, wallMat;
   
   			
-  			async 
   
   
   				THREE.RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() );

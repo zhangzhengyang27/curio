@@ -43,7 +43,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				// scene
@@ -58,7 +57,7 @@ async function onReady(__stage) {
   				// environment
   
   				const environmentTexture = await new HDRLoader()
-  					.loadAsync( './textures/equirectangular/752-hdri-skies-com_1k.hdr' );
+  					.loadAsync( ASSET_HOST + 'textures/equirectangular/752-hdri-skies-com_1k.hdr' );
   
   				environmentTexture.mapping = THREE.EquirectangularReflectionMapping;
   

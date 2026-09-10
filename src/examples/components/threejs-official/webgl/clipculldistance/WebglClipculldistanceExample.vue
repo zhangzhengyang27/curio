@@ -28,6 +28,29 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\" >three.js</a> - vertex shader clipping via\n\t\t\t<a href=\"https://registry.khronos.org/webgl/extensions/WEBGL_clip_cull_distance/\" target=\"_blank\" rel=\"noopener\" >WEBGL_clip_cull_distance</a>\n\t\t\t<div id=\"notSupported\" style=\"display:none\">WEBGL_clip_cull_distance not supported"
+
+const vertexShader = /* glsl */`
+  uniform float time;
+  attribute vec4 color;
+  varying vec4 vColor;
+
+  void main() {
+    vColor = color;
+    vec3 pos = position;
+    pos.x += sin( time + position.y * 10.0 ) * 0.1;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+    gl_ClipDistance[ 0 ] = pos.x;
+  }
+`;
+
+const fragmentShader = /* glsl */`
+  varying vec4 vColor;
+
+  void main() {
+    gl_FragColor = vColor;
+  }
+`;
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -37,6 +60,7 @@ function onReady(__stage) {
   
   
   			let timer, stats;
+  			let material;
   
   
   
@@ -57,10 +81,10 @@ function onReady(__stage) {
   
   
   				if ( renderer.extensions.has( 'WEBGL_clip_cull_distance' ) === false ) {
-  
-  					document.getElementById( 'notSupported' ).style.display = '';
+  				
+  					console.warn( 'WEBGL_clip_cull_distance not supported' );
   					return;
-  
+  				
   				}
   
   				const ext = renderer
@@ -108,8 +132,8 @@ function onReady(__stage) {
   					uniforms: {
   						time: { value: 1.0 }
   					},
-  					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					side: THREE.DoubleSide,
   					transparent: true,
   					vertexColors: true

@@ -26,8 +26,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  new OrbitControls(camera, renderer.domElement)
-  
   const urls = [0, 1, 2, 3, 4, 5].map(k => (props.example?.globals?.FILE_HOST + 'files/sky/skyBox0/' + (k + 1) + '.png'));
   
   const textureCube = new THREE.CubeTextureLoader().load(urls);

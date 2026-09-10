@@ -45,7 +45,6 @@ async function onReady(__stage) {
   			let probes, probesHelper;
   
   			
-  			async 
   
   
   				// Camera

@@ -95,7 +95,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				const width = (__stage.container?.clientWidth || window.innerWidth) || 1;
   				const height = (__stage.container?.clientHeight || window.innerHeight) || 1;

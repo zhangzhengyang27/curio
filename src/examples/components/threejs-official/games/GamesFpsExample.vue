@@ -78,7 +78,7 @@ function onReady(__stage) {
   			directionalLight.shadow.bias = - 0.00006;
   			scene.add( directionalLight );
   
-  			const container = document.getElementById( 'container' );
+  			const container = __stage.container;
   
   
   
@@ -417,7 +417,7 @@ function onReady(__stage) {
   
   			}
   
-  			const loader = new GLTFLoader().setPath( './models/gltf/' );
+  			const loader = new GLTFLoader().setPath( ASSET_HOST + 'models/gltf/' );
   
   			loader.load( 'collision-world.glb', ( gltf ) => {
   

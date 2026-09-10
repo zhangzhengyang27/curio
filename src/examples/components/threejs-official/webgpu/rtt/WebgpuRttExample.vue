@@ -2,6 +2,7 @@
   <WebGPUExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-options="{ fov: 70, near: 0.1, far: 10 }"
     @ready="onReady"
   >
@@ -28,6 +29,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>WebGPU RTT</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -55,7 +58,7 @@ function onReady(__stage) {
   				// textured mesh
   
   				const loader = new THREE.TextureLoader();
-  				const uvTexture = loader.load( './textures/uv_grid_opengl.jpg' );
+  				const uvTexture = loader.load( ASSET_HOST + 'textures/uv_grid_opengl.jpg' );
   
   				const geometryBox = new THREE.BoxGeometry();
   				const materialBox = new THREE.MeshBasicNodeMaterial();

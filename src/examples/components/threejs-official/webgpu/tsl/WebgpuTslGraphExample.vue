@@ -89,7 +89,7 @@ async function onReady(__stage) {
   						// Use it for production
   
   						const tslLoader = new TSLGraphLoader();
-  						const applier = await tslLoader.setPath( './shaders/' ).loadAsync( 'tsl-graphs.json' );
+  						const applier = await tslLoader.setPath( ASSET_HOST + 'shaders/' ).loadAsync( 'tsl-graphs.json' );
   
   						applier.apply( scene );
   
@@ -104,7 +104,6 @@ async function onReady(__stage) {
   
   			}
   
-  			async 
   
   
   				
@@ -141,7 +140,7 @@ async function onReady(__stage) {
   
   				scene.environment = environment;
   
-  				prefab = ( await new GLTFLoader().loadAsync( './models/gltf/ShaderBall.glb' ) ).scene;
+  				prefab = ( await new GLTFLoader().loadAsync( ASSET_HOST + 'models/gltf/ShaderBall.glb' ) ).scene;
   
   				await initTSLGraph();
   

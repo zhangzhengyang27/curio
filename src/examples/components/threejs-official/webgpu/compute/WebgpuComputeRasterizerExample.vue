@@ -82,7 +82,6 @@ function onReady(__stage) {
   			const background = new THREE.Color( .1, .1, .1 );
   
   			
-  			async 
   
   
   				
@@ -134,7 +133,10 @@ function onReady(__stage) {
   
   				const maxTrianglesPerInstance = lods[ 0 ].numTriangles;
   				const totalTriangles = rows * cols * maxTrianglesPerInstance;
-  				document.getElementById( 'triangleCount' ).innerText = new Intl.NumberFormat().format( totalTriangles );
+  				const triangleCountEl = document.createElement( 'div' );
+  				triangleCountEl.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  				__stage.overlay?.appendChild( triangleCountEl );
+  				triangleCountEl.innerText = new Intl.NumberFormat().format( totalTriangles );
   
   				const vertexArray = new Float32Array( totalVertices * 4 ); // vec4 padded
   				const uvArray = new Float32Array( totalVertices * 2 );

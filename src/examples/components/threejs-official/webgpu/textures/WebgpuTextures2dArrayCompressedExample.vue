@@ -51,7 +51,6 @@ function onReady(__stage) {
   			let depthStep = 1;
   
   			
-  			async 
   
   
   				

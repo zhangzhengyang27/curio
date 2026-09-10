@@ -58,7 +58,6 @@ async function onReady(__stage) {
   		const v0 = new THREE.Vector3();
   
   		
-  		async 
   
   
   			conf = {

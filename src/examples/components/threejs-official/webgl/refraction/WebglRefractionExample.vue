@@ -46,10 +46,9 @@ async function onReady(__stage) {
   			let refractor, smallSphere;
   
   			
-  			async 
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				timer = new THREE.Timer();
   				timer.connect( document );

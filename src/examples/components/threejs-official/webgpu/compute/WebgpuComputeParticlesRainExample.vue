@@ -2,6 +2,7 @@
   <WebGPUExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-position="[40, 8, 0]"
     :camera-look-at="[0, 0, 0]"
     :camera-options="{ fov: 60, near: 0.1, far: 110 }"
@@ -58,7 +59,6 @@ function onReady(__stage) {
   			let collisionBoxPos, collisionBoxPosUI;
   
   			
-  			async 
   
   
   				const { innerWidth, innerHeight } = window;

@@ -69,7 +69,6 @@ async function onReady(__stage) {
   
   			} );
   
-  			async 
   
   
   				

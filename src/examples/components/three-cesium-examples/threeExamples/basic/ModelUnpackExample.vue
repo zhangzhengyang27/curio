@@ -32,8 +32,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  new OrbitControls(camera, renderer.domElement)
-  
   scene.add(new THREE.AmbientLight(0xffffff, 1))
   
   const pointLight = new THREE.PointLight(0xffffff, 1.5, 0, 2)

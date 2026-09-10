@@ -51,7 +51,6 @@ async function onReady(__stage) {
   			const uniformEffector2 = uniform( - 0.2 );
   
   			
-  			async 
   
   
   				

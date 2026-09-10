@@ -41,7 +41,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -56,14 +55,14 @@ async function onReady(__stage) {
   				// HDR textures
   
   				const hdr1Texture = await new HDRLoader()
-  					.loadAsync( './textures/equirectangular/pedestrian_overpass_1k.hdr' );
+  					.loadAsync( ASSET_HOST + 'textures/equirectangular/pedestrian_overpass_1k.hdr' );
   
   				hdr1Texture.mapping = THREE.EquirectangularReflectionMapping;
   				hdr1Texture.generateMipmaps = true;
   				hdr1Texture.minFilter = THREE.LinearMipmapLinearFilter;
   
   				const hdr2Texture = await new HDRLoader()
-  					.loadAsync( './textures/equirectangular/752-hdri-skies-com_1k.hdr' );
+  					.loadAsync( ASSET_HOST + 'textures/equirectangular/752-hdri-skies-com_1k.hdr' );
   
   				hdr2Texture.mapping = THREE.EquirectangularReflectionMapping;
   				hdr2Texture.generateMipmaps = true;

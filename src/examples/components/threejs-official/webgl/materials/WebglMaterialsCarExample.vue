@@ -51,7 +51,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				
   
@@ -102,21 +102,33 @@ function onReady(__stage) {
   					color: 0xffffff, metalness: 0.25, roughness: 0, transmission: 1.0
   				} );
   
-  				const bodyColorInput = document.getElementById( 'body-color' );
+  				const bodyColorInput = document.createElement( 'input' );
+  				bodyColorInput.type = 'color';
+  				bodyColorInput.value = '#ff0000';
+  				bodyColorInput.style.cssText = 'position:absolute;top:10px;left:10px;';
+  				__stage.overlay?.appendChild( bodyColorInput );
   				bodyColorInput.addEventListener( 'input', function () {
   
   					bodyMaterial.color.set( this.value );
   
   				} );
   
-  				const detailsColorInput = document.getElementById( 'details-color' );
+  				const detailsColorInput = document.createElement( 'input' );
+  				detailsColorInput.type = 'color';
+  				detailsColorInput.value = '#ffffff';
+  				detailsColorInput.style.cssText = 'position:absolute;top:40px;left:10px;';
+  				__stage.overlay?.appendChild( detailsColorInput );
   				detailsColorInput.addEventListener( 'input', function () {
   
   					detailsMaterial.color.set( this.value );
   
   				} );
   
-  				const glassColorInput = document.getElementById( 'glass-color' );
+  				const glassColorInput = document.createElement( 'input' );
+  				glassColorInput.type = 'color';
+  				glassColorInput.value = '#ffffff';
+  				glassColorInput.style.cssText = 'position:absolute;top:70px;left:10px;';
+  				__stage.overlay?.appendChild( glassColorInput );
   				glassColorInput.addEventListener( 'input', function () {
   
   					glassMaterial.color.set( this.value );

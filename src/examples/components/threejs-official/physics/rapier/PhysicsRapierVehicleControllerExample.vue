@@ -47,7 +47,6 @@ async function onReady(__stage) {
   			let car, chassis, wheels, movement, vehicleController;
   
   			
-  			async 
   
   
   				

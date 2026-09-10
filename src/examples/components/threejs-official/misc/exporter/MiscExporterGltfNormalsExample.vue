@@ -175,7 +175,11 @@ function onReady(__stage) {
   
   			}
   
-  			document.getElementById( 'export_objects' ).addEventListener( 'click', function () {
+  			const exportButton = document.createElement( 'button' );
+  			exportButton.textContent = 'Export GLTF';
+  			exportButton.style.cssText = 'position:absolute;top:10px;left:10px;padding:4px 8px;cursor:pointer;';
+  			__stage.overlay?.appendChild( exportButton );
+  			exportButton.addEventListener( 'click', function () {
   
   				exportGLTF( [ mesh1, mesh2 ] );
   

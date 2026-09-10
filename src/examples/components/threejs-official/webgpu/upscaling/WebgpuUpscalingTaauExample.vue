@@ -56,7 +56,6 @@ function onReady(__stage) {
   			let renderPipeline, mixer, timer;
   
   			
-  			async 
   
   
   				

@@ -4,6 +4,7 @@
     :camera-options="{ fov: 72, near: 5, far: 9999 }"
     custom-render
     @ready="onReady"
+    @before-dispose="onBeforeDispose"
   >
     <template #default>
       <div
@@ -30,6 +31,16 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - reverse depth buffer<br/>"
+
+let _extraRenderers = []
+
+function onBeforeDispose() {
+  _extraRenderers.forEach(r => {
+    try { r.dispose() } catch { /* ignore */ }
+  })
+  _extraRenderers = []
+}
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -49,7 +60,7 @@ function onReady(__stage) {
   			renderTarget.depthTexture = new THREE.DepthTexture();
   			renderTarget.depthTexture.type = THREE.FloatType;
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
@@ -136,34 +147,43 @@ function onReady(__stage) {
   
   				}
   
-  				const normalContainer = document.getElementById( 'container_normal' );
+  				const normalContainer = document.createElement( 'div' );
+  				normalContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( normalContainer );
   				normalRenderer = new THREE.WebGLRenderer();
   				normalRenderer.setPixelRatio( window.devicePixelRatio );
   				normalRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				normalRenderer.domElement.style.position = 'relative';
   				normalContainer.appendChild( normalRenderer.domElement );
+  				_extraRenderers.push(normalRenderer);
   
   				normalComposer = new EffectComposer( normalRenderer, renderTarget );
   				normalComposer.addPass( new RenderPass( scene, camera ) );
   				normalComposer.addPass( new OutputPass() );
   
-  				const logarithmicContainer = document.getElementById( 'container_logarithmic' );
+  				const logarithmicContainer = document.createElement( 'div' );
+  				logarithmicContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( logarithmicContainer );
   				logarithmicRenderer = new THREE.WebGLRenderer( { logarithmicDepthBuffer: true } );
   				logarithmicRenderer.setPixelRatio( window.devicePixelRatio );
   				logarithmicRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				logarithmicRenderer.domElement.style.position = 'relative';
   				logarithmicContainer.appendChild( logarithmicRenderer.domElement );
+  				_extraRenderers.push(logarithmicRenderer);
   
   				logarithmicComposer = new EffectComposer( logarithmicRenderer, renderTarget );
   				logarithmicComposer.addPass( new RenderPass( scene, camera ) );
   				logarithmicComposer.addPass( new OutputPass() );
   
-  				const reverseContainer = document.getElementById( 'container_reverse' );
+  				const reverseContainer = document.createElement( 'div' );
+  				reverseContainer.style.cssText = 'display:inline-block;width:33%;vertical-align:top;';
+  				__stage.container.appendChild( reverseContainer );
   				reverseRenderer = new THREE.WebGLRenderer( { reversedDepthBuffer: true } );
   				reverseRenderer.setPixelRatio( window.devicePixelRatio );
   				reverseRenderer.setSize( 0.33 * (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				reverseRenderer.domElement.style.position = 'relative';
   				reverseContainer.appendChild( reverseRenderer.domElement );
+  				_extraRenderers.push(reverseRenderer);
   
   				reverseComposer = new EffectComposer( reverseRenderer, renderTarget );
   				reverseComposer.addPass( new RenderPass( scene, reversedCamera ) );

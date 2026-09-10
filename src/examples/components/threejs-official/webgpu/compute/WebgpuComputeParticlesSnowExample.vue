@@ -2,6 +2,7 @@
   <WebGPUExampleScene
     camera="perspective"
     antialias
+    custom-render
     :clear-color="0x000000"
     :camera-position="[20, 2, 20]"
     :camera-look-at="[0, 40, 0]"
@@ -56,7 +57,6 @@ function onReady(__stage) {
   			let collisionCamera, collisionPosRT, collisionPosMaterial;
   
   			
-  			async 
   
   
   				const { innerWidth, innerHeight } = window;

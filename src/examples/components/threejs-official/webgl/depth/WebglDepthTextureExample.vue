@@ -1,6 +1,7 @@
 <template>
   <ExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 70, near: 0.01, far: 50 }"
     @ready="onReady"
   >
@@ -31,6 +32,29 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> webgl - depth texture<br/>\n\t\t\tStores render target depth in a texture attachment.<br/>\n\t\t\tCreated by <a href=\"http://twitter.com/mattdesl\" target=\"_blank\" rel=\"noopener\">@mattdesl</a>.\n\n\t\t\t<div id=\"error\" style=\"display: none;\">\n\t\t\tYour browser does not support <strong>WEBGL_depth_texture</strong>.<br/><br/>\n\t\t\tThis demo will not work."
+
+const postVertShader = /* glsl */`
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const postFragShader = /* glsl */`
+#include <packing>
+varying vec2 vUv;
+uniform sampler2D tDiffuse;
+uniform sampler2D tDepth;
+uniform float cameraNear;
+uniform float cameraFar;
+void main() {
+    float fragCoordZ = texture2D(tDepth, vUv).x;
+    float viewZ = perspectiveDepthToViewZ(fragCoordZ, cameraNear, cameraFar);
+    gl_FragColor = vec4(vec3(1.0 - viewZ / cameraFar), 1.0);
+}
+`
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -123,8 +147,8 @@ function onReady(__stage) {
   				// Setup post processing stage
   				postCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
   				postMaterial = new THREE.ShaderMaterial( {
-  					vertexShader: document.querySelector( '#post-vert' ).textContent.trim(),
-  					fragmentShader: document.querySelector( '#post-frag' ).textContent.trim(),
+  					vertexShader: postVertShader,
+  					fragmentShader: postFragShader,
   					uniforms: {
   						cameraNear: { value: camera.near },
   						cameraFar: { value: camera.far },

@@ -47,13 +47,13 @@ async function onReady(__stage) {
   
   				new Promise( ( resolve, reject ) => {
   
-  					new GLTFLoader().load( './models/gltf/Michelle.glb', resolve, undefined, reject );
+  					new GLTFLoader().load( ASSET_HOST + 'models/gltf/Michelle.glb', resolve, undefined, reject );
   
   				} ),
   
   				new Promise( ( resolve, reject ) => {
   
-  					new GLTFLoader().load( './models/gltf/Soldier.glb', resolve, undefined, reject );
+  					new GLTFLoader().load( ASSET_HOST + 'models/gltf/Soldier.glb', resolve, undefined, reject );
   
   				} )
   

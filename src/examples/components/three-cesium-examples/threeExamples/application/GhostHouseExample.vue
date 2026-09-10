@@ -265,7 +265,7 @@ function onReady(ctx) {
   camera.position.z = 5
   scene.add(camera);
   
-  document.getElementById('box').appendChild(renderer.domElement);
+  // renderer.domElement already managed by ExampleScene
   
   /**
    * Shadow

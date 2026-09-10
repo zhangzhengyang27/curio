@@ -46,7 +46,6 @@ function onReady(__stage) {
   
   			const COLOR = 0xcccccc;
   
-  			async 
   
   
   				const width = (__stage.container?.clientWidth || window.innerWidth);

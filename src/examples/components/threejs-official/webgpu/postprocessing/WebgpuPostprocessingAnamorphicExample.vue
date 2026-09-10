@@ -49,7 +49,6 @@ function onReady(__stage) {
   			const _dummy = new THREE.Object3D();
   
   			
-  			async 
   
   
   				

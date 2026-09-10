@@ -27,6 +27,7 @@ const props = defineProps({
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - 360 stereo video<br />\n\t\t\tstereoscopic panoramic render by <a href=\"http://pedrofe.com/rendering-for-oculus-rift-with-arnold/\" target=\"_blank\" rel=\"noopener\">pedrofe</a>. scene from <a href=\"http://www.meryproject.com/\" target=\"_blank\" rel=\"noopener\">mery project</a>."
 function onReady(__stage) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -37,7 +38,7 @@ function onReady(__stage) {
   			
   
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   				container.addEventListener( 'click', function () {
   
   					video.play();
@@ -49,7 +50,11 @@ function onReady(__stage) {
   
   				// video
   
-  				const video = document.getElementById( 'video' );
+  				const video = document.createElement( 'video' );
+  				video.muted = true;
+  				video.loop = true;
+  				video.playsInline = true;
+  				video.src = ASSET_HOST + 'textures/MaryOculus.webm';
   				video.play();
   
   				const texture = new THREE.VideoTexture( video );

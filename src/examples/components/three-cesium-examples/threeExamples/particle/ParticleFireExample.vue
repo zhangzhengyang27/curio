@@ -271,7 +271,7 @@ function onReady(ctx) {
   
   scene.add(camera);
   
-  document.getElementById("box").appendChild(renderer.domElement);
+  // renderer.domElement already managed by ExampleScene
   
   controls.enableDamping = true;
   

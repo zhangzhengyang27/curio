@@ -43,7 +43,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -51,11 +50,11 @@ async function onReady(__stage) {
   
   				
   
-  				const uvTexture = new THREE.TextureLoader().load( './textures/uv_grid_opengl.jpg' );
+  				const uvTexture = new THREE.TextureLoader().load( ASSET_HOST + 'textures/uv_grid_opengl.jpg' );
   
   				const hdrUrls = [ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ];
   				const texture = await new HDRCubeTextureLoader()
-  					.setPath( './textures/cube/pisaHDR/' )
+  					.setPath( ASSET_HOST + 'textures/cube/pisaHDR/' )
   					.loadAsync( hdrUrls );
   
   				texture.name = 'pisaHDR';

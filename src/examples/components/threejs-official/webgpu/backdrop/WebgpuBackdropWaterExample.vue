@@ -89,7 +89,7 @@ function onReady(__stage) {
   				// objects
   
   				const textureLoader = new THREE.TextureLoader();
-  				const iceDiffuse = textureLoader.load( './textures/water.jpg' );
+  				const iceDiffuse = textureLoader.load( ASSET_HOST + 'textures/water.jpg' );
   				iceDiffuse.wrapS = THREE.RepeatWrapping;
   				iceDiffuse.wrapT = THREE.RepeatWrapping;
   				iceDiffuse.colorSpace = THREE.NoColorSpace;

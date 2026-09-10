@@ -42,7 +42,6 @@ function onReady(__stage) {
   			const count = 1000;
   
   			
-  			async 
   
   
   				

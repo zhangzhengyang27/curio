@@ -39,7 +39,6 @@ function onReady(__stage) {
   			const scaleVector = new THREE.Vector2( 1, 1 );
   
   			
-  			async 
   
   
   				

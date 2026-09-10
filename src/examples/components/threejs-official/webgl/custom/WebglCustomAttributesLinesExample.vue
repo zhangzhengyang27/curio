@@ -29,6 +29,39 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - custom attributes example"
+
+const vertexShader = /* glsl */ `
+uniform float amplitude;
+
+attribute vec3 displacement;
+attribute vec3 customColor;
+
+varying vec3 vColor;
+
+void main() {
+
+	vec3 newPosition = position + amplitude * displacement;
+
+	vColor = customColor;
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform vec3 color;
+uniform float opacity;
+
+varying vec3 vColor;
+
+void main() {
+
+	gl_FragColor = vec4( vColor * color, opacity );
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -71,8 +104,8 @@ function onReady(__stage) {
   				const shaderMaterial = new THREE.ShaderMaterial( {
   
   					uniforms: uniforms,
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					blending: THREE.AdditiveBlending,
   					depthTest: false,
   					transparent: true
@@ -121,9 +154,9 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
-  
-  
+  				//
+  				
+  				
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   

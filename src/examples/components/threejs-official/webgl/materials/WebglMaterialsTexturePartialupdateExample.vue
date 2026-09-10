@@ -43,7 +43,6 @@ async function onReady(__stage) {
   			const color = new THREE.Color();
   
   			
-  			async 
   
   
   				

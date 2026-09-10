@@ -46,7 +46,6 @@ function onReady(__stage) {
   			let renderPipeline;
   
   			
-  			async 
   
   
   				

@@ -59,9 +59,17 @@ async function onReady(__stage) {
   			let testDone = false;
   			let meshGroup = null;
   
-  			const longestFrameEl = document.getElementById( 'longestFrame' );
-  			const meshCountEl = document.getElementById( 'meshCount' );
-  			const compileModeEl = document.getElementById( 'compileMode' );
+  			const statsDiv = document.createElement( 'div' );
+  			statsDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  			__stage.overlay?.appendChild( statsDiv );
+  			const longestFrameEl = document.createElement( 'span' );
+  			const meshCountEl = document.createElement( 'span' );
+  			const compileModeEl = document.createElement( 'span' );
+  			statsDiv.appendChild( compileModeEl );
+  			statsDiv.appendChild( document.createElement( 'br' ) );
+  			statsDiv.appendChild( meshCountEl );
+  			statsDiv.appendChild( document.createElement( 'br' ) );
+  			statsDiv.appendChild( longestFrameEl );
   
   			const params = {
   				withoutCompile: function () {
@@ -77,7 +85,6 @@ async function onReady(__stage) {
   			};
   
   			
-  			async 
   
   
   				// GUI
@@ -112,7 +119,7 @@ async function onReady(__stage) {
   
   					MESH_COUNT = 64;
   					GRID_SIZE = 8;
-  					document.getElementById( 'materialCount' ).textContent = '64';
+  					statsDiv.querySelector( 'span' ).textContent = '64';
   					meshCountEl.textContent = '0 / 64';
   
   				}

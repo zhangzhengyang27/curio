@@ -1,6 +1,7 @@
 <template>
   <WebGPUExampleScene
     camera="perspective"
+    custom-render
     :camera-options="{ fov: 50 }"
     @ready="onReady"
   >

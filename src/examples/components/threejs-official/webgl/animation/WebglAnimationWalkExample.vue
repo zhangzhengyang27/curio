@@ -79,7 +79,7 @@ function onReady(__stage) {
   
   			function init() {
   
-  				const container = document.getElementById( 'container' );
+  				const container = __stage.container;
   
   				
   

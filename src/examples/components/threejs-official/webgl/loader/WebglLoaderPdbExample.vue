@@ -110,7 +110,7 @@ function onReady(__stage) {
   				labelRenderer.domElement.style.position = 'absolute';
   				labelRenderer.domElement.style.top = '0px';
   				labelRenderer.domElement.style.pointerEvents = 'none';
-  				document.getElementById( 'container' ).appendChild( labelRenderer.domElement );
+  				__stage.container.appendChild( labelRenderer.domElement );
   
   				//
   

@@ -105,7 +105,9 @@ async function onReady(__stage) {
   					const arraybuffer = await exporter.parseAsync( gltf.scene, { animations: gltf.animations } );
   					const blob = new Blob( [ arraybuffer ], { type: 'application/octet-stream' } );
   
-  					const link = document.getElementById( 'link' );
+  					const link = document.createElement( 'a' );
+  					link.style.display = 'none';
+  					document.body.appendChild( link );
   					link.href = URL.createObjectURL( blob );
   
   				} );
@@ -137,7 +139,9 @@ async function onReady(__stage) {
   
   			function exportUSDZ() {
   
-  				const link = document.getElementById( 'link' );
+  				const link = document.createElement( 'a' );
+  				link.style.display = 'none';
+  				document.body.appendChild( link );
   				link.click();
   
   			}

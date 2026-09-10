@@ -62,7 +62,6 @@ async function onReady(__stage) {
   			let _prevTime = 0, _deltaTime = 0;
   
   			
-  			async 
   
   
   				// camera
@@ -286,7 +285,15 @@ async function onReady(__stage) {
   				// initial sun position
   				updateSunDirection();
   
-  				document.getElementById( 'hour' ).addEventListener( 'input', ( e ) => {
+  				const hourInput = document.createElement( 'input' );
+  				hourInput.type = 'range';
+  				hourInput.min = '0';
+  				hourInput.max = '24';
+  				hourInput.step = '0.1';
+  				hourInput.value = String( params.hourUTC );
+  				hourInput.style.cssText = 'position:absolute;bottom:10px;left:10px;width:200px;';
+  				__stage.overlay?.appendChild( hourInput );
+  				hourInput.addEventListener( 'input', ( e ) => {
   
   					params.hourUTC = parseFloat( e.target.value );
   					updateSunDirection();

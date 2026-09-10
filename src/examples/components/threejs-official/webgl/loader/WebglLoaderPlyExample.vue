@@ -73,7 +73,7 @@ function onReady(__stage) {
   				// PLY file
   
   				const loader = new PLYLoader();
-  				loader.load( './models/ply/ascii/dolphins.ply', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/ply/ascii/dolphins.ply', function ( geometry ) {
   
   					geometry.computeVertexNormals();
   
@@ -92,7 +92,7 @@ function onReady(__stage) {
   
   				} );
   
-  				loader.load( './models/ply/binary/Lucy100k.ply', function ( geometry ) {
+  				loader.load( ASSET_HOST + 'models/ply/binary/Lucy100k.ply', function ( geometry ) {
   
   					geometry.computeVertexNormals();
   

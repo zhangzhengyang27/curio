@@ -50,7 +50,6 @@ function onReady(__stage) {
   			let tsmHelper;
   
   			
-  			async 
   
   
   				// Renderer setup

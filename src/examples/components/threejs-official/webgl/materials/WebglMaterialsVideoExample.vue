@@ -31,6 +31,7 @@ const props = defineProps({
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl video demo<br/>\n\t\t\tplaying <a href=\"http://durian.blender.org/\" target=\"_blank\" rel=\"noopener\">sintel</a> trailer"
 function onReady(__stage) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -76,7 +77,11 @@ function onReady(__stage) {
   				
   
   
-  				video = document.getElementById( 'video' );
+  				video = document.createElement( 'video' );
+  				video.muted = true;
+  				video.loop = true;
+  				video.playsInline = true;
+  				video.src = ASSET_HOST + 'textures/sintel.mp4';
   				video.play();
   				video.addEventListener( 'play', function () {
   

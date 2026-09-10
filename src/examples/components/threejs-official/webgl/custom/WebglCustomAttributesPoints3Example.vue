@@ -27,6 +27,49 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - custom attributes example - billboards - alphatest"
+
+const vertexShader = /* glsl */ `
+attribute float size;
+attribute vec4 ca;
+
+varying vec4 vColor;
+
+void main() {
+
+	vColor = ca;
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+	gl_PointSize = size * ( 150.0 / -mvPosition.z );
+
+	gl_Position = projectionMatrix * mvPosition;
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform vec3 color;
+uniform sampler2D pointTexture;
+
+varying vec4 vColor;
+
+void main() {
+
+	vec4 outColor = texture2D( pointTexture, gl_PointCoord );
+
+	if ( outColor.a < 0.5 ) discard;
+
+	gl_FragColor = outColor * vec4( color * vColor.xyz, 1.0 );
+
+	float depth = gl_FragCoord.z / gl_FragCoord.w;
+	const vec3 fogColor = vec3( 0.0 );
+
+	float fogFactor = smoothstep( 200.0, 600.0, depth );
+	gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
+
+}
+`
+
 function onReady(__stage) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
@@ -44,6 +87,8 @@ function onReady(__stage) {
   
   
   			let vertices1;
+
+  			let object;
   
   			const WIDTH = (__stage.container?.clientWidth || window.innerWidth);
   			const HEIGHT = (__stage.container?.clientHeight || window.innerHeight);
@@ -185,8 +230,8 @@ function onReady(__stage) {
   						color: { value: new THREE.Color( 0xffffff ) },
   						pointTexture: { value: texture }
   					},
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader
   
   				} );
   
@@ -200,9 +245,9 @@ function onReady(__stage) {
   				
   
   
-  				const container = document.getElementById( 'container' );
-  
-  
+  				//
+  				
+  				
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   

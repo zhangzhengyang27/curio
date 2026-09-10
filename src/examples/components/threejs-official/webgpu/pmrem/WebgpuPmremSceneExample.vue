@@ -39,7 +39,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -63,7 +62,7 @@ async function onReady(__stage) {
   				controls.update();
   
   				//
-  				const loader = new THREE.CubeTextureLoader().setPath( './textures/cube/Park3Med/' );
+  				const loader = new THREE.CubeTextureLoader().setPath( ASSET_HOST + 'textures/cube/Park3Med/' );
   
   				scene.background = await loader.loadAsync( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] );
   

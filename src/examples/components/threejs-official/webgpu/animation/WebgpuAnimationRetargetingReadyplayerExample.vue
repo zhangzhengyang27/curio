@@ -48,13 +48,13 @@ async function onReady(__stage) {
   
   				new Promise( ( resolve, reject ) => {
   
-  					new FBXLoader().load( './models/fbx/mixamo.fbx', resolve, undefined, reject );
+  					new FBXLoader().load( ASSET_HOST + 'models/fbx/mixamo.fbx', resolve, undefined, reject );
   
   				} ),
   
   				new Promise( ( resolve, reject ) => {
   
-  					new GLTFLoader().load( './models/gltf/readyplayer.me.glb', resolve, undefined, reject );
+  					new GLTFLoader().load( ASSET_HOST + 'models/gltf/readyplayer.me.glb', resolve, undefined, reject );
   
   				} )
   

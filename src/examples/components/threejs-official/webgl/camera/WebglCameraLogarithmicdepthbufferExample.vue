@@ -2,6 +2,7 @@
   <ExampleScene
     camera="perspective"
     antialias
+    custom-render
     :camera-options="{ fov: 50 }"
     @ready="onReady"
   >
@@ -77,7 +78,7 @@ function onReady(__stage) {
   			
   
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   
   				const loader = new FontLoader();
   				loader.load( ASSET_HOST + 'fonts/helvetiker_regular.typeface.json', function ( font ) {
@@ -94,7 +95,9 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild(stats.dom)
   
   				// Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
-  				border = document.getElementById( 'renderer_border' );
+  				border = document.createElement( 'div' );
+  				border.style.cssText = 'position:absolute;top:0;left:50%;width:4px;height:100%;background:#fff;cursor:col-resize;';
+  				__stage.overlay?.appendChild( border );
   				border.addEventListener( 'pointerdown', onBorderPointerDown );
   
   				window.addEventListener( 'mousemove', onMouseMove );
@@ -106,7 +109,7 @@ function onReady(__stage) {
   
   			function initView( scene, name, logDepthBuf ) {
   
-  				const framecontainer = document.getElementById( 'container_' + name );
+  				const framecontainer = __stage.container;
   
   
   				scene.add( camera );

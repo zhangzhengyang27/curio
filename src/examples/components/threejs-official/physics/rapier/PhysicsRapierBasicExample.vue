@@ -50,7 +50,6 @@ async function onReady(__stage) {
   			let physics, physicsHelper;
   
   			
-  			async 
   
   
   				

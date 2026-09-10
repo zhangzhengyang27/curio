@@ -40,7 +40,6 @@ async function onReady(__stage) {
   			let box;
   
   			
-  			async 
   
   
   				
@@ -60,19 +59,19 @@ async function onReady(__stage) {
   				// textures
   
   				const textureLoader = new THREE.TextureLoader();
-  				const uvTexture = textureLoader.load( './textures/uv_grid_opengl.jpg' );
+  				const uvTexture = textureLoader.load( ASSET_HOST + 'textures/uv_grid_opengl.jpg' );
   				uvTexture.wrapS = THREE.RepeatWrapping;
   				uvTexture.wrapT = THREE.RepeatWrapping;
   				uvTexture.name = 'uv_grid';
   
-  				const textureDisplace = textureLoader.load( './textures/transition/transition1.png' );
+  				const textureDisplace = textureLoader.load( ASSET_HOST + 'textures/transition/transition1.png' );
   				textureDisplace.wrapS = THREE.RepeatWrapping;
   				textureDisplace.wrapT = THREE.RepeatWrapping;
   
   				const ktxLoader = await new KTX2Loader()
   					.detectSupport( renderer );
   
-  				const ktxTexture = await ktxLoader.loadAsync( './textures/ktx2/2d_uastc.ktx2' );
+  				const ktxTexture = await ktxLoader.loadAsync( ASSET_HOST + 'textures/ktx2/2d_uastc.ktx2' );
   
   				// box mesh
   

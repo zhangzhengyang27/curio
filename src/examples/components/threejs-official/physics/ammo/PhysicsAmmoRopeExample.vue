@@ -88,7 +88,7 @@ function onReady(__stage) {
   
   		function initGraphics() {
   
-  			container = document.getElementById( 'container' );
+  			container = __stage.container;
   
   			
   

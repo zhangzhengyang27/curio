@@ -68,7 +68,6 @@ async function onReady(__stage) {
   			const maxNumObjects = 30;
   
   			
-  			async 
   
   
   				heightData = generateHeight( terrainWidth, terrainDepth, terrainMinHeight, terrainMaxHeight );
@@ -80,7 +79,7 @@ async function onReady(__stage) {
   
   			function initGraphics() {
   
-  				container = document.getElementById( 'container' );
+  				container = __stage.container;
   				
   
   

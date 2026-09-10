@@ -88,7 +88,9 @@ async function onReady(__stage) {
   				objects.logzbuf = await initView( scene, 'logzbuf', true );
   
   				// Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
-  				border = document.getElementById( 'renderer_border' );
+  				border = document.createElement( 'div' );
+  				border.style.cssText = 'position:absolute;top:0;left:50%;width:4px;height:100%;background:#fff;cursor:col-resize;';
+  				__stage.overlay?.appendChild( border );
   				border.addEventListener( 'pointerdown', onBorderPointerDown );
   
   				window.addEventListener( 'mousemove', onMouseMove );
@@ -99,7 +101,7 @@ async function onReady(__stage) {
   
   			async function initView( scene, name, logDepthBuf ) {
   
-  				const framecontainer = document.getElementById( 'container_' + name );
+  				const framecontainer = __stage.container;
   
   
   				scene.add( camera );

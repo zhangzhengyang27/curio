@@ -47,7 +47,6 @@ async function onReady(__stage) {
   
   			init().then( render );
   
-  			async 
   
   
   				

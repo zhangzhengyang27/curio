@@ -43,7 +43,6 @@ function onReady(__stage) {
   			let cube;
   
   			
-  			async 
   
   
   				

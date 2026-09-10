@@ -34,9 +34,12 @@ function onReady(__stage) {
   
   
   
+  			const timestampsDiv = document.createElement( 'div' );
+  			timestampsDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
+  			__stage.overlay?.appendChild( timestampsDiv );
   			const timestamps = {
-  				webgpu: document.getElementById( 'timestamps' ),
-  				webgl: document.getElementById( 'timestamps_webgl' )
+  				webgpu: timestampsDiv,
+  				webgl: timestampsDiv
   			};
   
   			// WebGPU Backend

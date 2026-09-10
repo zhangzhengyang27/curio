@@ -47,7 +47,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				let mixer;

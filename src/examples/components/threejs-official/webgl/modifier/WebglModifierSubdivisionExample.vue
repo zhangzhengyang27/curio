@@ -33,6 +33,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - modifier - <a href=\"https://github.com/stevinz/three-subdivide\" target=\"_blank\" rel=\"noopener\">subdivision</a><br/>\n\t\t\tSee external <a href=\"https://github.com/stevinz/three-subdivide\" target=\"_blank\" rel=\"noopener\">three-subdivide</a> for more information on subdivision surfaces."
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -86,7 +88,7 @@ function onReady(__stage) {
   				backLight.position.set( 0, 1, - 1 );
   				scene.add( frontLight, backLight );
   
-  				texture = new THREE.TextureLoader().load( './textures/uv_grid_opengl.jpg', () => {
+  				texture = new THREE.TextureLoader().load( ASSET_HOST + 'textures/uv_grid_opengl.jpg', () => {
   
   					texture.wrapS = THREE.RepeatWrapping;
   					texture.wrapT = THREE.RepeatWrapping;

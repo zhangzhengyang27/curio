@@ -46,16 +46,16 @@ function onReady(__stage) {
   		const height = 3;
   		const offset = 0.5;
   
-  		const startButton = document.getElementById( 'startButton' );
+  		const startButton = document.createElement( 'button' );
+  		startButton.textContent = 'Click to Start';
+  		startButton.style.cssText = 'padding:12px 24px;font-size:16px;cursor:pointer;';
+  		__stage.overlay?.appendChild( startButton );
   		startButton.addEventListener( 'click', init );
   
-  		
+  		function init() {
+  			startButton.remove();
   
-  
-  			const overlay = document.getElementById( 'overlay' );
-  			overlay.remove();
-  
-  			const container = document.getElementById( 'container' );
+  			const container = __stage.container;
   
   			
   
@@ -154,19 +154,14 @@ function onReady(__stage) {
   
   			controls.minDistance = 1;
   			controls.maxDistance = 25;
-  
-  			//
-  
-  			
-  
-  		
-  
-  
-  		
-  
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
-    timer.update();
-    			const time = timer.getElapsed();
+
+		}
+
+		let timer;
+		__stage.addUpdateCallback((_delta, _elapsed) => {
+			if (!timer) return;
+			timer.update();
+			const time = timer.getElapsed();
     			for ( let i = 0; i < objects.length; i ++ ) {
     				const ball = objects[ i ];
     				const previousHeight = ball.position.y;

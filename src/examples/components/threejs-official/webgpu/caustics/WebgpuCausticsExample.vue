@@ -44,7 +44,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -73,11 +72,11 @@ async function onReady(__stage) {
   
   				const dracoLoader = new DRACOLoader();
   
-  				gltf = ( await new GLTFLoader().setDRACOLoader( dracoLoader ).loadAsync( './models/gltf/duck.glb' ) ).scene;
+  				gltf = ( await new GLTFLoader().setDRACOLoader( dracoLoader ).loadAsync( ASSET_HOST + 'models/gltf/duck.glb' ) ).scene;
   				gltf.scale.setScalar( .5 );
   				scene.add( gltf );
   
-  				const causticMap = new THREE.TextureLoader().load( './textures/opengameart/Caustic_Free.jpg' );
+  				const causticMap = new THREE.TextureLoader().load( ASSET_HOST + 'textures/opengameart/Caustic_Free.jpg' );
   				causticMap.wrapS = causticMap.wrapT = THREE.RepeatWrapping;
   				causticMap.colorSpace = THREE.SRGBColorSpace;
   

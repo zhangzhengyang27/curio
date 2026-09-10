@@ -50,7 +50,7 @@ async function onReady(__stage) {
   
   				scene.background = new THREE.Color( 0x222222 );
   
-  				const rendererDOM = document.getElementById( 'renderer' );
+  				const rendererDOM = renderer.domElement;
   
   
   
@@ -84,14 +84,18 @@ async function onReady(__stage) {
   					let timeout = null;
   					let rawShader = null;
   
-  					const editorDOM = document.getElementById( 'source' );
-  					const resultDOM = document.getElementById( 'result' );
+  					const editorDOM = document.createElement( 'div' );
+  					editorDOM.style.cssText = 'position:absolute;top:0;right:0;width:40%;height:100%;';
+  					__stage.overlay?.appendChild( editorDOM );
+  					const resultDOM = document.createElement( 'div' );
+  					resultDOM.style.cssText = 'position:absolute;bottom:0;right:0;width:40%;height:30%;overflow:auto;color:#0f0;font-size:11px;background:rgba(0,0,0,0.8);';
+  					__stage.overlay?.appendChild( resultDOM );
   
   					const tslCode = `// Simple uv.x animation
   
   const { texture, uniform, vec2, vec4, uv, oscSine, time, grayscale } = await import( 'three/tsl' );
   
-  const samplerTexture = new THREE.TextureLoader().load( './textures/uv_grid_opengl.jpg' );
+  const samplerTexture = new THREE.TextureLoader().load( ASSET_HOST + 'textures/uv_grid_opengl.jpg' );
   samplerTexture.wrapS = THREE.RepeatWrapping;
   samplerTexture.colorSpace = THREE.SRGBColorSpace;
   

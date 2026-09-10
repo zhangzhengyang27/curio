@@ -42,7 +42,6 @@ async function onReady(__stage) {
   
   
   			
-  			async 
   
   
   				
@@ -52,7 +51,7 @@ async function onReady(__stage) {
   
   				const hdrUrls = [ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ];
   				const cube1Texture = new HDRCubeTextureLoader()
-  					.setPath( './textures/cube/pisaHDR/' )
+  					.setPath( ASSET_HOST + 'textures/cube/pisaHDR/' )
   					.load( hdrUrls );
   
   				cube1Texture.generateMipmaps = true;
@@ -60,7 +59,7 @@ async function onReady(__stage) {
   
   				const cube2Urls = [ 'dark-s_px.jpg', 'dark-s_nx.jpg', 'dark-s_py.jpg', 'dark-s_ny.jpg', 'dark-s_pz.jpg', 'dark-s_nz.jpg' ];
   				const cube2Texture = await new THREE.CubeTextureLoader()
-  					.setPath( './textures/cube/MilkyWay/' )
+  					.setPath( ASSET_HOST + 'textures/cube/MilkyWay/' )
   					.loadAsync( cube2Urls );
   
   				cube2Texture.generateMipmaps = true;

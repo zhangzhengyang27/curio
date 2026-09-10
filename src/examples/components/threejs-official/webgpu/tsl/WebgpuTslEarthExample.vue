@@ -29,6 +29,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Earth</span>"
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -72,15 +74,15 @@ function onReady(__stage) {
   
   				const textureLoader = new THREE.TextureLoader();
   
-  				const dayTexture = textureLoader.load( './textures/planets/earth_day_4096.jpg' );
+  				const dayTexture = textureLoader.load( ASSET_HOST + 'textures/planets/earth_day_4096.jpg' );
   				dayTexture.colorSpace = THREE.SRGBColorSpace;
   				dayTexture.anisotropy = 8;
   
-  				const nightTexture = textureLoader.load( './textures/planets/earth_night_4096.jpg' );
+  				const nightTexture = textureLoader.load( ASSET_HOST + 'textures/planets/earth_night_4096.jpg' );
   				nightTexture.colorSpace = THREE.SRGBColorSpace;
   				nightTexture.anisotropy = 8;
   
-  				const bumpRoughnessCloudsTexture = textureLoader.load( './textures/planets/earth_bump_roughness_clouds_4096.jpg' );
+  				const bumpRoughnessCloudsTexture = textureLoader.load( ASSET_HOST + 'textures/planets/earth_bump_roughness_clouds_4096.jpg' );
   				bumpRoughnessCloudsTexture.anisotropy = 8;
   
   				// fresnel

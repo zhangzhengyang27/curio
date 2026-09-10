@@ -27,6 +27,41 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> buffergeometry - selective - draw\n\t\t\t<div id=\"title\">"
+
+const vertexShader = /* glsl */ `
+attribute float visible;
+varying float vVisible;
+attribute vec3 vertColor;
+varying vec3 vColor;
+
+void main() {
+
+	vColor = vertColor;
+	vVisible = visible;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+varying float vVisible;
+varying vec3 vColor;
+
+void main() {
+
+	if ( vVisible > 0.0 ) {
+
+		gl_FragColor = vec4( vColor, 1.0 );
+
+	} else {
+
+		discard;
+
+	}
+
+}
+`
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -59,11 +94,11 @@ function onReady(__stage) {
   
   				addLines( 1.0 );
   
-  				const hideLinesButton = document.getElementById( 'hideLines' );
-  				hideLinesButton.addEventListener( 'click', hideLines );
-  
-  				const showAllLinesButton = document.getElementById( 'showAllLines' );
-  				showAllLinesButton.addEventListener( 'click', showAllLines );
+  				// const hideLinesButton = document.getElementById( 'hideLines' );
+  				// hideLinesButton.addEventListener( 'click', hideLines );
+  				
+  				// const showAllLinesButton = document.getElementById( 'showAllLines' );
+  				// showAllLinesButton.addEventListener( 'click', showAllLines );
   
   				
   
@@ -122,8 +157,8 @@ function onReady(__stage) {
   
   				const shaderMaterial = new THREE.ShaderMaterial( {
   
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader
   				} );
   
   				mesh = new THREE.LineSegments( geometry, shaderMaterial );
@@ -136,7 +171,8 @@ function onReady(__stage) {
   			function updateCount() {
   
   				const str = '1 draw call, ' + numLat * numLng + ' lines, ' + numLinesCulled + ' culled (<a target="_blank" href="http://callum.com">author</a>)';
-  				document.getElementById( 'title' ).innerHTML = str.replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+  				// document.getElementById( 'title' ).innerHTML = str.replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+  				console.log( str );
   
   			}
   

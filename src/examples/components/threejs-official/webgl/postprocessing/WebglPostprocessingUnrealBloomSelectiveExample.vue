@@ -39,6 +39,33 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> Click on a sphere to toggle bloom<br>By <a href=\"http://github.com/Temdog007\" target=\"_blank\" rel=\"noopener\">Temdog007</a>"
+
+const vertexShader = /* glsl */ `
+varying vec2 vUv;
+
+void main() {
+
+	vUv = uv;
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+}
+`
+
+const fragmentShader = /* glsl */ `
+uniform sampler2D baseTexture;
+uniform sampler2D bloomTexture;
+uniform float bloomStrength;
+
+varying vec2 vUv;
+
+void main() {
+
+	gl_FragColor = ( texture2D( baseTexture, vUv ) + texture2D( bloomTexture, vUv ) * bloomStrength );
+
+}
+`
+
 function onReady(__stage) {
   const scene = __stage.scene
   const camera = __stage.camera
@@ -105,8 +132,8 @@ function onReady(__stage) {
   						bloomTexture: { value: bloomComposer.renderTarget2.texture },
   						bloomStrength: { value: params.strength }
   					},
-  					vertexShader: document.getElementById( 'vertexshader' ).textContent,
-  					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  					vertexShader: vertexShader,
+  					fragmentShader: fragmentShader,
   					defines: {}
   				} ), 'baseTexture'
   			);

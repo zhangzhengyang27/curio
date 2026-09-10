@@ -51,6 +51,23 @@ async function onReady(__stage) {
   let newHeight;
   let vPosition;
   
+  // Inlined shader (originally from script tag in HTML)
+  const readWaterLevelFragmentShaderCode = `
+    uniform vec2 point1;
+    uniform sampler2D levelTexture;
+    void main() {
+      vec2 cellSize = 1.0 / resolution.xy;
+      vec2 uv = point1.xy;
+      float heightValue = texture2D( levelTexture, uv ).x;
+      float heightL = texture2D( levelTexture, uv - vec2( cellSize.x, 0.0 ) ).x;
+      float heightR = texture2D( levelTexture, uv + vec2( cellSize.x, 0.0 ) ).x;
+      float heightD = texture2D( levelTexture, uv - vec2( 0.0, cellSize.y ) ).x;
+      float heightU = texture2D( levelTexture, uv + vec2( 0.0, cellSize.y ) ).x;
+      vec3 normal = normalize( vec3( heightL - heightR, 2.0 * cellSize.x * BOUNDS, heightD - heightU ) );
+      gl_FragColor = vec4( ( heightValue + BOUNDS * 0.5 ) / BOUNDS, normal.x * 0.5 + 0.5, normal.z * 0.5 + 0.5, 1.0 );
+    }
+  `;
+  
   
   
   
@@ -105,7 +122,6 @@ async function onReady(__stage) {
   			};
   
   			
-  			async 
   
   
   				
@@ -138,7 +154,7 @@ async function onReady(__stage) {
   				
   
   
-  				const hdrLoader = new HDRLoader().setPath( './textures/equirectangular/' );
+  				const hdrLoader = new HDRLoader().setPath( ASSET_HOST + 'textures/equirectangular/' );
   				const glbloader = new GLTFLoader().setPath( ASSET_HOST + 'models/gltf/' );
   				glbloader.setDRACOLoader( new DRACOLoader().setDecoderPath( DRACO_GLTF_CONFIG ) );
   
@@ -266,7 +282,7 @@ async function onReady(__stage) {
   				//smoothShader = gpuCompute.createShaderMaterial( document.getElementById( 'smoothFragmentShader' ).textContent, { smoothTexture: { value: null } } );
   
   				// Create compute shader to read water level
-  				readWaterLevelShader = gpuCompute.createShaderMaterial( document.getElementById( 'readWaterLevelFragmentShader' ).textContent, {
+  				readWaterLevelShader = gpuCompute.createShaderMaterial( readWaterLevelFragmentShaderCode, {
   					point1: { value: new THREE.Vector2() },
   					levelTexture: { value: null }
   				} );

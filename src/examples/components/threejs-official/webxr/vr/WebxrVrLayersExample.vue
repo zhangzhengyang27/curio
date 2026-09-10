@@ -140,7 +140,7 @@ function onReady(__stage) {
   				line.renderOrder = 1;
   
   				const controllerModelFactory = new XRControllerModelFactory();
-  				const handModelFactory = new XRHandModelFactory().setPath( './models/fbx/' );
+  				const handModelFactory = new XRHandModelFactory().setPath( ASSET_HOST + 'models/fbx/' );
   
   				//
   

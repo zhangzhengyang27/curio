@@ -102,8 +102,22 @@ async function onReady(__stage) {
   			
   
   
-  				const example1Code = document.getElementById( 'example1' ).textContent;
-  				const example2Code = document.getElementById( 'example2' ).textContent;
+  				const example1Code = `
+  					void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+  						vec2 uv = fragCoord / iResolution.xy;
+  						vec3 col = 0.5 + 0.5 * cos( iTime + uv.xyx + vec3( 0, 2, 4 ) );
+  						fragColor = vec4( col, 1.0 );
+  					}
+  				`;
+  				const example2Code = `
+  					void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+  						vec2 uv = ( fragCoord - 0.5 * iResolution.xy ) / iResolution.y;
+  						float d = length( uv );
+  						vec3 col = vec3( smoothstep( 0.5, 0.49, d ) );
+  						col *= 0.5 + 0.5 * cos( iTime + uv.xyx + vec3( 0, 2, 4 ) );
+  						fragColor = vec4( col, 1.0 );
+  					}
+  				`;
   
   				const shaderToy1Node = new ShaderToyNode();
   				shaderToy1Node.parse( example1Code );

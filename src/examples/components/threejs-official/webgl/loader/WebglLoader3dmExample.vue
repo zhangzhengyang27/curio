@@ -62,8 +62,7 @@ function onReady(__stage) {
   					scene.add( object );
   					initGUI( object.userData.layers );
   
-  					// hide spinner
-  					document.getElementById( 'loader' ).style.display = 'none';
+  					// hide spinner (no spinner element in Vue component)
   
   				}, function ( progress ) {
   

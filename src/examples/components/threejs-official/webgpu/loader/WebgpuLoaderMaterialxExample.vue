@@ -174,7 +174,7 @@ async function onReady(__stage) {
   
   						scene.environment = texture;
   
-  						prefab = ( await new GLTFLoader().loadAsync( './models/gltf/ShaderBall.glb' ) ).scene;
+  						prefab = ( await new GLTFLoader().loadAsync( ASSET_HOST + 'models/gltf/ShaderBall.glb' ) ).scene;
   
   						for ( const sample of samples ) {
   

@@ -30,6 +30,50 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - instancing demo (single triangle)\n\t\t<div id=\"notSupported\" style=\"display:none\">Sorry your graphics card + browser does not support hardware instancing"
+
+const vertexShader = /* glsl */`
+  precision highp float;
+
+  uniform float time;
+  uniform float sineTime;
+
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+
+  attribute vec3 position;
+  attribute vec3 offset;
+  attribute vec4 color;
+  attribute vec4 orientationStart;
+  attribute vec4 orientationEnd;
+
+  varying vec3 vPosition;
+  varying vec4 vColor;
+
+  void main() {
+    vPosition = position * max( abs( sineTime * 10.0 ), 0.1 ) + offset;
+    vec4 orientation = normalize( mix( orientationStart, orientationEnd, sineTime ) );
+    vec3 vcV = cross( orientation.xyz, vPosition );
+    vPosition = vcV * ( 2.0 * orientation.w ) + ( cross( orientation.xyz, vcV ) * 2.0 + vPosition );
+    vColor = color;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
+  }
+`;
+
+const fragmentShader = /* glsl */`
+  precision highp float;
+
+  uniform float time;
+
+  varying vec3 vPosition;
+  varying vec4 vColor;
+
+  void main() {
+    vec4 color = vec4( vColor );
+    color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
+    gl_FragColor = color;
+  }
+`;
+
 function onReady(__stage) {
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,7 +89,7 @@ function onReady(__stage) {
   		
   
   
-  			container = document.getElementById( 'container' );
+  			container = __stage.container;
   
   			
   			camera.position.z = 2;
@@ -114,8 +158,8 @@ function onReady(__stage) {
   					'time': { value: 1.0 },
   					'sineTime': { value: 1.0 }
   				},
-  				vertexShader: document.getElementById( 'vertexShader' ).textContent,
-  				fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+  				vertexShader: vertexShader,
+  				fragmentShader: fragmentShader,
   				side: THREE.DoubleSide,
   				forceSinglePass: true,
   				transparent: true

@@ -192,7 +192,7 @@ function onReady(ctx) {
    * Renderer
    */
   
-  document.getElementById("box").appendChild(renderer.domElement);
+  // renderer.domElement already managed by ExampleScene
   // Controls
   controls.enableDamping = true;
   /**

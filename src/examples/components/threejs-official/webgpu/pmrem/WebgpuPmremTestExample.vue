@@ -40,7 +40,6 @@ function onReady(__stage) {
 
   
   
-  			async 
   
   
   				const width = (__stage.container?.clientWidth || window.innerWidth);

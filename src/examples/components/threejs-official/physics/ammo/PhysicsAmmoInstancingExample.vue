@@ -49,7 +49,6 @@ async function onReady(__stage) {
   			let boxes, spheres;
   
   			
-  			async 
   
   
   				physics = await AmmoPhysics();

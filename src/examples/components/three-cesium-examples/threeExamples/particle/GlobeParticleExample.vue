@@ -38,7 +38,7 @@ function onReady(ctx) {
   
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
-  document.getElementById("box").appendChild(renderer.domElement);
+  // renderer.domElement already managed by ExampleScene
   
   const ambientLight = new THREE.AmbientLight(0x333366, 0.8);
   scene.add(ambientLight);
