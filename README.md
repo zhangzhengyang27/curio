@@ -1,88 +1,110 @@
-# Three.js 版本升级说明
+# TerraVista 3D（earth-app）
 
-## 当前状态
+基于 Vue 3 + Vite + Three.js + Cesium 的 **3D 数据可视化项目**，包含两条主线：
 
-当前项目依赖的 npm `three` 稳定版为 `0.185.0`，但 Three.js 官方示例仓库（`three.js-dev`）已经推进到 `r186dev`，并新增了 `MeshBasicNodeMaterial`、`MeshPhongNodeMaterial`、`CanvasTarget` 等 WebGPU 相关 API。
+1. **首页地球应用**：可交互的 3D 地球，叠加人口、GDP、航线、地震、疫情、灯光等多类可视化图层，含时间轴、图层管理、对比视图。
+2. **示例中心**：聚合 **11 个来源、1417 条** Three.js / Cesium / WebGL / 图形学示例的可浏览画廊，支持按技术栈与子分类筛选、搜索、分页、查看源码。
 
-为了兼容这些新示例，项目没有等待 npm 发布新版，而是采用了本地 build 兼容方案：
+> 当前范围已冻结：**不再接入新的示例来源**，先收口存量并补齐工程治理。
+> 详见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 
-1. 将 `three.js-dev/build/` 下的最新 build 文件复制到 `src/examples/three-build-compat/`：
-   - `three.core.js`
-   - `three.module.js`
-   - `three.webgpu.js`
-   - `three.webgpu.nodes.js`
-   - `three.tsl.js`
+---
 
-2. 在 `vite.config.js` 中注册 `threeCompatResolver` 插件，将以下模块解析到上述本地文件：
-   - `three` → `src/examples/three-build-compat/three.module.js`
-   - `three/webgpu` → `src/examples/three-build-compat/three.webgpu.js`
-   - `three/tsl` → `src/examples/three-build-compat/three.tsl.js`
+## 快速开始
 
-3. 在 `optimizeDeps.exclude` 中排除 `three`、`three/webgpu`、`three/tsl`，避免 Vite 预构建冲突。
+```bash
+# 1. 安装依赖
+#    three@0.185 与 three-good-godrays 存在 peer 冲突，需要 --legacy-peer-deps
+npm install --legacy-peer-deps
 
-4. 转换脚本 `scripts/convert-threejs-official-to-vue.js` 会把 WebGPU 示例中的 `import ... from 'three'` 重写成 `import ... from 'three/webgpu'`，因为当前 WebGPU build 和核心 build 是分开的。
+# 2. 配置环境变量（可选，仅百度地图示例需要）
+cp .env.example .env.local
+#   编辑 .env.local，填入 VITE_BMAP_AK / VITE_TDT_TOKEN
 
-## 当 npm 最新稳定版升级后
+# 3. 启动开发服务器
+npm run dev          # http://localhost:5173
 
-一旦 npm 上的 `three` 发布了包含上述 API 的稳定版（例如 `0.186.0` 或更高），建议按以下步骤切回 npm 包：
+# 4. 生产构建
+npm run build
+```
 
-1. **更新 `package.json`**
-   将 `three` 的依赖版本改为目标版本，例如：
-   ```json
-   "three": "^0.186.0"
-   ```
+### 环境变量
 
-2. **重新安装依赖**
-   ```bash
-   npm install
-   ```
+| 变量 | 用途 | 是否必需 |
+|---|---|---|
+| `VITE_BMAP_AK` | 百度地图开放平台 AK（`/bmap` 页面） | 否，未配置时页面优雅降级 |
+| `VITE_TDT_TOKEN` | 天地图令牌（部分 Cesium 示例底图） | 否，未配置时相关示例不加载瓦片 |
 
-3. **移除 Vite 兼容插件**
-   编辑 `vite.config.js`：
-   - 删除 `threeCompatResolver()` 插件；
-   - 删除 `optimizeDeps.exclude` 中的 `three`、`three/webgpu`、`three/tsl`；
-   - 如果不需要再手动指定 `three/examples/jsm` 路径，也可以删除对应的 alias。
+凭据只写在 `.env.local`（已被 `.gitignore` 忽略），**严禁提交进仓库**；CI 会执行
+`npm run check:secrets` 拦截。新增变量请在 `.env.example` 登记。
 
-   修改后大概如下：
-   ```js
-   export default defineConfig({
-     plugins: [vue()],
-     resolve: {
-       alias: {
-         '@': fileURLToPath(new URL('./src', import.meta.url)),
-         // 'three/examples/jsm': fileURLToPath(new URL('./src/examples/jsm-compat', import.meta.url))
-       }
-     },
-     // ...
-     optimizeDeps: {
-       include: ['three-globe'],
-       exclude: ['satellite.js'],
-     }
-   })
-   ```
+---
 
-4. **清理本地兼容文件（可选）**
-   如果确认 npm 版本已完全覆盖需求，可以删除：
-   ```bash
-   rm -rf src/examples/three-build-compat
-   ```
+## 常用命令
 
-5. **调整转换脚本（可选）**
-   如果未来 `three` 核心包已经直接导出 `MeshBasicNodeMaterial` 等节点材质，可以去掉 `scripts/convert-threejs-official-to-vue.js` 中针对 WebGPU 示例的 `from 'three'` → `from 'three/webgpu'` 重写逻辑。
+| 命令 | 作用 |
+|---|---|
+| `npm run dev` | 启动开发服务器 |
+| `npm run build` | 生产构建（含示例依赖拷贝） |
+| `npm run preview` | 预览构建产物 |
+| `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
+| `npm run typecheck:ts` | 对自有 TS 源码做类型检查 |
+| `npm run test:e2e` | Playwright 冒烟测试（`tests/smoke.spec.js`） |
+| `npm run verify` | **一键跑全部一致性校验**（见下） |
 
-6. **验证构建**
-   ```bash
-   rm -rf node_modules/.vite
-   npm run build
-   ```
+### 质量阀门
 
-7. **运行开发服务器抽查示例**
-   ```bash
-   npm run dev
-   ```
-   重点检查 WebGPU、WebXR、CSS3D、SVG 等类别的示例是否能正常渲染，控制台是否有 `IMPORT_IS_UNDEFINED` 或 `UNRESOLVED_IMPORT` 错误。
+`npm run verify` 串联四项校验，CI 与本地都应保持全绿：
 
-## 注意事项
+| 校验 | 脚本 | 拦截什么 |
+|---|---|---|
+| 明文凭据 | `scripts/check-secrets.mjs` | AK / Token / 私钥被写进仓库 |
+| 注册表一致性 | `scripts/verify-registry.mjs` | 主键冲突、字段缺失、**示例组件文件找不到** |
+| 封面完整性 | `scripts/verify-thumbnails.mjs` | 非空 thumbnail 对应文件缺失（线上破图） |
+| 兼容层守卫 | `scripts/verify-three-compat.mjs` | three.js 本地兼容层被静默改动 |
 
-- 在切回 npm 包之前，请确保 `node_modules/three/build/` 和 `node_modules/three/examples/jsm/` 中的文件版本与官方示例仓库一致，否则可能出现 API 缺失或路径不兼容的问题。
-- 如果项目中还使用了 `src/examples/jsm-compat/` 作为 `three/examples/jsm` 的本地替代，升级时也应同步更新或移除该目录。
+CI 定义在 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：
+`凭据扫描 → ESLint → 类型检查 → 三项校验 → 生产构建 → 冒烟 E2E`。
+
+---
+
+## 目录结构
+
+```
+src/
+├── App.vue                 # 全站顶栏（品牌 / 导航 / 搜索 / 主题切换）
+├── main.js
+├── router/index.js         # / · /three-globe · /examples · /bmap
+├── components/             # 首页地球应用组件（EarthCanvas、面板、工具栏…）
+├── composables/            # 首页用 composable（useScene/useRenderLoop/useRaycaster…）
+├── stores/                 # Pinia：地球/图层/时间轴/主题/交互
+├── three/                  # 首页地球渲染层：objects / layers / geo / utils / gc
+├── views/                  # EarthView、ThreeGlobeGallery、GlobeDemo、BMap
+└── examples/               # ★ 示例中心
+    ├── registry/           # 11 个数据源注册表 + 聚合入口 index.js
+    ├── components/         # 1429 个示例组件，按 {source}/{category}/{Id}Example.vue 约定
+    ├── views/              # ExampleGallery（画廊）/ ExampleDemo（详情）/ ExampleHost（宿主）
+    ├── runners/            # IframeRunner
+    ├── composables/        # useExampleFilters、各技术栈 stage
+    ├── jsm-compat/         # three.js addons 本地副本
+    └── three-build-compat/ # three.js 预发布 build 兼容层（见 docs/THREE_UPGRADE.md）
+```
+
+---
+
+## 文档
+
+| 文档 | 内容 |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | 架构与关键机制（示例解析、兼容层、资源清理） |
+| [`docs/KNOWN_PITFALLS.md`](docs/KNOWN_PITFALLS.md) | **动手前必读**：历史踩坑与不可逆操作 |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | 范围声明、待办与优先级 |
+| [`docs/THREE_UPGRADE.md`](docs/THREE_UPGRADE.md) | three.js 兼容层机制与切回 npm 的步骤 |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | 提交规范、评审要求、红线 |
+
+## 参考
+
+- 主要技术栈：Vue 3.5 · Vite 8 · Three.js 0.185（+ r186dev 兼容层）· Cesium 1.142 · Pinia 3
+- 示例来源（11）：`threejs-official`、`three-cesium-examples`、`cesium-examples`、`webgl`、
+  `graphics`、`mygrapics`、`three-project`、`threejs-lesson`、`earth-lessons`、
+  `city-realtime-webgl`、`granary-3d`
