@@ -41,12 +41,14 @@ node_modules/.vite
 Thumbs.db
 
 # Test artifacts
-/tmp
-/example-screenshots
-verify-examples.mjs
-check-*.mjs
-test-*.py
-tmp/
+# 注意：以下一次性脚本的忽略规则必须用前导「/」锚定到仓库根目录。
+# 早期版本写成 `verify-examples.mjs` / `check-*.mjs` / `test-*.py`（无前导斜杠），
+# 会匹配任意层级，导致 tests/ 下的测试文件和 scripts/check-secrets.mjs 被误忽略。
+/tmp/
+/example-screenshots/
+/verify-examples.mjs
+/check-*.mjs
+/test-*.py
 build.log
 svg_sandbox.png
 test-results/

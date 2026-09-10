@@ -41,6 +41,7 @@ function exampleUrl(source, category, id) {
 }
 
 const onlyFailed = process.argv.includes('--only-failed')
+const overwrite = process.argv.includes('--overwrite')
 const concurrency = Number(process.argv.includes('--concurrency')
   ? process.argv[process.argv.indexOf('--concurrency') + 1]
   : 4)
@@ -58,6 +59,12 @@ async function main() {
       .filter(m => m.ok === false)
       .map(({ source, category, id }) => ({ source, category, id }))
     console.log(`--only-failed: 仅重截 ${targets.length} 个失败项`)
+  } else if (overwrite) {
+    // 覆盖所有 thumbnail 指向 /example-thumbs/ 的示例，不论文件是否已存在。
+    targets = all
+      .filter(e => e.thumbnail && e.thumbnail.startsWith('/example-thumbs/') && e.source)
+      .map(e => ({ source: e.source, category: e.category, id: e.id }))
+    console.log(`--overwrite: 重截所有 example-thumbs 示例，共 ${targets.length} 个`)
   } else {
     targets = all
       .filter(e => !e.thumbnail && e.source)
@@ -116,7 +123,7 @@ async function main() {
       const t = targets[i]
       const abs = absPathFor(t.source, t.category, t.id)
       const url = thumbUrl(t.source, t.category, t.id)
-      if (existsSync(abs) && (await stat(abs)).size > 0) {
+      if (!overwrite && existsSync(abs) && (await stat(abs)).size > 0) {
         map.push({ ...t, thumbnail: url, ok: true, skipped: true })
         done++
         continue
@@ -126,18 +133,30 @@ async function main() {
           waitUntil: 'domcontentloaded',
           timeout: 45000
         })
-        const canvas = page.locator('canvas').first()
-        if (await canvas.count()) {
-          await canvas.waitFor({ timeout: 10000 }).catch(() => {})
-          await page.waitForTimeout(1500)
-          await mkdir(path.dirname(abs), { recursive: true })
-          const box = await canvas.boundingBox().catch(() => null)
-          await capture(abs, box)
-        } else {
-          await page.waitForTimeout(1500)
-          await mkdir(path.dirname(abs), { recursive: true })
-          await capture(abs, null)
+        // 隐藏页面 chrome：只保留示例本身，不要顶部导航栏、面包屑、标题、标签。
+        await page.addStyleTag({
+          content: `
+            .app-nav { display: none !important; }
+            .top-bar { display: none !important; }
+            .demo-root { top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; }
+          `
+        })
+        await page.waitForTimeout(300)
+        const demoBody = page.locator('.demo-body').first()
+        let box = null
+        if (await demoBody.count()) {
+          box = await demoBody.boundingBox().catch(() => null)
         }
+        if (!box) {
+          const canvas = page.locator('canvas').first()
+          if (await canvas.count()) {
+            await canvas.waitFor({ timeout: 10000 }).catch(() => {})
+            box = await canvas.boundingBox().catch(() => null)
+          }
+        }
+        await page.waitForTimeout(1500)
+        await mkdir(path.dirname(abs), { recursive: true })
+        await capture(abs, box)
         const sz = (await stat(abs)).size
         map.push({ ...t, thumbnail: url, ok: sz > 500, skipped: false })
         if (sz <= 500) failures.push({ ...t, reason: 'too small (' + sz + ')' })
