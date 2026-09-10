@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>地球 3D 数据可视化</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+    <!-- 百度地图 GL SDK 不再在此静态引入：AK 属于机密配置，改由 src/views/BMap/composables/useBMap.ts
+         在需要时按 VITE_BMAP_AK 动态加载，未配置 AK 时页面优雅降级而不是白屏。 -->
   </head>
   <body>
     <div id="app"></div>
