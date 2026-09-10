@@ -1,0 +1,127 @@
+#!/usr/bin/env node
+/**
+ * 示例注册表一致性校验。
+ *
+ * 示例中心由 11 个 registry 文件聚合而成，组件按命名约定动态解析：
+ *   src/examples/components/{source}/{category}/{PascalCase(id)}Example.vue
+ *   src/examples/components/{source}/{category}/{id}.vue
+ *   src/examples/components/{source}/{category}/{id}/index.vue
+ * 这套「约定优于配置」的机制没有类型系统保护，一旦 registry 与磁盘文件不一致，
+ * 用户侧表现为卡片点进去白屏/报「未找到 Vue 组件」，且不会有任何构建报错。
+ * 因此需要本脚本作为 CI 闸门。
+ *
+ * 校验项：
+ *   1. 主键 (source/category/id) 唯一
+ *   2. 必填字段完整（source/category/id/title/runner）
+ *   3. runner 合法（vue | iframe）
+ *   4. runner=vue 的示例必须能在约定路径找到对应组件
+ *   5. 每个 source 至少有一条示例
+ *
+ * 用法：node scripts/verify-registry.mjs   （有问题则退出码 1）
+ */
+import { existsSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+const ROOT = resolve(fileURLToPath(import.meta.url), '../..')
+const REG_DIR = join(ROOT, 'src/examples/registry')
+const COMPONENTS_DIR = join(ROOT, 'src/examples/components')
+
+const REQUIRED_FIELDS = ['source', 'category', 'id', 'title', 'runner']
+const VALID_RUNNERS = new Set(['vue', 'iframe'])
+
+const toPascalCase = (id) =>
+  id
+    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
+    .replace(/^(.)/, (_, char) => char.toUpperCase())
+
+const idx = await import(pathToFileURL(join(REG_DIR, 'index.js')).href)
+const all = await idx.getAllExamplesAsync()
+const sources = idx.getSources()
+
+const errors = []
+const warnings = []
+
+// ---- 1. 主键唯一 ----
+const seen = new Map()
+for (const ex of all) {
+  const key = `${ex.source}/${ex.category}/${ex.id}`
+  if (seen.has(key)) {
+    errors.push(`主键冲突（同 source+category+id 重复注册）: ${key}`)
+  } else {
+    seen.set(key, ex)
+  }
+}
+
+// ---- 2. 必填字段 ----
+for (const ex of all) {
+  const key = `${ex.source}/${ex.category}/${ex.id}`
+  for (const field of REQUIRED_FIELDS) {
+    if (ex[field] === undefined || ex[field] === null || ex[field] === '') {
+      errors.push(`缺少必填字段 ${field}: ${key}`)
+    }
+  }
+}
+
+// ---- 3. runner 合法 ----
+for (const ex of all) {
+  if (!VALID_RUNNERS.has(ex.runner)) {
+    errors.push(`非法 runner "${ex.runner}": ${ex.source}/${ex.category}/${ex.id}`)
+  }
+}
+
+// ---- 4. runner=vue 的组件文件必须存在 ----
+for (const ex of all) {
+  if (ex.runner !== 'vue') continue
+  const dir = join(COMPONENTS_DIR, ex.source, ex.category)
+  const candidates = [
+    join(dir, `${toPascalCase(ex.id)}Example.vue`),
+    join(dir, `${ex.id}.vue`),
+    join(dir, ex.id, 'index.vue'),
+  ]
+  if (!candidates.some((p) => existsSync(p))) {
+    errors.push(`组件文件缺失: ${ex.source}/${ex.category}/${ex.id}（已尝试约定路径 3 个候选）`)
+  }
+}
+
+// ---- 5. 每个 source 至少有一条示例 ----
+const perSource = new Map()
+for (const ex of all) {
+  perSource.set(ex.source, (perSource.get(ex.source) || 0) + 1)
+}
+for (const { source } of sources) {
+  if (!perSource.get(source)) {
+    errors.push(`source "${source}" 未注册任何示例（registry 为空或加载失败）`)
+  }
+}
+
+// ---- 6. 兜底：总量不为 0（防止 registry 加载失败被误判为通过）----
+if (all.length === 0) {
+  errors.push('聚合后的示例总数为 0，疑似 registry 加载失败（请检查懒加载是否已 await）')
+}
+
+// ---- 报告 ----
+console.log('[verify-registry] 各数据源示例数：')
+for (const [source, count] of [...perSource.entries()].sort((a, b) => b[1] - a[1])) {
+  console.log(`  ${String(count).padStart(5)}  ${source}`)
+}
+console.log(`\n[verify-registry] 合计 ${all.length} 条示例，来自 ${perSource.size} 个数据源。`)
+
+const iframeCount = all.filter((ex) => ex.runner === 'iframe').length
+if (iframeCount > 0) {
+  warnings.push(`存在 ${iframeCount} 条 runner=iframe 的示例（当前项目约定为全部 vue，请确认是否符合预期）`)
+}
+
+if (warnings.length) {
+  console.log('\n[verify-registry] 提示：')
+  for (const w of warnings) console.log(`  - ${w}`)
+}
+
+if (errors.length) {
+  console.error(`\n[FAIL] 发现 ${errors.length} 个注册表一致性问题：`)
+  for (const e of errors) console.error(`  - ${e}`)
+  process.exit(1)
+}
+
+console.log('\n[OK] 注册表主键唯一、字段完整、组件文件全部命中。')
+process.exit(0)
