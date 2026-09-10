@@ -1,0 +1,16 @@
+#!/bin/sh
+# 提交前快速闸门：明文凭据扫描（秒级，不会拖慢日常提交）。
+#
+# 启用方式（每个克隆执行一次，属于本机 git 配置，需开发者自行决定）：
+#   git config core.hooksPath .githooks
+#
+# 完整校验（lint / 注册表一致性 / 构建 / E2E）请交给 CI，见 .github/workflows/ci.yml。
+set -e
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[pre-commit] 未检测到 node，跳过凭据扫描。"
+  exit 0
+fi
+
+echo "[pre-commit] 扫描明文凭据…"
+node scripts/check-secrets.mjs

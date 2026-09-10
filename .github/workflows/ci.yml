@@ -1,0 +1,80 @@
+name: CI
+
+# 变更必须过闸：任何 push / PR 都要通过「凭据扫描 → 静态检查 → 示例数据一致性 → 构建 → 冒烟 E2E」。
+# 这是本项目从「人工手测」转为「自动化回归」的关键一环。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# 同一分支的旧任务自动取消，避免排队浪费
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: 校验与构建
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      # 冒烟测试在未配置地图 AK 的情况下也应通过（页面需优雅降级）
+      CI: true
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: 安装依赖
+        # three@0.185 与 three-good-godrays（要求 <=0.182）存在 peer 冲突，
+        # 项目一贯使用 --legacy-peer-deps 安装（见 docs/KNOWN_PITFALLS.md）。
+        run: npm ci --legacy-peer-deps
+
+      - name: 明文凭据扫描
+        run: npm run check:secrets
+
+      - name: ESLint
+        run: npm run lint:ci
+
+      - name: TypeScript 类型检查（仅自有 TS 源码）
+        run: npm run typecheck:ts
+
+      - name: 示例注册表一致性
+        run: npm run verify:registry
+
+      - name: 示例封面完整性
+        run: npm run verify:thumbnails
+
+      - name: three.js 兼容层守卫
+        run: npm run verify:three-compat
+
+      - name: 生产构建
+        run: npm run build
+
+      - name: 安装 Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 冒烟 E2E
+        run: npm run test:e2e
+
+      - name: 失败时上传 Playwright 报告
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
