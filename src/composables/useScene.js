@@ -4,8 +4,10 @@ import { disposeObject3D } from '../three/gc.js'
 export function useScene(canvas) {
   const scene = new THREE.Scene()
 
-  const width = window.innerWidth
-  const height = window.innerHeight
+  // 优先使用容器尺寸，回退到 window 尺寸
+  const container = canvas.parentElement || null
+  const width = container?.clientWidth || window.innerWidth
+  const height = container?.clientHeight || window.innerHeight
   const k = width / height
   const s = 120
   const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
@@ -13,9 +15,32 @@ export function useScene(canvas) {
   camera.lookAt(0, 0, 0)
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
-  renderer.setPixelRatio(window.devicePixelRatio)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   renderer.setSize(width, height)
   renderer.setClearColor(0x0a0a1a, 1) // 深空蓝黑
+
+  // === WebGL Context Lost / Restored 处理 ===
+  let _contextLost = false
+  const _contextLostCallbacks = []
+  const _contextRestoredCallbacks = []
+
+  function onContextLost(event) {
+    event.preventDefault()
+    _contextLost = true
+    console.warn('[useScene] WebGL context lost, waiting for restore...')
+    _contextLostCallbacks.forEach(cb => cb())
+  }
+
+  function onContextRestored() {
+    _contextLost = false
+    console.info('[useScene] WebGL context restored')
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    onResize()
+    _contextRestoredCallbacks.forEach(cb => cb())
+  }
+
+  canvas.addEventListener('webglcontextlost', onContextLost, false)
+  canvas.addEventListener('webglcontextrestored', onContextRestored, false)
 
   // === 星空背景 ===
   const starsGeo = new THREE.BufferGeometry()
@@ -56,9 +81,11 @@ export function useScene(canvas) {
   const ambient = new THREE.AmbientLight(0x334466, 0.7)
   scene.add(ambient)
 
+  const _resizeCallbacks = []
   function onResize() {
-    const w = window.innerWidth
-    const h = window.innerHeight
+    const w = container?.clientWidth || window.innerWidth
+    const h = container?.clientHeight || window.innerHeight
+    if (w === 0 || h === 0) return
     const k2 = w / h
     camera.left = -s * k2
     camera.right = s * k2
@@ -66,15 +93,41 @@ export function useScene(canvas) {
     camera.bottom = -s
     camera.updateProjectionMatrix()
     renderer.setSize(w, h)
+    _resizeCallbacks.forEach(cb => cb(w, h))
   }
-  window.addEventListener('resize', onResize)
+
+  // 使用 ResizeObserver 监听容器尺寸变化（侧边栏展开、窗口缩放等）
+  let _resizeObserver = null
+  if (container && typeof ResizeObserver !== 'undefined') {
+    _resizeObserver = new ResizeObserver(() => onResize())
+    _resizeObserver.observe(container)
+  } else {
+    window.addEventListener('resize', onResize)
+  }
+
+  function addResizeCallback(cb) {
+    _resizeCallbacks.push(cb)
+  }
+
+  function onContextLostOnce(cb) { _contextLostCallbacks.push(cb) }
+  function onContextRestoredOnce(cb) { _contextRestoredCallbacks.push(cb) }
 
   function dispose() {
-    window.removeEventListener('resize', onResize)
+    if (_resizeObserver) {
+      _resizeObserver.disconnect()
+      _resizeObserver = null
+    } else {
+      window.removeEventListener('resize', onResize)
+    }
+    canvas.removeEventListener('webglcontextlost', onContextLost)
+    canvas.removeEventListener('webglcontextrestored', onContextRestored)
+    _resizeCallbacks.length = 0
+    _contextLostCallbacks.length = 0
+    _contextRestoredCallbacks.length = 0
     disposeObject3D(scene)
     scene.clear()
     renderer.dispose()
   }
 
-  return { scene, camera, renderer, dispose }
+  return { scene, camera, renderer, dispose, addResizeCallback, onContextLostOnce, onContextRestoredOnce }
 }

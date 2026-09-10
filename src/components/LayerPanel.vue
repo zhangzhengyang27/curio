@@ -2,8 +2,12 @@
   <div class="layer-panel">
     <div class="panel-header">
       <div>
-        <h2 class="panel-title">图层</h2>
-        <p class="panel-subtitle">管理地球覆盖图层</p>
+        <h2 class="panel-title">
+          图层
+        </h2>
+        <p class="panel-subtitle">
+          管理地球覆盖图层
+        </p>
       </div>
     </div>
 
@@ -19,7 +23,10 @@
           @click="toggle(layer)"
         >
           <div class="layer-left">
-            <span class="layer-icon" v-html="getIcon(layer.id)" />
+            <span
+              class="layer-icon"
+              v-html="getIcon(layer.id)"
+            />
             <span class="layer-name">{{ layer.name }}</span>
           </div>
           <div class="layer-right">
@@ -67,9 +74,25 @@
 
     <div class="panel-footer">
       <button class="add-layer-btn">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
+        <svg
+          class="btn-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line
+            x1="12"
+            y1="5"
+            x2="12"
+            y2="19"
+          />
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+          />
         </svg>
         添加自定义图层
       </button>

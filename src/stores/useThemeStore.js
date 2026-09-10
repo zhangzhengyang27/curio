@@ -25,7 +25,6 @@ export const useThemeStore = defineStore('theme', () => {
 
   function toggle() {
     isDark.value = !isDark.value
-    apply()
   }
 
   watch(isDark, apply)

@@ -72,13 +72,13 @@ let isRealisticEarth = false // 是否使用真实地球贴图
 let proceduralTexture = null // 程序生成的地球纹理备份
 let countryMeshStates = [] // 国家 Mesh 的原始材质状态备份
 let realisticHighlightMesh = null // 真实地球模式下高亮的国家 Mesh
-let removeLabelResize = null // label resize 监听清理函数
 
 onMounted(async () => {
   try {
     canvasEl = canvasRef.value
     const sceneCtx = useScene(canvasRef.value)
     scene = sceneCtx.scene; camera = sceneCtx.camera; renderer = sceneCtx.renderer; disposeScene = sceneCtx.dispose
+    const addResizeCallback = sceneCtx.addResizeCallback
 
     raycasterCtx.setCamera(camera)
 
@@ -97,9 +97,7 @@ onMounted(async () => {
     const { label } = labelManager.createLabelEl('GDP')
     scene.add(label); labelManager.mainLabel = label; disposeLabels = labelManager.dispose
 
-    function onLabelResize() { labelManager?.resize() }
-    window.addEventListener('resize', onLabelResize)
-    removeLabelResize = () => window.removeEventListener('resize', onLabelResize)
+    addResizeCallback(() => labelManager?.resize())
 
     earth = createEarth(R, { tweenGroup })
     earthStore.setEarthGroup(earth); scene.add(earth)
@@ -210,13 +208,14 @@ onMounted(async () => {
       const nowMs = performance.now()
       // 大气光晕更新相机位置
       if (atmosphere?.userData?.updateCamera) atmosphere.userData.updateCamera(camera)
-      // 云层旋转
-      if (cloudLayer) cloudLayer.rotateY(0.0003)
+      // 云层旋转（仅在可见时）
+      if (cloudLayer && cloudLayer.visible) cloudLayer.rotateY(0.0003)
       // 风暴粒子
       if (stormPoints) updateStormParticles(stormPoints, 0.016)
-      // GDP柱体高度 Tween 过渡
+      // GDP柱体高度 Tween 过渡（tweening 标记防止每帧重复创建 Tween）
       pillarMeshes.forEach(pm => {
-        if (Math.abs(pm.targetHeight - pm.height) > 0.05) {
+        if (!pm.tweening && Math.abs(pm.targetHeight - pm.height) > 0.05) {
+          pm.tweening = true
           new TWEEN.Tween(pm, tweenGroup)
             .to({ height: pm.targetHeight }, 600)
             .easing(TWEEN.Easing.Quadratic.InOut)
@@ -225,13 +224,19 @@ onMounted(async () => {
               obj.bar.scale.set(1, Math.max(obj.height, 0.3), 1)
               obj.dot.position.copy(obj.base).addScaledVector(obj.dir, obj.height + 0.8)
             })
+            .onComplete(() => { pm.tweening = false })
             .start()
         }
       })
       visualizationLayer?.update(nowSec)
       tweenGroup.update(nowMs) // 图层共享 Tween 组，TWEEN 使用毫秒时间
       updateTileEnginePOV(tileEngine, camera)
-      composer.render()
+      // Bloom 关闭时直接渲染，跳过 EffectComposer 的 pass 管线开销
+      if (bloomPass && bloomPass.enabled) {
+        composer.render()
+      } else {
+        renderer.render(scene, camera)
+      }
       if (htmlMarkersGroup) {
         updateHtmlMarkersVisibility(htmlMarkersGroup, camera, R)
       }
@@ -510,7 +515,6 @@ onUnmounted(() => {
   stopWatch?.()
   stopWatchSelected?.()
   cancelFlight?.()
-  removeLabelResize?.()
   canvasEl?.removeEventListener('click', onCanvasClick)
   canvasEl?.removeEventListener('contextmenu', onContextMenu)
   canvasEl = null

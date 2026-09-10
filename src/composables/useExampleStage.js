@@ -64,14 +64,16 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
   const size = ref({ width: 0, height: 0 })
 
   const renderLoop = useRenderLoop()
-  const clock = new THREE.Clock()
+  const timer = new THREE.Timer()
   const updateCallbacks = new Set()
 
   let mounted = false
+  const trackedRafIds = new Set()
   let resizeObserver = null
   let gridHelper = null
   let css2dRenderer = null
   let css3dRenderer = null
+  const trackedListeners = []
 
   function getContainerSize() {
     if (fitContainer && containerRef?.value) {
@@ -203,8 +205,9 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
   }
 
   function renderFrame() {
-    const delta = clock.getDelta()
-    const elapsed = clock.getElapsedTime()
+    timer.update()
+    const delta = timer.getDelta()
+    const elapsed = timer.getElapsed()
     updateCallbacks.forEach((fn) => fn(delta, elapsed))
     if (controlsRef.value) controlsRef.value.update()
     if (!customRender) rendererRef.value.render(scene, cameraRef.value)
@@ -241,11 +244,33 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
     applySize()
   }
 
+  /**
+   * 追踪事件监听器，dispose 时自动移除。
+   * @param {EventTarget} target - window / document / canvas 等
+   * @param {string} type - 事件类型
+   * @param {Function} fn - 回调
+   * @param {object|boolean} [opts] - addEventListener 选项
+   */
+  function listen(target, type, fn, opts) {
+    target.addEventListener(type, fn, opts)
+    trackedListeners.push([target, type, fn, opts])
+  }
+
   function dispose() {
     if (!mounted) return
     mounted = false
 
     if (onBeforeDispose) onBeforeDispose(ctx)
+
+    // 移除所有被追踪的事件监听器
+    trackedListeners.forEach(([target, type, fn, opts]) => {
+      try { target.removeEventListener(type, fn, opts) } catch { /* ignore */ }
+    })
+    trackedListeners.length = 0
+
+    // 取消所有被追踪的 requestAnimationFrame 循环
+    trackedRafIds.forEach(id => cancelAnimationFrame(id))
+    trackedRafIds.clear()
 
     if (resizeObserver) {
       resizeObserver.disconnect()
@@ -257,7 +282,7 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
     renderLoop.stop()
     renderLoop.setRenderFn(null)
     updateCallbacks.clear()
-    clock.stop()
+    timer.dispose()
 
     if (controlsRef.value) {
       controlsRef.value.dispose()
@@ -314,7 +339,47 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
     if (autoStart) renderLoop.start()
 
     isReady.value = true
-    if (onReady) onReady(ctx)
+    if (onReady) {
+      // 在 onReady 执行期间拦截 window/document.addEventListener 和 requestAnimationFrame，
+      // 自动将示例注册的全局事件监听器和 RAF 循环纳入 dispose 清理范围。
+      const origWinAdd = window.addEventListener
+      const origDocAdd = document.addEventListener
+      const origRaf = window.requestAnimationFrame.bind(window)
+      window.addEventListener = function (type, fn, opts) {
+        trackedListeners.push([window, type, fn, opts])
+        return origWinAdd.call(window, type, fn, opts)
+      }
+      document.addEventListener = function (type, fn, opts) {
+        trackedListeners.push([document, type, fn, opts])
+        return origDocAdd.call(document, type, fn, opts)
+      }
+      // trackedRaf 在回调执行期间重新挂载拦截，确保递归 RAF 调用也被追踪
+      function trackedRaf(cb) {
+        const id = origRaf(function wrappedRaf(ts) {
+          trackedRafIds.delete(id)
+          if (!mounted) return // dispose 后不再继续循环
+          // 回调执行期间重新拦截 RAF，使递归调用 requestAnimationFrame(animate) 也被追踪
+          window.requestAnimationFrame = trackedRaf
+          try { cb(ts) } finally { window.requestAnimationFrame = origRaf }
+        })
+        trackedRafIds.add(id)
+        return id
+      }
+      window.requestAnimationFrame = trackedRaf
+      try {
+        const result = onReady(ctx)
+        // 处理 async onReady 返回的 Promise，避免 unhandled rejection
+        if (result && typeof result.catch === 'function') {
+          result.catch((err) => {
+            console.warn('[useExampleStage] onReady async error:', err)
+          })
+        }
+      } finally {
+        window.addEventListener = origWinAdd
+        document.addEventListener = origDocAdd
+        window.requestAnimationFrame = origRaf
+      }
+    }
   }
 
   onMounted(mount)
@@ -350,6 +415,7 @@ export function useExampleStage(canvasRef, containerRef, overlayRef, options = {
     setCamera,
     renderOnce,
     resize,
+    listen,
     dispose,
   }
 

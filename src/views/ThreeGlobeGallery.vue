@@ -4,15 +4,27 @@
       <!-- Header & Filters -->
       <header class="gallery-header">
         <div class="header-text">
-          <h1 class="page-title">ThreeGlobe 示例集</h1>
+          <h1 class="page-title">
+            ThreeGlobe 示例集
+          </h1>
           <p class="page-subtitle">
             Explore interactive 3D geospatial visualizations and implementation examples.
           </p>
         </div>
         <div class="header-actions">
           <div class="search-box">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
+            <svg
+              class="search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+              />
               <path d="m21 21-4.35-4.35" />
             </svg>
             <input
@@ -22,8 +34,17 @@
               type="text"
             >
           </div>
-          <button class="filter-btn" @click="showFilters = !showFilters">
-            <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button
+            class="filter-btn"
+            @click="showFilters = !showFilters"
+          >
+            <svg
+              class="filter-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
             </svg>
             Filters
@@ -51,15 +72,22 @@
           :to="`/three-globe/${ex.id}`"
           class="example-card"
         >
-          <div class="card-media" :style="{ '--card-gradient': ex.gradient }">
+          <div
+            class="card-media"
+            :style="{ '--card-gradient': ex.gradient }"
+          >
             <div class="card-image">
               <span class="card-emoji">{{ ex.icon }}</span>
             </div>
             <div class="card-image-overlay" />
           </div>
           <div class="card-body">
-            <h3 class="card-title">{{ ex.title }}</h3>
-            <p class="card-desc">{{ ex.desc }}</p>
+            <h3 class="card-title">
+              {{ ex.title }}
+            </h3>
+            <p class="card-desc">
+              {{ ex.desc }}
+            </p>
             <div class="card-tags">
               <span
                 v-for="t in ex.tags"
@@ -78,8 +106,17 @@
         >
           <div class="submit-body">
             <div class="submit-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
                 <path d="M12 8v8M8 12h8" />
               </svg>
             </div>
@@ -89,7 +126,10 @@
         </a>
       </div>
 
-      <p v-if="filteredExamples.length === 0" class="empty-state">
+      <p
+        v-if="filteredExamples.length === 0"
+        class="empty-state"
+      >
         未找到匹配 “{{ searchQuery }}” 的示例
       </p>
     </main>

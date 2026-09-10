@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { geoGraticule10 } from 'd3-geo'
+import { geoGraticule10 } from 'd3'
 import GeoJsonGeometry from 'three-geojson-geometry'
 
 /**

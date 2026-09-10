@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, markRaw } from 'vue'
 
 export const useLayerStore = defineStore('layer', () => {
   const layers = ref([
@@ -9,7 +9,8 @@ export const useLayerStore = defineStore('layer', () => {
 
   function setLayerChildren(id, children) {
     const layer = layers.value.find(l => l.id === id)
-    if (layer) layer.children = children
+    // markRaw: Three.js 对象无需 Vue 深度代理，避免代理 geometry/material 的性能开销
+    if (layer) layer.children = children.map(c => markRaw(c))
   }
 
   function setVisible(id, visible) {
@@ -25,7 +26,7 @@ export const useLayerStore = defineStore('layer', () => {
     if (layer) {
       layer.opacity = opacity
       layer.children.forEach(child => {
-        if (child.material) {
+        if (child.material && child.material.opacity !== undefined) {
           child.material.opacity = opacity
           child.material.transparent = true
         }

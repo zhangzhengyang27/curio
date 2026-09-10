@@ -109,6 +109,9 @@ function getCylinderState(item, R, options = {}, computedMax, computedMin) {
   }
 
   const pos = lon2xyz(R, lngVal, latVal)
+  if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+    console.error('[DEBUG] NaN in lon2xyz', { lngVal, latVal, R, item }, new Error().stack)
+  }
   _normal.set(pos.x, pos.y, pos.z).normalize()
   _basePos.copy(_normal).multiplyScalar(R * 1.002)
 

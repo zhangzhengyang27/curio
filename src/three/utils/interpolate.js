@@ -1,4 +1,4 @@
-import { interpolateArray } from 'd3-interpolate'
+import { interpolateArray } from 'd3'
 import { Vector3 } from 'three'
 
 /**

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import * as THREE from 'three'
 
 /**
@@ -7,7 +7,9 @@ import * as THREE from 'three'
  */
 export function useRaycaster() {
   const raycaster = new THREE.Raycaster()
-  const currentMesh = ref(null)
+  // shallowRef: Mesh 对象无需 Vue 深度代理
+  const currentMesh = shallowRef(null)
+  const _ndc = new THREE.Vector2()
   let _camera = null
 
   function setCamera(camera) {
@@ -22,7 +24,8 @@ export function useRaycaster() {
     if (!cam) return null
     const x = (event.clientX / window.innerWidth) * 2 - 1
     const y = -(event.clientY / window.innerHeight) * 2 + 1
-    raycaster.setFromCamera(new THREE.Vector2(x, y), cam)
+    _ndc.set(x, y)
+    raycaster.setFromCamera(_ndc, cam)
     const intersects = raycaster.intersectObjects(targets)
     return intersects.length > 0 ? intersects[0] : null
   }

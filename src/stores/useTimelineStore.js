@@ -1,24 +1,33 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
+
+// 预过滤：排除汇总区域和非国家条目
+const isRealCountry = (n) => typeof n === 'string' && !n.includes('(') && !n.includes('（') && !n.includes('组织') && !n.includes('成员') && !n.includes('红') && !n.includes('货币') && !n.includes('签') && !n.includes('世界') && !n.includes('地区') && !n.includes('联盟') && !n.includes('IBRD') && !n.includes('HIPC') && n.length <= 8
 
 export const useTimelineStore = defineStore('timeline', () => {
   const currentYear = ref(2015)
   const isPlaying = ref(false)
   const speed = ref(1)
   const yearRange = ref([2000, 2020])
-  const yearlyData = ref(null)
+  const yearlyData = shallowRef(null)
   const globalMax = ref(0)
   let playTimer = null
+  let realCountryMax = 0 // 预计算的真实国家 GDP 最大值，避免 getPillarData 每次全量扫描
 
   function setYearlyData(data) {
     yearlyData.value = data || null
     let max = 0
+    let cMax = 0
     if (data) {
       Object.values(data).forEach(yd => {
-        Object.values(yd).forEach(v => { if (typeof v === 'number' && v > max) max = v })
+        Object.entries(yd).forEach(([n, v]) => {
+          if (typeof v === 'number' && v > max) max = v
+          if (isRealCountry(n) && typeof v === 'number' && v > cMax) cMax = v
+        })
       })
     }
     globalMax.value = max
+    realCountryMax = cMax
   }
 
   function setYear(year) {
@@ -36,27 +45,11 @@ export const useTimelineStore = defineStore('timeline', () => {
   }
   function setSpeed(s) { speed.value = s; if (isPlaying.value) { pause(); play() } }
 
-  const _AGGREGATE = new Set([
-    '世界','经合组织成员','人口紅利之後','高收入国家','IBRD与IDA','低收入国家',
-    '中低等收入国家','中高等收入国家','最不发达地区','发展中地区','东亚与太平洋',
-    '欧洲与中亚','拉丁美洲与加勒比','中东与北非','南亚','撒哈拉以南非洲','北美',
-    '欧洲联盟','阿拉伯联盟','小岛屿发展中国家','阿拉伯联盟国家','中低收入国家',
-    '中等收入国家','低收入','只有IBRD','高收入','低收入缺粮国','最不发达国家',
-    '中等偏下收入','中等偏上收入','重债穷国','东亚发展中国家','已签署的HIPC'
-  ])
-
   function getPillarData(year) {
     const data = yearlyData.value?.[year]
     const prevData = yearlyData.value?.[year - 1]
     if (!data) return { pillars: [], maxHeight: 60 }
-    let maxGdp = 0
-    // Pre-filter: only names with <6 chars and no special characters (likely real countries)
-    const isRealCountry = (n) => typeof n === 'string' && !n.includes('(') && !n.includes('（') && !n.includes('区') && !n.includes('组织') && !n.includes('成员') && !n.includes('红') && !n.includes('货币') && !n.includes('签') && n.length <= 6
-    Object.values(yearlyData.value || {}).forEach(yd => {
-      Object.entries(yd).forEach(([n, v]) => {
-        if (isRealCountry(n) && typeof v === 'number' && v > maxGdp) maxGdp = v
-      })
-    })
+    const maxGdp = realCountryMax
     const entries = Object.entries(data)
       .filter(([n, v]) => isRealCountry(n) && typeof v === 'number')
       .sort((a, b) => b[1] - a[1])

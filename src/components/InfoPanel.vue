@@ -6,33 +6,95 @@
     >
       <div class="panel-header">
         <div class="header-title">
-          <span v-if="flag" class="flag">{{ flag }}</span>
-          <span v-else class="flag-placeholder">
-            <svg class="flag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <span
+            v-if="flag"
+            class="flag"
+          >{{ flag }}</span>
+          <span
+            v-else
+            class="flag-placeholder"
+          >
+            <svg
+              class="flag-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-              <line x1="4" y1="22" x2="4" y2="15" />
+              <line
+                x1="4"
+                y1="22"
+                x2="4"
+                y2="15"
+              />
             </svg>
           </span>
           <h3>{{ interactionStore.infoPanelData?.name || '地点详情' }}</h3>
         </div>
-        <button class="more-btn" aria-label="更多操作">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="5" r="1" fill="currentColor" />
-            <circle cx="12" cy="12" r="1" fill="currentColor" />
-            <circle cx="12" cy="19" r="1" fill="currentColor" />
+        <button
+          class="more-btn"
+          aria-label="更多操作"
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle
+              cx="12"
+              cy="5"
+              r="1"
+              fill="currentColor"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="1"
+              fill="currentColor"
+            />
+            <circle
+              cx="12"
+              cy="19"
+              r="1"
+              fill="currentColor"
+            />
           </svg>
         </button>
       </div>
 
       <div class="panel-body custom-scrollbar">
         <div class="metrics-section">
-          <h4 class="section-title">关键指标</h4>
+          <h4 class="section-title">
+            关键指标
+          </h4>
 
-          <div v-if="interactionStore.infoPanelData?.gdp" class="metric-row">
+          <div
+            v-if="interactionStore.infoPanelData?.gdp"
+            class="metric-row"
+          >
             <div class="metric-label">
-              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="6" width="20" height="12" rx="2" />
-                <circle cx="12" cy="12" r="2" />
+              <svg
+                class="metric-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect
+                  x="2"
+                  y="6"
+                  width="20"
+                  height="12"
+                  rx="2"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="2"
+                />
                 <path d="M6 12h.01M18 12h.01" />
               </svg>
               <span>GDP</span>
@@ -40,11 +102,24 @@
             <span class="metric-value">{{ interactionStore.infoPanelData.gdp }}</span>
           </div>
 
-          <div v-if="interactionStore.infoPanelData?.population" class="metric-row">
+          <div
+            v-if="interactionStore.infoPanelData?.population"
+            class="metric-row"
+          >
             <div class="metric-label">
-              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg
+                class="metric-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                />
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
               <span>人口</span>
@@ -52,10 +127,23 @@
             <span class="metric-value">{{ interactionStore.infoPanelData.population }}</span>
           </div>
 
-          <div v-if="interactionStore.infoPanelData?.lon !== undefined" class="metric-row">
+          <div
+            v-if="interactionStore.infoPanelData?.lon !== undefined"
+            class="metric-row"
+          >
             <div class="metric-label">
-              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
+              <svg
+                class="metric-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
                 <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
               <span>经度</span>
@@ -63,10 +151,23 @@
             <span class="metric-value mono">{{ formatCoord(interactionStore.infoPanelData.lon, 'lon') }}</span>
           </div>
 
-          <div v-if="interactionStore.infoPanelData?.lat !== undefined" class="metric-row">
+          <div
+            v-if="interactionStore.infoPanelData?.lat !== undefined"
+            class="metric-row"
+          >
             <div class="metric-label">
-              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
+              <svg
+                class="metric-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
                 <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
               <span>纬度</span>
@@ -76,9 +177,17 @@
         </div>
 
         <div class="chart-section">
-          <h4 class="section-title">GDP 增长（10年）</h4>
+          <h4 class="section-title">
+            GDP 增长（10年）
+          </h4>
           <div class="chart-placeholder">
-            <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              class="chart-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="M3 3v18h18" />
               <path d="m19 9-5 5-4-4-3 3" />
             </svg>
@@ -88,10 +197,16 @@
       </div>
 
       <div class="panel-footer">
-        <button class="primary-btn" @click="addToComparison">
+        <button
+          class="primary-btn"
+          @click="addToComparison"
+        >
           加入对比
         </button>
-        <button class="secondary-btn" @click="interactionStore.closeInfoPanel">
+        <button
+          class="secondary-btn"
+          @click="interactionStore.closeInfoPanel"
+        >
           关闭
         </button>
       </div>

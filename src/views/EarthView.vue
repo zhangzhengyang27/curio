@@ -90,9 +90,11 @@ import LoadingOverlay from '../components/LoadingOverlay.vue'
 import CompareView from './CompareView.vue'
 import { useEarthStore } from '../stores/useEarthStore.js'
 import { useLayerStore } from '../stores/useLayerStore.js'
+import { useTimelineStore } from '../stores/useTimelineStore.js'
 
 const earthStore = useEarthStore()
 const layerStore = useLayerStore()
+const timelineStore = useTimelineStore()
 const earthCanvasRef = ref(null)
 const splitMode = ref(false)
 const fileInput = ref(null)
@@ -227,6 +229,7 @@ onUnmounted(() => {
     clearInterval(gifInterval)
     gifFrames = []
   }
+  timelineStore.pause()
 })
 
 function openFileImport() {
@@ -276,7 +279,12 @@ function handleRealisticEarthToggle() {
 if (typeof window !== 'undefined') {
   const hash = window.location.hash.replace('#', '')
   if (hash && ['gdp','population','carbon','trade','flights','earthquake','nightlights','china','landmarks','heatmap'].includes(hash)) {
-    setTimeout(() => earthCanvasRef.value?.switchVisualization(hash), 2000)
+    const stopReady = watch(() => earthCanvasRef.value, (val) => {
+      if (val) {
+        val.switchVisualization(hash)
+        stopReady()
+      }
+    }, { immediate: true })
   }
 }
 watch(() => earthStore.currentVisualization, (v) => {

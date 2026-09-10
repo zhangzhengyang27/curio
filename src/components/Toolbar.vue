@@ -8,7 +8,10 @@
       :title="tool.title"
       @click="tool.action"
     >
-      <span class="tool-icon" v-html="tool.icon" />
+      <span
+        class="tool-icon"
+        v-html="tool.icon"
+      />
       <span class="tool-tooltip">{{ tool.title }}</span>
     </button>
   </div>

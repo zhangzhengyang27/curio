@@ -10,111 +10,133 @@
         @click.stop
       >
         <div class="code-header">
-        <div class="code-title">
-          <svg class="code-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
-          <div class="title-text">
-            <span class="title-name">{{ title }}</span>
+          <div class="code-title">
+            <svg
+              class="code-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            <div class="title-text">
+              <span class="title-name">{{ title }}</span>
+            </div>
+          </div>
+          <div class="code-actions">
+            <button
+              class="action-btn header-copy"
+              :disabled="!activeSection?.code"
+              :title="copiedIndex === activeIndex ? '已复制' : '复制代码'"
+              @click="copySection(activeIndex)"
+            >
+              <svg
+                v-if="copiedIndex !== activeIndex"
+                class="action-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect
+                  x="9"
+                  y="9"
+                  width="13"
+                  height="13"
+                  rx="2"
+                />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              <svg
+                v-else
+                class="action-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>{{ copiedIndex === activeIndex ? '已复制' : '复制' }}</span>
+            </button>
+            <button
+              class="action-btn close-btn"
+              aria-label="关闭"
+              title="关闭"
+              @click="$emit('close')"
+            >
+              <svg
+                class="action-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line
+                  x1="18"
+                  y1="6"
+                  x2="6"
+                  y2="18"
+                />
+                <line
+                  x1="6"
+                  y1="6"
+                  x2="18"
+                  y2="18"
+                />
+              </svg>
+            </button>
           </div>
         </div>
-        <div class="code-actions">
-          <button
-            class="action-btn header-copy"
-            :disabled="!activeSection?.code"
-            :title="copiedIndex === activeIndex ? '已复制' : '复制代码'"
-            @click="copySection(activeIndex)"
-          >
-            <svg
-              v-if="copiedIndex !== activeIndex"
-              class="action-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            <svg
-              v-else
-              class="action-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span>{{ copiedIndex === activeIndex ? '已复制' : '复制' }}</span>
-          </button>
-          <button
-            class="action-btn close-btn"
-            aria-label="关闭"
-            title="关闭"
-            @click="$emit('close')"
-          >
-            <svg
-              class="action-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <div
-        v-if="sections && sections.length > 1"
-        class="code-tabs"
-      >
-        <button
-          v-for="(sec, i) in sections"
-          :key="i"
-          class="code-tab"
-          :class="{ active: i === activeIndex }"
-          :title="sec.filename"
-          @click="activeIndex = i"
-        >
-          {{ tabLabel(sec.filename) }}
-        </button>
-      </div>
-
-      <div class="code-body custom-scrollbar">
         <div
-          v-if="loading"
-          class="code-loading"
+          v-if="sections && sections.length > 1"
+          class="code-tabs"
         >
-          <span class="spinner" />
-          正在加载源码…
+          <button
+            v-for="(sec, i) in sections"
+            :key="i"
+            class="code-tab"
+            :class="{ active: i === activeIndex }"
+            :title="sec.filename"
+            @click="activeIndex = i"
+          >
+            {{ tabLabel(sec.filename) }}
+          </button>
         </div>
-        <template v-else-if="activeSection">
+
+        <div class="code-body custom-scrollbar">
           <div
-            v-if="!activeSection.code"
+            v-if="loading"
+            class="code-loading"
+          >
+            <span class="spinner" />
+            正在加载源码…
+          </div>
+          <template v-else-if="activeSection">
+            <div
+              v-if="!activeSection.code"
+              class="code-empty"
+            >
+              未能获取源码。
+            </div>
+            <pre
+              v-else
+              class="code-pre"
+            ><code
+            class="hljs"
+            v-html="highlightCode(activeSection.code, activeSection.filename)"
+            /></pre>
+          </template>
+          <div
+            v-else
             class="code-empty"
           >
             未能获取源码。
           </div>
-          <pre
-            v-else
-            class="code-pre"
-          ><code
-            class="hljs"
-            v-html="highlightCode(activeSection.code, activeSection.filename)"
-          /></pre>
-        </template>
-        <div
-          v-else
-          class="code-empty"
-        >
-          未能获取源码。
         </div>
-      </div>
       </div>
     </div>
   </Transition>

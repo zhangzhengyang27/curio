@@ -46,6 +46,7 @@ export class VisualizationLayer {
     this.tweenGroup = tweenGroup
 
     this.layerManager = new LayerManager({ scene, earthGroup, R, parent, tweenGroup })
+    this._switchSeq = 0 // 竞态防护序列号
     this._registerLayers()
   }
 
@@ -70,6 +71,9 @@ export class VisualizationLayer {
    * @returns {Promise<BaseLayer|null>}
    */
   async switchVisualization(mode, data) {
+    // 每次调用递增序列号，await 后校验是否仍为最新调用，防止快速切换乱序
+    const seq = ++this._switchSeq
+
     if (mode === 'gdp') {
       this.clearOverlays()
       this._restoreGdpColors()
@@ -86,6 +90,10 @@ export class VisualizationLayer {
 
     this.earthStore?.setVisualization(mode)
     const layerData = data !== undefined ? data : await this._loadData(mode)
+
+    // 数据加载期间用户可能已切换到其他模式，丢弃过期结果
+    if (seq !== this._switchSeq) return null
+
     const options = mode === 'china' ? { flyTo: this.flyToFn } : {}
     return this.layerManager.switch(mode, layerData, options)
   }

@@ -1,6 +1,8 @@
 import * as THREE from 'three'
-import { scaleLinear, scaleSequential, scaleThreshold } from 'd3-scale'
 import {
+  scaleLinear,
+  scaleSequential,
+  scaleThreshold,
   interpolateTurbo,
   interpolateViridis,
   interpolatePlasma,
@@ -11,7 +13,7 @@ import {
   interpolateOranges,
   interpolateReds,
   interpolateMagma
-} from 'd3-scale-chromatic'
+} from 'd3'
 
 /**
  * d3-scale 与 d3-scale-chromatic 统一颜色映射工具

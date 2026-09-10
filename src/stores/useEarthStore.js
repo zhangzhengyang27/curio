@@ -6,11 +6,11 @@ export const useEarthStore = defineStore('earth', () => {
   const rotationSpeed = ref(0.001)
   const isRotating = ref(true)
 
-  const meshesByCountry = ref({})
+  const meshesByCountry = shallowRef({})
   const selectedCountry = ref(null)
   const compareCountries = ref([])
   const currentVisualization = ref('gdp')
-  const searchIndex = ref({})
+  const searchIndex = shallowRef({})
 
   function setEarthGroup(group) {
     earthGroup.value = group
