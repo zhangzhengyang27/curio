@@ -8,7 +8,6 @@
     "build": "vite build && node scripts/copy-example-deps.js",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
-    "typecheck:ts": "tsc --noEmit -p tsconfig.typecheck.json",
     "lint": "eslint . --fix",
     "lint:ci": "eslint .",
     "format": "prettier --write \"src/**/*.{vue,js,ts,css}\"",

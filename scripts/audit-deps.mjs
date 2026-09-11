@@ -38,7 +38,6 @@ const CONFIG_FILES = [
   'playwright.config.js',
   'tsconfig.json',
   'tsconfig.node.json',
-  'tsconfig.typecheck.json',
 ]
 
 function* walk(dir) {

@@ -49,7 +49,7 @@
 | 项 | 说明 |
 |---|---|
 | 拆分巨石组件 | 已抽出 `ExampleCard.vue`：`ExampleGallery.vue` 由 895 行降至 671 行（卡片模板 + 缩略图兜底状态 + 卡片样式全部迁走，缩略图失败状态改为每卡自持）。**仍待拆**：`ExampleGallery.vue` 剩余的筛选状态机与侧栏/分页、`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行）。拆分需配合视觉/交互回归验证，属独立任务 |
-| 类型检查完全落地 | 当前 `typecheck:ts` 只覆盖 23 个自有 `.ts` 文件；全部示例仍是 JS 无类型保护，需评估是否值得推进 |
+| 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 **3346 个文件 / 1497 个 `.vue`**，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 清理 `console.log` | 218 个示例文件含调试日志，建议对应用层代码启用 `no-console`，示例作为参考代码保留 |
 | 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见「已完成」）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小 |
@@ -66,6 +66,19 @@
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
 
 ---
+
+## 2.5 文档与计划的存放约定
+
+| 位置 | 用途 |
+|---|---|
+| `README.md` / `CONTRIBUTING.md` | 项目说明、上手与提交规范（**当前有效**） |
+| `docs/` | 架构、坑点、路线图、three.js 升级（**当前有效，随代码一起维护**） |
+| `.trae/specs/`、`.trae/documents/` | 历史 spec 与实施计划归档（各示例源接入时期）。文档里的路径是当时机器的绝对路径，**已失效**，仅作决策留痕；如需重启某个计划，请先把结论提炼进 `docs/ROADMAP.md` |
+
+> 教训：`.trae/documents/fix-three-project-typescript-errors.md` 里早已写明
+> 「目标：`pnpm typecheck` 退出码为 0」，而该目标后来确实达成了（实测 0 error）。
+> 这份存档没被纳入 `docs/`，导致后来误判「全量类型检查不可用」并多写了一份收敛配置。
+> **归档 ≠ 可忽略**：计划文档里的结论必须同步到 `docs/`。
 
 ## 3. 明确不做
 

@@ -48,7 +48,7 @@ npm run build
 | `npm run build` | 生产构建（含示例依赖拷贝） |
 | `npm run preview` | 预览构建产物 |
 | `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
-| `npm run typecheck:ts` | 对自有 TS 源码做类型检查 |
+| `npm run typecheck` | 类型检查（`vue-tsc`，覆盖全部 1497 个 `.vue` + 自有 `.ts`，当前 0 error） |
 | `npm run test:e2e` | Playwright 冒烟测试（`tests/smoke.spec.js`，跑 dev server） |
 | `E2E_TARGET=preview npm run test:e2e` | 冒烟测试跑**已构建产物**（需先 `npm run build`） |
 | `npm run verify` | **一键跑全部一致性校验**（见下） |
@@ -105,6 +105,7 @@ src/
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | 范围声明、待办与优先级 |
 | [`docs/THREE_UPGRADE.md`](docs/THREE_UPGRADE.md) | three.js 兼容层机制与切回 npm 的步骤 |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 提交规范、评审要求、红线 |
+| [`.trae/specs/`](.trae/specs/) · [`.trae/documents/`](.trae/documents/) | 历史 spec 与实施计划归档（早期接入各示例源时的规格与任务清单）。**路径为当时环境的绝对路径，已失效，仅作决策留痕** |
 
 ## 参考
 

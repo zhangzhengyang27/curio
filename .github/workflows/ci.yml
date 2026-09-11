@@ -49,8 +49,10 @@ jobs:
       - name: ESLint
         run: npm run lint:ci
 
-      - name: TypeScript 类型检查（仅自有 TS 源码）
-        run: npm run typecheck:ts
+      - name: TypeScript 类型检查（全量 vue-tsc）
+        # vue-tsc --noEmit 覆盖全部 .vue（实测 1497 个）+ 自有 .ts，当前 0 error。
+        # 不要退回「只查 .ts 子集」的收敛配置：那是基于错误假设的降级方案。
+        run: npm run typecheck
 
       - name: 示例注册表一致性
         run: npm run verify:registry

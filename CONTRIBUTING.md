@@ -35,7 +35,7 @@ git config core.hooksPath .githooks
 ```bash
 npm run check:secrets     # 凭据没有明文入库
 npm run lint:ci           # ESLint 无 error
-npm run typecheck:ts      # 自有 TS 源码类型检查
+npm run typecheck         # 类型检查（vue-tsc 全量，覆盖所有 .vue）
 npm run verify            # 注册表 / 封面 / 兼容层 三项一致性
 npm run build             # 能正常构建
 npm run test:e2e          # 冒烟用例通过（dev server，反馈快）
