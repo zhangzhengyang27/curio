@@ -127,7 +127,6 @@ function onReady(ctx) {
               diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.875, 0, 0), smoothstep(1., 0.5, n));
             `
           );
-          console.log(shader.fragmentShader);
         }
       })
       super(g, m);

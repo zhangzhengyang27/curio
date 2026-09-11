@@ -184,7 +184,6 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
               let ModelMatrixWheel = glMatrix.mat4.create();
               glMatrix.mat4.identity(ModelMatrixWheel);
-              console.log(wheelMove);
               glMatrix.mat4.translate(ModelMatrixWheel, ModelMatrixWheel, [0, 0, wheelMove]);
               glMatrix.mat4.multiply(ModelMatrixWheel, ModelMatrixWheel, ModelMatrixxy);
   

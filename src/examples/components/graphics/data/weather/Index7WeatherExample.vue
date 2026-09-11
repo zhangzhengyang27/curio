@@ -45,7 +45,6 @@ async function initGraphicsExample() {
               })
               .sort((a, b) => a.tdp - b.tdp)
     
-            console.log(dataset)
     
             let dataset2 = [...dataset]
     
@@ -69,7 +68,6 @@ async function initGraphicsExample() {
               return d
             })
     
-            console.log(dataset2)
     
             const { Chart, Scatter, Line, Legend, Tooltip, Axis } = qcharts
             const chart = new Chart({

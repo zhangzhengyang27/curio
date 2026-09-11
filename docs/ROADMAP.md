@@ -63,6 +63,7 @@
 | 脚本物理归档 | 已在 `scripts/README.md` 用文档区分「质量闸门 / 注册表写入 / 一次性脚本」，但一次性脚本仍与主流程脚本混在同一目录。可进一步移入 `scripts/legacy/`（注意 `test-convert.js` 与 `convert-threejs-official-to-vue.js` 存在 import 依赖，移动时需同步改路径） |
 | 生成器输出格式对齐 | 生成器输出与现有 registry 存在**格式差异**（`patch-registry-thumbs.mjs` 会在 `"id"` 后插入空行，生成器不产出），因此 `--dry-run` 会稳定显示 -6 / -29 行的行数差异。对齐格式后，才可能把 `--dry-run` 接进 CI 做「registry 与生成器漂移检测」；当前若直接接入会产生持续噪声 |
 | 首页延迟加载 registry | 首页会加载 3+ 个 registry（约 43 KB），源于顶栏搜索的 `useExampleFilters`；可延迟到进入 `/examples` 或聚焦搜索框时再加载（见 `docs/PERF_BASELINE.md`） |
+| 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | ~~构建产物瘦身~~ | **不建议做**：34 MB / 3203 chunks 分散在按需加载的示例块里，不在首屏路径上。优化目标应是首屏与常用路径，而非磁盘产物大小（见 `docs/PERF_BASELINE.md`） |
 | 画廊性能 | 卡片列表的过滤结果缺少记忆化 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |

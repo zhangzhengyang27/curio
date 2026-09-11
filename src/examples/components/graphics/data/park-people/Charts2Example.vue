@@ -43,7 +43,6 @@ async function initGraphicsExample() {
     const  {Scene, Sprite, Polyline, SpriteSvg} = spritejs;
         (async function() {
           const data = await (await fetch('data.json')).json();
-          console.log(data);
           // group data
     
           function count(d, dataset) {
@@ -91,7 +90,6 @@ async function initGraphicsExample() {
           }
     
           const dataset = groupData(data);
-          console.log(dataset);
     
           const { Chart, Pie, Legend, Tooltip, theme} = qcharts;
     

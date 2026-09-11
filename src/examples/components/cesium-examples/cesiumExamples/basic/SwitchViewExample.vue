@@ -137,7 +137,6 @@ async function onReady(ctx) {
   
   for (const key in obj) gui.add(obj, key)
   
-      console.log(viewer.camera)
 }
 
 function onBeforeDispose() {

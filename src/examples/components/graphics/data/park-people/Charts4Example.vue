@@ -34,7 +34,6 @@ async function initGraphicsExample() {
     const  {Scene, Sprite, Polyline, SpriteSvg} = spritejs;
         (async function() {
           const data = await (await fetch('data.json')).json();
-          console.log(data);
           // group data
     
           function count(d, dataset) {
@@ -87,7 +86,6 @@ async function initGraphicsExample() {
             d[1].place = place;
             dataset.push(...d);
           });
-          console.log(dataset);
     
           const { Chart, PolarBar, Legend, Tooltip, theme} = qcharts;
             const chart = new Chart({

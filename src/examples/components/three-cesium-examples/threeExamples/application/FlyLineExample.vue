@@ -94,7 +94,6 @@ function onReady(ctx) {
       scene.add( axesHelper );
       var globeTextureLoader = new THREE.TextureLoader();
       globeTextureLoader.load(props.example?.globals?.FILE_HOST + 'threeExamples/application/flyLine/earth.jpeg', function (texture1) {
-          console.log(texture1)
           var globeGgeometry = new THREE.SphereGeometry(60, 100, 100);
           var globeMaterial = new THREE.MeshStandardMaterial({map: texture1});
           globeMesh = new THREE.Mesh(globeGgeometry, globeMaterial);

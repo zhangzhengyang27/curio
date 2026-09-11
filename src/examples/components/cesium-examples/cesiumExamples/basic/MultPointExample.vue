@@ -52,7 +52,6 @@ function onReady(ctx) {
   viewer.screenSpaceEventHandler.setInputAction(function (event) {
     const object = viewer.scene.pick(event.position)
     if (object && object.id) {
-      console.log(object.id)
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
 

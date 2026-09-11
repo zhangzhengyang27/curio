@@ -111,7 +111,6 @@ function onReady(ctx) {
                   var cartographic = Cesium.Cartographic.fromDegrees(-115.166493, 39.9060534, 10);
                   var posi = new Cesium.Cartographic(cartographic.longitude, cartographic.latitude)
                   var height = viewer.scene.globe.getHeight(posi)
-                  console.log(height)
   
                   var haha = viewer.entities.add({
                       name: '自动计算贴地',

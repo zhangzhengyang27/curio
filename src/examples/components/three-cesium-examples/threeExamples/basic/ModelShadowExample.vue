@@ -25,7 +25,6 @@ function onReady(ctx) {
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  console.log(THREE.REVISION)
   
   renderer.shadowMap.needsUpdate = true
   

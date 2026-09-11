@@ -106,14 +106,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               let ModelMatrix = glMatrix.mat4.create();
               glMatrix.mat4.identity(ModelMatrix);
               let angle = Math.PI / 180 * count;
-              console.log(angle);
               glMatrix.mat4.rotate(ModelMatrix, ModelMatrix, angle, [0, 0, 1])
   
   
               let ViewMatrix = glMatrix.mat4.create();
               glMatrix.mat4.identity(ViewMatrix);
               glMatrix.mat4.lookAt(ViewMatrix, [anglex, angley, 0.2], [0, 0, 0], [0, 1, 0]);
-              console.log(ViewMatrix);
   
               let mvMatrix = glMatrix.mat4.create();
               glMatrix.mat4.multiply(mvMatrix, ViewMatrix, ModelMatrix)

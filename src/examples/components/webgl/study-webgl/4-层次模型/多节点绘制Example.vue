@@ -210,7 +210,6 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function keydown(ev) {
   
-              console.log(g_joint1Angle);
               switch (ev.keyCode) {
   
                   case 38:

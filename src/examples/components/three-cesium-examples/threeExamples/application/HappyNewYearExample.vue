@@ -385,7 +385,6 @@ function onReady(stageCtx) {
                 vAppearance = smoothstep(5., 2.5, -vec3(modelViewMatrix * vec4(transformed, 1)).z);
               `
                   );
-                  console.log(shader.vertexShader);
                   shader.fragmentShader = `
               uniform sampler2D texYear;
               varying float vAppearance;
@@ -406,7 +405,6 @@ function onReady(stageCtx) {
                 diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0, 1, 1) * 0.75, ytVal * vAppearance);
               `
                   );
-                  console.log(shader.fragmentShader);
               }
           });
       }

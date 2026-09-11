@@ -156,7 +156,6 @@ function onReady(stageCtx) {
           
           `
         );
-        console.log(shader.fragmentShader);
       }
       
       this.addPass(renderPass);

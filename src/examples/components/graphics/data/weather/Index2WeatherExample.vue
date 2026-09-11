@@ -35,7 +35,6 @@ async function initGraphicsExample() {
     (async function() {
           const rawData = await (await fetch('beijing_2014.csv')).text();
           const data = d3.csvParse(rawData).filter(d => new Date(d.Date).getMonth() < 3);
-          console.log(data);
           const dataset1 = data
             .map(d => {
               return {
@@ -50,7 +49,6 @@ async function initGraphicsExample() {
                   date: d.Date,
                   category: '平均湿度'}
                 });
-          console.log(dataset2);
           const { Chart, Line, Legend, Tooltip, Axis } = qcharts;
           const chart = new Chart({
             container: '#app'

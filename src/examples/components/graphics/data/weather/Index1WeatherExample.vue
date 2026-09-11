@@ -37,7 +37,6 @@ async function initGraphicsExample() {
           const data = d3.csvParse(rawData);
           const dataset = data.filter(d => new Date(d.Date).getMonth() < 3)
             .map(d => {return {temperature: Number(d['Temperature(Celsius)(avg)']), date: d.Date, category: '平均气温'}})
-          console.log(dataset);
     
           const { Chart, Line, Legend, Tooltip, Axis } = qcharts;
           const chart = new Chart({

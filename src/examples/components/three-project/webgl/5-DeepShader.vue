@@ -94,7 +94,6 @@
     // 添加到场景
     if (scene.value) {
       scene.value.add(floor)
-      console.log(floor)
     }
   }
 

@@ -59,7 +59,6 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
         pixel
       )
   
-      console.log(pixel);
 }
 </script>
 

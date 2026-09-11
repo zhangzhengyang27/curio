@@ -53,6 +53,5 @@ function onReady(ctx) {
   c.y = a.z * b.x - a.x * b.z
   c.z = a.x * b.y - a.y * b.x
   c.setLength(1)
-  console.log(c)
 }
 </script>

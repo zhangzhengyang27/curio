@@ -35,7 +35,6 @@ async function initGraphicsExample() {
     (async function() {
           const rawData = await (await fetch('beijing_2014.csv')).text();
           const data = d3.csvParse(rawData);
-          console.log(data);
           const dataset = data
             .map(d => {
               return {

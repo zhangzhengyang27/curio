@@ -264,7 +264,6 @@ async function onReady(ctx) {
       latitude: Number(lat.toFixed(6)),
       altitude: Number(alt.toFixed(2)),
     };
-    console.log(coordinate);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   await initScene();
   addMaterial();

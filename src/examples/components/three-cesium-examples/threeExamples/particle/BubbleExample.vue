@@ -281,7 +281,6 @@ function onReady(ctx) {
           this.geometry.setFromPoints(points);
           this.geometry.setAttribute('data1', new Float32BufferAttribute(data1Array, 1));
           this.geometry.setAttribute('data2', new Float32BufferAttribute(data2Array, 1));
-          console.log(this.geometry);
       }
   
       onBeforeRender = () => {

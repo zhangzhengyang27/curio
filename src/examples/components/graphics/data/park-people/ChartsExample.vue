@@ -38,7 +38,6 @@ async function initGraphicsExample() {
           dataset.unshift([6, 0]);
           dataset.push([22, 0]);
     
-          console.log(dataset);
           const scene = new Scene({
             container,
             width: 600,
