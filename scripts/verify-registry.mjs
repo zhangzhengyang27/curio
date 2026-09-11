@@ -22,18 +22,13 @@
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { exampleComponentCandidates } from './lib/example-component.mjs'
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..')
 const REG_DIR = join(ROOT, 'src/examples/registry')
-const COMPONENTS_DIR = join(ROOT, 'src/examples/components')
 
 const REQUIRED_FIELDS = ['source', 'category', 'id', 'title', 'runner']
 const VALID_RUNNERS = new Set(['vue', 'iframe'])
-
-const toPascalCase = (id) =>
-  id
-    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
-    .replace(/^(.)/, (_, char) => char.toUpperCase())
 
 const idx = await import(pathToFileURL(join(REG_DIR, 'index.js')).href)
 const all = await idx.getAllExamplesAsync()
@@ -73,13 +68,7 @@ for (const ex of all) {
 // ---- 4. runner=vue 的组件文件必须存在 ----
 for (const ex of all) {
   if (ex.runner !== 'vue') continue
-  const dir = join(COMPONENTS_DIR, ex.source, ex.category)
-  const candidates = [
-    join(dir, `${toPascalCase(ex.id)}Example.vue`),
-    join(dir, `${ex.id}.vue`),
-    join(dir, ex.id, 'index.vue'),
-  ]
-  if (!candidates.some((p) => existsSync(p))) {
+  if (!exampleComponentCandidates(ex.source, ex.category, ex.id).some((p) => existsSync(p))) {
     errors.push(`组件文件缺失: ${ex.source}/${ex.category}/${ex.id}（已尝试约定路径 3 个候选）`)
   }
 }

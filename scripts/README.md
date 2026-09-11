@@ -16,6 +16,7 @@
 |---|---|
 | `check-secrets.mjs` | 扫描明文凭据（AK / Token / 私钥） |
 | `verify-registry.mjs` | 注册表主键唯一、字段完整、**组件文件按命名约定命中** |
+| `npm run verify:drift` | **registry 与生成器漂移检测**：依次以 `--check` 跑下面 3 个生成器，逐字节比对生成结果与已提交文件。四个 registry（`threeCesiumExamples` / `cesiumExamples` / `threejsLesson` / `earthLessons`）当前均为 0 漂移 |
 | `verify-thumbnails.mjs` | 非空 thumbnail 对应的封面文件是否存在（防线上破图） |
 | `verify-three-compat.mjs` | three.js 本地兼容层的哈希基线守卫（`--update` 可更新基线） |
 | `audit-deps.mjs` | 依赖使用情况审计（`npm run audit:deps`）。分层扫描 src / public / 配置 / bin / types，输出「未检测到引用」的候选清单；**只输出线索、不改 package.json** |
@@ -30,19 +31,26 @@
 > ```bash
 > node scripts/<脚本>              # 拒绝写入并说明原因（默认安全）
 > node scripts/<脚本> --dry-run    # 只预览影响，不落盘  ← 重跑前先跑这个
+> node scripts/<脚本> --check      # 只读：比对生成结果与磁盘文件，漂移则退出码 1
 > node scripts/<脚本> --force      # 确认后写入
 > ```
 >
 > `--dry-run` 会打印目标文件的行数 / 条目数 / 缩略图数量的前后对比，
 > 便于发现「这次重跑会丢什么」。
+>
+> `--check` 是**逐字节**比对（`npm run verify:drift` 与 CI 都在用），
+> 比 `--dry-run` 的行数统计严格得多：只改字段顺序、只改文案这类
+> 「行数不变」的漂移，`--dry-run` 看不出来，`--check` 能抓到。
+> 字段顺序的唯一事实来源是生成器，所以**不要手工调整 registry 的格式**，
+> 有改动请改生成器后重跑。
 
 | 脚本 | 写入对象 | 风险说明 |
 |---|---|---|
-| `generate-registry.js` | `threeCesiumExamples.js`、`cesiumExamples.js` | 自带合并保护，会保留手工字段；相对安全 |
+| `generate-registry.js` | `threeCesiumExamples.js`、`cesiumExamples.js` | 自带合并保护，会保留手工字段；相对安全。**只登记已转换为 Vue 组件的条目**（与校验闸门同用 `lib/example-component.mjs` 判断），未转换的会跳过并列出 |
 | `generate-threejs-lesson-registry.js` | `threejsLesson.js` | 按磁盘 `.js` 扫描重建条目集合，会整体重写顺序与格式 |
 | `generate-earth-lessons-registry.js` | `earthLessons.js` | 同上 |
 | `improve-example-meta.mjs` | 指定 source 的 registry | 重写 `title` / `description` / `tags`；用法 `[source] [--dry-run\|--force]` |
-| `patch-registry-thumbs.mjs` | 全部 registry | 按 `_thumb_map.json` 回填 `thumbnail` |
+| `patch-registry-thumbs.mjs` | 全部 registry | 按 `_thumb_map.json` **就地更新** `thumbnail` 的值（不移动字段位置，重跑幂等） |
 
 ### 已内置的字段保留
 
@@ -93,4 +101,5 @@
 
 | 文件 | 作用 |
 |---|---|
-| `lib/registry-guard.mjs` | 写入守卫 + 命令行开关解析 + `preserveCuratedFields()` 字段保留 |
+| `lib/registry-guard.mjs` | 写入守卫 + 命令行开关解析（`--dry-run` / `--check` / `--force`）+ `preserveCuratedFields()` 字段保留 |
+| `lib/example-component.mjs` | 示例组件「约定路径」解析的**单一事实来源**。`generate-registry.js` 与 `verify-registry.mjs` 共用，避免两边各写一份后判断不一致 |

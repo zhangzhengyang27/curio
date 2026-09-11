@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { parseWriteFlags, writeRegistry as writeRegistryGuarded } from './lib/registry-guard.mjs'
+import { hasExampleComponent } from './lib/example-component.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
@@ -123,6 +124,29 @@ async function buildRegistry(name, sourceName, label, sourceKey) {
   })
 
   let examples = Array.from(groups.values()).flatMap(g => g.examples)
+
+  // 只登记「已转换为 Vue 组件」的示例。
+  //
+  // 背景：config 里有的条目在磁盘上有 .js 源文件，但从未被转成 Vue 组件
+  // （例如 threeExamples/application/thanksBibi，在 1218670 基线快照中被移除后
+  //  一直未转换）。本脚本把 runner 固定为 'vue'，而 verify-registry 会拦截
+  // runner=vue 但组件缺失的条目 —— 若生成器照单全收，每次重跑都会往 registry
+  // 里塞回一个「点进去白屏」的条目，并把一致性校验搞红。
+  //
+  // 这里与校验闸门共用 lib/example-component.mjs 的约定，保证两处判断一致。
+  // 被跳过的条目会显式列出，信息不会静默丢失；转换出组件后重跑即自动纳入。
+  const skipped = []
+  examples = examples.filter((ex) => {
+    if (hasExampleComponent(sourceKey, ex.category, ex.id)) return true
+    skipped.push(`${ex.category}/${ex.id}`)
+    return false
+  })
+  if (skipped.length) {
+    console.warn(
+      `[${sourceName}] 以下 ${skipped.length} 个示例有源文件但未转换为 Vue 组件，已跳过登记：`
+    )
+    for (const s of skipped) console.warn(`  - ${s}（待转换后重跑本脚本即自动纳入）`)
+  }
 
   // 合并保护：重跑时尽量保留手工编辑过的字段，避免覆盖丢失
   const existing = await loadExistingExamples(name)

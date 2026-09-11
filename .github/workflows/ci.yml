@@ -57,6 +57,12 @@ jobs:
       - name: 示例注册表一致性
         run: npm run verify:registry
 
+      - name: 示例注册表与生成器漂移检测
+        # 逐字节比对「生成器输出」与「已提交的 registry」，拦截手工改了 registry
+        # 却没同步改生成器（或反之）。注意：这是字节比对，比行数统计更严格 ——
+        # 只改字段顺序 / 只改文案这类「行数不变」的漂移也能抓到。
+        run: npm run verify:drift
+
       - name: 示例封面完整性
         run: npm run verify:thumbnails
 

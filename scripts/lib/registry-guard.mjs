@@ -14,6 +14,7 @@
  *   - 不带参数运行        → 拒绝写入，打印原因与后续操作指引（安全默认值）
  *   - --dry-run           → 只打印将要发生的变化摘要，不落盘
  *   - --force / --write   → 真正写入（若目标文件有未提交改动，会额外高亮提醒）
+ *   - --check             → 只读：比对生成结果与现有文件，不一致则退出码 1（漂移检测，供 CI 使用）
  *
  * 这样把「静默覆盖」变成「必须显式确认」，并让 --dry-run 成为重跑前的标准动作。
  */
@@ -29,6 +30,7 @@ export function parseWriteFlags(argv = process.argv.slice(2)) {
   return {
     dryRun: argv.includes('--dry-run'),
     force: argv.includes('--force') || argv.includes('--write'),
+    check: argv.includes('--check'),
   }
 }
 
@@ -148,6 +150,31 @@ export function writeRegistry(targetPath, content, flags, scriptName = 'unknown'
     `条目数: ${a.ids} → ${b.ids}  (${delta(b.ids - a.ids)})`,
     `缩略图: ${a.thumbs} → ${b.thumbs}  (${delta(b.thumbs - a.thumbs)})`,
   ].join('\n  ')
+
+  // 漂移检测：生成结果与磁盘文件逐字节比对，供 CI 拦截「registry 与生成器不一致」
+  if (flags.check) {
+    if (before === content) {
+      console.log(`[registry-guard] --check 无漂移: ${rel}`)
+      return { written: false }
+    }
+    const beforeLines = before.split('\n')
+    const afterLines = content.split('\n')
+    const at = beforeLines.findIndex((l, i) => l !== afterLines[i])
+    console.error(`\n[registry-guard] 检测到漂移（${scriptName}）：${rel}\n  ${summary}`)
+    if (at !== -1) {
+      console.error(`  首处差异在第 ${at + 1} 行：`)
+      console.error(`    现有: ${beforeLines[at]}`)
+      console.error(`    生成: ${afterLines[at]}`)
+    }
+    console.error(
+      '\n  registry 已与生成器不一致（手工改动 / 生成脚本改了但没重跑）。\n' +
+        '  确认生成结果正确后重跑: node <script> --force\n' +
+        '  若手工改动是有意的，请同步改生成器，而不是只改 registry。\n'
+    )
+    // 用 exitCode 而非 process.exit，让同一脚本的多个 registry 都能被检查完再退出
+    process.exitCode = 1
+    return { written: false }
+  }
 
   if (flags.dryRun) {
     console.log(`\n[registry-guard] --dry-run（未写入）由 ${scriptName} 触发：\n  ${summary}\n`)

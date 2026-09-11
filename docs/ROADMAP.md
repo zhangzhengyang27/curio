@@ -32,6 +32,8 @@
 | 脚本目录归档说明 | 新增 `scripts/README.md`，区分「质量闸门 / 注册表写入 / 一次性脚本」三类，标明哪些不可重跑 |
 | 依赖审计与瘦身 | 新增 `scripts/audit-deps.mjs`（分层扫描 src / public / 配置 / bin / types，排除 CLI 与类型包等假阳性）。据此清掉 **7 个未使用依赖**：`@mediapipe/tasks-vision`（示例走 jsdelivr CDN）、`lottie-web`（同）、`heatmap.js`（示例自带内联实现）、`monomorph`、`solar-calculator`（零引用）、`@vue/eslint-config-prettier`、`@vue/eslint-config-typescript`（eslint 配置未引用）。移除后 28 个包被剪除、锁文件 -651 行，产物模块数与 chunk 数完全不变（5957 modules / 3203 chunks），证明确为死依赖 |
 | 首屏性能优化 | 新增 `tests/perf.spec.js` 测量真实首屏（详见 `docs/PERF_BASELINE.md`）。据此发现并修复：分组把 `@sparkjsdev/spark` 变成共享块后被提升进首页 `modulepreload`，而首页并不使用它 —— 占首页首屏 JS 的 76%。去掉该分组后 **首页 JS 2246 KB → 533 KB（−76%）、FCP 4008 ms → 716 ms**；示例中心 2254 KB → 541 KB |
+| 生成器输出格式对齐 | 4 个由生成器维护的 registry（`threeCesiumExamples` / `cesiumExamples` / `threejsLesson` / `earthLessons`）现已与生成器输出**逐字节一致**（此前 `--dry-run` 稳定显示 -6 / -29 行漂移）。配套三件事：① `patch-registry-thumbs.mjs` 改为**就地更新** `thumbnail`（原实现会把它插到 `"id"` 后并留下空行，是漂移的真正源头），实测重跑对 12 个 registry **零字节变化**、完全幂等；② `registry-guard` 新增 `--check` 开关做逐字节比对 —— 比 `--dry-run` 的行数统计严格得多，只改字段顺序 / 只改文案这类「行数不变」的漂移也能抓到；③ 新增 `npm run verify:drift` 与 CI 漂移检测闸门 |
+| 生成器不再登记未转换的示例 | `generate-registry.js` 原先照单全收 config 里的条目，会把 `threeExamples/application/thanksBibi` 这类「有源文件、无 Vue 组件」的条目塞回 registry，直接把 `verify:registry` 搞红（用户侧表现为点进去白屏）。现按组件是否存在过滤，与校验闸门共用 `lib/example-component.mjs` 的约定；被跳过的条目会显式列出，不静默丢数据。详见 P2 待办 |
 
 ---
 
@@ -61,7 +63,8 @@
 | 项 | 说明 |
 |---|---|
 | 脚本物理归档 | 已在 `scripts/README.md` 用文档区分「质量闸门 / 注册表写入 / 一次性脚本」，但一次性脚本仍与主流程脚本混在同一目录。可进一步移入 `scripts/legacy/`（注意 `test-convert.js` 与 `convert-threejs-official-to-vue.js` 存在 import 依赖，移动时需同步改路径） |
-| 生成器输出格式对齐 | 生成器输出与现有 registry 存在**格式差异**（`patch-registry-thumbs.mjs` 会在 `"id"` 后插入空行，生成器不产出），因此 `--dry-run` 会稳定显示 -6 / -29 行的行数差异。对齐格式后，才可能把 `--dry-run` 接进 CI 做「registry 与生成器漂移检测」；当前若直接接入会产生持续噪声 |
+| ~~生成器输出格式对齐~~ | **已完成并升级**：4 个 registry 已与生成器逐字节一致；漂移检测用**逐字节比对**的 `npm run verify:drift`（而非原先设想的 `--dry-run` 行数统计），已接进 `npm run verify` 与 CI。见「已完成」 |
+| `thanksBibi` 示例未登记 | `threeExamples/application/thanksBibi` 磁盘上有源文件（`.js` + 封面），但从未转换为 Vue 组件，在 `1218670` 基线快照中被移除。生成器现在会跳过它并打印提示。若想真正上线，需补 `src/examples/components/three-cesium-examples/threeExamples/application/ThanksBibiExample.vue`（参考同目录 `FlyLineExample.vue` 的 `ExampleScene` 写法，注意源示例依赖 `#box` 容器与 `CSS3DRenderer`），然后重跑生成器即可自动纳入。**属示例开发，需视觉回归验证，未在本轮做** |
 | 首页延迟加载 registry | 首页会加载 3+ 个 registry（约 43 KB），源于顶栏搜索的 `useExampleFilters`；可延迟到进入 `/examples` 或聚焦搜索框时再加载（见 `docs/PERF_BASELINE.md`） |
 | 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | ~~构建产物瘦身~~ | **不建议做**：34 MB / 3203 chunks 分散在按需加载的示例块里，不在首屏路径上。优化目标应是首屏与常用路径，而非磁盘产物大小（见 `docs/PERF_BASELINE.md`） |

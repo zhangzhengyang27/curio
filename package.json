@@ -15,9 +15,10 @@
     "audit:deps": "node scripts/audit-deps.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "verify:registry": "node scripts/verify-registry.mjs",
+    "verify:drift": "node scripts/generate-registry.js --check && node scripts/generate-threejs-lesson-registry.js --check && node scripts/generate-earth-lessons-registry.js --check",
     "verify:thumbnails": "node scripts/verify-thumbnails.mjs",
     "verify:three-compat": "node scripts/verify-three-compat.mjs",
-    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:thumbnails && npm run verify:three-compat"
+    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat"
   },
   "dependencies": {
     "3d-tiles-renderer": "^0.4.28",

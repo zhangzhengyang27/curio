@@ -51,8 +51,13 @@
 ```bash
 node scripts/<脚本>              # 拒绝写入（默认安全值）
 node scripts/<脚本> --dry-run    # 预览影响：行数 / 条目数 / 缩略图数量前后对比
+node scripts/<脚本> --check      # 只读：逐字节比对生成结果与磁盘文件，漂移则退出码 1
 node scripts/<脚本> --force      # 确认后写入
 ```
+
+> **`--dry-run` 看不出格式漂移**：它的摘要只统计行数 / 条目数 / 缩略图数量，
+> 所以「只调换了字段顺序」「只改了文案」这类行数不变的差异会显示成 `0 / 0 / 0` 假绿。
+> 需要判断「registry 与生成器是否真的一致」时用 `--check`（`npm run verify:drift`）。
 
 `--dry-run` 的实测收获（直接暴露出两个生成器的破坏性）：
 
@@ -69,6 +74,12 @@ node scripts/<脚本> --force      # 确认后写入
 
 **删除示例的正确流程**：`git rm` 源 `.js`/`.tsx` → 手动编辑 registry 删条目 →
 清理 `scripts/_thumb_map.json` 映射 →（可选）删生成脚本中的死键。
+
+**生成脚本维护的 4 个 registry 不能手工改格式**：
+`threeCesiumExamples` / `cesiumExamples` / `threejsLesson` / `earthLessons`
+的字段顺序、空行、文案由生成器决定，`npm run verify:drift`（CI 中同样执行）会做逐字节比对。
+手工调格式、或改了生成器却没重跑，都会被拦下。**要改就改生成器再重跑**，不要只改 registry。
+（这也是 `patch-registry-thumbs.mjs` 必须「就地更新」而不能挪动 `thumbnail` 位置的原因。）
 
 脚本清单与分类（哪些可重跑、哪些是一次性的）见 [`scripts/README.md`](../scripts/README.md)。
 
