@@ -43,7 +43,7 @@
 
 | 项 | 说明 |
 |---|---|
-| 拆分巨石组件 | `ExampleGallery.vue`（895 行）、`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行） |
+| 拆分巨石组件 | 已抽出 `ExampleCard.vue`：`ExampleGallery.vue` 由 895 行降至 671 行（卡片模板 + 缩略图兜底状态 + 卡片样式全部迁走，缩略图失败状态改为每卡自持）。**仍待拆**：`ExampleGallery.vue` 剩余的筛选状态机与侧栏/分页、`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行）。拆分需配合视觉/交互回归验证，属独立任务 |
 | 类型检查完全落地 | 当前 `typecheck:ts` 只覆盖 23 个自有 `.ts` 文件；全部示例仍是 JS 无类型保护，需评估是否值得推进 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 清理 `console.log` | 218 个示例文件含调试日志，建议对应用层代码启用 `no-console`，示例作为参考代码保留 |
@@ -58,6 +58,7 @@
 | 生成器 `--check` 模式 | 让 registry 生成器支持「只校验不写入」，在 CI 中检测 registry 与生成器不一致 |
 | 构建产物瘦身 | 1417 示例 × 2 chunk（组件 + `?raw` 源码）导致产物数量膨胀，可评估按需策略 |
 | 画廊性能 | 卡片列表的过滤结果缺少记忆化 |
+| 分包规则有效性核查 | 实测 `vite.config.js` 的 `manualChunks` 只有部分规则生效：构建产物中能看到 `vendor-cesium / vendor-spark / vendor-web-ifc / vendor-3d-tiles / vendor-postprocessing / vendor-three-globe / vendor-cannon-es / vendor-chart / vendor-d3 / vendor-three-mesh-bvh`，但**没有** `vendor-three`、`vendor-echarts`、`vendor-gsap`、`vendor-lil-gui`、`vendor-theatre`（three.js 代码实际被打进了 `vendor-3d-tiles` / `vendor-postprocessing` 等块）。疑与 Vite 8 底层打包器对 `manualChunks` 的实现有关，需要针对真实产物测量后再调整策略 |
 
 ---
 
