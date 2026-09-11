@@ -71,32 +71,25 @@ export const loadStyle = (href: string): Promise<void> => {
   return promise;
 };
 
-/**
- * 百度地图 GL SDK 的引入地址。
- * AK 通过构建期环境变量 VITE_BMAP_AK 注入（见 .env.example），不写入仓库。
- * @returns 未配置 AK 时返回 null。
- */
-export const getBMapScriptSrc = (): string | null => {
-  const ak = import.meta.env.VITE_BMAP_AK;
-  if (!ak) {
-    return null;
-  }
-  return `https://api.map.baidu.com/api?type=webgl&v=1.0&ak=${encodeURIComponent(ak)}`;
-};
+/** 是否配置了百度地图 AK（由构建期环境变量 VITE_BMAP_AK 决定）。 */
+export const isBMapConfigured = (): boolean => Boolean(import.meta.env.VITE_BMAP_AK);
 
 /**
- * 确保百度地图 GL SDK 可用：按需动态加载脚本，已加载则直接返回。
- * 未配置 AK 时抛出可读错误，由调用方展示降级提示（而不是整页白屏）。
+ * 确保百度地图 GL SDK 可用。
+ *
+ * 注意：SDK 本身由 index.html 在**文档解析期**按 %VITE_BMAP_AK% 同步注入，
+ * 这里只负责「等待 window.BMapGL 就绪」。不能用 loadScript() 动态 append 的方式加载，
+ * 因为百度加载器内部依赖 document.write，运行时注入不会生效（详见 index.html 注释）。
+ *
+ * @throws 未配置 AK 时抛出可读错误，由调用方展示降级提示（而不是整页白屏）
  */
 export const ensureBMapSDK = async (timeout = 8000): Promise<void> => {
   if (window.BMapGL) {
     return;
   }
-  const src = getBMapScriptSrc();
-  if (!src) {
+  if (!isBMapConfigured()) {
     throw new Error("未配置百度地图 AK：请在 .env.local 中设置 VITE_BMAP_AK 后重启开发服务器");
   }
-  await loadScript(src);
   await waitForBMapGL(timeout);
 };
 

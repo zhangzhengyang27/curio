@@ -5,8 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>地球 3D 数据可视化</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
-    <!-- 百度地图 GL SDK 不再在此静态引入：AK 属于机密配置，改由 src/views/BMap/composables/useBMap.ts
-         在需要时按 VITE_BMAP_AK 动态加载，未配置 AK 时页面优雅降级而不是白屏。 -->
+    <!--
+      百度地图 GL SDK：AK 属于机密配置，不写死在仓库里，由 Vite 在启动/构建时
+      用 %VITE_BMAP_AK% 从 .env.local 注入（见 .env.example）。
+
+      为什么必须在这里同步注入、而不能等到运行时再 append <script>？
+      因为百度官方加载器内部用 document.write 去注入真正的 SDK，而 document.write
+      只在 HTML 解析阶段有效；运行时动态 append 的脚本里执行它不会生效，
+      表现为 window.BMapGL 永远不出现（页面长期停留在「正在加载…」）。
+
+      未配置 AK 时整段跳过，交由页面展示可读的降级提示，而不是白屏。
+    -->
+    <script>
+      (function () {
+        var ak = '%VITE_BMAP_AK%'
+        // 未配置时 Vite 会保留占位符或置空，两种情况都跳过加载
+        if (!ak || ak.charAt(0) === '%') return
+        document.write(
+          '<script type="text/javascript" src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=' +
+            encodeURIComponent(ak) +
+            '"><\/script>'
+        )
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>
