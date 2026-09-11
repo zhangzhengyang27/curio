@@ -122,6 +122,7 @@
             >
               未能获取源码。
             </div>
+            <!-- eslint-disable vue/no-v-html -- 高亮结果由 escapeHtml/hljs 转义后拼装，不含未转义的用户输入 -->
             <pre
               v-else
               class="code-pre"
@@ -129,6 +130,7 @@
             class="hljs"
             v-html="highlightCode(activeSection.code, activeSection.filename)"
             /></pre>
+            <!-- eslint-enable vue/no-v-html -->
           </template>
           <div
             v-else

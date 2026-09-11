@@ -203,9 +203,9 @@ export default tseslint.config(
     },
   },
 
-  // 开发脚本 — 允许未使用变量、宽松
+  // 开发脚本 — 允许未使用变量、宽松（注意 .mjs / .cjs 也要覆盖，否则会有噪声告警）
   {
-    files: ['scripts/**/*.js'],
+    files: ['scripts/**/*.{js,mjs,cjs}'],
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
     },
@@ -216,6 +216,17 @@ export default tseslint.config(
     files: ['*.config.*', 'env.d.ts'],
     rules: {
       '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
+
+  // 应用层（首页地球 + BMap 等自有页面）：禁止遗留调试日志。
+  // 说明：src/examples/** 下的 1400+ 示例组件属于「参考代码」，保留其原始
+  // console 输出（很多示例本身就是教学用途），因此这里显式排除。
+  {
+    files: ['src/**/*.{js,ts,vue}'],
+    ignores: ['src/examples/**'],
+    rules: {
+      'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
     },
   },
 )

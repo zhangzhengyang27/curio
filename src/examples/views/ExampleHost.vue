@@ -14,7 +14,7 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { disposeAllGUI } from '../utils/guiTracker.js'
 
-const props = defineProps({
+defineProps({
   comp: { type: [Object, Function], required: true },
   example: { type: Object, required: true },
 })

@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { compression } from 'vite-plugin-compression2'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'node:path'
-import { existsSync, statSync, createReadStream } from 'node:fs'
+import { statSync, createReadStream } from 'node:fs'
 
 const threeBuildDir = fileURLToPath(new URL('./src/examples/three-build-compat', import.meta.url))
 const nodeEmptyStub = fileURLToPath(new URL('./src/examples/jsm-compat/node-empty.js', import.meta.url))

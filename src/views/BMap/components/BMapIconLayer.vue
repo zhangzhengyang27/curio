@@ -69,7 +69,7 @@ onMounted(async () => {
       enablePicked: true,
       onClick: (item: { dataItem: { properties: { count: number } } }) => {
          
-        console.log("点击了图标：", item.dataItem.properties.count);
+        console.info("点击了图标：", item.dataItem.properties.count);
       },
     });
     view.addLayer(layer);

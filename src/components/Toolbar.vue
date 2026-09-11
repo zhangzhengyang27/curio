@@ -8,10 +8,12 @@
       :title="tool.title"
       @click="tool.action"
     >
+      <!-- eslint-disable vue/no-v-html -- tool.icon 来自组件内静态 SVG 常量表，非外部输入 -->
       <span
         class="tool-icon"
         v-html="tool.icon"
       />
+      <!-- eslint-enable vue/no-v-html -->
       <span class="tool-tooltip">{{ tool.title }}</span>
     </button>
   </div>

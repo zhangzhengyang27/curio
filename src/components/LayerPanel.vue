@@ -23,10 +23,12 @@
           @click="toggle(layer)"
         >
           <div class="layer-left">
+            <!-- eslint-disable vue/no-v-html -- getIcon 返回组件内静态 SVG 常量，非外部输入 -->
             <span
               class="layer-icon"
               v-html="getIcon(layer.id)"
             />
+            <!-- eslint-enable vue/no-v-html -->
             <span class="layer-name">{{ layer.name }}</span>
           </div>
           <div class="layer-right">
