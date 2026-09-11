@@ -137,7 +137,7 @@ async function main() {
     copyLog,
   }
 
-  const manifestPath = path.join(root, 'scripts/threejs-official-assets-manifest.json')
+  const manifestPath = path.join(root, 'scripts/legacy/threejs-official-assets-manifest.json')
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2))
 
   console.log(`[copy] ${copied} copied, ${missing} missing`)

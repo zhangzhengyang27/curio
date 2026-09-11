@@ -1313,7 +1313,7 @@ async function main() {
 
   // Write manual review list
   if (manualReviews.length) {
-    const manualPath = path.join(root, 'scripts/threejs-official-manual-review.json')
+    const manualPath = path.join(root, 'scripts/legacy/threejs-official-manual-review.json')
     let existing = []
     if (fs.existsSync(manualPath)) {
       existing = JSON.parse(fs.readFileSync(manualPath, 'utf-8'))

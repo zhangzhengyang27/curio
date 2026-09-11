@@ -23,7 +23,7 @@
 
 3. 在 `optimizeDeps.exclude` 中排除 `three`、`three/webgpu`、`three/tsl`，避免 Vite 预构建冲突。
 
-4. 转换脚本 `scripts/convert-threejs-official-to-vue.js` 会把 WebGPU 示例中的 `import ... from 'three'` 重写成 `import ... from 'three/webgpu'`，因为当前 WebGPU build 和核心 build 是分开的。
+4. 转换脚本 `scripts/legacy/convert-threejs-official-to-vue.js` 会把 WebGPU 示例中的 `import ... from 'three'` 重写成 `import ... from 'three/webgpu'`，因为当前 WebGPU build 和核心 build 是分开的。
 
 ## 当前基线
 
@@ -97,7 +97,7 @@ node scripts/verify-three-compat.mjs --update
    同时删除兼容层守卫脚本与 npm 脚本 `verify:three-compat`
    （`package.json`、`.github/workflows/ci.yml`、`scripts/verify-three-compat.mjs`）。
 
-5. **调整转换脚本（可选）**：如果未来 `three` 核心包已经直接导出 `MeshBasicNodeMaterial` 等节点材质，可以去掉 `scripts/convert-threejs-official-to-vue.js` 中针对 WebGPU 示例的 `from 'three'` → `from 'three/webgpu'` 重写逻辑。
+5. **调整转换脚本（可选）**：如果未来 `three` 核心包已经直接导出 `MeshBasicNodeMaterial` 等节点材质，可以去掉 `scripts/legacy/convert-threejs-official-to-vue.js` 中针对 WebGPU 示例的 `from 'three'` → `from 'three/webgpu'` 重写逻辑。
 
 6. **验证构建**
 

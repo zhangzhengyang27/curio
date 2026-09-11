@@ -6,7 +6,7 @@
 |---|---|---|
 | **A. 质量闸门** | CI 与 `npm run verify` 使用的校验脚本 | ✅ 只读，安全 |
 | **B. 注册表写入** | 生成 / 改写 `src/examples/registry/*.js` | ⚠ **受 registry-guard 保护**，需显式确认 |
-| **C. 一次性脚本** | 历史转换、修复补丁、诊断调试 | ❌ 多数只在当时有效，**不要重跑** |
+| **C. 一次性脚本** | 历史转换、修复补丁、诊断调试，已归档到 `legacy/` | ❌ 多数只在当时有效，**不要重跑** |
 
 ---
 
@@ -60,17 +60,32 @@
 
 **新增条目不受影响**：现有文件中不存在的条目仍由生成器正常产出。
 
-## C. 一次性脚本（不建议重跑）
+## C. 一次性脚本 → `scripts/legacy/`（不建议重跑）
 
-| 组 | 脚本 | 说明 |
+历史遗留的一次性脚本已统一归档到 **`scripts/legacy/`**，从 38 个文件的平铺改为按用途分组存放。
+**不要重跑它们**：多数只对当时的源数据/产物有效，重跑前需先确认前置条件仍然成立。
+
+| 组 | 代表脚本 | 说明 |
 |---|---|---|
-| 示例转换 | `convert-*.js` / `convert-*.cjs`、`migrate-mygrapics-cleanup.cjs`、`sync-vue-runners.js`、`gen-cesium-shim.js` | 把外部示例源批量转成 Vue 组件，产物已入库；重跑需先确认源目录仍存在 |
+| 示例转换 | `convert-*.js` / `convert-*.cjs`、`migrate-mygrapics-cleanup.cjs`、`sync-vue-runners.js`、`gen-cesium-shim.js` | 把外部示例源批量转成 Vue 组件；产物已入库，源码目录未必还在 |
 | 修复补丁 | `fix-base-var-declarations*.cjs`、`fix-conversion-artifacts.js`、`fix-graphics-cleanup.cjs`、`fix-missing-controls.cjs`、`fix-webgl-conversion-bugs.cjs`、`patch-convert-*.cjs`、`upgrade-glmatrix-legacy.cjs` | 针对当时转换产物的一次性修正，已完成 |
-| 截图流水线 | `screenshot-examples.mjs`、`download-threejs-screenshots.mjs`、`_thumb_map.json` | 生成封面；重跑后需 `patch-registry-thumbs.mjs` 回填 |
 | 诊断 / 试验 | `debug-*.js/mjs`、`build-diagnostics.js`、`diag-failures.js`、`scan-*.js`、`test-convert.js`、`test-dedup.mjs`、`test-function-map.js`、`test-implicit-decl.mjs` | 一次性排查工具 |
-| 历史校验（Python 等） | `verify-examples*.py`、`verify-godrays.py`、`verify-webcam.py`、`verify-webgl-examples.cjs`、`verify-three-cesium-vue-examples.js`、`verify-earth-lessons.py`、`verify-examples-screenshot.py` | 早于当前 CI 校验体系的自建脚本，已被 `verify-*.mjs` 取代，保留作参考 |
+| 历史校验 | `verify-examples*.py`、`verify-godrays.py`、`verify-webcam.py`、`verify-earth-lessons.py`、`verify-webgl-examples.cjs`、`verify-three-cesium-vue-examples.js` | 早于当前 CI 校验体系的自建脚本，已被 `verify-*.mjs` 取代，保留作参考 |
+| 数据清单 | `threejs-official-assets-manifest.json`、`threejs-official-manual-review.json` | 仅被 `legacy/` 内的脚本读取 |
 
-> `scripts/` 下的 `.js` / `.mjs` / `.cjs` 在 ESLint 中被整体放宽（允许未使用变量），
+> ⚠ 归档时已同步修正 `legacy/` 内指向 `scripts/` 的硬编码路径。
+> 若将来再移动脚本，请一并 grep `'scripts/` 与 `path.join(root, 'scripts'` 确认没有断链。
+
+### 仍留在 `scripts/` 的截图流水线
+
+| 脚本 | 作用 |
+|---|---|
+| `screenshot-examples.mjs` | 用 Playwright + swiftshader 批量截封面（支持 `--overwrite` / `--only-failed`） |
+| `download-threejs-screenshots.mjs` | 从 threejs.org 下载官方示例截图 |
+| `_thumb_map.json` | 截图清单，被上面两个脚本与 `patch-registry-thumbs.mjs` 共用 |
+| `patch-registry-thumbs.mjs` | 把清单回填进 registry（受 registry-guard 保护） |
+
+> `scripts/` 下的 `.js` / `.mjs` / `.cjs`（含 `legacy/`）在 ESLint 中被整体放宽（允许未使用变量），
 > 它们属于工具脚本，不参与应用代码的质量约束。
 
 ## lib/
