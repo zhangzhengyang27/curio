@@ -108,25 +108,51 @@ export default defineConfig({
     rollupOptions: {
       external: ['node:module', 'node:worker_threads'],
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/three/') || id.includes('three-build-compat')) return 'vendor-three'
-          if (id.includes('echarts')) return 'vendor-echarts'
-          if (id.includes('three-globe')) return 'vendor-three-globe'
-          if (id.includes('cesium')) return 'vendor-cesium'
-          if (id.includes('cannon-es')) return 'vendor-cannon-es'
-          if (id.includes('gsap')) return 'vendor-gsap'
-          if (id.includes('lil-gui')) return 'vendor-lil-gui'
-          if (id.includes('chart.js') || id.includes('chartjs')) return 'vendor-chart'
-          if (id.includes('d3') || id.includes('d3-geo') || id.includes('d3-scale') || id.includes('d3-interpolate')) return 'vendor-d3'
-          if (id.includes('postprocessing')) return 'vendor-postprocessing'
-          if (id.includes('@sparkjsdev')) return 'vendor-spark'
-          if (id.includes('@theatre')) return 'vendor-theatre'
-          if (id.includes('web-ifc')) return 'vendor-web-ifc'
-          if (id.includes('3d-tiles-renderer')) return 'vendor-3d-tiles'
-          if (id.includes('three-mesh-bvh')) return 'vendor-three-mesh-bvh'
-        }
-      }
-    }
+        /**
+         * 分包策略。
+         *
+         * 这里刻意不使用 `manualChunks`：Vite 8 的打包内核是 Rolldown，Rolldown 中
+         * `manualChunks` 已被废弃（会转译成 codeSplitting.groups[].name()），并且需要
+         * 显式控制 group 语义。之前用 manualChunks 的实测后果是：
+         *   - 产物里出现 `vendor-cesium / vendor-spark / vendor-web-ifc / vendor-3d-tiles /
+         *     vendor-postprocessing / vendor-three-globe / ...`，
+         *     但**没有** `vendor-three / vendor-echarts / vendor-gsap / vendor-lil-gui / vendor-theatre`；
+         *   - three.js 代码被打进了 `vendor-3d-tiles` 与 `vendor-postprocessing`（重复打包）。
+         * 原因是 group 的 `includeDependenciesRecursively` 默认为 true：捕获 3d-tiles-renderer /
+         * postprocessing 时会把它们的依赖（three）一并吞进那个组。
+         *
+         * 因此：改用 codeSplitting.groups，并给 three 最高 priority ——
+         * Rolldown 会先处理高优先级 group，被捕获的模块会从其它 group 中移除，
+         * 从而避免 three.js 被重复打包。
+         *
+         * 注意：正则里用 `[\\/]` 匹配路径分隔符（Windows 兼容）。
+         */
+        codeSplitting: {
+          groups: [
+            {
+              // three.js 核心 + 本地兼容层（three-build-compat），优先级最高
+              name: 'vendor-three',
+              test: /three-build-compat|node_modules[\\/]three[\\/]/,
+              priority: 100,
+            },
+            { name: 'vendor-cesium', test: /node_modules[\\/](@cesium|cesium)[\\/]/, priority: 90 },
+            { name: 'vendor-spark', test: /node_modules[\\/]@sparkjsdev[\\/]/, priority: 80 },
+            { name: 'vendor-web-ifc', test: /node_modules[\\/]web-ifc[\\/]/, priority: 80 },
+            { name: 'vendor-postprocessing', test: /node_modules[\\/]postprocessing[\\/]/, priority: 80 },
+            { name: 'vendor-3d-tiles', test: /node_modules[\\/]3d-tiles-renderer[\\/]/, priority: 80 },
+            { name: 'vendor-three-globe', test: /node_modules[\\/]three-globe[\\/]/, priority: 80 },
+            { name: 'vendor-three-mesh-bvh', test: /node_modules[\\/]three-mesh-bvh[\\/]/, priority: 80 },
+            { name: 'vendor-echarts', test: /node_modules[\\/](echarts|zrender)[\\/]/, priority: 80 },
+            { name: 'vendor-gsap', test: /node_modules[\\/]gsap[\\/]/, priority: 80 },
+            { name: 'vendor-lil-gui', test: /node_modules[\\/]lil-gui[\\/]/, priority: 80 },
+            { name: 'vendor-theatre', test: /node_modules[\\/]@theatre[\\/]/, priority: 80 },
+            { name: 'vendor-cannon-es', test: /node_modules[\\/]cannon-es[\\/]/, priority: 80 },
+            { name: 'vendor-chart', test: /node_modules[\\/](chart\.js|chartjs)[\\/]/, priority: 80 },
+            { name: 'vendor-d3', test: /node_modules[\\/]d3(-[a-z-]+)?[\\/]/, priority: 80 },
+          ],
+        },
+      },
+    },
   },
   worker: {
     format: 'es'
