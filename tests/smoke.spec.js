@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { test, expect } from '@playwright/test'
 
 /**
@@ -23,6 +26,22 @@ function collectPageErrors(page) {
   const errors = []
   page.on('pageerror', (err) => errors.push(err.message))
   return errors
+}
+
+/**
+ * 读取本机是否配置了百度地图 AK。
+ * 测试需要据此走两条不同的期望分支（有 AK → 示例就绪；无 AK → 降级提示），
+ * 否则「未配置 AK」的功能在 CI 与本地会给出相反的结论。
+ */
+function readBMapAk() {
+  const root = fileURLToPath(new URL('..', import.meta.url))
+  for (const file of ['.env.local', '.env']) {
+    const full = join(root, file)
+    if (!existsSync(full)) continue
+    const match = readFileSync(full, 'utf8').match(/^\s*VITE_BMAP_AK\s*=\s*(\S.*)$/m)
+    if (match && match[1].trim()) return match[1].trim()
+  }
+  return process.env.VITE_BMAP_AK || ''
 }
 
 test.describe('冒烟测试：核心链路', () => {
@@ -77,14 +96,24 @@ test.describe('冒烟测试：核心链路', () => {
     expect((await code.innerText()).length).toBeGreaterThan(100)
   })
 
-  test('百度地图页可加载，且最终进入「就绪」或「降级」而非卡在加载态', async ({ page }) => {
+  test('百度地图页按是否配置 AK 进入就绪或降级，而非卡在加载态', async ({ page }) => {
+    const akConfigured = !!readBMapAk()
+
     await page.goto('/bmap')
 
     await expect(page.locator('.bmap-page')).toBeVisible()
     await expect(page.locator('.bmap-header h1')).toContainText('百度地图')
 
-    // 配置了 VITE_BMAP_AK → 出现示例 tab；未配置 → 出现可读的降级提示。
-    // 两者都必须出现其一，否则说明页面卡在「正在加载百度地图 SDK…」。
-    await expect(page.locator('.bmap-warning, .bmap-nav').first()).toBeVisible({ timeout: 20000 })
+    if (akConfigured) {
+      // 已配置 VITE_BMAP_AK → SDK 动态加载成功，示例 tab 栏渲染出来
+      await expect(page.locator('.bmap-nav')).toBeVisible({ timeout: 20000 })
+      await expect(page.locator('.bmap-warning')).toHaveCount(0)
+    } else {
+      // 未配置 AK → 必须给出可读的降级提示，而不是一直卡在「正在加载…」
+      await expect(page.locator('.bmap-warning')).toContainText('未配置百度地图 AK', {
+        timeout: 20000,
+      })
+      await expect(page.locator('.bmap-loading')).toHaveCount(0)
+    }
   })
 })

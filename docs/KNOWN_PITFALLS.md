@@ -171,6 +171,27 @@ npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true
 **判断要点**：出现 `safe-delete ... BULK_CONFIRM_REQUIRED` 时不要怀疑代码，
 它发生在「产物写出」阶段而非「编译」阶段。
 
+### C9. 百度地图 SDK 不能用「运行时动态 append script」来加载
+
+**现象**：`/bmap` 永远停在「正在加载百度地图 SDK…」，或最终提示
+「百度地图脚本未加载，请检查 AK 或网络」——但 AK 与网络都正常。
+
+**根因**：百度地图 JS API 的官方加载器（`https://api.map.baidu.com/api?...`）返回的脚本
+内部用 `document.write` 去注入真正的 SDK（`getscript?...`）。
+而 `document.write` **只在 HTML 解析阶段有效**：运行时用 `document.createElement('script')`
+追加的脚本里执行它不会生效，于是 `window.BMapGL` 永远不会出现。
+
+**正确做法**（当前实现）：AK 仍不写死进仓库，由 Vite 在启动/构建时把 `%VITE_BMAP_AK%`
+替换进 `index.html`，在**文档解析期**同步写出 `<script>`；运行时只负责
+`waitForBMapGL()`。未配置 AK 时整段跳过，页面展示降级提示。
+
+**排查方法**：直接 curl 加载器 URL 看返回内容。若看到
+`document.write('<script ... getscript ...>')`，就说明必须走解析期注入这条路。
+
+**顺带一提**：未配置 AK 时 Vite 会打印
+`%VITE_BMAP_AK% is not defined in env variables ... Is the variable mistyped?`，
+这是预期告警（占位符会原样保留，被前端的守卫识别并跳过加载）。
+
 ---
 
 ## D. 凭据与配置
