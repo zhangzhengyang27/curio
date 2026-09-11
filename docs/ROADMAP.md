@@ -50,7 +50,8 @@
 |---|---|---|
 | 建立远端仓库并推送 | 当前仓库 **没有任何 remote**，8 个提交只存在于本机磁盘 | 一次磁盘故障即全部丢失 |
 | 轮换已泄露的凭据 | 百度 AK 与天地图令牌曾以明文存在于工作区，应视为已泄露 | 需在对应控制台轮换 + 配置白名单 |
-| 首次跑通 CI | `.github/workflows/ci.yml` **已存在**（含 lint / typecheck / verify / build / e2e，verify 链已含新增的漂移检测），但**从未真正执行过** —— 需先建远端并推送后才可能跑 | 依赖安装、`npm ci` 与 lockfile 一致性需实测。⚠ 在此之前应视为「未验证」，不要假定流水线是绿的 |
+| 首次跑通 CI | `.github/workflows/ci.yml` **已存在**（含 lint / typecheck / verify / build / e2e，verify 链已含新增的漂移检测），但**从未真正执行过** —— 需先建远端并推送后才可能跑。**分步已在本机手工验过**：`npm run lint` 干净、`npm run verify` 全绿、`npm run typecheck` 0 error、`vite build` EXIT=0、E2E dev + preview 各 15/15；`npm ci --dry-run --legacy-peer-deps` 亦通过，且本地 `node_modules` 同为 npm 安装 —— 即 CI 将装出的依赖树与本机一致。剩余风险主要是 GitHub 环境差异（`npx playwright install --with-deps chromium` 等）。⚠ 在这些步骤真正跑通前，仍应视为「未验证」 |
+| 双 lockfile 隐患（推送前建议决断） | 仓库**同时存在** `package-lock.json` 与 `pnpm-lock.yaml`，且 `package.json` 未声明 `packageManager`；CI 明确走 `npm ci --legacy-peer-deps`。好消息是 install **不会挂**（已实测）。但 `pnpm-lock.yaml` 比 `package-lock.json` 还新，若日后有人改用 pnpm，两棵依赖树会**静默分叉而 CI 不报错** —— 建议二选一：保留 npm 就删掉 `pnpm-lock.yaml` 及 `package.json` 里遗留的 `pnpm.onlyBuiltDependencies` 字段 |
 
 ### P1（技术债）
 
@@ -59,7 +60,7 @@
 | 拆分巨石组件 | `ExampleGallery.vue` **已拆完**：895 → **266 行**。分三步走 —— ① 抽出 `ExampleCard.vue`（→671）；② 抽出 `useGalleryFilters.js`（筛选状态机 / URL 同步 / 分页，205 行，→541）；③ 抽出 `GalleryFilterSidebar.vue`（214 行）与 `GalleryPagination.vue`（120 行），样式按选择器整体切片搬迁（未手抄，避免抄错）。**`CodeDrawer.vue` 也已拆完**：675 → **317 行** —— 抽出 `CodeDrawerHeader.vue`（182 行，纯展示：复制/关闭以事件抛出，不碰剪贴板、不持有 activeIndex），并把 104 行**全局**高亮配色移出组件到 `src/styles/code-highlight.css`（在组件里挂全局 `<style>` 本身就是债；改用 JS `import` 引入，仍随组件懒加载、不进首屏）。动手前**先补特征测试**：新增「打开时锁定背景滚动、关闭后必须还原」与「ESC 可关闭」两条 —— 此前 CodeDrawer 的交互行为零覆盖，而滚动锁泄漏属于改坏了当场看不出、事后整页滚不动的那类 bug。顺带修了 `copyTimer` 未在 `onUnmounted` 清理（overflow 与 keydown 都清了，唯独漏它）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务 |
 | 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 **3346 个文件 / 1497 个 `.vue`**，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
-| 清理 `console.log` | 218 个示例文件含调试日志，建议对应用层代码启用 `no-console`，示例作为参考代码保留 |
+| 清理 `console.log`（**实测已达成，无需再做**） | `eslint.config.js` 早已配置 `no-console: ['error', { allow: ['warn','error','info'] }]`。实测 `console.log/debug` 共 530 处，全部落在**有意豁免**的范围：448 处在 `src/examples/components`（示例作参考代码保留）、77 处在 `src/examples/jsm-compat`（vendored）、其余在 `three-build-compat` / `runners`。**应用层（`src/components`、`views`、`composables`、`stores`、`router`、`App.vue`）为 0 处** —— 闸门本来就在生效，此条应移入「已完成」 |
 | 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见「已完成」）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小 |
 | three 兼容层退出 | 指定 owner，跟踪 npm `three` 稳定版进度，达成条件后按 `THREE_UPGRADE.md` 退出 |
 
