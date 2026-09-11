@@ -130,9 +130,21 @@ vite.config.js  → threeCompatResolver：three / three/webgpu / three/tsl
 
 ## 5. 构建与分包
 
-`vite.config.js` 中的 `manualChunks` 按体积大的三方库手工分包
+`vite.config.js` 用 **`codeSplitting.groups`** 按体积大的三方库分包
 （`vendor-three` / `vendor-cesium` / `vendor-echarts` / `vendor-d3` / `vendor-postprocessing` …），
-并启用 gzip + brotli 压缩。新增重依赖时请顺手补一条分包规则，否则会撑大主包。
+并启用 gzip + brotli 压缩。三条维护约定：
+
+1. **不要用 `manualChunks`** —— Vite 8 的打包内核是 Rolldown，该选项已废弃且会**静默失效**
+   （只有部分规则生效，且 three.js 被重复打包进其它 vendor 块）。
+2. **给 three.js 最高 `priority`（100）**，其余 80 / 90。group 的
+   `includeDependenciesRecursively` 默认为 `true`，高优先级组先捕获才能避免
+   核心库被 `3d-tiles-renderer` / `postprocessing` 这类依赖吞走。
+3. **新增分组前，先确认该库是否真的出现在首页 / 常用页的依赖图里** ——
+   分组会把库变成**共享 chunk**，可能被提升进 `modulepreload`。
+   曾因此让首页预载一个它根本不用的 1.7 MB 高斯泼溅库。
+
+正则里用 `[\\/]` 匹配路径分隔符（Windows 兼容）。机制细节与实测数据见
+[`KNOWN_PITFALLS.md` C6](KNOWN_PITFALLS.md) 与 [`PERF_BASELINE.md`](PERF_BASELINE.md)。
 
 ## 6. 质量阀门
 

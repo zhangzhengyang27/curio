@@ -23,7 +23,7 @@
 | 修复真实缺陷 | 校验闸门抓出并修复 **4 个组件路径失配的示例**（2 个 city-realtime-webgl + 2 个 three-cesium） |
 | 质量阀门 | 新增 `verify-registry.mjs`、`verify-three-compat.mjs`；修复 `.gitignore` 过宽规则（曾吞掉 `tests/`） |
 | E2E 恢复 | 新增 `tests/smoke.spec.js`（5 条核心链路用例），`test:e2e` 不再是空阀门 |
-| CI | 新增 `.github/workflows/ci.yml`：凭据扫描 → ESLint → 类型检查 → 三项校验 → 构建 → 冒烟 E2E |
+| CI | 新增 `.github/workflows/ci.yml`：凭据扫描 → ESLint → 类型检查 → 四项校验 → 构建 → 冒烟 E2E |
 | 文档 | README 重写；新增 ARCHITECTURE / KNOWN_PITFALLS / THREE_UPGRADE / ROADMAP / CONTRIBUTING |
 | 兼容层守卫 | 兼容层建立哈希基线 + CI 校验，防止预发布 build 静默漂移 |
 | 分包规则修复 | 原 `manualChunks` 在 Rolldown 下已废弃且只有部分生效（three.js 被重复打包进其它 vendor 块，`vendor-cesium` 混入 echarts/theatre/lil-gui 达 8.3 MB）。改用 `codeSplitting.groups` + `priority` 后 15 个分包全部生效，`vendor-three`(1.36 MB)/`vendor-echarts`(1.07 MB)/`vendor-lil-gui`(30 KB) 独立，`vendor-cesium` 降至 696 KB |
@@ -58,7 +58,7 @@
 | 项 | 说明 |
 |---|---|
 | 拆分巨石组件 | `ExampleGallery.vue` **已拆完**：895 → **266 行**。分三步走 —— ① 抽出 `ExampleCard.vue`（→671）；② 抽出 `useGalleryFilters.js`（筛选状态机 / URL 同步 / 分页，205 行，→541）；③ 抽出 `GalleryFilterSidebar.vue`（214 行）与 `GalleryPagination.vue`（120 行），样式按选择器整体切片搬迁（未手抄，避免抄错）。**`CodeDrawer.vue` 也已拆完**：675 → **317 行** —— 抽出 `CodeDrawerHeader.vue`（182 行，纯展示：复制/关闭以事件抛出，不碰剪贴板、不持有 activeIndex），并把 104 行**全局**高亮配色移出组件到 `src/styles/code-highlight.css`（在组件里挂全局 `<style>` 本身就是债；改用 JS `import` 引入，仍随组件懒加载、不进首屏）。动手前**先补特征测试**：新增「打开时锁定背景滚动、关闭后必须还原」与「ESC 可关闭」两条 —— 此前 CodeDrawer 的交互行为零覆盖，而滚动锁泄漏属于改坏了当场看不出、事后整页滚不动的那类 bug。顺带修了 `copyTimer` 未在 `onUnmounted` 清理（overflow 与 keydown 都清了，唯独漏它）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务 |
-| 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 **3346 个文件 / 1497 个 `.vue`**，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
+| 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 `src` 下全部 `.vue`（实测 1500 个）与自有 `.ts`，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 清理 `console.log`（**实测已达成，无需再做**） | `eslint.config.js` 早已配置 `no-console: ['error', { allow: ['warn','error','info'] }]`。实测 `console.log/debug` 共 530 处，全部落在**有意豁免**的范围：448 处在 `src/examples/components`（示例作参考代码保留）、77 处在 `src/examples/jsm-compat`（vendored）、其余在 `three-build-compat` / `runners`。**应用层（`src/components`、`views`、`composables`、`stores`、`router`、`App.vue`）为 0 处** —— 闸门本来就在生效，此条应移入「已完成」 |
 | 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见「已完成」）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小 |

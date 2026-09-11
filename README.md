@@ -48,24 +48,25 @@ npm run build
 | `npm run build` | 生产构建（含示例依赖拷贝） |
 | `npm run preview` | 预览构建产物 |
 | `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
-| `npm run typecheck` | 类型检查（`vue-tsc`，覆盖全部 1497 个 `.vue` + 自有 `.ts`，当前 0 error） |
+| `npm run typecheck` | 类型检查（`vue-tsc`，覆盖全部 1500 个 `.vue` + 自有 `.ts`，当前 0 error） |
 | `npm run test:e2e` | Playwright 冒烟测试（`tests/smoke.spec.js`，跑 dev server） |
 | `E2E_TARGET=preview npm run test:e2e` | 冒烟测试跑**已构建产物**（需先 `npm run build`） |
 | `npm run verify` | **一键跑全部一致性校验**（见下） |
 
 ### 质量阀门
 
-`npm run verify` 串联四项校验，CI 与本地都应保持全绿：
+`npm run verify` 串联五项校验，CI 与本地都应保持全绿：
 
 | 校验 | 脚本 | 拦截什么 |
 |---|---|---|
 | 明文凭据 | `scripts/check-secrets.mjs` | AK / Token / 私钥被写进仓库 |
 | 注册表一致性 | `scripts/verify-registry.mjs` | 主键冲突、字段缺失、**示例组件文件找不到** |
+| 注册表漂移 | `npm run verify:drift` | 改了 registry 却没同步生成器（或反之）。串起 3 个生成器以 `--check` 做**逐字节**比对，比行数统计严格 |
 | 封面完整性 | `scripts/verify-thumbnails.mjs` | 非空 thumbnail 对应文件缺失（线上破图） |
 | 兼容层守卫 | `scripts/verify-three-compat.mjs` | three.js 本地兼容层被静默改动 |
 
 CI 定义在 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：
-`凭据扫描 → ESLint → 类型检查 → 三项校验 → 生产构建 → 冒烟 E2E（dev + 生产产物）`。
+`凭据扫描 → ESLint → 类型检查 → 四项校验 → 生产构建 → 冒烟 E2E（dev + 生产产物）`。
 
 > 冒烟测试要跑两种模式：dev server 反馈快，但**不经过生产打包**，
 > 测不出分包 / 产物相关问题，因此 CI 里还会用 `vite preview` 跑一遍真实产物。
