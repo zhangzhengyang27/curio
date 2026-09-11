@@ -1,16 +1,17 @@
-// 由 scripts/generate-registry.js 自动生成，请勿手动修改
+// 由 scripts/generate-registry.js 生成（仅覆盖 three-cesium-examples 与 cesium-examples 两个源；其余 registry 需手动维护）。
+// 合并保护：重跑本脚本会从 public/external-examples 重新解析并覆盖本文件，title/description/thumbnail/tags 等手工改动会被尽量保留，但结构性改动仍可能丢失，建议重跑前先 git diff 确认。
+
 export default {
   "source": "cesium-examples",
   "label": "Cesium 案例",
   "examples": [
     {
       "id": "test",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/tools/test.jpg",
       "category": "cesiumExamples/tools",
       "title": "测试",
       "titleEn": "test",
       "description": "这是一个基于 Cesium 的示例。运用了 影像图层 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/tools/test.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/tools/test.js",
       "tags": [
@@ -111,12 +112,11 @@ export default {
     },
     {
       "id": "coordLayer",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/layer/coordLayer.jpg",
       "category": "cesiumExamples/layer",
       "title": "坐标参考",
       "titleEn": "Coordinate",
       "description": "这是一个基于 Cesium 的示例。运用了 影像图层 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/layer/coordLayer.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/layer/coordLayer.js",
       "tags": [
@@ -480,12 +480,11 @@ export default {
     },
     {
       "id": "cameraView",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/cameraView.jpg",
       "category": "cesiumExamples/basic",
       "title": "记录视角",
       "titleEn": "Camera View",
       "description": "这是一个基于 Cesium 的示例。运用了 GUI调试面板、Cesium Viewer、影像图层、相机飞行、图元(Primitive) 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/cameraView.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cameraView.js",
       "tags": [
@@ -503,12 +502,11 @@ export default {
     },
     {
       "id": "autoRotate",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/autoRotate.jpg",
       "category": "cesiumExamples/basic",
       "title": "自动旋转",
       "titleEn": "Auto Rotate",
       "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、影像图层 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/autoRotate.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/autoRotate.js",
       "tags": [
@@ -524,12 +522,11 @@ export default {
     },
     {
       "id": "cesiumText",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/cesiumText.jpg",
       "category": "cesiumExamples/basic",
       "title": "绘制文字",
       "titleEn": "Draw Text",
       "description": "这是一个基于 Cesium 的示例。运用了 Cesium Viewer、实体(Entity)、地形(Terrain)、影像图层、相机飞行 等 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/cesiumText.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/cesiumText.js",
       "tags": [
@@ -656,12 +653,11 @@ export default {
     },
     {
       "id": "multPointCluster",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/multPointCluster.jpg",
       "category": "cesiumExamples/basic",
       "title": "cesium大量点聚合",
       "titleEn": "Points Cluster",
       "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、Cesium Viewer、实体(Entity)、影像图层、图元(Primitive) 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/basic/multPointCluster.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/basic/multPointCluster.js",
       "tags": [
@@ -1292,12 +1288,11 @@ export default {
     },
     {
       "id": "cesium_three",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/cesium_three.jpg",
       "category": "cesiumExamples/expand",
       "title": "cesium深度融合three",
       "titleEn": "Cesium && Three",
       "description": "这是一个基于 Cesium 的示例。运用了 自定义GLSL着色器、粒子/点云、GLTF模型加载、水面模拟、射线拾取交互 等 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/cesium_three.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/cesium_three.js",
       "tags": [
@@ -1337,12 +1332,11 @@ export default {
     },
     {
       "id": "echartsFlyLine",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/echartsFlyLine.jpg",
       "category": "cesiumExamples/expand",
       "title": "echarts飞线",
       "titleEn": "EchartsFlyLine",
       "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层、相机飞行 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/echartsFlyLine.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/echartsFlyLine.js",
       "tags": [
@@ -1359,12 +1353,11 @@ export default {
     },
     {
       "id": "heatMap",
-
-      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/heatMap.jpg",
       "category": "cesiumExamples/expand",
       "title": "热力图",
       "titleEn": "Heat Map",
       "description": "这是一个基于 Cesium 的示例。运用了 粒子/点云、实体(Entity)、影像图层 技术。",
+      "thumbnail": "/example-thumbs/cesium-examples/cesiumExamples/expand/heatMap.jpg",
       "tag": "",
       "entry": "/external-examples/three-cesium-examples/cesiumExamples/expand/heatMap.js",
       "tags": [

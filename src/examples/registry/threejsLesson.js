@@ -6,8 +6,6 @@ export default {
   "examples": [
     {
       "id": "machineRoom",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/02-machineroom/machineRoom.jpg",
       "category": "02-machineroom",
       "categoryLabel": "机房",
       "title": "机房展示",
@@ -19,12 +17,11 @@ export default {
         "GLTF模型加载",
         "纹理加载",
         "射线拾取交互"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/02-machineroom/machineRoom.jpg"
     },
     {
       "id": "dpr",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/dpr.jpg",
       "category": "03-basics",
       "categoryLabel": "基础",
       "title": "设备像素比",
@@ -33,12 +30,11 @@ export default {
       "runner": "vue",
       "tags": [
         "基础"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/dpr.jpg"
     },
     {
       "id": "illustration",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/illustration.jpg",
       "category": "03-basics",
       "categoryLabel": "基础",
       "title": "三维插图",
@@ -47,12 +43,11 @@ export default {
       "runner": "vue",
       "tags": [
         "基础"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/illustration.jpg"
     },
     {
       "id": "renderStructure",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/renderStructure.jpg",
       "category": "03-basics",
       "categoryLabel": "基础",
       "title": "渲染结构",
@@ -61,12 +56,11 @@ export default {
       "runner": "vue",
       "tags": [
         "基础"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/03-basics/renderStructure.jpg"
     },
     {
       "id": "customGeo",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/customGeo.jpg",
       "category": "04-geometry",
       "categoryLabel": "几何体",
       "title": "自定义几何体",
@@ -77,12 +71,11 @@ export default {
         "几何体",
         "线框模式",
         "矢量几何"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/customGeo.jpg"
     },
     {
       "id": "geo2D",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/geo2D.jpg",
       "category": "04-geometry",
       "categoryLabel": "几何体",
       "title": "二维几何体",
@@ -93,12 +86,11 @@ export default {
         "几何体",
         "线框模式",
         "矢量几何"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/geo2D.jpg"
     },
     {
       "id": "geo3D",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/geo3D.jpg",
       "category": "04-geometry",
       "categoryLabel": "几何体",
       "title": "三维几何体",
@@ -109,12 +101,11 @@ export default {
         "几何体",
         "线框模式",
         "矢量几何"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/04-geometry/geo3D.jpg"
     },
     {
       "id": "tank",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/05-scenegraph/tank.jpg",
       "category": "05-scenegraph",
       "categoryLabel": "场景图",
       "title": "坦克",
@@ -125,12 +116,11 @@ export default {
         "场景图",
         "GUI调试面板",
         "实时阴影"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/05-scenegraph/tank.jpg"
     },
     {
       "id": "universe",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/05-scenegraph/universe.jpg",
       "category": "05-scenegraph",
       "categoryLabel": "场景图",
       "title": "宇宙",
@@ -140,12 +130,11 @@ export default {
       "tags": [
         "场景图",
         "GUI调试面板"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/05-scenegraph/universe.jpg"
     },
     {
       "id": "alpha",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/alpha.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "透明度",
@@ -155,12 +144,11 @@ export default {
       "tags": [
         "材质",
         "纹理加载"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/alpha.jpg"
     },
     {
       "id": "blendTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/blendTest.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "混合测试",
@@ -173,12 +161,11 @@ export default {
         "实时阴影",
         "混合模式",
         "矢量几何"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/blendTest.jpg"
     },
     {
       "id": "meshBasicMaterialTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshBasicMaterialTest.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "基础材质",
@@ -191,12 +178,11 @@ export default {
         "立方体/全景环境",
         "雾化",
         "环境反射(PBR)"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshBasicMaterialTest.jpg"
     },
     {
       "id": "meshPhysicalMaterialTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshPhysicalMaterialTest.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "物理材质",
@@ -207,12 +193,11 @@ export default {
         "材质",
         "纹理加载",
         "立方体/全景环境"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshPhysicalMaterialTest.jpg"
     },
     {
       "id": "meshStandardMaterialTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshStandardMaterialTest.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "标准材质",
@@ -222,12 +207,11 @@ export default {
       "tags": [
         "材质",
         "立方体/全景环境"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/meshStandardMaterialTest.jpg"
     },
     {
       "id": "shaderMaterialTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/shaderMaterialTest.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "着色器材质",
@@ -239,12 +223,11 @@ export default {
         "自定义GLSL着色器",
         "粒子/点云",
         "混合模式"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/shaderMaterialTest.jpg"
     },
     {
       "id": "vertextColors",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/vertextColors.jpg",
       "category": "06-materials",
       "categoryLabel": "材质",
       "title": "顶点颜色",
@@ -253,12 +236,11 @@ export default {
       "runner": "vue",
       "tags": [
         "材质"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/06-materials/vertextColors.jpg"
     },
     {
       "id": "directionalLightShadowTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/directionalLightShadowTest.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "平行光阴影",
@@ -268,12 +250,11 @@ export default {
       "tags": [
         "灯光",
         "实时阴影"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/directionalLightShadowTest.jpg"
     },
     {
       "id": "lensflareTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/lensflareTest.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "镜头光晕",
@@ -283,12 +264,11 @@ export default {
       "tags": [
         "灯光",
         "纹理加载"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/lensflareTest.jpg"
     },
     {
       "id": "light",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/light.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "灯光基础",
@@ -298,12 +278,11 @@ export default {
       "tags": [
         "灯光",
         "实时阴影"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/light.jpg"
     },
     {
       "id": "lightProbeTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/lightProbeTest.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "光照探针",
@@ -315,12 +294,11 @@ export default {
         "纹理加载",
         "立方体/全景环境",
         "环境反射(PBR)"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/lightProbeTest.jpg"
     },
     {
       "id": "pointLightShadowTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/pointLightShadowTest.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "点光源阴影",
@@ -330,12 +308,11 @@ export default {
       "tags": [
         "灯光",
         "实时阴影"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/pointLightShadowTest.jpg"
     },
     {
       "id": "spotLightTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/07-light/spotLightTest.jpg",
       "category": "07-light",
       "categoryLabel": "灯光",
       "title": "聚光灯",
@@ -345,12 +322,11 @@ export default {
       "tags": [
         "灯光",
         "实时阴影"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/07-light/spotLightTest.jpg"
     },
     {
       "id": "rotate01",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate01.jpg",
       "category": "08-quaternion",
       "categoryLabel": "四元数",
       "title": "旋转01",
@@ -361,12 +337,11 @@ export default {
         "四元数",
         "粒子/点云",
         "线条/线框"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate01.jpg"
     },
     {
       "id": "rotate02",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate02.jpg",
       "category": "08-quaternion",
       "categoryLabel": "四元数",
       "title": "旋转02",
@@ -377,12 +352,11 @@ export default {
         "四元数",
         "粒子/点云",
         "线条/线框"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate02.jpg"
     },
     {
       "id": "rotate03",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate03.jpg",
       "category": "08-quaternion",
       "categoryLabel": "四元数",
       "title": "旋转03",
@@ -393,12 +367,11 @@ export default {
         "四元数",
         "粒子/点云",
         "线条/线框"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate03.jpg"
     },
     {
       "id": "rotate04",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate04.jpg",
       "category": "08-quaternion",
       "categoryLabel": "四元数",
       "title": "旋转04",
@@ -409,12 +382,11 @@ export default {
         "四元数",
         "粒子/点云",
         "线条/线框"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/08-quaternion/rotate04.jpg"
     },
     {
       "id": "memory01",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory01.jpg",
       "category": "09-cleanup",
       "categoryLabel": "资源释放",
       "title": "内存管理01",
@@ -424,12 +396,11 @@ export default {
       "tags": [
         "资源释放",
         "纹理加载"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory01.jpg"
     },
     {
       "id": "memory02",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory02.jpg",
       "category": "09-cleanup",
       "categoryLabel": "资源释放",
       "title": "内存管理02",
@@ -440,12 +411,11 @@ export default {
         "资源释放",
         "纹理加载",
         "立方体/全景环境"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/memory02.jpg"
     },
     {
       "id": "useEffectTest",
-
-      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/useEffectTest.jpg",
       "category": "09-cleanup",
       "categoryLabel": "资源释放",
       "title": "useEffect 测试",
@@ -454,7 +424,8 @@ export default {
       "runner": "vue",
       "tags": [
         "资源释放"
-      ]
+      ],
+      "thumbnail": "/example-thumbs/threejs-lesson/09-cleanup/useEffectTest.jpg"
     }
   ]
 }
