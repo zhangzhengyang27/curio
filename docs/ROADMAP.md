@@ -31,6 +31,7 @@
 | 生成器安全化 | 新增 `scripts/lib/registry-guard.mjs`：5 个会写 registry 的脚本改为「默认拒绝写入 + `--dry-run` 预览 + `--force` 确认」。实测拦下两个生成器的破坏性覆盖（threejs-lesson 丢 29 张封面 + 全部精修文案、earth-lessons 丢 6 张封面），并通过 `preserveCuratedFields()` 根治（保留 title/description/tags/thumbnail/runner） |
 | 脚本目录归档说明 | 新增 `scripts/README.md`，区分「质量闸门 / 注册表写入 / 一次性脚本」三类，标明哪些不可重跑 |
 | 依赖审计与瘦身 | 新增 `scripts/audit-deps.mjs`（分层扫描 src / public / 配置 / bin / types，排除 CLI 与类型包等假阳性）。据此清掉 **7 个未使用依赖**：`@mediapipe/tasks-vision`（示例走 jsdelivr CDN）、`lottie-web`（同）、`heatmap.js`（示例自带内联实现）、`monomorph`、`solar-calculator`（零引用）、`@vue/eslint-config-prettier`、`@vue/eslint-config-typescript`（eslint 配置未引用）。移除后 28 个包被剪除、锁文件 -651 行，产物模块数与 chunk 数完全不变（5957 modules / 3203 chunks），证明确为死依赖 |
+| 首屏性能优化 | 新增 `tests/perf.spec.js` 测量真实首屏（详见 `docs/PERF_BASELINE.md`）。据此发现并修复：分组把 `@sparkjsdev/spark` 变成共享块后被提升进首页 `modulepreload`，而首页并不使用它 —— 占首页首屏 JS 的 76%。去掉该分组后 **首页 JS 2246 KB → 533 KB（−76%）、FCP 4008 ms → 716 ms**；示例中心 2254 KB → 541 KB |
 
 ---
 
@@ -61,7 +62,8 @@
 |---|---|
 | 脚本物理归档 | 已在 `scripts/README.md` 用文档区分「质量闸门 / 注册表写入 / 一次性脚本」，但一次性脚本仍与主流程脚本混在同一目录。可进一步移入 `scripts/legacy/`（注意 `test-convert.js` 与 `convert-threejs-official-to-vue.js` 存在 import 依赖，移动时需同步改路径） |
 | 生成器输出格式对齐 | 生成器输出与现有 registry 存在**格式差异**（`patch-registry-thumbs.mjs` 会在 `"id"` 后插入空行，生成器不产出），因此 `--dry-run` 会稳定显示 -6 / -29 行的行数差异。对齐格式后，才可能把 `--dry-run` 接进 CI 做「registry 与生成器漂移检测」；当前若直接接入会产生持续噪声 |
-| 构建产物瘦身 | 1417 示例 × 2 chunk（组件 + `?raw` 源码）导致产物数量膨胀（当前 3203 个 JS chunk / 34 MB），可评估按需策略 |
+| 首页延迟加载 registry | 首页会加载 3+ 个 registry（约 43 KB），源于顶栏搜索的 `useExampleFilters`；可延迟到进入 `/examples` 或聚焦搜索框时再加载（见 `docs/PERF_BASELINE.md`） |
+| ~~构建产物瘦身~~ | **不建议做**：34 MB / 3203 chunks 分散在按需加载的示例块里，不在首屏路径上。优化目标应是首屏与常用路径，而非磁盘产物大小（见 `docs/PERF_BASELINE.md`） |
 | 画廊性能 | 卡片列表的过滤结果缺少记忆化 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
 

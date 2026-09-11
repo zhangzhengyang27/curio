@@ -104,6 +104,7 @@ src/
 | [`docs/KNOWN_PITFALLS.md`](docs/KNOWN_PITFALLS.md) | **动手前必读**：历史踩坑与不可逆操作 |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | 范围声明、待办与优先级 |
 | [`docs/THREE_UPGRADE.md`](docs/THREE_UPGRADE.md) | three.js 兼容层机制与切回 npm 的步骤 |
+| [`docs/PERF_BASELINE.md`](docs/PERF_BASELINE.md) | 首屏/画廊性能基线与测量方法（`npm run test:e2e` 含 `性能基线` 用例） |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 提交规范、评审要求、红线 |
 | [`.trae/specs/`](.trae/specs/) · [`.trae/documents/`](.trae/documents/) | 历史 spec 与实施计划归档（早期接入各示例源时的规格与任务清单）。**路径为当时环境的绝对路径，已失效，仅作决策留痕** |
 

@@ -136,7 +136,11 @@ export default defineConfig({
               priority: 100,
             },
             { name: 'vendor-cesium', test: /node_modules[\\/](@cesium|cesium)[\\/]/, priority: 90 },
-            { name: 'vendor-spark', test: /node_modules[\\/]@sparkjsdev[\\/]/, priority: 80 },
+            // ⚠ 刻意不为 @sparkjsdev/spark 建分组。
+            // 实测（tests/perf.spec.js）：它只被单个示例动态 import，
+            // 但一旦分组就变成共享 chunk，会被 Vite 提升进首页的 modulepreload
+            // —— 首页首屏 2246 KB JS 里有 1714 KB（76%）是它，而首页根本不用。
+            // 不分组后由打包器放回按需加载的懒加载块。
             { name: 'vendor-web-ifc', test: /node_modules[\\/]web-ifc[\\/]/, priority: 80 },
             { name: 'vendor-postprocessing', test: /node_modules[\\/]postprocessing[\\/]/, priority: 80 },
             { name: 'vendor-3d-tiles', test: /node_modules[\\/]3d-tiles-renderer[\\/]/, priority: 80 },
