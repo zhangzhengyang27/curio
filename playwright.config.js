@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 
+// E2E 使用独立端口，避免与开发者本机其它项目的 dev server（常见占用 5173）冲突：
+// 一旦端口被别的应用占用，reuseExistingServer 会把测试连到「别人的页面」上，
+// 结果是 5 条用例全部以「元素找不到」失败，且原因极难定位。
+const E2E_PORT = Number(process.env.E2E_PORT || 5199)
+const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
+
 export default defineConfig({
   testDir: './tests',
   // 显式约束用例文件，避免误把 tests/ 下的一次性脚本（.mjs/.py）当成用例
@@ -10,7 +16,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: E2E_BASE_URL,
     trace: 'on-first-retry',
   },
   projects: [
@@ -20,8 +26,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
+    // --strictPort：端口被占用时直接失败，而不是回退到随机端口让测试打偏
+    command: `npm run dev -- --port ${E2E_PORT} --strictPort`,
+    url: E2E_BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },

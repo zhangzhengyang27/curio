@@ -77,10 +77,14 @@ test.describe('冒烟测试：核心链路', () => {
     expect((await code.innerText()).length).toBeGreaterThan(100)
   })
 
-  test('百度地图页可加载（未配置 AK 时优雅降级）', async ({ page }) => {
+  test('百度地图页可加载，且最终进入「就绪」或「降级」而非卡在加载态', async ({ page }) => {
     await page.goto('/bmap')
 
     await expect(page.locator('.bmap-page')).toBeVisible()
     await expect(page.locator('.bmap-header h1')).toContainText('百度地图')
+
+    // 配置了 VITE_BMAP_AK → 出现示例 tab；未配置 → 出现可读的降级提示。
+    // 两者都必须出现其一，否则说明页面卡在「正在加载百度地图 SDK…」。
+    await expect(page.locator('.bmap-warning, .bmap-nav').first()).toBeVisible({ timeout: 20000 })
   })
 })

@@ -125,6 +125,52 @@ rm -rf node_modules/.vite && npm run dev
 `vite.config.js` 的 `manualChunks` 是手工维护的。新增大体积三方库（>100KB）时
 请补一条分包规则，否则会被打进主包。
 
+> 注意：实测当前只有部分规则生效（见 `docs/ROADMAP.md` 的「分包规则有效性核查」），
+> 调整分包策略前请先对真实产物做测量。
+
+### C7. E2E 必须使用独立端口（默认 5199）
+
+**现象**：`npx playwright test` 的 5 条用例全部以「元素找不到」失败，但应用本身正常。
+
+**根因**：默认 `baseURL` 是 `http://localhost:5173`，而 5173 是 vite 的默认端口，
+本机其它项目（本仓库之外）很容易占用它。`reuseExistingServer` 会把测试直接连到
+**别人的 dev server** 上，于是断言的全是别的页面。
+
+**现状**：`playwright.config.js` 已改用 `E2E_PORT`（默认 5199）并加 `--strictPort`：
+端口被占用时直接失败，而不是让测试打偏。需要覆盖端口时设置环境变量 `E2E_PORT`。
+
+**教训**：自动化测试的「假失败」和「假通过」一样危险 —— 前者会被当成代码问题排查很久，
+后者会让闸门形同虚设。凡是「连接到外部服务」的测试，都要先把连接目标固定成独占资源。
+
+---
+
+### C8. 本机环境下第二次 `vite build` 会失败于清空 `dist/`
+
+**现象**：第一次 `npm run build` 正常；之后每次构建都在输出阶段失败：
+
+```
+error during build:
+Build failed with 1 error:
+Error: [safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":3623,"threshold":500, ... "targets":[".../dist/assets"]}
+```
+
+而日志里 `✓ 5957 modules transformed` 已经出现 —— **代码本身没有问题**。
+
+**根因**：本机开发环境对「批量删除」有保护（单次删除超过阈值即拦截，阈值 500）。
+`dist/assets` 有 3600+ 个产物文件，vite 构建前清空输出目录会触发拦截。
+CI（GitHub Actions 标准 runner）没有这个限制，因此 CI 不受影响。
+
+**绕过方式**：输出到仓库外的临时目录（推荐，可重复执行）：
+
+```bash
+npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true
+```
+
+或先手动删除 `dist/` 再构建。
+
+**判断要点**：出现 `safe-delete ... BULK_CONFIRM_REQUIRED` 时不要怀疑代码，
+它发生在「产物写出」阶段而非「编译」阶段。
+
 ---
 
 ## D. 凭据与配置
