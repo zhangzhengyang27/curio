@@ -26,6 +26,8 @@
 | CI | 新增 `.github/workflows/ci.yml`：凭据扫描 → ESLint → 类型检查 → 三项校验 → 构建 → 冒烟 E2E |
 | 文档 | README 重写；新增 ARCHITECTURE / KNOWN_PITFALLS / THREE_UPGRADE / ROADMAP / CONTRIBUTING |
 | 兼容层守卫 | 兼容层建立哈希基线 + CI 校验，防止预发布 build 静默漂移 |
+| 分包规则修复 | 原 `manualChunks` 在 Rolldown 下已废弃且只有部分生效（three.js 被重复打包进其它 vendor 块，`vendor-cesium` 混入 echarts/theatre/lil-gui 达 8.3 MB）。改用 `codeSplitting.groups` + `priority` 后 15 个分包全部生效，`vendor-three`(1.36 MB)/`vendor-echarts`(1.07 MB)/`vendor-lil-gui`(30 KB) 独立，`vendor-cesium` 降至 696 KB |
+| E2E 覆盖生产产物 | 原 E2E 只跑 dev server，测不出分包/产物问题。新增 `E2E_TARGET=preview` 模式，CI 中 dev 与 preview 两种模式都跑 |
 
 ---
 
@@ -56,9 +58,9 @@
 |---|---|
 | 脚本归档 | `scripts/` 下 19 个一次性 `convert-*` / `fix-*` 脚本建议移入 `scripts/legacy/`，保留可重复运行的进入主流程 |
 | 生成器 `--check` 模式 | 让 registry 生成器支持「只校验不写入」，在 CI 中检测 registry 与生成器不一致 |
-| 构建产物瘦身 | 1417 示例 × 2 chunk（组件 + `?raw` 源码）导致产物数量膨胀，可评估按需策略 |
+| 构建产物瘦身 | 1417 示例 × 2 chunk（组件 + `?raw` 源码）导致产物数量膨胀（当前 3203 个 JS chunk / 34 MB），可评估按需策略 |
 | 画廊性能 | 卡片列表的过滤结果缺少记忆化 |
-| 分包规则有效性核查 | 实测 `vite.config.js` 的 `manualChunks` 只有部分规则生效：构建产物中能看到 `vendor-cesium / vendor-spark / vendor-web-ifc / vendor-3d-tiles / vendor-postprocessing / vendor-three-globe / vendor-cannon-es / vendor-chart / vendor-d3 / vendor-three-mesh-bvh`，但**没有** `vendor-three`、`vendor-echarts`、`vendor-gsap`、`vendor-lil-gui`、`vendor-theatre`（three.js 代码实际被打进了 `vendor-3d-tiles` / `vendor-postprocessing` 等块）。疑与 Vite 8 底层打包器对 `manualChunks` 的实现有关，需要针对真实产物测量后再调整策略 |
+| 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
 
 ---
 

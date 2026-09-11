@@ -38,8 +38,12 @@ npm run lint:ci           # ESLint 无 error
 npm run typecheck:ts      # 自有 TS 源码类型检查
 npm run verify            # 注册表 / 封面 / 兼容层 三项一致性
 npm run build             # 能正常构建
-npm run test:e2e          # 冒烟用例通过（改动涉及页面时必跑）
+npm run test:e2e          # 冒烟用例通过（dev server，反馈快）
+E2E_TARGET=preview npm run test:e2e   # 冒烟用例跑生产产物（合并前必跑）
 ```
+
+改动涉及 `vite.config.js` 的分包、构建期 env 注入、或任何产物形态时，
+**必须**跑 `E2E_TARGET=preview` 那一遍 —— dev 模式不经过生产打包，测不出这类问题。
 
 CI（`.github/workflows/ci.yml`）会执行同样的门禁，本地先跑一遍能省一轮往返。
 

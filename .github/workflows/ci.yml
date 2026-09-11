@@ -67,8 +67,16 @@ jobs:
       - name: 安装 Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: 冒烟 E2E
+      - name: 冒烟 E2E（开发服务器）
         run: npm run test:e2e
+
+      - name: 冒烟 E2E（生产产物）
+        # 用 vite preview 服务上一步构建出的 dist，验证真正要上线的东西。
+        # dev 模式不经过生产打包，测不出分包 / 产物相关问题，两者都要跑。
+        run: npm run test:e2e
+        env:
+          E2E_TARGET: preview
+          E2E_PORT: '5200'
 
       - name: 失败时上传 Playwright 报告
         if: failure()

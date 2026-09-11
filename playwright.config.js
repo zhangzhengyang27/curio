@@ -6,6 +6,20 @@ import { defineConfig, devices } from '@playwright/test'
 const E2E_PORT = Number(process.env.E2E_PORT || 5199)
 const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
 
+// E2E 目标：
+//   dev（默认）  → 直接跑 vite dev server，反馈快，但**不经过生产打包**，
+//                  因此测不出分包/产物相关问题（例如 chunk 拆分导致的初始化顺序错误）。
+//   preview      → 跑 `vite preview` 服务已构建产物，验证真正要上线的东西。
+// 建议：本地开发用 dev，合并前与 CI 两者都跑。
+const E2E_TARGET = process.env.E2E_TARGET === 'preview' ? 'preview' : 'dev'
+// preview 模式要预览的产物目录（可指向仓库外的构建输出，绕开本机批量删除保护）
+const E2E_PREVIEW_OUT_DIR = process.env.E2E_PREVIEW_OUT_DIR || 'dist'
+
+const webServerCommand =
+  E2E_TARGET === 'preview'
+    ? `npm run preview -- --outDir ${E2E_PREVIEW_OUT_DIR} --port ${E2E_PORT} --strictPort`
+    : `npm run dev -- --port ${E2E_PORT} --strictPort`
+
 export default defineConfig({
   testDir: './tests',
   // 显式约束用例文件，避免误把 tests/ 下的一次性脚本（.mjs/.py）当成用例
@@ -35,7 +49,7 @@ export default defineConfig({
   ],
   webServer: {
     // --strictPort：端口被占用时直接失败，而不是回退到随机端口让测试打偏
-    command: `npm run dev -- --port ${E2E_PORT} --strictPort`,
+    command: webServerCommand,
     url: E2E_BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

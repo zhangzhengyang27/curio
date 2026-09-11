@@ -120,13 +120,40 @@ npm install --legacy-peer-deps
 rm -rf node_modules/.vite && npm run dev
 ```
 
-### C6. 新增重依赖请同步补 `manualChunks`
+### C6. 分包必须用 `codeSplitting.groups`，不要用 `manualChunks`
 
-`vite.config.js` 的 `manualChunks` 是手工维护的。新增大体积三方库（>100KB）时
-请补一条分包规则，否则会被打进主包。
+**背景**：Vite 8 的打包内核是 **Rolldown**。Rolldown 中 `manualChunks` 已被标记
+`@deprecated`，只是被转译成 `codeSplitting.groups[].name()`，而且无法表达分组语义。
 
-> 注意：实测当前只有部分规则生效（见 `docs/ROADMAP.md` 的「分包规则有效性核查」），
-> 调整分包策略前请先对真实产物做测量。
+**踩过的坑**：项目原先用 `manualChunks` 写了 15 条规则，实测结果是
+
+| 现象 | 后果 |
+|---|---|
+| 构建产物里有 `vendor-cesium / vendor-spark / vendor-web-ifc / vendor-3d-tiles / vendor-postprocessing / ...`，但**没有** `vendor-three / vendor-echarts / vendor-gsap / vendor-lil-gui / vendor-theatre` | 规则静默失效，无任何报错 |
+| three.js 代码同时出现在 `vendor-3d-tiles` 与 `vendor-postprocessing` | 核心库被重复打包 |
+| `vendor-cesium` 膨胀到 **8.3 MB**，里面混着 echarts / theatre / lil-gui / three-globe… | 只要打开一个用到 lil-gui 的示例，就要下载 8.3 MB |
+
+**根因**：`codeSplitting` group 的 `includeDependenciesRecursively` **默认为 `true`** ——
+捕获 `3d-tiles-renderer` / `postprocessing` 时，会把它们的依赖（three）一并吞进那个组。
+
+**正确做法**：用 `codeSplitting.groups`，并给 three 最高 `priority`
+（高优先级 group 先捕获，被捕获的模块会从其它 group 中移除）：
+
+```js
+codeSplitting: {
+  groups: [
+    { name: 'vendor-three', test: /three-build-compat|node_modules[\\/]three[\\/]/, priority: 100 },
+    { name: 'vendor-cesium', test: /node_modules[\\/](@cesium|cesium)[\\/]/, priority: 90 },
+    // …其余 priority: 80
+  ],
+}
+```
+
+修复后：15 个分包全部生效，`vendor-cesium` 由 8.3 MB 降到 696 KB，
+`vendor-three`(1.36 MB) / `vendor-echarts`(1.07 MB) / `vendor-lil-gui`(30 KB) 各自独立。
+
+**维护约定**：新增大体积三方库（>100 KB）时，在 `groups` 里补一条 `test` + `priority: 80`。
+注意正则里用 `[\\/]` 匹配路径分隔符（Windows 兼容）。
 
 ### C7. E2E 必须使用独立端口（默认 5199）
 
@@ -191,6 +218,23 @@ npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true
 **顺带一提**：未配置 AK 时 Vite 会打印
 `%VITE_BMAP_AK% is not defined in env variables ... Is the variable mistyped?`，
 这是预期告警（占位符会原样保留，被前端的守卫识别并跳过加载）。
+
+### C10. 测试体系必须覆盖生产产物，不能只测 dev server
+
+**坑**：E2E 默认跑 `vite dev server`，它**按需编译、不经过生产打包**。
+因此「分包错乱、产物里的模块初始化顺序问题、构建期 env 注入失败」这类问题
+在 dev 模式下永远测不出来 —— 本次修复的 `manualChunks` 失效问题正属于此类。
+
+**做法**：`playwright.config.js` 支持 `E2E_TARGET`：
+
+```bash
+npm run test:e2e                    # dev server（快，日常反馈）
+E2E_TARGET=preview npm run test:e2e # 预览已构建产物（合并前必跑；需先 npm run build）
+```
+
+CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
+若生产产物不在默认 `dist/`，可用 `E2E_PREVIEW_OUT_DIR` 指定
+（本机批量删除保护导致 `dist/` 无法重复清空时也用得上）。
 
 ---
 
