@@ -134,13 +134,40 @@ const allExamplesList = shallowRef([])
 ensureRegistryLoaded().then(list => { allExamplesList.value = list })
 const allExamples = computed(() => allExamplesList.value)
 
+/**
+ * 一次性派生的检索索引：按「技术」分桶 + 预计算小写检索串。
+ *
+ * 为什么需要：下面 techTabs / availableSubCategories / filteredExamples 原本各自
+ * 全量扫一遍全部示例（1417 条），而 subCategoryDefinitions 有 17 条正则、
+ * 关键词匹配还要逐条 toLowerCase —— 每敲一个字就整链重算，是几万次正则匹配
+ * 加几千次字符串分配，输入会明显发涩。
+ *
+ * 分桶只在注册表加载完成时构建一次；此后改搜索词只需在「当前技术的桶」里做
+ * 字符串匹配，技术维度的匹配不再重复计算。
+ */
+const exampleIndex = computed(() => {
+  const byTech = new Map(techGroups.map(t => [t.key, []]))
+  // 用 \u0000 分隔，避免跨字段拼接产生意外命中（如标题尾部 + 标签首部连起来）
+  const haystacks = new Map()
+  for (const ex of allExamplesList.value) {
+    haystacks.set(
+      ex,
+      [ex.title || '', ex.description || '', ...(ex.tags || [])].join('\u0000').toLowerCase()
+    )
+    for (const tech of techGroups) {
+      if (tech.match(ex)) byTech.get(tech.key).push(ex)
+    }
+  }
+  return { byTech, haystacks }
+})
+
+// 当前技术下的示例集合（复用分桶结果，不在每次输入时重算）
+const techExamples = computed(
+  () => exampleIndex.value.byTech.get(currentTech.value) ?? allExamples.value
+)
+
 const techTabs = computed(() => {
-  return techGroups.map(t => {
-    const count = t.key === 'all'
-      ? allExamples.value.length
-      : allExamples.value.filter(ex => t.match(ex)).length
-    return { ...t, count }
-  })
+  return techGroups.map(t => ({ ...t, count: exampleIndex.value.byTech.get(t.key).length }))
 })
 
 // 用户主动切换技术 / 子分类时，重置子分类与页码。
@@ -194,19 +221,15 @@ watch(currentPage, () => {
 
 const currentTechInfo = computed(() => techGroups.find(t => t.key === currentTech.value))
 const currentTechLabel = computed(() => currentTechInfo.value?.label || '全部技术')
-const techExamplesCount = computed(() => {
-  const match = currentTechInfo.value?.match || (() => true)
-  return allExamples.value.filter(ex => match(ex)).length
-})
+const techExamplesCount = computed(() => techExamples.value.length)
 
 const availableSubCategories = computed(() => {
-  const tech = techGroups.find(t => t.key === currentTech.value)
-  const techExamples = allExamples.value.filter(ex => tech.match(ex))
+  const list = techExamples.value
 
   const counts = new Map()
-  counts.set('all', techExamples.length)
+  counts.set('all', list.length)
 
-  techExamples.forEach(ex => {
+  list.forEach(ex => {
     subCategoryDefinitions.forEach(sub => {
       if (sub.key !== 'all' && sub.match(ex)) {
         counts.set(sub.key, (counts.get(sub.key) || 0) + 1)
@@ -221,18 +244,16 @@ const availableSubCategories = computed(() => {
 
 const filteredExamples = computed(() => {
   const kw = keyword.value.trim().toLowerCase()
-  const tech = techGroups.find(t => t.key === currentTech.value)
   const sub = subCategoryDefinitions.find(s => s.key === currentSubCategory.value)
+  const list = techExamples.value
 
-  return allExamples.value.filter(ex => {
-    const matchTech = tech.match(ex)
-    const matchSub = sub.match(ex)
-    const matchKw =
-      !kw ||
-      ex.title.toLowerCase().includes(kw) ||
-      (ex.description && ex.description.toLowerCase().includes(kw)) ||
-      ex.tags.some(tag => tag.toLowerCase().includes(kw))
-    return matchTech && matchSub && matchKw
+  // 无关键词且不限子分类时直接复用分桶数组，连一次遍历都省掉
+  if (!kw && sub.key === 'all') return list
+
+  return list.filter(ex => {
+    if (sub.key !== 'all' && !sub.match(ex)) return false
+    if (!kw) return true
+    return exampleIndex.value.haystacks.get(ex).includes(kw)
   })
 })
 

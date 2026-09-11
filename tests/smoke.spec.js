@@ -124,6 +124,27 @@ test.describe('冒烟测试：核心链路', () => {
     expect(pageErrors, `示例中心出现未捕获异常：\n${pageErrors.join('\n')}`).toEqual([])
   })
 
+  test('示例中心按关键词过滤：URL ?search= 生效且结果集变小', async ({ page }) => {
+    // .result-count 在注册表加载完成前是 0，必须先等卡片渲染出来再读，否则读到的是中间态
+    const readCount = async () =>
+      Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10)
+
+    await page.goto('/examples')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    const total = await readCount()
+    expect(total, '未过滤时应展示全部示例').toBeGreaterThan(1000)
+
+    // 关键词走 route.query.search → ExampleGallery 的 filteredExamples。
+    // 用「shader」而非更直觉的词：标题/描述/标签多为中文，实测 "water" / "camera"
+    // 在这三个字段里命中数为 0（页面会显示空态，卡片渲染不出来）。
+    await page.goto('/examples?search=shader')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    const filtered = await readCount()
+
+    expect(filtered, `「shader」应有命中（全部 ${total} 条，命中 ${filtered} 条）`).toBeGreaterThan(0)
+    expect(filtered, `过滤后应少于全部（全部 ${total} 条，命中 ${filtered} 条）`).toBeLessThan(total)
+  })
+
   test('示例详情页能按命名约定解析到 Vue 组件', async ({ page }) => {
     await page.goto(DEMO_PATH)
 
