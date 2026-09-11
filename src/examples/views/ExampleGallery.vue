@@ -116,177 +116,26 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, shallowRef } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { techGroups, subCategoryDefinitions, ensureRegistryLoaded } from '../composables/useExampleFilters.js'
+// 筛选状态机（URL ↔ 状态同步、过滤、分页）已抽到 useGalleryFilters，
+// 本组件只负责渲染。改动过滤逻辑请改 composable，别在这里加分支。
+import { useGalleryFilters } from '../composables/useGalleryFilters.js'
 import ExampleCard from './ExampleCard.vue'
 
-const route = useRoute()
-const router = useRouter()
-
-const keyword = ref(route.query.search || '')
-const currentTech = ref('all')
-const currentSubCategory = ref('all')
-const currentPage = ref(Number(route.query.page) || 1)
-const pageSize = 16
-
-const allExamplesList = shallowRef([])
-ensureRegistryLoaded().then(list => { allExamplesList.value = list })
-const allExamples = computed(() => allExamplesList.value)
-
-/**
- * 一次性派生的检索索引：按「技术」分桶 + 预计算小写检索串。
- *
- * 为什么需要：下面 techTabs / availableSubCategories / filteredExamples 原本各自
- * 全量扫一遍全部示例（1417 条），而 subCategoryDefinitions 有 17 条正则、
- * 关键词匹配还要逐条 toLowerCase —— 每敲一个字就整链重算，是几万次正则匹配
- * 加几千次字符串分配，输入会明显发涩。
- *
- * 分桶只在注册表加载完成时构建一次；此后改搜索词只需在「当前技术的桶」里做
- * 字符串匹配，技术维度的匹配不再重复计算。
- */
-const exampleIndex = computed(() => {
-  const byTech = new Map(techGroups.map(t => [t.key, []]))
-  // 用 \u0000 分隔，避免跨字段拼接产生意外命中（如标题尾部 + 标签首部连起来）
-  const haystacks = new Map()
-  for (const ex of allExamplesList.value) {
-    haystacks.set(
-      ex,
-      [ex.title || '', ex.description || '', ...(ex.tags || [])].join('\u0000').toLowerCase()
-    )
-    for (const tech of techGroups) {
-      if (tech.match(ex)) byTech.get(tech.key).push(ex)
-    }
-  }
-  return { byTech, haystacks }
-})
-
-// 当前技术下的示例集合（复用分桶结果，不在每次输入时重算）
-const techExamples = computed(
-  () => exampleIndex.value.byTech.get(currentTech.value) ?? allExamples.value
-)
-
-const techTabs = computed(() => {
-  return techGroups.map(t => ({ ...t, count: exampleIndex.value.byTech.get(t.key).length }))
-})
-
-// 用户主动切换技术 / 子分类时，重置子分类与页码。
-// 注意：不再用 watch(currentTech) / watch([keyword, currentSubCategory]) 自动重置，
-// 否则在浏览器前进/后退（syncQueryToState 从 URL 还原状态）时也会触发重置，
-// 导致子分类与页码状态被冲掉、无法恢复。
-function selectTech(key) {
-  if (currentTech.value === key) return
-  currentTech.value = key
-  currentSubCategory.value = 'all'
-  currentPage.value = 1
-}
-
-function selectCategory(key) {
-  if (currentSubCategory.value === key) return
-  currentSubCategory.value = key
-  currentPage.value = 1
-}
-
-function syncQueryToState() {
-  const { tech, sub, search } = route.query
-  const validTech = tech && techGroups.some(t => t.key === tech)
-  const validSub = sub && subCategoryDefinitions.some(s => s.key === sub)
-  if (validTech) currentTech.value = tech
-  if (validSub) currentSubCategory.value = sub
-  keyword.value = search || ''
-  currentPage.value = Number(route.query.page) || 1
-}
-
-onMounted(syncQueryToState)
-watch(() => route.query, syncQueryToState, { deep: true })
-
-// 状态 -> URL：切换技术 / 分类 / 搜索时写回 query，刷新可保持、可分享、可前进后退
-watch([currentTech, currentSubCategory, keyword, currentPage], () => {
-  const query = {}
-  if (currentTech.value !== 'all') query.tech = currentTech.value
-  if (currentSubCategory.value !== 'all') query.sub = currentSubCategory.value
-  const kw = keyword.value.trim()
-  if (kw) query.search = kw
-  if (currentPage.value > 1) query.page = currentPage.value
-  // 避免无实质变化时触发导航（防止 watch 循环）
-  const currentQuery = route.query
-  const isSame = JSON.stringify(query) === JSON.stringify({ ...currentQuery })
-  if (!isSame) router.replace({ query })
-})
-
-// 翻页时滚动到顶部
-watch(currentPage, () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-})
-
-const currentTechInfo = computed(() => techGroups.find(t => t.key === currentTech.value))
-const currentTechLabel = computed(() => currentTechInfo.value?.label || '全部技术')
-const techExamplesCount = computed(() => techExamples.value.length)
-
-const availableSubCategories = computed(() => {
-  const list = techExamples.value
-
-  const counts = new Map()
-  counts.set('all', list.length)
-
-  list.forEach(ex => {
-    subCategoryDefinitions.forEach(sub => {
-      if (sub.key !== 'all' && sub.match(ex)) {
-        counts.set(sub.key, (counts.get(sub.key) || 0) + 1)
-      }
-    })
-  })
-
-  return subCategoryDefinitions
-    .filter(sub => sub.key === 'all' || (counts.get(sub.key) || 0) > 0)
-    .map(sub => ({ ...sub, count: counts.get(sub.key) || 0 }))
-})
-
-const filteredExamples = computed(() => {
-  const kw = keyword.value.trim().toLowerCase()
-  const sub = subCategoryDefinitions.find(s => s.key === currentSubCategory.value)
-  const list = techExamples.value
-
-  // 无关键词且不限子分类时直接复用分桶数组，连一次遍历都省掉
-  if (!kw && sub.key === 'all') return list
-
-  return list.filter(ex => {
-    if (sub.key !== 'all' && !sub.match(ex)) return false
-    if (!kw) return true
-    return exampleIndex.value.haystacks.get(ex).includes(kw)
-  })
-})
-
-const totalPages = computed(() => Math.ceil(filteredExamples.value.length / pageSize))
-const paginatedExamples = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-  return filteredExamples.value.slice(start, start + pageSize)
-})
-
-const visiblePages = computed(() => {
-  const total = totalPages.value
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1)
-  }
-
-  const current = currentPage.value
-  let start = Math.max(2, current - 2)
-  let end = Math.min(total - 1, current + 2)
-
-  if (current <= 3) {
-    end = 5
-  } else if (current >= total - 2) {
-    start = total - 4
-  }
-
-  const pages = [1]
-  if (start > 2) pages.push('...')
-  for (let i = start; i <= end; i++) pages.push(i)
-  if (end < total - 1) pages.push('...')
-  pages.push(total)
-  return pages
-})
-
+const {
+  currentTech,
+  currentSubCategory,
+  currentPage,
+  currentTechLabel,
+  techExamplesCount,
+  techTabs,
+  availableSubCategories,
+  filteredExamples,
+  paginatedExamples,
+  totalPages,
+  visiblePages,
+  selectTech,
+  selectCategory,
+} = useGalleryFilters()
 </script>
 
 <style scoped>

@@ -145,6 +145,42 @@ test.describe('冒烟测试：核心链路', () => {
     expect(filtered, `过滤后应少于全部（全部 ${total} 条，命中 ${filtered} 条）`).toBeLessThan(total)
   })
 
+  test('切换技术标签会过滤结果并写回 URL', async ({ page }) => {
+    await page.goto('/examples')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    const total = Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10)
+
+    const threeTab = page.locator('.tech-tab', { hasText: 'Three.js' })
+    await expect(threeTab).toBeVisible()
+    const tabCount = Number.parseInt((await threeTab.locator('.tech-tab-count').innerText()).replace(/\D/g, ''), 10)
+    expect(tabCount, 'Three.js 标签应显示自己的条目数').toBeGreaterThan(0)
+
+    await threeTab.click()
+
+    await expect(page.locator('.tech-tab.active')).toContainText('Three.js')
+    await expect.poll(() => new URL(page.url()).searchParams.get('tech')).toBe('threejs')
+    // 结果计数与侧栏计数都应切到该技术
+    await expect
+      .poll(async () => Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10))
+      .toBe(tabCount)
+    await expect(page.locator('.tech-count')).toContainText(String(tabCount))
+    expect(tabCount, `技术过滤后应少于全部（全部 ${total}）`).toBeLessThan(total)
+  })
+
+  test('分页：URL ?page= 生效，且第 2 页内容与第 1 页不同', async ({ page }) => {
+    await page.goto('/examples')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    await expect(page.locator('.pagination')).toBeVisible()
+    const firstOnPage1 = await page.locator('.example-card').first().innerText()
+
+    await page.goto('/examples?page=2')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    const firstOnPage2 = await page.locator('.example-card').first().innerText()
+
+    expect(firstOnPage2, '第 2 页的首张卡片应与第 1 页不同').not.toBe(firstOnPage1)
+    await expect(page.locator('.page-btn.active')).toContainText('2')
+  })
+
   test('示例详情页能按命名约定解析到 Vue 组件', async ({ page }) => {
     await page.goto(DEMO_PATH)
 
