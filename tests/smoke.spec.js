@@ -10,7 +10,10 @@ import { test, expect } from '@playwright/test'
  * 避免再次出现「配置看起来存在、实际跑不出用例」的假阀门（见 CI 与 CONTRIBUTING）。
  *
  * 选择器均取自真实组件：
- *   .app-nav / .nav-brand / .search-input   → src/App.vue
+ *   .app-nav / .nav-brand / .nav-search .search-input → src/App.vue
+ *   （顶栏搜索框必须带 .nav-search 限定：首页 EarthView 里还有一个
+ *     src/components/SearchBox.vue 的 .search-input，裸用 .search-input 会命中 2 个元素。
+ *     该歧义在 dev 模式下因首页渲染慢而侥幸通过，生产产物下必然失败。）
  *   .example-card / .error-tip             → src/examples/views/ExampleGallery.vue
  *   .demo-root / .code-btn                 → src/examples/views/ExampleDemo.vue
  *   .example-host                          → src/examples/views/ExampleHost.vue
@@ -20,6 +23,18 @@ import { test, expect } from '@playwright/test'
 
 // 结构简单、依赖少的示例：css2d 的 label 示例（含共享壳 ExampleScene，可覆盖多节代码）
 const DEMO_PATH = '/examples/threejs-official/css2d/css2d_label'
+
+/**
+ * registry **数据**分块的识别模式，兼容两种 E2E 目标：
+ *   dev     → /src/examples/registry/threeCesiumExamples.js（源码路径）
+ *   preview → /assets/threeCesiumExamples-CcbqyxGT.js（带哈希的分块名）
+ *
+ * 必须只匹配 11 个数据文件、排除 registry/index.js：index.js 是 barrel，
+ * 被 useExampleFilters 静态导入，首页请求它属于正常；真正要拦的是数据分块。
+ * 顶栏在所有路由都挂载，曾因此把 3+ 个数据 registry 拉进首屏（见 docs/PERF_BASELINE.md）。
+ */
+const REGISTRY_CHUNK_RE =
+  /(?:\/src\/examples\/registry\/|\/assets\/)(?:threeCesiumExamples|cesiumExamples|threejsLesson|earthLessons|threejsOfficialExamples|granary3dExamples|webglExamples|mygrapicsExamples|graphicsExamples|threeProjectExamples|cityRealtimeWebglExamples)(?:-[A-Za-z0-9_-]+)?\.js/
 
 /** 收集页面级未捕获异常，用于断言框架层没有崩溃 */
 function collectPageErrors(page) {
@@ -52,9 +67,46 @@ test.describe('冒烟测试：核心链路', () => {
 
     await expect(page.locator('.app-nav')).toBeVisible()
     await expect(page.locator('.nav-brand')).toBeVisible()
-    await expect(page.locator('.search-input')).toBeVisible()
+    await expect(page.locator('.nav-search .search-input')).toBeVisible()
 
     expect(pageErrors, `首页出现未捕获异常：\n${pageErrors.join('\n')}`).toEqual([])
+  })
+
+  test('首页不为顶栏预载示例注册表', async ({ page }) => {
+    const registryRequests = []
+    page.on('request', (req) => {
+      if (REGISTRY_CHUNK_RE.test(req.url())) registryRequests.push(req.url())
+    })
+
+    await page.goto('/')
+
+    await expect(page.locator('.app-nav')).toBeVisible()
+    // 等网络空闲，确保「本该发生」的预载确实已经发生而不是还没来得及
+    await page.waitForLoadState('networkidle')
+
+    expect(
+      registryRequests,
+      `首页预载了示例注册表（顶栏在所有路由都挂载，不应在 setup 阶段触发加载）：\n${registryRequests.join('\n')}`
+    ).toEqual([])
+  })
+
+  test('打开顶栏「示例中心」下拉后按需加载注册表并显示分类计数', async ({ page }) => {
+    await page.goto('/')
+
+    await expect(page.locator('.app-nav')).toBeVisible()
+    await page.locator('.dropdown-trigger', { hasText: '示例中心' }).click()
+    await expect(page.locator('.dropdown-item').first()).toBeVisible()
+
+    // registry 是按需加载的，计数会在加载完成后由 0 变为真实值
+    await expect
+      .poll(
+        async () => {
+          const counts = await page.locator('.dropdown-count').allInnerTexts()
+          return counts.reduce((sum, c) => sum + (Number.parseInt(c, 10) || 0), 0)
+        },
+        { timeout: 20000, message: '下拉项计数应大于 0，说明 registry 已按需加载完成' }
+      )
+      .toBeGreaterThan(0)
   })
 
   test('示例中心可加载、搜索框常驻且卡片渲染', async ({ page }) => {
@@ -62,7 +114,7 @@ test.describe('冒烟测试：核心链路', () => {
 
     await page.goto('/examples')
 
-    await expect(page.locator('.search-input')).toBeVisible()
+    await expect(page.locator('.nav-search .search-input')).toBeVisible()
     await expect(page.locator('.example-gallery-page')).toBeVisible()
 
     const cards = page.locator('.example-card')
