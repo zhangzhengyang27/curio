@@ -96,7 +96,15 @@ npm run verify:registry
 
 ### C1. 安装依赖必须加 `--legacy-peer-deps`
 
-`three@0.185` 与 `three-good-godrays`（要求 `three <= 0.182`）存在 peer 冲突。
+`three@0.185.0` 与若干 three 生态包存在 peer 冲突（实测 `pnpm install` 会报）：
+
+| 包 | 要求的 three 版本 |
+|---|---|
+| `three-good-godrays` | `>= 0.125.0 <= 0.182.0` |
+| `postprocessing` | `>= 0.168.0 < 0.185.0` |
+| `three-tile` | `0.183.1` |
+
+因此必须用 `--legacy-peer-deps` 安装，否则 npm 直接报错中止。
 
 ```bash
 npm install --legacy-peer-deps

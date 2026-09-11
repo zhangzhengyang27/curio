@@ -18,6 +18,7 @@
 | `verify-registry.mjs` | 注册表主键唯一、字段完整、**组件文件按命名约定命中** |
 | `verify-thumbnails.mjs` | 非空 thumbnail 对应的封面文件是否存在（防线上破图） |
 | `verify-three-compat.mjs` | three.js 本地兼容层的哈希基线守卫（`--update` 可更新基线） |
+| `audit-deps.mjs` | 依赖使用情况审计（`npm run audit:deps`）。分层扫描 src / public / 配置 / bin / types，输出「未检测到引用」的候选清单；**只输出线索、不改 package.json** |
 | `copy-example-deps.js` | 构建后把示例依赖拷进产物（`npm run build` 的一部分） |
 
 ## B. 注册表写入脚本（⚠ 需显式确认）
