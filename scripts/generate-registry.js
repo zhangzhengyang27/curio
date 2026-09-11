@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
+import { parseWriteFlags, writeRegistry as writeRegistryGuarded } from './lib/registry-guard.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
@@ -160,8 +161,10 @@ function writeRegistry(name, data) {
 
 export default ${JSON.stringify(data, null, 2)}
 `
-  fs.writeFileSync(outputPath, content, 'utf-8')
-  console.log(`已生成注册表: ${outputPath}，共 ${data.examples.length} 个示例`)
+  const { written } = writeRegistryGuarded(outputPath, content, parseWriteFlags(), 'generate-registry.js')
+  if (written) {
+    console.log(`已生成注册表: ${outputPath}，共 ${data.examples.length} 个示例`)
+  }
 }
 
 console.warn('[generate-registry] 即将覆盖并重新生成 registry 文件（仅 threeCesiumExamples.js 与 cesiumExamples.js）。重跑前请先 git diff/commit 确认，手工改动的条目会被「合并保护」尽量保留。')

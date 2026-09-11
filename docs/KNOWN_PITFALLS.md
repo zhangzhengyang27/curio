@@ -41,18 +41,36 @@
 
 ## B. 不可逆 / 高危操作
 
-### B1. 不要随便重跑示例注册表生成脚本
+### B1. registry 写入脚本必须先 `--dry-run`
 
-`scripts/generate-threejs-lesson-registry.js` 会**整体覆盖** `src/examples/registry/threejsLesson.js`：
-其 `runner` 由 `hasVueComponent()` 决定（无对应 `.vue` 就写 `iframe`），并且会丢掉手工维护的
-标题 / 描述 / 缩略图 / 标签。
+`src/examples/registry/*.js` 同时承载「机器生成」与「人工精修」两类数据，而生成器无法区分。
+历史上有过多次「重跑把手工数据整体覆盖、且没有任何报错」的事故。
 
-其他生成器（`generate-registry.js`、`convert-*.cjs`、`generate-*.js`）也有同类风险，
-文件头通常写着「自动生成，请勿手动修改」，但它们与手工维护的 registry 混用，
-**重跑前务必先 `git diff` 确认**，或先提交当前状态作为回退点。
+**现在所有写入都经过 `scripts/lib/registry-guard.mjs`**：
+
+```bash
+node scripts/<脚本>              # 拒绝写入（默认安全值）
+node scripts/<脚本> --dry-run    # 预览影响：行数 / 条目数 / 缩略图数量前后对比
+node scripts/<脚本> --force      # 确认后写入
+```
+
+`--dry-run` 的实测收获（直接暴露出两个生成器的破坏性）：
+
+| 脚本 | 修复前 | 修复后 |
+|---|---|---|
+| `generate-threejs-lesson-registry.js` | 丢 29 张封面，`title/description/tags` 全部退回模板值 | 保留 29×5 个字段 |
+| `generate-earth-lessons-registry.js` | 丢 6 张封面，`description/tags` 退回原始值 | 保留 6×5 个字段 |
+
+字段保留由 `preserveCuratedFields()` 实现：按 `category/id` 保留
+`title / description / tags / thumbnail / runner`；新增条目不受影响。
+
+**标准动作**：重跑任何 registry 写入脚本前，先 `git status` 确认工作树干净（或在干净分支上），
+再 `--dry-run` 看一眼 diff 摘要，最后才 `--force`。
 
 **删除示例的正确流程**：`git rm` 源 `.js`/`.tsx` → 手动编辑 registry 删条目 →
 清理 `scripts/_thumb_map.json` 映射 →（可选）删生成脚本中的死键。
+
+脚本清单与分类（哪些可重跑、哪些是一次性的）见 [`scripts/README.md`](../scripts/README.md)。
 
 ### B2. 生成器脚本中曾写死过他人机器路径
 

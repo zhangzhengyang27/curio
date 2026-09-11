@@ -1,12 +1,16 @@
 // 把截图脚本生成的 scripts/_thumb_map.json 回填进各 registry 文件：
 // 在每条示例的 "id" 行后插入 "thumbnail": "<url>"。保留原格式与头部注释。
-import { readFile, writeFile, readdir } from 'node:fs/promises'
+// 用法：node scripts/patch-registry-thumbs.mjs [--dry-run|--force]
+// 写入受 registry-guard 保护（默认拒绝写入）。
+import { readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parseWriteFlags, writeRegistry } from './lib/registry-guard.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const REG = path.join(ROOT, 'src/examples/registry')
+const WRITE_FLAGS = parseWriteFlags()
 
 function escapeRegExp(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -71,7 +75,7 @@ async function main() {
         console.log(`SKIP 未匹配: ${src} / ${e.category} / ${e.id}`)
       }
     }
-    await writeFile(path.join(REG, f), text)
+    writeRegistry(path.join(REG, f), text, WRITE_FLAGS, 'patch-registry-thumbs.mjs')
     console.log(`patched ${f} (${entries.length} 条)`)
   }
 

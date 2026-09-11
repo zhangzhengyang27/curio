@@ -1,6 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  loadExistingExamples,
+  parseWriteFlags,
+  preserveCuratedFields,
+  writeRegistry,
+} from './lib/registry-guard.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
@@ -59,10 +65,23 @@ const data = {
 }
 
 const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', 'earthLessons.js')
+
+// 保留人工/流水线产出的字段（title/description/tags/thumbnail/runner），避免覆盖丢失
+const { preserved } = preserveCuratedFields(data.examples, await loadExistingExamples(outputPath))
+if (Object.keys(preserved).length) {
+  console.log(
+    `[registry-guard] 已保留已有字段：${Object.entries(preserved)
+      .map(([k, v]) => `${k}×${v}`)
+      .join(', ')}`
+  )
+}
+
 const content = `// 由 scripts/generate-earth-lessons-registry.js 自动生成，请勿手动修改
 
 export default ${JSON.stringify(data, null, 2)}
 `
 
-fs.writeFileSync(outputPath, content, 'utf-8')
-console.log(`已生成注册表: ${outputPath}，共 ${data.examples.length} 个示例`)
+const { written } = writeRegistry(outputPath, content, parseWriteFlags(), 'generate-earth-lessons-registry.js')
+if (written) {
+  console.log(`已生成注册表: ${outputPath}，共 ${data.examples.length} 个示例`)
+}

@@ -5,18 +5,24 @@
 // 描述按各源技术栈定制（Cesium 源写 Cesium、WebGL 源写原生 WebGL …），不套 three.js 话术。
 // 保留文件头注释、其它字段（source/category/categoryLabel/titleEn/thumbnail/runner/globals/entry…）不变。
 //
-// 用法：node scripts/improve-example-meta.mjs [source]
+// 用法：node scripts/improve-example-meta.mjs [source] [--dry-run|--force]
 //   source 缺省为 threejs-official。
+//   本脚本会整体重写 registry 的 title/description/tags，因此写入受 registry-guard 保护：
+//   默认拒绝写入，需先 --dry-run 预览、再 --force 确认。
 
-import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from 'fs'
+import { readFileSync, readdirSync, existsSync, statSync } from 'fs'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { dirname, join } from 'path'
+import { parseWriteFlags, writeRegistry } from './lib/registry-guard.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const REG_DIR = join(ROOT, 'src/examples/registry')
 const COMP_ROOT = join(ROOT, 'src/examples/components')
 
-const SOURCE = process.argv[2] || 'threejs-official'
+const WRITE_FLAGS = parseWriteFlags()
+// 位置参数里要排除 --dry-run / --force 这类开关，否则会被当成 source 名
+const POSITIONAL = process.argv.slice(2).filter((a) => !a.startsWith('--'))
+const SOURCE = POSITIONAL[0] || 'threejs-official'
 // source -> registry 文件名（不带 .js）
 const REG_FILE_MAP = {
   'threejs-official': 'threejsOfficialExamples',
@@ -409,7 +415,7 @@ async function main() {
 
   // 写回（统一序列化为 JSON，保留头部注释与字段顺序）
   const out = header + marker + JSON.stringify(data, null, 2) + '\n'
-  writeFileSync(REG_FILE, out)
+  writeRegistry(REG_FILE, out, WRITE_FLAGS, 'improve-example-meta.mjs')
 
   console.log(`source=${SOURCE}`)
   console.log(`总条目: ${data.examples.length} | 已优化: ${improved} | 标题保留: ${titleKept} | 组件未找到(保留原值): ${notFound}`)
