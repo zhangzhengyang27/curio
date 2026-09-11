@@ -146,22 +146,8 @@
 
 <script setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import typescript from 'highlight.js/lib/languages/typescript'
-import xml from 'highlight.js/lib/languages/xml'
-import css from 'highlight.js/lib/languages/css'
-import scss from 'highlight.js/lib/languages/scss'
-import less from 'highlight.js/lib/languages/less'
-import json from 'highlight.js/lib/languages/json'
-
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('typescript', typescript)
-hljs.registerLanguage('xml', xml)
-hljs.registerLanguage('css', css)
-hljs.registerLanguage('scss', scss)
-hljs.registerLanguage('less', less)
-hljs.registerLanguage('json', json)
+// 语法高亮逻辑已抽到 useCodeHighlight（纯逻辑，无 UI 依赖）
+import { useCodeHighlight } from '../composables/useCodeHighlight.js'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -173,102 +159,14 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
+const { highlightCode, tabLabel } = useCodeHighlight()
+
 const activeIndex = ref(0)
 const copiedIndex = ref(-1)
 let copyTimer = null
 
 // 当前激活的那一节（tab 选中项）
 const activeSection = computed(() => props.sections?.[activeIndex.value] || null)
-
-// tab 标题只取 basename，避免路径过长撑爆 tab 栏
-function tabLabel(name) {
-  if (!name) return '未命名'
-  return name.split('/').pop() || name
-}
-
-function langFromFilename(name) {
-  if (!name) return 'xml'
-  const lower = name.toLowerCase()
-  if (lower.endsWith('.vue') || lower.endsWith('.html')) return 'xml'
-  if (lower.endsWith('.ts')) return 'typescript'
-  if (lower.endsWith('.css')) return 'css'
-  if (lower.endsWith('.json')) return 'json'
-  if (lower.endsWith('.js')) return 'javascript'
-  return 'xml'
-}
-
-function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
-
-// 把 .vue 拆成 template/script/style 块，各自用合适语言高亮
-// （比整文件当 xml 更准：<script> 里的 JS、<style> 里的 CSS 也会上色）
-function highlightVue(code) {
-  const blocks = []
-  const re = /<(template|script|style)([^>]*)>([\s\S]*?)<\/\1>/gi
-  let lastIndex = 0
-  let m
-  while ((m = re.exec(code))) {
-    if (m.index > lastIndex) {
-      const between = code.slice(lastIndex, m.index)
-      if (between.trim()) {
-        blocks.push({ lang: 'xml', code: between })
-      } else if (between.length) {
-        // 仅含空白（多为 template/script/style 之间的换行）：原样保留，
-        // 否则这些换行被丢弃，会导致 </template><script> 等标签被拼到同一行
-        blocks.push({ html: escapeHtml(between) })
-      }
-    }
-    const tag = m[1].toLowerCase()
-    const attrs = m[2]
-    let lang = 'xml'
-    if (tag === 'script') {
-      lang = /lang=["']ts["']/i.test(attrs) ? 'typescript' : 'javascript'
-    } else if (tag === 'style') {
-      if (/lang=["'](scss|sass)["']/i.test(attrs)) lang = 'scss'
-      else if (/lang=["']less["']/i.test(attrs)) lang = 'less'
-      else lang = 'css'
-    }
-    const openHtml = hljs.highlight(`<${tag}${attrs}>`, { language: 'xml' }).value
-    const innerHtml = hljs.getLanguage(lang)
-      ? hljs.highlight(m[3], { language: lang }).value
-      : escapeHtml(m[3])
-    const closeHtml = hljs.highlight(`</${tag}>`, { language: 'xml' }).value
-    blocks.push({ html: openHtml + innerHtml + closeHtml })
-    lastIndex = re.lastIndex
-  }
-  if (lastIndex < code.length) {
-    const rest = code.slice(lastIndex)
-    if (rest.trim()) blocks.push({ lang: 'xml', code: rest })
-  }
-  return blocks
-    .map((b) => (b.html != null ? b.html : hljs.highlight(b.code, { language: b.lang }).value))
-    .join('')
-}
-
-// 单节高亮：.vue 走分块逻辑，其余按扩展名整体高亮
-function highlightCode(code, filename) {
-  if (!code) return ''
-  if (filename && filename.toLowerCase().endsWith('.vue')) {
-    try {
-      return highlightVue(code)
-    } catch (e) {
-      return escapeHtml(code)
-    }
-  }
-  const lang = langFromFilename(filename)
-  try {
-    if (hljs.getLanguage(lang)) {
-      return hljs.highlight(code, { language: lang }).value
-    }
-    return hljs.highlightAuto(code).value
-  } catch (e) {
-    return escapeHtml(code)
-  }
-}
 
 async function copySection(i) {
   const code = props.sections?.[i]?.code
