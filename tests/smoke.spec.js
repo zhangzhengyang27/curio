@@ -167,6 +167,28 @@ test.describe('冒烟测试：核心链路', () => {
     expect(tabCount, `技术过滤后应少于全部（全部 ${total}）`).toBeLessThan(total)
   })
 
+  test('点击侧栏子分类会过滤结果并写回 URL', async ({ page }) => {
+    await page.goto('/examples')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+
+    const items = page.locator('.category-item')
+    await expect(items.first()).toBeVisible()
+    // 第 1 项是「全部」，跳过它，取第一个真实子分类
+    const target = items.nth(1)
+    const label = (await target.locator('.item-label').innerText()).trim()
+    const count = Number.parseInt((await target.locator('.item-count').innerText()).replace(/\D/g, ''), 10)
+    expect(count, `子分类「${label}」应有计数`).toBeGreaterThan(0)
+
+    await target.click()
+
+    await expect(page.locator('.category-item.active')).toContainText(label)
+    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).not.toBeNull()
+    // 结果数应等于侧栏里该子分类标注的数量
+    await expect
+      .poll(async () => Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10))
+      .toBe(count)
+  })
+
   test('分页：URL ?page= 生效，且第 2 页内容与第 1 页不同', async ({ page }) => {
     await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible()

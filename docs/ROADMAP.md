@@ -37,6 +37,7 @@
 | 首页延迟加载 registry | `useExampleFilters()` 原先在 setup 阶段就 `ensureRegistryLoaded()`，而它被 App.vue 的**全局顶栏**使用、在所有路由（含首页）都挂载，导致首页拉取全部 11 个 registry 数据分块（合计约 58 KB）。改为按需触发：悬停/打开「示例中心」下拉、聚焦搜索框、或已在 `/examples`。新增 E2E 用例 `首页不为顶栏预载示例注册表` 断言首页该类请求为 0 |
 | 修复冒烟用例的选择器歧义（CI 首跑必挂） | `tests/smoke.spec.js` 里 `page.locator('.search-input')` 在首页会命中 **2** 个元素：顶栏的（App.vue）和首页地球自己的（`components/SearchBox.vue`，在 `EarthView` 中无条件渲染）。dev 模式下因首页渲染慢、断言先跑完而侥幸通过；**生产产物下必然失败**。已改为 `.nav-search .search-input`。这说明「E2E 已恢复」此前并未在 preview 模式下真跑通过（CI 从未执行，见 P0） |
 | 抽出画廊筛选状态机（P1 拆巨石的一部分） | `ExampleGallery.vue` 的 script 从约 173 行降到 23 行，筛选/分页/URL 同步全部迁到新增的 `src/examples/composables/useGalleryFilters.js`。**先补测试再动手**：动手前为「技术标签切换」「分页」补了 E2E（此前这两块零覆盖），改完 12 条用例在 dev 与 preview 下都通过。⚠ 注意 E2E 覆盖的是 URL 驱动的状态（`?tech=` / `?page=` / `?search=`），**点击侧栏子分类**目前仍无覆盖 |
+| 拆出侧栏与分页组件 + 补子分类点击 E2E | `ExampleGallery.vue` 541 → 266 行：侧栏与分页（模板 + 各自样式）拆成 `GalleryFilterSidebar.vue` / `GalleryPagination.vue`，两者都是纯展示组件（props 进、事件出）。同时补上「点击侧栏子分类」E2E，至此画廊的四种筛选入口（技术标签 / 子分类 / 关键词 / 分页）都有覆盖。**样式搬迁用脚本按选择器切片、不手抄**：400 行 CSS 手抄极易出错 |
 | 画廊过滤记忆化 + 补上关键词搜索的 E2E | `ExampleGallery.vue` 的 `techTabs` / `availableSubCategories` / `filteredExamples` 原本各自全量扫 1417 条，且 `subCategoryDefinitions` 有 17 条正则、关键词匹配还逐条 `toLowerCase` —— 每敲一个字整链重算。改为一次性建索引（按技术分桶 + 预计算小写检索串）。**等价性已用真实数据校验**：技术分桶 5 组计数全等、子分类 17 项计数全等、8 个关键词的命中集合全等。同时新增 E2E「按关键词过滤」用例 —— 此前搜索过滤零测试覆盖。⚠ 选测试关键词时注意：标题/描述/标签多为中文，实测 `water` / `camera` 在这些字段里命中数为 0 |
 
 ---
@@ -55,7 +56,7 @@
 
 | 项 | 说明 |
 |---|---|
-| 拆分巨石组件 | 已抽出 `ExampleCard.vue`（895 → 671 行）与 `useGalleryFilters.js`（筛选状态机：URL↔状态同步、过滤、分页，205 行）：`ExampleGallery.vue` 现为 **541 行 / script 仅 23 行**，剩余 400 余行是 scoped 样式。**仍待拆**：`ExampleGallery.vue` 的侧栏与分页模板、`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行）。拆分需配合视觉/交互回归验证，属独立任务 |
+| 拆分巨石组件 | `ExampleGallery.vue` **已拆完**：895 → **266 行**。分三步走 —— ① 抽出 `ExampleCard.vue`（→671）；② 抽出 `useGalleryFilters.js`（筛选状态机 / URL 同步 / 分页，205 行，→541）；③ 抽出 `GalleryFilterSidebar.vue`（214 行）与 `GalleryPagination.vue`（120 行），样式按选择器整体切片搬迁（未手抄，避免抄错）。**仍待拆**：`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行）。拆分需配合视觉/交互回归验证，属独立任务 |
 | 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 **3346 个文件 / 1497 个 `.vue`**，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 清理 `console.log` | 218 个示例文件含调试日志，建议对应用层代码启用 `no-console`，示例作为参考代码保留 |
