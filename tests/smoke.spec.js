@@ -227,6 +227,37 @@ test.describe('冒烟测试：核心链路', () => {
     expect((await code.innerText()).length).toBeGreaterThan(100)
   })
 
+  test('「查看代码」弹窗：打开时锁定背景滚动，关闭后必须还原', async ({ page }) => {
+    await page.goto(DEMO_PATH)
+
+    await page.locator('.code-btn').evaluate((el) => el.click())
+    await expect(page.locator('.code-modal')).toBeVisible()
+
+    // 复制按钮可用 == 抽屉确实拿到了当前节的源码；日后若把 Header 抽成子组件，
+    // 最容易丢的就是这个 prop（丢了就会变成禁用态）
+    await expect(page.locator('.code-modal .header-copy')).toBeEnabled()
+
+    // 打开时锁定背景滚动，否则弹窗后面的页面还能滚
+    expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden')
+
+    await page.locator('.code-modal .close-btn').click()
+    await expect(page.locator('.code-modal')).toHaveCount(0)
+
+    // 关键：关闭后必须还原。泄漏了整页就再也滚不动，且当场很难发现
+    expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+  })
+
+  test('「查看代码」弹窗：ESC 可关闭并解绑监听', async ({ page }) => {
+    await page.goto(DEMO_PATH)
+
+    await page.locator('.code-btn').evaluate((el) => el.click())
+    await expect(page.locator('.code-modal')).toBeVisible()
+
+    await page.keyboard.press('Escape')
+    await expect(page.locator('.code-modal')).toHaveCount(0)
+    expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+  })
+
   test('百度地图页按是否配置 AK 进入就绪或降级，而非卡在加载态', async ({ page }) => {
     const akConfigured = !!readBMapAk()
 

@@ -56,7 +56,7 @@
 
 | 项 | 说明 |
 |---|---|
-| 拆分巨石组件 | `ExampleGallery.vue` **已拆完**：895 → **266 行**。分三步走 —— ① 抽出 `ExampleCard.vue`（→671）；② 抽出 `useGalleryFilters.js`（筛选状态机 / URL 同步 / 分页，205 行，→541）；③ 抽出 `GalleryFilterSidebar.vue`（214 行）与 `GalleryPagination.vue`（120 行），样式按选择器整体切片搬迁（未手抄，避免抄错）。**仍待拆**：`CodeDrawer.vue`（675 行）、`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行）。拆分需配合视觉/交互回归验证，属独立任务 |
+| 拆分巨石组件 | `ExampleGallery.vue` **已拆完**：895 → **266 行**。分三步走 —— ① 抽出 `ExampleCard.vue`（→671）；② 抽出 `useGalleryFilters.js`（筛选状态机 / URL 同步 / 分页，205 行，→541）；③ 抽出 `GalleryFilterSidebar.vue`（214 行）与 `GalleryPagination.vue`（120 行），样式按选择器整体切片搬迁（未手抄，避免抄错）。**`CodeDrawer.vue` 也已拆完**：675 → **317 行** —— 抽出 `CodeDrawerHeader.vue`（182 行，纯展示：复制/关闭以事件抛出，不碰剪贴板、不持有 activeIndex），并把 104 行**全局**高亮配色移出组件到 `src/styles/code-highlight.css`（在组件里挂全局 `<style>` 本身就是债；改用 JS `import` 引入，仍随组件懒加载、不进首屏）。动手前**先补特征测试**：新增「打开时锁定背景滚动、关闭后必须还原」与「ESC 可关闭」两条 —— 此前 CodeDrawer 的交互行为零覆盖，而滚动锁泄漏属于改坏了当场看不出、事后整页滚不动的那类 bug。顺带修了 `copyTimer` 未在 `onUnmounted` 清理（overflow 与 keydown 都清了，唯独漏它）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务 |
 | 类型检查（已落地，无需推进） | **实测修正**：`npm run typecheck`（`vue-tsc --noEmit`）已覆盖 **3346 个文件 / 1497 个 `.vue`**，**0 error**、退出码 0。此前误以为「全量 vue-tsc 不可用」并加了一份只查 `.ts` 的收敛配置，已删除。CI 现执行全量检查 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 清理 `console.log` | 218 个示例文件含调试日志，建议对应用层代码启用 `no-console`，示例作为参考代码保留 |

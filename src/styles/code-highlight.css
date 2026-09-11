@@ -1,0 +1,104 @@
+.code-modal .hljs {
+  color: var(--tv-on-surface);
+  background: transparent;
+}
+
+.code-modal .hljs-comment,
+.code-modal .hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.code-modal .hljs-keyword,
+.code-modal .hljs-selector-tag,
+.code-modal .hljs-literal,
+.code-modal .hljs-doctag {
+  color: #cf222e;
+}
+
+.code-modal .hljs-string,
+.code-modal .hljs-regexp,
+.code-modal .hljs-addition {
+  color: #0a3069;
+}
+
+.code-modal .hljs-number,
+.code-modal .hljs-meta {
+  color: #0550ae;
+}
+
+.code-modal .hljs-title,
+.code-modal .hljs-title.function_,
+.code-modal .hljs-section,
+.code-modal .hljs-name {
+  color: #8250df;
+}
+
+.code-modal .hljs-attr,
+.code-modal .hljs-attribute,
+.code-modal .hljs-tag,
+.code-modal .hljs-built_in,
+.code-modal .hljs-type {
+  color: #116329;
+}
+
+.code-modal .hljs-symbol,
+.code-modal .hljs-variable,
+.code-modal .hljs-template-variable,
+.code-modal .hljs-bullet {
+  color: #953800;
+}
+
+.code-modal .hljs-deletion {
+  color: #82071e;
+}
+
+/* 暗色主题覆盖 */
+html.dark .code-modal .hljs-comment,
+html.dark .code-modal .hljs-quote {
+  color: #8b949e;
+}
+
+html.dark .code-modal .hljs-keyword,
+html.dark .code-modal .hljs-selector-tag,
+html.dark .code-modal .hljs-literal,
+html.dark .code-modal .hljs-doctag {
+  color: #ff7b72;
+}
+
+html.dark .code-modal .hljs-string,
+html.dark .code-modal .hljs-regexp,
+html.dark .code-modal .hljs-addition {
+  color: #a5d6ff;
+}
+
+html.dark .code-modal .hljs-number,
+html.dark .code-modal .hljs-meta {
+  color: #79c0ff;
+}
+
+html.dark .code-modal .hljs-title,
+html.dark .code-modal .hljs-title.function_,
+html.dark .code-modal .hljs-section,
+html.dark .code-modal .hljs-name {
+  color: #d2a8ff;
+}
+
+html.dark .code-modal .hljs-attr,
+html.dark .code-modal .hljs-attribute,
+html.dark .code-modal .hljs-tag,
+html.dark .code-modal .hljs-built_in,
+html.dark .code-modal .hljs-type {
+  color: #7ee787;
+}
+
+html.dark .code-modal .hljs-symbol,
+html.dark .code-modal .hljs-variable,
+html.dark .code-modal .hljs-template-variable,
+html.dark .code-modal .hljs-bullet {
+  color: #ffa657;
+}
+
+html.dark .code-modal .hljs-deletion {
+  color: #ffa198;
+}

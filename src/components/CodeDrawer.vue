@@ -9,87 +9,14 @@
         class="code-modal"
         @click.stop
       >
-        <div class="code-header">
-          <div class="code-title">
-            <svg
-              class="code-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-            <div class="title-text">
-              <span class="title-name">{{ title }}</span>
-            </div>
-          </div>
-          <div class="code-actions">
-            <button
-              class="action-btn header-copy"
-              :disabled="!activeSection?.code"
-              :title="copiedIndex === activeIndex ? '已复制' : '复制代码'"
-              @click="copySection(activeIndex)"
-            >
-              <svg
-                v-if="copiedIndex !== activeIndex"
-                class="action-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect
-                  x="9"
-                  y="9"
-                  width="13"
-                  height="13"
-                  rx="2"
-                />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-              <svg
-                v-else
-                class="action-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <span>{{ copiedIndex === activeIndex ? '已复制' : '复制' }}</span>
-            </button>
-            <button
-              class="action-btn close-btn"
-              aria-label="关闭"
-              title="关闭"
-              @click="$emit('close')"
-            >
-              <svg
-                class="action-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line
-                  x1="18"
-                  y1="6"
-                  x2="6"
-                  y2="18"
-                />
-                <line
-                  x1="6"
-                  y1="6"
-                  x2="18"
-                  y2="18"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <CodeDrawerHeader
+          :title="title"
+          :active-section="activeSection"
+          :active-index="activeIndex"
+          :copied-index="copiedIndex"
+          @copy="copySection"
+          @close="$emit('close')"
+        />
 
         <div
           v-if="sections && sections.length > 1"
@@ -143,9 +70,11 @@
     </div>
   </Transition>
 </template>
-
 <script setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
+import CodeDrawerHeader from './CodeDrawerHeader.vue'
+// 高亮配色是全局样式（选择器已用 .code-modal 限定），独立成文件，不留在组件里
+import '../styles/code-highlight.css'
 // 语法高亮逻辑已抽到 useCodeHighlight（纯逻辑，无 UI 依赖）
 import { useCodeHighlight } from '../composables/useCodeHighlight.js'
 
@@ -225,6 +154,11 @@ watch(
 onUnmounted(() => {
   document.body.style.overflow = ''
   window.removeEventListener('keydown', handleKeydown)
+  // 与上面两项保持一致：卸载时也要清掉复制状态的定时器
+  if (copyTimer) {
+    clearTimeout(copyTimer)
+    copyTimer = null
+  }
 })
 
 // 切换示例（sections 引用变化）时回到第一个 tab
@@ -243,7 +177,6 @@ watch(activeIndex, () => {
   }
 })
 </script>
-
 <style scoped>
 .code-modal-mask {
   position: fixed;
@@ -267,89 +200,6 @@ watch(activeIndex, () => {
   border: 1px solid var(--tv-outline-variant);
   border-radius: var(--tv-radius-lg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
-}
-
-.code-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tv-sm);
-  padding: var(--tv-sm) var(--tv-md);
-  border-bottom: 1px solid var(--tv-outline-variant);
-  flex-shrink: 0;
-}
-
-.code-title {
-  display: flex;
-  align-items: center;
-  gap: var(--tv-sm);
-  min-width: 0;
-}
-
-.code-icon {
-  width: 18px;
-  height: 18px;
-  color: var(--tv-primary);
-  flex-shrink: 0;
-}
-
-.title-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.title-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--tv-on-surface);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.code-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--tv-xs);
-  flex-shrink: 0;
-}
-
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.action-btn:hover:not(:disabled) {
-  background: var(--tv-surface-container);
-  color: var(--tv-primary);
-  border-color: var(--tv-primary);
-}
-
-.action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.action-icon {
-  width: 15px;
-  height: 15px;
-}
-
-.close-btn {
-  padding: 0;
-  width: 28px;
-  justify-content: center;
 }
 
 .code-body {
@@ -462,114 +312,5 @@ watch(activeIndex, () => {
 .code-modal-leave-to .code-modal {
   transform: scale(0.96);
   opacity: 0;
-}
-</style>
-
-<!-- 语法高亮配色：用项目 --tv-* 语义色，避免引入 hljs 预置主题污染全局；
-     作用域限定在 .code-modal 下，跟随 html.dark 自动切换。 -->
-<style>
-.code-modal .hljs {
-  color: var(--tv-on-surface);
-  background: transparent;
-}
-
-.code-modal .hljs-comment,
-.code-modal .hljs-quote {
-  color: #6b7280;
-  font-style: italic;
-}
-
-.code-modal .hljs-keyword,
-.code-modal .hljs-selector-tag,
-.code-modal .hljs-literal,
-.code-modal .hljs-doctag {
-  color: #cf222e;
-}
-
-.code-modal .hljs-string,
-.code-modal .hljs-regexp,
-.code-modal .hljs-addition {
-  color: #0a3069;
-}
-
-.code-modal .hljs-number,
-.code-modal .hljs-meta {
-  color: #0550ae;
-}
-
-.code-modal .hljs-title,
-.code-modal .hljs-title.function_,
-.code-modal .hljs-section,
-.code-modal .hljs-name {
-  color: #8250df;
-}
-
-.code-modal .hljs-attr,
-.code-modal .hljs-attribute,
-.code-modal .hljs-tag,
-.code-modal .hljs-built_in,
-.code-modal .hljs-type {
-  color: #116329;
-}
-
-.code-modal .hljs-symbol,
-.code-modal .hljs-variable,
-.code-modal .hljs-template-variable,
-.code-modal .hljs-bullet {
-  color: #953800;
-}
-
-.code-modal .hljs-deletion {
-  color: #82071e;
-}
-
-/* 暗色主题覆盖 */
-html.dark .code-modal .hljs-comment,
-html.dark .code-modal .hljs-quote {
-  color: #8b949e;
-}
-
-html.dark .code-modal .hljs-keyword,
-html.dark .code-modal .hljs-selector-tag,
-html.dark .code-modal .hljs-literal,
-html.dark .code-modal .hljs-doctag {
-  color: #ff7b72;
-}
-
-html.dark .code-modal .hljs-string,
-html.dark .code-modal .hljs-regexp,
-html.dark .code-modal .hljs-addition {
-  color: #a5d6ff;
-}
-
-html.dark .code-modal .hljs-number,
-html.dark .code-modal .hljs-meta {
-  color: #79c0ff;
-}
-
-html.dark .code-modal .hljs-title,
-html.dark .code-modal .hljs-title.function_,
-html.dark .code-modal .hljs-section,
-html.dark .code-modal .hljs-name {
-  color: #d2a8ff;
-}
-
-html.dark .code-modal .hljs-attr,
-html.dark .code-modal .hljs-attribute,
-html.dark .code-modal .hljs-tag,
-html.dark .code-modal .hljs-built_in,
-html.dark .code-modal .hljs-type {
-  color: #7ee787;
-}
-
-html.dark .code-modal .hljs-symbol,
-html.dark .code-modal .hljs-variable,
-html.dark .code-modal .hljs-template-variable,
-html.dark .code-modal .hljs-bullet {
-  color: #ffa657;
-}
-
-html.dark .code-modal .hljs-deletion {
-  color: #ffa198;
 }
 </style>
