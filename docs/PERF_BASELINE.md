@@ -75,7 +75,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 
 | 机会 | 预估收益 | 说明 |
 |---|---|---|
-| 首页延迟加载 registry | ~43 KB | 首页加载了 3+ 个 registry 文件，源于顶栏搜索使用的 `useExampleFilters`。可延迟到进入 `/examples` 或聚焦搜索框时再加载 |
+| ~~首页延迟加载 registry~~ | **已落地** | `useExampleFilters()` 原先在 setup 阶段就 `ensureRegistryLoaded()`，而它被 App.vue 的**全局顶栏**使用、在所有路由（含首页）都挂载，于是首页会拉全部 11 个 registry。现改为调用方按需触发（悬停/打开下拉、聚焦搜索框、已在 `/examples`）。11 个数据分块合计约 **58 KB**（未压缩 678 KB） |
 | 示例中心封面图 | 343 KB / 16 张 | 已用 `loading="lazy"`，但首屏 16 张仍会加载。可缩小封面尺寸或改用更小的预览图 |
 | `vendor-three` | 369 KB | 首页必需，进一步压缩需裁剪 three.js 构建（风险高，不建议） |
 | 产物总量 34 MB / 3203 chunks | — | 这些是**按需加载**的示例块，不在首屏路径上，不影响用户体验。不必为了减小总量而动它们 |
@@ -84,6 +84,21 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 用户每次只下载其中极小一部分。优化目标应该是**首屏与常用路径**，而不是磁盘上的产物大小。
 
 ---
+
+### 首页延迟加载 registry 的实测
+
+落地后首页：**传输总量 523 KB / JS 517 KB / 26 个请求**（文档基线为 539 KB / 533 KB）。
+
+> ⚠ 这个差值（−16 KB）**小于** 11 个分块的 58 KB，说明本轮测量环境噪声较大
+> （同一份产物测出的 FCP 是 2132 ms，而文档基线是 716 ms，差 3 倍 —— 测量时机器有负载）。
+> 因此**不要把 −16 KB 当作准确收益**，它只说明「确实降了」。
+
+真正可靠的证据是 `tests/smoke.spec.js` 里的
+**「首页不为顶栏预载示例注册表」** 用例：它在 dev 与 preview 两种模式下都断言
+首页发出的 registry 数据分块请求为 **0**。这比 KB 数字更抗噪，也是防回归的主力。
+
+分块识别要**排除 `registry/index.js`**：那是 barrel，被 `useExampleFilters` 静态导入，
+首页请求它属于正常；只有 11 个数据分块才该被拦。
 
 ## 4. 防回归
 

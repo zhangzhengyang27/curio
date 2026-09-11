@@ -69,7 +69,15 @@ export function getSubCategoriesByTech(techKey) {
 }
 
 export function useExampleFilters() {
-  ensureRegistryLoaded()
+  // 刻意 **不在** setup 阶段触发 ensureRegistryLoaded()。
+  //
+  // 本 composable 被 App.vue 的全局顶栏使用，而顶栏在所有路由（含首页）都会挂载；
+  // 在 setup 里触发一次，就等于把 11 个 registry（约 43 KB，见 docs/PERF_BASELINE.md）
+  // 钉进首屏依赖图 —— 而首页根本不需要它，顶栏的示例分类菜单要等用户打开才渲染。
+  //
+  // 约定：需要数据时由调用方在合适时机主动调用返回的 ensureRegistryLoaded
+  // （悬停/打开下拉、聚焦搜索框、进入 /examples）。/examples 下的页面本身
+  // 也会在 setup 阶段调用 ensureRegistryLoaded，不依赖这里。
   const allExamples = computed(() => allExamplesList.value)
 
   const techList = computed(() => {
@@ -86,6 +94,7 @@ export function useExampleFilters() {
     subCategoryDefinitions,
     techList,
     registryReady,
-    getSubCategoriesByTech
+    getSubCategoriesByTech,
+    ensureRegistryLoaded
   }
 }

@@ -53,6 +53,8 @@
       <div
         ref="examplesDropdownRef"
         class="nav-dropdown"
+        @mouseenter="preloadExamplesRegistry"
+        @focusin="preloadExamplesRegistry"
       >
         <span
           :class="['dropdown-trigger', { active: isExamplesRoute }]"
@@ -113,6 +115,7 @@
           class="search-input"
           placeholder="搜索示例..."
           @input="updateSearchQuery"
+          @focus="preloadExamplesRegistry"
         >
       </div>
 
@@ -198,9 +201,10 @@ import { useExampleFilters } from './examples/composables/useExampleFilters.js'
 const themeStore = useThemeStore()
 const route = useRoute()
 const router = useRouter()
-const { techList } = useExampleFilters()
-
-onMounted(() => themeStore.init())
+// 顶栏在所有路由（含首页）都挂载，因此这里只取 techList，不触发 registry 加载。
+// 加载推迟到「用户真的要看示例分类」时：悬停/聚焦下拉、聚焦搜索框、或已在 /examples。
+const { techList, ensureRegistryLoaded } = useExampleFilters()
+const preloadExamplesRegistry = ensureRegistryLoaded
 
 const showExamplesDropdown = ref(false)
 const examplesDropdownRef = ref(null)
@@ -208,11 +212,19 @@ const exampleSearch = ref('')
 const exampleTechs = computed(() => techList.value.filter(t => t.key !== 'all'))
 const isExamplesRoute = computed(() => route.path === '/examples' || route.path.startsWith('/examples/'))
 
+onMounted(() => {
+  themeStore.init()
+  // 直接以 /examples 落地时，分类菜单马上就要用；其余路由一律不预载
+  if (isExamplesRoute.value) preloadExamplesRegistry()
+})
+
 watch(() => route.query.search, val => {
   exampleSearch.value = val || ''
 }, { immediate: true })
 
 function toggleExamplesDropdown() {
+  // 触屏 / 键盘操作不触发 mouseenter，这里兜底
+  if (!showExamplesDropdown.value) preloadExamplesRegistry()
   showExamplesDropdown.value = !showExamplesDropdown.value
 }
 
