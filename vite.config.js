@@ -136,6 +136,13 @@ export default defineConfig({
               priority: 100,
             },
             { name: 'vendor-cesium', test: /node_modules[\\/](@cesium|cesium)[\\/]/, priority: 90 },
+            // jsm-compat 的 CSS2DRenderer 被首页（useLabels）与海量示例共享。
+            // 实测（2026-09）：不设专属分组时，Rolldown 会把它与 three-globe 等模块搅进
+            // 同一个 chunk，首页为拿两个 CSS2D 类被迫下载整个 three-globe（首屏 +155 KB）。
+            // ⚠ 只圈这一个文件：jsm-compat 其余部分混有顶层就访问 DOM 的示例应用
+            //（mygrapics/bezier 等的 document.querySelector('canvas').getContext），
+            // 大粒度分组会让首页连带执行它们而白屏（实测复现过）。
+            { name: 'vendor-css2d', test: /[\\/]jsm-compat[\\/]renderers[\\/]CSS2DRenderer\.js/, priority: 90 },
             // ⚠ 刻意不为 @sparkjsdev/spark 建分组。
             // 实测（tests/perf.spec.js）：它只被单个示例动态 import，
             // 但一旦分组就变成共享 chunk，会被 Vite 提升进首页的 modulepreload
@@ -144,7 +151,14 @@ export default defineConfig({
             { name: 'vendor-web-ifc', test: /node_modules[\\/]web-ifc[\\/]/, priority: 80 },
             { name: 'vendor-postprocessing', test: /node_modules[\\/]postprocessing[\\/]/, priority: 80 },
             { name: 'vendor-3d-tiles', test: /node_modules[\\/]3d-tiles-renderer[\\/]/, priority: 80 },
-            { name: 'vendor-three-globe', test: /node_modules[\\/]three-globe[\\/]/, priority: 80 },
+            { name: 'vendor-three-globe',
+              test: /node_modules[\\/]three-globe[\\/]/,
+              priority: 80,
+              // ⚠ 必须关闭递归捕获：three-globe 的依赖（@tweenjs/tween、d3-*）是首页
+              // 自己也在用的库，被吞进本组后，首页为拿 Tween/d3-scale 被迫下载
+              // 整个 three-globe（首屏 +155 KB，2026-09 实测）。
+              // 关闭后 tween/d3 归各自分组或默认块，three-globe 仅在真正用到时加载。
+              includeDependenciesRecursively: false },
             { name: 'vendor-three-mesh-bvh', test: /node_modules[\\/]three-mesh-bvh[\\/]/, priority: 80 },
             { name: 'vendor-echarts', test: /node_modules[\\/](echarts|zrender)[\\/]/, priority: 80 },
             { name: 'vendor-gsap', test: /node_modules[\\/]gsap[\\/]/, priority: 80 },
