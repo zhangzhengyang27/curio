@@ -348,8 +348,8 @@ function toggleRealisticEarth() {
 
   if (isRealisticEarth) {
     // 切换到真实地球：加载蓝大理石纹理 + 地形凹凸贴图
-    earth.setTexture('/textures/earth-blue-marble.jpg')
-    earth.setBumpMap('/textures/earth-topology.png')
+    earth.setTexture('/textures/earth-blue-marble.webp')
+    earth.setBumpMap('/textures/earth-topology.webp')
     // 隐藏国家 Mesh 色块，让真实贴图可见
     earth.meshArr.forEach(m => {
       m.material.transparent = true
