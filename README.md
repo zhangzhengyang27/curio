@@ -2,7 +2,7 @@
 
 基于 Vue 3 + Vite + Three.js + Cesium 的 **3D 数据可视化项目**，包含两条主线：
 
-1. **首页地球应用**：可交互的 3D 地球，叠加人口、GDP、航线、地震、疫情、灯光等多类可视化图层，含时间轴、图层管理、对比视图。
+1. **首页地球应用**：可交互的 3D 地球，叠加人口、GDP、航线、地震、疫情、灯光等多类可视化图层，含时间轴、图层管理、对比视图，以及**数据巡游**（一键自动导览：相机逐站飞行、逐层点亮、字幕解说，`?tour=` 链接可分享，见 [`docs/TOUR_ROUTES.md`](docs/TOUR_ROUTES.md)）。
 2. **示例中心**：聚合 **11 个来源、1417 条** Three.js / Cesium / WebGL / 图形学示例的可浏览画廊，支持按技术栈与子分类筛选、搜索、分页、查看源码。
 
 > 当前范围已冻结：**不再接入新的示例来源**，先收口存量并补齐工程治理。
@@ -107,6 +107,7 @@ src/
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | 部署指引：产物形态、托管硬性要求、发布前校验 |
 | [`docs/THREE_UPGRADE.md`](docs/THREE_UPGRADE.md) | three.js 兼容层机制与切回 npm 的步骤 |
 | [`docs/PERF_BASELINE.md`](docs/PERF_BASELINE.md) | 首屏/画廊性能基线与测量方法（`npm run test:e2e` 含 `性能基线` 用例） |
+| [`docs/TOUR_ROUTES.md`](docs/TOUR_ROUTES.md) | 数据巡游分镜与路线数据（改文案/镜头只改 `src/three/tours/*.json`） |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | 提交规范、评审要求、红线 |
 | [`.trae/specs/`](.trae/specs/) · [`.trae/documents/`](.trae/documents/) | 历史 spec 与实施计划归档（早期接入各示例源时的规格与任务清单）。**路径为当时环境的绝对路径，已失效，仅作决策留痕** |
 
