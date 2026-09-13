@@ -40,6 +40,7 @@
         :on-record-gif="handleRecordGif"
         :on-bloom-toggle="handleBloomToggle"
         :on-realistic-earth-toggle="handleRealisticEarthToggle"
+        :on-tour="openTourPicker"
       />
     </aside>
 
@@ -64,6 +65,13 @@
     <LegendBar />
     <LoadingOverlay ref="loadingRef" />
     <ContextMenu :on-fly-to="handleFlyTo" />
+    <TourOverlay
+      v-if="tourUIVisible"
+      :tour="tour"
+      :routes="tourRoutes ?? []"
+      @pick="handleTourPick"
+      @close="handleTourClose"
+    />
 
     <input
       ref="fileInput"
@@ -76,7 +84,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, shallowRef, computed, defineAsyncComponent, onMounted, onUnmounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import EarthCanvas from '../components/EarthCanvas.vue'
 import SearchBox from '../components/SearchBox.vue'
 import InfoPanel from '../components/InfoPanel.vue'
@@ -88,6 +97,7 @@ import TimelineSlider from '../components/TimelineSlider.vue'
 import LegendBar from '../components/LegendBar.vue'
 import LoadingOverlay from '../components/LoadingOverlay.vue'
 import CompareView from './CompareView.vue'
+import { useTourEngine } from '../composables/useTourEngine.js'
 import { useEarthStore } from '../stores/useEarthStore.js'
 import { useLayerStore } from '../stores/useLayerStore.js'
 import { useTimelineStore } from '../stores/useTimelineStore.js'
@@ -275,6 +285,83 @@ function handleBloomToggle() {
 function handleRealisticEarthToggle() {
   return earthCanvasRef.value?.toggleRealisticEarth()
 }
+
+// === 数据巡游（分镜稿与路线数据见 docs/TOUR_ROUTES.md） ===
+const TourOverlay = defineAsyncComponent(() => import('../components/TourOverlay.vue'))
+const routeInfo = useRoute()
+const router = useRouter()
+
+const tour = useTourEngine({
+  switchMode: (mode) => earthCanvasRef.value?.switchVisualization(mode),
+  flyTo: (lon, lat, duration) => earthCanvasRef.value?.flyTo(lon, lat, duration)
+})
+const tourRoutes = shallowRef(null)
+const tourPickerVisible = ref(false)
+const tourUIVisible = computed(() => tourPickerVisible.value || tour.status.value !== 'idle')
+
+async function openTourPicker() {
+  if (!tourRoutes.value) {
+    const mod = await import('../three/tours/routes.js')
+    tourRoutes.value = mod.routes
+  }
+  tourPickerVisible.value = true
+}
+
+function handleTourPick(r) {
+  tourPickerVisible.value = false
+  tour.start(r, 0)
+}
+
+function handleTourClose() {
+  tourPickerVisible.value = false
+  tour.stop()
+}
+
+// 播放开始时暂停自转并记住现场；退出/播完时还原可视化模式与自转
+let tourSavedViz = null
+let tourSavedRotate = null
+watch(tour.status, (s) => {
+  if (s !== 'idle' && tourSavedViz === null) {
+    tourSavedViz = earthStore.currentVisualization
+    tourSavedRotate = earthStore.isRotating
+    earthStore.isRotating = false
+  }
+  if (s === 'idle' && tourSavedViz !== null) {
+    earthStore.isRotating = tourSavedRotate
+    if (tourSavedViz !== earthStore.currentVisualization) earthCanvasRef.value?.switchVisualization(tourSavedViz)
+    tourSavedViz = null
+  }
+})
+
+// URL 状态：?tour=<id>&step=<n>（step 为 1-based），可刷新续播、可分享
+watch([tour.status, tour.stepIndex], ([status, idx]) => {
+  if (status === 'idle' || !tour.route.value) {
+    if (routeInfo.query.tour !== undefined) router.replace({ query: {} })
+    return
+  }
+  const next = { tour: tour.route.value.id, step: String(idx + 1) }
+  if (routeInfo.query.tour !== next.tour || routeInfo.query.step !== next.step) {
+    router.replace({ query: next })
+  }
+})
+
+// 分享链接直达：定位到指定步骤但不自动播放
+if (routeInfo.query.tour) {
+  import('../three/tours/routes.js')
+    .then((mod) => {
+      const r = mod.routes.find((x) => x.id === routeInfo.query.tour)
+      const step = Math.max(1, Number(routeInfo.query.step) || 1)
+      if (r) tour.loadAt(r, step - 1)
+    })
+    .catch(() => {})
+}
+
+// 播放中用户拖拽地球 → 自动暂停，把控制权还给用户
+watch(earthCanvasRef, (val) => {
+  val?.getControls?.()?.addEventListener('start', () => {
+    if (tour.status.value === 'playing') tour.pause()
+  })
+}, { once: true })
 
 if (typeof window !== 'undefined') {
   const hash = window.location.hash.replace('#', '')
