@@ -428,7 +428,7 @@ function clearRealisticHighlight() {
   realisticHighlightMesh = null
 }
 
-defineExpose({ flyTo: (lon, lat) => flyToFn?.(lon, lat), getRenderer: () => renderer, getControls: () => controls, switchVisualization, toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
+defineExpose({ flyTo: (lon, lat, duration) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization, toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
 
 // === Timeline year watch — GDP柱状动画 ===
 const stopWatch = watch(() => timelineStore.currentYear, (year) => {
