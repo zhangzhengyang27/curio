@@ -79,7 +79,7 @@
 | 示例转换 | `convert-*.js` / `convert-*.cjs`、`migrate-mygrapics-cleanup.cjs`、`sync-vue-runners.js`、`gen-cesium-shim.js` | 把外部示例源批量转成 Vue 组件；产物已入库，源码目录未必还在 |
 | 修复补丁 | `fix-base-var-declarations*.cjs`、`fix-conversion-artifacts.js`、`fix-graphics-cleanup.cjs`、`fix-missing-controls.cjs`、`fix-webgl-conversion-bugs.cjs`、`patch-convert-*.cjs`、`upgrade-glmatrix-legacy.cjs` | 针对当时转换产物的一次性修正，已完成 |
 | 诊断 / 试验 | `debug-*.js/mjs`、`build-diagnostics.js`、`diag-failures.js`、`scan-*.js`、`test-convert.js`、`test-dedup.mjs`、`test-function-map.js`、`test-implicit-decl.mjs` | 一次性排查工具 |
-| 历史校验 | `verify-examples*.py`、`verify-godrays.py`、`verify-webcam.py`、`verify-earth-lessons.py`、`verify-webgl-examples.cjs`、`verify-three-cesium-vue-examples.js` | 早于当前 CI 校验体系的自建脚本，已被 `verify-*.mjs` 取代，保留作参考 |
+| 历史校验 | `verify-examples*.py`、`verify-godrays.py`、`verify-webcam.py`、`verify-earth-lessons.py`、`verify-webgl-examples.cjs`、`verify-three-cesium-vue-examples.js`、`test-*-cesium*.py`（原在 `tests/`，2026-09 迁入）、`verify-examples.mjs`（早期截图脚本，`screenshot-examples.mjs` 的前身，写死端口 5183） | 早于当前 CI 校验体系的自建脚本，已被 `verify-*.mjs` 取代，保留作参考 |
 | 数据清单 | `threejs-official-assets-manifest.json`、`threejs-official-manual-review.json` | 仅被 `legacy/` 内的脚本读取 |
 
 > ⚠ 归档时已同步修正 `legacy/` 内指向 `scripts/` 的硬编码路径。
