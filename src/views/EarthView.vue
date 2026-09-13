@@ -52,21 +52,37 @@
       <button
         v-for="mode in vizModes"
         :key="mode.key"
-        :class="['viz-btn', { active: earthStore.currentVisualization === mode.key }]"
+        :class="['viz-btn', { active: earthStore.currentVisualization === mode.key, loading: earthStore.vizLoading === mode.key }]"
         @click="mode.key === 'import' ? openFileImport() : switchViz(mode.key)"
       >
         <span
-          v-if="mode.icon"
+          v-if="earthStore.vizLoading === mode.key"
+          class="viz-icon viz-spinner"
+          aria-label="加载中"
+        />
+        <span
+          v-else-if="mode.icon"
           class="viz-icon"
         >{{ mode.icon }}</span>
         <span>{{ mode.label }}</span>
       </button>
     </div>
 
+    <!-- 异步图层加载提示：非阻塞；巡游模式下底栏隐藏，此 chip 仍可见 -->
+    <Transition name="fade">
+      <div
+        v-if="earthStore.vizLoading"
+        class="viz-loading tv-glass-panel"
+        data-testid="viz-loading"
+      >
+        <span class="viz-loading-spinner" />
+        <span>正在加载「{{ vizLoadingLabel }}」数据…</span>
+      </div>
+    </Transition>
+
     <ComparePanel />
     <TimelineSlider v-if="!tourUIVisible" />
     <LegendBar />
-    <LoadingOverlay ref="loadingRef" />
     <ContextMenu :on-fly-to="handleFlyTo" />
     <TourOverlay
       v-if="tourUIVisible"
@@ -98,7 +114,6 @@ import Toolbar from '../components/Toolbar.vue'
 import LayerPanel from '../components/LayerPanel.vue'
 import TimelineSlider from '../components/TimelineSlider.vue'
 import LegendBar from '../components/LegendBar.vue'
-import LoadingOverlay from '../components/LoadingOverlay.vue'
 import CompareView from './CompareView.vue'
 import { useTourEngine } from '../composables/useTourEngine.js'
 import { useEarthStore } from '../stores/useEarthStore.js'
@@ -111,7 +126,6 @@ const timelineStore = useTimelineStore()
 const earthCanvasRef = ref(null)
 const splitMode = ref(false)
 const fileInput = ref(null)
-const loadingRef = ref(null)
 
 const vizModes = [
   { key: 'gdp', label: 'GDP', icon: '💰' },
@@ -127,6 +141,8 @@ const vizModes = [
   { key: 'import', label: '导入数据', icon: '📁' },
   { key: 'default', label: '默认', icon: '🌍' }
 ]
+
+const vizLoadingLabel = computed(() => vizModes.find(m => m.key === earthStore.vizLoading)?.label ?? earthStore.vizLoading)
 
 function switchViz(mode) {
   earthCanvasRef.value?.switchVisualization(mode)
@@ -529,5 +545,57 @@ watch(() => earthStore.currentVisualization, (v) => {
   .bottom-bar {
     max-width: calc(100% - var(--tv-margin) * 2);
   }
+}
+
+/* 异步图层加载提示 */
+.viz-loading {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: var(--tv-radius-full, 999px);
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.viz-loading-spinner,
+.viz-spinner {
+  display: inline-block;
+  border: 2px solid rgba(128, 128, 128, 0.3);
+  border-top-color: var(--tv-primary, #4f8ef7);
+  border-radius: 50%;
+  animation: viz-spin 0.8s linear infinite;
+}
+
+.viz-loading-spinner {
+  width: 16px;
+  height: 16px;
+}
+
+.viz-spinner {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes viz-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

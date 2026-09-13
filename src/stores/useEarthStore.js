@@ -11,6 +11,8 @@ export const useEarthStore = defineStore('earth', () => {
   const compareCountries = ref([])
   const currentVisualization = ref('gdp')
   const searchIndex = shallowRef({})
+  // 正在加载数据的可视化模式（key），null = 无加载中。非阻塞提示用，见 EarthCanvas
+  const vizLoading = ref(null)
 
   function setEarthGroup(group) {
     earthGroup.value = group
@@ -41,6 +43,10 @@ export const useEarthStore = defineStore('earth', () => {
     currentVisualization.value = mode
   }
 
+  function setVizLoading(modeOrNull) {
+    vizLoading.value = modeOrNull
+  }
+
   function setSearchIndex(index) {
     searchIndex.value = index
   }
@@ -48,8 +54,8 @@ export const useEarthStore = defineStore('earth', () => {
   return {
     earthGroup, rotationSpeed, isRotating,
     meshesByCountry, selectedCountry, compareCountries, currentVisualization,
-    searchIndex,
+    searchIndex, vizLoading,
     setEarthGroup, addLayer, removeLayer,
-    selectCountry, toggleCompare, setVisualization, setSearchIndex
+    selectCountry, toggleCompare, setVisualization, setVizLoading, setSearchIndex
   }
 })

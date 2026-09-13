@@ -272,12 +272,20 @@ function onContextMenu(event) {
   else interactionStore.closeContextMenu()
 }
 
+// 这些模式切数据要走网络/构建，需要加载反馈；gdp/default/landmarks 是同步的
+const VIZ_MODES_WITH_DATA = new Set(['population', 'carbon', 'trade', 'flights', 'earthquake', 'nightlights', 'china', 'heatmap'])
+
 async function switchVisualization(mode) {
   if (mode === earthStore.currentVisualization) return
+  // 画布未就绪时本次切换不会真正发生，也就不该亮加载态
+  if (VIZ_MODES_WITH_DATA.has(mode) && visualizationLayer) earthStore.setVizLoading(mode)
   try {
     await visualizationLayer?.switchVisualization(mode)
   } catch (err) {
     console.error('Viz switch error:', mode, err)
+  } finally {
+    // 快速连切时 vizLoading 可能已被更新的请求覆盖，只在仍归属本次时清除
+    if (earthStore.vizLoading === mode) earthStore.setVizLoading(null)
   }
 }
 
