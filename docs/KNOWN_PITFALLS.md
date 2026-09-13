@@ -273,6 +273,31 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
 若生产产物不在默认 `dist/`，可用 `E2E_PREVIEW_OUT_DIR` 指定
 （本机批量删除保护导致 `dist/` 无法重复清空时也用得上）。
 
+### C11. 同一页面的 URL 状态只能归一个机制管（hash 与 query 双写会互相冲掉）
+
+**现象**：巡游步进后 `?step=` 被「弹回」旧值，同时地址栏 `#hash` 挂着新模式名。
+
+**根因**：直写 `window.location.hash` 会触发原生 hashchange，vue-router 以
+**当时的 query** 发起一次导航——若此刻上一次 `router.replace({ query })` 尚未提交，
+旧 query 就会把刚写入的新值覆盖回去（竞态，后提交者赢）。
+
+**正确做法**：hash 状态（`EarthView` 的可视化模式同步）与 query 状态（巡游的
+`?tour=&step=`）共存时，必须在直写 hash 的 watcher 里短路另一个机制激活的期间
+（见 `EarthView` 巡游段注释）。新增任何 URL 状态前先盘点页面上已有哪些写地址的代码。
+
+### C12. 新增键盘交互前，先 grep 全局快捷键
+
+**现象**：巡游播放器的空格（播放/暂停，挂 `window`）与 `EarthView` 既有全局
+快捷键（空格=切换自转、`r`=相机回位，挂 `document`）叠加触发：按一次空格，
+「暂停巡游 + 打开自转」同时发生。
+
+**根因**：冒泡顺序 `document` 先于 `window`，后挂的监听器里 `preventDefault`
+拦不住先收到事件的那个。
+
+**正确做法**：动手前先 `grep -rn "addEventListener('keydown'" src/` 盘点存量监听；
+冲突时在**旧监听入口**加「界面态短路」（如巡游打开时全局快捷键整体让位），
+不要指望在自己一侧 stop/prevent。
+
 ---
 
 ## D. 凭据与配置

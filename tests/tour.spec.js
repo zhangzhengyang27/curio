@@ -87,6 +87,15 @@ test.describe('数据巡游', () => {
     await expect(page).not.toHaveURL(/tour=/)
   })
 
+  test('播完最后一步自动结束并清理 URL 状态', async ({ page }) => {
+    // 直达末步（暂停态）→ 播放 → 最后一步（飞行 2.5s + 停留 5s）播完应自动 stop
+    await page.goto('/?tour=earth-at-night&step=5')
+    await expect(page.locator(BAR)).toBeVisible()
+    await page.locator('[data-testid="tour-toggle"]').click()
+    await expect(page.locator(BAR)).toBeHidden({ timeout: 15000 })
+    await expect(page).not.toHaveURL(/tour=/)
+  })
+
   test('分享链接直达：定位到指定步骤但保持暂停', async ({ page }) => {
     await page.goto('/?tour=global-overview&step=3')
     await expect(page.locator(BAR)).toBeVisible()
