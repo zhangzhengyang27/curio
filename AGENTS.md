@@ -135,6 +135,8 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | 架构与关键机制（示例解析、资源清理、兼容层、分包） | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) |
 | **历史坑与不可逆操作** | [`docs/KNOWN_PITFALLS.md`](./docs/KNOWN_PITFALLS.md) |
 | 范围声明、待办与优先级 | [`docs/ROADMAP.md`](./docs/ROADMAP.md) |
+| 治理轮次的已完成项归档 | [`docs/CHANGELOG.md`](./docs/CHANGELOG.md) |
+| 部署形态、托管要求与发布前校验 | [`docs/DEPLOY.md`](./docs/DEPLOY.md) |
 | three.js 兼容层机制与退出步骤 | [`docs/THREE_UPGRADE.md`](./docs/THREE_UPGRADE.md) |
 | 首屏性能基线与测量方法 | [`docs/PERF_BASELINE.md`](./docs/PERF_BASELINE.md) |
 | 脚本分类（质量闸门 / registry 写入 / 一次性） | [`scripts/README.md`](./scripts/README.md) |
