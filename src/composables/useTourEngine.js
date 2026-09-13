@@ -80,18 +80,20 @@ export function useTourEngine({ switchMode, flyTo }) {
 
   function next() {
     if (!route.value) return
-    if (stepIndex.value < stepCount.value - 1) applyStep(stepIndex.value + 1, { schedule: true })
-    else stop()
+    if (stepIndex.value < stepCount.value - 1) {
+      // 手动步进只在「正在播放」时延续自动前进；暂停态下步进=浏览，不再挂定时器
+      applyStep(stepIndex.value + 1, { schedule: status.value === 'playing' })
+    } else stop()
   }
 
   function prev() {
     if (!route.value || stepIndex.value <= 0) return
-    applyStep(stepIndex.value - 1, { schedule: true })
+    applyStep(stepIndex.value - 1, { schedule: status.value === 'playing' })
   }
 
   function goTo(i) {
     if (!route.value) return
-    applyStep(i, { schedule: true })
+    applyStep(i, { schedule: status.value === 'playing' })
   }
 
   /** 退出 / 播完最后一步。状态归位，场景还原由 EarthView 完成。 */

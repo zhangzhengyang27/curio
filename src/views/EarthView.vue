@@ -44,8 +44,11 @@
       />
     </aside>
 
-    <!-- Bottom Visualization Switcher -->
-    <div class="bottom-bar tv-glass-panel">
+    <!-- 巡游播放时隐藏模式切换条与时间轴：既聚焦叙事，也避免与播放条抢底部空间 -->
+    <div
+      v-if="!tourUIVisible"
+      class="bottom-bar tv-glass-panel"
+    >
       <button
         v-for="mode in vizModes"
         :key="mode.key"
@@ -61,7 +64,7 @@
     </div>
 
     <ComparePanel />
-    <TimelineSlider />
+    <TimelineSlider v-if="!tourUIVisible" />
     <LegendBar />
     <LoadingOverlay ref="loadingRef" />
     <ContextMenu :on-fly-to="handleFlyTo" />
@@ -375,6 +378,9 @@ if (typeof window !== 'undefined') {
   }
 }
 watch(() => earthStore.currentVisualization, (v) => {
+  // 巡游播放中地址状态由 ?tour=&step= 统一管理；此时写 hash 会触发
+  // vue-router 携带旧 query 的导航，把刚 replace 的 step 冲回去（竞态）
+  if (tour.status.value !== 'idle') return
   if (v && v !== 'gdp') window.location.hash = '#' + v
 })
 </script>
