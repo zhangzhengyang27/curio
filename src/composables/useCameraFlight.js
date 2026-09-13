@@ -14,11 +14,19 @@ export function useCameraFlight(controls, camera, R = 100) {
     const target = lon2xyz(R, longitude, latitude)
     const targetVec = new THREE.Vector3(target.x, target.y, target.z)
 
+    // 直达：不进 rAF。duration 为 0 时 elapsed/duration 会产生 NaN
+    // 写入相机与 controls.target（巡游「开场即位」的镜头是 0 时长）
+    if (animationId) cancelAnimationFrame(animationId)
+    if (duration <= 0) {
+      controls.target.copy(targetVec)
+      camera.position.copy(targetVec.clone().normalize().multiplyScalar(R * 2.5))
+      controls.update()
+      return
+    }
+
     const startTarget = controls.target.clone()
     const startCam = camera.position.clone()
     const startTime = performance.now()
-
-    if (animationId) cancelAnimationFrame(animationId)
 
     function animate(now) {
       const elapsed = now - startTime

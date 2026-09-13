@@ -186,6 +186,9 @@ function handleSplitScreen() {
 
 function handleKeydown(e) {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return
+  // 巡游界面打开期间全局快捷键整体让位（空格/相机类按键归播放器管，
+  // 且 document 先于 window 收到事件，播放器侧 preventDefault 拦不住这里）
+  if (tourUIVisible.value) return
   switch (e.key.toLowerCase()) {
     case ' ': e.preventDefault(); earthStore.isRotating = !earthStore.isRotating; break
     case 's': handleScreenshot(); break
