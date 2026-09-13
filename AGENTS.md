@@ -70,7 +70,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run preview` | 预览构建产物 |
 | `npm run typecheck` | 全量 `vue-tsc --noEmit`（覆盖 `src` 下全部 `.vue` + 自有 `.ts`，当前 0 error） |
 | `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
-| `npm run test:e2e` | Playwright 冒烟（dev server，端口 5199） |
+| `npm run test:e2e` | Playwright 冒烟（dev server，端口 5299） |
 | `npm run verify` | **一键跑 5 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
@@ -101,7 +101,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 |---|---|
 | 第二次 `vite build` 失败于 `[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED]`，日志里却已有 `✓ N modules transformed` | **代码没问题**，是清空 `dist/`（3600+ 文件）触发本机批量删除保护（阈值 500）。输出到仓库外：<br>`npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true` |
 | 生产构建耗时 7~37 分钟不等 | 用后台任务跑，不要用前台短超时 |
-| E2E 全部用例以「元素找不到」失败，但应用本身正常 | 端口被本机其它项目占用，`reuseExistingServer` 连到了**别人的 dev server**。已改用 `E2E_PORT`（默认 5199）+ `--strictPort`；需要时覆盖 `E2E_PORT` |
+| E2E 全部用例以「元素找不到」失败，但应用本身正常 | 端口被本机其它项目占用，`reuseExistingServer` 连到了**别人的 dev server**。已改用 `E2E_PORT`（默认 5299）+ `--strictPort`；需要时覆盖 `E2E_PORT` |
 | 新增依赖后路由组件完全不挂载、且无报错 | Vite 模块图变脏：`rm -rf node_modules/.vite && npm run dev` |
 | `npm run` 用久了 zsh 进入损坏态（`_load_nvm: command not found` / `maximum nested function level reached`） | 直接用绝对路径的 node 跑脚本 |
 | `test:e2e` 任务状态显示 failed，但输出里是 `N passed` | npm 收尾清理 `~/.npm/_logs` 被沙箱拦下所致。**看 `N passed`，不看退出状态** |

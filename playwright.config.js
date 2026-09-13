@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
-// E2E 使用独立端口，避免与开发者本机其它项目的 dev server（常见占用 5173）冲突：
+// E2E 使用独立端口，避免与开发者本机其它项目的 dev server（常见占用 5173/5199）冲突：
 // 一旦端口被别的应用占用，reuseExistingServer 会把测试连到「别人的页面」上，
-// 结果是 5 条用例全部以「元素找不到」失败，且原因极难定位。
-const E2E_PORT = Number(process.env.E2E_PORT || 5199)
+// 结果是用例全部以「元素找不到」失败，且原因极难定位。
+// 5199 也曾被占用过（2026-09 实测），故默认改用更冷门的 5299。
+const E2E_PORT = Number(process.env.E2E_PORT || 5299)
 const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
 
 // E2E 目标：
