@@ -22,7 +22,9 @@ jobs:
   ci:
     name: 校验与构建
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 生产构建实测 7~37 分钟（本机 macOS），叠加全量 typecheck、verify 链与 dev+preview 双模式 E2E，
+    # 30 分钟余量不足，首跑存在被误杀的风险（见 docs/ROADMAP.md P0「首次跑通 CI」）
+    timeout-minutes: 60
 
     env:
       # 冒烟测试在未配置地图 AK 的情况下也应通过（页面需优雅降级）
