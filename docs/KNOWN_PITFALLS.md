@@ -192,7 +192,19 @@ codeSplitting: {
 **维护约定**：新增大体积三方库（>100 KB）时，在 `groups` 里补一条 `test` + `priority: 80`。
 注意正则里用 `[\\/]` 匹配路径分隔符（Windows 兼容）。
 
-### C7. E2E 必须使用独立端口（默认 5199）
+**2026-09 补记（两个新增约束，均实测复现过）**：
+
+1. **组内库的依赖若被首页/其它组共享，必须显式 `includeDependenciesRecursively: false`**。
+   `vendor-three-globe` 曾因默认递归捕获把 tween.js / d3-scale 吞进自己 chunk——
+   那些是首页自己也在用的库，结果首页为拿 Tween 和比例尺被迫下载整个 three-globe（首屏 +155 KB）。
+2. **不要对 `src/examples/jsm-compat/` 大粒度分组**。其中混有顶层就访问 DOM 的示例应用
+   （`mygrapics/bezier` 等的 `document.querySelector('canvas').getContext('2d')`），
+   被并进首页可达的共享块后，首页一加载就执行它们，直接白屏。
+   首页真正需要的只有 `renderers/CSS2DRenderer.js`，已单文件成组（`vendor-css2d`）。
+   排查手段：构建后用探针对比新旧产物的首页 `pageerror` 与资源清单，
+   「chunk 拆分导致的初始化顺序/副作用问题」只在 preview 产物下复现（见 C10）。
+
+### C7. E2E 必须使用独立端口（默认 5299）
 
 **现象**：`npx playwright test` 的 5 条用例全部以「元素找不到」失败，但应用本身正常。
 
@@ -200,7 +212,7 @@ codeSplitting: {
 本机其它项目（本仓库之外）很容易占用它。`reuseExistingServer` 会把测试直接连到
 **别人的 dev server** 上，于是断言的全是别的页面。
 
-**现状**：`playwright.config.js` 已改用 `E2E_PORT`（默认 5199）并加 `--strictPort`：
+**现状**：`playwright.config.js` 已改用 `E2E_PORT`（默认 5299）并加 `--strictPort`：
 端口被占用时直接失败，而不是让测试打偏。需要覆盖端口时设置环境变量 `E2E_PORT`。
 
 **教训**：自动化测试的「假失败」和「假通过」一样危险 —— 前者会被当成代码问题排查很久，

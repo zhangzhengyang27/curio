@@ -1,8 +1,9 @@
 # 性能基线
 
-> 结论先行：**首页首屏 JS 从 2246 KB 降到 533 KB（−76%）**，原因是移除了一个
-> 首页根本不用的 1.7 MB 高斯泼溅库（`@sparkjsdev/spark`）的预加载。
-> 下面是测量方法、数字与剩余机会。
+> 结论先行：**2026-09-14 复测发现本文档旧基线（首页 539 KB）已严重失真**——
+> 实测首页传输 2999 KB。归因出三个相互独立的成因并全部修复后，回落至 **1765 KB**，
+> 其中首页 JS 由 694 KB 降至 **589 KB**。旧数字失真的根因之一正是「perf 只测量不断言」，
+> 详见「防回归」一节。
 
 ---
 
@@ -27,47 +28,59 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 
 - **必须以生产产物（`E2E_TARGET=preview`）为准。** dev server 按需编译，数字没有参考价值。
 - **传输量是硬指标，时间仅供参考。** 测量环境是 headless Chromium + 软件渲染（swiftshader）
-  且与其他任务共享 CPU，FCP 等绝对时间明显高于真实硬件。
+  且与其他任务共享 CPU，FCP 等绝对时间波动极大（同一产物实测过 584 ms 与 16364 ms）。
   时间可用于**前后对比**，不要当作线上体验的绝对值。
+- **采集窗口 = `load` 事件 + 就绪选择器可见**。晚于该窗口才发起的资源不计入。
+  对比数字时必须同口径；改动了资源加载时机（懒加载/预加载）时尤其要当心口径漂移。
 - 每次测量使用全新 context，不受缓存影响。
+- 本机注意：多次 `vite preview` 复用同一端口时，确认旧进程已退出（`lsof -ti :<port>`），
+  否则探测到的是旧产物（2026-09 实测踩过）。
 
 ---
 
-## 2. 基线数字（生产产物）
+## 2. 基线数字（生产产物，2026-09-14 修复后）
 
-| 指标 | 优化前 | 优化后 | 变化 |
+| 指标 | 修复前（本轮实测） | 修复后 | 变化 |
 |---|---|---|---|
-| **首页** 传输总量 | 2252 KB | **539 KB** | **−76%** |
-| **首页** 其中 JS | 2246 KB | **533 KB** | **−76%** |
-| 首页 FCP | 4008 ms | 716 ms | −82% |
-| 首页 就绪（`.app-nav`） | 4994 ms | 1161 ms | −77% |
-| **示例中心** 传输总量 | 2603 KB | **889 KB** | **−66%** |
-| 示例中心 其中 JS | 2254 KB | **541 KB** | **−76%** |
-| 示例中心 FCP | 4004 ms | 976 ms | −76% |
-| 示例中心 就绪（`.example-card`） | 6058 ms | 1556 ms | −74% |
+| **首页** 传输总量 | 2999 KB | **1765 KB** | **−41%** |
+| **首页** 其中 JS | 694 KB | **589 KB** | **−15%** |
+| 首页 其中图片 | 1798 KB | 669 KB | −63% |
+| **示例中心** 传输总量 | 890 KB | 890 KB | 持平 |
+| **示例中心** 其中 JS | 542 KB | 542 KB | 持平 |
 
-### 优化前的首页 JS 构成（问题所在）
+> 历史注：本文档旧基线为「首页 539 KB / JS 533 KB」（2026-09 上轮）。
+> 该数字测量时部分资源（贴图/首屏数据）晚于采集窗口，未能反映真实首屏；
+> 且此后引入的回归无人发现。新旧数字**不可直接对比**，以本表口径为准。
+
+### 首页当前的传输构成（修复后）
 
 ```
-1714 KB  vendor-spark    ← 高斯泼溅库，首页根本不用（76%）
- 369 KB  vendor-three    ← 必需
-  57 KB  vendor-3d-tiles ← 首页 3D Tiles 图层，必需
-  24 KB  threejsOfficialExamples（registry）
-  13 KB  threeCesiumExamples（registry）
-   6 KB  webglExamples（registry）
+ 627 KB  earth-blue-marble.webp   ← 地表贴图（WebP q80）
+ 369 KB  vendor-three             ← 必需
+ 237 KB  gdp.json                 ← 首屏数据（GDP 模式默认加载）
+ 215 KB  worldZh.json             ← 首屏数据（中文世界地图）
+  57 KB  vendor-3d-tiles          ← 首页 3D Tiles 图层，必需
+  48 KB  gdp-timeline.json        ← 首屏数据
+  46 KB  vendor-d3
+  42 KB  earth-topology.webp      ← 凹凸贴图（WebP q80）
 ```
 
-### 根因
+### 2026-09-14 修复的三个成因
 
-`@sparkjsdev/spark` 只被单个示例（`SparkjsExample.vue`）以 `await import()` 动态引入。
-但一旦在 `vite.config.js` 的 `codeSplitting.groups` 里给它建分组，它就变成**共享 chunk**，
-被 Vite 提升进首页的 `modulepreload` 列表 —— 而首页的 entry 静态导入里根本没有它。
-
-**修复**：不为 spark 建分组，交回打包器放进按需加载的懒加载块（现为独立的
-`spark.module-*.js`，只在打开该示例时加载）。
-
-> 顺带说明：修复前 `vendor-cesium`（8.3 MB）也曾被预载到首页，
-> 已在上一轮的分包修复中一并解决。
+1. **`vendor-three-globe` 分组递归捕获吞依赖（−155 KB）**：
+   分组默认 `includeDependenciesRecursively: true`，把 three-globe 的依赖
+   （`@tweenjs/tween`、`d3-scale` 等**首页自己也在用的库**）一并吞进该 chunk；
+   首页的 Tween/d3-scale 被绑定到那份拷贝，被迫下载整个 three-globe。
+   修复：该组显式关闭递归捕获（`vite.config.js` 内有完整注释）。
+2. **CSS2DRenderer 与 three-globe 被搅进同一 chunk**：
+   首页 `useLabels` 只需要 jsm-compat 的两个 CSS2D 类，但 Rolldown 默认分块把它们
+   与 three-globe 模块合并。修复：CSS2DRenderer 单文件独立成 `vendor-css2d` 组。
+   ⚠ 不能对整个 `jsm-compat/` 大粒度分组——其中混有顶层就访问 DOM 的示例应用
+   （`mygrapics/bezier` 等的 `document.querySelector('canvas').getContext`），
+   曾因此让首页加载时直接崩溃（实测复现，见 `KNOWN_PITFALLS.md` C6 补记）。
+3. **贴图未压缩**：地表/凹凸贴图由 JPG(1428 KB)+PNG(372 KB) 转 WebP q80，
+   合计 1800 KB → 672 KB（−63%）。原图备份在仓库外，转换无代码逻辑变化
+   （`EarthCanvas.vue` 两处路径引用同步更新）。
 
 ---
 
@@ -75,36 +88,25 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 
 | 机会 | 预估收益 | 说明 |
 |---|---|---|
-| ~~首页延迟加载 registry~~ | **已落地** | `useExampleFilters()` 原先在 setup 阶段就 `ensureRegistryLoaded()`，而它被 App.vue 的**全局顶栏**使用、在所有路由（含首页）都挂载，于是首页会拉全部 11 个 registry。现改为调用方按需触发（悬停/打开下拉、聚焦搜索框、已在 `/examples`）。11 个数据分块合计约 **58 KB**（未压缩 678 KB） |
-| 示例中心封面图 | 343 KB / 16 张 | 已用 `loading="lazy"`，但首屏 16 张仍会加载。可缩小封面尺寸或改用更小的预览图 |
+| 首屏数据延迟加载 | ~500 KB | `gdp.json`(237) + `worldZh.json`(215) + `gdp-timeline`(48) 在首页初始化即加载；若默认模式改为按需，首屏可再降近三成。属产品决策（默认展示什么），未做 |
+| 地表贴图 | 627 KB | 已是 WebP q80；再降需降分辨率（4096→2048，肉眼可感），不建议 |
 | `vendor-three` | 369 KB | 首页必需，进一步压缩需裁剪 three.js 构建（风险高，不建议） |
-| 产物总量 34 MB / 3203 chunks | — | 这些是**按需加载**的示例块，不在首屏路径上，不影响用户体验。不必为了减小总量而动它们 |
+| 产物总量 34 MB / 3200+ chunks | — | 按需加载的示例块，不在首屏路径上。不必为总量优化 |
 
-**不建议做**：为了降低「产物总量」而做全量瘦身 —— 那 34 MB 分散在 3203 个按需块里，
+**不建议做**：为了降低「产物总量」而做全量瘦身——那 34 MB 分散在 3200 个按需块里，
 用户每次只下载其中极小一部分。优化目标应该是**首屏与常用路径**，而不是磁盘上的产物大小。
 
 ---
 
-### 首页延迟加载 registry 的实测
-
-落地后首页：**传输总量 523 KB / JS 517 KB / 26 个请求**（文档基线为 539 KB / 533 KB）。
-
-> ⚠ 这个差值（−16 KB）**小于** 11 个分块的 58 KB，说明本轮测量环境噪声较大
-> （同一份产物测出的 FCP 是 2132 ms，而文档基线是 716 ms，差 3 倍 —— 测量时机器有负载）。
-> 因此**不要把 −16 KB 当作准确收益**，它只说明「确实降了」。
-
-真正可靠的证据是 `tests/smoke.spec.js` 里的
-**「首页不为顶栏预载示例注册表」** 用例：它在 dev 与 preview 两种模式下都断言
-首页发出的 registry 数据分块请求为 **0**。这比 KB 数字更抗噪，也是防回归的主力。
-
-分块识别要**排除 `registry/index.js`**：那是 barrel，被 `useExampleFilters` 静态导入，
-首页请求它属于正常；只有 11 个数据分块才该被拦。
-
 ## 4. 防回归
 
-`tests/perf.spec.js` 只测量、不做性能断言（避免 CI 抖动）。
-数字会打印在 CI 日志里，每次发布前人工对比一次即可。
+`tests/perf.spec.js` 只测量、不做性能断言（避免 CI 抖动误杀）——这正是本轮
+「首屏从 539 涨到 2999 无任何闸门变红」的原因。当前约定：
 
-若将来要给某个库新增 `codeSplitting.groups` 条目，请务必确认：
-**它是否真的会出现在首页/常用页的依赖图里**。分组会把库变成共享块，
-从而可能被提升进 `modulepreload` —— 这正是本次 1.7 MB 问题的成因。
+- 数字打印在 CI 日志里，**每次发布前人工对比一次**本文档基线；
+- 涉及 `vite.config.js` 分组的改动，必须用第 1 节口径实测首页传输并更新本文档；
+- 若将来要加自动断言，建议只对「JS 传输量」设宽阈值（如 ≤ 650 KB），图片/数据另议。
+
+给库新增 `codeSplitting.groups` 条目前，务必确认：它是否真的出现在首页/常用页的
+依赖图里、以及它的依赖是否被别处共享——分组会把依赖一并变成共享块
+（`includeDependenciesRecursively` 陷阱见成因 1）。
