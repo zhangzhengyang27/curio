@@ -1,0 +1,63 @@
+{
+  "id": "global-overview",
+  "title": "全球数据全览",
+  "description": "人口、经济、贸易、航线、地震与夜光——90 秒绕这颗星球一圈的默认巡游。",
+  "steps": [
+    {
+      "mode": "default",
+      "camera": { "lon": 100, "lat": 25 },
+      "flyDuration": 0,
+      "dwell": 6000,
+      "caption": { "title": "一颗数据地球", "text": "人口、经济、航线、灾难与灯火——接下来 90 秒，绕这颗星球一圈。" }
+    },
+    {
+      "mode": "population",
+      "camera": { "lon": 30, "lat": 45 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "80 亿人的分布", "text": "每一格亮光都是聚居区，东亚与南亚承载了近一半人口。" }
+    },
+    {
+      "mode": "gdp",
+      "camera": { "lon": 110, "lat": 35 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "经济的心跳", "text": "柱高即体量：东亚、北美与欧洲三极撑起全球 GDP。" }
+    },
+    {
+      "mode": "trade",
+      "camera": { "lon": 120, "lat": -20 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "贸易动脉", "text": "弧线连起的港口网络，承载着全球八成的货物贸易。" }
+    },
+    {
+      "mode": "flights",
+      "camera": { "lon": -35, "lat": 45 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "空中桥梁", "text": "每天约 10 万个商业航班，把大陆缝合成一张网。" }
+    },
+    {
+      "mode": "earthquake",
+      "camera": { "lon": 140, "lat": -25 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "不安的火环", "text": "板块边界上的震中，勾勒出太平洋火环的形状。" }
+    },
+    {
+      "mode": "nightlights",
+      "camera": { "lon": 80, "lat": 25 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "夜光里的文明", "text": "从卫星上看，人类的足迹就是灯光。" }
+    },
+    {
+      "mode": "default",
+      "camera": { "lon": 0, "lat": 25 },
+      "flyDuration": 2500,
+      "dwell": 6000,
+      "caption": { "title": "数据之外", "text": "每一层都只是地球的一个切面——切换图层，继续探索。" }
+    }
+  ]
+}

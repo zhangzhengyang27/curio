@@ -1,0 +1,42 @@
+{
+  "id": "global-connections",
+  "title": "全球连接",
+  "description": "航线、贸易与碳排放，讲「地球是一张网」的故事。",
+  "steps": [
+    {
+      "mode": "flights",
+      "camera": { "lon": -40, "lat": 45 },
+      "flyDuration": 0,
+      "dwell": 8000,
+      "caption": { "title": "网络开始的地方", "text": "航空网络，是全球化最直观的骨架。" }
+    },
+    {
+      "mode": "trade",
+      "camera": { "lon": 150, "lat": 25 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "海上动脉", "text": "集装箱航线串起东亚制造与全球消费。" }
+    },
+    {
+      "mode": "carbon",
+      "camera": { "lon": -100, "lat": 40 },
+      "flyDuration": 2500,
+      "dwell": 8000,
+      "caption": { "title": "连接的代价", "text": "生产与运输的每一环，都留下碳足迹。" }
+    },
+    {
+      "mode": "nightlights",
+      "camera": { "lon": 15, "lat": 50 },
+      "flyDuration": 2500,
+      "dwell": 7000,
+      "caption": { "title": "永不熄灭的节点", "text": "连接网络的枢纽，夜晚依然明亮。" }
+    },
+    {
+      "mode": "default",
+      "camera": { "lon": 0, "lat": 30 },
+      "flyDuration": 2500,
+      "dwell": 5000,
+      "caption": { "title": "一张网上的地球", "text": "人流、物流与能量流，把大陆绑在一起。" }
+    }
+  ]
+}

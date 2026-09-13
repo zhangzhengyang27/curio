@@ -1,0 +1,42 @@
+{
+  "id": "earth-at-night",
+  "title": "地球之夜",
+  "description": "追着夜光飞越三大洲的视觉短途线。",
+  "steps": [
+    {
+      "mode": "nightlights",
+      "camera": { "lon": 115, "lat": 35 },
+      "flyDuration": 0,
+      "dwell": 8000,
+      "caption": { "title": "入夜", "text": "东亚城市群在黑夜里连成光带。" }
+    },
+    {
+      "mode": "nightlights",
+      "camera": { "lon": 10, "lat": 48 },
+      "flyDuration": 3000,
+      "dwell": 8000,
+      "caption": { "title": "旧大陆的灯火", "text": "欧洲的灯光沿城市带铺开。" }
+    },
+    {
+      "mode": "nightlights",
+      "camera": { "lon": -95, "lat": 35 },
+      "flyDuration": 3000,
+      "dwell": 8000,
+      "caption": { "title": "新大陆的光网", "text": "东北走廊与加州海岸两团亮斑。" }
+    },
+    {
+      "mode": "landmarks",
+      "camera": { "lon": 0, "lat": 40 },
+      "flyDuration": 3000,
+      "dwell": 7000,
+      "caption": { "title": "走近一点", "text": "光斑之下，是具体的生活。" }
+    },
+    {
+      "mode": "default",
+      "camera": { "lon": 0, "lat": 20 },
+      "flyDuration": 2500,
+      "dwell": 5000,
+      "caption": { "title": "晚安，地球", "text": "熄了灯，明天见。" }
+    }
+  ]
+}

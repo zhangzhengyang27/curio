@@ -1,0 +1,42 @@
+{
+  "id": "china-focus",
+  "title": "中国视角",
+  "description": "从省份剖面到全球供应链，把镜头对准中国数据。",
+  "steps": [
+    {
+      "mode": "china",
+      "camera": { "lon": 104, "lat": 35 },
+      "flyDuration": 3000,
+      "dwell": 8000,
+      "caption": { "title": "聚焦中国", "text": "34 个省级行政区的数据剖面。" }
+    },
+    {
+      "mode": "population",
+      "camera": { "lon": 104, "lat": 35 },
+      "flyDuration": 2500,
+      "dwell": 7000,
+      "caption": { "title": "十四亿人的分布", "text": "胡焕庸线以东，人口密度骤增。" }
+    },
+    {
+      "mode": "gdp",
+      "camera": { "lon": 116, "lat": 40 },
+      "flyDuration": 2500,
+      "dwell": 7000,
+      "caption": { "title": "经济版图", "text": "沿海与内陆的梯度，是增长的空间故事。" }
+    },
+    {
+      "mode": "trade",
+      "camera": { "lon": 121, "lat": 31 },
+      "flyDuration": 2500,
+      "dwell": 7000,
+      "caption": { "title": "世界工厂的进出", "text": "从长三角与珠三角延伸出的全球供应链。" }
+    },
+    {
+      "mode": "default",
+      "camera": { "lon": 104, "lat": 35 },
+      "flyDuration": 2500,
+      "dwell": 5000,
+      "caption": { "title": "换一个视角", "text": "把镜头拉回全球，中国是网络中的关键节点。" }
+    }
+  ]
+}
