@@ -33,10 +33,12 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：华中上空约 700 万米——足以看清中国大陆轮廓与路网，
-  //又不至于高到让矢量图变成一片灰白（曾因此被误认为「没加载出来」）
+  // 初始视角：华中上空约 280 万米（对应天地图影像 level 5~6）。
+  // ⚠ 实测（2026-09）天地图 img_w 在 level 3~4 对国内区域返回「此级别下该区域
+  // 无影像」的占位图，初始高度若落在该层级，用户会看到整球提示文字——
+  // 千万别把初始/书签高度拉回 400 万米以上。
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(108, 32, 7_000_000),
+    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 2_800_000),
   })
   return viewer
 }
