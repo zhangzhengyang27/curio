@@ -201,7 +201,10 @@ export class MapToolsController {
     if (tool === 'distance') {
       let total = 0
       for (let i = 1; i < positions.length; i++) {
-        const geodesic = new Cesium.EllipsoidGeodesic(positions[i - 1], positions[i])
+        // EllipsoidGeodesic 入参是 Cartographic（经纬度弧度），传 Cartesian3 会得到 NaN
+        const start = Cesium.Cartographic.fromCartesian(positions[i - 1])
+        const end = Cesium.Cartographic.fromCartesian(positions[i])
+        const geodesic = new Cesium.EllipsoidGeodesic(start, end)
         total += geodesic.surfaceDistance
       }
       const line = this.viewer.entities.add({

@@ -45,7 +45,11 @@ test.describe('地图工具箱', () => {
     await page.mouse.click(CANVAS_CLICK_B.x, CANVAS_CLICK_B.y)
     await page.mouse.click(CANVAS_CLICK_B.x, CANVAS_CLICK_B.y, { button: 'right' })
 
-    await expect(page.locator('[data-testid="status-result"]')).toContainText('总距离', { timeout: 10_000 })
+    // 数值必须有效：EllipsoidGeodesic 入参传错时会出现「总距离 NaN m」
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('总距离', { timeout: 10_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km|m))/)
+    await expect(result).not.toContainText('NaN')
     // 产物登记后撤销/清空可用
     await expect(page.locator('[data-testid="clear-btn"]')).toBeEnabled()
   })
