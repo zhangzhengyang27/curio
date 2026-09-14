@@ -176,12 +176,20 @@ export class MapToolsController {
     }
 
     if (tool === 'line') {
-      this._addRegistry('line', positions, { polyline: { positions, width: 3, material: color } })
+      // ⚠ 必须走 _registerEntity 直传 positions 数组：曾误用 _addRegistry
+      //（期望单点），把数组当单个 Cartesian 转经纬度得到 NaN，导出
+      // GeoJSON 的坐标全部序列化为 null
+      const line = this.viewer.entities.add({
+        polyline: { positions, width: 3, material: color },
+      })
+      this._registerEntity('line', line, positions)
       this.lastResult = { kind: 'line', text: `折线 · ${positions.length} 个顶点` }
       return 'line'
     }
 
-    if (tool === 'polygon') {
+    // 量面积（area）与标面（polygon）共用多边形绘制逻辑；登记 kind 用 tool
+    // 本身以便图例/导出区分，GeoJSON 中两者都导出为 Polygon
+    if (tool === 'area' || tool === 'polygon') {
       const fill = this.viewer.entities.add({
         polygon: {
           hierarchy: positions,
@@ -192,7 +200,7 @@ export class MapToolsController {
       const outline = this.viewer.entities.add({
         polyline: { positions: [...positions, positions[0]], width: 3, material: color },
       })
-      this._registerEntity('polygon', outline, positions, [fill])
+      this._registerEntity(tool, outline, positions, [fill])
       const area = this._computeArea(positions)
       this.lastResult = { kind: 'area', text: `面积 ${formatArea(area)}` }
       return 'area'
