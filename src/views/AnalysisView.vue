@@ -23,7 +23,9 @@
       v-if="ready"
       class="panel panel-left tv-glass-panel"
     >
-      <h3 class="panel-title">全球数据分析</h3>
+      <h3 class="panel-title">
+        全球数据分析
+      </h3>
       <input
         v-model="search"
         class="search-input"
@@ -63,7 +65,9 @@
           没有匹配的国家
         </p>
       </div>
-      <p class="list-meta">共 {{ countries.length }} 个国家/地区 · 按最新 GDP 排序</p>
+      <p class="list-meta">
+        共 {{ countries.length }} 个国家/地区 · 按最新 GDP 排序
+      </p>
     </aside>
 
     <!-- 右侧：指标卡与对比 -->
@@ -77,16 +81,20 @@
           <span
             v-if="gdpRankText"
             class="rank-badge"
-          >GDP 第 {{ gdpRankText }} 位</span>
+          >GDP {{ gdpRankText }}</span>
         </h3>
         <dl class="metrics">
           <div class="metric">
             <dt>GDP（{{ year }}）</dt>
-            <dd data-testid="metric-gdp">{{ gdpText }}</dd>
+            <dd data-testid="metric-gdp">
+              {{ gdpText }}
+            </dd>
           </div>
           <div class="metric">
             <dt>人口</dt>
-            <dd data-testid="metric-population">{{ popText }}</dd>
+            <dd data-testid="metric-population">
+              {{ popText }}
+            </dd>
           </div>
           <div class="metric">
             <dt>人均 GDP</dt>
@@ -114,7 +122,9 @@
       </p>
 
       <template v-if="compare.length">
-        <p class="group-label">对比（{{ compare.length }}）</p>
+        <p class="group-label">
+          对比（{{ compare.length }}）
+        </p>
         <table
           class="compare-table"
           data-testid="compare-table"
@@ -204,6 +214,15 @@
       <span class="legend-text">GDP 低 → 高</span>
       <span class="legend-gradient" />
     </div>
+
+    <!-- 调试角标（?debug=1） -->
+    <div
+      v-if="debug && ready"
+      class="debug-hud"
+      data-testid="debug-hud"
+    >
+      DEBUG · 相机高度 {{ debugHeight }}m · 国家 {{ countries.length }} · 对比 {{ compare.length }}
+    </div>
   </div>
 </template>
 
@@ -219,6 +238,8 @@ const ready = ref(false)
 const search = ref('')
 const selected = ref(null)
 const compare = ref([])
+// ?debug=1 时暴露渲染器调试钩子与 HUD
+const debug = ref(new URLSearchParams(window.location.search).has('debug'))
 const yearIndex = ref(0)
 const playing = ref(false)
 
@@ -226,6 +247,8 @@ const { loading, error: dataError, years, countries, gdpByYear, load } = useCoun
 let viewer = null
 let choropleth = null
 let playTimer = null
+let debugTimer = null
+const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
 const selectedCountry = computed(() => countries.value.find((c) => c.name === selected.value) || null)
@@ -308,6 +331,14 @@ onMounted(async () => {
     })
     choropleth = new Choropleth(Cesium, viewer)
     await choropleth.load()
+
+    if (debug.value) {
+      // 调试钩子：供探针读取渲染器真实状态
+      window.__tvMapDebug = { viewer, Cesium }
+      debugTimer = setInterval(() => {
+        debugHeight.value = Math.round(viewer.camera.positionCartographic.height)
+      }, 500)
+    }
     yearIndex.value = years.value.length - 1
     choropleth.apply(gdpByYear.value, year.value, selected.value, compare.value)
 
@@ -325,6 +356,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   if (playTimer) clearInterval(playTimer)
+  if (debugTimer) clearInterval(debugTimer)
   choropleth?.destroy()
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
@@ -581,5 +613,20 @@ onUnmounted(() => {
   height: 10px;
   border-radius: 5px;
   background: linear-gradient(to right, #f7fbff, #d0e1f2, #94c4df, #4a98c9, #2271b2, #0c4a8c, #08306b);
+}
+
+.debug-hud {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #7fff9f;
+  font: 11px/1.6 monospace;
+  white-space: nowrap;
+  pointer-events: none;
 }
 </style>
