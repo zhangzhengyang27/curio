@@ -1,31 +1,50 @@
 /**
  * 地图工具箱的 Viewer 工厂。
  *
- * 底图策略（凭据外部化 + 优雅降级，见 KNOWN_PITFALLS D1）：
- * - 配置了 VITE_TDT_TOKEN：天地图底图，默认「卫星模式」= 矢量兜底 + 影像 + 影像注记，
- *   可切「矢量模式」= 矢量 + 矢量注记。
+ * 底图策略（凭据外部化 + 优雅降级，见 KNOWN_PITFALLS D1/D3）：
+ * - 配置了 VITE_TDT_TOKEN：默认「矢量」底图（vec+cva，从未出过占位问题），
+ *   卫星影像（vec 兜底 + img+cia）为可切换项。
  * - 未配置：降级 OpenStreetMap，功能不受影响。
  * 全程不使用 Cesium Ion 资产，因此不需要 Ion token。
  *
- * ⚠ 天地图已知行为（2026-09 实测 + 社区结论）：
- * 1. img_w 在 level 3~4 对国内区域返回「此级别下，该区域无影像」占位图（4769B jpg），
- *    level 5 起才有真实影像 → 影像层必须 minimumTerrainLevel = 5，
- *    低层级由底层矢量兜底，任何缩放级别都不会露出占位文字。
+ * ⚠ 天地图已知行为（2026-09 逐层级实测 + 社区结论）：
+ * 1. img_w 影像在国内是「半覆盖」：L3~4 整片「无影像」占位（带字 4769B），
+ *    L5 瓦片也带部分水印（武汉样本 3% 水印像素），L6 起才是纯净卫星图
+ *    → 影像层 minimumTerrainLevel = 6，之下由底层矢量兜底。
  * 2. 天地图「浏览器端」key 拒绝非浏览器 UA 的请求（脚本直连 403、code 301012）。
  * 3. 域名必须用 tianditu.gov.cn（旧 tianditu.com 不支持 https）。
+ * 4. 个人 key 影像底图日配额 1 万次 + 并发限流；超限同样返回占位图（见 D3）。
  */
-export const IMG_MIN_TERRAIN_LEVEL = 5
+export const IMG_MIN_TERRAIN_LEVEL = 6
+
+/**
+ * 天地图 key 池：VITE_TDT_TOKEN 支持逗号分隔多个 key（每人最多 5 个），
+ * 每创建一个图层 provider 轮换一个——分摊单 key 的日配额（影像底图个人 key
+ * 仅 1 万次/天）与并发限流。
+ */
+const TDT_TOKENS = (import.meta.env.VITE_TDT_TOKEN || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+let tdtKeyCursor = 0
+
+function nextTdtToken() {
+  const t = TDT_TOKENS[tdtKeyCursor % TDT_TOKENS.length]
+  tdtKeyCursor++
+  return t
+}
 
 export function createMapViewer(Cesium, container) {
-  const token = import.meta.env.VITE_TDT_TOKEN || ''
+  // 个人 key 有并发限流：8 个 t 子域名 × 默认 6 并发 = 48 并发会触发限流返回占位图
+  Cesium.RequestScheduler.requestsPerServer = 3
   let viewer
 
-  if (token) {
+  if (TDT_TOKENS.length) {
     viewer = new Cesium.Viewer(container, {
-      baseLayer: new Cesium.ImageryLayer(createTdtProvider(Cesium, token, TDT_LAYERS.vec.base)),
+      baseLayer: new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.vec.base)),
       ...baseViewerOptions(),
     })
-    applyTdtStack(viewer, 'img')
+    applyTdtStack(viewer, 'vec')
   } else {
     console.warn(
       '[map] 未配置 VITE_TDT_TOKEN，底图降级为 OpenStreetMap。' +
@@ -39,9 +58,9 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：华中上空约 280 万米（level 5~6，影像层已可用）
+  // 初始视角：华中上空约 180 万米（level 6~7：矢量路网/卫星细节清晰）
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 2_800_000),
+    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 1_800_000),
   })
   return viewer
 }
@@ -49,21 +68,20 @@ export function createMapViewer(Cesium, container) {
 /** 切换天地图底图模式：'img' 卫星（矢量兜底+影像+注记）/ 'vec' 矢量（矢量+注记） */
 export function applyTdtStack(viewer, mode) {
   const Cesium = window.Cesium
-  const token = import.meta.env.VITE_TDT_TOKEN || ''
-  if (!token) return
+  if (!TDT_TOKENS.length) return
   viewer.imageryLayers.removeAll()
   // 矢量永远在最底层兜底：低层级时影像层隐藏，露出矢量而不是占位图
-  viewer.imageryLayers.add(new Cesium.ImageryLayer(createTdtProvider(Cesium, token, TDT_LAYERS.vec.base)))
+  viewer.imageryLayers.add(new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.vec.base)))
 
   if (mode === 'img') {
-    const img = new Cesium.ImageryLayer(createTdtProvider(Cesium, token, TDT_LAYERS.img.base))
+    const img = new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.img.base))
     img.minimumTerrainLevel = IMG_MIN_TERRAIN_LEVEL
     viewer.imageryLayers.add(img)
-    const cia = new Cesium.ImageryLayer(createTdtProvider(Cesium, token, TDT_LAYERS.img.anno))
+    const cia = new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.img.anno))
     cia.minimumTerrainLevel = IMG_MIN_TERRAIN_LEVEL
     viewer.imageryLayers.add(cia)
   } else {
-    viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, token, TDT_LAYERS.vec.anno))
+    viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, TDT_LAYERS.vec.anno))
   }
 }
 
@@ -76,12 +94,12 @@ function makeLayerConf(layer, matrixSet) {
   return { layer, matrixSet }
 }
 
-function createTdtProvider(Cesium, token, conf) {
+function createTdtProvider(Cesium, conf) {
   return new Cesium.WebMapTileServiceImageryProvider({
     url:
       `https://t{s}.tianditu.gov.cn/${conf.matrixSet}/wmts?service=WMTS&version=1.0.0` +
       `&request=GetTile&tilematrix={TileMatrix}&tilematrixset=w&layer=${conf.layer}` +
-      `&style=default&format=tiles&tk=${token}`,
+      `&style=default&format=tiles&tk=${nextTdtToken()}`,
     layer: conf.layer,
     style: 'default',
     format: 'tiles',

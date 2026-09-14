@@ -231,7 +231,7 @@ const drawTools = [
 
 let viewer = null
 let controller = null
-const baseType = ref('img')
+const baseType = ref('vec')
 // ?debug=1 时的自诊断角标：让页面自己报告相机高度/瓦片队列/图层状态，
 // 用于远程排查「用户浏览器里地图不可见」类问题
 const debug = ref(new URLSearchParams(window.location.search).has('debug'))
