@@ -178,6 +178,13 @@ onMounted(async () => {
       tweenGroup
     })
 
+    // 应用初始化空窗期间排队的可视化切换请求
+    if (pendingVizMode) {
+      const queued = pendingVizMode
+      pendingVizMode = null
+      switchVisualization(queued)
+    }
+
     // 加载时序GDP数据
     try {
       const tlData = await fetch('/data/mock/gdp-timeline.json').then(r => r.json())
@@ -275,10 +282,17 @@ function onContextMenu(event) {
 // 这些模式切数据要走网络/构建，需要加载反馈；gdp/default/landmarks 是同步的
 const VIZ_MODES_WITH_DATA = new Set(['population', 'carbon', 'trade', 'flights', 'earthquake', 'nightlights', 'china', 'heatmap'])
 
+// 画布初始化完成前收到的切换请求会排队，就绪后自动应用
+let pendingVizMode = null
+
 async function switchVisualization(mode) {
-  if (mode === earthStore.currentVisualization) return
-  // 画布未就绪时本次切换不会真正发生，也就不该亮加载态
-  if (VIZ_MODES_WITH_DATA.has(mode) && visualizationLayer) earthStore.setVizLoading(mode)
+  if (mode === earthStore.currentVisualization && !pendingVizMode) return
+  // 画布未就绪时先排队（旧实现直接静默 no-op，用户启动期点击会被无声丢弃）
+  if (!visualizationLayer) {
+    pendingVizMode = mode
+    return
+  }
+  if (VIZ_MODES_WITH_DATA.has(mode)) earthStore.setVizLoading(mode)
   try {
     await visualizationLayer?.switchVisualization(mode)
   } catch (err) {

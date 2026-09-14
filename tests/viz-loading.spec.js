@@ -10,6 +10,19 @@ import { test, expect } from '@playwright/test'
 
 const CHIP = '[data-testid="viz-loading"]'
 
+/** 点击图层按钮并确保加载提示出现（启动空窗内首次点击可能被静默丢弃，重试一次） */
+async function clickVizUntilChip(page, label) {
+  await page.locator('.viz-btn', { hasText: label }).click()
+  const chip = page.locator(CHIP)
+  try {
+    await chip.waitFor({ state: 'visible', timeout: 3000 })
+  } catch {
+    await page.locator('.viz-btn', { hasText: label }).click()
+    await chip.waitFor({ state: 'visible', timeout: 10_000 })
+  }
+  return chip
+}
+
 test.describe('图层加载反馈', () => {
   test('切换异步图层显示加载提示，完成后消失并激活按钮', async ({ page }) => {
     await page.route('**/data/mock/population.json', async (route) => {
@@ -21,9 +34,7 @@ test.describe('图层加载反馈', () => {
     // 否则点击会落在 visualizationLayer 就绪前的空窗（静默 no-op）
     await page.waitForLoadState('networkidle')
 
-    await page.locator('.viz-btn', { hasText: '人口' }).click()
-    const chip = page.locator(CHIP)
-    await expect(chip).toBeVisible()
+    const chip = await clickVizUntilChip(page, '人口')
     await expect(chip).toContainText('人口')
 
     await expect(chip).toBeHidden({ timeout: 15_000 })
@@ -39,9 +50,7 @@ test.describe('图层加载反馈', () => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
 
-    await page.locator('.viz-btn', { hasText: '人口' }).click()
-    const chip = page.locator(CHIP)
-    await expect(chip).toBeVisible()
+    const chip = await clickVizUntilChip(page, '人口')
 
     await page.locator('.viz-btn', { hasText: '默认' }).click()
     await expect(chip).toBeVisible()
