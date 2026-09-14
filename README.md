@@ -79,7 +79,7 @@ CI 定义在 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：
 src/
 ├── App.vue                 # 全站顶栏（品牌 / 导航 / 搜索 / 主题切换）
 ├── main.js
-├── router/index.js         # / · /three-globe · /examples · /bmap · /tools（地图工具箱）
+├── router/index.js         # / · /three-globe · /examples · /bmap · /tools（地图工具箱）· /analysis（全球数据分析）
 ├── components/             # 首页地球应用组件（EarthCanvas、面板、工具栏…）
 ├── composables/            # 首页用 composable（useScene/useRenderLoop/useRaycaster…）
 ├── stores/                 # Pinia：地球/图层/时间轴/主题/交互
