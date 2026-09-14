@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 
 /**
@@ -54,6 +55,24 @@ test.describe('地图工具箱', () => {
     await expect(page.locator('[data-testid="clear-btn"]')).toBeEnabled()
   })
 
+  test('量面积：闭合多边形后给出面积且产物登记', async ({ page }) => {
+    // 回归：_buildResult 曾缺 area 分支，量面积整条链路静默失效
+    await page.goto('/tools')
+    await page.locator('.panel-left').waitFor()
+    await page.locator('[data-tool="area"]').click()
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.click(700, 580)
+    await page.mouse.click(700, 450, { button: 'right' })
+
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('面积', { timeout: 10_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km²|m²))/)
+    await expect(result).not.toContainText('NaN')
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+  })
+
   test('标点并导出 GeoJSON', async ({ page }) => {
     await page.goto('/tools')
     await page.locator('.panel-left').waitFor()
@@ -67,6 +86,31 @@ test.describe('地图工具箱', () => {
     await page.locator('[data-testid="export-geojson"]').click()
     const download = await downloadPromise
     expect(download.suggestedFilename()).toMatch(/\.geojson$/)
+  })
+
+  test('标线导出的 GeoJSON 坐标有效（非 null）', async ({ page }) => {
+    // 回归：line 分支曾把坐标数组误传给期望单点的 _addRegistry，
+    // 每个坐标变成 NaN → JSON 序列化为 null
+    await page.goto('/tools')
+    await page.locator('.panel-left').waitFor()
+    await page.locator('[data-tool="line"]').click()
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.click(820, 500, { button: 'right' })
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.locator('[data-testid="export-geojson"]').click()
+    const download = await downloadPromise
+    const gj = JSON.parse(readFileSync(await download.path(), 'utf8'))
+    expect(gj.features).toHaveLength(1)
+    expect(gj.features[0].geometry.type).toBe('LineString')
+    const coords = gj.features[0].geometry.coordinates
+    expect(coords.length).toBe(2)
+    for (const [lon, lat] of coords) {
+      expect(Number.isFinite(lon)).toBe(true)
+      expect(Number.isFinite(lat)).toBe(true)
+    }
   })
 
   test('书签：保存、刷新持久化、删除', async ({ page }) => {
