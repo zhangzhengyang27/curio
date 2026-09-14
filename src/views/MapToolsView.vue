@@ -191,6 +191,16 @@
         data-testid="status-hint"
       >{{ hintText }}</span>
     </footer>
+
+    <!-- 调试角标（?debug=1） -->
+    <div
+      v-if="debug && ready"
+      class="debug-hud"
+      data-testid="debug-hud"
+    >
+      DEBUG · 相机高度 {{ debugInfo.height }}m · 瓦片队列 {{ debugInfo.pending }} · 图层
+      {{ debugInfo.layers }} · 底图 {{ baseType }}
+    </div>
   </div>
 </template>
 
@@ -222,6 +232,11 @@ const drawTools = [
 let viewer = null
 let controller = null
 const baseType = ref('img')
+// ?debug=1 时的自诊断角标：让页面自己报告相机高度/瓦片队列/图层状态，
+// 用于远程排查「用户浏览器里地图不可见」类问题
+const debug = ref(new URLSearchParams(window.location.search).has('debug'))
+const debugInfo = ref({ height: 0, pending: 0, layers: 0 })
+let debugTimer = null
 
 function setBase(type) {
   if (!viewer || baseType.value === type) return
@@ -307,6 +322,17 @@ onMounted(async () => {
       },
     })
     ready.value = true
+
+    if (debug.value) {
+      viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
+        debugInfo.value.pending = queueLen
+      })
+      debugTimer = setInterval(() => {
+        const carto = viewer.camera.positionCartographic
+        debugInfo.value.height = Math.round(carto.height)
+        debugInfo.value.layers = viewer.imageryLayers.length
+      }, 500)
+    }
   } catch (err) {
     loadError.value = '地图引擎加载失败，请刷新重试。'
     console.error('[map-tools] init error:', err)
@@ -315,6 +341,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   controller?.destroy()
+  if (debugTimer) clearInterval(debugTimer)
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
 </script>
@@ -528,5 +555,20 @@ onUnmounted(() => {
 
 .status-hint {
   opacity: 0.6;
+}
+
+.debug-hud {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #7fff9f;
+  font: 11px/1.6 monospace;
+  white-space: nowrap;
+  pointer-events: none;
 }
 </style>
