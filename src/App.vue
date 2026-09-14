@@ -51,6 +51,12 @@
         全球分析
       </router-link>
       <router-link
+        to="/monitor"
+        active-class="active"
+      >
+        业务监控
+      </router-link>
+      <router-link
         to="/tools"
         active-class="active"
       >
