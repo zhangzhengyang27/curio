@@ -29,7 +29,7 @@ test.describe('地图工具箱', () => {
   test('页面打开：Cesium 初始化完成，工具面板就绪，无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30_000 })
     await expect(page.locator('.cesium-viewer canvas').first()).toBeVisible()
     await expect(page.locator('[data-testid="status-coords"]')).toContainText('移动鼠标')
@@ -37,7 +37,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('量距：两次采点后状态栏给出总距离', async ({ page }) => {
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="distance"]').click()
     await expect(page.locator('[data-testid="status-hint"]')).toContainText('左键')
@@ -57,7 +57,7 @@ test.describe('地图工具箱', () => {
 
   test('量面积：闭合多边形后给出面积且产物登记', async ({ page }) => {
     // 回归：_buildResult 曾缺 area 分支，量面积整条链路静默失效
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="area"]').click()
     await page.mouse.move(700, 450)
@@ -74,7 +74,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('标点并导出 GeoJSON', async ({ page }) => {
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="point"]').click()
     await page.mouse.click(CANVAS_CLICK_A.x, CANVAS_CLICK_A.y)
@@ -91,7 +91,7 @@ test.describe('地图工具箱', () => {
   test('标线导出的 GeoJSON 坐标有效（非 null）', async ({ page }) => {
     // 回归：line 分支曾把坐标数组误传给期望单点的 _addRegistry，
     // 每个坐标变成 NaN → JSON 序列化为 null
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="line"]').click()
     await page.mouse.move(700, 450)
@@ -114,7 +114,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('书签：保存、刷新持久化、删除', async ({ page }) => {
-    await page.goto('/tools')
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-right').waitFor()
 
     await page.locator('[data-testid="bookmark-add"]').click()
