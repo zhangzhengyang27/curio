@@ -197,7 +197,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer, switchTdtBase } from '../map/createViewer.js'
+import { createMapViewer, applyTdtStack } from '../map/createViewer.js'
 import { MapToolsController } from '../map/tools/mapToolsController.js'
 import { loadBookmarks, addBookmark, removeBookmark, flyToBookmark } from '../map/bookmarks.js'
 
@@ -225,7 +225,7 @@ const baseType = ref('img')
 
 function setBase(type) {
   if (!viewer || baseType.value === type) return
-  switchTdtBase(viewer, type)
+  applyTdtStack(viewer, type)
   baseType.value = type
 }
 
