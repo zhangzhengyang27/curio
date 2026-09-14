@@ -23,7 +23,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | 示例中心 | `/examples` → `src/examples/` | **11 个来源 / 1417 条示例 / 1429 个 `.vue` 组件** |
 
 - 路由表：`/`、`/three-globe`、`/three-globe/:example`、`/examples`、
-  `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）。
+  `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）、`/monitor`（数字地球平台·业务监控）。
 - **范围已冻结**：不再接入新的示例来源，只做存量修复与机制优化
   （[`docs/ROADMAP.md`](./docs/ROADMAP.md) 第 0 节）。
 - **不变量**：1417 条示例的 `runner` **全部为 `'vue'`**（`iframe` 通道存在但无条目使用）。
