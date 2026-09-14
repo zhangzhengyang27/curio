@@ -45,7 +45,9 @@ function nextTdtToken() {
 
 export function createMapViewer(Cesium, container) {
   // 个人 key 有并发限流：8 个 t 子域名 × 默认 6 并发 = 48 并发会触发限流返回占位图
-  Cesium.RequestScheduler.requestsPerServer = 3
+  // 实测：48 并发必触发天地图频控（返回 103B 素色 vec 占位 / 4769B 水印 img 占位），
+  // 限流窗口数分钟后自动恢复。单子域名 × 1 并发 = 全局串行，最稳。
+  Cesium.RequestScheduler.requestsPerServer = 1
   let viewer
 
   if (TDT_TOKENS.length) {
@@ -67,9 +69,12 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：华中上空约 120 万米（level 7，卫星/矢量细节都清晰）
+  // 初始视角：武汉城区上空约 35 万米。
+  // ⚠ 天地图矢量图在「高空 + 陆地」视角下就是大面积米白色，曾被用户
+  // 一致反馈为「地图没加载出来」。初始必须落在城市级，路网/长江/注记
+  // 肉眼立辨，见 docs/KNOWN_PITFALLS.md D3。
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 1_200_000),
+    destination: Cesium.Cartesian3.fromDegrees(114.3, 30.6, 350_000),
   })
 
   // 拉远上限：天地图 L1~2 是全球占位区，禁止进入
@@ -127,7 +132,7 @@ function createTdtProvider(Cesium, conf) {
     style: 'default',
     format: 'tiles',
     tileMatrixSetID: 'w',
-    subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
+    subdomains: ['0'],
     tilingScheme: new Cesium.WebMercatorTilingScheme(),
     maximumLevel: 18,
   })
