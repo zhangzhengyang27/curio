@@ -88,8 +88,11 @@ server {
 ## 5. 发布前校验
 
 ```bash
-# 本机构建受批量删除保护限制（KNOWN_PITFALLS C8），输出到仓库外：
+# 本机构建受批量删除保护限制（KNOWN_PITFALLS C8），输出到仓库外。
+# ⚠ 必须带上 copy-example-deps：dist/node_modules 下的 cesium/three 等运行时资源
+# 是 /tools 与示例的硬依赖，裸 vite build 的产物不完整（E2E 会以资源 404 暴露）：
 npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true
+node scripts/copy-example-deps.js --outDir /tmp/earth-build-verify
 
 # 用真实产物跑冒烟（与线上形态一致）：
 E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/earth-build-verify npm run test:e2e

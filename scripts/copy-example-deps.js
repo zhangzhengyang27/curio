@@ -5,7 +5,13 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
 const nodeModules = path.join(projectRoot, 'node_modules')
-const dist = path.join(projectRoot, 'dist')
+// 支持与 `vite build --outDir X` 配套使用：node scripts/copy-example-deps.js --outDir X
+// （--outDir=X 与 --outDir X 两种写法皆可）
+// 否则产物（dist/node_modules 下的 cesium/three 运行时资源）缺失，/tools 与示例会 404
+const eqArg = process.argv.find((a) => a.startsWith('--outDir='))
+const eqIdx = process.argv.indexOf('--outDir')
+const outDirArg = eqArg ? eqArg.split('=')[1] : eqIdx > -1 ? process.argv[eqIdx + 1] : null
+const dist = outDirArg ? path.resolve(outDirArg) : path.join(projectRoot, 'dist')
 const distNodeModules = path.join(dist, 'node_modules')
 
 /**
