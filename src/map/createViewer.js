@@ -8,14 +8,23 @@
  * 全程不使用 Cesium Ion 资产，因此不需要 Ion token。
  *
  * ⚠ 天地图已知行为（2026-09 逐层级实测 + 社区结论）：
- * 1. img_w 影像在国内是「半覆盖」：L3~4 整片「无影像」占位（带字 4769B），
- *    L5 瓦片也带部分水印（武汉样本 3% 水印像素），L6 起才是纯净卫星图
- *    → 影像层 minimumTerrainLevel = 6，之下由底层矢量兜底。
+ * 1. img_w 影像在国内是「半覆盖」：L3~5 均为「无影像」占位（带字 4769B /
+ *    素色变体，L5 武汉样本带 3% 水印像素），L6 起才是纯净卫星图
+ *    → 影像层按相机高度显隐（≤150 万米可见）+ 拉远距离上限，
+ *    由底层矢量兜底。minimumTerrainLevel 实测拦不住低层级占位瓦片。
  * 2. 天地图「浏览器端」key 拒绝非浏览器 UA 的请求（脚本直连 403、code 301012）。
  * 3. 域名必须用 tianditu.gov.cn（旧 tianditu.com 不支持 https）。
  * 4. 个人 key 影像底图日配额 1 万次 + 并发限流；超限同样返回占位图（见 D3）。
  */
-export const IMG_MIN_TERRAIN_LEVEL = 6
+/**
+ * 影像层可见的相机高度上限（米）。
+ * 天地图卫星影像没有全球低层级数据：相机高度超过约 150 万米
+ * （level < 6）时服务端返回「无影像」占位图，必须隐藏影像层、
+ * 露出矢量兜底；同时用 maximumZoomDistance 限制拉远范围，
+ * 避免进入 L1~2 的全球占位区。
+ */
+export const IMG_VISIBLE_MAX_HEIGHT = 1_500_000
+export const MAX_ZOOM_DISTANCE = 10_000_000
 
 /**
  * 天地图 key 池：VITE_TDT_TOKEN 支持逗号分隔多个 key（每人最多 5 个），
@@ -58,9 +67,23 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：华中上空约 180 万米（level 6~7：矢量路网/卫星细节清晰）
+  // 初始视角：华中上空约 120 万米（level 7，卫星/矢量细节都清晰）
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 1_800_000),
+    destination: Cesium.Cartesian3.fromDegrees(110, 30.5, 1_200_000),
+  })
+
+  // 拉远上限：天地图 L1~2 是全球占位区，禁止进入
+  const ssc = viewer.scene.screenSpaceCameraController
+  ssc.minimumZoomDistance = 20_000
+  ssc.maximumZoomDistance = MAX_ZOOM_DISTANCE
+
+  // 影像层按相机高度显隐（minimumTerrainLevel 实测拦不住低层级占位瓦片）
+  viewer.scene.preRender.addEventListener(() => {
+    const gated = viewer.__tdtImgGated
+    if (!gated || gated.length === 0) return
+    const h = viewer.camera.positionCartographic.height
+    const show = h <= IMG_VISIBLE_MAX_HEIGHT
+    gated.forEach((layer) => { layer.show = show })
   })
   return viewer
 }
@@ -75,12 +98,12 @@ export function applyTdtStack(viewer, mode) {
 
   if (mode === 'img') {
     const img = new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.img.base))
-    img.minimumTerrainLevel = IMG_MIN_TERRAIN_LEVEL
-    viewer.imageryLayers.add(img)
     const cia = new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.img.anno))
-    cia.minimumTerrainLevel = IMG_MIN_TERRAIN_LEVEL
+    viewer.imageryLayers.add(img)
     viewer.imageryLayers.add(cia)
+    viewer.__tdtImgGated = [img, cia]
   } else {
+    viewer.__tdtImgGated = []
     viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, TDT_LAYERS.vec.anno))
   }
 }

@@ -344,9 +344,13 @@ L3~4 整片占位（带字 jpg 4769B，主色深藏青 (7,6,40)）；**L5 瓦片
 区分「真图/带字占位/素色占位」；对照控制台配额表排除配额因素。
 
 **缓解**（已内置于 `src/map/createViewer.js`）：
-1. 影像层 `minimumTerrainLevel = 6`，L6 以下由底层矢量兜底（任何层级不露占位）；
-2. 默认底图为矢量（零占位史），卫星影像为切换项；
-3. `VITE_TDT_TOKEN` 支持逗号分隔多 key，provider 轮换使用（每账号可建 5 个 key）；
-4. `RequestScheduler.requestsPerServer = 3` 压低并发；
-5. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量。
+1. **影像层按相机高度显隐**：高度 ≤150 万米（约 L6+）才显示 img/cia，
+   超过即隐藏、露出底层矢量。⚠ `ImageryLayer.minimumTerrainLevel`
+   实测拦不住低层级占位瓦片，不要依赖；
+2. **拉远上限** `maximumZoomDistance = 1000 万米`：天地图 L1~2 是全球占位区，
+   禁止用户缩放进去了；
+3. 默认底图为矢量（零占位史），卫星影像为切换项；
+4. `VITE_TDT_TOKEN` 支持逗号分隔多 key，provider 轮换使用（每账号可建 5 个 key）；
+5. `RequestScheduler.requestsPerServer = 3` 压低并发；
+6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量。
 
