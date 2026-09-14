@@ -51,6 +51,12 @@
         全球分析
       </router-link>
       <router-link
+        to="/workbench"
+        active-class="active"
+      >
+        分析工作台
+      </router-link>
+      <router-link
         to="/monitor"
         active-class="active"
       >

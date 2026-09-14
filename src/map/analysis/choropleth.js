@@ -51,16 +51,23 @@ export class Choropleth {
   }
 
   /**
-   * 按某年 GDP 重新着色。
+   * 按某年 GDP 重新着色（GDP 专用便捷入口，内部转调 applyValues）。
    * @param {object} timeline gdp-timeline 原始数据
    * @param {string} year 年份
    * @param {string|null} selected 主选国
    * @param {string[]} compared 对比国列表
    */
   apply(timeline, year, selected = null, compared = []) {
+    this.applyValues(timeline[year] || {}, selected, compared)
+  }
+
+  /**
+   * 按任意「国名 → 数值」映射着色（工作台的通用指标入口）。
+   * 映射之外的国家置灰。
+   */
+  applyValues(values, selected = null, compared = []) {
     if (!this.dataSource) return
-    const row = timeline[year] || {}
-    const entries = Object.entries(row).filter(([name]) => this.byName.has(name))
+    const entries = Object.entries(values).filter(([name]) => this.byName.has(name))
     entries.sort((a, b) => b[1] - a[1])
     const Cesium = this.Cesium
 
@@ -77,9 +84,9 @@ export class Choropleth {
       const css = highlight || rampColor(percent)
       entity.polygon.material = Cesium.Color.fromCssColorString(css).withAlpha(highlight ? 0.95 : 0.85)
     }
-    // 无 GDP 数据的国家置灰
+    // 无数据的国家置灰
     for (const [name, entity] of this.byName) {
-      if (!(name in row) && !(name === selected) && !compared.includes(name)) {
+      if (!(name in values) && !(name === selected) && !compared.includes(name)) {
         if (entity.polygon) {
           entity.polygon.material = Cesium.Color.fromCssColorString('#dcdcd6').withAlpha(0.6)
         }
