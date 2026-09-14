@@ -45,6 +45,12 @@
         ThreeGlobe
       </router-link>
       <router-link
+        to="/analysis"
+        active-class="active"
+      >
+        全球分析
+      </router-link>
+      <router-link
         to="/tools"
         active-class="active"
       >

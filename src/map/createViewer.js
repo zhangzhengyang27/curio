@@ -43,11 +43,16 @@ function nextTdtToken() {
   return t
 }
 
-export function createMapViewer(Cesium, container) {
+export function createMapViewer(Cesium, container, options = {}) {
   // 个人 key 有并发限流：8 个 t 子域名 × 默认 6 并发 = 48 并发会触发限流返回占位图
   // 实测：48 并发必触发天地图频控（返回 103B 素色 vec 占位 / 4769B 水印 img 占位），
   // 限流窗口数分钟后自动恢复。单子域名 × 1 并发 = 全局串行，最稳。
   Cesium.RequestScheduler.requestsPerServer = 1
+  const {
+    mode = 'vec', // 'vec' 纯矢量 / 'img' 卫星（矢量兜底）
+    view = { lon: 114.3, lat: 30.6, height: 350_000 },
+    maxZoom = MAX_ZOOM_DISTANCE,
+  } = options
   let viewer
 
   if (TDT_TOKENS.length) {
@@ -55,7 +60,7 @@ export function createMapViewer(Cesium, container) {
       baseLayer: new Cesium.ImageryLayer(createTdtProvider(Cesium, TDT_LAYERS.vec.base)),
       ...baseViewerOptions(),
     })
-    applyTdtStack(viewer, 'vec')
+    applyTdtStack(viewer, mode)
   } else {
     console.warn(
       '[map] 未配置 VITE_TDT_TOKEN，底图降级为 OpenStreetMap。' +
@@ -69,18 +74,18 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：武汉城区上空约 35 万米。
+  // 初始视角：可在 options.view 覆盖（分析页用全球视角，工具箱用武汉城区）。
   // ⚠ 天地图矢量图在「高空 + 陆地」视角下就是大面积米白色，曾被用户
-  // 一致反馈为「地图没加载出来」。初始必须落在城市级，路网/长江/注记
+  // 一致反馈为「地图没加载出来」。工具箱页初始必须落在城市级，路网/长江/注记
   // 肉眼立辨，见 docs/KNOWN_PITFALLS.md D3。
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(114.3, 30.6, 350_000),
+    destination: Cesium.Cartesian3.fromDegrees(view.lon, view.lat, view.height),
   })
 
   // 拉远上限：天地图 L1~2 是全球占位区，禁止进入
   const ssc = viewer.scene.screenSpaceCameraController
   ssc.minimumZoomDistance = 20_000
-  ssc.maximumZoomDistance = MAX_ZOOM_DISTANCE
+  ssc.maximumZoomDistance = maxZoom
 
   // 影像层按相机高度显隐（minimumTerrainLevel 实测拦不住低层级占位瓦片）
   viewer.scene.preRender.addEventListener(() => {
