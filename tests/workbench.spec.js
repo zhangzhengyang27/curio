@@ -1,0 +1,48 @@
+import { test, expect } from '@playwright/test'
+
+/**
+ * 主题分析工作台（/workbench）冒烟测试。
+ *
+ * 闭环：选主题（GDP/碳排放）→ 着色图与 Top10 排行/图表联动 → 生成并导出 HTML 分析报告。
+ */
+
+test.describe('主题分析工作台', () => {
+  test('页面打开：Top10 排行与图表就绪，无页面错误', async ({ page }) => {
+    const errors = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/workbench')
+    await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
+    await expect(page.locator('[data-testid="ranking-list"] .rank-row')).toHaveCount(10, { timeout: 15_000 })
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('[data-testid="summary"]')).toContainText('合计')
+    expect(errors).toEqual([])
+  })
+
+  test('切换主题：排行与摘要随指标联动', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('万亿美元')
+
+    await page.locator('[data-testid="theme-carbon"]').click()
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('MtCO₂', { timeout: 10_000 })
+    await expect(page.locator('[data-testid="summary"]')).toContainText('碳排放')
+  })
+
+  test('导出报告：下载自包含 HTML 报告', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.locator('[data-testid="export-report"]').click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toMatch(/terra-report-gdp-.*\.html$/)
+    const path = await download.path()
+    const fs = await import('node:fs')
+    const html = fs.readFileSync(path, 'utf8')
+    expect(html).toContain('<!doctype html>')
+    expect(html).toContain('分析报告')
+    expect(html).toContain('data:image/png') // 地图快照与图表已内嵌
+    expect(html).toContain('<table>')
+  })
+})
