@@ -17,9 +17,13 @@
       v-if="ready"
       class="panel panel-left tv-glass-panel"
     >
-      <h3 class="panel-title">地图工具箱</h3>
+      <h3 class="panel-title">
+        地图工具箱
+      </h3>
 
-      <p class="group-label">量测</p>
+      <p class="group-label">
+        量测
+      </p>
       <div class="tool-grid">
         <button
           v-for="tool in measureTools"
@@ -35,7 +39,9 @@
         </button>
       </div>
 
-      <p class="group-label">标绘</p>
+      <p class="group-label">
+        标绘
+      </p>
       <div class="tool-grid">
         <button
           v-for="tool in drawTools"
@@ -76,7 +82,9 @@
       v-if="ready"
       class="panel panel-right tv-glass-panel"
     >
-      <h3 class="panel-title">书签与导出</h3>
+      <h3 class="panel-title">
+        书签与导出
+      </h3>
 
       <button
         class="mini-btn primary"
@@ -119,7 +127,31 @@
         暂无书签。调整视角后点「保存当前视角」。
       </p>
 
-      <p class="group-label">导出</p>
+      <p class="group-label">
+        底图
+      </p>
+      <div class="tool-actions">
+        <button
+          class="mini-btn"
+          :class="{ primary: baseType === 'img' }"
+          data-testid="base-img"
+          @click="setBase('img')"
+        >
+          卫星影像
+        </button>
+        <button
+          class="mini-btn"
+          :class="{ primary: baseType === 'vec' }"
+          data-testid="base-vec"
+          @click="setBase('vec')"
+        >
+          矢量地图
+        </button>
+      </div>
+
+      <p class="group-label">
+        导出
+      </p>
       <div class="tool-actions">
         <button
           class="mini-btn"
@@ -165,7 +197,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer } from '../map/createViewer.js'
+import { createMapViewer, switchTdtBase } from '../map/createViewer.js'
 import { MapToolsController } from '../map/tools/mapToolsController.js'
 import { loadBookmarks, addBookmark, removeBookmark, flyToBookmark } from '../map/bookmarks.js'
 
@@ -189,6 +221,13 @@ const drawTools = [
 
 let viewer = null
 let controller = null
+const baseType = ref('img')
+
+function setBase(type) {
+  if (!viewer || baseType.value === type) return
+  switchTdtBase(viewer, type)
+  baseType.value = type
+}
 
 const coordsText = computed(() => {
   const c = status.value.coords

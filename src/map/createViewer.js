@@ -2,9 +2,13 @@
  * 地图工具箱的 Viewer 工厂。
  *
  * 底图策略（凭据外部化 + 优雅降级，见 KNOWN_PITFALLS D1）：
- * - 配置了 VITE_TDT_TOKEN：天地图矢量底图（vec_w）+ 中文注记（cva_w）
- * - 未配置：降级 OpenStreetMap，功能不受影响
+ * - 配置了 VITE_TDT_TOKEN：天地图「卫星影像」为默认底图（低层级下观感即「地球」，
+ *   不会像矢量图那样一大片灰白被误认为没加载），可一键切回矢量。
+ * - 未配置：降级 OpenStreetMap，功能不受影响。
  * 全程不使用 Cesium Ion 资产，因此不需要 Ion token。
+ *
+ * ⚠ 天地图「浏览器端」key 会拒绝非浏览器 UA 的请求（curl/脚本直连 403、
+ * code 301012），真浏览器不受影响。
  */
 export function createMapViewer(Cesium, container) {
   const token = import.meta.env.VITE_TDT_TOKEN || ''
@@ -12,10 +16,10 @@ export function createMapViewer(Cesium, container) {
 
   if (token) {
     viewer = new Cesium.Viewer(container, {
-      baseLayer: new Cesium.ImageryLayer(createTdtProvider(Cesium, token, 'vec', 'vec_w')),
+      baseLayer: new Cesium.ImageryLayer(createTdtProvider(Cesium, token, TDT_LAYERS.img.base)),
       ...baseViewerOptions(),
     })
-    viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, token, 'cva', 'cva_w'))
+    viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, token, TDT_LAYERS.img.anno))
   } else {
     console.warn(
       '[map] 未配置 VITE_TDT_TOKEN，底图降级为 OpenStreetMap。' +
@@ -29,11 +33,48 @@ export function createMapViewer(Cesium, container) {
     })
   }
 
-  // 初始视角：东亚上空
+  // 初始视角：华中上空约 700 万米——足以看清中国大陆轮廓与路网，
+  //又不至于高到让矢量图变成一片灰白（曾因此被误认为「没加载出来」）
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(105, 35, 12_000_000),
+    destination: Cesium.Cartesian3.fromDegrees(108, 32, 7_000_000),
   })
   return viewer
+}
+
+/** 切换天地图底图类型（'img' 卫星影像 / 'vec' 矢量），注记层随之联动 */
+export function switchTdtBase(viewer, type) {
+  const Cesium = window.Cesium
+  const token = import.meta.env.VITE_TDT_TOKEN || ''
+  if (!token) return
+  const conf = TDT_LAYERS[type]
+  viewer.imageryLayers.removeAll()
+  viewer.imageryLayers.addImageryLayer(new Cesium.ImageryLayer(createTdtProvider(Cesium, token, conf.base)))
+  viewer.imageryLayers.addImageryProvider(createTdtProvider(Cesium, token, conf.anno))
+}
+
+const TDT_LAYERS = {
+  img: { base: makeLayerConf('img', 'img_w'), anno: makeLayerConf('cia', 'cia_w') },
+  vec: { base: makeLayerConf('vec', 'vec_w'), anno: makeLayerConf('cva', 'cva_w') },
+}
+
+function makeLayerConf(layer, matrixSet) {
+  return { layer, matrixSet }
+}
+
+function createTdtProvider(Cesium, token, conf) {
+  return new Cesium.WebMapTileServiceImageryProvider({
+    url:
+      `https://t{s}.tianditu.gov.cn/${conf.matrixSet}/wmts?service=WMTS&version=1.0.0` +
+      `&request=GetTile&tilematrix={TileMatrix}&tilematrixset=w&layer=${conf.layer}` +
+      `&style=default&format=tiles&tk=${token}`,
+    layer: conf.layer,
+    style: 'default',
+    format: 'tiles',
+    tileMatrixSetID: 'w',
+    subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
+    tilingScheme: new Cesium.WebMercatorTilingScheme(),
+    maximumLevel: 18,
+  })
 }
 
 function baseViewerOptions() {
@@ -49,20 +90,4 @@ function baseViewerOptions() {
     timeline: false,
     navigationHelpButton: false,
   }
-}
-
-function createTdtProvider(Cesium, token, layer, matrixSet) {
-  return new Cesium.WebMapTileServiceImageryProvider({
-    url:
-      `https://t{s}.tianditu.gov.cn/${matrixSet}/wmts?service=WMTS&version=1.0.0` +
-      `&request=GetTile&tilematrix={TileMatrix}&tilematrixset=w&layer=${layer}` +
-      `&style=default&format=tiles&tk=${token}`,
-    layer,
-    style: 'default',
-    format: 'tiles',
-    tileMatrixSetID: 'w',
-    subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-    tilingScheme: new Cesium.WebMercatorTilingScheme(),
-    maximumLevel: 18,
-  })
 }
