@@ -126,8 +126,8 @@ function createTdtProvider(Cesium, conf) {
   return new Cesium.WebMapTileServiceImageryProvider({
     url:
       `https://t{s}.tianditu.gov.cn/${conf.matrixSet}/wmts?service=WMTS&version=1.0.0` +
-      `&request=GetTile&tilematrix={TileMatrix}&tilematrixset=w&layer=${conf.layer}` +
-      `&style=default&format=tiles&tk=${nextTdtToken()}`,
+      `&request=GetTile&tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}` +
+      `&tilematrixset=w&layer=${conf.layer}&style=default&format=tiles&tk=${nextTdtToken()}`,
     layer: conf.layer,
     style: 'default',
     format: 'tiles',

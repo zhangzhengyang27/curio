@@ -327,6 +327,30 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
 历史问题：`.npmrc` 里写过 `store-dir=/Users/<他人>/...`，换机器/换 CI 直接失败。
 已清理。配置文件应保持环境无关。
 
+### D3-0. Cesium WMTS URL 模板缺 `{TileRow}`/`{TileCol}` 占位（「地图永远出不来」的最终根因）
+
+**现象**：`/tools` 画布在任何缩放层级都是一张固定的米白图（1400×844 画布
+`drawImage` 采样独立色块数=1），但 Network 面板里天地图瓦片请求全部 200、
+`TileProviderError` 为 0——「下载了几百张瓦片，画面却一张都没变」。
+
+**根因**：`WebMapTileServiceImageryProvider` 的 url 模板里只写了
+`{TileMatrix}`，漏掉 `tilerow={TileRow}` 与 `tilecol={TileCol}`。于是
+每次请求的 URL 只随层级变、不随行列变——同一层级的几十个请求是**同一条
+URL**，天地图对其返回同一张默认概貌图。占位水印、素色米白、
+「配置对了却永远出不来」全部由此而来。
+
+**正确写法**（天地图 WMTS + Cesium）：`tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}`。
+注意占位符名字是 `{TileCol}` 不是 `{TileColumn}`（写错则该参数不被替换，
+服务端直接 400）。
+
+**排查手段**：挂 `scene.preRender` + 强制 `scene.render()` 后
+`drawImage` 采样画布，独立色块数≈1 即「画布是死的」；再抓页面实际
+请求 URL 逐字核对（本轮就是靠对比「页面 URL 无 tilecol」定位的）。
+另外：WebGL 画布无 preserveDrawingBuffer 时 `drawImage` 采到的是
+清屏后的黑帧，不能作为画面证据。
+
+---
+
 ### D3. 天地图影像的「无影像」占位与个人 key 配额
 
 **现象**：浏览器里整球铺满「此级别下，该区域无影像，请放大或缩小地图后再浏览」，

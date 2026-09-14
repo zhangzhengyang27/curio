@@ -324,6 +324,12 @@ onMounted(async () => {
     ready.value = true
 
     if (debug.value) {
+      // 调试钩子：探针可读取渲染器真实状态（画布像素/瓦片错误计数）
+      window.__tvMapDebug = { viewer, Cesium }
+      Cesium.TileProviderError.addEventListener((err) => {
+        window.__tvMapDebug.tileErrors = (window.__tvMapDebug.tileErrors || 0) + 1
+        window.__tvMapDebug.lastTileError = String(err?.message || err).slice(0, 200)
+      })
       viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
         debugInfo.value.pending = queueLen
       })
