@@ -6,7 +6,7 @@
     />
 
     <div
-      v-if="loadError"
+      v-if="loadError && !ready"
       class="load-error tv-glass-panel"
     >
       {{ loadError }}
@@ -322,6 +322,7 @@ onMounted(async () => {
       },
     })
     ready.value = true
+    loadError.value = ''
 
     if (debug.value) {
       // 调试钩子：探针可读取渲染器真实状态（画布像素/瓦片错误计数）
