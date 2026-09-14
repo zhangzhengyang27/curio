@@ -45,6 +45,12 @@
         ThreeGlobe
       </router-link>
       <router-link
+        to="/tools"
+        active-class="active"
+      >
+        地图工具
+      </router-link>
+      <router-link
         to="/bmap"
         active-class="active"
       >

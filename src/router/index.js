@@ -6,6 +6,7 @@ const GlobeDemo = () => import('../views/GlobeDemo.vue')
 const ExampleGallery = () => import('../examples/views/ExampleGallery.vue')
 const ExampleDemo = () => import('../examples/views/ExampleDemo.vue')
 const BMapView = () => import('../views/BMap/index.vue')
+const MapToolsView = () => import('../views/MapToolsView.vue')
 
 const routes = [
   { path: '/', name: 'earth', component: EarthView },
@@ -14,6 +15,7 @@ const routes = [
   { path: '/examples', name: 'example-gallery', component: ExampleGallery },
   { path: '/examples/:source/:pathMatch(.*)*', name: 'example-demo', component: ExampleDemo, props: true },
   { path: '/bmap', name: 'bmap', component: BMapView },
+  { path: '/tools', name: 'map-tools', component: MapToolsView },
 ]
 
 const router = createRouter({
