@@ -23,7 +23,7 @@ const STORAGE_KEY = 'tv-map-annotations'
 
 export class MapToolsController {
   /** @param {Cesium.Viewer} viewer */
-  constructor(Cesium, viewer, { onStatus, onRegistryChange, onToolChange } = {}) {
+  constructor(Cesium, viewer, { onStatus, onRegistryChange, onToolChange, onEditChange } = {}) {
     this.Cesium = Cesium
     this.viewer = viewer
     this.activeTool = null
@@ -41,15 +41,28 @@ export class MapToolsController {
      * 用户再点画布却无任何反馈」的脱钩(2026-09-15 审查 P1)。
      */
     this.onToolChange = onToolChange || (() => {})
+    /** 编辑态广播(M2):entry 或 null */
+    this.onEditChange = onEditChange || (() => {})
+    /** 当前编辑中的产物(M2) */
+    this.selectedEntry = null
+    /** @type {object[]} 编辑态顶点拖拽把手实体 */
+    this.vertexHandles = []
+    /** 正在拖拽的顶点序号(M2),null 表示未拖拽 */
+    this.dragIndex = null
 
     this.handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
     this.handler.setInputAction((e) => this._onClick(e), Cesium.ScreenSpaceEventType.LEFT_CLICK)
     this.handler.setInputAction((e) => this._onMove(e), Cesium.ScreenSpaceEventType.MOUSE_MOVE)
     this.handler.setInputAction(() => this._finish(), Cesium.ScreenSpaceEventType.RIGHT_CLICK)
     this.handler.setInputAction(() => this._finish(), Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK)
+    this.handler.setInputAction((e) => this._onLeftDown(e), Cesium.ScreenSpaceEventType.LEFT_DOWN)
+    this.handler.setInputAction(() => this._onLeftUp(), Cesium.ScreenSpaceEventType.LEFT_UP)
 
     this._keyHandler = (e) => {
-      if (e.key === 'Escape') this._cancel()
+      if (e.key === 'Escape') {
+        if (this.selectedEntry) this._exitEdit()
+        else this._cancel()
+      }
     }
     window.addEventListener('keydown', this._keyHandler)
 
@@ -58,6 +71,7 @@ export class MapToolsController {
 
   setTool(tool) {
     if (this.activeTool === tool) return
+    this._exitEdit()
     this._cancel()
     this.activeTool = tool
     this.onToolChange(tool)
@@ -76,8 +90,19 @@ export class MapToolsController {
   }
 
   _onClick(e) {
-    // 无激活工具时不得采点:曾静默积累坐标,用户看到高亮按钮却无任何反馈
-    if (!this.activeTool) return
+    // 编辑态:点击空白退出编辑,点击其它产物切换选中;不采点
+    if (this.selectedEntry) {
+      const entry = this._pickEntry(e.position)
+      if (entry && entry !== this.selectedEntry) this._enterEdit(entry)
+      else if (!entry) this._exitEdit()
+      return
+    }
+    // 无激活工具时尝试选中已绘产物(M2);不得采点:曾静默积累坐标
+    if (!this.activeTool) {
+      const entry = this._pickEntry(e.position)
+      if (entry) this._enterEdit(entry)
+      return
+    }
     const carto = this._pickCartographic(e.position)
     if (!carto) return
     const Cesium = this.Cesium
@@ -92,6 +117,11 @@ export class MapToolsController {
   }
 
   _onMove(e) {
+    // 拖拽顶点时优先更新几何(M2)
+    if (this.dragIndex != null && this.selectedEntry) {
+      this._dragVertexTo(e.endPosition)
+      return
+    }
     const carto = this._pickCartographic(e.endPosition)
     this.onStatus({
       coords: carto
@@ -103,6 +133,149 @@ export class MapToolsController {
         : null,
     })
     this._updatePreview(carto)
+  }
+
+  /**
+   * 点击命中产物:几何最近匹配(屏幕距离阈值 28px)。
+   * ⚠ 不用 scene.pick——细线/半透明实体在 headless 与低端 GPU 上拾取极不可靠
+   * (实测宽 14 不透明线也命不中),几何匹配只依赖投影坐标,完全确定。
+   */
+  _pickEntry(windowPos) {
+    let best = null
+    let bestDist = 28
+    for (const entry of this.registry) {
+      if (!entry.positions) continue
+      for (const p of entry.positions) {
+        const px = this.viewer.scene.cartesianToCanvasCoordinates(p)
+        if (!px) continue
+        const d = Math.hypot(px.x - windowPos.x, px.y - windowPos.y)
+        if (d < bestDist) {
+          bestDist = d
+          best = entry
+        }
+      }
+    }
+    return best
+  }
+
+  // ---- 标绘编辑(M2):选中 → 样式/顶点拖拽/单删 ----
+
+  _enterEdit(entry) {
+    this._exitEdit()
+    this.selectedEntry = entry
+    if (entry.positions && entry.kind !== 'point') {
+      // 顶点拖拽把手
+      const Cesium = this.Cesium
+      entry.positions.forEach((pos, i) => {
+        const handle = this.viewer.entities.add({
+          id: `vtx_${entry.id}_${i}`,
+          position: pos,
+          point: {
+            pixelSize: 11,
+            color: Cesium.Color.WHITE,
+            outlineColor: Cesium.Color.fromCssColorString(entry.style?.colorCss || '#4fc3f7'),
+            outlineWidth: 2,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          },
+          __vertexHandle: true,
+        })
+        this.vertexHandles.push(handle)
+      })
+    }
+    this.onEditChange(entry)
+  }
+
+  _exitEdit() {
+    this.dragIndex = null
+    this.vertexHandles.forEach((h) => this.viewer.entities.remove(h))
+    this.vertexHandles = []
+    if (this.selectedEntry) {
+      this.selectedEntry = null
+      this.onEditChange(null)
+    }
+  }
+
+  _onLeftDown(e) {
+    if (!this.selectedEntry || this.dragIndex != null) return
+    // 顶点命中同样用几何匹配(scene.pick 对 point 实体同样不可靠)
+    let bestIdx = null
+    let bestDist = 16
+    this.selectedEntry.positions.forEach((p, idx) => {
+      const px = this.viewer.scene.cartesianToCanvasCoordinates(p)
+      if (!px) return
+      const d = Math.hypot(px.x - e.position.x, px.y - e.position.y)
+      if (d < bestDist) {
+        bestDist = d
+        bestIdx = idx
+      }
+    })
+    if (bestIdx != null) {
+      this.dragIndex = bestIdx
+      // 拖拽期间禁用左键旋转,避免相机同时转动
+      this.viewer.scene.screenSpaceCameraController.enableRotate = false
+    }
+  }
+
+  _onLeftUp() {
+    if (this.dragIndex != null) {
+      this.dragIndex = null
+      this.viewer.scene.screenSpaceCameraController.enableRotate = true
+      this._persist()
+    }
+  }
+
+  _dragVertexTo(windowPos) {
+    const entry = this.selectedEntry
+    const cartesian = this.viewer.camera.pickEllipsoid(windowPos, this.Cesium.Ellipsoid.WGS84)
+    if (!cartesian || !entry?.positions) return
+    const positions = [...entry.positions]
+    positions[this.dragIndex] = cartesian
+    entry.positions = positions
+    // 同步几何:主体、附属与拾取代理的线都要跟着顶点走
+    if (entry.entity.polyline) entry.entity.polyline.positions.setValue(positions)
+    if (entry.entity.polygon) entry.entity.polygon.hierarchy.setValue(positions)
+    for (const x of entry.extras) {
+      if (x.polyline) x.polyline.positions.setValue(positions)
+      if (x.polygon) x.polygon.hierarchy.setValue(positions)
+    }
+    const handle = this.viewer.entities.getById(`vtx_${entry.id}_${this.dragIndex}`)
+    if (handle) handle.position = cartesian
+    entry.coords = positions.map((p) => this._toDegrees(p))
+  }
+
+  /** 编辑态改样式:主体线宽/颜色,面的填充与描边同步 */
+  setSelectedStyle({ colorCss, width }) {
+    const entry = this.selectedEntry
+    if (!entry) return
+    const Cesium = this.Cesium
+    const color = Cesium.Color.fromCssColorString(colorCss || entry.style?.colorCss || '#4fc3f7')
+    entry.style = {
+      colorCss: colorCss || entry.style?.colorCss,
+      width: width ?? entry.style?.width ?? 3,
+    }
+    const w = entry.style.width
+    if (entry.entity.polyline) {
+      entry.entity.polyline.material = color
+      entry.entity.polyline.width = w
+    }
+    if (entry.entity.polygon) {
+      entry.entity.polygon.material = color.withAlpha(0.3)
+    }
+    if (entry.entity.point) entry.entity.point.color = color
+    const fill = entry.extras.find((x) => x.polygon)
+    if (fill) fill.polygon.material = color.withAlpha(0.3)
+  }
+
+  /** 编辑态删除当前产物(主体+附属) */
+  deleteSelected() {
+    const entry = this.selectedEntry
+    if (!entry) return
+    this.viewer.entities.remove(entry.entity)
+    entry.extras.forEach((x) => this.viewer.entities.remove(x))
+    this.registry = this.registry.filter((en) => en.id !== entry.id)
+    this._exitEdit()
+    this.onRegistryChange(this.registry)
+    this._persist()
   }
 
   _pickCartographic(windowPos) {
@@ -228,6 +401,11 @@ export class MapToolsController {
       })
       this._registerEntity(tool, outline, positions, [fill])
       const area = this._computeArea(positions)
+      this.registry[this.registry.length - 1].record = {
+        kind: 'area',
+        text: `面积 ${formatArea(area)}`,
+        at: Date.now(),
+      }
       this.lastResult = { kind: 'area', text: `面积 ${formatArea(area)}` }
       return 'area'
     }
@@ -258,6 +436,11 @@ export class MapToolsController {
         },
       })
       this._registerEntity('distance', line, positions, [label])
+      this.registry[this.registry.length - 1].record = {
+        kind: 'distance',
+        text: `总距离 ${formatDistance(total)}`,
+        at: Date.now(),
+      }
       this.lastResult = { kind: 'distance', text: `总距离 ${formatDistance(total)}` }
       return 'distance'
     }
@@ -276,8 +459,15 @@ export class MapToolsController {
       entity,
       /** 附属实体（面积填充/距离标签），随主体一起撤销/清空 */
       extras,
+      /** 拖拽顶点用的笛卡尔坐标序列(M2) */
+      positions,
       /** GeoJSON 导出用的经纬度环（度） */
       coords: positions.map((p) => this._toDegrees(p)),
+      /** 编辑面板记录的样式(M2) */
+      style: {
+        colorCss: TOOL_COLORS[kind] || '#4fc3f7',
+        width: entity.polyline?.width ?? 3,
+      },
       createdAt: Date.now(),
     }
     this.registry.push(entry)
@@ -309,6 +499,7 @@ export class MapToolsController {
   undoLast() {
     const last = this.registry.pop()
     if (!last) return
+    if (this.selectedEntry === last) this._exitEdit()
     this.viewer.entities.remove(last.entity)
     last.extras.forEach((e) => this.viewer.entities.remove(e))
     this.onRegistryChange(this.registry)
@@ -316,6 +507,7 @@ export class MapToolsController {
   }
 
   clearAll() {
+    this._exitEdit()
     this.registry.forEach((e) => {
       this.viewer.entities.remove(e.entity)
       e.extras.forEach((x) => this.viewer.entities.remove(x))
@@ -408,6 +600,11 @@ export class MapToolsController {
     const n = this._restoreRecords(records)
     if (n) this._persist()
     return n
+  }
+
+  /** 量测记录(M5):挂在产物上,撤销/删除/导入恢复自动同步 */
+  get records() {
+    return this.registry.filter((e) => e.record).map((e) => e.record)
   }
 
   /** 导出全部产物为 GeoJSON FeatureCollection */

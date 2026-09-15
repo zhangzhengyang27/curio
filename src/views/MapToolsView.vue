@@ -108,6 +108,79 @@
           清空标注（{{ registryCount }}）
         </button>
       </div>
+
+      <!-- 编辑面板(M2):选中已绘产物后出现 -->
+      <template v-if="editingEntry">
+        <p class="group-label">
+          编辑:{{ editingEntry.kind }}
+        </p>
+        <div
+          class="edit-panel"
+          data-testid="edit-panel"
+        >
+          <div class="color-row">
+            <button
+              v-for="c in EDIT_COLORS"
+              :key="c"
+              class="color-swatch"
+              :data-testid="`edit-color-${c}`"
+              :style="{ background: c }"
+              :title="c"
+              @click="applyStyle({ colorCss: c })"
+            />
+          </div>
+          <label class="width-row">
+            线宽
+            <input
+              type="range"
+              min="1"
+              max="8"
+              :value="editingEntry.style?.width ?? 3"
+              data-testid="edit-width"
+              @input="applyStyle({ width: Number($event.target.value) })"
+            >
+          </label>
+          <button
+            class="mini-btn danger"
+            data-testid="edit-delete"
+            @click="deleteSelected"
+          >
+            删除此标注
+          </button>
+          <p class="place-hint">
+            拖拽白色顶点调整形状,Esc 或点空白退出编辑
+          </p>
+        </div>
+      </template>
+
+      <!-- 量测记录(M5):随撤销/删除自动同步 -->
+      <template v-if="records.length">
+        <p class="group-label">
+          量测记录({{ records.length }})
+        </p>
+        <ul
+          class="measure-list"
+          data-testid="measure-records"
+        >
+          <li
+            v-for="(r, i) in records"
+            :key="i"
+            class="measure-item"
+          >
+            <span>{{ r.kind === 'distance' ? '📏' : '⬛' }}</span>
+            <span class="measure-text">{{ r.text }}</span>
+          </li>
+        </ul>
+        <div class="tool-actions">
+          <button
+            class="mini-btn"
+            data-testid="export-records"
+            @click="exportRecordsCsv"
+          >
+            记录 → CSV
+          </button>
+        </div>
+      </template>
     </aside>
 
     <!-- 右侧：书签与导出 -->
@@ -137,20 +210,39 @@
           :key="bm.id"
           class="bookmark-item"
         >
-          <button
-            class="bookmark-goto"
-            :title="`${bm.lat}, ${bm.lon} · ${bm.height}m`"
-            @click="gotoBookmark(bm)"
-          >
-            {{ bm.name }}
-          </button>
-          <button
-            class="bookmark-del"
-            title="删除"
-            @click="deleteBookmark(bm.id)"
-          >
-            ×
-          </button>
+          <template v-if="renamingId === bm.id">
+            <input
+              v-model="renameText"
+              class="place-input"
+              :data-testid="`rename-input-${bm.id}`"
+              @keyup.enter="commitRename(bm.id)"
+              @blur="commitRename(bm.id)"
+            >
+          </template>
+          <template v-else>
+            <button
+              class="bookmark-goto"
+              :title="`${bm.lat}, ${bm.lon} · ${bm.height}m`"
+              @click="gotoBookmark(bm)"
+            >
+              {{ bm.name }}
+            </button>
+            <button
+              class="bookmark-del"
+              title="重命名"
+              data-testid="bookmark-rename"
+              @click="startRename(bm)"
+            >
+              ✎
+            </button>
+            <button
+              class="bookmark-del"
+              title="删除"
+              @click="deleteBookmark(bm.id)"
+            >
+              ×
+            </button>
+          </template>
         </div>
       </div>
       <p
@@ -159,6 +251,33 @@
       >
         暂无书签。调整视角后点「保存当前视角」。
       </p>
+
+      <!-- 书签导出/导入(M4) -->
+      <div class="tool-actions">
+        <button
+          class="mini-btn"
+          data-testid="export-bookmarks"
+          :disabled="bookmarks.length === 0"
+          @click="exportBmJson"
+        >
+          书签 → JSON
+        </button>
+        <button
+          class="mini-btn"
+          data-testid="import-bookmarks"
+          @click="bmInputRef?.click()"
+        >
+          导入书签
+        </button>
+        <input
+          ref="bmInputRef"
+          class="import-input"
+          type="file"
+          accept=".json,application/json"
+          data-testid="import-bookmarks-input"
+          @change="onImportBookmarks"
+        >
+      </div>
 
       <p class="group-label">
         底图
@@ -257,7 +376,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { loadCesium } from '../map/cesiumLoader.js'
 import { createMapViewer, applyTdtStack } from '../map/createViewer.js'
 import { MapToolsController } from '../map/tools/mapToolsController.js'
-import { loadBookmarks, addBookmark, removeBookmark, flyToBookmark } from '../map/bookmarks.js'
+import { loadBookmarks, addBookmark, removeBookmark, renameBookmark, exportBookmarks, importBookmarks, flyToBookmark } from '../map/bookmarks.js'
 
 const containerRef = ref(null)
 const ready = ref(false)
@@ -267,6 +386,13 @@ const registryCount = ref(0)
 const bookmarks = ref(loadBookmarks())
 const status = ref({ coords: null, hint: '', result: null })
 const importInputRef = ref(null)
+const bmInputRef = ref(null)
+const records = ref([])
+const editingEntry = ref(null)
+const renamingId = ref(null)
+const renameText = ref('')
+// 编辑面板可选颜色(M2)
+const EDIT_COLORS = ['#4fc3f7', '#aed581', '#ff8a65', '#ba68c8', '#ffd54f', '#e57373']
 
 const measureTools = [
   { key: 'distance', label: '量距离', icon: '📏', desc: '测地线距离' },
@@ -422,6 +548,7 @@ function onImportFile(e) {
     .then((text) => JSON.parse(text))
     .then((gj) => {
       const n = controller.importGeoJSON(gj)
+      records.value = controller.records
       status.value = {
         ...status.value,
         result: { text: n > 0 ? `已导入 ${n} 条标注` : '未识别到可导入的标注' },
@@ -430,6 +557,55 @@ function onImportFile(e) {
     .catch(() => {
       status.value = { ...status.value, result: { text: '导入失败：文件不是合法 JSON' } }
     })
+}
+
+// ---- 标绘编辑(M2) ----
+function applyStyle(patch) {
+  controller?.setSelectedStyle(patch)
+}
+
+function deleteSelected() {
+  controller?.deleteSelected()
+  records.value = controller?.records ?? []
+}
+
+// ---- 书签增强(M4) ----
+function startRename(bm) {
+  renamingId.value = bm.id
+  renameText.value = bm.name
+}
+
+function commitRename(id) {
+  if (renamingId.value !== id) return
+  bookmarks.value = renameBookmark(id, renameText.value)
+  renamingId.value = null
+}
+
+function exportBmJson() {
+  download(exportBookmarks(), `terra-bookmarks-${Date.now()}.json`, 'application/json')
+}
+
+function onImportBookmarks(e) {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  file.text().then((text) => {
+    const { list, imported } = importBookmarks(text)
+    bookmarks.value = list
+    status.value = {
+      ...status.value,
+      result: { text: imported > 0 ? `已导入 ${imported} 条书签` : '未发现可导入的新书签' },
+    }
+  })
+}
+
+// ---- 量测记录导出(M5) ----
+function exportRecordsCsv() {
+  const header = ['类型', '结果', '时间']
+  const rows = records.value.map((r) => [r.kind === 'distance' ? '量距' : '量面积', r.text, new Date(r.at).toLocaleString('zh-CN')])
+  const esc = (v) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)
+  const csv = '\uFEFF' + [header, ...rows].map((r) => r.map(esc).join(',')).join('\n')
+  download(csv, `terra-measures-${Date.now()}.csv`, 'text/csv;charset=utf-8')
 }
 
 function download(content, filename, mime, objectUrl = null) {
@@ -454,13 +630,18 @@ onMounted(async () => {
       },
       onRegistryChange: (registry) => {
         registryCount.value = registry.length
+        records.value = controller.records
       },
       onToolChange: (tool) => {
         activeTool.value = tool
       },
+      onEditChange: (entry) => {
+        editingEntry.value = entry
+      },
     })
     // 恢复上次会话的标注(M3):清空/撤销会同步覆写存储
     const restored = controller.restoreSaved()
+    records.value = controller.records
     if (restored > 0) {
       status.value = { ...status.value, result: { text: `已恢复 ${restored} 条标注` } }
     }
@@ -471,7 +652,7 @@ onMounted(async () => {
       // 调试钩子:探针可读取渲染器真实状态(画布像素/瓦片错误计数)。
       // 独立 try 包裹:诊断设施自身失效不应伪装成页面初始化失败
       try {
-        window.__tvMapDebug = { viewer, Cesium }
+        window.__tvMapDebug = { viewer, Cesium, controller }
         attachTileErrorWatch()
         viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
           debugInfo.value.pending = queueLen
@@ -644,6 +825,71 @@ onUnmounted(() => {
 
 .import-input {
   display: none;
+}
+
+.edit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+
+.color-row {
+  display: flex;
+  gap: 6px;
+}
+
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  padding: 0;
+}
+
+.color-swatch:hover {
+  border-color: #fff;
+}
+
+.width-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.width-row input {
+  flex: 1;
+}
+
+.measure-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 120px;
+  overflow: auto;
+}
+
+.measure-item {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: rgba(128, 128, 128, 0.08);
+}
+
+.measure-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .mini-btn {

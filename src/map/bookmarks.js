@@ -41,6 +41,55 @@ export function removeBookmark(id) {
   return list
 }
 
+/** 重命名书签(M4);返回更新后的列表,名称为空则不改动 */
+export function renameBookmark(id, name) {
+  const trimmed = String(name || '').trim()
+  if (!trimmed) return loadBookmarks()
+  const list = loadBookmarks().map((b) => (b.id === id ? { ...b, name: trimmed } : b))
+  save(list)
+  return list
+}
+
+/** 导出全部书签为 JSON 字符串(M4,与导入对称) */
+export function exportBookmarks() {
+  return JSON.stringify(loadBookmarks(), null, 2)
+}
+
+/**
+ * 导入书签 JSON(M4)。按 id 去重合并(同 id 保留已有),返回更新后的列表;
+ * 结构非法或条目缺关键字段时跳过该条目。
+ */
+export function importBookmarks(jsonStr) {
+  let arr
+  try {
+    arr = JSON.parse(jsonStr)
+  } catch {
+    return { list: loadBookmarks(), imported: 0 }
+  }
+  if (!Array.isArray(arr)) return { list: loadBookmarks(), imported: 0 }
+  const existing = loadBookmarks()
+  const byId = new Map(existing.map((b) => [b.id, b]))
+  let imported = 0
+  for (const b of arr) {
+    if (!b || typeof b.id !== 'string' || !Number.isFinite(b.lon) || !Number.isFinite(b.lat)) continue
+    if (byId.has(b.id)) continue
+    byId.set(b.id, {
+      id: b.id,
+      name: String(b.name || `书签 ${byId.size + 1}`),
+      lon: b.lon,
+      lat: b.lat,
+      height: Number.isFinite(b.height) ? b.height : 350_000,
+      heading: Number.isFinite(b.heading) ? b.heading : 0,
+      pitch: Number.isFinite(b.pitch) ? b.pitch : -90,
+      createdAt: Number.isFinite(b.createdAt) ? b.createdAt : Date.now(),
+    })
+    imported++
+  }
+  const list = [...byId.values()]
+  save(list)
+  return { list, imported }
+}
+
 export function flyToBookmark(camera, bm) {
   const Cesium = window.Cesium
   camera.flyTo({

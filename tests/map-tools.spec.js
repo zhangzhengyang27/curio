@@ -129,7 +129,7 @@ test.describe('地图工具箱', () => {
     await page.locator('.panel-right').waitFor()
     await expect(page.locator('[data-testid="bookmark-list"] .bookmark-item')).toHaveCount(1)
 
-    await page.locator('[data-testid="bookmark-list"] .bookmark-del').click()
+    await page.locator('[data-testid="bookmark-list"] .bookmark-del[title="删除"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="bookmark-list"]')).toHaveCount(0)
   })
 
@@ -277,5 +277,115 @@ test.describe('地图工具箱', () => {
     await page.locator('[data-testid="place-search"]').fill('武汉')
     await page.locator('[data-testid="place-search"]').press('Enter')
     await expect(page.locator('[data-testid="place-hint"]')).toContainText('不可用', { timeout: 10_000 })
+  })
+
+  test('标绘编辑:选中→改色→拖顶点→单删(M2)', async ({ page }) => {
+    test.setTimeout(180_000)
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 标线(2 点)
+    await page.locator('[data-tool="line"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.dblclick(820, 500)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+    // ⚠ dblclick 后立即点击会被浏览器并入连击链,须等静止(探针实测 bestDist=0 却未选中)
+    await page.waitForTimeout(2500)
+
+    // 求线第一顶点的屏幕坐标(视口系),点击选中(几何匹配只认顶点,28px 阈值)
+    const mid = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const entry = controller.registry[0]
+      const rect = viewer.canvas.getBoundingClientRect()
+      const px = viewer.scene.cartesianToCanvasCoordinates(entry.positions[0])
+      return { x: Math.round(px.x + rect.left), y: Math.round(px.y + rect.top) }
+    })
+    await page.mouse.click(mid.x, mid.y)
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeVisible({ timeout: 10_000 })
+
+    // 改色:controller 记录的 style 同步
+    await page.locator('[data-testid="edit-color-#e57373"]').click({ force: true })
+    const colorCss = await page.evaluate(() => window.__tvMapDebug.controller.selectedEntry.style.colorCss)
+    expect(colorCss).toBe('#e57373')
+
+    // 拖顶点:重新求第一顶点屏幕坐标(含视口偏移),按下-移动-抬起后位置应变化
+    const v0 = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const rect = viewer.canvas.getBoundingClientRect()
+      const px = viewer.scene.cartesianToCanvasCoordinates(controller.registry[0].positions[0])
+      return { x: Math.round(px.x + rect.left), y: Math.round(px.y + rect.top) }
+    })
+    const before = await page.evaluate(() => JSON.stringify(window.__tvMapDebug.controller.registry[0].coords))
+    await page.mouse.move(v0.x, v0.y)
+    await page.mouse.down()
+    await page.mouse.move(v0.x - 90, v0.y - 70, { steps: 8 })
+    await page.mouse.up()
+    await page.waitForTimeout(300)
+    const after = await page.evaluate(() => JSON.stringify(window.__tvMapDebug.controller.registry[0].coords))
+    expect(after).not.toBe(before)
+
+    // 单删:计数归零
+    await page.locator('[data-testid="edit-delete"]').click({ force: true })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeHidden()
+  })
+
+  test('书签增强:重命名持久化、导出再导入(M4)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-right').waitFor({ timeout: 30_000 })
+
+    await page.locator('[data-testid="bookmark-add"]').click({ force: true })
+    await expect(page.locator('[data-testid="bookmark-list"] .bookmark-item')).toHaveCount(1)
+
+    // 重命名
+    await page.locator('[data-testid="bookmark-rename"]').click({ force: true })
+    const renameInput = page.locator('[data-testid^="rename-input-"]')
+    await renameInput.fill('武汉老城')
+    await renameInput.press('Enter')
+    await expect(page.locator('[data-testid="bookmark-list"] .bookmark-goto')).toHaveText('武汉老城')
+
+    // 导出
+    const dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-bookmarks"]').evaluate((el) => el.click())
+    const d = await dl
+    expect(d.suggestedFilename()).toMatch(/terra-bookmarks-.*\.json$/)
+
+    // 删除后导入同一文件恢复
+    await page.locator('[data-testid="bookmark-list"] .bookmark-del[title="删除"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="bookmark-list"] .bookmark-item')).toHaveCount(0)
+    await page.setInputFiles('[data-testid="import-bookmarks-input"]', await d.path())
+    await expect(page.locator('[data-testid="bookmark-list"] .bookmark-goto')).toHaveText('武汉老城')
+
+    // 刷新持久化
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-right').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="bookmark-list"] .bookmark-goto')).toHaveText('武汉老城')
+  })
+
+  test('量测记录:量距后记录入列,CSV 导出(M5)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    await page.locator('[data-tool="distance"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(780, 460)
+    await page.mouse.dblclick(780, 460)
+    await expect(page.locator('[data-testid="status-result"]')).toContainText('总距离', { timeout: 10_000 })
+
+    await expect(page.locator('[data-testid="measure-records"] .measure-item')).toHaveCount(1)
+    await expect(page.locator('[data-testid="measure-records"]')).toContainText(/km|m/)
+
+    const dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-records"]').evaluate((el) => el.click())
+    const d = await dl
+    const fs = await import('node:fs')
+    const buf = fs.readFileSync(await d.path())
+    expect(buf[0]).toBe(0xef) // BOM
+    const csv = buf.toString('utf8')
+    expect(csv).toContain('类型,结果,时间')
+    expect(csv).toMatch(/量距,总距离/)
   })
 })
