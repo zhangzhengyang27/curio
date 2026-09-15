@@ -310,6 +310,50 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
 冲突时在**旧监听入口**加「界面态短路」（如巡游打开时全局快捷键整体让位），
 不要指望在自己一侧 stop/prevent。
 
+### C13. Cesium 页面上的 Playwright 交互会「静默卡死」，须 force + 落定等待
+
+**现象**（2026-09-15 四页面走查实测，两种形态）：
+
+1. `click()`/`check()` 的 call log 停在 `performing click action` 直到超时——
+   元素明明 `visible, enabled, stable` 都通过了。
+2. force 点击 `click action done`，但 `check()` 等 `checked` 状态超时——
+   事件根本没生效。
+
+**根因**：
+
+1. 形态 1：页面上 Cesium 渲染循环 + choropleth 重着色占满主线程时，
+   Playwright actionability/hit-target 探针（经 rAF 注入）长时间得不到执行，
+   点击协议等不到 ack。分析页时间轴播放中点「暂停」必现——这就是
+   「播放用例满载时偶发不稳定」的真身。
+2. 形态 2：`fill()` 过滤列表后 v-for **整行重建 DOM**，立即 click 会把事件
+   打在已脱离文档的旧节点上（坐标命中同一位置的新节点，但 force click 的
+   目标是旧 handle），`change` 丢失。
+
+**正确做法**：
+
+- 对 Cesium 页面上的面板交互统一加 `{ force: true }`（按钮/checkbox/滑杆；
+  force 跳过 actionability 探针，事件照常派发）。
+- `fill` 触发列表重渲后，等 ~300ms 让渲染落定再点击；`check()` 后用
+  `toBeChecked()` 显式断言，别只信 click 返回。
+- 相关用例参考：`tests/analysis.spec.js` 的 `checkCountry` 与播放收尾注释。
+
+### C14. `Cesium.TileProviderError` 在 1.142 是类不是事件（调试代码静默失效）
+
+**现象**：`?debug=1` 的 HUD 恒显「相机高度 0m · 瓦片队列 0 · 图层 0」，
+真实状态完全正常；且无任何控制台报错。
+
+**根因**：1.142 中 `typeof Cesium.TileProviderError === 'function'`（类），
+没有 `addEventListener`，也没有静态 `Event`。调用它的 addEventListener 抛
+TypeError，中断了同块后续的 HUD 定时器/事件监听初始化；异常被外层
+try/catch 吞掉，而错误面板的显示条件是 `loadError && !ready`（ready 已
+true），UI 零提示——典型的「静默假通过」。
+
+**正确做法**：瓦片错误计数挂到各图层 provider 的
+`imageryLayers.get(i).imageryProvider.errorEvent`（1.142 实测存在）；
+注意 `applyTdtStack` 重建图层后要对新 provider 重挂。诊断类代码自身要
+独立 try/catch，失败 console.warn，不与页面初始化错误混流。
+参考：`src/views/MapToolsView.vue` 的 `attachTileErrorWatch()`。
+
 ---
 
 ## D. 凭据与配置
@@ -383,6 +427,7 @@ L3~4 整片占位（带字 jpg 4769B，主色深藏青 (7,6,40)）；**L5 瓦片
    禁止用户缩放进去了；
 3. 默认底图为矢量（零占位史），卫星影像为切换项；
 4. `VITE_TDT_TOKEN` 支持逗号分隔多 key，provider 轮换使用（每账号可建 5 个 key）；
-5. `RequestScheduler.requestsPerServer = 3` 压低并发；
+5. `RequestScheduler.requestsPerServer = 1` + 单子域名（t0）：全局串行拉瓦片，最稳
+   （更早版本曾用 3，48 并发实测必触发限流，见上文复现实验）；
 6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量。
 
