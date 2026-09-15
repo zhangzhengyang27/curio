@@ -34,6 +34,43 @@
         class="stat warn"
         data-testid="stats-critical"
       >重大待处置 <b>{{ stats.critical }}</b></span>
+      <label
+        class="threshold-row"
+        title="震级达到该值自动列为「重大」并置顶"
+      >
+        重大阈值
+        <input
+          type="number"
+          min="4"
+          max="9"
+          step="0.5"
+          :value="threshold"
+          data-testid="threshold-input"
+          @change="onThresholdChange"
+        >
+      </label>
+      <button
+        class="mini-btn"
+        data-testid="tour-btn"
+        @click="toggleTour"
+      >
+        {{ touring ? '⏸ 停止巡游' : '▶ 巡游大屏' }}
+      </button>
+      <button
+        class="mini-btn"
+        data-testid="tour-step"
+        title="步进到下一个未处置事件"
+        @click="stepTour"
+      >
+        ⏭
+      </button>
+      <button
+        class="mini-btn"
+        data-testid="replay-btn"
+        @click="toggleReplay"
+      >
+        {{ replaying ? '⏹ 停止回放' : '⏪ 时间回放' }}
+      </button>
     </header>
 
     <!-- 左侧：实时事件流 -->
@@ -205,6 +242,15 @@ const {
   arrivedEvents,
   stats,
   pendingPool,
+  threshold,
+  setThreshold,
+  touring,
+  startTour,
+  stopTour,
+  tourStep,
+  replaying,
+  startReplay,
+  stopReplay,
   load,
   simulateOne,
   startStream,
@@ -223,6 +269,48 @@ function toggleStream() {
 function onResetDrill() {
   resetDrill()
   syncMarkers()
+}
+
+// ---- 阈值告警(K2) ----
+function onThresholdChange(e) {
+  setThreshold(e.target.value)
+  syncMarkers()
+}
+
+// ---- 巡游大屏(K3):自动轮播未处置事件 ----
+function focusEvent(e) {
+  if (!e) return
+  selected.value = e
+  viewer?.camera.flyTo({
+    destination: window.Cesium.Cartesian3.fromDegrees(e.lon, e.lat, 450_000),
+    duration: 1.4,
+  })
+}
+
+function toggleTour() {
+  if (touring.value) {
+    stopTour()
+  } else {
+    startTour(focusEvent)
+  }
+}
+
+function stepTour() {
+  stopTour()
+  focusEvent(tourStep())
+}
+
+// ---- 时间回放(K4):按发震时间升序重放 ----
+function toggleReplay() {
+  if (replaying.value) {
+    stopReplay()
+    return
+  }
+  syncMarkers()
+  startReplay((e) => {
+    selected.value = e
+    syncMarkers()
+  }, 300)
 }
 
 let viewer = null
@@ -275,6 +363,14 @@ function onSimulate() {
 }
 
 function syncMarkers() {
+  const arrivedIds = new Set(arrivedEvents.value.map((e) => e.id))
+  // 清理已回退事件的标记(时间回放/重置演练会重置 arrived)
+  for (const [id, entity] of markerEntities) {
+    if (!arrivedIds.has(id)) {
+      viewer.entities.remove(entity)
+      markerEntities.delete(id)
+    }
+  }
   for (const e of arrivedEvents.value) {
     if (!markerEntities.has(e.id)) addMarker(e)
     else refreshMarker(e)
@@ -393,6 +489,25 @@ onUnmounted(() => {
 
 .stat.warn {
   color: #ef5350;
+}
+
+.threshold-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.threshold-row input {
+  width: 46px;
+  padding: 2px 4px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  text-align: center;
 }
 
 .panel {

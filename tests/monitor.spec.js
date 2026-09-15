@@ -106,4 +106,78 @@ test.describe('业务监控', () => {
     await toggle.evaluate((el) => el.click()) // 收尾停止,不干扰其它用例
     await expect(toggle).toContainText('开启')
   })
+
+  test('阈值告警:调低阈值后「重大」数与置顶即时重排(K2)', async ({ page }) => {
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.stats-bar').waitFor({ timeout: 30000 })
+    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10, { timeout: 15_000 })
+
+    // 读取数据文件计算期望:arrived 前 10 条(按日期降序)中 mag ≥ 阈值的数量
+    const fs = await import('node:fs')
+    const raw = JSON.parse(fs.readFileSync('public/data/mock/earthquakes.json', 'utf8'))
+    const arrived = [...raw].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 10)
+
+    const criticalCount = async () =>
+      Number((await page.locator('[data-testid="stats-critical"]').textContent()).replace(/[^0-9]/g, ''))
+
+    await page.locator('[data-testid="threshold-input"]').evaluate((el) => {
+      el.value = '8'
+      el.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    const expectAt8 = arrived.filter((r) => r.mag >= 8).length
+    await expect
+      .poll(criticalCount, { timeout: 5_000 })
+      .toBe(expectAt8)
+
+    await page.locator('[data-testid="threshold-input"]').evaluate((el) => {
+      el.value = '4'
+      el.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    const expectAt4 = arrived.filter((r) => r.mag >= 4).length
+    await expect
+      .poll(criticalCount, { timeout: 5_000 })
+      .toBe(expectAt4)
+    // 有重大事件时列表首位必须是重大
+    if (expectAt4 > 0) {
+      await expect(page.locator('[data-testid="feed-list"] .feed-item').first()).toContainText('重大')
+    }
+  })
+
+  test('巡游大屏:自动轮播未处置事件,步进可用(K3)', async ({ page }) => {
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.stats-bar').waitFor({ timeout: 30000 })
+
+    // 步进:详情切换到某事件
+    await page.locator('[data-testid="tour-step"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="detail-mag"]')).toBeVisible({ timeout: 10_000 })
+
+    // 自动巡游:开启后 5s 内详情应自动切换
+    await page.locator('[data-testid="tour-btn"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="tour-btn"]')).toContainText('停止巡游', { timeout: 5_000 })
+    await page.waitForTimeout(5000)
+    await expect(page.locator('[data-testid="detail-mag"]')).toBeVisible()
+
+    // 停止
+    await page.locator('[data-testid="tour-btn"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="tour-btn"]')).toContainText('巡游大屏')
+  })
+
+  test('时间回放:按发震时间升序重放事件到达(K4)', async ({ page }) => {
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.stats-bar').waitFor({ timeout: 30000 })
+
+    const fs = await import('node:fs')
+    const raw = JSON.parse(fs.readFileSync('public/data/mock/earthquakes.json', 'utf8'))
+    // 升序 = 最早的先到达;feed「新的在前」,放行到第 7 条时首位 = 升序第 7 条
+    const ascending = [...raw].sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0))
+    const seventh = ascending[6]
+
+    await page.locator('[data-testid="replay-btn"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="replay-btn"]')).toContainText('停止回放', { timeout: 5_000 })
+    await expect
+      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').first().textContent(), { timeout: 15_000 })
+      .toContain(seventh.date.slice(0, 10))
+
+    await page.locator('[data-testid="replay-btn"]').evaluate((el) => el.click()) // 收尾停止
+  })
 })

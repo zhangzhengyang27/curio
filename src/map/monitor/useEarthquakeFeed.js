@@ -33,15 +33,16 @@ function persistStatus(events) {
 }
 
 export const LEVELS = {
-  critical: { label: '重大', color: '#e53935' }, // mag ≥ 7
-  major: { label: '较大', color: '#fb8c00' }, // 5 ≤ mag < 7
+  critical: { label: '重大', color: '#e53935' }, // mag ≥ 阈值(默认 7,UI 可调 K2)
+  major: { label: '较大', color: '#fb8c00' }, // 5 ≤ mag < 阈值
   normal: { label: '一般', color: '#fbc02d' }, // mag < 5
 }
 
 export const STATUS_LABEL = { open: '未处理', processing: '处理中', resolved: '已处置' }
 
-export function levelOf(mag) {
-  if (mag >= 7) return 'critical'
+/** 按阈值分级(K2):critical = mag ≥ threshold;major = 5 ≤ mag < threshold */
+export function levelOf(mag, threshold = 7) {
+  if (mag >= threshold) return 'critical'
   if (mag >= 5) return 'major'
   return 'normal'
 }
@@ -49,11 +50,16 @@ export function levelOf(mag) {
 export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 } = {}) {
   const events = ref([]) // 全部事件（含未放行）
   const feed = ref([]) // 已放行（到达）的事件 id，按到达顺序，新的在前
+  const threshold = ref(7) // 重大阈值(K2),UI 可调
   let streamTimer = null
+  let tourTimer = null // 巡游计时器(K3)
+  let replayTimer = null // 时间回放计时器(K4)
 
   const arrivedEvents = computed(() => {
     const byId = new Map(events.value.map((e) => [e.id, e]))
-    return feed.value.map((id) => byId.get(id)).filter(Boolean)
+    const list = feed.value.map((id) => byId.get(id)).filter(Boolean)
+    // 重大事件列顶(K2),其余按到达顺序
+    return [...list.filter((e) => e.level === 'critical'), ...list.filter((e) => e.level !== 'critical')]
   })
 
   const stats = computed(() => {
@@ -66,6 +72,16 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
   })
 
   const pendingPool = computed(() => events.value.filter((e) => !e.arrived))
+
+  /** 调整重大阈值并全量重算分级(K2) */
+  function setThreshold(t) {
+    const v = Math.min(9, Math.max(4, Math.round(Number(t) || 7)))
+    threshold.value = v
+    for (const e of events.value) {
+      e.level = levelOf(e.mag, v)
+    }
+    return v
+  }
 
   function load() {
     return fetch('/data/mock/earthquakes.json')
@@ -81,14 +97,20 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
           mag: r.mag,
           depth: r.depth,
           date: r.date,
-          level: levelOf(r.mag),
+          level: levelOf(r.mag, threshold.value),
           status: persisted[i] || 'open',
           arrived: false,
         }))
-        for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(k)
+        for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
       })
   }
 
+  /**
+   * 放行池中第 pooledIndex 个未放行事件。
+   * ⚠ 循环放行时固定传 0:pool 每次都会重建(已放行被过滤),传递增索引
+   *   会跳号——曾导致初始 10 条实际是「偶数位」事件、最新事件被跳过
+   *   (2026-09-15 K2 实施时发现的产品缺陷)。
+   */
   function revealAt(pooledIndex) {
     const pool = events.value.filter((e) => !e.arrived)
     const e = pool[Math.min(pooledIndex, pool.length - 1)]
@@ -131,11 +153,96 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
 
   /** 重置演练：全部事件回到未处理并清空持久化（K1） */
   function resetDrill() {
-    for (const e of events.value) e.status = 'open'
+    stopTour()
+    stopReplay()
+    for (const e of events.value) {
+      e.status = 'open'
+      e.arrived = false
+      e.level = levelOf(e.mag, threshold.value)
+    }
+    feed.value = []
     localStorage.removeItem(STATUS_KEY)
+    for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
   }
 
-  onUnmounted(stopStream)
+  // ---- 巡游大屏(K3):自动轮播未处置事件 ----
+  const touring = ref(false)
+  const tourPosition = ref(0) // 在未处置队列中的游标
+
+  const tourTargets = computed(() => arrivedEvents.value.filter((e) => e.status !== 'resolved'))
+
+  /** 步进到下一个未处置事件,返回该事件(无未处置返回 null) */
+  function tourStep() {
+    const targets = tourTargets.value
+    if (!targets.length) return null
+    tourPosition.value = (tourPosition.value + 1) % targets.length
+    return targets[tourPosition.value]
+  }
+
+  function startTour(onEach, intervalMs = 4000) {
+    stopTour()
+    stopReplay()
+    touring.value = true
+    tourPosition.value = -1
+    onEach(tourStep())
+    tourTimer = setInterval(() => {
+      const next = tourStep()
+      if (!next) {
+        stopTour()
+        return
+      }
+      onEach(next)
+    }, intervalMs)
+  }
+
+  function stopTour() {
+    if (tourTimer) {
+      clearInterval(tourTimer)
+      tourTimer = null
+    }
+    touring.value = false
+  }
+
+  // ---- 时间回放(K4):按发震时间升序重放事件到达过程 ----
+  const replaying = ref(false)
+
+  function startReplay(onEach, intervalMs = 700) {
+    stopReplay()
+    stopTour()
+    stopStream()
+    replaying.value = true
+    // 全部回退,按发震时间升序重放
+    for (const e of events.value) e.arrived = false
+    feed.value = []
+    const ascending = [...events.value].sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0))
+    let i = 0
+    const step = () => {
+      if (i >= ascending.length) {
+        stopReplay()
+        return
+      }
+      const e = ascending[i++]
+      e.arrived = true
+      feed.value = [e.id, ...feed.value]
+      onEach(e)
+      replayTimer = setTimeout(step, intervalMs)
+    }
+    step()
+  }
+
+  function stopReplay() {
+    if (replayTimer) {
+      clearTimeout(replayTimer)
+      replayTimer = null
+    }
+    replaying.value = false
+  }
+
+  onUnmounted(() => {
+    stopStream()
+    stopTour()
+    stopReplay()
+  })
 
   return {
     events,
@@ -143,6 +250,15 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     arrivedEvents,
     stats,
     pendingPool,
+    threshold,
+    setThreshold,
+    touring,
+    startTour,
+    stopTour,
+    tourStep,
+    replaying,
+    startReplay,
+    stopReplay,
     load,
     simulateOne,
     startStream,
