@@ -40,6 +40,7 @@
             :key="i"
             class="place-item"
             :data-testid="`place-item-${i}`"
+            :title="p.displayName || p.name"
             @click="flyToPlace(p)"
           >
             {{ p.name }}
@@ -399,52 +400,152 @@ const measureTools = [
   { key: 'area', label: '量面积', icon: '⬛', desc: '多边形面积' },
 ]
 
-// ---- 地名搜索(M1):天地图搜索 V2.0;key 只经 env 注入,服务不可用时仅提示 ----
+// ---- 地名搜索(M1):三通道——天地图 V2.0 优先(个人认证暂无权限 404,企业认证后
+//      自动恢复)→ 高德 Web 服务兜底(国内可达、CORS 开放、个人免费;返回 GCJ-02
+//      坐标,经纠偏转 WGS-84)→ OpenStreetMap Nominatim(免认证最后兜底,当前网络
+//      环境不可达,保留通道)。key 只经 env 注入;全部失败时仅提示,不阻塞其它工具。 ----
 const TDT_KEY = (import.meta.env.VITE_TDT_TOKEN || '').split(',')[0].trim()
+const AMAP_KEY = (import.meta.env.VITE_AMAP_KEY || '').trim()
 const placeQuery = ref('')
 const placeResults = ref([])
 const placeHint = ref('')
+
+async function fetchJson(url, timeoutMs = 8000) {
+  // 超时兜底:跨域请求偶发挂起时也能落到降级提示
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
+  try {
+    const res = await fetch(url, { signal: ctrl.signal })
+    if (!res.ok) throw new Error(`搜索服务响应 ${res.status}`)
+    return await res.json()
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+async function searchTdt(q) {
+  const postStr = JSON.stringify({
+    keyWord: q,
+    level: 12,
+    mapBound: '73.5,18,135,53.5', // 中国范围
+    queryType: 1, // 普通搜索
+    start: 0,
+    count: 10,
+  })
+  const data = await fetchJson(
+    `https://api.tianditu.gov.cn/search?postStr=${encodeURIComponent(postStr)}&type=query&tk=${TDT_KEY}`
+  )
+  const pois = Array.isArray(data.pois) ? data.pois : []
+  return pois
+    .slice(0, 8)
+    .map((p) => {
+      const [lon, lat] = String(p.lonlat || '').split(',').map(Number)
+      return { name: p.name, lon, lat }
+    })
+    .filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
+}
+
+/** GCJ-02(高德/火星坐标)→ WGS-84 近似逆变换:误差米级,演示场景足够 */
+function gcj02ToWgs84(lon, lat) {
+  // 纠偏只对中国大陆范围有意义,境外坐标原样返回
+  if (lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271) {
+    return { lon, lat }
+  }
+  const a = 6378245.0
+  const ee = 0.006693421622965943 // 克拉索夫斯基椭球第一偏心率平方(double 精度截断)
+  const transformLat = (x, y) => {
+    let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x))
+    ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0
+    ret += (20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin(y / 3.0 * Math.PI)) * 2.0 / 3.0
+    ret += (160.0 * Math.sin(y / 12.0 * Math.PI) + 320 * Math.sin(y * Math.PI / 30.0)) * 2.0 / 3.0
+    return ret
+  }
+  const transformLon = (x, y) => {
+    let ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x))
+    ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0
+    ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0
+    ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0
+    return ret
+  }
+  const radLat = (lat / 180.0) * Math.PI
+  let magic = Math.sin(radLat)
+  magic = 1 - ee * magic * magic
+  const sqrtMagic = Math.sqrt(magic)
+  let dLat = transformLat(lon - 105.0, lat - 35.0)
+  let dLon = transformLon(lon - 105.0, lat - 35.0)
+  dLat = (dLat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * Math.PI)
+  dLon = (dLon * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * Math.PI)
+  return { lon: lon - dLon, lat: lat - dLat }
+}
+
+async function searchAmap(q) {
+  const data = await fetchJson(
+    `https://restapi.amap.com/v3/place/text?keywords=${encodeURIComponent(q)}&offset=8&page=1&key=${AMAP_KEY}`
+  )
+  // INVALID_USER_KEY/配额超限等业务错误按通道失败处理,交给下一个通道
+  if (data.status !== '1') throw new Error(String(data.info || 'amap error'))
+  const pois = Array.isArray(data.pois) ? data.pois : []
+  return pois
+    .map((p) => {
+      const [gcjLon, gcjLat] = String(p.location || '').split(',').map(Number)
+      if (!Number.isFinite(gcjLon) || !Number.isFinite(gcjLat)) return null
+      const wgs = gcj02ToWgs84(gcjLon, gcjLat)
+      const region = [p.pname, p.cityname === p.pname ? '' : p.cityname, p.adname].filter(Boolean).join(' ')
+      return {
+        name: p.name,
+        displayName: region ? `${p.name}（${region}）` : p.name,
+        lon: +wgs.lon.toFixed(6),
+        lat: +wgs.lat.toFixed(6),
+      }
+    })
+    .filter(Boolean)
+    .slice(0, 8)
+}
+
+async function searchNominatim(q) {
+  // 公共实例限 1 请求/秒(演示调用频率远低于此);accept-language 优先返回中文名
+  const data = await fetchJson(
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=jsonv2&limit=8&accept-language=zh-CN`
+  )
+  if (!Array.isArray(data)) return []
+  return data
+    .map((r) => ({
+      name: r.name || String(r.display_name || '').split(',')[0],
+      displayName: r.display_name,
+      lon: +r.lon,
+      lat: +r.lat,
+    }))
+    .filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
+    .slice(0, 8)
+}
 
 async function searchPlace() {
   const q = placeQuery.value.trim()
   if (!q) return
   placeResults.value = []
   placeHint.value = ''
-  if (!TDT_KEY) {
-    placeHint.value = '未配置天地图 token,地名搜索不可用'
-    return
-  }
-  try {
-    const postStr = JSON.stringify({
-      keyWord: q,
-      level: 12,
-      mapBound: '73.5,18,135,53.5', // 中国范围
-      queryType: 1, // 普通搜索
-      start: 0,
-      count: 10,
-    })
-    // 8s 超时兜底:跨域请求偶发挂起时也能落到降级提示
-    const ctrl = new AbortController()
-    const timer = setTimeout(() => ctrl.abort(), 8000)
-    const res = await fetch(
-      `https://api.tianditu.gov.cn/search?postStr=${encodeURIComponent(postStr)}&type=query&tk=${TDT_KEY}`,
-      { signal: ctrl.signal }
-    )
-    clearTimeout(timer)
-    if (!res.ok) throw new Error(`搜索服务响应 ${res.status}`)
-    const data = await res.json()
-    const pois = Array.isArray(data.pois) ? data.pois : []
-    if (!pois.length) {
-      placeHint.value = `没有找到「${q}」相关地名`
-      return
+  const channels = [
+    TDT_KEY && (() => searchTdt(q)),
+    AMAP_KEY && (() => searchAmap(q)),
+    () => searchNominatim(q),
+  ].filter(Boolean)
+  let found = []
+  let attempted = 0
+  let errored = 0
+  for (const run of channels) {
+    attempted++
+    try {
+      found = await run()
+      if (found.length) break
+    } catch {
+      errored++
     }
-    placeResults.value = pois.slice(0, 8).map((p) => {
-      const [lon, lat] = String(p.lonlat || '').split(',').map(Number)
-      return { name: p.name, lon, lat }
-    }).filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
-    if (!placeResults.value.length) placeHint.value = `没有找到「${q}」相关地名`
-  } catch {
-    placeHint.value = '地名搜索服务不可用，请稍后再试'
+  }
+  if (found.length) {
+    placeResults.value = found
+  } else {
+    placeHint.value =
+      errored === attempted ? '地名搜索服务不可用，请稍后再试' : `没有找到「${q}」相关地名`
   }
 }
 

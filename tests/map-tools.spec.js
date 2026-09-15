@@ -269,10 +269,56 @@ test.describe('地图工具箱', () => {
     expect(hBefore).not.toBe(hAfter)
   })
 
-  test('地名搜索:服务不可用时输入框区提示降级(M1)', async ({ page }) => {
+  test('地名搜索:天地图无权限时自动落高德兜底并纠偏坐标(M1 三通道)', async ({ page }) => {
+    // 高德通道仅在 env 配了 key 时注册(构建期注入);未配时跳过,配 key 的环境可跑
+    test.skip(!process.env.VITE_AMAP_KEY, '需 VITE_AMAP_KEY 环境变量(值任意)才能验证高德兜底通道')
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 天地图通道 404(个人认证无搜索权限的现状);高德返回 GCJ-02 坐标
+    await page.route('**/api.tianditu.gov.cn/search*', (route) =>
+      route.fulfill({ status: 404, contentType: 'text/html', body: '<html>not found</html>' })
+    )
+    await page.route('**/restapi.amap.com/v3/place/text*', (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          status: '1',
+          pois: [
+            {
+              name: '黄鹤楼',
+              location: '114.301609,30.542941', // GCJ-02(武汉,偏差约数百米)
+              pname: '湖北省',
+              cityname: '武汉市',
+              adname: '武昌区',
+            },
+          ],
+        }),
+      })
+    )
+    // Nominatim 断供(本机网络不可达),确保高德通道命中
+    await page.route('**/nominatim.openstreetmap.org/search*', (route) => route.abort())
+
+    await page.locator('[data-testid="place-search"]').fill('黄鹤楼')
+    await page.locator('[data-testid="place-search"]').press('Enter')
+    await expect(page.locator('[data-testid="place-results"] .place-item').first()).toContainText('黄鹤楼', { timeout: 10_000 })
+
+    // 点击候选:纠偏后的 WGS-84 坐标应飞达 8 万米视角
+    await page.locator('[data-testid="place-item-0"]').click()
+    await page.waitForTimeout(2200) // flyTo 1.6s
+    const h = await page.evaluate(() =>
+      Math.round(window.__tvMapDebug.viewer.camera.positionCartographic.height)
+    )
+    expect(Math.abs(h - 80_000)).toBeLessThan(5_000)
+  })
+
+  test('地名搜索:全部服务不可用时输入框区提示降级(M1)', async ({ page }) => {
     await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    // 三通道都断供才降级
     await page.route('**/api.tianditu.gov.cn/search*', (route) => route.abort())
+    await page.route('**/restapi.amap.com/v3/place/text*', (route) => route.abort())
+    await page.route('**/nominatim.openstreetmap.org/search*', (route) => route.abort())
 
     await page.locator('[data-testid="place-search"]').fill('武汉')
     await page.locator('[data-testid="place-search"]').press('Enter')
