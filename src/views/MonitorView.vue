@@ -54,7 +54,7 @@
         data-testid="tour-btn"
         @click="toggleTour"
       >
-        {{ touring ? '⏸ 停止巡游' : '▶ 巡游大屏' }}
+        {{ tourStatus === 'playing' ? '⏸ 停止巡游' : '▶ 巡游大屏' }}
       </button>
       <button
         class="mini-btn"
@@ -223,10 +223,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { loadCesium } from '../map/cesiumLoader.js'
 import { createMapViewer } from '../map/createViewer.js'
 import { useEarthquakeFeed, LEVELS, STATUS_LABEL } from '../map/monitor/useEarthquakeFeed.js'
+import { useTourEngine } from '../composables/useTourEngine.js'
 
 const containerRef = ref(null)
 const ready = ref(false)
@@ -244,10 +245,6 @@ const {
   pendingPool,
   threshold,
   setThreshold,
-  touring,
-  startTour,
-  stopTour,
-  tourStep,
   replaying,
   startReplay,
   stopReplay,
@@ -260,6 +257,63 @@ const {
 } = useEarthquakeFeed({ initialCount: 10, streamIntervalMs })
 const feedPool = ref(0)
 
+// 巡游大屏(K3)复用全局巡游引擎(X1):未处置事件序列 → 纯相机分镜
+const tour = useTourEngine({
+  flyTo: (lon, lat, durationMs = 1400) => {
+    viewer?.camera.flyTo({
+      destination: window.Cesium.Cartesian3.fromDegrees(lon, lat, 450_000),
+      duration: durationMs / 1000,
+    })
+  },
+})
+const tourStatus = tour.status
+
+function buildTourRoute() {
+  const targets = arrivedEvents.value.filter((e) => e.status !== 'resolved')
+  return {
+    steps: targets.map((e) => ({
+      camera: { lon: e.lon, lat: e.lat },
+      flyDuration: 1400,
+      dwell: 2600,
+      caption: { title: `M${e.mag} · ${LEVELS[e.level].label}`, text: `${e.date} · 深度 ${e.depth}km` },
+      eventId: e.id,
+    })),
+  }
+}
+
+function toggleTour() {
+  if (tour.status.value === 'idle') {
+    const route = buildTourRoute()
+    if (!route.steps.length) return
+    tour.start(route, 0)
+  } else if (tour.status.value === 'paused') {
+    tour.play() // 步进浏览过的路线,从这里继续播
+  } else {
+    tour.stop()
+  }
+}
+
+function stepTour() {
+  if (tour.status.value === 'idle') {
+    const route = buildTourRoute()
+    if (!route.steps.length) return
+    tour.loadAt(route, 0)
+    return
+  }
+  tour.next()
+}
+
+// 分镜推进时同步左侧选中(巡游联动详情卡)
+watch(
+  () => tour.route.value?.steps[tour.stepIndex.value],
+  (step) => {
+    if (step?.eventId != null) {
+      const ev = events.value.find((x) => x.id === step.eventId)
+      if (ev) selected.value = ev
+    }
+  }
+)
+
 function toggleStream() {
   if (streaming.value) stopStream()
   else startStream()
@@ -267,6 +321,7 @@ function toggleStream() {
 }
 
 function onResetDrill() {
+  tour.stop()
   resetDrill()
   syncMarkers()
 }
@@ -277,28 +332,7 @@ function onThresholdChange(e) {
   syncMarkers()
 }
 
-// ---- 巡游大屏(K3):自动轮播未处置事件 ----
-function focusEvent(e) {
-  if (!e) return
-  selected.value = e
-  viewer?.camera.flyTo({
-    destination: window.Cesium.Cartesian3.fromDegrees(e.lon, e.lat, 450_000),
-    duration: 1.4,
-  })
-}
-
-function toggleTour() {
-  if (touring.value) {
-    stopTour()
-  } else {
-    startTour(focusEvent)
-  }
-}
-
-function stepTour() {
-  stopTour()
-  focusEvent(tourStep())
-}
+// ---- 巡游大屏(K3)已迁移至 useTourEngine(X1) ----
 
 // ---- 时间回放(K4):按发震时间升序重放 ----
 function toggleReplay() {
@@ -306,6 +340,7 @@ function toggleReplay() {
     stopReplay()
     return
   }
+  tour.stop()
   syncMarkers()
   startReplay((e) => {
     selected.value = e

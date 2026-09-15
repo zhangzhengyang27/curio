@@ -3,15 +3,17 @@ import { ref, computed, onUnmounted } from 'vue'
 /**
  * 数据巡游引擎：按路线分镜串起「可视化模式切换 + 相机飞行 + 字幕」。
  *
- * 只负责编排与状态，不直接触碰 Three.js——场景操作通过回调注入，
- * 在 EarthView 中与 EarthCanvas 的 expose 对接；也便于脱离场景单测。
+ * 只负责编排与状态，不直接触碰场景——操作通过回调注入：
+ *   - switchMode(mode)：可选。分镜无 mode 字段时不调用（纯相机巡游场景，如监控大屏）。
+ *   - flyTo(lon, lat, durationMs)：可选。分镜无 camera 字段时不调用。
  *
  * 分镜 schema 与路线数据见 docs/TOUR_ROUTES.md：
- *   { mode, camera: { lon, lat }, flyDuration, dwell, caption: { title, text } }
+ *   { mode?, camera?: { lon, lat }, flyDuration, dwell, caption: { title, text } }
  * 每一步时间轴 = flyDuration（飞行）+ dwell（停留），播完最后一步自动 stop()。
  * 退出时的场景还原（原可视化模式、自转开关）由 EarthView 监听 status 完成。
+ * X1(2026-09-15)：字段全部可选化，供监控巡游大屏(K3)等纯相机场景复用。
  */
-export function useTourEngine({ switchMode, flyTo }) {
+export function useTourEngine({ switchMode, flyTo } = {}) {
   const status = ref('idle') // idle | playing | paused
   const route = ref(null) // 当前路线对象
   const stepIndex = ref(0) // 0-based，URL 同步时 +1 转为 1-based
@@ -33,9 +35,9 @@ export function useTourEngine({ switchMode, flyTo }) {
     const step = steps[idx]
     stepIndex.value = idx
     caption.value = step.caption
-    switchMode(step.mode)
-    // china 模式自带 flyTo(104,35)，不再重复飞行
-    if (step.camera && step.mode !== 'china') {
+    // 通用化(X1):mode/camera 均可选,按需调用注入的回调
+    if (step.mode && switchMode) switchMode(step.mode)
+    if (step.camera && flyTo) {
       flyTo(step.camera.lon, step.camera.lat, step.flyDuration ?? 2500)
     }
     clearTimer()

@@ -142,6 +142,22 @@ test.describe('主题分析工作台', () => {
     expect(html).toContain('保存为 PDF')
   })
 
+  test('URL 状态:?theme= 还原主题;切换主题地址同步(X2)', async ({ page }) => {
+    await page.goto('/workbench?theme=carbon')
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('MtCO₂', { timeout: 15_000 })
+    await expect(page.locator('[data-testid="theme-carbon"]')).toHaveClass(/active/)
+
+    // 切换主题驱动地址同步;回 gdp 时清掉参数
+    await page.locator('[data-testid="theme-population"]').evaluate((el) => el.click())
+    await expect(page).toHaveURL(/theme=population/, { timeout: 5_000 })
+    await page.locator('[data-testid="theme-gdp"]').evaluate((el) => el.click())
+    await expect(page).not.toHaveURL(/theme=/, { timeout: 5_000 })
+
+    // 无效参数静默回默认
+    await page.goto('/workbench?theme=不存在的主题')
+    await expect(page.locator('[data-testid="theme-gdp"]')).toHaveClass(/active/, { timeout: 15_000 })
+  })
+
   test('数据加载失败：显示错误提示而非静默空白(回归:错误分支曾是死代码)', async ({ page }) => {
     await page.route('**/data/mock/gdp-timeline.json', (route) => route.abort())
     await page.goto('/workbench')

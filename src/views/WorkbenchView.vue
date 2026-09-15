@@ -124,7 +124,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { loadCesium } from '../map/cesiumLoader.js'
 import { createMapViewer } from '../map/createViewer.js'
 import { Choropleth } from '../map/analysis/choropleth.js'
@@ -168,6 +169,18 @@ const ready = ref(false)
 const loadError = ref('')
 const theme = ref('gdp')
 const exporting = ref(false)
+const route = useRoute()
+const router = useRouter()
+
+// URL 状态(X2):?theme= 与 analysis 的 ?country=&year= 同一套命名规范;
+// 本页仅此一个 URL 机制(C11:一个页面的 URL 状态只能归一个机制管)
+const THEME_QUERY_KEYS = Object.keys(THEMES)
+const queryTheme = typeof route.query.theme === 'string' ? route.query.theme : ''
+if (THEME_QUERY_KEYS.includes(queryTheme)) theme.value = queryTheme
+
+watch(theme, (t) => {
+  router.replace({ query: t === 'gdp' ? {} : { theme: t } }).catch(() => {})
+})
 
 // dataError = 数据层错误(数据文件拉取失败);loadError = Cesium 初始化错误。
 // 曾只解构数据不接 error,数据失败时页面静默全灰(审查 P2 死代码分支)

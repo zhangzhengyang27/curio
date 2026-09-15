@@ -23,6 +23,11 @@ import { test } from '@playwright/test'
 const ROUTES = [
   { path: '/', name: '首页地球', ready: '.app-nav' },
   { path: '/examples', name: '示例中心', ready: '.example-card' },
+  // 四页面(X3):Cesium 底座约 10MB 级传输属预期,预算见 docs/PERF_BASELINE.md
+  { path: '/tools', name: '地图工具箱', ready: '.panel-left' },
+  { path: '/analysis', name: '全球数据分析', ready: '.panel-left' },
+  { path: '/monitor', name: '业务监控', ready: '.stats-bar' },
+  { path: '/workbench', name: '分析工作台', ready: '.panel-left' },
 ]
 
 function fmtKB(bytes) {

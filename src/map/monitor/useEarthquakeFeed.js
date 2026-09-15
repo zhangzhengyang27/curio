@@ -52,7 +52,6 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
   const feed = ref([]) // 已放行（到达）的事件 id，按到达顺序，新的在前
   const threshold = ref(7) // 重大阈值(K2),UI 可调
   let streamTimer = null
-  let tourTimer = null // 巡游计时器(K3)
   let replayTimer = null // 时间回放计时器(K4)
 
   const arrivedEvents = computed(() => {
@@ -153,7 +152,6 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
 
   /** 重置演练：全部事件回到未处理并清空持久化（K1） */
   function resetDrill() {
-    stopTour()
     stopReplay()
     for (const e of events.value) {
       e.status = 'open'
@@ -165,50 +163,11 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
   }
 
-  // ---- 巡游大屏(K3):自动轮播未处置事件 ----
-  const touring = ref(false)
-  const tourPosition = ref(0) // 在未处置队列中的游标
-
-  const tourTargets = computed(() => arrivedEvents.value.filter((e) => e.status !== 'resolved'))
-
-  /** 步进到下一个未处置事件,返回该事件(无未处置返回 null) */
-  function tourStep() {
-    const targets = tourTargets.value
-    if (!targets.length) return null
-    tourPosition.value = (tourPosition.value + 1) % targets.length
-    return targets[tourPosition.value]
-  }
-
-  function startTour(onEach, intervalMs = 4000) {
-    stopTour()
-    stopReplay()
-    touring.value = true
-    tourPosition.value = -1
-    onEach(tourStep())
-    tourTimer = setInterval(() => {
-      const next = tourStep()
-      if (!next) {
-        stopTour()
-        return
-      }
-      onEach(next)
-    }, intervalMs)
-  }
-
-  function stopTour() {
-    if (tourTimer) {
-      clearInterval(tourTimer)
-      tourTimer = null
-    }
-    touring.value = false
-  }
-
   // ---- 时间回放(K4):按发震时间升序重放事件到达过程 ----
   const replaying = ref(false)
 
   function startReplay(onEach, intervalMs = 700) {
     stopReplay()
-    stopTour()
     stopStream()
     replaying.value = true
     // 全部回退,按发震时间升序重放
@@ -240,7 +199,6 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
 
   onUnmounted(() => {
     stopStream()
-    stopTour()
     stopReplay()
   })
 
@@ -252,10 +210,6 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     pendingPool,
     threshold,
     setThreshold,
-    touring,
-    startTour,
-    stopTour,
-    tourStep,
     replaying,
     startReplay,
     stopReplay,
