@@ -237,4 +237,45 @@ test.describe('地图工具箱', () => {
       expect(JSON.stringify(f2[i].geometry.coordinates)).toBe(JSON.stringify(f1[i].geometry.coordinates))
     }
   })
+
+  test('地名搜索:输入回车出候选,点击飞达(M1)', async ({ page }) => {
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 拦截天地图搜索 API,返回固定候选(不依赖外部服务)
+    await page.route('**/api.tianditu.gov.cn/search*', async (route) => {
+      await route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          count: 1,
+          pois: [{ name: '黄鹤楼', lonlat: '114.3054,30.5428', phone: '', address: '' }],
+        }),
+      })
+    })
+
+    await page.locator('[data-testid="place-search"]').fill('黄鹤楼')
+    await page.locator('[data-testid="place-search"]').press('Enter')
+    await expect(page.locator('[data-testid="place-results"] .place-item').first()).toContainText('黄鹤楼', { timeout: 10_000 })
+
+    const hBefore = await page.evaluate(() =>
+      Math.round(window.__tvMapDebug.viewer.camera.positionCartographic.height)
+    )
+    await page.locator('[data-testid="place-item-0"]').click()
+    await page.waitForTimeout(2200) // flyTo 1.6s
+    const hAfter = await page.evaluate(() =>
+      Math.round(window.__tvMapDebug.viewer.camera.positionCartographic.height)
+    )
+    expect(Math.abs(hAfter - 80_000)).toBeLessThan(5_000) // 飞达 8 万米视角
+    expect(hBefore).not.toBe(hAfter)
+  })
+
+  test('地名搜索:服务不可用时输入框区提示降级(M1)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await page.route('**/api.tianditu.gov.cn/search*', (route) => route.abort())
+
+    await page.locator('[data-testid="place-search"]').fill('武汉')
+    await page.locator('[data-testid="place-search"]').press('Enter')
+    await expect(page.locator('[data-testid="place-hint"]')).toContainText('不可用', { timeout: 10_000 })
+  })
 })

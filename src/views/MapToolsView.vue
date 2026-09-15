@@ -21,6 +21,39 @@
         地图工具箱
       </h3>
 
+      <!-- 地名搜索(M1):天地图搜索 V2.0,失败静默降级为提示 -->
+      <div class="place-search">
+        <input
+          v-model="placeQuery"
+          class="place-input"
+          data-testid="place-search"
+          placeholder="搜索地名,回车定位…"
+          @keyup.enter="searchPlace"
+        >
+        <ul
+          v-if="placeResults.length"
+          class="place-list"
+          data-testid="place-results"
+        >
+          <li
+            v-for="(p, i) in placeResults"
+            :key="i"
+            class="place-item"
+            :data-testid="`place-item-${i}`"
+            @click="flyToPlace(p)"
+          >
+            {{ p.name }}
+          </li>
+        </ul>
+        <p
+          v-if="placeHint"
+          class="place-hint"
+          data-testid="place-hint"
+        >
+          {{ placeHint }}
+        </p>
+      </div>
+
       <p class="group-label">
         量测
       </p>
@@ -239,6 +272,57 @@ const measureTools = [
   { key: 'distance', label: '量距离', icon: '📏', desc: '测地线距离' },
   { key: 'area', label: '量面积', icon: '⬛', desc: '多边形面积' },
 ]
+
+// ---- 地名搜索(M1):天地图搜索 V2.0;key 只经 env 注入,服务不可用时仅提示 ----
+const TDT_KEY = (import.meta.env.VITE_TDT_TOKEN || '').split(',')[0].trim()
+const placeQuery = ref('')
+const placeResults = ref([])
+const placeHint = ref('')
+
+async function searchPlace() {
+  const q = placeQuery.value.trim()
+  if (!q) return
+  placeResults.value = []
+  placeHint.value = ''
+  if (!TDT_KEY) {
+    placeHint.value = '未配置天地图 token,地名搜索不可用'
+    return
+  }
+  try {
+    const postStr = JSON.stringify({
+      keyWord: q,
+      level: 12,
+      mapBound: '73.5,18,135,53.5', // 中国范围
+      queryType: 1, // 普通搜索
+      start: 0,
+      count: 10,
+    })
+    const res = await fetch(
+      `https://api.tianditu.gov.cn/search?postStr=${encodeURIComponent(postStr)}&type=query&tk=${TDT_KEY}`
+    )
+    const data = await res.json()
+    const pois = Array.isArray(data.pois) ? data.pois : []
+    if (!pois.length) {
+      placeHint.value = `没有找到「${q}」相关地名`
+      return
+    }
+    placeResults.value = pois.slice(0, 8).map((p) => {
+      const [lon, lat] = String(p.lonlat || '').split(',').map(Number)
+      return { name: p.name, lon, lat }
+    }).filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
+    if (!placeResults.value.length) placeHint.value = `没有找到「${q}」相关地名`
+  } catch {
+    placeHint.value = '地名搜索服务不可用,请稍后再试'
+  }
+}
+
+function flyToPlace(p) {
+  if (!viewer) return
+  viewer.camera.flyTo({
+    destination: window.Cesium.Cartesian3.fromDegrees(p.lon, p.lat, 80_000),
+    duration: 1.6,
+  })
+}
 const drawTools = [
   { key: 'point', label: '标点', icon: '📍', desc: '放置标注点' },
   { key: 'line', label: '标线', icon: '〰️', desc: '绘制折线' },
@@ -469,6 +553,53 @@ onUnmounted(() => {
   margin: 12px 0 6px;
   font-size: 11px;
   opacity: 0.6;
+}
+
+.place-search {
+  margin-bottom: 4px;
+}
+
+.place-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.place-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 150px;
+  overflow: auto;
+}
+
+.place-item {
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.place-item:hover {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.place-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  opacity: 0.55;
+  line-height: 1.5;
 }
 
 .tool-grid {
