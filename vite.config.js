@@ -8,6 +8,7 @@ import { statSync, createReadStream } from 'node:fs'
 const threeBuildDir = fileURLToPath(new URL('./src/examples/three-build-compat', import.meta.url))
 const nodeEmptyStub = fileURLToPath(new URL('./src/examples/jsm-compat/node-empty.js', import.meta.url))
 const lilGuiTracked = fileURLToPath(new URL('./src/examples/utils/lil-gui-tracked.js', import.meta.url))
+const cesiumInterop = fileURLToPath(new URL('./src/map/cesium-interop.js', import.meta.url))
 
 // lil-gui 原始 ESM 入口：交给 Node 解析，避免在源码里硬编码 node_modules 物理路径。
 // 解析失败（例如依赖尚未安装）时返回 null，仅跳过该别名，不影响其余配置加载。
@@ -30,6 +31,22 @@ function threeCompatResolver() {
       if (id === 'three') return `${threeBuildDir}/three.module.js`
       if (id === 'three/webgpu') return `${threeBuildDir}/three.webgpu.js`
       if (id === 'three/tsl') return `${threeBuildDir}/three.tsl.js`
+    }
+  }
+}
+
+// Cesium 由 cesiumLoader.js 以动态 <script> 加载（window.Cesium），不经 npm 打包。
+// @cesium-extends/* 的 `import 'cesium'`（peerDependency）指到互操作 shim，
+// 复用全局实例，避免打进第二份 Cesium 引擎。
+// ⚠ 必须按 importer 限定作用域：cesium-transform-controls（示例中心存量依赖）
+// 也裸导入 'cesium' 且用的是完整包导出，shim 只导出了 @cesium-extends 用到的
+// 21 个具名，全局重定向会让它构建期 Missing export（实测复现过）。
+function cesiumInteropResolver() {
+  return {
+    name: 'cesium-interop-resolver',
+    enforce: 'pre',
+    resolveId(id, importer) {
+      if (id === 'cesium' && importer && importer.includes('@cesium-extends')) return cesiumInterop
     }
   }
 }
@@ -80,6 +97,7 @@ export default defineConfig({
   plugins: [
     serveUnicodePublic(),
     threeCompatResolver(),
+    cesiumInteropResolver(),
     vue(),
     compression({ algorithm: 'gzip', threshold: 10240 }),
     compression({ algorithm: 'brotliCompress', threshold: 10240 })
@@ -177,6 +195,14 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['three-globe'],
-    exclude: ['satellite.js', 'three', 'three/webgpu', 'three/tsl'],
+    exclude: [
+      'satellite.js', 'three', 'three/webgpu', 'three/tsl',
+      // 这些包 import 'cesium'：一旦被预打包，优化器会把真实 cesium 源码打进去
+      // （预打包不经过 resolveId 插件），dev 下出现双引擎。排除后按源码逐文件
+      // 请求，'cesium' 导入走 cesiumInteropResolver。
+      // ⚠ 不可再排除 @cesium-extends/measure 之类带 CJS 依赖链（turf→
+      // polygon-clipping UMD）的包：裸伺服没有 ESM 互转，页面直接报错（实测）。
+      '@cesium-extends/drawer', '@cesium-extends/common', '@cesium-extends/subscriber', '@cesium-extends/tooltip',
+    ],
   }
 })
