@@ -42,9 +42,10 @@ test.describe('图层加载反馈', () => {
   })
 
   test('快速连切时提示跟随最后一次请求，不提前消失', async ({ page }) => {
-    // 人口慢（1.2s）；切回默认（同步路径）不应清掉仍在加载中的人口提示
+    // 人口慢（2.5s,给满载机器上的第二次点击留足余量,曾用 1.2s 在并行
+    // 负载下 click 耗时超窗导致假红）；切回默认（同步路径）不应清掉仍在加载中的人口提示
     await page.route('**/data/mock/population.json', async (route) => {
-      await new Promise((resolve) => setTimeout(resolve, 1200))
+      await new Promise((resolve) => setTimeout(resolve, 2500))
       await route.continue()
     })
     await page.goto('/')
