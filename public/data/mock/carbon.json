@@ -1,841 +1,841 @@
 {
   "阿富汗": {
-    "emission": 4397.67,
+    "emission": 1565.07,
     "unit": "MtCO2",
     "year": 2020
   },
   "安哥拉": {
-    "emission": 5827.98,
+    "emission": 7050.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿尔巴尼亚": {
-    "emission": 1298.04,
+    "emission": 6434.5,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿拉伯联合酋长国": {
-    "emission": 3272.04,
+    "emission": 7341.74,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿根廷": {
-    "emission": 963.48,
+    "emission": 1981.75,
     "unit": "MtCO2",
     "year": 2020
   },
   "亚美尼亚": {
-    "emission": 4679.47,
+    "emission": 3744.87,
     "unit": "MtCO2",
     "year": 2020
   },
   "法国": {
-    "emission": 5187.33,
+    "emission": 3268.16,
     "unit": "MtCO2",
     "year": 2020
   },
   "澳大利亚": {
-    "emission": 722.98,
+    "emission": 1832.8,
     "unit": "MtCO2",
     "year": 2020
   },
   "奥地利": {
-    "emission": 9284.09,
+    "emission": 1655.9,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿塞拜疆": {
-    "emission": 7998.22,
+    "emission": 2116.89,
     "unit": "MtCO2",
     "year": 2020
   },
   "布隆迪": {
-    "emission": 8164.42,
+    "emission": 5410.51,
     "unit": "MtCO2",
     "year": 2020
   },
   "比利时": {
-    "emission": 1802.88,
+    "emission": 978.87,
     "unit": "MtCO2",
     "year": 2020
   },
   "贝宁": {
-    "emission": 1523.15,
+    "emission": 6806.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "布基纳法索": {
-    "emission": 1310.54,
+    "emission": 6123.98,
     "unit": "MtCO2",
     "year": 2020
   },
   "孟加拉国": {
-    "emission": 324.52,
+    "emission": 774.21,
     "unit": "MtCO2",
     "year": 2020
   },
   "保加利亚": {
-    "emission": 4541.86,
+    "emission": 1977.27,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴哈马": {
-    "emission": 5516.14,
+    "emission": 8298.06,
     "unit": "MtCO2",
     "year": 2020
   },
   "波斯尼亚和黑塞哥维那": {
-    "emission": 6832.84,
+    "emission": 7879.98,
     "unit": "MtCO2",
     "year": 2020
   },
   "白俄罗斯": {
-    "emission": 659.96,
+    "emission": 4499.36,
     "unit": "MtCO2",
     "year": 2020
   },
   "伯利兹": {
-    "emission": 9919.23,
+    "emission": 7068.98,
     "unit": "MtCO2",
     "year": 2020
   },
   "玻利维亚": {
-    "emission": 4224.11,
+    "emission": 4161.38,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴西": {
-    "emission": 8500.11,
+    "emission": 1935.2,
     "unit": "MtCO2",
     "year": 2020
   },
   "文莱达鲁萨兰国": {
-    "emission": 8775.57,
+    "emission": 8124.83,
     "unit": "MtCO2",
     "year": 2020
   },
   "不丹": {
-    "emission": 3490.5,
+    "emission": 1979.58,
     "unit": "MtCO2",
     "year": 2020
   },
   "博茨瓦纳": {
-    "emission": 2631.37,
+    "emission": 7969.1,
     "unit": "MtCO2",
     "year": 2020
   },
   "中非共和国": {
-    "emission": 5767.92,
+    "emission": 6361.75,
     "unit": "MtCO2",
     "year": 2020
   },
   "加拿大": {
-    "emission": 8732.75,
+    "emission": 9295.03,
     "unit": "MtCO2",
     "year": 2020
   },
   "瑞士": {
-    "emission": 7539.96,
+    "emission": 6025.85,
     "unit": "MtCO2",
     "year": 2020
   },
   "智利": {
-    "emission": 1086.93,
+    "emission": 5952.13,
     "unit": "MtCO2",
     "year": 2020
   },
   "中国": {
-    "emission": 1919.77,
+    "emission": 574.44,
     "unit": "MtCO2",
     "year": 2020
   },
   "科特迪瓦": {
-    "emission": 3062.23,
+    "emission": 525.69,
     "unit": "MtCO2",
     "year": 2020
   },
   "喀麦隆": {
-    "emission": 1687.21,
+    "emission": 2652.18,
     "unit": "MtCO2",
     "year": 2020
   },
   "刚果（金）": {
-    "emission": 262.69,
+    "emission": 907.8,
     "unit": "MtCO2",
     "year": 2020
   },
   "刚果（布）": {
-    "emission": 36.6,
+    "emission": 989.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "哥伦比亚": {
-    "emission": 4087.15,
+    "emission": 7604.37,
     "unit": "MtCO2",
     "year": 2020
   },
   "哥斯达黎加": {
-    "emission": 8764.28,
+    "emission": 4074.62,
     "unit": "MtCO2",
     "year": 2020
   },
   "古巴": {
-    "emission": 9130.44,
+    "emission": 6012.61,
     "unit": "MtCO2",
     "year": 2020
   },
   "塞浦路斯": {
-    "emission": 9642.41,
+    "emission": 8070.09,
     "unit": "MtCO2",
     "year": 2020
   },
   "捷克共和国": {
-    "emission": 6792.5,
+    "emission": 788.38,
     "unit": "MtCO2",
     "year": 2020
   },
   "德国": {
-    "emission": 8409.34,
+    "emission": 2259.02,
     "unit": "MtCO2",
     "year": 2020
   },
   "吉布提": {
-    "emission": 9774.87,
+    "emission": 6993.55,
     "unit": "MtCO2",
     "year": 2020
   },
   "丹麦": {
-    "emission": 7021.04,
+    "emission": 2040.93,
     "unit": "MtCO2",
     "year": 2020
   },
   "多米尼加共和国": {
-    "emission": 2972.85,
+    "emission": 2416.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿尔及利亚": {
-    "emission": 9320.11,
+    "emission": 4666.9,
     "unit": "MtCO2",
     "year": 2020
   },
   "厄瓜多尔": {
-    "emission": 5966.24,
+    "emission": 2222.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿拉伯埃及共和国": {
-    "emission": 8118.65,
+    "emission": 1515.57,
     "unit": "MtCO2",
     "year": 2020
   },
   "厄立特里亚": {
-    "emission": 9989.48,
+    "emission": 4512.43,
     "unit": "MtCO2",
     "year": 2020
   },
   "西班牙": {
-    "emission": 1856.32,
+    "emission": 7428.72,
     "unit": "MtCO2",
     "year": 2020
   },
   "爱沙尼亚": {
-    "emission": 2751.42,
+    "emission": 4247.02,
     "unit": "MtCO2",
     "year": 2020
   },
   "埃塞俄比亚": {
-    "emission": 5183.04,
+    "emission": 1553.03,
     "unit": "MtCO2",
     "year": 2020
   },
   "芬兰": {
-    "emission": 4572.6,
+    "emission": 5287.35,
     "unit": "MtCO2",
     "year": 2020
   },
   "斐济": {
-    "emission": 39.33,
+    "emission": 534.65,
     "unit": "MtCO2",
     "year": 2020
   },
   "英国": {
-    "emission": 2233.26,
+    "emission": 3831.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "加蓬": {
-    "emission": 7340.64,
+    "emission": 1168.61,
     "unit": "MtCO2",
     "year": 2020
   },
   "格鲁吉亚": {
-    "emission": 7246.68,
+    "emission": 6175.36,
     "unit": "MtCO2",
     "year": 2020
   },
   "加纳": {
-    "emission": 8331.7,
+    "emission": 7382.69,
     "unit": "MtCO2",
     "year": 2020
   },
   "几内亚": {
-    "emission": 6419.33,
+    "emission": 3708.32,
     "unit": "MtCO2",
     "year": 2020
   },
   "冈比亚": {
-    "emission": 4793.49,
+    "emission": 1548.19,
     "unit": "MtCO2",
     "year": 2020
   },
   "几内亚比绍共和国": {
-    "emission": 337.27,
+    "emission": 3918.05,
     "unit": "MtCO2",
     "year": 2020
   },
   "赤道几内亚": {
-    "emission": 7790.22,
+    "emission": 5354.42,
     "unit": "MtCO2",
     "year": 2020
   },
   "希腊": {
-    "emission": 2908.41,
+    "emission": 7722.23,
     "unit": "MtCO2",
     "year": 2020
   },
   "危地马拉": {
-    "emission": 3231.15,
+    "emission": 4845.9,
     "unit": "MtCO2",
     "year": 2020
   },
   "圭亚那": {
-    "emission": 6836.15,
+    "emission": 4006.08,
     "unit": "MtCO2",
     "year": 2020
   },
   "洪都拉斯": {
-    "emission": 4995.47,
+    "emission": 9288.02,
     "unit": "MtCO2",
     "year": 2020
   },
   "克罗地亚": {
-    "emission": 8390.4,
+    "emission": 3362.19,
     "unit": "MtCO2",
     "year": 2020
   },
   "海地": {
-    "emission": 4589.69,
+    "emission": 1796.17,
     "unit": "MtCO2",
     "year": 2020
   },
   "匈牙利": {
-    "emission": 4797.36,
+    "emission": 6349.05,
     "unit": "MtCO2",
     "year": 2020
   },
   "印度尼西亚": {
-    "emission": 6914.01,
+    "emission": 6399.42,
     "unit": "MtCO2",
     "year": 2020
   },
   "印度": {
-    "emission": 8537.8,
+    "emission": 8451.15,
     "unit": "MtCO2",
     "year": 2020
   },
   "爱尔兰": {
-    "emission": 3500.47,
+    "emission": 777.02,
     "unit": "MtCO2",
     "year": 2020
   },
   "伊朗伊斯兰共和国": {
-    "emission": 5304.63,
+    "emission": 2540.77,
     "unit": "MtCO2",
     "year": 2020
   },
   "伊拉克": {
-    "emission": 3001.4,
+    "emission": 9955.37,
     "unit": "MtCO2",
     "year": 2020
   },
   "冰岛": {
-    "emission": 1663.99,
+    "emission": 1896.78,
     "unit": "MtCO2",
     "year": 2020
   },
   "以色列": {
-    "emission": 4767.49,
+    "emission": 1067.17,
     "unit": "MtCO2",
     "year": 2020
   },
   "意大利": {
-    "emission": 5821.94,
+    "emission": 8863.34,
     "unit": "MtCO2",
     "year": 2020
   },
   "牙买加": {
-    "emission": 306.91,
+    "emission": 1548.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "约旦": {
-    "emission": 4265.49,
+    "emission": 8004.38,
     "unit": "MtCO2",
     "year": 2020
   },
   "日本": {
-    "emission": 6932.54,
+    "emission": 6792.55,
     "unit": "MtCO2",
     "year": 2020
   },
   "克什米尔": {
-    "emission": 7328.16,
+    "emission": 831.68,
     "unit": "MtCO2",
     "year": 2020
   },
   "哈萨克斯坦": {
-    "emission": 6131.27,
+    "emission": 1514.75,
     "unit": "MtCO2",
     "year": 2020
   },
   "肯尼亚": {
-    "emission": 7362.67,
+    "emission": 933.93,
     "unit": "MtCO2",
     "year": 2020
   },
   "吉尔吉斯斯坦": {
-    "emission": 2175.92,
+    "emission": 5320.06,
     "unit": "MtCO2",
     "year": 2020
   },
   "柬埔寨": {
-    "emission": 195.66,
+    "emission": 2053.79,
     "unit": "MtCO2",
     "year": 2020
   },
   "大韩民国": {
-    "emission": 1136.22,
+    "emission": 5402.73,
     "unit": "MtCO2",
     "year": 2020
   },
   "科索沃": {
-    "emission": 7580.33,
+    "emission": 6044.18,
     "unit": "MtCO2",
     "year": 2020
   },
   "科威特": {
-    "emission": 2351.3,
+    "emission": 7355.73,
     "unit": "MtCO2",
     "year": 2020
   },
   "老挝": {
-    "emission": 3493.01,
+    "emission": 3318.14,
     "unit": "MtCO2",
     "year": 2020
   },
   "黎巴嫩": {
-    "emission": 8346.15,
+    "emission": 1975.84,
     "unit": "MtCO2",
     "year": 2020
   },
   "利比里亚": {
-    "emission": 619.71,
+    "emission": 5062.73,
     "unit": "MtCO2",
     "year": 2020
   },
   "利比亚": {
-    "emission": 9758.57,
+    "emission": 5763.99,
     "unit": "MtCO2",
     "year": 2020
   },
   "斯里兰卡": {
-    "emission": 8770.55,
+    "emission": 2113.85,
     "unit": "MtCO2",
     "year": 2020
   },
   "莱索托": {
-    "emission": 1447,
+    "emission": 1817.61,
     "unit": "MtCO2",
     "year": 2020
   },
   "立陶宛": {
-    "emission": 1611.07,
+    "emission": 1494.41,
     "unit": "MtCO2",
     "year": 2020
   },
   "卢森堡": {
-    "emission": 768.05,
+    "emission": 3812.41,
     "unit": "MtCO2",
     "year": 2020
   },
   "拉脱维亚": {
-    "emission": 2604.63,
+    "emission": 2272.05,
     "unit": "MtCO2",
     "year": 2020
   },
   "摩洛哥": {
-    "emission": 7668.72,
+    "emission": 3415.43,
     "unit": "MtCO2",
     "year": 2020
   },
   "摩尔多瓦": {
-    "emission": 5596.93,
+    "emission": 1368.55,
     "unit": "MtCO2",
     "year": 2020
   },
   "马达加斯加": {
-    "emission": 6246.98,
+    "emission": 10461.84,
     "unit": "MtCO2",
     "year": 2020
   },
   "墨西哥": {
-    "emission": 4709.53,
+    "emission": 5987.83,
     "unit": "MtCO2",
     "year": 2020
   },
   "马其顿": {
-    "emission": 7627.11,
+    "emission": 8938.12,
     "unit": "MtCO2",
     "year": 2020
   },
   "马里": {
-    "emission": 5618.39,
+    "emission": 8591.69,
     "unit": "MtCO2",
     "year": 2020
   },
   "缅甸": {
-    "emission": 4399.61,
+    "emission": 6194.8,
     "unit": "MtCO2",
     "year": 2020
   },
   "黑山": {
-    "emission": 6432.96,
+    "emission": 784.9,
     "unit": "MtCO2",
     "year": 2020
   },
   "蒙古": {
-    "emission": 6518.88,
+    "emission": 5882.05,
     "unit": "MtCO2",
     "year": 2020
   },
   "莫桑比克": {
-    "emission": 4185.36,
+    "emission": 7625.42,
     "unit": "MtCO2",
     "year": 2020
   },
   "毛里塔尼亚": {
-    "emission": 7800.84,
+    "emission": 3549.53,
     "unit": "MtCO2",
     "year": 2020
   },
   "马拉维": {
-    "emission": 4964.68,
+    "emission": 7115.66,
     "unit": "MtCO2",
     "year": 2020
   },
   "马来西亚": {
-    "emission": 4950.31,
+    "emission": 4281.85,
     "unit": "MtCO2",
     "year": 2020
   },
   "纳米比亚": {
-    "emission": 4152.56,
+    "emission": 2136.94,
     "unit": "MtCO2",
     "year": 2020
   },
   "尼日尔": {
-    "emission": 685.09,
+    "emission": 1502.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "尼日利亚": {
-    "emission": 95.47,
+    "emission": 2222.85,
     "unit": "MtCO2",
     "year": 2020
   },
   "尼加拉瓜": {
-    "emission": 2199.15,
+    "emission": 7869.29,
     "unit": "MtCO2",
     "year": 2020
   },
   "荷兰": {
-    "emission": 3963.42,
+    "emission": 3252.3,
     "unit": "MtCO2",
     "year": 2020
   },
   "挪威": {
-    "emission": 7146.87,
+    "emission": 3033.66,
     "unit": "MtCO2",
     "year": 2020
   },
   "尼泊尔": {
-    "emission": 5474.73,
+    "emission": 8728.8,
     "unit": "MtCO2",
     "year": 2020
   },
   "新西兰": {
-    "emission": 3035.23,
+    "emission": 4295.1,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿曼": {
-    "emission": 4052.08,
+    "emission": 6632.41,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴基斯坦": {
-    "emission": 6250.47,
+    "emission": 1727.6,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴拿马": {
-    "emission": 9765.06,
+    "emission": 7112.44,
     "unit": "MtCO2",
     "year": 2020
   },
   "秘鲁": {
-    "emission": 7183.45,
+    "emission": 4301.22,
     "unit": "MtCO2",
     "year": 2020
   },
   "菲律宾": {
-    "emission": 2522.98,
+    "emission": 404.18,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴布亚新几内亚": {
-    "emission": 7303.86,
+    "emission": 6121.97,
     "unit": "MtCO2",
     "year": 2020
   },
   "波兰": {
-    "emission": 7638.99,
+    "emission": 5240.03,
     "unit": "MtCO2",
     "year": 2020
   },
   "美国": {
-    "emission": 896.15,
+    "emission": 9982.75,
     "unit": "MtCO2",
     "year": 2020
   },
   "朝鲜民主主义人民共和国": {
-    "emission": 3220.48,
+    "emission": 1640.19,
     "unit": "MtCO2",
     "year": 2020
   },
   "葡萄牙": {
-    "emission": 6956.96,
+    "emission": 2429.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "巴拉圭": {
-    "emission": 6024.62,
+    "emission": 3342.55,
     "unit": "MtCO2",
     "year": 2020
   },
   "卡塔尔": {
-    "emission": 6144.21,
+    "emission": 4981.59,
     "unit": "MtCO2",
     "year": 2020
   },
   "罗马尼亚": {
-    "emission": 7081.89,
+    "emission": 7966.78,
     "unit": "MtCO2",
     "year": 2020
   },
   "俄罗斯联邦": {
-    "emission": 2344.49,
+    "emission": 4759.68,
     "unit": "MtCO2",
     "year": 2020
   },
   "卢旺达": {
-    "emission": 1501.16,
+    "emission": 3602.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "西撒哈拉": {
-    "emission": 7116.25,
+    "emission": 549.1,
     "unit": "MtCO2",
     "year": 2020
   },
   "沙特阿拉伯": {
-    "emission": 2895.77,
+    "emission": 554.24,
     "unit": "MtCO2",
     "year": 2020
   },
   "苏丹": {
-    "emission": 7792.57,
+    "emission": 1539.12,
     "unit": "MtCO2",
     "year": 2020
   },
   "南苏丹": {
-    "emission": 3470.88,
+    "emission": 10872.56,
     "unit": "MtCO2",
     "year": 2020
   },
   "塞内加尔": {
-    "emission": 2889.77,
+    "emission": 10884.04,
     "unit": "MtCO2",
     "year": 2020
   },
   "所罗门群岛": {
-    "emission": 2519.61,
+    "emission": 9669.1,
     "unit": "MtCO2",
     "year": 2020
   },
   "塞拉利昂": {
-    "emission": 4465.96,
+    "emission": 1428.42,
     "unit": "MtCO2",
     "year": 2020
   },
   "萨尔瓦多": {
-    "emission": 6347.28,
+    "emission": 1833.66,
     "unit": "MtCO2",
     "year": 2020
   },
   "索马里": {
-    "emission": 3628.55,
+    "emission": 5859.46,
     "unit": "MtCO2",
     "year": 2020
   },
   "塞尔维亚": {
-    "emission": 9157.45,
+    "emission": 6624.47,
     "unit": "MtCO2",
     "year": 2020
   },
   "苏里南": {
-    "emission": 8410.26,
+    "emission": 2765.81,
     "unit": "MtCO2",
     "year": 2020
   },
   "斯洛伐克共和国": {
-    "emission": 5654.05,
+    "emission": 4094.61,
     "unit": "MtCO2",
     "year": 2020
   },
   "斯洛文尼亚": {
-    "emission": 9757.8,
+    "emission": 3717.33,
     "unit": "MtCO2",
     "year": 2020
   },
   "瑞典": {
-    "emission": 2477.67,
+    "emission": 6721.64,
     "unit": "MtCO2",
     "year": 2020
   },
   "斯威士兰": {
-    "emission": 7458.87,
+    "emission": 9961.05,
     "unit": "MtCO2",
     "year": 2020
   },
   "阿拉伯叙利亚共和国": {
-    "emission": 6373.97,
+    "emission": 1429.21,
     "unit": "MtCO2",
     "year": 2020
   },
   "乍得": {
-    "emission": 1867.87,
+    "emission": 2011.78,
     "unit": "MtCO2",
     "year": 2020
   },
   "多哥": {
-    "emission": 2497.89,
+    "emission": 3382.55,
     "unit": "MtCO2",
     "year": 2020
   },
   "泰国": {
-    "emission": 930.2,
+    "emission": 2007.95,
     "unit": "MtCO2",
     "year": 2020
   },
   "塔吉克斯坦": {
-    "emission": 1233.86,
+    "emission": 1815.63,
     "unit": "MtCO2",
     "year": 2020
   },
   "土库曼斯坦": {
-    "emission": 6216.79,
+    "emission": 3024.29,
     "unit": "MtCO2",
     "year": 2020
   },
   "东帝汶": {
-    "emission": 7686.32,
+    "emission": 6679.64,
     "unit": "MtCO2",
     "year": 2020
   },
   "特立尼达和多巴哥": {
-    "emission": 1161.79,
+    "emission": 2259.39,
     "unit": "MtCO2",
     "year": 2020
   },
   "突尼斯": {
-    "emission": 7477.39,
+    "emission": 8997.15,
     "unit": "MtCO2",
     "year": 2020
   },
   "土耳其": {
-    "emission": 4057.09,
+    "emission": 1899.78,
     "unit": "MtCO2",
     "year": 2020
   },
   "坦桑尼亚": {
-    "emission": 6412.6,
+    "emission": 9158.39,
     "unit": "MtCO2",
     "year": 2020
   },
   "乌干达": {
-    "emission": 5325.38,
+    "emission": 6121.32,
     "unit": "MtCO2",
     "year": 2020
   },
   "乌克兰": {
-    "emission": 3643.32,
+    "emission": 2669.43,
     "unit": "MtCO2",
     "year": 2020
   },
   "乌拉圭": {
-    "emission": 3339.15,
+    "emission": 9749.59,
     "unit": "MtCO2",
     "year": 2020
   },
   "乌兹别克斯坦": {
-    "emission": 7877.47,
+    "emission": 8658.3,
     "unit": "MtCO2",
     "year": 2020
   },
   "委内瑞拉玻利瓦尔共和国": {
-    "emission": 1648.67,
+    "emission": 3216.81,
     "unit": "MtCO2",
     "year": 2020
   },
   "越南": {
-    "emission": 584.57,
+    "emission": 4020.88,
     "unit": "MtCO2",
     "year": 2020
   },
   "瓦努阿图": {
-    "emission": 293.44,
+    "emission": 880.37,
     "unit": "MtCO2",
     "year": 2020
   },
   "也门共和国": {
-    "emission": 3323.28,
+    "emission": 1010.17,
     "unit": "MtCO2",
     "year": 2020
   },
   "南非": {
-    "emission": 146.33,
+    "emission": 1809.03,
     "unit": "MtCO2",
     "year": 2020
   },
   "赞比亚": {
-    "emission": 4682.8,
+    "emission": 7668.73,
     "unit": "MtCO2",
     "year": 2020
   },
   "津巴布韦": {
-    "emission": 3158,
+    "emission": 6711.95,
     "unit": "MtCO2",
     "year": 2020
   }

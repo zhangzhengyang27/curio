@@ -20,20 +20,14 @@
       <h3 class="panel-title">分析工作台</h3>
       <div class="theme-tabs">
         <button
+          v-for="key in THEME_KEYS"
+          :key="key"
           class="theme-tab"
-          :class="{ active: theme === 'gdp' }"
-          data-testid="theme-gdp"
-          @click="setTheme('gdp')"
+          :class="{ active: theme === key }"
+          :data-testid="`theme-${key}`"
+          @click="setTheme(key)"
         >
-          全球经济 · GDP
-        </button>
-        <button
-          class="theme-tab"
-          :class="{ active: theme === 'carbon' }"
-          data-testid="theme-carbon"
-          @click="setTheme('carbon')"
-        >
-          碳排放
+          {{ THEMES[key].title }}
         </button>
       </div>
 
@@ -93,9 +87,36 @@ import { Choropleth } from '../map/analysis/choropleth.js'
 import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData.js'
 
 const THEMES = {
-  gdp: { title: '全球经济 · GDP', year: '2020' },
-  carbon: { title: '全球碳排放', year: '2020' },
+  gdp: {
+    title: '全球经济 · GDP',
+    word: 'GDP 总量',
+    unit: '万亿美元',
+    fmt: (v) => `${(v / 1e12).toFixed(2)}`,
+    fmtCard: formatUSD,
+  },
+  carbon: {
+    title: '全球碳排放',
+    word: '碳排放总量',
+    unit: 'MtCO₂',
+    fmt: (v) => Math.round(v).toLocaleString(),
+    fmtCard: (v) => `${Math.round(v).toLocaleString()} MtCO₂`,
+  },
+  population: {
+    title: '人口规模',
+    word: '人口总量',
+    unit: '亿人',
+    fmt: (v) => (v / 1e8).toFixed(2),
+    fmtCard: formatPopulation,
+  },
+  density: {
+    title: '人口密度',
+    word: '人口密度',
+    unit: '人/km²',
+    fmt: (v) => Math.round(v).toLocaleString(),
+    fmtCard: (v) => `${Math.round(v).toLocaleString()} 人/km²`,
+  },
 }
+const THEME_KEYS = Object.keys(THEMES)
 
 const containerRef = ref(null)
 const chartRef = ref(null)
@@ -110,14 +131,19 @@ let choropleth = null
 let chart = null
 let chartInstance = null
 
+// GDP 用 2020 年(时间序列末年);其余主题数据文件均为静态年
+const THEME_YEAR = { gdp: '2020' }
+const THEME_YEAR_LABEL = { gdp: '2020 年，', carbon: '2020 年，', population: '', density: '' }
+const THEME_YEAR_TEXT = { gdp: '2020', carbon: '2020', population: '静态演示数据', density: '静态演示数据' }
+
 // 各主题的「国名 → 数值」映射
-// ⚠ gdp 必须按 countries（多边形 ∩ GDP 交集，166 国）过滤：timeline 原始数据
-//   含「世界/高收入国家」等 96 个无多边形聚合项，不过滤会把全球总量当国家
-//   排进 Top10/摘要/导出报告（2026-09-15 审查 P0）。carbon 已按 countries 构建。
+// ⚠ gdp 必须按 countries(多边形 ∩ GDP 交集,166 国)过滤:timeline 原始数据
+//   含「世界/高收入国家」等 96 个无多边形聚合项,不过滤会把全球总量当国家
+//   排进 Top10/摘要/导出报告(2026-09-15 审查 P0)。carbon 已按 countries 构建。
 const metricMaps = {
   gdp: computed(() => {
     const map = {}
-    const yearData = gdpByYear.value[THEMES.gdp.year] || {}
+    const yearData = gdpByYear.value[THEME_YEAR.gdp] || {}
     for (const c of countries.value) {
       if (yearData[c.name] != null) map[c.name] = yearData[c.name]
     }
@@ -127,6 +153,21 @@ const metricMaps = {
     const map = {}
     for (const c of countries.value) {
       if (c.emission != null) map[c.name] = c.emission
+    }
+    return map
+  }),
+  population: computed(() => {
+    const map = {}
+    for (const c of countries.value) {
+      if (c.population != null) map[c.name] = c.population
+    }
+    return map
+  }),
+  // 密度直接取数据文件的 density 字段(与 analysis 指标卡同口径),不重算
+  density: computed(() => {
+    const map = {}
+    for (const c of countries.value) {
+      if (c.density != null) map[c.name] = c.density
     }
     return map
   }),
@@ -142,7 +183,7 @@ const top10 = computed(() => {
 })
 
 function formatValue(v) {
-  return theme.value === 'gdp' ? formatUSD(v) : `${v.toLocaleString()} MtCO₂`
+  return THEMES[theme.value].fmtCard(v)
 }
 
 function setTheme(t) {
@@ -179,19 +220,17 @@ function renderChart() {
 }
 
 const summary = computed(() => {
+  const conf = THEMES[theme.value]
   const entries = Object.entries(values.value).sort((a, b) => b[1] - a[1])
   if (!entries.length) return ''
   const total = entries.reduce((s, [, v]) => s + v, 0)
   const top10Sum = entries.slice(0, 10).reduce((s, [, v]) => s + v, 0)
   const [first, second] = entries
-  const unitWord = theme.value === 'gdp' ? '万亿美元' : 'MtCO₂'
-  const fmt = (v) => (theme.value === 'gdp' ? `${(v / 1e12).toFixed(2)}` : v.toLocaleString())
   return (
-    `${THEMES[theme.value].year} 年，样本内 ${entries.length} 个经济体的` +
-    `${theme.value === 'gdp' ? 'GDP' : '碳排放总量'}合计 ${fmt(total)} ${unitWord}；` +
-    `前 10 名合计占 ${(top10Sum * 100 / total).toFixed(1)}%。` +
-    `${first[0]} 以 ${fmt(first[1])} ${unitWord} 居首，` +
-    `其后为 ${second?.[0] ?? '—'}（${fmt(second?.[1] ?? 0)} ${unitWord}）。` +
+    `${THEME_YEAR_LABEL[theme.value]}样本内 ${entries.length} 个经济体的${conf.word}` +
+    `合计 ${conf.fmt(total)} ${conf.unit}；前 10 名合计占 ${(top10Sum * 100 / total).toFixed(1)}%。` +
+    `${first[0]} 以 ${conf.fmt(first[1])} ${conf.unit} 居首，` +
+    `其后为 ${second?.[0] ?? '—'}（${conf.fmt(second?.[1] ?? 0)} ${conf.unit}）。` +
     `分布呈显著头部集中，区域间差距明显。`
   )
 })
@@ -203,7 +242,7 @@ async function exportReport() {
     viewer.render()
     const mapSnap = viewer.canvas.toDataURL('image/png')
     const chartSnap = chartInstance ? chartInstance.getDataURL({ type: 'png', pixelRatio: 2 }) : ''
-    const yearDesc = THEMES[theme.value].year
+    const yearDesc = THEME_YEAR_TEXT[theme.value]
     const rows = top10.value
       .map((t, i) => `<tr><td>${i + 1}</td><td>${t.name}</td><td>${formatValue(t.value)}</td></tr>`)
       .join('')
@@ -330,6 +369,7 @@ onUnmounted(() => {
 
 .theme-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 10px;
 }
