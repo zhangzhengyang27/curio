@@ -127,4 +127,26 @@ test.describe('地图工具箱', () => {
     await page.locator('[data-testid="bookmark-list"] .bookmark-del').click()
     await expect(page.locator('[data-testid="bookmark-list"]')).toHaveCount(0)
   })
+
+  test('工具结束后与 Esc 取消后,按钮高亮同步消除(回归:高亮与控制器状态脱钩)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor()
+    const distanceBtn = page.locator('[data-tool="distance"]')
+
+    // 量距采两点结束后,工具已退出 → 按钮不得仍高亮
+    await distanceBtn.click()
+    await expect(distanceBtn).toHaveClass(/active/)
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(780, 460)
+    await page.mouse.dblclick(780, 460)
+    await expect(page.locator('[data-testid="status-result"]')).toContainText('总距离', { timeout: 10_000 })
+    await expect(distanceBtn).not.toHaveClass(/active/)
+
+    // Esc 取消同样要消除高亮
+    await distanceBtn.click()
+    await expect(distanceBtn).toHaveClass(/active/)
+    await page.keyboard.press('Escape')
+    await expect(distanceBtn).not.toHaveClass(/active/)
+  })
 })

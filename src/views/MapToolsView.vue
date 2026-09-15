@@ -251,15 +251,11 @@ const coordsText = computed(() => {
 const hintText = computed(() => status.value.hint || '')
 const resultText = computed(() => status.value.result?.text || '')
 
+// 按钮高亮以 controller 广播为准(单一事实源):工具结束/Esc 取消时
+// controller 侧状态归 null,若 View 另持一份 ref 会出现高亮脱钩(审查 P1)
 function toggleTool(key) {
   if (!controller) return
-  if (activeTool.value === key) {
-    controller.setTool(null)
-    activeTool.value = null
-  } else {
-    controller.setTool(key)
-    activeTool.value = key
-  }
+  controller.setTool(controller.activeTool === key ? null : key)
 }
 
 function saveBookmark() {
@@ -319,6 +315,9 @@ onMounted(async () => {
       },
       onRegistryChange: (registry) => {
         registryCount.value = registry.length
+      },
+      onToolChange: (tool) => {
+        activeTool.value = tool
       },
     })
     ready.value = true

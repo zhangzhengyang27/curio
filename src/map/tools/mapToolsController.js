@@ -18,7 +18,7 @@ const TOOL_COLORS = {
 
 export class MapToolsController {
   /** @param {Cesium.Viewer} viewer */
-  constructor(Cesium, viewer, { onStatus, onRegistryChange } = {}) {
+  constructor(Cesium, viewer, { onStatus, onRegistryChange, onToolChange } = {}) {
     this.Cesium = Cesium
     this.viewer = viewer
     this.activeTool = null
@@ -30,6 +30,12 @@ export class MapToolsController {
     this.lastResult = null
     this.onStatus = onStatus || (() => {})
     this.onRegistryChange = onRegistryChange || (() => {})
+    /**
+     * 工具激活状态变化的单一事实源广播。View 层的按钮高亮必须跟随它,
+     * 不能另持一份 ref——曾因双状态源出现「结束后/取消后按钮仍高亮,
+     * 用户再点画布却无任何反馈」的脱钩(2026-09-15 审查 P1)。
+     */
+    this.onToolChange = onToolChange || (() => {})
 
     this.handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
     this.handler.setInputAction((e) => this._onClick(e), Cesium.ScreenSpaceEventType.LEFT_CLICK)
@@ -49,6 +55,7 @@ export class MapToolsController {
     if (this.activeTool === tool) return
     this._cancel()
     this.activeTool = tool
+    this.onToolChange(tool)
     this.onStatus({ hint: this._hintFor(tool) })
   }
 
@@ -64,6 +71,8 @@ export class MapToolsController {
   }
 
   _onClick(e) {
+    // 无激活工具时不得采点:曾静默积累坐标,用户看到高亮按钮却无任何反馈
+    if (!this.activeTool) return
     const carto = this._pickCartographic(e.position)
     if (!carto) return
     const Cesium = this.Cesium
@@ -152,14 +161,20 @@ export class MapToolsController {
       this.onStatus({ result: this.lastResult })
       this.onRegistryChange(this.registry)
     }
-    if (tool !== 'point') this.activeTool = null
+    if (tool !== 'point') {
+      this.activeTool = null
+      this.onToolChange(null)
+    }
     this.onStatus({ hint: tool === 'point' ? this._hintFor('point') : '' })
   }
 
   _cancel() {
     this._removePreview()
     this.points = []
-    this.activeTool = null
+    if (this.activeTool !== null) {
+      this.activeTool = null
+      this.onToolChange(null)
+    }
     this.onStatus({ hint: '' })
   }
 
