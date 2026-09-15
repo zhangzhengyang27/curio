@@ -57,4 +57,53 @@ test.describe('业务监控', () => {
     await page.locator('[data-testid="simulate-btn"]').click()
     await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(before + 1)
   })
+
+  test('处置持久化：刷新后状态与统计恢复；重置演练全部回到未处理', async ({ page }) => {
+    // 处置状态存 localStorage,测试间互不污染;⚠ addInitScript 每次导航都执行,
+    // 裸清会把 reload 后刚存的状态也清掉(map-tools 书签用例同款坑),须只清一次
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem('__tv-cleaned')) {
+        localStorage.removeItem('tv-monitor-status')
+        sessionStorage.setItem('__tv-cleaned', '1')
+      }
+    })
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+
+    // 第一条:处置到「已处置」
+    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
+    await page.locator('[data-testid="act-processing"]').click()
+    await page.locator('[data-testid="act-resolve"]').click()
+    await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
+
+    // 刷新:处置状态与统计保持(K1)
+    await page.reload()
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+    await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
+    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
+    await expect(page.locator('[data-testid="detail-status"]')).toHaveText('已处置')
+
+    // 重置演练:统计清零回初始
+    await page.locator('[data-testid="reset-drill"]').click()
+    await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('0')
+    await expect(page.locator('[data-testid="detail-status"]')).toHaveText('未处理')
+  })
+
+  test('流开关：nostream 进入后可手动开启自动推送', async ({ page }) => {
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+    const count = await page.locator('[data-testid="feed-list"] .feed-item').count()
+
+    // Cesium 页上 CDP 点击会偶发丢失(KNOWN_PITFALLS C13),统一走 DOM click
+    const toggle = page.locator('[data-testid="stream-toggle"]')
+    await expect(toggle).toContainText('开启')
+    await toggle.evaluate((el) => el.click())
+    await expect(toggle).toContainText('停止')
+    // 开启后 7s 定时器应推送一条(最长等到 15s)
+    await expect
+      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').count(), { timeout: 15_000 })
+      .toBe(count + 1)
+    await toggle.evaluate((el) => el.click()) // 收尾停止,不干扰其它用例
+    await expect(toggle).toContainText('开启')
+  })
 })

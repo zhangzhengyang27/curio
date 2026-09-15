@@ -6,8 +6,31 @@ import { ref, computed, onUnmounted } from 'vue'
  * 事件源：/data/mock/earthquakes.json（200 条，{lon,lat,mag,depth,date}）。
  * 「实时推送」为模拟实现：加载后仅放行最初一批（默认 10 条），其余进入
  * 待推送池，由定时器逐条放行（或点「模拟事件」手动放行）——用于演示
- * 告警驱动的监控闭环。处置状态为内存态（刷新即重置），不影响底图数据。
+ * 告警驱动的监控闭环。
+ *
+ * 处置状态持久化（K1）：非默认状态（处理中/已处置）以 { eventId: status }
+ * 存 localStorage（tv-monitor-status），刷新后恢复；eventId 是数据池内的
+ * 稳定索引（池文件冻结不变）。重置演练清空存储并全部回到未处理。
  */
+
+const STATUS_KEY = 'tv-monitor-status'
+
+function loadPersistedStatus() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STATUS_KEY))
+    return raw && typeof raw === 'object' ? raw : {}
+  } catch {
+    return {}
+  }
+}
+
+function persistStatus(events) {
+  const map = {}
+  for (const e of events) {
+    if (e.status !== 'open') map[e.id] = e.status
+  }
+  localStorage.setItem(STATUS_KEY, JSON.stringify(map))
+}
 
 export const LEVELS = {
   critical: { label: '重大', color: '#e53935' }, // mag ≥ 7
@@ -50,6 +73,7 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
       .then((raw) => {
         // 按日期降序 = 「最新事件」在前，模拟流按此顺序放行
         const sorted = [...raw].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+        const persisted = loadPersistedStatus()
         events.value = sorted.map((r, i) => ({
           id: i,
           lon: r.lon,
@@ -58,7 +82,7 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
           depth: r.depth,
           date: r.date,
           level: levelOf(r.mag),
-          status: 'open',
+          status: persisted[i] || 'open',
           arrived: false,
         }))
         for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(k)
@@ -99,7 +123,16 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
 
   function setStatus(id, status) {
     const e = events.value.find((x) => x.id === id)
-    if (e) e.status = status
+    if (e) {
+      e.status = status
+      persistStatus(events.value)
+    }
+  }
+
+  /** 重置演练：全部事件回到未处理并清空持久化（K1） */
+  function resetDrill() {
+    for (const e of events.value) e.status = 'open'
+    localStorage.removeItem(STATUS_KEY)
   }
 
   onUnmounted(stopStream)
@@ -115,5 +148,6 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     startStream,
     stopStream,
     setStatus,
+    resetDrill,
   }
 }

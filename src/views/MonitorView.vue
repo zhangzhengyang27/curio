@@ -45,12 +45,20 @@
         <h3 class="panel-title">实时事件流</h3>
         <button
           class="mini-btn"
+          data-testid="stream-toggle"
+          :title="streaming ? '停止自动推送' : '开启自动推送（每 7 秒一条）'"
+          @click="toggleStream"
+        >
+          {{ streaming ? '⏸ 停止推送' : '▶ 开启推送' }}
+        </button>
+        <button
+          class="mini-btn"
           data-testid="simulate-btn"
           :disabled="pendingCount === 0"
           title="模拟一条新事件推送"
           @click="onSimulate"
         >
-          + 模拟事件
+          + 模拟
         </button>
       </div>
 
@@ -83,12 +91,20 @@
           v-if="arrivedEvents.length === 0"
           class="empty-tip"
         >
-          暂无事件，点击「+ 模拟事件」推送一条。
+          暂无事件，点击「+ 模拟」推送一条。
         </p>
       </div>
       <p class="list-meta">
         已接收 {{ arrivedEvents.length }} / 数据池 {{ events.length }} 条 ·
-        {{ streaming ? `每 ${streamIntervalMs / 1000}s 自动推送` : '自动推送已停' }}
+        {{ streaming ? `每 ${streamIntervalMs / 1000}s 自动推送` : '自动推送已停' }} ·
+        <button
+          class="link-btn"
+          data-testid="reset-drill"
+          title="清空处置记录，全部回到未处理"
+          @click="onResetDrill"
+        >
+          重置演练
+        </button>
       </p>
     </aside>
 
@@ -188,8 +204,20 @@ const {
   startStream,
   stopStream,
   setStatus: setEventStatus,
+  resetDrill,
 } = useEarthquakeFeed({ initialCount: 10, streamIntervalMs })
 const feedPool = ref(0)
+
+function toggleStream() {
+  if (streaming.value) stopStream()
+  else startStream()
+  streaming.value = !streaming.value
+}
+
+function onResetDrill() {
+  resetDrill()
+  syncMarkers()
+}
 
 let viewer = null
 let markerEntities = new Map() // eventId → Cesium.Entity
@@ -284,7 +312,11 @@ onMounted(async () => {
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
 
     if (!new URLSearchParams(window.location.search).has('nostream')) startStream()
-    poolTimer = setInterval(() => { feedPool.value = pendingPool.value.length }, 1000)
+    poolTimer = setInterval(() => {
+      feedPool.value = pendingPool.value.length
+      // 数据层池空时会自动 stopStream,流状态文案须跟随(否则显示仍「推送中」)
+      if (streaming.value && pendingPool.value.length === 0) streaming.value = false
+    }, 1000)
     ready.value = true
   } catch (err) {
     loadError.value = '地图引擎加载失败，请刷新重试。'
@@ -546,5 +578,19 @@ onUnmounted(() => {
   margin: 8px 0 0;
   font-size: 10px;
   opacity: 0.5;
+}
+
+.link-btn {
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--tv-primary, #4f8ef7);
+  font-size: 10px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  opacity: 0.8;
 }
 </style>
