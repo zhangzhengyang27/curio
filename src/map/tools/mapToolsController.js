@@ -16,6 +16,11 @@ const TOOL_COLORS = {
   polygon: '#ffd54f',
 }
 
+/** 各 kind 完成一次产物所需的最少顶点数(不足则不登记,导出 GeoJSON 才合法) */
+const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3 }
+
+const STORAGE_KEY = 'tv-map-annotations'
+
 export class MapToolsController {
   /** @param {Cesium.Viewer} viewer */
   constructor(Cesium, viewer, { onStatus, onRegistryChange, onToolChange } = {}) {
@@ -154,12 +159,18 @@ export class MapToolsController {
       this._cancel()
       return
     }
+    // 顶点不足不登记(曾可产出 1 点 LineString / 2 点 Polygon 等无效 GeoJSON)
+    if (this.points.length < (MIN_POINTS[tool] || 1)) {
+      this.onStatus({ hint: `至少需要 ${MIN_POINTS[tool]} 个顶点，继续采集或 Esc 取消` })
+      return
+    }
     const kind = this._buildResult(tool, this.points)
     this._removePreview()
     this.points = []
     if (kind) {
       this.onStatus({ result: this.lastResult })
       this.onRegistryChange(this.registry)
+      this._persist()
     }
     if (tool !== 'point') {
       this.activeTool = null
@@ -301,6 +312,7 @@ export class MapToolsController {
     this.viewer.entities.remove(last.entity)
     last.extras.forEach((e) => this.viewer.entities.remove(e))
     this.onRegistryChange(this.registry)
+    this._persist()
   }
 
   clearAll() {
@@ -313,6 +325,89 @@ export class MapToolsController {
     this._cancel()
     this.onRegistryChange(this.registry)
     this.onStatus({ result: null })
+    this._persist()
+  }
+
+  // ---- 持久化与导入(M3):存储与 GeoJSON 同源的 {kind, coords, createdAt} ----
+
+  _persist() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.serialize()))
+    } catch {
+      // 存储失败(隐私模式/超限)不阻断功能,当前会话内仍可用
+    }
+  }
+
+  serialize() {
+    return this.registry.map((e) => ({ kind: e.kind, coords: e.coords, createdAt: e.createdAt }))
+  }
+
+  /** 恢复 localStorage 里的标注并重建实体;返回恢复条数 */
+  restoreSaved() {
+    let records = []
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+    } catch {
+      records = []
+    }
+    return this._restoreRecords(records)
+  }
+
+  _restoreRecords(records) {
+    if (!Array.isArray(records)) return 0
+    let n = 0
+    for (const r of records) {
+      if (!r || typeof r.kind !== 'string' || !Array.isArray(r.coords)) continue
+      const positions = this._coordsToPositions(r.kind, r.coords)
+      if (!positions) continue
+      this._buildResult(r.kind, positions)
+      // 恢复保持原始时间戳(GeoJSON 导出含 createdAt)
+      const entry = this.registry[this.registry.length - 1]
+      if (entry && r.createdAt != null) entry.createdAt = r.createdAt
+      n++
+    }
+    if (n) this.onRegistryChange(this.registry)
+    return n
+  }
+
+  _coordsToPositions(kind, coords) {
+    const MIN = MIN_POINTS[kind]
+    if (!MIN) return null
+    // point 的存储形态是 [[lon,lat]](单点包一层数组,与 GeoJSON 导出同构)
+    const list = kind === 'point' ? [coords[0]] : coords
+    if (list.some((c) => !Array.isArray(c) || c.length < 2 || !Number.isFinite(+c[0]) || !Number.isFinite(+c[1]))) {
+      return null
+    }
+    return list.map(([lon, lat]) => this.Cesium.Cartesian3.fromDegrees(+lon, +lat))
+  }
+
+  /** 导入 GeoJSON FeatureCollection(与本页导出对称);返回成功导入条数 */
+  importGeoJSON(fc) {
+    if (!fc || fc.type !== 'FeatureCollection' || !Array.isArray(fc.features)) return 0
+    const records = []
+    for (const f of fc.features) {
+      const g = f?.geometry
+      if (!g) continue
+      const propsKind = f.properties?.kind
+      if (g.type === 'Point') {
+        records.push({ kind: 'point', coords: [g.coordinates] })
+      } else if (g.type === 'LineString') {
+        const kind = propsKind === 'distance' ? 'distance' : 'line'
+        records.push({ kind, coords: g.coordinates })
+      } else if (g.type === 'Polygon') {
+        const ring = g.coordinates?.[0] || []
+        // 去掉 GeoJSON 闭合环的尾点,回到顶点序列
+        const open = ring.length > 1 &&
+          ring[0][0] === ring[ring.length - 1][0] && ring[0][1] === ring[ring.length - 1][1]
+          ? ring.slice(0, -1)
+          : ring
+        const kind = propsKind === 'area' ? 'area' : 'polygon'
+        records.push({ kind, coords: open })
+      }
+    }
+    const n = this._restoreRecords(records)
+    if (n) this._persist()
+    return n
   }
 
   /** 导出全部产物为 GeoJSON FeatureCollection */

@@ -163,11 +163,26 @@
         </button>
         <button
           class="mini-btn"
+          data-testid="import-geojson"
+          @click="importInputRef?.click()"
+        >
+          导入 GeoJSON
+        </button>
+        <button
+          class="mini-btn"
           data-testid="export-png"
           @click="exportPNG"
         >
           地图截图
         </button>
+        <input
+          ref="importInputRef"
+          class="import-input"
+          type="file"
+          accept=".geojson,.json,application/geo+json"
+          data-testid="import-geojson-input"
+          @change="onImportFile"
+        >
       </div>
     </aside>
 
@@ -218,6 +233,7 @@ const activeTool = ref(null)
 const registryCount = ref(0)
 const bookmarks = ref(loadBookmarks())
 const status = ref({ coords: null, hint: '', result: null })
+const importInputRef = ref(null)
 
 const measureTools = [
   { key: 'distance', label: '量距离', icon: '📏', desc: '测地线距离' },
@@ -313,6 +329,25 @@ function exportPNG() {
   })
 }
 
+function onImportFile(e) {
+  const file = e.target.files?.[0]
+  e.target.value = '' // 允许连续导入同一文件
+  if (!file || !controller) return
+  file
+    .text()
+    .then((text) => JSON.parse(text))
+    .then((gj) => {
+      const n = controller.importGeoJSON(gj)
+      status.value = {
+        ...status.value,
+        result: { text: n > 0 ? `已导入 ${n} 条标注` : '未识别到可导入的标注' },
+      }
+    })
+    .catch(() => {
+      status.value = { ...status.value, result: { text: '导入失败：文件不是合法 JSON' } }
+    })
+}
+
 function download(content, filename, mime, objectUrl = null) {
   const a = document.createElement('a')
   a.download = filename
@@ -340,6 +375,11 @@ onMounted(async () => {
         activeTool.value = tool
       },
     })
+    // 恢复上次会话的标注(M3):清空/撤销会同步覆写存储
+    const restored = controller.restoreSaved()
+    if (restored > 0) {
+      status.value = { ...status.value, result: { text: `已恢复 ${restored} 条标注` } }
+    }
     ready.value = true
     loadError.value = ''
 
@@ -466,8 +506,13 @@ onUnmounted(() => {
 
 .tool-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-top: 12px;
+}
+
+.import-input {
+  display: none;
 }
 
 .mini-btn {

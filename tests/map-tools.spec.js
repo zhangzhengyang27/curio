@@ -14,13 +14,18 @@ const CANVAS_CLICK_A = { x: 640, y: 400 }
 const CANVAS_CLICK_B = { x: 780, y: 460 }
 
 test.describe('地图工具箱', () => {
+  // 画布 mouse 事件在 2 worker 并行(CPU 竞争)时会偶发丢失,probe 单跑稳定、
+  // CI 本就是 workers=1;本地串行消除该噪音(见 KNOWN_PITFALLS C13)
+  test.describe.configure({ mode: 'serial' })
+
   test.beforeEach(async ({ page }) => {
-    // 书签存 localStorage，测试间互不污染。
+    // 书签/标注存 localStorage，测试间互不污染。
     // ⚠ 不能裸用 addInitScript 清 key：它在每次导航都执行，会把测试中途
     // reload 后刚存的书签也清掉（实测踩过）；sessionStorage 标记保证只清一次
     await page.addInitScript(() => {
       if (!sessionStorage.getItem('__tv-cleaned')) {
         localStorage.removeItem('tv-map-bookmarks')
+        localStorage.removeItem('tv-map-annotations')
         sessionStorage.setItem('__tv-cleaned', '1')
       }
     })
@@ -159,5 +164,77 @@ test.describe('地图工具箱', () => {
     await expect
       .poll(async () => hud.textContent(), { timeout: 5_000 })
       .toMatch(/相机高度 [1-9]\d*/m)
+  })
+
+  test('标绘持久化：刷新后标注恢复(M3)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor()
+
+    // 标一个点 + 一条线
+    await page.locator('[data-tool="point"]').evaluate((el) => el.click())
+    await page.mouse.click(640, 400)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+    await page.locator('[data-tool="line"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(700, 430)
+    await page.mouse.click(800, 500)
+    await page.mouse.dblclick(800, 500)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('2')
+
+    // 刷新:标注恢复
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('2')
+    // 清空后刷新不再恢复
+    await page.locator('[data-testid="clear-btn"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
+  })
+
+  test('GeoJSON 导入：导出→清空→导入,标注与画面恢复(M3)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor()
+
+    // 标点 + 标面并导出
+    await page.locator('[data-tool="point"]').evaluate((el) => el.click())
+    await page.mouse.click(640, 400)
+    await page.locator('[data-tool="polygon"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(620, 390)
+    await page.mouse.click(810, 470)
+    await page.mouse.click(690, 560)
+    await page.mouse.dblclick(690, 560)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('2')
+
+    const dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-geojson"]').evaluate((el) => el.click())
+    const download = await dl
+    const geojsonPath = await download.path()
+
+    // 清空后导入同一文件:计数恢复,且 GeoJSON 再导出坐标一致
+    await page.locator('[data-testid="clear-btn"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
+    await page.setInputFiles('[data-testid="import-geojson-input"]', geojsonPath)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('2')
+
+    const dl2 = page.waitForEvent('download')
+    await page.locator('[data-testid="export-geojson"]').evaluate((el) => el.click())
+    const download2 = await dl2
+    const fs = await import('node:fs')
+    const gj1 = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'))
+    const gj2 = JSON.parse(fs.readFileSync(await download2.path(), 'utf8'))
+    expect(gj2.features).toHaveLength(2)
+    const sortFeat = (gj) =>
+      [...gj.features].sort((a, b) =>
+        a.geometry.type === b.geometry.type ? 0 : a.geometry.type < b.geometry.type ? -1 : 1
+      )
+    const f1 = sortFeat(gj1)
+    const f2 = sortFeat(gj2)
+    for (let i = 0; i < 2; i++) {
+      expect(f2[i].geometry.type).toBe(f1[i].geometry.type)
+      expect(JSON.stringify(f2[i].geometry.coordinates)).toBe(JSON.stringify(f1[i].geometry.coordinates))
+    }
   })
 })
