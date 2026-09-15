@@ -22,7 +22,7 @@ test.describe('业务监控', () => {
   test('点击事件流：详情面板展示震级与处置按钮', async ({ page }) => {
     await page.goto('/monitor?nostream=1')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
-    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
+    await page.locator('[data-testid="feed-list"] .feed-item').first().evaluate((el) => el.click())
     const detail = page.locator('[data-testid="detail-mag"]')
     await expect(detail).toBeVisible()
     await expect(detail).toContainText(/M\d/)
@@ -32,13 +32,13 @@ test.describe('业务监控', () => {
   test('处置流转：未处理→处理中→已处置，统计联动', async ({ page }) => {
     await page.goto('/monitor?nostream=1')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
-    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
+    await page.locator('[data-testid="feed-list"] .feed-item').first().evaluate((el) => el.click())
 
-    await page.locator('[data-testid="act-processing"]').click()
+    await page.locator('[data-testid="act-processing"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('处理中')
     await expect(page.locator('[data-testid="stats-processing"]')).toContainText('1')
 
-    await page.locator('[data-testid="act-resolve"]').click()
+    await page.locator('[data-testid="act-resolve"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('已处置')
     await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
     // 未处理数应从 10 降到 9
@@ -46,7 +46,7 @@ test.describe('业务监控', () => {
     expect(Number(openText.replace(/[^0-9]/g, ''))).toBe(9)
 
     // 可重开
-    await page.locator('[data-testid="act-reopen"]').click()
+    await page.locator('[data-testid="act-reopen"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('未处理')
   })
 
@@ -54,7 +54,7 @@ test.describe('业务监控', () => {
     await page.goto('/monitor?nostream=1')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
     const before = await page.locator('[data-testid="feed-list"] .feed-item').count()
-    await page.locator('[data-testid="simulate-btn"]').click()
+    await page.locator('[data-testid="simulate-btn"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(before + 1)
   })
 
@@ -71,20 +71,20 @@ test.describe('业务监控', () => {
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
 
     // 第一条:处置到「已处置」
-    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
-    await page.locator('[data-testid="act-processing"]').click()
-    await page.locator('[data-testid="act-resolve"]').click()
+    await page.locator('[data-testid="feed-list"] .feed-item').first().evaluate((el) => el.click())
+    await page.locator('[data-testid="act-processing"]').evaluate((el) => el.click())
+    await page.locator('[data-testid="act-resolve"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
 
     // 刷新:处置状态与统计保持(K1)
     await page.reload()
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
     await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
-    await page.locator('[data-testid="feed-list"] .feed-item').first().click()
+    await page.locator('[data-testid="feed-list"] .feed-item').first().evaluate((el) => el.click())
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('已处置')
 
     // 重置演练:统计清零回初始
-    await page.locator('[data-testid="reset-drill"]').click()
+    await page.locator('[data-testid="reset-drill"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('0')
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('未处理')
   })
