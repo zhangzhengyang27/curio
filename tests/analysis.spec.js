@@ -27,27 +27,6 @@ async function clickUntilAccepted(button, expectText) {
   await expect(button).toContainText(expectText) // 最终失败时给出明确断言错误
 }
 
-/** 勾选复选框并确认生效:以对比表列数为准(toBeChecked 在忙页上会读到 undefined 误判,
- *  曾把已勾上的又点掉);勾选触发全图重着色,事件可能打在重渲窗口旧节点上,未生效则重试 */
-async function checkCountryInList(page, name, expectCount) {
-  await page.locator('[data-testid="country-search"]').evaluate((el, v) => {
-    el.value = v
-    el.dispatchEvent(new Event('input', { bubbles: true }))
-  }, name)
-  await page.waitForTimeout(300)
-  const box = page.locator(`[data-testid="country-${name}"] .compare-toggle input`)
-  for (let i = 0; i < 3; i++) {
-    await box.evaluate((el) => el.click()).catch(() => {})
-    try {
-      await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(expectCount, { timeout: 2_000 })
-      return
-    } catch {
-      // 未生效,重试
-    }
-  }
-  await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(expectCount)
-}
-
 test.describe('全球数据分析', () => {
   // 重着色让主线程持续满载,文件内并行用例互抢 CPU 时连 evaluate 都进不去
   // (本地实测);serial 消除该噪音,CI 本就 workers=1(见 KNOWN_PITFALLS C13)
@@ -64,9 +43,14 @@ test.describe('全球数据分析', () => {
   test('搜索并选择国家：指标卡联动展示 GDP 与人口', async ({ page }) => {
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
-    await page.locator('[data-testid="country-search"]').fill('中国')
-    await page.locator('[data-testid="country-中国"]').click()
-    await expect(page.locator('.panel-right .panel-title')).toContainText('中国')
+    // Cesium 页上 CDP fill/click 会偶发卡死或丢事件(C13),走 DOM 设值/点击
+    await page.locator('[data-testid="country-search"]').evaluate((el) => {
+      el.value = '中国'
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await page.waitForTimeout(300)
+    await page.locator('[data-testid="country-中国"]').evaluate((el) => el.click())
+    await expect(page.locator('.panel-right .panel-title')).toContainText('中国', { timeout: 15_000 })
     const gdp = page.locator('[data-testid="metric-gdp"]')
     await expect(gdp).toContainText(/万亿|亿/)
     await expect(gdp).not.toContainText('NaN')
@@ -76,10 +60,23 @@ test.describe('全球数据分析', () => {
   test('多国对比：勾选后对比表按列展示', async ({ page }) => {
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
-    // 中国选为主选国,美国加入对比(生效与否以对比表列数为准)
-    await checkCountryInList(page, '中国', 2)
-    await checkCountryInList(page, '美国', 3)
-    await expect(page.locator('[data-testid="compare-table"]')).toBeVisible()
+    // 中国选为主选国,美国加入对比。勾选触发全图重着色、页面满载,
+    // CDP 往返会被堵死,整段交互放进单次页面内脚本(同「对比满 4 国」用例)
+    await page.evaluate(async () => {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+      const search = async (v) => {
+        const el = document.querySelector('[data-testid="country-search"]')
+        el.value = v
+        el.dispatchEvent(new Event('input', { bubbles: true }))
+        await sleep(150)
+      }
+      for (const n of ['中国', '美国']) {
+        await search(n)
+        document.querySelector(`[data-testid="country-${n}"] .compare-toggle input`).click()
+        await sleep(150)
+      }
+    })
+    await expect(page.locator('[data-testid="compare-table"]')).toBeVisible({ timeout: 15_000 })
     await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(3) // 指标列 + 2 国
     await expect(page.locator('[data-testid="compare-table"]')).toContainText('美国')
   })

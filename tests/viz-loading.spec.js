@@ -10,14 +10,17 @@ import { test, expect } from '@playwright/test'
 
 const CHIP = '[data-testid="viz-loading"]'
 
-/** 点击图层按钮并确保加载提示出现（启动空窗内首次点击可能被静默丢弃，重试一次） */
+/**
+ * 点击图层按钮并确保加载提示出现。首页地球主线程繁忙,CDP 点击会偶发
+ * 丢失(见 KNOWN_PITFALLS C13),统一走 DOM click,chip 未出现则重试一次。
+ */
 async function clickVizUntilChip(page, label) {
-  await page.locator('.viz-btn', { hasText: label }).click()
+  await page.locator('.viz-btn', { hasText: label }).evaluate((el) => el.click())
   const chip = page.locator(CHIP)
   try {
     await chip.waitFor({ state: 'visible', timeout: 3000 })
   } catch {
-    await page.locator('.viz-btn', { hasText: label }).click()
+    await page.locator('.viz-btn', { hasText: label }).evaluate((el) => el.click())
     await chip.waitFor({ state: 'visible', timeout: 10_000 })
   }
   return chip
@@ -53,7 +56,7 @@ test.describe('图层加载反馈', () => {
 
     const chip = await clickVizUntilChip(page, '人口')
 
-    await page.locator('.viz-btn', { hasText: '默认' }).click()
+    await page.locator('.viz-btn', { hasText: '默认' }).evaluate((el) => el.click())
     await expect(chip).toBeVisible()
 
     await expect(chip).toBeHidden({ timeout: 15_000 })
