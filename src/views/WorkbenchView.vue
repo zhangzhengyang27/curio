@@ -73,12 +73,44 @@
         class="chart-box"
         data-testid="chart"
       />
+      <!-- 选国下钻(W3):GDP 主题点排行后显示该国多年趋势 -->
+      <template v-if="drillCountry">
+        <p class="group-label">
+          {{ drillCountry }} · GDP 走势(2000~2020)
+        </p>
+        <div
+          ref="drillRef"
+          class="drill-box"
+          data-testid="drill-chart"
+        />
+      </template>
       <p
         class="summary"
         data-testid="summary"
       >
         {{ summary }}
       </p>
+      <p class="group-label">
+        报告模板
+      </p>
+      <div class="report-mode">
+        <button
+          class="mode-pill"
+          :class="{ active: reportMode === 'brief' }"
+          data-testid="mode-brief"
+          @click="reportMode = 'brief'"
+        >
+          摘要版
+        </button>
+        <button
+          class="mode-pill"
+          :class="{ active: reportMode === 'full' }"
+          data-testid="mode-full"
+          @click="reportMode = 'full'"
+        >
+          完整版
+        </button>
+      </div>
       <button
         class="mini-btn primary"
         data-testid="export-report"
@@ -202,12 +234,42 @@ function formatValue(v) {
 function setTheme(t) {
   if (theme.value === t) return
   theme.value = t
+  drillCountry.value = null // 趋势图仅 GDP 有时间序列,切主题关闭下钻
   refresh()
 }
 
 function refresh() {
   choropleth?.applyValues(values.value)
   renderChart()
+  renderDrill()
+}
+
+// ---- 选国下钻(W3):点排行 → flyTo + 该国多年趋势小图(GDP 有时间序列) ----
+const drillCountry = ref(null)
+const drillRef = ref(null)
+let drillChart = null
+
+function focusCountry(name) {
+  choropleth?.flyTo(name)
+  drillCountry.value = theme.value === 'gdp' ? name : null
+  nextTick(renderDrill)
+}
+
+async function renderDrill() {
+  if (!drillCountry.value || !drillRef.value) return
+  if (!drillChart) {
+    const echarts = await import('echarts')
+    drillChart = echarts.init(drillRef.value)
+  }
+  const years = Object.keys(gdpByYear.value).sort()
+  const series = years.map((y) => gdpByYear.value[y]?.[drillCountry.value] ?? null)
+  drillChart.setOption({
+    grid: { left: 6, right: 10, top: 8, bottom: 4, containLabel: true },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: years, axisLabel: { fontSize: 9 } },
+    yAxis: { type: 'value', axisLabel: { fontSize: 9 } },
+    series: [{ type: 'line', data: series, symbolSize: 3, itemStyle: { color: '#2271b2' } }],
+  })
 }
 
 function renderChart() {
@@ -248,6 +310,20 @@ const summary = computed(() => {
   )
 })
 
+// 报告模板(W2):摘要版 / 完整版
+const reportMode = ref('full')
+
+/** 生成参数指纹(W2):主题/数据年份/样本量/榜首/合计值摘要,同参数重复生成指纹一致 */
+function reportFingerprint() {
+  const entries = Object.entries(values.value)
+  const top1 = entries.sort((a, b) => b[1] - a[1])[0]?.[0] ?? ''
+  const total = entries.reduce((s, [, v]) => s + v, 0)
+  const raw = `${theme.value}|${THEME_YEAR.gdp}|${entries.length}|${top1}|${Math.round(total)}`
+  let h = 5381
+  for (const ch of raw) h = ((h * 33) ^ ch.codePointAt(0)) >>> 0
+  return `TV-${theme.value.toUpperCase()}-${entries.length}N-${h.toString(36).toUpperCase()}`
+}
+
 async function exportReport() {
   if (exporting.value) return
   exporting.value = true
@@ -256,25 +332,38 @@ async function exportReport() {
     const mapSnap = viewer.canvas.toDataURL('image/png')
     const chartSnap = chartInstance ? chartInstance.getDataURL({ type: 'png', pixelRatio: 2 }) : ''
     const yearDesc = THEME_YEAR_TEXT[theme.value]
+    const full = reportMode.value === 'full'
     const rows = top10.value
       .map((t, i) => `<tr><td>${i + 1}</td><td>${t.name}</td><td>${formatValue(t.value)}</td></tr>`)
       .join('')
+    const chartSection = full
+      ? `<h2>Top 10 图表</h2><img src="${chartSnap}" alt="Top10 图表">`
+      : ''
+    const fingerprintSection = full
+      ? `<h2>生成参数指纹</h2><p class="meta"><code>${reportFingerprint()}</code> · 相同参数重新生成指纹一致,可用于核对报告与数据版本</p>`
+      : ''
     const html = `<!doctype html><html lang="zh"><head><meta charset="utf-8">
-<title>TerraVista 分析报告 · ${themeTitle.value}</title>
+<title>TerraVista 分析报告 · ${themeTitle.value}${full ? '' : '（摘要版）'}</title>
 <style>body{font-family:system-ui,-apple-system,'PingFang SC',sans-serif;max-width:920px;margin:28px auto;padding:0 16px;color:#222}
 img{max-width:100%;border:1px solid #ddd;border-radius:8px}h1{font-size:22px}h2{font-size:16px;margin-top:28px}
 table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid #ddd;padding:6px 10px;font-size:14px;text-align:left}
-.meta{color:#888;font-size:12px}</style></head><body>
-<h1>TerraVista 3D · ${themeTitle.value}分析报告</h1>
-<p class="meta">生成时间 ${new Date().toLocaleString('zh-CN')} · 数据年份 ${yearDesc} · 样本 ${Object.keys(values.value).length} 个经济体</p>
+.meta{color:#888;font-size:12px}
+.print-bar{position:fixed;top:12px;right:12px;padding:8px 16px;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;font-size:14px}
+@media print{.print-bar{display:none}body{max-width:none;margin:0;padding:12mm}img{page-break-inside:avoid}h2{page-break-after:avoid}}
+</style></head><body>
+<button class="print-bar" onclick="window.print()">🖨 打印 / 保存为 PDF</button>
+<p class="meta">提示:点击右上角按钮,在打印对话框中选择「另存为 PDF」即可导出 PDF 文件。</p>
+<h1>TerraVista 3D · ${themeTitle.value}分析报告${full ? '' : '（摘要版）'}</h1>
+<p class="meta">模板 ${full ? '完整版' : '摘要版'} · 生成时间 ${new Date().toLocaleString('zh-CN')} · 数据年份 ${yearDesc} · 样本 ${Object.keys(values.value).length} 个经济体</p>
 <p>${summary.value}</p>
 <h2>全球分布</h2><img src="${mapSnap}" alt="全球分布">
-<h2>Top 10</h2><img src="${chartSnap}" alt="Top10 图表">
-<h2>排名明细</h2><table><tr><th>排名</th><th>经济体</th><th>数值</th></tr>${rows}</table>
+${chartSection}
+<h2>Top 10</h2><table><tr><th>排名</th><th>经济体</th><th>数值</th></tr>${rows}</table>
+${fingerprintSection}
 <p class="meta">由 TerraVista 3D 分析工作台生成 · 数据为演示用途</p>
 </body></html>`
     const a = document.createElement('a')
-    a.download = `terra-report-${theme.value}-${Date.now()}.html`
+    a.download = `terra-report-${theme.value}-${reportMode.value}-${Date.now()}.html`
     a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }))
     document.body.appendChild(a)
     a.click()
@@ -283,10 +372,6 @@ table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid 
   } finally {
     exporting.value = false
   }
-}
-
-function focusCountry(name) {
-  choropleth?.flyTo(name)
 }
 
 let resizeHandler = null
@@ -320,6 +405,8 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeHandler)
   chartInstance?.dispose()
   chartInstance = null
+  drillChart?.dispose()
+  drillChart = null
   choropleth?.destroy()
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
@@ -452,6 +539,33 @@ onUnmounted(() => {
 .chart-box {
   width: 100%;
   height: 260px;
+}
+
+.drill-box {
+  width: 100%;
+  height: 140px;
+}
+
+.report-mode {
+  display: flex;
+  gap: 6px;
+}
+
+.mode-pill {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.mode-pill.active {
+  border-color: var(--tv-primary, #4f8ef7);
+  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  font-weight: 600;
 }
 
 .summary {

@@ -91,6 +91,57 @@ test.describe('主题分析工作台', () => {
     expect(html).toContain('<table>')
   })
 
+  test('选国下钻:点排行出该国 GDP 趋势小图(W3)', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('[data-testid="drill-chart"]')).toHaveCount(0)
+
+    const firstName = (await page.locator('[data-testid="rank-item-0"] .rank-name').innerText()).trim()
+    await page.locator('[data-testid="rank-item-0"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('.panel-right')).toContainText(`${firstName} · GDP 走势`)
+  })
+
+  test('报告模板:摘要版无指纹段,完整版含指纹(W2)', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    const fs = await import('node:fs')
+
+    // 摘要版
+    await page.locator('[data-testid="mode-brief"]').evaluate((el) => el.click())
+    let dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
+    const brief = await dl
+    expect(brief.suggestedFilename()).toMatch(/terra-report-gdp-brief-.*\.html$/)
+    const briefHtml = fs.readFileSync(await brief.path(), 'utf8')
+    expect(briefHtml).toContain('（摘要版）')
+    expect(briefHtml).toContain('data:image/png') // 地图快照仍在
+    expect(briefHtml).not.toContain('生成参数指纹') // 无指纹段
+    expect(briefHtml).toContain('<table>')
+
+    // 完整版含指纹
+    await page.locator('[data-testid="mode-full"]').evaluate((el) => el.click())
+    dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
+    const full = await dl
+    const fullHtml = fs.readFileSync(await full.path(), 'utf8')
+    expect(fullHtml).toContain('生成参数指纹')
+    expect(fullHtml).toMatch(/TV-GDP-\d+N-[0-9A-Z]+/)
+  })
+
+  test('报告支持打印导出 PDF:含 @media print 与打印按钮(W4)', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    const dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
+    const d = await dl
+    const fs = await import('node:fs')
+    const html = fs.readFileSync(await d.path(), 'utf8')
+    expect(html).toContain('@media print')
+    expect(html).toContain('window.print()')
+    expect(html).toContain('保存为 PDF')
+  })
+
   test('数据加载失败：显示错误提示而非静默空白(回归:错误分支曾是死代码)', async ({ page }) => {
     await page.route('**/data/mock/gdp-timeline.json', (route) => route.abort())
     await page.goto('/workbench')
