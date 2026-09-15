@@ -133,6 +133,18 @@
             <dd>{{ emissionText }}</dd>
           </div>
         </dl>
+
+        <!-- 国家趋势图(A2):选中国 GDP 2000~2020 -->
+        <template v-if="selected">
+          <p class="group-label">
+            {{ selected }} · GDP 走势(2000~2020)
+          </p>
+          <div
+            ref="trendRef"
+            class="trend-box"
+            data-testid="trend-chart"
+          />
+        </template>
       </template>
       <p
         v-else
@@ -140,6 +152,15 @@
       >
         点击地图上的国家，或在左侧列表选择。
       </p>
+
+      <!-- 导出当前视图(A4):不依赖选国,常驻 -->
+      <button
+        class="mini-btn"
+        data-testid="export-csv"
+        @click="exportCsv"
+      >
+        ⬇ 导出当前视图 CSV
+      </button>
 
       <template v-if="compare.length">
         <p class="group-label">
@@ -238,7 +259,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { loadCesium } from '../map/cesiumLoader.js'
 import { createMapViewer } from '../map/createViewer.js'
 import { useCountryData, formatUSD, formatPopulation, formatAreaSqKm, gdpRank } from '../map/analysis/useCountryData.js'
@@ -255,21 +277,26 @@ const yearIndex = ref(0)
 const playing = ref(false)
 
 const { loading, error: dataError, years, countries, gdpByYear, load } = useCountryData()
+const route = useRoute()
+const router = useRouter()
 let viewer = null
 let choropleth = null
 let playTimer = null
 let debugTimer = null
 let pickHandler = null
+let trendChart = null
+const trendRef = ref(null)
 const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
 const selectedCountry = computed(() => countries.value.find((c) => c.name === selected.value) || null)
 const compareFull = computed(() => compare.value.length >= 4)
 
-// 着色指标(A1):GDP 随时间轴年份联动;人口/碳排放为静态年,复用 choropleth
-// 的排名百分位色阶(applyValues 通用入口,无需为指标写专用色阶)
+// 着色指标(A1/A5):GDP 随时间轴年份联动;人均 GDP 派生;人口/碳排放为静态年,
+// 复用 choropleth 的排名百分位色阶(applyValues 通用入口,无需为指标写专用色阶)
 const METRICS = [
   { key: 'gdp', label: 'GDP' },
+  { key: 'percapita', label: '人均 GDP' },
   { key: 'population', label: '人口' },
   { key: 'carbon', label: '碳排放' },
 ]
@@ -284,6 +311,15 @@ function setMetric(key) {
 
 const metricValues = computed(() => {
   if (metric.value === 'gdp') return gdpByYear.value[year.value] || {}
+  if (metric.value === 'percapita') {
+    const yearData = gdpByYear.value[year.value] || {}
+    const map = {}
+    for (const c of countries.value) {
+      const gdp = yearData[c.name]
+      if (gdp != null && c.population) map[c.name] = gdp / c.population
+    }
+    return map
+  }
   if (metric.value === 'population') {
     const map = {}
     for (const c of countries.value) {
@@ -370,9 +406,78 @@ watch([year, selected, compare, metric], () => {
   choropleth?.applyValues(metricValues.value, selected.value, compare.value)
 })
 
+// ---- URL 状态分享(A3):?country=&year=,单一机制管本页 query(C11) ----
+// 初始化时从 query 还原一次;之后操作驱动 replace,不再 watch route(避免回写环)
+function restoreFromQuery() {
+  const restored = { country: false, year: false }
+  const qCountry = typeof route.query.country === 'string' ? route.query.country : ''
+  if (qCountry && countries.value.some((c) => c.name === qCountry)) {
+    selected.value = qCountry
+    restored.country = true
+  }
+  const qYear = String(route.query.year ?? '')
+  const idx = years.value.indexOf(qYear)
+  if (idx > -1) {
+    yearIndex.value = idx
+    restored.year = true
+  }
+  return restored
+}
+
+watch([selected, year], () => {
+  const q = {}
+  if (selected.value) q.country = selected.value
+  if (year.value) q.year = String(year.value)
+  router.replace({ query: q }).catch(() => {})
+})
+
+// ---- 国家趋势图(A2):选中国 → GDP 2000~2020 折线,echarts 动态 import ----
+async function renderTrend() {
+  if (!selected.value || !trendRef.value) return
+  if (!trendChart) {
+    const echarts = await import('echarts')
+    trendChart = echarts.init(trendRef.value)
+  }
+  const series = years.value.map((y) => gdpByYear.value[y]?.[selected.value] ?? null)
+  trendChart.setOption({
+    grid: { left: 8, right: 12, top: 20, bottom: 4, containLabel: true },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: years.value, axisLabel: { fontSize: 9 } },
+    yAxis: { type: 'value', axisLabel: { fontSize: 9, formatter: (v) => (v >= 1e12 ? `${(v / 1e12).toFixed(1)}万亿` : '') } },
+    series: [{ type: 'line', data: series, symbolSize: 4, itemStyle: { color: '#2271b2' } }],
+  })
+}
+
+watch(selected, () => {
+  nextTick(renderTrend)
+})
+
+// ---- 当前视图数据导出(A4):CSV(UTF-8 BOM),随时间轴年份 ----
+function exportCsv() {
+  const header = ['国家/地区', `GDP(${year.value},美元)`, '人口', '人均GDP(美元)', '面积(km²)', '人口密度(人/km²)', '碳排放(MtCO2)']
+  const esc = (v) => {
+    const s = v == null ? '' : String(v)
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+  }
+  const rows = countries.value.map((c) => {
+    const gdp = gdpByYear.value[year.value]?.[c.name] ?? ''
+    const percap = gdp !== '' && c.population ? Math.round(gdp / c.population) : ''
+    return [c.name, gdp, c.population ?? '', percap, c.area ?? '', c.density ?? '', c.emission ?? '']
+  })
+  const csv = '\uFEFF' + [header, ...rows].map((r) => r.map(esc).join(',')).join('\n')
+  const a = document.createElement('a')
+  a.download = `terra-analysis-${year.value || 'data'}.csv`
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+}
+
 onMounted(async () => {
   await load()
   if (dataError.value) return
+    const restored = restoreFromQuery() // A3:?country=&year= 还原选国与年份(须在首次着色前)
   try {
     const Cesium = await loadCesium()
     if (!containerRef.value) return
@@ -390,7 +495,8 @@ onMounted(async () => {
         debugHeight.value = Math.round(viewer.camera.positionCartographic.height)
       }, 500)
     }
-    yearIndex.value = years.value.length - 1
+    // 默认落在末年;URL 已指定年份时保持还原值
+    if (!restored.year) yearIndex.value = years.value.length - 1
     choropleth.applyValues(metricValues.value, selected.value, compare.value)
 
     // 点击地图选国(挂组件级引用,卸载时销毁——其余页面均如此)
@@ -409,6 +515,8 @@ onUnmounted(() => {
   if (playTimer) clearInterval(playTimer)
   if (debugTimer) clearInterval(debugTimer)
   pickHandler?.destroy()
+  trendChart?.dispose()
+  trendChart = null
   choropleth?.destroy()
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
@@ -581,6 +689,12 @@ onUnmounted(() => {
 .compare-table td:first-child {
   text-align: left;
   opacity: 0.65;
+}
+
+.trend-box {
+  width: 100%;
+  height: 150px;
+  margin-top: 2px;
 }
 
 .mini-btn {

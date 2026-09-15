@@ -189,4 +189,75 @@ test.describe('全球数据分析', () => {
     await expect(legend).toContainText('GDP 低 → 高', { timeout: 5_000 })
     expect(errors).toEqual([])
   })
+
+  test('URL 状态分享:?country=&year= 还原选国与年份;操作后地址同步(A3)', async ({ page }) => {
+    const errors = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/analysis?country=中国&year=2010')
+    await page.locator('.panel-right .panel-title', { hasText: '中国' }).waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="timeline-year"]')).toHaveText('2010')
+    await expect(page.locator('.panel-right .panel-title')).toContainText('中国')
+
+    // 无效参数静默忽略
+    await page.goto('/analysis?country=不存在的国家&year=1999')
+    await page.locator('.panel-right').waitFor({ timeout: 30_000 })
+    await expect(page.locator('.panel-right .empty-tip')).toBeVisible()
+
+    // 操作驱动地址同步
+    await page.locator('[data-testid="timeline-range"]').fill('5')
+    await expect(page).toHaveURL(/year=2005/, { timeout: 5_000 })
+    expect(errors).toEqual([])
+  })
+
+  test('国家趋势图:选中国后折线出现(A2)', async ({ page }) => {
+    const errors = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/analysis')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+    await expect(page.locator('[data-testid="trend-chart"]')).toBeHidden()
+
+    // 搜索+点击整段页内执行(C13:满载页 CDP 往返不可靠)
+    await page.evaluate(async () => {
+      const search = document.querySelector('[data-testid="country-search"]')
+      search.value = '中国'
+      search.dispatchEvent(new Event('input', { bubbles: true }))
+      await new Promise((r) => setTimeout(r, 300))
+      document.querySelector('[data-testid="country-中国"]').click()
+    })
+    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('.panel-right')).toContainText('GDP 走势(2000~2020)')
+    expect(errors).toEqual([])
+  })
+
+  test('CSV 导出:UTF-8 BOM、表头与行数据(A4)', async ({ page }) => {
+    await page.goto('/analysis')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+    await page.waitForTimeout(2500) // 等初始着色/瓦片高峰过去,evaluate 才能挤进主线程
+
+    const dl = page.waitForEvent('download')
+    await page.locator('[data-testid="export-csv"]').evaluate((el) => el.click())
+    const d = await dl
+    expect(d.suggestedFilename()).toMatch(/terra-analysis-\d{4}\.csv$/)
+    const fs = await import('node:fs')
+    const buf = fs.readFileSync(await d.path())
+    expect(buf[0]).toBe(0xef) // UTF-8 BOM
+    expect(buf[1]).toBe(0xbb)
+    expect(buf[2]).toBe(0xbf)
+    const csv = buf.toString('utf8')
+    expect(csv).toContain('国家/地区')
+    expect(csv).toContain('中国')
+    const chinaRow = csv.split('\n').find((l) => l.startsWith('中国,'))
+    expect(chinaRow).toBeTruthy()
+    expect(chinaRow.split(',').length).toBe(7)
+  })
+
+  test('人均 GDP 着色:图例与着色联动(A5)', async ({ page }) => {
+    const errors = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/analysis')
+    await page.locator('.timeline-bar').waitFor({ timeout: 30000 })
+    await page.locator('[data-testid="metric-tab-percapita"]').click({ force: true })
+    await expect(page.locator('.legend')).toContainText('人均 GDP 低 → 高', { timeout: 5_000 })
+    expect(errors).toEqual([])
+  })
 })
