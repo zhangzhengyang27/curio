@@ -27,7 +27,31 @@ async function clickUntilAccepted(button, expectText) {
   await expect(button).toContainText(expectText) // 最终失败时给出明确断言错误
 }
 
+/** 勾选复选框并确认生效:以对比表列数为准(toBeChecked 在忙页上会读到 undefined 误判,
+ *  曾把已勾上的又点掉);勾选触发全图重着色,事件可能打在重渲窗口旧节点上,未生效则重试 */
+async function checkCountryInList(page, name, expectCount) {
+  await page.locator('[data-testid="country-search"]').evaluate((el, v) => {
+    el.value = v
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+  }, name)
+  await page.waitForTimeout(300)
+  const box = page.locator(`[data-testid="country-${name}"] .compare-toggle input`)
+  for (let i = 0; i < 3; i++) {
+    await box.evaluate((el) => el.click()).catch(() => {})
+    try {
+      await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(expectCount, { timeout: 2_000 })
+      return
+    } catch {
+      // 未生效,重试
+    }
+  }
+  await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(expectCount)
+}
+
 test.describe('全球数据分析', () => {
+  // 重着色让主线程持续满载,文件内并行用例互抢 CPU 时连 evaluate 都进不去
+  // (本地实测);serial 消除该噪音,CI 本就 workers=1(见 KNOWN_PITFALLS C13)
+  test.describe.configure({ mode: 'serial' })
   test('页面打开：国家列表就绪（166 国），无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
@@ -52,20 +76,45 @@ test.describe('全球数据分析', () => {
   test('多国对比：勾选后对比表按列展示', async ({ page }) => {
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
-    // 列表过滤后 v-for 会整行重建:fill 后须等渲染落定再点,否则 click 打在
-    // 已脱离文档的旧节点上,change 丢失(C13 变体,force 也救不了)
-    const checkCountry = async (name) => {
-      await page.locator('[data-testid="country-search"]').fill(name)
-      await page.waitForTimeout(300)
-      await page.locator(`[data-testid="country-${name}"] .compare-toggle input`).check({ force: true })
-      await expect(page.locator(`[data-testid="country-${name}"] .compare-toggle input`)).toBeChecked()
-    }
-    // 中国选为主选国,美国加入对比
-    await checkCountry('中国')
-    await checkCountry('美国')
+    // 中国选为主选国,美国加入对比(生效与否以对比表列数为准)
+    await checkCountryInList(page, '中国', 2)
+    await checkCountryInList(page, '美国', 3)
     await expect(page.locator('[data-testid="compare-table"]')).toBeVisible()
     await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(3) // 指标列 + 2 国
     await expect(page.locator('[data-testid="compare-table"]')).toContainText('美国')
+  })
+
+  test('对比满 4 国后其余复选框禁用(回归:曾静默丢弃第 5 国勾选)', async ({ page }) => {
+    await page.goto('/analysis')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+
+    // 每次勾选都触发全图重着色,页面长期满载,CDP 往返(逐国 fill/click)会被堵死
+    // (本地实测连 waitForTimeout 都超时)。整段交互放进单次页面内脚本执行,
+    // 每次搜索后等 Vue 渲染落定再点击。
+    await page.evaluate(async () => {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+      const search = async (v) => {
+        const el = document.querySelector('[data-testid="country-search"]')
+        el.value = v
+        el.dispatchEvent(new Event('input', { bubbles: true }))
+        await sleep(150)
+      }
+      for (const n of ['中国', '美国', '日本', '德国']) {
+        await search(n)
+        document.querySelector(`[data-testid="country-${n}"] .compare-toggle input`).click()
+        await sleep(150)
+      }
+    })
+    await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(5, { timeout: 15_000 }) // 指标列 + 4 国
+
+    // 满员后第 5 国复选框禁用(悬停有说明),勾选不再静默丢弃
+    await page.locator('[data-testid="country-search"]').evaluate((el) => {
+      el.value = '印度'
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await page.waitForTimeout(300)
+    await expect(page.locator('[data-testid="country-印度"] .compare-toggle input')).toBeDisabled()
+    await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(5)
   })
 
   test('时间轴播放：年份自动演进', async ({ page }) => {

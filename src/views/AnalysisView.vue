@@ -48,12 +48,13 @@
           <span class="name">{{ c.name }}</span>
           <label
             class="compare-toggle"
-            title="加入对比"
+            :title="compareFull && !compare.includes(c.name) ? '最多同时对比 4 个国家' : '加入对比'"
             @click.stop
           >
             <input
               type="checkbox"
               :checked="compare.includes(c.name)"
+              :disabled="compareFull && !compare.includes(c.name)"
               @change.stop="toggleCompare(c.name)"
             >
           </label>
@@ -263,6 +264,7 @@ const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
 const selectedCountry = computed(() => countries.value.find((c) => c.name === selected.value) || null)
+const compareFull = computed(() => compare.value.length >= 4)
 
 // 着色指标(A1):GDP 随时间轴年份联动;人口/碳排放为静态年,复用 choropleth
 // 的排名百分位色阶(applyValues 通用入口,无需为指标写专用色阶)
@@ -338,7 +340,8 @@ function selectCountry(name) {
 function toggleCompare(name) {
   const idx = compare.value.indexOf(name)
   if (idx > -1) compare.value.splice(idx, 1)
-  else if (compare.value.length < 4) compare.value.push(name)
+  else if (!compareFull.value) compare.value.push(name)
+  // 满员后靠复选框 disabled 拦截(悬停有说明);曾在此静默丢弃第 5 国勾选
 }
 
 function togglePlay() {
