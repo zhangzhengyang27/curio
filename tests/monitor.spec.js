@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 业务监控页（/monitor·地震应急监测）冒烟测试。
@@ -7,6 +8,10 @@ import { test, expect } from '@playwright/test'
  * （未处理→处理中→已处置，可重开）→ 统计大盘联动。
  * 「+ 模拟事件」按钮提供确定性的事件到达路径（不依赖 7s 定时器）。
  */
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('业务监控', () => {
   test('页面打开：事件流与统计大盘就绪，无页面错误', async ({ page }) => {

@@ -1,10 +1,15 @@
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 主题分析工作台（/workbench）冒烟测试。
  *
  * 闭环：选主题（GDP/碳排放）→ 着色图与 Top10 排行/图表联动 → 生成并导出 HTML 分析报告。
  */
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('主题分析工作台', () => {
   test('页面打开：Top10 排行与图表就绪，无页面错误', async ({ page }) => {

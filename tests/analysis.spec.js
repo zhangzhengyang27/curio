@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 全球数据分析页（/analysis）冒烟测试。
@@ -9,6 +10,10 @@ import { test, expect } from '@playwright/test'
  * CDP fill/click 的往返不可靠——搜索/勾选/播放暂停等全部走页面内脚本(页内重试),
  * Playwright 侧只做读取与轮询断言。
  */
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('全球数据分析', () => {
   // 重着色让主线程持续满载,文件内并行用例互抢 CPU 时连 evaluate 都进不去

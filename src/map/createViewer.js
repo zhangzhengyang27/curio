@@ -135,18 +135,18 @@ function makeLayerConf(layer, matrixSet) {
 }
 
 function createTdtProvider(Cesium, conf) {
-  return new Cesium.WebMapTileServiceImageryProvider({
+  // 用 UrlTemplateImageryProvider 而非 WMTS provider：customTags 允许
+  // 每个瓦片请求轮换一次 tk，把限流配额摊到多个 key 上（单 key 时等价直连）。
+  // 天地图 WMTS 兼容 REST 风格 GetTile（z/x/y 即 tilematrix/tilecol/tilerow）。
+  return new Cesium.UrlTemplateImageryProvider({
     url:
       `https://t{s}.tianditu.gov.cn/${conf.matrixSet}/wmts?service=WMTS&version=1.0.0` +
-      `&request=GetTile&tilematrix={TileMatrix}&tilerow={TileRow}&tilecol={TileCol}` +
-      `&tilematrixset=w&layer=${conf.layer}&style=default&format=tiles&tk=${nextTdtToken()}`,
-    layer: conf.layer,
-    style: 'default',
-    format: 'tiles',
-    tileMatrixSetID: 'w',
+      `&request=GetTile&tilematrix={z}&tilerow={y}&tilecol={x}` +
+      `&tilematrixset=w&layer=${conf.layer}&style=default&format=tiles&tk={key}`,
     subdomains: ['0'],
     tilingScheme: new Cesium.WebMercatorTilingScheme(),
     maximumLevel: 18,
+    customTags: { key: () => nextTdtToken() },
   })
 }
 

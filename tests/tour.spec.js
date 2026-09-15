@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 数据巡游冒烟测试（docs/TOUR_ROUTES.md）。
@@ -18,6 +19,10 @@ const TOUR_BTN = '[title="数据巡游"]'
 const PICKER = '[data-testid="tour-picker"]'
 const BAR = '[data-testid="tour-bar"]'
 const CAPTION = '[data-testid="tour-caption"]'
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('数据巡游', () => {
   test('工具栏入口打开路线选择，四条路线可见', async ({ page }) => {

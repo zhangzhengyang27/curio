@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 异步图层加载反馈（EarthCanvas switchVisualization → earthStore.vizLoading）。
@@ -25,6 +26,10 @@ async function clickVizUntilChip(page, label) {
   }
   return chip
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('图层加载反馈', () => {
   test('切换异步图层显示加载提示，完成后消失并激活按钮', async ({ page }) => {

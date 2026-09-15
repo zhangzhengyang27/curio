@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 核心链路冒烟测试。
@@ -58,6 +59,10 @@ function readBMapAk() {
   }
   return process.env.VITE_BMAP_AK || ''
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('冒烟测试：核心链路', () => {
   test('首页可加载且顶栏完整', async ({ page }) => {

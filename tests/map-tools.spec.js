@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
+import { mockTianditu } from './helpers/tiles.js'
 
 /**
  * 地图工具箱（/tools）冒烟测试。
@@ -12,6 +13,10 @@ import { test, expect } from '@playwright/test'
 
 const CANVAS_CLICK_A = { x: 640, y: 400 }
 const CANVAS_CLICK_B = { x: 780, y: 460 }
+
+test.beforeEach(async ({ page }) => {
+  await mockTianditu(page)
+})
 
 test.describe('地图工具箱', () => {
   // 画布 mouse 事件在 2 worker 并行(CPU 竞争)时会偶发丢失,probe 单跑稳定、
