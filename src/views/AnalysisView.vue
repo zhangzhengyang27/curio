@@ -206,12 +206,24 @@
       >{{ year }}</span>
     </footer>
 
-    <!-- 图例 -->
+    <!-- 图例 + 着色指标切换 -->
     <div
       v-if="ready"
       class="legend tv-glass-panel"
     >
-      <span class="legend-text">GDP 低 → 高</span>
+      <div class="metric-tabs">
+        <button
+          v-for="m in METRICS"
+          :key="m.key"
+          class="metric-tab"
+          :class="{ active: metric === m.key }"
+          :data-testid="`metric-tab-${m.key}`"
+          @click="setMetric(m.key)"
+        >
+          {{ m.label }}
+        </button>
+      </div>
+      <span class="legend-text">{{ metricLabel }} 低 → 高</span>
       <span class="legend-gradient" />
     </div>
 
@@ -253,6 +265,38 @@ const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
 const selectedCountry = computed(() => countries.value.find((c) => c.name === selected.value) || null)
+
+// 着色指标(A1):GDP 随时间轴年份联动;人口/碳排放为静态年,复用 choropleth
+// 的排名百分位色阶(applyValues 通用入口,无需为指标写专用色阶)
+const METRICS = [
+  { key: 'gdp', label: 'GDP' },
+  { key: 'population', label: '人口' },
+  { key: 'carbon', label: '碳排放' },
+]
+const metric = ref('gdp')
+const metricLabel = computed(() => METRICS.find((m) => m.key === metric.value)?.label || '')
+
+function setMetric(key) {
+  if (metric.value === key) return
+  metric.value = key
+  choropleth?.applyValues(metricValues.value, selected.value, compare.value)
+}
+
+const metricValues = computed(() => {
+  if (metric.value === 'gdp') return gdpByYear.value[year.value] || {}
+  if (metric.value === 'population') {
+    const map = {}
+    for (const c of countries.value) {
+      if (c.population != null) map[c.name] = c.population
+    }
+    return map
+  }
+  const map = {}
+  for (const c of countries.value) {
+    if (c.emission != null) map[c.name] = c.emission
+  }
+  return map
+})
 
 const filteredCountries = computed(() => {
   const q = search.value.trim()
@@ -321,8 +365,8 @@ watch(playing, (on) => {
   }, 700)
 })
 
-watch([year, selected, compare], () => {
-  choropleth?.apply(gdpByYear.value, year.value, selected.value, compare.value)
+watch([year, selected, compare, metric], () => {
+  choropleth?.applyValues(metricValues.value, selected.value, compare.value)
 })
 
 onMounted(async () => {
@@ -346,7 +390,7 @@ onMounted(async () => {
       }, 500)
     }
     yearIndex.value = years.value.length - 1
-    choropleth.apply(gdpByYear.value, year.value, selected.value, compare.value)
+    choropleth.applyValues(metricValues.value, selected.value, compare.value)
 
     // 点击地图选国(挂组件级引用,卸载时销毁——其余页面均如此)
     pickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
@@ -604,7 +648,9 @@ onUnmounted(() => {
 
 .legend {
   position: absolute;
-  left: 16px;
+  /* 右下角:加了指标切换按钮后图例变宽,原先左下位会与居中的时间轴条重叠、
+     挡住播放按钮(2026-09-15 A1 交付时实测踩过),右侧底部无面板占用 */
+  right: 16px;
   bottom: 14px;
   z-index: 10;
   display: flex;
@@ -613,6 +659,28 @@ onUnmounted(() => {
   padding: 6px 12px;
   border-radius: var(--tv-radius-full, 999px);
   font-size: 11px;
+}
+
+.metric-tabs {
+  display: flex;
+  gap: 4px;
+  margin-right: 4px;
+}
+
+.metric-tab {
+  padding: 2px 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: var(--tv-radius-full, 999px);
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.metric-tab.active {
+  border-color: var(--tv-primary, #4f8ef7);
+  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  font-weight: 600;
 }
 
 .legend-gradient {
