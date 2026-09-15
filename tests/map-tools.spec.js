@@ -385,6 +385,9 @@ test.describe('地图工具箱', () => {
   })
 
   test('书签增强:重命名持久化、导出再导入(M4)', async ({ page }) => {
+    // 唯一两次整页加载(goto+reload)的用例:dev 下每次拉 30MB+ 未压缩 Cesium,
+    // 全程贴着默认 60s 超时线,机器稍慢即在任意一步超时(报错位置漂移,实测)
+    test.setTimeout(120_000)
     await page.goto('/tools', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-right').waitFor({ timeout: 30_000 })
 

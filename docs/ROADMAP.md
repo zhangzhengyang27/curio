@@ -105,7 +105,7 @@
 | `thanksBibi` 示例未登记 | `threeExamples/application/thanksBibi` 磁盘上有源文件（`.js` + 封面），但从未转换为 Vue 组件，在 `1218670` 基线快照中被移除。生成器现在会跳过它并打印提示。若想真正上线，需补 `src/examples/components/three-cesium-examples/threeExamples/application/ThanksBibiExample.vue`（参考同目录 `FlyLineExample.vue` 的 `ExampleScene` 写法，注意源示例依赖 `#box` 容器与 `CSS3DRenderer`），然后重跑生成器即可自动纳入。**属示例开发，需视觉回归验证，未在本轮做** |
 | 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
-| tools M4 书签用例基线即挂 | `map-tools.spec.js` 的「书签增强:重命名持久化、导出再导入(M4)」在**未含 tools 库改造的 main 基线上同样失败**（重命名断言超时，2026-09-16 stash 对照实测），与库改造无关但需排查修复 |
+| 临界超时用例排查 | 已修 M4（tools 书签）与 W2（workbench 报告模板）：均为「双整页加载/双报告导出」型用例，实测 52~57s 贴着默认 60s 超时线，机器稍慢即在任意一步超时（报错位置漂移）。已按 M2 先例 `test.setTimeout(120s)`。同型用例再出现超时漂移报错时，先查总时长再查逻辑 |
 | tools 贴地量测缓办 | 贴地距离/贴地面积需要地形 provider 才有独立数值——当前 `createViewer` 未接地形，globe.pick 高程恒为椭球面，贴地与平面量测结果相同，属伪功能；待天地图 DEM 或 3D Tiles 接入后启用 |
 
 ---

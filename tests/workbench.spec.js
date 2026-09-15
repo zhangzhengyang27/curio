@@ -108,6 +108,8 @@ test.describe('主题分析工作台', () => {
   })
 
   test('报告模板:摘要版无指纹段,完整版含指纹(W2)', async ({ page }) => {
+    // 双报告导出(两次完整 HTML 下载),实测 53~57s,贴着默认 60s 超时线
+    test.setTimeout(120_000)
     await page.goto('/workbench')
     await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
     const fs = await import('node:fs')
