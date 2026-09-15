@@ -560,6 +560,8 @@ const drawTools = [
   { key: 'point', label: '标点', icon: '📍', desc: '放置标注点' },
   { key: 'line', label: '标线', icon: '〰️', desc: '绘制折线' },
   { key: 'polygon', label: '标面', icon: '⬟', desc: '绘制多边形' },
+  { key: 'rectangle', label: '矩形', icon: '▭', desc: '对角两点画矩形' },
+  { key: 'circle', label: '圆形', icon: '⭕', desc: '圆心+半径画圆' },
 ]
 
 let viewer = null

@@ -439,4 +439,64 @@ test.describe('地图工具箱', () => {
     expect(csv).toContain('类型,结果,时间')
     expect(csv).toMatch(/量距,总距离/)
   })
+
+  test('矩形:对角两点自动成形并量面积(M6)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await page.locator('[data-tool="rectangle"]').click()
+    await expect(page.locator('[data-testid="status-hint"]')).toContainText('对角')
+
+    // 两点即自动成形,无需右键收尾
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(800, 520)
+
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('矩形面积', { timeout: 10_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km²|m²))/)
+    await expect(result).not.toContainText('NaN')
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+  })
+
+  test('圆形:圆心+半径自动闭合(M6)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await page.locator('[data-tool="circle"]').click()
+    await expect(page.locator('[data-testid="status-hint"]')).toContainText('圆心')
+
+    await page.mouse.move(700, 450)
+    await page.mouse.click(700, 450)
+    await page.mouse.click(800, 450)
+
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('圆形面积', { timeout: 10_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km²|m²))/)
+    await expect(result).not.toContainText('NaN')
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+  })
+
+  test('矩形 GeoJSON 导出为 Polygon,刷新后恢复(M6)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await page.locator('[data-tool="rectangle"]').click()
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(800, 520)
+    await expect(page.locator('[data-testid="status-result"]')).toContainText('矩形面积', { timeout: 10_000 })
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.locator('[data-testid="export-geojson"]').click()
+    const download = await downloadPromise
+    const gj = JSON.parse(readFileSync(await download.path(), 'utf8'))
+    expect(gj.features).toHaveLength(1)
+    expect(gj.features[0].geometry.type).toBe('Polygon')
+    expect(gj.features[0].properties.kind).toBe('rectangle')
+    // GeoJSON 环闭合:4 角 + 尾点闭合 = 5
+    expect(gj.features[0].geometry.coordinates[0]).toHaveLength(5)
+
+    // 持久化:刷新后矩形恢复(M3 同路径)
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1', { timeout: 15_000 })
+  })
 })

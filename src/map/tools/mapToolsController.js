@@ -32,16 +32,28 @@ const TOOL_COLORS = {
   point: '#ff8a65',
   line: '#ba68c8',
   polygon: '#ffd54f',
+  rectangle: '#4db6ac',
+  circle: '#f06292',
 }
 
 /** 各 kind 完成一次产物所需的最少顶点数(不足则不登记,导出 GeoJSON 才合法) */
-const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3 }
+const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3, rectangle: 2, circle: 2 }
 
 /** 由 Drawer 采集落点的工具（point 即放即成不走采集,右键/双击收尾） */
-const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon']
+const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon', 'rectangle', 'circle']
 
 /** 达到落点数即自动收尾的工具（两点成形的面状工具） */
-const AUTO_FINISH = {}
+const AUTO_FINISH = { rectangle: 2, circle: 2 }
+
+/** Drawer 预览图形类型（rectangle/circle 有原生预览,其余统一折线） */
+const DRAWER_TYPE = {
+  line: 'POLYLINE',
+  distance: 'POLYLINE',
+  area: 'POLYLINE',
+  polygon: 'POLYLINE',
+  rectangle: 'RECTANGLE',
+  circle: 'CIRCLE',
+}
 
 const STORAGE_KEY = 'tv-map-annotations'
 
@@ -138,6 +150,8 @@ export class MapToolsController {
       case 'point': return '左键点击放置标注点，可连续放置'
       case 'line': return '左键依次点击折线顶点，右键/双击结束'
       case 'polygon': return '左键依次点击多边形顶点，右键/双击闭合'
+      case 'rectangle': return '左键点击对角两点，自动成矩形'
+      case 'circle': return '左键点圆心，再点半径位置自动闭合'
       default: return ''
     }
   }
@@ -146,15 +160,14 @@ export class MapToolsController {
   _startDrawer(tool) {
     if (this._destroyed || !this.drawer || this.activeTool !== tool) return
     const color = this.Cesium.Color.fromCssColorString(TOOL_COLORS[tool] || '#4fc3f7')
+    const type = DRAWER_TYPE[tool] || 'POLYLINE'
     this.drawer.reset()
     this.drawer.start({
-      type: 'POLYLINE',
+      type,
       // sameStyle=false → 采集预览用 dynamicOptions;成品实体不经过库(_finish 自建)
-      dynamicOptions: {
-        clampToGround: true,
-        width: 2,
-        material: color.withAlpha(0.6),
-      },
+      dynamicOptions: type === 'POLYLINE'
+        ? { clampToGround: true, width: 2, material: color.withAlpha(0.6) }
+        : { material: color.withAlpha(0.4) },
     })
   }
 
@@ -486,7 +499,79 @@ export class MapToolsController {
       this.lastResult = { kind: 'distance', text: `总距离 ${formatDistance(total)}` }
       return 'distance'
     }
+
+    // 矩形:对角两点取包围盒,产物为四角多边形(与标面同构,可编辑/可导出)
+    if (tool === 'rectangle') {
+      const rect = Cesium.Rectangle.fromCartesianArray(positions)
+      const corners = [
+        [rect.north, rect.west],
+        [rect.north, rect.east],
+        [rect.south, rect.east],
+        [rect.south, rect.west],
+      ].map(([lat, lon]) => Cesium.Cartesian3.fromRadians(lon, lat))
+      const fill = this.viewer.entities.add({
+        polygon: {
+          hierarchy: corners,
+          material: color.withAlpha(0.3),
+          classificationType: Cesium.ClassificationType.BOTH,
+        },
+      })
+      const outline = this.viewer.entities.add({
+        polyline: { positions: [...corners, corners[0]], width: 3, material: color },
+      })
+      this._registerEntity('rectangle', outline, corners, [fill])
+      const area = this._computeArea(corners)
+      this.registry[this.registry.length - 1].record = {
+        kind: 'area',
+        text: `矩形面积 ${formatArea(area)}`,
+        at: Date.now(),
+      }
+      this.lastResult = { kind: 'area', text: `矩形面积 ${formatArea(area)}` }
+      return 'rectangle'
+    }
+
+    // 圆:圆心+半径,产物为 64 边正多边形(与标面同构;恢复/导入直接吃环坐标)
+    if (tool === 'circle') {
+      const ring = positions.length === 2
+        ? this._circlePositions(positions[0], Cesium.Cartesian3.distance(positions[0], positions[1]))
+        : positions
+      const fill = this.viewer.entities.add({
+        polygon: {
+          hierarchy: ring,
+          material: color.withAlpha(0.3),
+          classificationType: Cesium.ClassificationType.BOTH,
+        },
+      })
+      const outline = this.viewer.entities.add({
+        polyline: { positions: [...ring, ring[0]], width: 3, material: color },
+      })
+      this._registerEntity('circle', outline, ring, [fill])
+      const area = this._computeArea(ring)
+      this.registry[this.registry.length - 1].record = {
+        kind: 'area',
+        text: `圆形面积 ${formatArea(area)}`,
+        at: Date.now(),
+      }
+      this.lastResult = { kind: 'area', text: `圆形面积 ${formatArea(area)}` }
+      return 'circle'
+    }
     return null
+  }
+
+  /** 以 center 为圆心、radius 为半径的正多边形环(中心点切平面 ENU 圆,64 段) */
+  _circlePositions(center, radius, segments = 64) {
+    const Cesium = this.Cesium
+    const enu = Cesium.Transforms.eastNorthUpToFixedFrame(center)
+    const pts = []
+    for (let i = 0; i < segments; i++) {
+      const a = (i / segments) * 2 * Math.PI
+      pts.push(Cesium.Matrix4.multiplyByPoint(
+        enu,
+        new Cesium.Cartesian3(Math.cos(a) * radius, Math.sin(a) * radius, 0),
+        new Cesium.Cartesian3(),
+      ))
+    }
+    return pts
   }
 
   _addRegistry(kind, position, props) {
@@ -643,7 +728,8 @@ export class MapToolsController {
           ring[0][0] === ring[ring.length - 1][0] && ring[0][1] === ring[ring.length - 1][1]
           ? ring.slice(0, -1)
           : ring
-        const kind = propsKind === 'area' ? 'area' : 'polygon'
+        // rectangle/circle 的产物本就是多边形,恢复时直接吃环坐标
+        const kind = ['area', 'polygon', 'rectangle', 'circle'].includes(propsKind) ? propsKind : 'polygon'
         records.push({ kind, coords: open })
       }
     }
