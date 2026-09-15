@@ -59,7 +59,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/<dir> npm run build \
 #   因缺 cesium 静态资源而 404（KNOWN_PITFALLS C8/DEPLOY.md）
 ```
 
-当前基线：**E2E 53 条**（2026-09-15 本轮交付后：四页面 28 条 + 首页/巡游/性能 25 条，
+当前基线：**E2E 55 条**（2026-09-15 本轮交付后：四页面 30 条 + 首页/巡游/性能 25 条，
 dev 与 preview 双模式全绿）。任何交付不得使基线变红。
 
 ---
@@ -199,7 +199,7 @@ dev 与 preview 双模式全绿）。任何交付不得使基线变红。
 ```bash
 npm install --legacy-peer-deps
 npm run dev                 # http://localhost:5173
-npm run test:e2e            # 全量 53 条基线，必须保持全绿
+npm run test:e2e            # 全量 55 条基线，必须保持全绿
 ```
 
 天地图 token 在 `.env.local` 的 `VITE_TDT_TOKEN`（已配置；支持逗号分隔多 key 轮询）。

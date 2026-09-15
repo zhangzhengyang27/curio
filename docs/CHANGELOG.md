@@ -23,7 +23,7 @@
 | 增强 K1 | monitor 处置持久化 | 处置状态存 localStorage 刷新恢复 +「重置演练」+ 自动推送页面内开关（流状态文案真实化） |
 | 增强 W1 | workbench 主题扩展 | 2→4 主题（+人口规模/密度），THEMES 配置化，排行/摘要/图表/报告同一配置驱动 |
 | 增强 M3 | tools 标绘持久化 + GeoJSON 导入 | 标注存 localStorage 刷新恢复；导入与导出对称（再导出坐标逐位一致）；各工具补最少顶点校验 |
-| 测试 | E2E 42 → 53 条 | 新增回归 5（聚合项/暂停/脱钩/HUD）+ 功能 6（指标切换/持久化/重置/流开关/新主题/导入）+ 基线抗 flake（C13 模式：force→DOM click、serial、时序窗口放宽） |
+| 测试 | E2E 42 → 55 条 | 新增回归 6（聚合项/暂停/脱钩/HUD/对比上限/数据失败提示）+ 功能 6（指标切换/持久化/重置/流开关/新主题/导入）+ 基线抗 flake（C13 模式：force→DOM click、serial、页面内整段脚本、时序窗口放宽） |
 | 坑沉淀 | KNOWN_PITFALLS C13/C14 + D3 漂移修正 | Cesium 页 Playwright 交互静默卡死两形态与对策；TileProviderError API 形态坑；requestsPerServer 文档对齐代码（=1） |
 
 ### 工程治理
