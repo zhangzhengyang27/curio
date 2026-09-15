@@ -36,7 +36,7 @@
 
 | 页面 | 路由 | 用户旅程（闭环） | 状态 |
 |---|---|---|---|
-| ② 地图工具箱 | `/tools` | 搜索/定位 → 量距/量面 → 标绘点线面 → 书签保存/回跳 → 导出 GeoJSON/截图 | **P0 已完成 MVP**：量距（测地线）、量面（切平面鞋靴公式）、标点/线/面、撤销/清空、书签（localStorage 持久化）、GeoJSON/截图导出。天地图底图（token 缺省降级 OSM）。待补：地名搜索（需接天地图搜索 API）、标绘样式编辑 |
+| ② 地图工具箱 | `/tools` | 搜索/定位 → 量距/量面/矩形/圆 → 标绘点线面（编辑/顶点拖拽）→ 坐标转换 → 书签保存/回跳 → 导出 GeoJSON/CSV/截图 | **P0 MVP + 两批增强已完成（2026-09-16）**：地名搜索三通道、量距（测地线）、量面/矩形/圆（turf 测地面积）、标点/线/面 + 编辑（改色/线宽/顶点拖拽）、撤销/清空、量测记录 CSV、坐标转换（BD-09/GCJ-02/WGS-84）、书签、持久化与 GeoJSON 往返、截图。采集交互已切 `@cesium-extends/drawer`（仅视觉层，落点真值自采，见 `mapToolsController.js` 头注释）。天地图底图（token 缺省降级 OSM）。缓办：贴地量测（需地形 provider，见第 2 节 P2） |
 | ① 全球数据分析 | `/analysis` | 全球 GDP 着色图（choropleth）+ 搜索/点选国家 → 指标卡联动（GDP/人口/人均/密度/碳排放 + 当年排名）→ 多国对比表（≤4 国）→ 时间轴播放演进（2000~2020） | **P1 MVP 已完成（2026-09-14）**，E2E 4 条守护。待扩展：碳排放/人口指标着色切换、贸易/航线图层联动 |
 | ③ 业务监控 | `/monitor` | 主题：地震应急监测。模拟实时流（初始 10 条 + 定时/手动推送）→ 告警列表分级 → 点击定位 → 处置流转（未处理→处理中→已处置，可重开）→ 统计大盘 | **P2 MVP 已完成（2026-09-14）**，E2E 4 条守护。待扩展：巡游引擎复用为大屏轮播、处置记录持久化 |
 | ④ 主题分析工作台 | `/workbench` | 双主题（GDP/碳排放）→ 着色图 + Top10 排行 + echarts 图表联动 → 一键导出自包含 HTML 分析报告（内嵌地图快照与图表） | **P3 MVP 已完成（2026-09-14）**，E2E 3 条守护。待扩展：巡游引擎改造为报告分镜、更多主题与自选指标组合 |
@@ -105,6 +105,8 @@
 | `thanksBibi` 示例未登记 | `threeExamples/application/thanksBibi` 磁盘上有源文件（`.js` + 封面），但从未转换为 Vue 组件，在 `1218670` 基线快照中被移除。生成器现在会跳过它并打印提示。若想真正上线，需补 `src/examples/components/three-cesium-examples/threeExamples/application/ThanksBibiExample.vue`（参考同目录 `FlyLineExample.vue` 的 `ExampleScene` 写法，注意源示例依赖 `#box` 容器与 `CSS3DRenderer`），然后重跑生成器即可自动纳入。**属示例开发，需视觉回归验证，未在本轮做** |
 | 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
+| tools M4 书签用例基线即挂 | `map-tools.spec.js` 的「书签增强:重命名持久化、导出再导入(M4)」在**未含 tools 库改造的 main 基线上同样失败**（重命名断言超时，2026-09-16 stash 对照实测），与库改造无关但需排查修复 |
+| tools 贴地量测缓办 | 贴地距离/贴地面积需要地形 provider 才有独立数值——当前 `createViewer` 未接地形，globe.pick 高程恒为椭球面，贴地与平面量测结果相同，属伪功能；待天地图 DEM 或 3D Tiles 接入后启用 |
 
 ---
 

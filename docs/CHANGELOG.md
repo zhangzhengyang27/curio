@@ -69,3 +69,19 @@
 | 脚本物理归档（原 P2） | 已完成：38 个一次性脚本移入 `scripts/legacy/`（提交 `d730801`），主目录只剩质量闸门 / registry 写入 / 截图流水线脚本，分类见 `scripts/README.md` |
 | 构建产物瘦身（原 P2） | 决策：**不做**。34 MB / 3203 chunks 分散在按需加载的示例块里，不在首屏路径上，优化目标应是首屏与常用路径（见 `docs/PERF_BASELINE.md`） |
 | 拆分巨石组件（原 P1，部分完成） | `ExampleGallery.vue` 895 → 266 行（ExampleCard / useGalleryFilters / GalleryFilterSidebar / GalleryPagination）、`CodeDrawer.vue` 675 → 317 行（CodeDrawerHeader + 全局高亮配色外移）。剩余待拆项见 ROADMAP P1 |
+
+### 地图工具箱改造（2026-09-16，采集交互切 Drawer + 矩形/圆/坐标转换）
+
+调研 GitHub 同类项目（Mars3D / dc-sdk / cesium-extends / geojson.io）后拍板：
+不整体换底座（Mars3D 核心闭源、dc-sdk 活跃度存疑），按需引入 MIT 的
+`@cesium-extends/drawer`，坐标转换用 `coordtransform`。
+
+| 类别 | 项 | 说明 |
+|---|---|---|
+| 重构 | 采集交互切 Drawer | 消掉手写采集状态机的整类缺陷（预览残留/高亮脱钩/无效 GeoJSON），controller 公开 API、registry entry 形状、持久化格式、GeoJSON 往返逐字节等契约全部不变，存量用例零修改通过。**分工：Drawer 只做视觉层（POLYLINE/RECTANGLE/CIRCLE 预览、断点标记、十字光标），落点真值由 LEFT_CLICK 自采、右击/双击/Esc 收尾**——库的 END 事件有 100ms 门控（快速右击丢事件）、POLYGON 收尾先 _cancel 移除一顶点（右击收尾丢最后真实顶点）、onPointsChange 快照尾随位同受门控（快速连点两点距离算成 0 m），均实测 |
+| 依赖接入 | Cesium 互操作 shim | 本仓库 Cesium 经动态 `<script>` 加载（window.Cesium），库的 peer `import 'cesium'` 由 `cesiumInteropResolver` 按 **importer 限定**重定向到 `src/map/cesium-interop.js`（具名导出=各库 dist 导入并集）；`optimizeDeps.exclude` 同步排除防 dev 预打包打进第二份引擎。⚠ 全局重定向会让 `cesium-transform-controls` 构建期 Missing export（实测）；⚠ **不引入 `@cesium-extends/measure`**：其 turf→polygon-clipping UMD 链在 dev 裸伺服下无 ESM 导出，页面直接报错（实测） |
+| 算法 | 面积换 @turf/area | 切平面鞋靴公式 → turf 测地面积（任意大小多边形稳定）；量距保留 EllipsoidGeodesic 测地线累加（库的 getDistance 是直线弦距，不适合地图量测） |
+| 增强 M6 | 矩形/圆标绘 | Drawer 原生预览 + 两点自动收尾；产物与标面同构（多边形实体，编辑/导出/持久化全链路复用）；圆为圆心 ENU 系 64 边环，恢复/导入按环坐标往返逐点一致 |
+| 增强 M7 | 坐标转换卡 | BD-09/GCJ-02/WGS-84 互转（coordtransform，纯前端零网络），批量/交换/复制；高德搜索通道手写 50 行纠偏替换为同源库算法 |
+| 测试 | map-tools E2E 16 → 19 条 | +M6 三条（矩形量面积/圆量面积/矩形 GeoJSON 往返+刷新恢复）+ M7 一条（按库期望值精确断言、含方向交换） |
+| 坑沉淀 | tools M4 用例基线即挂 | 「书签增强」用例在未含本改造的 main 基线同样失败（stash 对照实测），与库改造无关，已登记 ROADMAP P2 待排查 |
