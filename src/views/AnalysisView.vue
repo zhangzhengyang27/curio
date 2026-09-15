@@ -68,6 +68,25 @@
       <p class="list-meta">
         共 {{ countries.length }} 个国家/地区 · 按最新 GDP 排序
       </p>
+
+      <!-- 图例 + 着色指标切换:放面板内,避免与居中的时间轴条重叠
+           (横排版曾在 1280/1440 视口盖住时间轴滑杆右段) -->
+      <div class="legend">
+        <div class="metric-tabs">
+          <button
+            v-for="m in METRICS"
+            :key="m.key"
+            class="metric-tab"
+            :class="{ active: metric === m.key }"
+            :data-testid="`metric-tab-${m.key}`"
+            @click="setMetric(m.key)"
+          >
+            {{ m.label }}
+          </button>
+        </div>
+        <span class="legend-text">{{ metricLabel }} 低 → 高</span>
+        <span class="legend-gradient" />
+      </div>
     </aside>
 
     <!-- 右侧：指标卡与对比 -->
@@ -205,27 +224,6 @@
         data-testid="timeline-year"
       >{{ year }}</span>
     </footer>
-
-    <!-- 图例 + 着色指标切换 -->
-    <div
-      v-if="ready"
-      class="legend tv-glass-panel"
-    >
-      <div class="metric-tabs">
-        <button
-          v-for="m in METRICS"
-          :key="m.key"
-          class="metric-tab"
-          :class="{ active: metric === m.key }"
-          :data-testid="`metric-tab-${m.key}`"
-          @click="setMetric(m.key)"
-        >
-          {{ m.label }}
-        </button>
-      </div>
-      <span class="legend-text">{{ metricLabel }} 低 → 高</span>
-      <span class="legend-gradient" />
-    </div>
 
     <!-- 调试角标（?debug=1） -->
     <div
@@ -647,24 +645,32 @@ onUnmounted(() => {
 }
 
 .legend {
-  position: absolute;
-  /* 右下角:加了指标切换按钮后图例变宽,原先左下位会与居中的时间轴条重叠、
-     挡住播放按钮(2026-09-15 A1 交付时实测踩过),右侧底部无面板占用 */
-  right: 16px;
-  bottom: 14px;
-  z-index: 10;
+  /* 面板内静态布局:竖排(指标按钮一行、文案+渐变一行),不与时间轴争位 */
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: var(--tv-radius-full, 999px);
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
   font-size: 11px;
+}
+
+.legend-text,
+.legend-gradient {
+  align-self: center;
+}
+
+.legend-gradient {
+  width: 80%;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #f7fbff, #d0e1f2, #94c4df, #4a98c9, #2271b2, #0c4a8c, #08306b);
 }
 
 .metric-tabs {
   display: flex;
   gap: 4px;
-  margin-right: 4px;
 }
 
 .metric-tab {
@@ -681,13 +687,6 @@ onUnmounted(() => {
   border-color: var(--tv-primary, #4f8ef7);
   background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
   font-weight: 600;
-}
-
-.legend-gradient {
-  width: 140px;
-  height: 10px;
-  border-radius: 5px;
-  background: linear-gradient(to right, #f7fbff, #d0e1f2, #94c4df, #4a98c9, #2271b2, #0c4a8c, #08306b);
 }
 
 .debug-hud {
