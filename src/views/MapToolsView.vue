@@ -423,9 +423,15 @@ async function searchPlace() {
       start: 0,
       count: 10,
     })
+    // 8s 超时兜底:跨域请求偶发挂起时也能落到降级提示
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 8000)
     const res = await fetch(
-      `https://api.tianditu.gov.cn/search?postStr=${encodeURIComponent(postStr)}&type=query&tk=${TDT_KEY}`
+      `https://api.tianditu.gov.cn/search?postStr=${encodeURIComponent(postStr)}&type=query&tk=${TDT_KEY}`,
+      { signal: ctrl.signal }
     )
+    clearTimeout(timer)
+    if (!res.ok) throw new Error(`搜索服务响应 ${res.status}`)
     const data = await res.json()
     const pois = Array.isArray(data.pois) ? data.pois : []
     if (!pois.length) {
@@ -438,7 +444,7 @@ async function searchPlace() {
     }).filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
     if (!placeResults.value.length) placeHint.value = `没有找到「${q}」相关地名`
   } catch {
-    placeHint.value = '地名搜索服务不可用,请稍后再试'
+    placeHint.value = '地名搜索服务不可用，请稍后再试'
   }
 }
 
