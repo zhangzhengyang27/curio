@@ -345,6 +345,12 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
 - 测试里用 `addInitScript` 清 localStorage 时，reload 也会再执行它，会把测试
   中途存下的状态清掉——用 sessionStorage 标记保证只清一次（map-tools 与
   monitor 两份 spec 均已踩过）。
+- **最终收敛形态**（2026-09-15 收尾时确定）：满载页上连 `evaluate` 的往返都可能
+  堵死，且「点完跨通道验证文本/checked」会读到切换瞬间的空值把已生效的操作
+  又点回去。可靠模式是**把一段交互整体放进单次页面内脚本**（每步后
+  `setTimeout` 等渲染落定、页内验证重试），Playwright 侧只做读取与轮询断言，
+  且生效与否用**业务语义**断言（对比表列数、按钮激活类、年份停走）而非
+  `toBeChecked` 这类通道敏感的属性读取。参考 `tests/analysis.spec.js`。
 - 相关用例参考：`tests/analysis.spec.js` 的 `checkCountry` 与播放收尾注释。
 
 ### C14. `Cesium.TileProviderError` 在 1.142 是类不是事件（调试代码静默失效）
