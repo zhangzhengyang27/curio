@@ -248,6 +248,7 @@ let viewer = null
 let choropleth = null
 let playTimer = null
 let debugTimer = null
+let pickHandler = null
 const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
@@ -304,11 +305,16 @@ function togglePlay() {
 }
 
 watch(playing, (on) => {
+  // 暂停与重新播放都要先清旧计时器:曾只在「自然播完」分支清理,
+  // 手动暂停后 interval 继续走,年份在暂停状态下仍逐年演进(审查 P1)
+  if (playTimer) clearInterval(playTimer)
+  playTimer = null
   if (!on) return
   playTimer = setInterval(() => {
     if (yearIndex.value >= years.value.length - 1) {
       playing.value = false
       clearInterval(playTimer)
+      playTimer = null
       return
     }
     yearIndex.value++
@@ -342,9 +348,9 @@ onMounted(async () => {
     yearIndex.value = years.value.length - 1
     choropleth.apply(gdpByYear.value, year.value, selected.value, compare.value)
 
-    // 点击地图选国
-    const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
-    handler.setInputAction((e) => {
+    // 点击地图选国(挂组件级引用,卸载时销毁——其余页面均如此)
+    pickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
+    pickHandler.setInputAction((e) => {
       const name = choropleth.pickName(e.position)
       if (name) selectCountry(name)
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
@@ -357,6 +363,7 @@ onMounted(async () => {
 onUnmounted(() => {
   if (playTimer) clearInterval(playTimer)
   if (debugTimer) clearInterval(debugTimer)
+  pickHandler?.destroy()
   choropleth?.destroy()
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
