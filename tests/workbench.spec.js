@@ -119,7 +119,8 @@ test.describe('主题分析工作台', () => {
     expect(briefHtml).not.toContain('生成参数指纹') // 无指纹段
     expect(briefHtml).toContain('<table>')
 
-    // 完整版含指纹
+    // 完整版含指纹(连续下载间留缓冲,并行负载下第二个 download 事件偶发丢失)
+    await page.waitForTimeout(600)
     await page.locator('[data-testid="mode-full"]').evaluate((el) => el.click())
     dl = page.waitForEvent('download')
     await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())

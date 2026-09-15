@@ -52,11 +52,12 @@
 >
 > | 项 | 内容 | 状态 |
 > |---|---|---|
-> | 修复 | workbench GDP 聚合项污染（P0）/ analysis 暂停失效（P1）/ tools 状态脱钩（P1）/ tools debug HUD 失效（P1）/ analysis handler 泄漏（P2）/ carbon mock 失真（P1，并入 W1） | **已完成**（各一条回归用例守护，见 `docs/PAGES_REVIEW_REPORT.md`） |
+> | 修复 | workbench GDP 聚合项污染（P0）/ analysis 暂停失效（P1）/ tools 状态脱钩（P1）/ tools debug HUD 失效（P1）/ analysis handler 泄漏（P2）/ carbon mock 失真（P1，并入 W1）/ 对比第 5 国静默（P2）/ workbench 数据失败死代码（P2）/ monitor 初始放行跳号（P2，K2 实施中发现） | **已完成**（各一条回归用例守护，见 `docs/PAGES_REVIEW_REPORT.md`） |
 > | A1 | 指标着色切换（GDP/人口/碳排放） | **已完成** |
 > | K1 | 处置持久化 + 重置演练 + 流开关 UI | **已完成** |
 > | W1 | 工作台主题扩展（人口/密度）+ carbon mock 重造 | **已完成** |
 > | M3 | 标绘持久化 + GeoJSON 导入 | **已完成** |
+> | M1/M2/M4/M5、A2/A3/A4/A5、K2/K3/K4、W2/W3/W4、X1/X2/X3 | **第二批（2026-09-15 增量拍板：剩余菜单全做）**——地名搜索、标绘编辑、书签增强、量测记录、趋势图、URL 分享、CSV 导出、人均着色、阈值告警、巡游大屏（复用巡游引擎）、时间回放、选国下钻、报告双模板、报告 PDF、引擎复用、URL 规范、性能度量 | **已完成**（`tests/perf.spec.js` 已扩展四页度量） |
 
 ### 1.3 分期与成功标准
 

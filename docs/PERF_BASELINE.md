@@ -48,6 +48,22 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 | **示例中心** 传输总量 | 890 KB | 890 KB | 持平 |
 | **示例中心** 其中 JS | 542 KB | 542 KB | 持平 |
 
+### 四平台页面首屏预算（X3，2026-09-15 新增）
+
+> `tests/perf.spec.js` 已覆盖四页度量（就绪选择器 + 传输构成）。
+> 四页共享 **Cesium 底座**（动态 script 加载 Build 产物，Workers/Assets 约 10 MB 级，
+> 仅在进入平台页面时按需加载，不进首页/示例中心首屏），预算按「Cesium 底座 + 页面自有资源」口径：
+
+| 页面 | 就绪选择器 | 首屏传输预算（上限告警，非 CI 断言） | 备注 |
+|---|---|---|---|
+| `/tools` 地图工具箱 | `.panel-left` | 15 MB | Cesium + 天地图瓦片按串行加载（红线），页面自有 JS 极小 |
+| `/analysis` 全球数据分析 | `.panel-left` | 15 MB | 另有 worldZh/gdp/population/carbon 数据(~600 KB) |
+| `/monitor` 业务监控 | `.stats-bar` | 15 MB | 另有 earthquakes.json(~30 KB) |
+| `/workbench` 分析工作台 | `.panel-left` | 15 MB | echarts 动态 import,不进首屏关键路径 |
+
+预算为**告警上限**而非精确值：perf spec 只测量不断言（文件头说明），
+若某页实测显著越过预算（如 Cesium 被意外打进页面主包），先查分包再查预载。
+
 > 历史注：本文档旧基线为「首页 539 KB / JS 533 KB」（2026-09 上轮）。
 > 该数字测量时部分资源（贴图/首屏数据）晚于采集窗口，未能反映真实首屏；
 > 且此后引入的回归无人发现。新旧数字**不可直接对比**，以本表口径为准。

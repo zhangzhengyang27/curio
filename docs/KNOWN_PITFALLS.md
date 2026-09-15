@@ -297,6 +297,16 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
 `?tour=&step=`）共存时，必须在直写 hash 的 watcher 里短路另一个机制激活的期间
 （见 `EarthView` 巡游段注释）。新增任何 URL 状态前先盘点页面上已有哪些写地址的代码。
 
+**URL 状态命名规范（X2，2026-09-15 沉淀）**：平台页面的 query 参数统一用
+「英文小写字段名」，一个概念一个名字，跨页面复用：
+- `?country=<中文名>`——选中国家（analysis）
+- `?year=<YYYY>`——时间轴年份（analysis）
+- `?theme=<key>`——主题/模式切换（workbench：gdp|carbon|population|density）
+- 功能开关用 `?<flag>=1` 形式（monitor 的 `?nostream=1`）
+- 无效值**静默忽略**回默认（不报错、不显示空态）；「缺省即默认值」的主题参数
+  在切回默认时**清除参数**保持地址干净（见 `WorkbenchView`）。
+- 新增页面的 URL 状态前，先 grep 本页已有写地址代码，保证单一机制（上文）。
+
 ### C12. 新增键盘交互前，先 grep 全局快捷键
 
 **现象**：巡游播放器的空格（播放/暂停，挂 `window`）与 `EarthView` 既有全局
