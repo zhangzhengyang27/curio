@@ -28,6 +28,20 @@ test.describe('主题分析工作台', () => {
     await expect(page.locator('[data-testid="summary"]')).toContainText('碳排放')
   })
 
+  test('GDP 排行不含聚合项：首位是真实经济体（回归：曾把「世界」排第一）', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="ranking-list"] .rank-row')).toHaveCount(10, { timeout: 15_000 })
+
+    // 2020 年 GDP 第一的国家是美国（timeline 原始数据里美国 30.8 万亿居国家首位）
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('美国', { timeout: 10_000 })
+    const allRanks = await page.locator('[data-testid="ranking-list"]').innerText()
+    for (const agg of ['世界', '高收入', '经合组织', '中等收入', '低收入', 'IBRD', '人口紅利']) {
+      expect(allRanks, `排行不得包含聚合项「${agg}」`).not.toContain(agg)
+    }
+    // 摘要同样不得把聚合项当经济体
+    await expect(page.locator('[data-testid="summary"]')).not.toContainText('世界 以')
+  })
+
   test('导出报告：下载自包含 HTML 报告', async ({ page }) => {
     await page.goto('/workbench')
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })

@@ -111,8 +111,18 @@ let chart = null
 let chartInstance = null
 
 // 各主题的「国名 → 数值」映射
+// ⚠ gdp 必须按 countries（多边形 ∩ GDP 交集，166 国）过滤：timeline 原始数据
+//   含「世界/高收入国家」等 96 个无多边形聚合项，不过滤会把全球总量当国家
+//   排进 Top10/摘要/导出报告（2026-09-15 审查 P0）。carbon 已按 countries 构建。
 const metricMaps = {
-  gdp: computed(() => gdpByYear.value[THEMES.gdp.year] || {}),
+  gdp: computed(() => {
+    const map = {}
+    const yearData = gdpByYear.value[THEMES.gdp.year] || {}
+    for (const c of countries.value) {
+      if (yearData[c.name] != null) map[c.name] = yearData[c.name]
+    }
+    return map
+  }),
   carbon: computed(() => {
     const map = {}
     for (const c of countries.value) {
