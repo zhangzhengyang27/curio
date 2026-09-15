@@ -17,7 +17,9 @@
       v-if="ready"
       class="panel panel-left tv-glass-panel"
     >
-      <h3 class="panel-title">分析工作台</h3>
+      <h3 class="panel-title">
+        分析工作台
+      </h3>
       <div class="theme-tabs">
         <button
           v-for="key in THEME_KEYS"
@@ -31,7 +33,9 @@
         </button>
       </div>
 
-      <p class="group-label">{{ themeTitle }} · Top 10</p>
+      <p class="group-label">
+        {{ themeTitle }} · Top 10
+      </p>
       <ol
         class="ranking"
         data-testid="ranking-list"
@@ -55,7 +59,9 @@
       v-if="ready"
       class="panel panel-right tv-glass-panel"
     >
-      <h3 class="panel-title">{{ themeTitle }} · 分布图表</h3>
+      <h3 class="panel-title">
+        {{ themeTitle }} · 分布图表
+      </h3>
       <div
         ref="chartRef"
         class="chart-box"

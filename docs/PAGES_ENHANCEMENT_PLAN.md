@@ -21,6 +21,11 @@
 
 你的任务分两段：**A. 审查**（第 4 节）→ **B. 增强**（第 5 节候选菜单，与需求方确认后实施）。
 
+> **执行状态（2026-09-15）**：任务 A 已完成，产出
+> [`PAGES_REVIEW_REPORT.md`](./PAGES_REVIEW_REPORT.md)（1 P0 + 4 P1，全部实测复现）；
+> 任务 B 经需求方确认实施「缺陷全部修复 + A1/K1/W1/M3」，**均已交付**
+> （见第 5 节打勾项与 ROADMAP 1.2）。
+
 ---
 
 ## 2. 硬性约束（红线，违反即返工）
@@ -135,7 +140,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/<dir> npm run build \
 |---|---|---|
 | M1 地名搜索 | 接天地图地名搜索 V2.0 API（key 已有），结果列表 → flyTo；失败静默降级 | 搜「武汉」出现候选，点击飞达；API 不可用时输入框提示 |
 | M2 标绘编辑 | 已绘实体可选中：拖拽顶点、改颜色/线宽、删除单个 | 顶点可拖、样式即时生效 |
-| M3 标绘持久化 | 标注存 localStorage，刷新恢复；GeoJSON 导入（与导出对称） | 导出的 GeoJSON 重新导入后画面一致 |
+| ✅ M3 标绘持久化（2026-09-15 交付） | 标注存 localStorage，刷新恢复；GeoJSON 导入（与导出对称） | 导出的 GeoJSON 重新导入后画面一致（E2E `tests/map-tools.spec.js` 断言坐标逐位一致） |
 | M4 书签增强 | 重命名、导出/导入 JSON、缩略图 | 书签列表可改名，导出可再导入 |
 | M5 量测记录 | 量测结果历史列表 + CSV 导出 | 多次量测可回看、可导出 |
 
@@ -143,7 +148,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/<dir> npm run build \
 
 | 候选 | 说明 | 验收标准 |
 |---|---|---|
-| A1 指标着色切换 | choropleth 指标切换 GDP/人口/碳排放（`applyValues` 已通用，只差 UI 与色阶） | 切指标后 1s 内全图重着色、图例更新 |
+| ✅ A1 指标着色切换（2026-09-15 交付） | choropleth 指标切换 GDP/人口/碳排放（`applyValues` 已通用，只差 UI 与色阶） | 切指标后 1s 内全图重着色、图例更新（E2E `tests/analysis.spec.js` 三指标切换用例） |
 | A2 国家趋势图 | 选中国家 → echarts 折线（2000~2020 GDP），echarts 动态 import | 折线与指标卡数值一致 |
 | A3 URL 状态分享 | `?country=&year=` 进 query（复用 `useGalleryFilters` 模式），刷新/分享还原 | 分享链接打开后选国与年份一致 |
 | A4 数据导出 | 当前视图国家表导出 CSV（UTF-8 BOM） | Excel 打开中文不乱码 |
@@ -153,7 +158,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/<dir> npm run build \
 
 | 候选 | 说明 | 验收标准 |
 |---|---|---|
-| K1 处置持久化 | 事件处置状态存 localStorage，刷新恢复；「重置演练」按钮清空 | 刷新后状态与统计一致 |
+| ✅ K1 处置持久化（2026-09-15 交付） | 事件处置状态存 localStorage，刷新恢复；「重置演练」按钮清空；顺带补自动推送 UI 开关 | 刷新后状态与统计一致（E2E `tests/monitor.spec.js` 持久化/重置/流开关三条用例） |
 | K2 阈值告警规则 | M≥7 自动标「重大」并列顶；规则可在 UI 调 | 改阈值后列表即时重排 |
 | K3 巡游大屏模式 | 复用 `useTourEngine` 思路：自动轮播未处置事件（flyTo + 详情卡） | 播放/暂停/步进可用 |
 | K4 时间回放 | 按发震时间回放事件到达过程 | 回放顺序与时间戳一致 |
@@ -162,7 +167,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/<dir> npm run build \
 
 | 候选 | 说明 | 验收标准 |
 |---|---|---|
-| W1 主题扩展 | 人口规模 / 人口密度主题（数据已在 useCountryData） | 每主题图表与摘要正确 |
+| ✅ W1 主题扩展（2026-09-15 交付） | 人口规模 / 人口密度主题（数据已在 useCountryData）；碳排放演示数据按人口同源重造 | 每主题图表与摘要正确（E2E `tests/workbench.spec.js` 新主题与数据自洽用例） |
 | W2 报告模板 | 摘要版 / 完整版两套模板；报告含生成参数指纹 | 两种模板产出均可离线打开 |
 | W3 选国下钻 | 点排行条目 → 地图 flyTo + 该国多年趋势小图 | 图表与排行数值一致 |
 | W4 报告 PDF | 报告页 @media print 样式 + 引导浏览器打印为 PDF | 打印预览排版完整 |

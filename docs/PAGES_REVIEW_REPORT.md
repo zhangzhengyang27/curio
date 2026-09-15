@@ -205,11 +205,15 @@ ref 从未被解构。数据加载失败时页面**静默全灰**（着色全灰
 
 ## 6. 缺陷 → 修复建议汇总（供任务 B 排期）
 
-| 优先 | 缺陷 | 建议归属 |
-|---|---|---|
-| **P0** | workbench GDP 聚合项污染（§4.1） | 立即修复（独立小 commit，先补失败断言再改） |
-| **P1** | analysis 暂停失效（§2.2） | 立即修复 + 回归用例 |
-| **P1** | tools 状态脱钩（§1.2） | 修复（controller 广播 activeTool） |
-| **P1** | tools debug HUD 失效（§1.3） | 修复（provider.errorEvent + 错误提示解耦） |
-| **P1** | carbon mock 失真（§4.2） | 数据重造（可与 W1 合并） |
-| P2 | analysis handler 泄漏（§2.3）、对比第 5 国静默（§2.4）、GeoJSON 下限（§1.4）、workbench 死代码（§4.3）、monitor 流开关（§3.2）、文档漂移（§5.1/5.2） | 随对应增强项顺手修 |
+> **处置状态（2026-09-15 任务 B 完成后回填）**：P0 与全部 P1 已修复并各带回归用例；
+> P2 中 analysis handler 泄漏、tools GeoJSON 下限、monitor 流开关、文档漂移已随修复
+> 批次与增强项落地；剩余 P2（对比第 5 国静默、workbench 死代码分支）留待后续增强项顺手处理。
+
+| 优先 | 缺陷 | 建议归属 | 状态 |
+|---|---|---|---|
+| **P0** | workbench GDP 聚合项污染（§4.1） | 立即修复（独立小 commit，先补失败断言再改） | ✅ 已修复 |
+| **P1** | analysis 暂停失效（§2.2） | 立即修复 + 回归用例 | ✅ 已修复 |
+| **P1** | tools 状态脱钩（§1.2） | 修复（controller 广播 activeTool） | ✅ 已修复 |
+| **P1** | tools debug HUD 失效（§1.3） | 修复（provider.errorEvent + 错误提示解耦） | ✅ 已修复 |
+| **P1** | carbon mock 失真（§4.2） | 数据重造（可与 W1 合并） | ✅ 随 W1 重造（与人口同源） |
+| P2 | analysis handler 泄漏（§2.3）、对比第 5 国静默（§2.4）、GeoJSON 下限（§1.4）、workbench 死代码（§4.3）、monitor 流开关（§3.2）、文档漂移（§5.1/5.2） | 随对应增强项顺手修 | ✅ 除「对比第 5 国静默」「workbench 死代码」外均已修 |

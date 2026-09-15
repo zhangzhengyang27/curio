@@ -348,7 +348,7 @@ export class MapToolsController {
     try {
       records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
     } catch {
-      records = []
+      // 解析失败按空处理(脏数据不阻断页面)
     }
     return this._restoreRecords(records)
   }

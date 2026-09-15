@@ -42,7 +42,9 @@
       class="panel panel-left tv-glass-panel"
     >
       <div class="panel-head">
-        <h3 class="panel-title">实时事件流</h3>
+        <h3 class="panel-title">
+          实时事件流
+        </h3>
         <button
           class="mini-btn"
           data-testid="stream-toggle"
@@ -125,7 +127,9 @@
         <dl class="metrics">
           <div class="metric">
             <dt>震级</dt>
-            <dd data-testid="detail-mag">M{{ selected.mag }}（{{ LEVELS[selected.level].label }}）</dd>
+            <dd data-testid="detail-mag">
+              M{{ selected.mag }}（{{ LEVELS[selected.level].label }}）
+            </dd>
           </div>
           <div class="metric">
             <dt>发震时刻</dt>
@@ -141,7 +145,9 @@
           </div>
         </dl>
 
-        <p class="group-label">处置</p>
+        <p class="group-label">
+          处置
+        </p>
         <div class="actions">
           <button
             v-if="selected.status === 'open'"

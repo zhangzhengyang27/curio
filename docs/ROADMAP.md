@@ -45,6 +45,18 @@
 
 > 📋 四页面的**审查与增强计划**（含现状清单、候选功能菜单、验收标准，供 AI 代理直接执行）
 > 见 [`docs/PAGES_ENHANCEMENT_PLAN.md`](./PAGES_ENHANCEMENT_PLAN.md)。
+> 📋 2026-09-15 任务 A 审查产出（1 P0 + 4 P1，含复现证据与修复方向）见
+> [`docs/PAGES_REVIEW_REPORT.md`](./PAGES_REVIEW_REPORT.md)。
+>
+> **2026-09-15 需求方拍板：本轮实施 = 审查缺陷全部修复 + 增强项 A1/K1/W1/M3**，逐项状态：
+>
+> | 项 | 内容 | 状态 |
+> |---|---|---|
+> | 修复 | workbench GDP 聚合项污染（P0）/ analysis 暂停失效（P1）/ tools 状态脱钩（P1）/ tools debug HUD 失效（P1）/ analysis handler 泄漏（P2）/ carbon mock 失真（P1，并入 W1） | **已完成**（各一条回归用例守护，见 `docs/PAGES_REVIEW_REPORT.md`） |
+> | A1 | 指标着色切换（GDP/人口/碳排放） | **已完成** |
+> | K1 | 处置持久化 + 重置演练 + 流开关 UI | **已完成** |
+> | W1 | 工作台主题扩展（人口/密度）+ carbon mock 重造 | **已完成** |
+> | M3 | 标绘持久化 + GeoJSON 导入 | **已完成** |
 
 ### 1.3 分期与成功标准
 
