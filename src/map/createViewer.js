@@ -87,6 +87,13 @@ export function createMapViewer(Cesium, container, options = {}) {
   ssc.minimumZoomDistance = 20_000
   ssc.maximumZoomDistance = maxZoom
 
+  // 禁用 Cesium 默认双击缩放/追踪实体：双击是工具箱结束采点的通道(由独立
+  // ScreenSpaceEventHandler 处理,不受影响),而默认 zoom 动画会在采点结束后
+  // 仍持续移动相机,让刚画完的实体投影漂移、后续点击拾取失配
+  viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(
+    Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK
+  )
+
   // 影像层按相机高度显隐（minimumTerrainLevel 实测拦不住低层级占位瓦片）
   viewer.scene.preRender.addEventListener(() => {
     const gated = viewer.__tdtImgGated
