@@ -524,4 +524,33 @@ test.describe('地图工具箱', () => {
     const [gcjLon, gcjLat] = coordtransform.wgs84togcj02(116.404, 39.915)
     await expect(page.locator('[data-testid="coord-output"]')).toHaveValue(`${gcjLon.toFixed(6)}, ${gcjLat.toFixed(6)}`)
   })
+
+  test('快捷键:Enter 结束采集,Delete 删除选中(M8)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // Enter 结束采线(等价右键/双击,geojson.io 惯例)
+    await page.locator('[data-tool="line"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.keyboard.press('Enter')
+    await expect(page.locator('[data-testid="status-result"]')).toContainText('折线', { timeout: 10_000 })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+    await page.waitForTimeout(1000)
+
+    // 点击选中后 Delete 删除(编辑态键盘删除)
+    const mid = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const rect = viewer.canvas.getBoundingClientRect()
+      const px = viewer.scene.cartesianToCanvasCoordinates(controller.registry[0].positions[0])
+      return { x: Math.round(px.x + rect.left), y: Math.round(px.y + rect.top) }
+    })
+    await page.mouse.click(mid.x, mid.y)
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeVisible({ timeout: 10_000 })
+    await page.keyboard.press('Delete')
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeHidden()
+  })
 })

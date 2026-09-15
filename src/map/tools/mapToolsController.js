@@ -121,10 +121,25 @@ export class MapToolsController {
     this.handler.setInputAction((e) => this._onLeftDown(e), Cesium.ScreenSpaceEventType.LEFT_DOWN)
     this.handler.setInputAction(() => this._onLeftUp(), Cesium.ScreenSpaceEventType.LEFT_UP)
 
+    // 快捷键(Esc/Enter/Delete)。⚠ 忽略来自输入控件的事件:地名搜索/重命名/
+    // 坐标转换的输入框里按 Enter 不应触发画布收尾或删除
     this._keyHandler = (e) => {
+      const tag = e.target?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
       if (e.key === 'Escape') {
         if (this.selectedEntry) this._exitEdit()
         else this._cancel()
+      } else if (e.key === 'Enter') {
+        // Enter 结束采集(geojson.io 惯例):无采集进行时保持空闲
+        if (!this.selectedEntry && this.activeTool && DRAW_TOOLS.includes(this.activeTool)) {
+          this._finish()
+        }
+      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+        // Delete 删除编辑中的产物
+        if (this.selectedEntry) {
+          e.preventDefault()
+          this.deleteSelected()
+        }
       }
     }
     window.addEventListener('keydown', this._keyHandler)
@@ -145,11 +160,11 @@ export class MapToolsController {
 
   _hintFor(tool) {
     switch (tool) {
-      case 'distance': return '左键依次点击采点，右键/双击结束，Esc 取消'
-      case 'area': return '左键依次点击多边形顶点，右键/双击闭合，Esc 取消'
+      case 'distance': return '左键依次点击采点，右键/双击/Enter 结束，Esc 取消'
+      case 'area': return '左键依次点击多边形顶点，右键/双击/Enter 闭合，Esc 取消'
       case 'point': return '左键点击放置标注点，可连续放置'
-      case 'line': return '左键依次点击折线顶点，右键/双击结束'
-      case 'polygon': return '左键依次点击多边形顶点，右键/双击闭合'
+      case 'line': return '左键依次点击折线顶点，右键/双击/Enter 结束'
+      case 'polygon': return '左键依次点击多边形顶点，右键/双击/Enter 闭合'
       case 'rectangle': return '左键点击对角两点，自动成矩形'
       case 'circle': return '左键点圆心，再点半径位置自动闭合'
       default: return ''
