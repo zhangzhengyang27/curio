@@ -65,7 +65,7 @@ test.describe('图层加载反馈', () => {
   test('即时模式不出现加载提示', async ({ page }) => {
     await page.goto('/')
     // gdp 走同步回落路径（restoreGdpColors），同 tick 内设置并清除 loading
-    await page.locator('.viz-btn', { hasText: 'GDP' }).click()
+    await page.locator('.viz-btn', { hasText: 'GDP' }).evaluate((el) => el.click())
     await expect(page.locator(CHIP)).toHaveCount(0)
     await expect(page.locator('.viz-btn', { hasText: 'GDP' })).toHaveClass(/active/)
   })
