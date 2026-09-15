@@ -149,4 +149,15 @@ test.describe('地图工具箱', () => {
     await page.keyboard.press('Escape')
     await expect(distanceBtn).not.toHaveClass(/active/)
   })
+
+  test('debug HUD 反映真实相机状态(回归:曾在 1.142 上静默失效恒显 0)', async ({ page }) => {
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    const hud = page.locator('[data-testid="debug-hud"]')
+    await expect(hud).toBeVisible()
+    // HUD 定时器 500ms 一刷:真实相机在初始视角 35 万米,不得恒显 0
+    await expect
+      .poll(async () => hud.textContent(), { timeout: 5_000 })
+      .toMatch(/相机高度 [1-9]\d*/m)
+  })
 })

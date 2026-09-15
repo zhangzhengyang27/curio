@@ -6,7 +6,7 @@
     />
 
     <div
-      v-if="loadError && !ready"
+      v-if="loadError"
       class="load-error tv-glass-panel"
     >
       {{ loadError }}
@@ -242,6 +242,26 @@ function setBase(type) {
   if (!viewer || baseType.value === type) return
   applyTdtStack(viewer, type)
   baseType.value = type
+  // applyTdtStack 会整组重建图层 provider,瓦片错误监听须对新 provider 重挂
+  if (debug.value) attachTileErrorWatch()
+}
+
+/**
+ * 瓦片错误计数挂到每个 imagery provider 的 errorEvent 上。
+ * ⚠ 不能用 Cesium.TileProviderError.addEventListener——1.142 里它是类而非
+ * 事件(无 addEventListener),调用即 TypeError,曾静默中断整个 debug 块,
+ * HUD 恒显 0 且无任何报错(2026-09-15 审查 P1)。
+ */
+function attachTileErrorWatch() {
+  if (!viewer || !window.__tvMapDebug) return
+  const n = viewer.imageryLayers.length
+  for (let i = 0; i < n; i++) {
+    const prov = viewer.imageryLayers.get(i).imageryProvider
+    prov.errorEvent?.addEventListener((err) => {
+      window.__tvMapDebug.tileErrors = (window.__tvMapDebug.tileErrors || 0) + 1
+      window.__tvMapDebug.lastTileError = String(err?.message || err).slice(0, 200)
+    })
+  }
 }
 
 const coordsText = computed(() => {
@@ -324,20 +344,22 @@ onMounted(async () => {
     loadError.value = ''
 
     if (debug.value) {
-      // 调试钩子：探针可读取渲染器真实状态（画布像素/瓦片错误计数）
-      window.__tvMapDebug = { viewer, Cesium }
-      Cesium.TileProviderError.addEventListener((err) => {
-        window.__tvMapDebug.tileErrors = (window.__tvMapDebug.tileErrors || 0) + 1
-        window.__tvMapDebug.lastTileError = String(err?.message || err).slice(0, 200)
-      })
-      viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
-        debugInfo.value.pending = queueLen
-      })
-      debugTimer = setInterval(() => {
-        const carto = viewer.camera.positionCartographic
-        debugInfo.value.height = Math.round(carto.height)
-        debugInfo.value.layers = viewer.imageryLayers.length
-      }, 500)
+      // 调试钩子:探针可读取渲染器真实状态(画布像素/瓦片错误计数)。
+      // 独立 try 包裹:诊断设施自身失效不应伪装成页面初始化失败
+      try {
+        window.__tvMapDebug = { viewer, Cesium }
+        attachTileErrorWatch()
+        viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
+          debugInfo.value.pending = queueLen
+        })
+        debugTimer = setInterval(() => {
+          const carto = viewer.camera.positionCartographic
+          debugInfo.value.height = Math.round(carto.height)
+          debugInfo.value.layers = viewer.imageryLayers.length
+        }, 500)
+      } catch (dbgErr) {
+        console.warn('[map-tools] 调试 HUD 初始化失败:', dbgErr)
+      }
     }
   } catch (err) {
     loadError.value = '地图引擎加载失败，请刷新重试。'
