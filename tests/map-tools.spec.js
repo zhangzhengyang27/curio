@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { mockTianditu } from './helpers/tiles.js'
+import coordtransform from 'coordtransform'
 
 /**
  * 地图工具箱（/tools）冒烟测试。
@@ -498,5 +499,26 @@ test.describe('地图工具箱', () => {
     await page.reload({ waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1', { timeout: 15_000 })
+  })
+
+  test('坐标转换:GCJ-02→WGS-84 批量转换与交换方向(M7)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('[data-testid="coord-card"]').waitFor({ timeout: 30_000 })
+
+    // 默认 gcj02 → wgs84,两行批量
+    await page.locator('[data-testid="coord-input"]').fill('116.404, 39.915\n121.5, 31.2')
+    await page.locator('[data-testid="coord-convert"]').click()
+    const expected = [
+      coordtransform.gcj02towgs84(116.404, 39.915),
+      coordtransform.gcj02towgs84(121.5, 31.2),
+    ].map(([lon, lat]) => `${lon.toFixed(6)}, ${lat.toFixed(6)}`).join('\n')
+    await expect(page.locator('[data-testid="coord-output"]')).toHaveValue(expected)
+
+    // 交换方向后 wgs84 → gcj02(重新填单行)
+    await page.locator('[data-testid="coord-swap"]').click()
+    await page.locator('[data-testid="coord-input"]').fill('116.404, 39.915')
+    await page.locator('[data-testid="coord-convert"]').click()
+    const [gcjLon, gcjLat] = coordtransform.wgs84togcj02(116.404, 39.915)
+    await expect(page.locator('[data-testid="coord-output"]')).toHaveValue(`${gcjLon.toFixed(6)}, ${gcjLat.toFixed(6)}`)
   })
 })

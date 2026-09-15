@@ -182,6 +182,95 @@
           </button>
         </div>
       </template>
+
+      <!-- 坐标转换(M7):BD-09/GCJ-02/WGS-84 纯前端互转,零网络 -->
+      <p class="group-label">
+        坐标转换
+      </p>
+      <div
+        class="coord-card"
+        data-testid="coord-card"
+      >
+        <div class="coord-row">
+          <select
+            v-model="coordFrom"
+            class="place-input coord-select"
+            data-testid="coord-from"
+          >
+            <option value="wgs84">
+              WGS-84
+            </option>
+            <option value="gcj02">
+              GCJ-02
+            </option>
+            <option value="bd09">
+              BD-09
+            </option>
+          </select>
+          <button
+            class="mini-btn"
+            data-testid="coord-swap"
+            title="交换源/目标坐标系"
+            @click="swapCoord"
+          >
+            ⇄
+          </button>
+          <select
+            v-model="coordTo"
+            class="place-input coord-select"
+            data-testid="coord-to"
+          >
+            <option value="wgs84">
+              WGS-84
+            </option>
+            <option value="gcj02">
+              GCJ-02
+            </option>
+            <option value="bd09">
+              BD-09
+            </option>
+          </select>
+        </div>
+        <textarea
+          v-model="coordInput"
+          class="place-input coord-textarea"
+          data-testid="coord-input"
+          rows="3"
+          placeholder="每行一个:经度, 纬度&#10;如 116.404, 39.915"
+        />
+        <div class="tool-actions">
+          <button
+            class="mini-btn primary"
+            data-testid="coord-convert"
+            @click="convertCoord"
+          >
+            转换
+          </button>
+          <button
+            class="mini-btn"
+            data-testid="coord-copy"
+            :disabled="!coordOutput"
+            @click="copyCoord"
+          >
+            复制
+          </button>
+        </div>
+        <textarea
+          v-if="coordOutput"
+          v-model="coordOutput"
+          class="place-input coord-textarea"
+          readonly
+          data-testid="coord-output"
+          rows="3"
+        />
+        <p
+          v-if="coordError"
+          class="place-hint"
+          data-testid="coord-error"
+        >
+          {{ coordError }}
+        </p>
+      </div>
     </aside>
 
     <!-- 右侧：书签与导出 -->
@@ -374,6 +463,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import coordtransform from 'coordtransform'
 import { loadCesium } from '../map/cesiumLoader.js'
 import { createMapViewer, applyTdtStack } from '../map/createViewer.js'
 import { MapToolsController } from '../map/tools/mapToolsController.js'
@@ -445,37 +535,65 @@ async function searchTdt(q) {
     .filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
 }
 
-/** GCJ-02(高德/火星坐标)→ WGS-84 近似逆变换:误差米级,演示场景足够 */
+/** GCJ-02(高德/火星坐标)→ WGS-84:coordtransform 同源算法,纠偏只对中国大陆范围有意义,境外坐标原样返回 */
 function gcj02ToWgs84(lon, lat) {
-  // 纠偏只对中国大陆范围有意义,境外坐标原样返回
   if (lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271) {
     return { lon, lat }
   }
-  const a = 6378245.0
-  const ee = 0.006693421622965943 // 克拉索夫斯基椭球第一偏心率平方(double 精度截断)
-  const transformLat = (x, y) => {
-    let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x))
-    ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0
-    ret += (20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin(y / 3.0 * Math.PI)) * 2.0 / 3.0
-    ret += (160.0 * Math.sin(y / 12.0 * Math.PI) + 320 * Math.sin(y * Math.PI / 30.0)) * 2.0 / 3.0
-    return ret
+  const [wgsLon, wgsLat] = coordtransform.gcj02towgs84(lon, lat)
+  return { lon: wgsLon, lat: wgsLat }
+}
+
+// ---- 坐标转换(M7):BD-09/GCJ-02/WGS-84 互转,纯前端零网络 ----
+const coordFrom = ref('gcj02')
+const coordTo = ref('wgs84')
+const coordInput = ref('')
+const coordOutput = ref('')
+const coordError = ref('')
+
+const COORD_CONVERTERS = {
+  wgs84: { gcj02: coordtransform.wgs84togcj02, bd09: coordtransform.wgs84tobd09 },
+  gcj02: { wgs84: coordtransform.gcj02towgs84, bd09: coordtransform.gcj02tobd09 },
+  bd09: { wgs84: coordtransform.bd09towgs84, gcj02: coordtransform.bd09togcj02 },
+}
+
+function convertCoord() {
+  coordError.value = ''
+  coordOutput.value = ''
+  const lines = coordInput.value.split('\n').map((s) => s.trim()).filter(Boolean)
+  if (!lines.length) {
+    coordError.value = '请输入坐标,每行「经度, 纬度」'
+    return
   }
-  const transformLon = (x, y) => {
-    let ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x))
-    ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0
-    ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0
-    ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0
-    return ret
+  if (coordFrom.value === coordTo.value) {
+    coordOutput.value = lines.join('\n')
+    return
   }
-  const radLat = (lat / 180.0) * Math.PI
-  let magic = Math.sin(radLat)
-  magic = 1 - ee * magic * magic
-  const sqrtMagic = Math.sqrt(magic)
-  let dLat = transformLat(lon - 105.0, lat - 35.0)
-  let dLon = transformLon(lon - 105.0, lat - 35.0)
-  dLat = (dLat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * Math.PI)
-  dLon = (dLon * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * Math.PI)
-  return { lon: lon - dLon, lat: lat - dLat }
+  const fn = COORD_CONVERTERS[coordFrom.value]?.[coordTo.value]
+  if (!fn) {
+    coordError.value = '不支持的坐标系组合'
+    return
+  }
+  const out = []
+  for (const line of lines) {
+    const m = line.match(/(-?\d+(?:\.\d+)?)\s*[,，]\s*(-?\d+(?:\.\d+)?)/)
+    if (!m) {
+      coordError.value = `无法解析:${line}`
+      return
+    }
+    out.push(fn(+m[1], +m[2]).map((n) => n.toFixed(6)).join(', '))
+  }
+  coordOutput.value = out.join('\n')
+}
+
+function swapCoord() {
+  ;[coordFrom.value, coordTo.value] = [coordTo.value, coordFrom.value]
+  coordOutput.value = ''
+  coordError.value = ''
+}
+
+async function copyCoord() {
+  if (coordOutput.value) await navigator.clipboard.writeText(coordOutput.value)
 }
 
 async function searchAmap(q) {
@@ -858,6 +976,30 @@ onUnmounted(() => {
   color: inherit;
   font-size: 12px;
   box-sizing: border-box;
+}
+
+.coord-card {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.coord-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.coord-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.coord-textarea {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
 }
 
 .place-list {
