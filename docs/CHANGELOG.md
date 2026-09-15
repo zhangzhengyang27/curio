@@ -18,7 +18,7 @@
 | 审查 P1 修复 | tools 工具状态脱钩 | View 高亮与 controller.activeTool 双状态源，结束/Esc 后按钮仍高亮、再点画布无反馈且采点静默积累。改为 onToolChange 单一事实源广播 + 采点守卫 |
 | 审查 P1 修复 | tools debug HUD 静默失效 | `Cesium.TileProviderError.addEventListener` 在 1.142 不存在（类非事件），TypeError 中断整个 debug 块且被 try/catch 吞掉。改挂 provider 级 errorEvent（见 KNOWN_PITFALLS C14） |
 | 审查 P1 修复 | carbon mock 失真 | 厄立特里亚 9989 MtCO₂ 居首。population.json 同为随机数据，故按「与人口同源自洽」重造（pop^0.85 加权），碳排/人口两榜高度重合 |
-| 审查 P2 顺修 | analysis handler 泄漏 / tools GeoJSON 顶点下限 / monitor 流开关 UI / 文档漂移 | 见审查报告第 6 节处置状态 |
+| 审查 P2 顺修 | analysis handler 泄漏 / tools GeoJSON 顶点下限 / monitor 流开关 UI / 对比第 5 国静默 / workbench 数据失败死代码 / 文档漂移 | 全部修复。对比满 4 国后复选框禁用+悬停说明；workbench 数据失败显示错误面板（曾为死代码分支，静默全灰） |
 | 增强 A1 | analysis 指标着色切换 | GDP/人口/碳排放三指标 choropleth 切换，图例随指标更新；图例收进左侧面板（横排版曾在 1280/1440 视口盖住时间轴滑杆） |
 | 增强 K1 | monitor 处置持久化 | 处置状态存 localStorage 刷新恢复 +「重置演练」+ 自动推送页面内开关（流状态文案真实化） |
 | 增强 W1 | workbench 主题扩展 | 2→4 主题（+人口规模/密度），THEMES 配置化，排行/摘要/图表/报告同一配置驱动 |
