@@ -1,13 +1,31 @@
 /**
  * 地图工具箱交互控制器。
  *
- * 统一管理五种工具（量距/量面/标点/标线/标面）的鼠标交互状态机：
- * LEFT_CLICK 采点，RIGHT_CLICK / LEFT_DOUBLE_CLICK 结束，ESC 取消；
- * 采集中实时预览。所有产物实体登记在册，支持撤销与清空，
- * 并可序列化为 GeoJSON 导出（点/线/面 → Point/LineString/Polygon）。
+ * 架构（2026-09 重构）：采集交互层委托给 @cesium-extends/drawer（左键落点、
+ * 实时预览线、断点标记、鼠标去重），本类保留产物登记/撤销/清空/持久化/
+ * GeoJSON 导入导出/编辑（顶点拖拽）职责；面积用 @turf/area 测地算法，
+ * 距离仍用 EllipsoidGeodesic 测地线累加。
  *
- * 面积算法：取首点的椭球切平面投影后鞋靴公式，对中小范围区域足够精确。
+ * 刻意不使用 Drawer 的 END/CANCEL 事件通道：
+ *   1. 其 END 事件有「首次点击后 100ms 内不响应」的门控，右击快速收尾会丢事件；
+ *   2. POLYGON 类型收尾会先 _cancel 移除一个顶点（依赖双击产生的重复点补偿），
+ *      右击收尾会丢最后一个真实顶点。
+ * 因此所有面状/线状采集统一走 POLYLINE 通道，右击/双击/Esc 仍由本类自己
+ * 的处理器收尾，产物实体仍由 _buildResult 统一构建（与 localStorage 恢复/
+ * GeoJSON 导入同路径）。库的成品实体通过不触发 _complete 而不会进入场景。
+ *
+ * ⚠ 落点真值由本类自己的 LEFT_CLICK 采集（this.points），不取 Drawer 的
+ * onPointsChange 快照：其数组是「已落点 + 1 个尾随鼠标位」，且尾随位受
+ * 「首次点击后 100ms 内不刷新」门控，快速连点会得到陈旧槽位（实测把
+ * 两点距离算成 0 m）。Drawer 在此只承担视觉层（预览线/断点标记/十字光标），
+ * 时序缺陷最多造成预览短暂 stale，不影响产物与量测数值。
+ *
+ * ⚠ 不引入 @cesium-extends/measure：其 turf 依赖链（polygon-clipping UMD）在
+ * dev 裸伺服（optimizeDeps.exclude）下没有 ESM 导出，页面直接报错（实测）。
  */
+import turfArea from '@turf/area'
+import { polygon as turfPolygon } from '@turf/helpers'
+
 const TOOL_COLORS = {
   distance: '#4fc3f7',
   area: '#aed581',
@@ -19,7 +37,22 @@ const TOOL_COLORS = {
 /** 各 kind 完成一次产物所需的最少顶点数(不足则不登记,导出 GeoJSON 才合法) */
 const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3 }
 
+/** 由 Drawer 采集落点的工具（point 即放即成不走采集,右键/双击收尾） */
+const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon']
+
+/** 达到落点数即自动收尾的工具（两点成形的面状工具） */
+const AUTO_FINISH = {}
+
 const STORAGE_KEY = 'tv-map-annotations'
+
+/** Drawer 只在此懒加载:模块求值时依赖 window.Cesium(cesium-interop shim),必须晚于 loadCesium() */
+let drawerPromise = null
+function ensureDrawer() {
+  if (!drawerPromise) {
+    drawerPromise = import('@cesium-extends/drawer').then((m) => m.default)
+  }
+  return drawerPromise
+}
 
 export class MapToolsController {
   /** @param {Cesium.Viewer} viewer */
@@ -27,11 +60,11 @@ export class MapToolsController {
     this.Cesium = Cesium
     this.viewer = viewer
     this.activeTool = null
-    /** @type {Cesium.Cartesian3[]} 当前采集中 */
+    /** @type {Cesium.Cartesian3[]} 当前采集中(落点真值,不依赖 Drawer 快照) */
     this.points = []
     /** @type {{id: string, kind: string, entity: object}[]} 已完成产物 */
     this.registry = []
-    /** 距离量测的累计结果（米） */
+    /** 量测的累计结果（米/平方米,由 _buildResult 写入） */
     this.lastResult = null
     this.onStatus = onStatus || (() => {})
     this.onRegistryChange = onRegistryChange || (() => {})
@@ -50,6 +83,24 @@ export class MapToolsController {
     /** 正在拖拽的顶点序号(M2),null 表示未拖拽 */
     this.dragIndex = null
 
+    this.drawer = null
+    this._destroyed = false
+    this._ready = ensureDrawer()
+      .then((Drawer) => {
+        if (this._destroyed) return null
+        // CANCEL/END 指到不可达的 MIDDLE 事件:收尾/取消全部由本类的
+        // RIGHT_CLICK/双击/Esc 处理器负责(原因见文件头注释)
+        this.drawer = new Drawer(viewer, {
+          sameStyle: false,
+          operateType: { START: 'LEFT_CLICK', MOVING: 'MOUSE_MOVE', CANCEL: 'MIDDLE_DOWN', END: 'MIDDLE_UP' },
+        })
+        return this.drawer
+      })
+      .catch((e) => {
+        console.error('[map-tools] 标绘库加载失败,采点类工具不可用', e)
+        return null
+      })
+
     this.handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
     this.handler.setInputAction((e) => this._onClick(e), Cesium.ScreenSpaceEventType.LEFT_CLICK)
     this.handler.setInputAction((e) => this._onMove(e), Cesium.ScreenSpaceEventType.MOUSE_MOVE)
@@ -65,8 +116,6 @@ export class MapToolsController {
       }
     }
     window.addEventListener('keydown', this._keyHandler)
-
-    this._previewEntity = null
   }
 
   setTool(tool) {
@@ -76,6 +125,10 @@ export class MapToolsController {
     this.activeTool = tool
     this.onToolChange(tool)
     this.onStatus({ hint: this._hintFor(tool) })
+    if (DRAW_TOOLS.includes(tool)) {
+      // 库尚未就绪的窗口期点击画布不会有反馈(百毫秒级),hint 已提示可采点
+      this._ready.then(() => this._startDrawer(tool))
+    }
   }
 
   _hintFor(tool) {
@@ -86,6 +139,28 @@ export class MapToolsController {
       case 'line': return '左键依次点击折线顶点，右键/双击结束'
       case 'polygon': return '左键依次点击多边形顶点，右键/双击闭合'
       default: return ''
+    }
+  }
+
+  /** 启动 Drawer 采集(库就绪后调用;工具已被切走时静默放弃) */
+  _startDrawer(tool) {
+    if (this._destroyed || !this.drawer || this.activeTool !== tool) return
+    const color = this.Cesium.Color.fromCssColorString(TOOL_COLORS[tool] || '#4fc3f7')
+    this.drawer.reset()
+    this.drawer.start({
+      type: 'POLYLINE',
+      // sameStyle=false → 采集预览用 dynamicOptions;成品实体不经过库(_finish 自建)
+      dynamicOptions: {
+        clampToGround: true,
+        width: 2,
+        material: color.withAlpha(0.6),
+      },
+    })
+  }
+
+  _resetDrawer() {
+    if (this.drawer && this.drawer.status !== 'INIT' && this.drawer.status !== 'DESTROY') {
+      this.drawer.reset()
     }
   }
 
@@ -103,17 +178,28 @@ export class MapToolsController {
       if (entry) this._enterEdit(entry)
       return
     }
-    const carto = this._pickCartographic(e.position)
-    if (!carto) return
-    const Cesium = this.Cesium
-    this.points.push(Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude))
-
-    // 标点即放即成；其余工具只采点，由右键/双击结束（不限顶点数）
     if (this.activeTool === 'point') {
-      this._finish()
+      const carto = this._pickCartographic(e.position)
+      if (!carto) return
+      const position = this.Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude)
+      this._buildResult('point', [position])
+      this.onStatus({ result: this.lastResult })
+      this.onRegistryChange(this.registry)
+      this._persist()
       return
     }
-    this._updatePreview()
+    if (DRAW_TOOLS.includes(this.activeTool)) {
+      // 落点真值自采(Drawer 只管视觉层,原因见文件头注释);与上一点同位时
+      // 去重——双击收尾会先触发一次同位 LEFT_CLICK
+      const carto = this._pickCartographic(e.position)
+      if (!carto) return
+      const position = this.Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude)
+      const last = this.points[this.points.length - 1]
+      if (last && this.Cesium.Cartesian3.distance(last, position) < 0.01) return
+      this.points.push(position)
+      const need = AUTO_FINISH[this.activeTool]
+      if (need && this.points.length >= need) this._finish()
+    }
   }
 
   _onMove(e) {
@@ -132,7 +218,6 @@ export class MapToolsController {
           }
         : null,
     })
-    this._updatePreview(carto)
   }
 
   /**
@@ -285,50 +370,14 @@ export class MapToolsController {
     return Cesium.Cartographic.fromCartesian(cartesian)
   }
 
-  _updatePreview(cursorCarto = null) {
-    const Cesium = this.Cesium
-    this._removePreview()
-    if (!this.activeTool || this.points.length === 0) return
-
-    const positions = [...this.points]
-    if (cursorCarto && this.activeTool !== 'point') {
-      positions.push(Cesium.Cartesian3.fromRadians(cursorCarto.longitude, cursorCarto.latitude))
-    }
-    const color = Cesium.Color.fromCssColorString(TOOL_COLORS[this.activeTool] || '#4fc3f7')
-
-    if (this.activeTool === 'distance' || this.activeTool === 'line') {
-      if (positions.length >= 2) {
-        this._previewEntity = this.viewer.entities.add({
-          polyline: { positions, width: 2, material: color.withAlpha(0.6) },
-        })
-      }
-    } else if (this.activeTool === 'area' || this.activeTool === 'polygon') {
-      if (positions.length >= 2) {
-        this._previewEntity = this.viewer.entities.add({
-          polyline: { positions: [...positions, positions[0]], width: 2, material: color.withAlpha(0.6) },
-        })
-      }
-    }
-    // 采集中每个点落一个临时标记，结束后并入产物
-    for (const p of positions) {
-      this.viewer.entities.add({
-        position: p,
-        point: { pixelSize: 6, color, disableDepthTestDistance: Number.POSITIVE_INFINITY },
-        __preview: true,
-      })
-    }
-  }
-
-  _removePreview() {
-    this.viewer.entities.values
-      .filter((e) => e.__preview)
-      .forEach((e) => this.viewer.entities.remove(e))
-    this._previewEntity = null
-  }
-
+  /** 右键/双击/两点自动成形共用的收尾 */
   _finish() {
     const tool = this.activeTool
-    if (!tool || this.points.length === 0) {
+    if (!tool || !DRAW_TOOLS.includes(tool)) {
+      this._cancel()
+      return
+    }
+    if (this.points.length === 0) {
       this._cancel()
       return
     }
@@ -337,23 +386,23 @@ export class MapToolsController {
       this.onStatus({ hint: `至少需要 ${MIN_POINTS[tool]} 个顶点，继续采集或 Esc 取消` })
       return
     }
-    const kind = this._buildResult(tool, this.points)
-    this._removePreview()
+    const positions = [...this.points]
+    const kind = this._buildResult(tool, positions)
+    this._resetDrawer()
     this.points = []
     if (kind) {
       this.onStatus({ result: this.lastResult })
       this.onRegistryChange(this.registry)
       this._persist()
     }
-    if (tool !== 'point') {
-      this.activeTool = null
-      this.onToolChange(null)
-    }
-    this.onStatus({ hint: tool === 'point' ? this._hintFor('point') : '' })
+    // 采点类工具单次收尾即退出(高亮回归:自然结束后按钮退激活)
+    this.activeTool = null
+    this.onToolChange(null)
+    this.onStatus({ hint: '' })
   }
 
   _cancel() {
-    this._removePreview()
+    this._resetDrawer()
     this.points = []
     if (this.activeTool !== null) {
       this.activeTool = null
@@ -411,14 +460,7 @@ export class MapToolsController {
     }
 
     if (tool === 'distance') {
-      let total = 0
-      for (let i = 1; i < positions.length; i++) {
-        // EllipsoidGeodesic 入参是 Cartographic（经纬度弧度），传 Cartesian3 会得到 NaN
-        const start = Cesium.Cartographic.fromCartesian(positions[i - 1])
-        const end = Cesium.Cartographic.fromCartesian(positions[i])
-        const geodesic = new Cesium.EllipsoidGeodesic(start, end)
-        total += geodesic.surfaceDistance
-      }
+      const total = this._computeDistance(positions)
       const line = this.viewer.entities.add({
         polyline: { positions, width: 3, material: color, clampToGround: true },
       })
@@ -482,18 +524,26 @@ export class MapToolsController {
     ]
   }
 
-  /** 切平面投影 + 鞋靴公式（平方米） */
-  _computeArea(cartesians) {
+  /** 测地线距离累加（米）。EllipsoidGeodesic 入参是 Cartographic（弧度），传 Cartesian3 会得到 NaN */
+  _computeDistance(positions) {
     const Cesium = this.Cesium
-    const plane = new Cesium.EllipsoidTangentPlane(cartesians[0])
-    const pts = plane.projectPointsOntoPlane(cartesians)
-    let area = 0
-    for (let i = 0; i < pts.length; i++) {
-      const a = pts[i]
-      const b = pts[(i + 1) % pts.length]
-      area += a.x * b.y - b.x * a.y
+    let total = 0
+    for (let i = 1; i < positions.length; i++) {
+      const start = Cesium.Cartographic.fromCartesian(positions[i - 1])
+      const end = Cesium.Cartographic.fromCartesian(positions[i])
+      total += new Cesium.EllipsoidGeodesic(start, end).surfaceDistance
     }
-    return Math.abs(area) / 2
+    return total
+  }
+
+  /** 面积（平方米）：turf 测地面积，任意大小多边形都稳定 */
+  _computeArea(positions) {
+    const Cesium = this.Cesium
+    const ring = positions.map((p) => {
+      const c = Cesium.Cartographic.fromCartesian(p)
+      return [Cesium.Math.toDegrees(c.longitude), Cesium.Math.toDegrees(c.latitude)]
+    })
+    return turfArea(turfPolygon([[...ring, ring[0]]]))
   }
 
   undoLast() {
@@ -626,8 +676,11 @@ export class MapToolsController {
   }
 
   destroy() {
+    this._destroyed = true
     window.removeEventListener('keydown', this._keyHandler)
     this.handler.destroy()
+    this._resetDrawer()
+    if (this.drawer) this.drawer.destroy()
   }
 }
 
