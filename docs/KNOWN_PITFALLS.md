@@ -335,6 +335,16 @@ CI 中两种模式都会执行（见 `.github/workflows/ci.yml`）。
   force 跳过 actionability 探针，事件照常派发）。
 - `fill` 触发列表重渲后，等 ~300ms 让渲染落定再点击；`check()` 后用
   `toBeChecked()` 显式断言，别只信 click 返回。
+- **force 也会整包丢**（2026-09-15 四页面增强交付时实测）：播放/推送进行中
+  主线程持续满载时，CDP `Input.dispatchMouseEvent` 的事件会丢失，重试也丢。
+  此时改用页面内 DOM click——`locator.evaluate((el) => el.click())`，走同一
+  Vue 事件链且可靠。参考 `tests/analysis.spec.js` 的 `clickUntilAccepted`。
+- 画布 mouse 事件（`page.mouse.click`）同样受并行资源竞争影响：本地
+  `workers: 2` 下偶发丢失，probe 单跑稳定、CI 本就 `workers: 1`。重画布交互
+  spec（如 `map-tools.spec.js`）加 `test.describe.configure({ mode: 'serial' })`。
+- 测试里用 `addInitScript` 清 localStorage 时，reload 也会再执行它，会把测试
+  中途存下的状态清掉——用 sessionStorage 标记保证只清一次（map-tools 与
+  monitor 两份 spec 均已踩过）。
 - 相关用例参考：`tests/analysis.spec.js` 的 `checkCountry` 与播放收尾注释。
 
 ### C14. `Cesium.TileProviderError` 在 1.142 是类不是事件（调试代码静默失效）
