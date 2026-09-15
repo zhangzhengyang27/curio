@@ -6,6 +6,12 @@
     />
 
     <div
+      v-if="dataError"
+      class="load-error tv-glass-panel"
+    >
+      {{ dataError }}
+    </div>
+    <div
       v-if="loadError"
       class="load-error tv-glass-panel"
     >
@@ -131,10 +137,11 @@ const loadError = ref('')
 const theme = ref('gdp')
 const exporting = ref(false)
 
-const { years, countries, gdpByYear, load } = useCountryData()
+// dataError = 数据层错误(数据文件拉取失败);loadError = Cesium 初始化错误。
+// 曾只解构数据不接 error,数据失败时页面静默全灰(审查 P2 死代码分支)
+const { countries, gdpByYear, load, error: dataError } = useCountryData()
 let viewer = null
 let choropleth = null
-let chart = null
 let chartInstance = null
 
 // GDP 用 2020 年(时间序列末年);其余主题数据文件均为静态年
@@ -286,7 +293,7 @@ let resizeHandler = null
 onMounted(async () => {
   try {
     await load()
-    if (loadError.value) return
+    if (dataError.value) return
     const Cesium = await loadCesium()
     if (!containerRef.value) return
     viewer = createMapViewer(Cesium, containerRef.value, {

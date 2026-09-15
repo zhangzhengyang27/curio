@@ -78,7 +78,8 @@ test.describe('主题分析工作台', () => {
     await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: 15_000 })
 
     const downloadPromise = page.waitForEvent('download')
-    await page.locator('[data-testid="export-report"]').click()
+    // Cesium 页上 CDP 点击偶发丢事件致 download 事件迟迟不达(KNOWN_PITFALLS C13),走 DOM click
+    await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
     const download = await downloadPromise
     expect(download.suggestedFilename()).toMatch(/terra-report-gdp-.*\.html$/)
     const path = await download.path()
@@ -88,5 +89,11 @@ test.describe('主题分析工作台', () => {
     expect(html).toContain('分析报告')
     expect(html).toContain('data:image/png') // 地图快照与图表已内嵌
     expect(html).toContain('<table>')
+  })
+
+  test('数据加载失败：显示错误提示而非静默空白(回归:错误分支曾是死代码)', async ({ page }) => {
+    await page.route('**/data/mock/gdp-timeline.json', (route) => route.abort())
+    await page.goto('/workbench')
+    await expect(page.locator('.load-error')).toContainText('数据加载失败', { timeout: 15_000 })
   })
 })
