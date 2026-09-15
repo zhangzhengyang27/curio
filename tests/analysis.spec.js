@@ -180,17 +180,21 @@ test.describe('全球数据分析', () => {
 
     await expect(legend).toContainText('GDP 低 → 高')
 
+    // 满载页点击走 DOM 通道(C13):locator.click 会等待「计划中的导航」,
+    // 而 setMetric 触发的 URL 同步 + 全图重着色会让该等待超时
+    const tabClick = (id) => page.locator(`[data-testid="${id}"]`).evaluate((el) => el.click())
+
     // 切人口:全图重着色 + 图例文案更新(1s 内)
-    await page.locator('[data-testid="metric-tab-population"]').click({ force: true })
+    await tabClick('metric-tab-population')
     await expect(legend).toContainText('人口 低 → 高', { timeout: 5_000 })
     await expect(page.locator('[data-testid="metric-tab-population"]')).toHaveClass(/active/)
 
     // 切碳排放
-    await page.locator('[data-testid="metric-tab-carbon"]').click({ force: true })
+    await tabClick('metric-tab-carbon')
     await expect(legend).toContainText('碳排放 低 → 高', { timeout: 5_000 })
 
     // 切回 GDP,与时间轴联动仍正常
-    await page.locator('[data-testid="metric-tab-gdp"]').click({ force: true })
+    await tabClick('metric-tab-gdp')
     await expect(legend).toContainText('GDP 低 → 高', { timeout: 5_000 })
     expect(errors).toEqual([])
   })
