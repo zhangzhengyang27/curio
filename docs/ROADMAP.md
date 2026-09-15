@@ -43,6 +43,9 @@
 
 共享底座：相机/视角、拾取、实体（标注）系统、图层管理、状态持久化（localStorage + URL）。
 
+> 📋 四页面的**审查与增强计划**（含现状清单、候选功能菜单、验收标准，供 AI 代理直接执行）
+> 见 [`docs/PAGES_ENHANCEMENT_PLAN.md`](./PAGES_ENHANCEMENT_PLAN.md)。
+
 ### 1.3 分期与成功标准
 
 - **P0（已完成）**：`/tools` 工具箱 MVP（见上表），E2E 守住（`tests/map-tools.spec.js`）。
