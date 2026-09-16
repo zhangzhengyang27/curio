@@ -774,7 +774,8 @@ export class MapToolsController {
     const rect = Cesium.Rectangle.fromCartesianArray(entry.positions)
     const pad = 0.004
     this.viewer.camera.flyTo({
-      destination: Cesium.Rectangle(
+      // ⚠ 必须 new:ES 类不能当函数调用,少 new 会在点击处理里直接 TypeError
+      destination: new Cesium.Rectangle(
         rect.west - pad,
         rect.south - pad,
         rect.east + pad,
@@ -782,6 +783,12 @@ export class MapToolsController {
       ),
       duration: 1.6,
     })
+  }
+
+  /** 量测记录定位(M11):按 records 序号飞达对应产物 */
+  flyToRecord(index) {
+    const entry = this.registry.filter((e) => e.record)[index]
+    if (entry) this.flyToEntry(entry.id)
   }
 
   _toDegrees(cartesian) {

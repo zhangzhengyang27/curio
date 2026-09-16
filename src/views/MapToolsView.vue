@@ -220,6 +220,9 @@
             v-for="(r, i) in records"
             :key="i"
             class="measure-item"
+            :title="r.text"
+            data-testid="measure-item"
+            @click="controller?.flyToRecord(i)"
           >
             <span>{{ r.kind === 'distance' ? '📏' : '⬛' }}</span>
             <span class="measure-text">{{ r.text }}</span>
@@ -324,6 +327,28 @@
           {{ coordError }}
         </p>
       </div>
+
+      <!-- 快捷键帮助(M12) -->
+      <div class="tool-actions">
+        <button
+          class="mini-btn"
+          data-testid="help-btn"
+          @click="helpVisible = !helpVisible"
+        >
+          {{ helpVisible ? '收起帮助' : 'ⓘ 快捷键' }}
+        </button>
+      </div>
+      <ul
+        v-if="helpVisible"
+        class="help-list"
+        data-testid="help-popover"
+      >
+        <li><kbd>Enter</kbd> 结束采点</li>
+        <li><kbd>Esc</kbd> 取消采集 / 退出编辑</li>
+        <li><kbd>Delete</kbd> 删除选中标注</li>
+        <li>右键 / 双击 结束采点</li>
+        <li>编辑态:边上点击加点,顶点右键删点</li>
+      </ul>
     </aside>
 
     <!-- 右侧：书签与导出 -->
@@ -606,6 +631,7 @@ const coordTo = ref('wgs84')
 const coordInput = ref('')
 const coordOutput = ref('')
 const coordError = ref('')
+const helpVisible = ref(false)
 
 const COORD_CONVERTERS = {
   wgs84: { gcj02: coordtransform.wgs84togcj02, bd09: coordtransform.wgs84tobd09 },
@@ -1074,6 +1100,32 @@ onUnmounted(() => {
   resize: vertical;
   font-family: inherit;
   line-height: 1.5;
+}
+
+.measure-item {
+  cursor: pointer;
+}
+
+.help-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
+  background: rgba(20, 24, 30, 0.55);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.help-list kbd {
+  display: inline-block;
+  min-width: 44px;
+  padding: 0 5px;
+  border: 1px solid rgba(128, 128, 128, 0.45);
+  border-radius: 4px;
+  text-align: center;
+  font-family: inherit;
+  margin-right: 6px;
 }
 
 .place-list {

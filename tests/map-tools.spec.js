@@ -647,4 +647,51 @@ test.describe('地图工具箱', () => {
     await page.waitForTimeout(1800)
     await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
   })
+
+  test('量测记录:点击条目飞达对应产物(M11)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 量距(有量测记录),记录入列
+    await page.locator('[data-tool="distance"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.click(820, 500, { button: 'right' })
+    await expect(page.locator('[data-testid="measure-item"]')).toHaveCount(1)
+
+    // 相机先挪到上海,点记录条目 → 应飞回武汉的产物
+    await page.evaluate(() => {
+      const { Cesium, viewer } = window.__tvMapDebug
+      viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(121.5, 31.2, 500_000) })
+    })
+    await page.waitForTimeout(300)
+    const before = await page.evaluate(() => {
+      const c = window.__tvMapDebug.viewer.camera.positionCartographic
+      return { lon: (c.longitude * 180) / Math.PI }
+    })
+    await page.locator('[data-testid="measure-item"]').click()
+    await page.waitForTimeout(2200) // flyTo duration 1.6s
+    const after = await page.evaluate(() => {
+      const c = window.__tvMapDebug.viewer.camera.positionCartographic
+      return { lon: c.longitude * 180 / Math.PI }
+    })
+    expect(before.lon).toBeGreaterThan(120)
+    expect(after.lon).toBeLessThan(116)
+  })
+
+  test('快捷键帮助:开关与内容(M12)', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="help-popover"]')).toHaveCount(0)
+
+    await page.locator('[data-testid="help-btn"]').click()
+    await expect(page.locator('[data-testid="help-popover"]')).toBeVisible()
+    await expect(page.locator('[data-testid="help-popover"]')).toContainText('Enter')
+    await expect(page.locator('[data-testid="help-popover"]')).toContainText('Delete')
+
+    await page.locator('[data-testid="help-btn"]').click()
+    await expect(page.locator('[data-testid="help-popover"]')).toHaveCount(0)
+  })
 })
