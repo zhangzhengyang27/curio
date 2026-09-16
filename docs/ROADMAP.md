@@ -108,7 +108,7 @@
 | 临界超时用例排查 | 已修 M4（tools 书签）与 W2（workbench 报告模板）：均为「双整页加载/双报告导出」型用例，实测 52~57s 贴着默认 60s 超时线，机器稍慢即在任意一步超时（报错位置漂移）。已按 M2 先例 `test.setTimeout(120s)`。同型用例再出现超时漂移报错时，先查总时长再查逻辑 |
 | tools 地形接入（**已接入，2026-09-16**） | 官方闭源扩展包评估不通过（49k 行 bundle/仅适配 1.52~1.63.1/协议黑盒，详见 CHANGELOG），最终改用 **Cesium 内置 `ArcGISTiledElevationTerrainProvider.fromUrl`** 接 ArcGIS World Elevation3D 公开高程服务（无需 token/无协议逆向）。**架构关键决策：provider 只做 sampleTerrain 的采样源，刻意不赋给 viewer.terrainProvider**——实测地形渲染在 CN 网络+全局串行调度下持续产生 3s 级长任务拖卡主线程；纯采样则零渲染开销、页面流畅。已实现：贴地距离（沿测地线插值 + sampleTerrain 高程 + 段内勾股合成，异步收尾）、高程剖面 SVG、编辑后重算。真实验证：珠峰区域采样高程 7.9~8.7km。换数据源只需改 `src/map/terrainSampler.js` |
 | tools 贴地面积缓办 | 贴地面积需要多边形网格细分 + 逐格高程采样 + 3D 面积累加（贴地距离的二维推广），在 sampleTerrain 通道上可实现但工作量独立；待下一轮 |
-| vue-cesium 量测/绘制组件集成（受阻挂账） | vue-cesium 3.2.12（MIT、Vue3 原生）的量测/绘制/分析组件在本项目环境点击链路静默失效：组件挂载、FAB 激活、事件均正常，但地图点击不进入绘制处理链；dev（预打包/裸伺服）与 preview（Rolldown 全量打包）三形态复现，纯官方三行接入形态也复现，且伴随 FAB 动作方向渲染反转等 UI 异常。已收缩交付（仅保留其 VcNavigation 导航控件，`/tools/navigation` 示例 + E2E 守护）。解除条件：vue-cesium 后续版本修复或换打包内核验证；排查过程与判据详见 CHANGELOG 2026-09-16 |
+| vue-cesium 量测/绘制组件集成（受阻挂账） | vue-cesium 3.2.12（MIT、Vue3 原生）的量测/绘制/分析组件在本项目环境点击链路静默失效：组件挂载、FAB 激活、事件均正常，但地图点击不进入绘制处理链。**根因已对照实验实锤（2026-09-16）**：/tmp 最小官方形态项目锁同版本依赖，仅构建内核不同——Vite 7（esbuild+rollup）双形态正常、本项目 Vite 8（Rolldown）双形态失效。已收缩交付（仅保留其 VcNavigation 导航控件，`/tools/navigation` 示例 + E2E 守护）。解除路径三选一：① 向 vue-cesium 提 issue（最小复现已备好于 /tmp/vc-esbuild-test）等修复 ② 评估全仓降级 Vite 7（需改写分包配置+全量重验，约半天）③ 维持自有实现（量测/贴地已覆盖） |
 
 ---
 
