@@ -6,6 +6,22 @@
 
 ## 2026-09 治理轮次
 
+### vue-cesium 工具类组件补齐至全覆盖（2026-09-17）
+
+对照官方文档 90 组件页盘点：工具/控件/覆盖物/后处理四族组件全部迁入，`/tools` 示例列表 6 → 17 卡片。
+构建块类（图层/数据源/实体/几何/基元等 ~70 个 API 组件）不属「示例」范畴，维持不入列。
+
+| 项 | 说明 |
+|---|---|
+| 量测补齐 | 8 → **11 种**全覆盖：补矩形/正多边形/圆（`getMeasurementCmp` 支持集实测 3.2.12） |
+| 控件类 5 | 鹰眼图 `VcOverviewMap`（小窗底图走 Cesium 本地 NaturalEarthII 离线瓦片，不耗天地图配额）/ 打印 `VcPrint`（`printAutomatically:false` 防系统打印对话框打断自动化）/ 拾取指示器 `VcSelectionIndicator`（关 `allowFeatureInfoRequests` 避免逐点击发 WMTS pickFeatures）/ 小屏导航 `VcNavigationSm` / 原导航页并入 `VcAjaxBar` |
+| 覆盖物 6 | 热力图（伪随机点分布固定，截图可比对）/ HTML 卡片（样式须**全局** style——overlay 内容挂 viewer 容器，scoped 作用不到）/ ECharts（echarts 是 vue-cesium 自带依赖，无需安装；不用远程图片 symbol）/ 台风（按 `VcTyphoonRoute/Point` 类型合成轨迹含风圈四象限）/ 风场（按实现结构合成 Float32Array 网格）/ 动态对象（**必须在 viewer-ready 拿到 Cesium 后**再构造条目） |
+| 后处理 1 | `VcPostProcessStageScan`（radar/circle 可切）+ 自定义夜视 shader（GLSL3：`colorTexture` 采样 + `out_FragColor`），经 `VcPostProcessStageCollection` 挂载 |
+| 探针驱动的三处修复 | E2E「组件 ready」盖不住渲染层问题，11 页截图探针揪出：**① echarts**：容器 div 无内置宽高 → `echarts.init` 建 0×0 画布，zrender 逐帧抛 drawImage 异常且不渲染；显式铺满后真机核显仍仅 2 FPS——组件每帧 `chart.resize` 整图重绘叠加涟漪/飞线动画，改静态 scatter/lines 后 **40 FPS**。**② dynamic**：条目必须自带 `sampledPositions` 数组（内部逐条 `addPosition`），传 Entity 式 `position` 在 transform 阶段 `forEach` 崩溃**打断渲染循环（球面全黑）**。**③ wind**：d.ts 注释称 `array` 为 `Array<Float32Array>` 分层，实现却把 `array[0]` 当数值、`createTexture` 当扁平 `arrayBufferView`——照类型注释传被**静默吞掉（零粒子零报错）**；改扁平 TypedArray，并调参（8192→2048 粒子/慢速/短拖尾，否则白色流线盖死底图） |
+| 教训沉淀 | ① 「E2E 绿」≠「渲染正确」：覆盖物/后处理这类渲染型组件必须有**截图/帧差目视探针**兜底（帧差采样即判粒子是否在动）。② vue-cesium 的 **d.ts 类型注释与实现可能不一致，以实现为准**（wind 数据结构一例）。③ 无头 Playwright 默认 SwiftShader 软渲染，FPS 探测必须加 `--use-angle=metal`（本机）取真值——软渲染下 healthy 页面也会显示为 0~2 FPS，而 echarts 页的 2 FPS 在硬件 GL 下复现才是真问题 |
+| 已知非问题 | 近景页偶发底图空白 = 天地图频控占位（探针 11 页连打触发，限流窗口自动恢复），与 KNOWN_PITFALLS D3 同源 |
+| E2E | tools-examples.spec.js 4 → **15 条**：卡片数改为按 `TOOLS_EXAMPLES.length` 自适应；11 个新页「面板出现 + 就绪文案」独立用例（拆独立用例是因个别页在软渲染下偏慢会耗尽共享超时） |
+
 ### vue-cesium 量测/绘制全量接入 + 根因修正（2026-09-17）
 
 推翻 2026-09-16「Rolldown 构建链不兼容」的错误结论，量测/绘制/分析/淹没四示例页全量回归。
