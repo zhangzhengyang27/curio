@@ -21,6 +21,7 @@
 | `verify-three-compat.mjs` | three.js 本地兼容层的哈希基线守卫（`--update` 可更新基线） |
 | `audit-deps.mjs` | 依赖使用情况审计（`npm run audit:deps`）。分层扫描 src / public / 配置 / bin / types，输出「未检测到引用」的候选清单；**只输出线索、不改 package.json** |
 | `audit-console.mjs` | 示例层 console 调用分类审计（`node scripts/audit-console.mjs [目录]`）。按「错误/告警/ElMessage 替代/教学演示输出/疑似噪声」分类；**只输出线索、不改文件** |
+| `audit-pages.mjs` | 数字地球平台四页巡检（`node scripts/audit-pages.mjs`，需 dev server 已跑在 5173）。逐页检查 load-error / canvas / pageerror / HTTP≥400；**只输出线索、不改文件** |
 | `copy-example-deps.js` | 构建后把示例依赖拷进产物（`npm run build` 的一部分） |
 
 ## B. 注册表写入脚本（⚠ 需显式确认）

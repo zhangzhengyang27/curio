@@ -16,6 +16,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Editor directories and files
+.zcode/
 .vscode/*
 !.vscode/extensions.json
 .idea
