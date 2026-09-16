@@ -553,4 +553,63 @@ test.describe('地图工具箱', () => {
     await expect(page.locator('[data-testid="clear-btn"]')).toContainText('0')
     await expect(page.locator('[data-testid="edit-panel"]')).toBeHidden()
   })
+
+  test('编辑增删点:边上点击插点,顶点右键删点,面积记录刷新(M9)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 画 3 点量面(带面积记录)
+    await page.locator('[data-tool="area"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(620, 380)
+    await page.mouse.click(840, 380)
+    await page.mouse.click(730, 560)
+    await page.mouse.click(730, 560, { button: 'right' })
+    await expect(page.locator('[data-testid="status-result"]')).toContainText('面积', { timeout: 10_000 })
+    await page.waitForTimeout(1500)
+
+    // 点首顶点选中
+    const v0 = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const rect = viewer.canvas.getBoundingClientRect()
+      const px = viewer.scene.cartesianToCanvasCoordinates(controller.registry[0].positions[0])
+      return { x: Math.round(px.x + rect.left), y: Math.round(px.y + rect.top) }
+    })
+    await page.mouse.click(v0.x, v0.y)
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeVisible({ timeout: 10_000 })
+    const textBefore = await page.evaluate(() => window.__tvMapDebug.controller.registry[0].record.text)
+
+    // 边 0-1 中点左键插点:3→4 顶点,面积记录同步重算
+    const mid01 = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const rect = viewer.canvas.getBoundingClientRect()
+      const s = controller.registry[0].positions
+      const a = viewer.scene.cartesianToCanvasCoordinates(s[0])
+      const b = viewer.scene.cartesianToCanvasCoordinates(s[1])
+      return { x: Math.round((a.x + b.x) / 2 + rect.left), y: Math.round((a.y + b.y) / 2 + rect.top) }
+    })
+    await page.mouse.click(mid01.x, mid01.y)
+    await page.waitForTimeout(400)
+    const afterInsert = await page.evaluate(() => {
+      const r = window.__tvMapDebug.controller.registry[0]
+      return { n: r.coords.length, text: r.record.text }
+    })
+    expect(afterInsert.n).toBe(4)
+    expect(afterInsert.text).not.toBe(textBefore)
+    expect(afterInsert.text).toMatch(/^面积/)
+
+    // 右键顶点删点:4→3 顶点,编辑态保持
+    const v0b = await page.evaluate(() => {
+      const { viewer, controller } = window.__tvMapDebug
+      const rect = viewer.canvas.getBoundingClientRect()
+      const px = viewer.scene.cartesianToCanvasCoordinates(controller.registry[0].positions[0])
+      return { x: Math.round(px.x + rect.left), y: Math.round(px.y + rect.top) }
+    })
+    await page.mouse.click(v0b.x, v0b.y, { button: 'right' })
+    await page.waitForTimeout(400)
+    const n = await page.evaluate(() => window.__tvMapDebug.controller.registry[0].coords.length)
+    expect(n).toBe(3)
+    await expect(page.locator('[data-testid="edit-panel"]')).toBeVisible()
+  })
 })

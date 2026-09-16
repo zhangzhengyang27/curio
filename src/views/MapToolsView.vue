@@ -149,7 +149,7 @@
             删除此标注
           </button>
           <p class="place-hint">
-            拖拽白色顶点调整形状,Esc 或点空白退出编辑
+            拖白色顶点调形状,边上点击加点,顶点右键删点,Delete 删除,Esc 或点空白退出
           </p>
         </div>
       </template>

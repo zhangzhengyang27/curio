@@ -39,6 +39,22 @@ const TOOL_COLORS = {
 /** 各 kind 完成一次产物所需的最少顶点数(不足则不登记,导出 GeoJSON 才合法) */
 const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3, rectangle: 2, circle: 2 }
 
+/** 闭合多边形类产物(描边要闭环,GeoJSON 导出为 Polygon) */
+const CLOSED_KINDS = ['area', 'polygon', 'rectangle', 'circle']
+
+/** 编辑态删点下限:GeoJSON Polygon 环至少 3 点,LineString 至少 2 点 */
+const REMOVE_FLOOR = { line: 2, distance: 2, area: 3, polygon: 3, rectangle: 3, circle: 3 }
+
+/** 点到线段(屏幕坐标)的距离 */
+function distToSegment(p, a, b) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const lenSq = dx * dx + dy * dy
+  let t = lenSq === 0 ? 0 : ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq
+  t = Math.max(0, Math.min(1, t))
+  return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy))
+}
+
 /** 由 Drawer 采集落点的工具（point 即放即成不走采集,右键/双击收尾） */
 const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon', 'rectangle', 'circle']
 
@@ -116,7 +132,7 @@ export class MapToolsController {
     this.handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
     this.handler.setInputAction((e) => this._onClick(e), Cesium.ScreenSpaceEventType.LEFT_CLICK)
     this.handler.setInputAction((e) => this._onMove(e), Cesium.ScreenSpaceEventType.MOUSE_MOVE)
-    this.handler.setInputAction(() => this._finish(), Cesium.ScreenSpaceEventType.RIGHT_CLICK)
+    this.handler.setInputAction((e) => this._onRightClick(e), Cesium.ScreenSpaceEventType.RIGHT_CLICK)
     this.handler.setInputAction(() => this._finish(), Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK)
     this.handler.setInputAction((e) => this._onLeftDown(e), Cesium.ScreenSpaceEventType.LEFT_DOWN)
     this.handler.setInputAction(() => this._onLeftUp(), Cesium.ScreenSpaceEventType.LEFT_UP)
@@ -193,11 +209,19 @@ export class MapToolsController {
   }
 
   _onClick(e) {
-    // 编辑态:点击空白退出编辑,点击其它产物切换选中;不采点
+    // 编辑态:顶点上的点击属于刚结束的拖拽(DOWN→UP→CLICK 序列),不做事;
+    // 点在边上插入顶点(M9);点其它产物切换选中;点空白退出编辑
     if (this.selectedEntry) {
-      const entry = this._pickEntry(e.position)
-      if (entry && entry !== this.selectedEntry) this._enterEdit(entry)
-      else if (!entry) this._exitEdit()
+      const entry = this.selectedEntry
+      if (this._nearestVertex(entry, e.position, 16) != null) return
+      const segIdx = this._hitSegment(entry, e.position, 10)
+      if (segIdx != null) {
+        this._insertVertex(entry, segIdx, e.position)
+        return
+      }
+      const hit = this._pickEntry(e.position)
+      if (hit && hit !== entry) this._enterEdit(hit)
+      else if (!hit) this._exitEdit()
       return
     }
     // 无激活工具时尝试选中已绘产物(M2);不得采点:曾静默积累坐标
@@ -271,31 +295,62 @@ export class MapToolsController {
     return best
   }
 
-  // ---- 标绘编辑(M2):选中 → 样式/顶点拖拽/单删 ----
+  /** 编辑态点击命中边(屏幕距离阈值 px):返回线段起点序号(插点位置),未命中返回 null */
+  _hitSegment(entry, windowPos, threshold = 10) {
+    const pts = entry.positions || []
+    const n = pts.length
+    if (n < 2) return null
+    const closed = CLOSED_KINDS.includes(entry.kind)
+    let best = null
+    let bestDist = threshold
+    for (let i = 0; i < (closed ? n : n - 1); i++) {
+      const a = this.viewer.scene.cartesianToCanvasCoordinates(pts[i])
+      const b = this.viewer.scene.cartesianToCanvasCoordinates(pts[(i + 1) % n])
+      if (!a || !b) continue
+      const d = distToSegment(windowPos, a, b)
+      if (d < bestDist) {
+        bestDist = d
+        best = i
+      }
+    }
+    return best
+  }
+
+  // ---- 标绘编辑(M2):选中 → 样式/顶点拖拽/增删点/单删 ----
 
   _enterEdit(entry) {
     this._exitEdit()
     this.selectedEntry = entry
-    if (entry.positions && entry.kind !== 'point') {
-      // 顶点拖拽把手
-      const Cesium = this.Cesium
-      entry.positions.forEach((pos, i) => {
-        const handle = this.viewer.entities.add({
-          id: `vtx_${entry.id}_${i}`,
-          position: pos,
-          point: {
-            pixelSize: 11,
-            color: Cesium.Color.WHITE,
-            outlineColor: Cesium.Color.fromCssColorString(entry.style?.colorCss || '#4fc3f7'),
-            outlineWidth: 2,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY,
-          },
-          __vertexHandle: true,
-        })
-        this.vertexHandles.push(handle)
-      })
-    }
+    this._createHandles(entry)
     this.onEditChange(entry)
+  }
+
+  /** 顶点拖拽把手(编辑态白色圆点,id 规则 vtx_{entryId}_{index}) */
+  _createHandles(entry) {
+    if (!entry.positions || entry.kind === 'point') return
+    const Cesium = this.Cesium
+    entry.positions.forEach((pos, i) => {
+      const handle = this.viewer.entities.add({
+        id: `vtx_${entry.id}_${i}`,
+        position: pos,
+        point: {
+          pixelSize: 11,
+          color: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.fromCssColorString(entry.style?.colorCss || '#4fc3f7'),
+          outlineWidth: 2,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+        __vertexHandle: true,
+      })
+      this.vertexHandles.push(handle)
+    })
+  }
+
+  /** 增删点后把手全量重建(索引随顶点序列平移,不做增量) */
+  _rebuildHandles(entry) {
+    this.vertexHandles.forEach((h) => this.viewer.entities.remove(h))
+    this.vertexHandles = []
+    this._createHandles(entry)
   }
 
   _exitEdit() {
@@ -308,22 +363,27 @@ export class MapToolsController {
     }
   }
 
-  _onLeftDown(e) {
-    if (!this.selectedEntry || this.dragIndex != null) return
-    // 顶点命中同样用几何匹配(scene.pick 对 point 实体同样不可靠)
+  /** 顶点命中:几何最近匹配(屏幕距离阈值 px),返回序号或 null(scene.pick 对 point 实体同样不可靠) */
+  _nearestVertex(entry, windowPos, threshold = 16) {
     let bestIdx = null
-    let bestDist = 16
-    this.selectedEntry.positions.forEach((p, idx) => {
+    let bestDist = threshold
+    ;(entry.positions || []).forEach((p, idx) => {
       const px = this.viewer.scene.cartesianToCanvasCoordinates(p)
       if (!px) return
-      const d = Math.hypot(px.x - e.position.x, px.y - e.position.y)
+      const d = Math.hypot(px.x - windowPos.x, px.y - windowPos.y)
       if (d < bestDist) {
         bestDist = d
         bestIdx = idx
       }
     })
-    if (bestIdx != null) {
-      this.dragIndex = bestIdx
+    return bestIdx
+  }
+
+  _onLeftDown(e) {
+    if (!this.selectedEntry || this.dragIndex != null) return
+    const idx = this._nearestVertex(this.selectedEntry, e.position, 16)
+    if (idx != null) {
+      this.dragIndex = idx
       // 拖拽期间禁用左键旋转,避免相机同时转动
       this.viewer.scene.screenSpaceCameraController.enableRotate = false
     }
@@ -337,6 +397,83 @@ export class MapToolsController {
     }
   }
 
+  /** 编辑态右键:命中顶点则删点(M9),否则走采点收尾 */
+  _onRightClick(e) {
+    if (this.selectedEntry) {
+      const idx = e.position ? this._nearestVertex(this.selectedEntry, e.position, 12) : null
+      if (idx != null) this._removeVertex(this.selectedEntry, idx)
+      return
+    }
+    this._finish()
+  }
+
+  /** 编辑态点边插点(M9):segIdx 为线段起点序号,新顶点取点击处的球面位置 */
+  _insertVertex(entry, segIdx, windowPos) {
+    const cartesian = this.viewer.camera.pickEllipsoid(windowPos, this.Cesium.Ellipsoid.WGS84)
+    if (!cartesian) return
+    const positions = [...entry.positions]
+    positions.splice(segIdx + 1, 0, cartesian)
+    entry.positions = positions
+    this._applyGeometry(entry)
+    this._rebuildHandles(entry)
+    this._persist()
+  }
+
+  _removeVertex(entry, idx) {
+    const floor = REMOVE_FLOOR[entry.kind] || 2
+    if (entry.positions.length <= floor) {
+      this.onStatus({ hint: `至少保留 ${floor} 个顶点` })
+      return
+    }
+    const positions = [...entry.positions]
+    positions.splice(idx, 1)
+    entry.positions = positions
+    this._applyGeometry(entry)
+    this._rebuildHandles(entry)
+    this._persist()
+  }
+
+  /**
+   * 顶点序列变更(拖拽/插点/删点)后的统一同步:主体、附属与闭合描边。
+   * ⚠ hierarchy 必须用 PolygonHierarchy 包装,不能 setValue 裸数组:构造期
+   * Cesium 会把数组规范化,运行期 setValue 不做转换,GroundPolygon updater
+   * 读到裸数组直接 TypeError → 整个渲染循环停止(实测)。
+   * ⚠ 闭合类产物的描边是「顶点+首点闭合」的静态序列,直接 setValue 开序列
+   * 会丢掉闭合段(拖拽顶点后描边缺口的存量 bug,2026-09-16 修复)。
+   */
+  _applyGeometry(entry) {
+    const Cesium = this.Cesium
+    const positions = entry.positions
+    const closed = CLOSED_KINDS.includes(entry.kind)
+    const linePositions = closed ? [...positions, positions[0]] : positions
+    if (entry.entity.polyline) entry.entity.polyline.positions.setValue(linePositions)
+    if (entry.entity.polygon) entry.entity.polygon.hierarchy.setValue(new Cesium.PolygonHierarchy(positions))
+    for (const x of entry.extras) {
+      if (x.polyline) x.polyline.positions.setValue(linePositions)
+      if (x.polygon) x.polygon.hierarchy.setValue(new Cesium.PolygonHierarchy(positions))
+      if (x.label && entry.kind === 'distance') {
+        x.position.setValue(positions[Math.floor(positions.length / 2)])
+        if (entry.record) x.label.text = entry.record.text
+      }
+    }
+    entry.coords = positions.map((p) => this._toDegrees(p))
+    this._refreshRecord(entry)
+  }
+
+  /** 量测类产物几何变更后重算记录与标签文案(拖拽/增删点后面积/距离不再失真) */
+  _refreshRecord(entry) {
+    if (!entry.record) return
+    if (entry.record.kind === 'distance') {
+      const text = `总距离 ${formatDistance(this._computeDistance(entry.positions))}`
+      entry.record.text = text
+      const label = entry.extras.find((x) => x.label)
+      if (label) label.label.text = text
+    } else if (entry.record.kind === 'area') {
+      const prefix = entry.kind === 'rectangle' ? '矩形面积 ' : entry.kind === 'circle' ? '圆形面积 ' : '面积 '
+      entry.record.text = `${prefix}${formatArea(this._computeArea(entry.positions))}`
+    }
+  }
+
   _dragVertexTo(windowPos) {
     const entry = this.selectedEntry
     const cartesian = this.viewer.camera.pickEllipsoid(windowPos, this.Cesium.Ellipsoid.WGS84)
@@ -344,16 +481,9 @@ export class MapToolsController {
     const positions = [...entry.positions]
     positions[this.dragIndex] = cartesian
     entry.positions = positions
-    // 同步几何:主体、附属与拾取代理的线都要跟着顶点走
-    if (entry.entity.polyline) entry.entity.polyline.positions.setValue(positions)
-    if (entry.entity.polygon) entry.entity.polygon.hierarchy.setValue(positions)
-    for (const x of entry.extras) {
-      if (x.polyline) x.polyline.positions.setValue(positions)
-      if (x.polygon) x.polygon.hierarchy.setValue(positions)
-    }
     const handle = this.viewer.entities.getById(`vtx_${entry.id}_${this.dragIndex}`)
     if (handle) handle.position = cartesian
-    entry.coords = positions.map((p) => this._toDegrees(p))
+    this._applyGeometry(entry)
   }
 
   /** 编辑态改样式:主体线宽/颜色,面的填充与描边同步 */
