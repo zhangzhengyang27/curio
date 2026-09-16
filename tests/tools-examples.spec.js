@@ -31,7 +31,7 @@ test('量测示例:激活距离量测,两点收线出结果', async ({ page }) =
   await page.evaluate(() => {
     const btn = document.querySelector('button.vc-measure-distance') ||
       document.querySelector('button .vc-icons-measure-distance')?.closest('button')
-    btn && btn.click()
+    if (btn) btn.click()
   })
   // 激活会触发 activeEvt → 面板状态重渲染,留出稳定窗口再开始采点
   await expect(page.getByTestId('measure-status')).toContainText('量测中', { timeout: 10_000 })

@@ -62,6 +62,9 @@ const ACTIONS = [
   { name: 'height', label: '高度' },
   { name: 'area', label: '面积' },
   { name: 'point', label: '坐标' },
+  { name: 'rectangle', label: '矩形' },
+  { name: 'regular', label: '正多边形' },
+  { name: 'circle', label: '圆' },
 ]
 const LABEL_BY_NAME = Object.fromEntries(ACTIONS.map((a) => [a.name, a.label]))
 // ⚠ 必须是稳定引用:模板里内联 .map() 会在每次渲染时生成新数组,使

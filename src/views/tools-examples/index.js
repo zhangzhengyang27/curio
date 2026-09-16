@@ -8,9 +8,10 @@
  * component 必须是动态 import 工厂：保证每个示例独立分包，
  * 进入列表页不加载 vue-cesium 与任何示例代码。
  *
- * 量测/绘制/分析/淹没四页依赖 vue-cesium 的绘制组件家族，要求构建链为
- * Vite 7（esbuild/rollup）——Rolldown（Vite 8）下点击链路静默失效，
- * 对照实验与降级决策见 docs/CHANGELOG.md 2026-09-16/17 条。
+ * 量测/绘制/分析/淹没四页依赖 vue-cesium 的绘制组件家族：
+ * ⚠ :measurements/:drawings/:analyses 等 FAB 列表 prop 必须传稳定数组引用——
+ * 内联 .map() 会在父组件重渲染时使其内部 action 表 computed 失效重建，
+ * 点击链路静默失效（实测 3.2.12，见 docs/CHANGELOG.md 2026-09-17 条）。
  */
 export const TOOLS_EXAMPLES = [
   {
@@ -27,8 +28,8 @@ export const TOOLS_EXAMPLES = [
     title: '量测',
     icon: '📐',
     gradient: 'linear-gradient(135deg, #123a2f 0%, #2f9f6e 100%)',
-    tags: ['vue-cesium', '距离', '面积', '三角量算'],
-    desc: '距离/折线/面积/三角/水平/垂直/高度/坐标八种量测，支持量测结果顶点编辑。',
+    tags: ['vue-cesium', '距离', '面积', '三角量算', '矩形圆'],
+    desc: '距离/折线/面积/三角/水平/垂直/高度/坐标/矩形/正多边形/圆十一种量测，支持量测结果顶点编辑。',
     component: () => import('./MeasurementsExample.vue'),
   },
   {
