@@ -6,6 +6,18 @@
 
 ## 2026-09 治理轮次
 
+### vue-cesium 量测/绘制全量接入 + 根因修正（2026-09-17）
+
+推翻 2026-09-16「Rolldown 构建链不兼容」的错误结论，量测/绘制/分析/淹没四示例页全量回归。
+
+| 项 | 说明 |
+|---|---|
+| 根因修正 | 降级 Vite 7 后本项目**依然失效** → 内核非根因。toy 变量二分（Cesium 注入方式/双击移除/viewer props/天地图层/缩放约束/RequestScheduler/camera prop 逐一排除）后 A/B 定位，真因有二：**① 不稳定 props 引用**：模板里 `:measurements="ACTIONS.map(...)"` 内联 map，激活量测 → activeEvt → 父组件重渲染 → 新数组引用使 vue-cesium 内部 `drawingActionInstances` computed 失效重建（全新 cmpRef），而 `selectedDrawingActionInstance` 残留旧对象 → 分发器打到空 cmp 上，点击全被静默吞掉。修复：`:measurements` 等**必须传 script 常量稳定引用**（toy 当初"正常"只是因为没传该 prop 且用 JS click 激活，两个偏差叠加造成误判）。**② FAB 方向**：VcFab `direction` 默认 `'right'`，bottom-right 位置动作条飞出视口、撑出容器横向溢出；Playwright 点击动作按钮的 scroll-into-view 把 `overflow:hidden` 容器 scrollLeft 拉到 465，**整个 fixed 地图被视觉拉偏**，坐标拾取全错。修复：`main-fab-opts: { direction: 'left' }` |
+| 教训沉淀 | 对照实验的"正常组"必须与"失败组"**完全同路径**（toy 用 JS click 激活、无状态响应——恰绕开了真因触发链），否则会得出错误的归因。"唯一变量"的确认要穷尽到触发链层级，而不是文件/依赖层级 |
+| 降级撤销 | vite 8→7 降级 + manualChunks 改写在 vite7-downgrade 分支完成并验证可用，但根因既明，**降级不必要**，分支保留备查后删除；main 维持 Vite 8（Rolldown）+ codeSplitting.groups |
+| 全量接入 | 恢复量测（距离/折线/三角/水平/垂直/高度/面积/坐标）+ 标绘（图钉/点/线/面/矩形/圆/正多边形，clampToGround）+ 通视/可视域 + 淹没（ArcGIS 地形仅该页挂载渲染）四示例页，`/tools` 列表 6 卡片。修复后 probe 实测两点收线出值（drawEvt finished） |
+| E2E | tools-examples.spec.js 4 条：6 卡片列表跳转、量测 FAB 激活→两点→量测完成、导航控件渲染、未知 slug 兜底 |
+
 ### tools 工具箱改版为示例列表（2026-09-16）
 
 `/tools` 从单页工具改为「示例列表 → 点击进入单个示例」结构（与示例中心同模式），
@@ -15,7 +27,7 @@
 |---|---|
 | 路由改版 | `/tools` → `MapToolsGallery`（卡片列表）；`/tools/:slug` → `MapToolsExampleView` 按 `src/views/tools-examples/index.js` 注册表懒加载。新增示例 = 注册表加条目 + 一个 .vue 文件，列表与路由自动生效。综合工具箱整体 `git mv` 至 `tools-examples/ToolboxExample.vue`（内容不变），现挂 `/tools/toolbox`——**27 条 E2E 仅同步 URL（`/tools` → `/tools/toolbox`），交互契约与断言零改动** |
 | 共享壳 | `ToolsExampleShell.vue`：`loadCesium()` 先建 `window.Cesium`（vue-cesium 的 `getCesiumScript` 首行 `if (!globalThis.Cesium)` 直接复用，源码级确认不产生双引擎）→ `VcConfigProvider` 必须包 `VcViewer`（否则 `globalConfig` 未初始化，`__scriptPromise` TypeError）→ viewer 由 vc-viewer 默认路径自建，`@ready` 后叠加 `applyTdtStack`（天地图栈）与 `applyViewerConstraints`（从 createViewer 抽出的缩放边界/双击禁用/影像门控，两条创建路径行为一致）。**必须显式传 `:camera`**：vc-viewer 会无条件用默认相机（105°E/30°N/1900 万米）覆盖初始化视角 |
-| vue-cesium 量测/绘制/分析不可用（重要结论） | VcMeasurements/VcDrawings/VcAnalyses/VcAnalysisFlood 的点击链路在本项目环境**静默失效**：组件挂载（cmpRef 有值）、FAB 激活（activeEvt 正常）、场景渲染（相机/瓦片/手动 ScreenSpaceEventHandler 均正常）逐一验证过，但地图点击始终不进入绘制处理链。**三形态复现**：dev 预打包、dev 裸伺服（optimizeDeps.exclude）、preview（Rolldown 全量打包）；且**纯官方三行接入形态**（VcConfigProvider+VcViewer+VcMeasurements，零自定义 props）同样复现，并伴随 FAB 动作按钮展开方向渲染反转（元素定位到视口外）。遂收缩交付：仅保留验证可靠的 VcNavigation（`/tools/navigation`，罗盘/缩放/定位/打印/状态栏），量测/绘制/贴地能力仍由自有 mapToolsController 提供（27 条 E2E 守护）。挂账见 ROADMAP P2「vue-cesium 量测/绘制组件集成（受阻挂账）」。**根因已对照实验实锤（同日）**：在 /tmp 搭建最小官方形态项目，锁定同版本 vue@3.5.39/vue-cesium@3.2.12/cesium@1.142，仅构建内核不同——Vite 7（esbuild serve + rollup build）下 dev/生产双形态量测交互完全正常（drawEvt new→new→finished:true），本项目 Vite 8（Rolldown）双形态均失效 → 不兼容点在构建链内核。FAB 方向反转在两种内核下均存在，属库自身独立 bug，与构建无关。最小复现项目保留在 /tmp/vc-esbuild-test（含 drawEvt 判据），可直接用于提 issue |
+| vue-cesium 量测/绘制/分析不可用（重要结论） | VcMeasurements/VcDrawings/VcAnalyses/VcAnalysisFlood 的点击链路在本项目环境**静默失效**：组件挂载（cmpRef 有值）、FAB 激活（activeEvt 正常）、场景渲染（相机/瓦片/手动 ScreenSpaceEventHandler 均正常）逐一验证过，但地图点击始终不进入绘制处理链。**三形态复现**：dev 预打包、dev 裸伺服（optimizeDeps.exclude）、preview（Rolldown 全量打包）；且**纯官方三行接入形态**（VcConfigProvider+VcViewer+VcMeasurements，零自定义 props）同样复现，并伴随 FAB 动作按钮展开方向渲染反转（元素定位到视口外）。遂收缩交付：仅保留验证可靠的 VcNavigation（`/tools/navigation`，罗盘/缩放/定位/打印/状态栏），量测/绘制/贴地能力仍由自有 mapToolsController 提供（27 条 E2E 守护）。挂账见 ROADMAP P2「vue-cesium 量测/绘制组件集成（受阻挂账）」。**根因已对照实验实锤（同日）**：在 /tmp 搭建最小官方形态项目，锁定同版本 vue@3.5.39/vue-cesium@3.2.12/cesium@1.142，仅构建内核不同——Vite 7（esbuild serve + rollup build）下 dev/生产双形态量测交互完全正常（drawEvt new→new→finished:true），本项目 Vite 8（Rolldown）双形态均失效 → 不兼容点在构建链内核。FAB 方向反转在两种内核下均存在，属库自身独立 bug，与构建无关。最小复现项目保留在 /tmp/vc-esbuild-test（含 drawEvt 判据），可直接用于提 issue。（⚠ **2026-09-17 该"Rolldown 实锤"结论被推翻**——真实根因见下节） |
 | vue-cesium 裸伺服不可行 | optimizeDeps.exclude 'vue-cesium' 后其依赖链里的 CJS 包在 dev 下 named export 失效：`lodash`（cesium-helpers.mjs 混用 CJS 版）、`@zouyaoji/heatmap.js` 等逐个爆错（与 KNOWN_PITFALLS 中 @cesium-extends/measure 的 turf→polygon-clipping 链同型，且 dev 无 tree-shaking 会拖出全量依赖图）。**vue-cesium 必须走预打包**；dev 下曾用 `resolve.alias { /^lodash$/ → 'lodash-es' }` 兜底，回滚 exclude 后保留（无害） |
 | E2E | 新增 `tests/tools-examples.spec.js` 3 条：列表渲染与点击进入、导航控件渲染、未知 slug 兜底。总 27+3 |
 | 依赖 | 新增 `vue-cesium@3.2.12`（MIT，承诺框架与文档永久免费；peerDep 仅 vue^3.5） |

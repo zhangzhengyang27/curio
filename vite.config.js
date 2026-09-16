@@ -208,9 +208,9 @@ export default defineConfig({
       '@cesium-extends/drawer', '@cesium-extends/common', '@cesium-extends/subscriber', '@cesium-extends/tooltip',
       // vue-cesium 必须走预打包：裸伺服（exclude）下其依赖链里的 CJS 包
       // （lodash、@zouyaoji/heatmap.js…）named export 失效，页面直接报错。
-      // 预打包模式下 VcNavigation 控件验证可用；其量测/绘制/分析组件在本
-      // 项目环境（Vite 8 Rolldown）点击链路静默失效，dev/preview 双形态
-      // 复现，暂不引入，见 docs/CHANGELOG.md 2026-09-16 条
+      // ⚠ 使用其量测/绘制组件时，:measurements 等必须传稳定数组引用——
+      // 内联 .map() 会在父组件重渲染时使其内部 action 表 computed 失效重建，
+      // 点击链路静默失效（曾误判为构建内核问题，见 CHANGELOG 2026-09-17 条）
     ],
   }
 })

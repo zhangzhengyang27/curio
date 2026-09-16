@@ -36,7 +36,7 @@
 
 | 页面 | 路由 | 用户旅程（闭环） | 状态 |
 |---|---|---|---|
-| ② 地图工具箱 | `/tools` | 示例列表 → 点击进入单个示例。当前含：综合工具箱（`/tools/toolbox`：搜索/定位 → 量距/量面/矩形/圆/贴地距离 → 标绘点线面（编辑/顶点拖拽）→ 坐标转换 → 书签保存/回跳 → 导出 GeoJSON/CSV/截图）+ 导航控件示例（vue-cesium VcNavigation） | **P0 MVP + 两批增强已完成；示例列表改版已完成（2026-09-16）**：`/tools` 改为示例列表页（`MapToolsGallery` + `src/views/tools-examples/` 注册表），综合工具箱整体迁至 `/tools/toolbox`（27 条 E2E 随 URL 同步，交互契约不变）。vue-cesium 的量测/绘制/分析组件在本项目环境点击链路静默失效（dev/preview 双形态复现，详见 CHANGELOG 2026-09-16），暂不引入，仅保留其导航控件；贴地距离/剖面已由自有实现覆盖（terrainSampler 采样源） |
+| ② 地图工具箱 | `/tools` | 示例列表 → 点击进入单个示例。当前含：综合工具箱（`/tools/toolbox`：搜索/定位 → 量距/量面/矩形/圆/贴地距离 → 标绘点线面（编辑/顶点拖拽）→ 坐标转换 → 书签保存/回跳 → 导出 GeoJSON/CSV/截图）+ vue-cesium 五示例（量测八种/标绘七种含贴地与顶点编辑/通视与可视域/淹没分析（ArcGIS 地形）/导航控件） | **P0 MVP + 两批增强已完成；示例列表改版 + vue-cesium 全量接入已完成（2026-09-17）**：`/tools` 为示例列表页（`MapToolsGallery` + `src/views/tools-examples/` 注册表），综合工具箱整体迁至 `/tools/toolbox`（27 条 E2E 随 URL 同步，交互契约不变）。⚠ vue-cesium 量测/绘制组件的 props 必须传稳定数组引用（内联 .map() 会使组件内部 action 表重建、点击链静默失效，见 CHANGELOG 2026-09-17）；FAB 需显式 `direction:'left'`（默认 right 在右下角飞出视口）。贴地距离/剖面由自有实现覆盖（terrainSampler 采样源） |
 | ① 全球数据分析 | `/analysis` | 全球 GDP 着色图（choropleth）+ 搜索/点选国家 → 指标卡联动（GDP/人口/人均/密度/碳排放 + 当年排名）→ 多国对比表（≤4 国）→ 时间轴播放演进（2000~2020） | **P1 MVP 已完成（2026-09-14）**，E2E 4 条守护。待扩展：碳排放/人口指标着色切换、贸易/航线图层联动 |
 | ③ 业务监控 | `/monitor` | 主题：地震应急监测。模拟实时流（初始 10 条 + 定时/手动推送）→ 告警列表分级 → 点击定位 → 处置流转（未处理→处理中→已处置，可重开）→ 统计大盘 | **P2 MVP 已完成（2026-09-14）**，E2E 4 条守护。待扩展：巡游引擎复用为大屏轮播、处置记录持久化 |
 | ④ 主题分析工作台 | `/workbench` | 双主题（GDP/碳排放）→ 着色图 + Top10 排行 + echarts 图表联动 → 一键导出自包含 HTML 分析报告（内嵌地图快照与图表） | **P3 MVP 已完成（2026-09-14）**，E2E 3 条守护。待扩展：巡游引擎改造为报告分镜、更多主题与自选指标组合 |
@@ -108,7 +108,7 @@
 | 临界超时用例排查 | 已修 M4（tools 书签）与 W2（workbench 报告模板）：均为「双整页加载/双报告导出」型用例，实测 52~57s 贴着默认 60s 超时线，机器稍慢即在任意一步超时（报错位置漂移）。已按 M2 先例 `test.setTimeout(120s)`。同型用例再出现超时漂移报错时，先查总时长再查逻辑 |
 | tools 地形接入（**已接入，2026-09-16**） | 官方闭源扩展包评估不通过（49k 行 bundle/仅适配 1.52~1.63.1/协议黑盒，详见 CHANGELOG），最终改用 **Cesium 内置 `ArcGISTiledElevationTerrainProvider.fromUrl`** 接 ArcGIS World Elevation3D 公开高程服务（无需 token/无协议逆向）。**架构关键决策：provider 只做 sampleTerrain 的采样源，刻意不赋给 viewer.terrainProvider**——实测地形渲染在 CN 网络+全局串行调度下持续产生 3s 级长任务拖卡主线程；纯采样则零渲染开销、页面流畅。已实现：贴地距离（沿测地线插值 + sampleTerrain 高程 + 段内勾股合成，异步收尾）、高程剖面 SVG、编辑后重算。真实验证：珠峰区域采样高程 7.9~8.7km。换数据源只需改 `src/map/terrainSampler.js` |
 | tools 贴地面积缓办 | 贴地面积需要多边形网格细分 + 逐格高程采样 + 3D 面积累加（贴地距离的二维推广），在 sampleTerrain 通道上可实现但工作量独立；待下一轮 |
-| vue-cesium 量测/绘制组件集成（受阻挂账） | vue-cesium 3.2.12（MIT、Vue3 原生）的量测/绘制/分析组件在本项目环境点击链路静默失效：组件挂载、FAB 激活、事件均正常，但地图点击不进入绘制处理链。**根因已对照实验实锤（2026-09-16）**：/tmp 最小官方形态项目锁同版本依赖，仅构建内核不同——Vite 7（esbuild+rollup）双形态正常、本项目 Vite 8（Rolldown）双形态失效。已收缩交付（仅保留其 VcNavigation 导航控件，`/tools/navigation` 示例 + E2E 守护）。解除路径三选一：① 向 vue-cesium 提 issue（最小复现已备好于 /tmp/vc-esbuild-test）等修复 ② 评估全仓降级 Vite 7（需改写分包配置+全量重验，约半天）③ 维持自有实现（量测/贴地已覆盖） |
+| vue-cesium 量测/绘制组件集成 | **已解决（2026-09-17）**：此前误判为 Rolldown 构建链不兼容（对照实验的正常组激活路径不同，未触达真因）。真实根因：① `:measurements` 等 props 传内联 `.map()` 不稳定引用，激活后父组件重渲染使组件内部 action 表 computed 失效重建，selected 残留旧对象致点击被静默吞掉——修复为 script 常量稳定引用；② VcFab `direction` 默认 `'right'`，右下角动作条飞出视口并触发容器滚动拉偏地图——修复为 `main-fab-opts:{direction:'left'}`。四示例页已回归，Vite 8 无需降级。坑记录见 CHANGELOG 2026-09-17 |
 
 ---
 
