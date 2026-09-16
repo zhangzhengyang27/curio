@@ -158,6 +158,15 @@ export const TOOLS_EXAMPLES = [
     desc: 'SampledPositionProperty 驱动的环飞无人机，路径尾迹 + 时钟倍速回放（VcOverlayDynamic）。',
     component: () => import('./DynamicOverlayExample.vue'),
   },
+  {
+    slug: 'post-process',
+    title: '扫描与后处理',
+    icon: '📡',
+    gradient: 'linear-gradient(135deg, #32123a 0%, #9f2f8a 100%)',
+    tags: ['vue-cesium', '雷达扫描', '夜视滤镜'],
+    desc: '雷达/圆环扫描圈与全屏夜视滤镜，后期处理管线示例（VcPostProcessStageScan / Stage / Collection）。',
+    component: () => import('./PostProcessExample.vue'),
+  },
 ]
 
 export function getToolsExample(slug) {

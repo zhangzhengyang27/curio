@@ -21,6 +21,7 @@ const NEW_PAGES = [
   { slug: 'overlay-typhoon', ready: '[data-testid="example-status"]:has-text("9 个定位点")' },
   { slug: 'overlay-wind', ready: '[data-testid="example-status"]:has-text("粒子流动中")' },
   { slug: 'overlay-dynamic', ready: '[data-testid="example-status"]:has-text("巡飞中")' },
+  { slug: 'post-process', ready: '[data-testid="example-status"]:has-text("扫描显示中")' },
 ]
 
 test('示例列表:渲染全部卡片,点击进入对应示例', async ({ page }) => {
