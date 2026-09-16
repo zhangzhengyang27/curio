@@ -6,7 +6,8 @@ const GlobeDemo = () => import('../views/GlobeDemo.vue')
 const ExampleGallery = () => import('../examples/views/ExampleGallery.vue')
 const ExampleDemo = () => import('../examples/views/ExampleDemo.vue')
 const BMapView = () => import('../views/BMap/index.vue')
-const MapToolsView = () => import('../views/MapToolsView.vue')
+const MapToolsGallery = () => import('../views/MapToolsGallery.vue')
+const MapToolsExampleView = () => import('../views/MapToolsExampleView.vue')
 const AnalysisView = () => import('../views/AnalysisView.vue')
 const WorkbenchView = () => import('../views/WorkbenchView.vue')
 const MonitorView = () => import('../views/MonitorView.vue')
@@ -18,7 +19,8 @@ const routes = [
   { path: '/examples', name: 'example-gallery', component: ExampleGallery },
   { path: '/examples/:source/:pathMatch(.*)*', name: 'example-demo', component: ExampleDemo, props: true },
   { path: '/bmap', name: 'bmap', component: BMapView },
-  { path: '/tools', name: 'map-tools', component: MapToolsView },
+  { path: '/tools', name: 'map-tools-gallery', component: MapToolsGallery },
+  { path: '/tools/:slug', name: 'map-tools-example', component: MapToolsExampleView, props: true },
   { path: '/analysis', name: 'global-analysis', component: AnalysisView },
   { path: '/workbench', name: 'workbench', component: WorkbenchView },
   { path: '/monitor', name: 'business-monitor', component: MonitorView },

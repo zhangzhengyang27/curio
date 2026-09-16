@@ -82,6 +82,16 @@ export function createMapViewer(Cesium, container, options = {}) {
     destination: Cesium.Cartesian3.fromDegrees(view.lon, view.lat, view.height),
   })
 
+  applyViewerConstraints(Cesium, viewer, maxZoom)
+  return viewer
+}
+
+/**
+ * viewer 创建后的统一约束（缩放边界、双击行为、影像层高度门控）。
+ * createMapViewer 内部调用；vue-cesium 示例页（ToolsExampleShell）在 @ready
+ * 后对 vc-viewer 自建 viewer 调用同一份——保证两条创建路径行为一致。
+ */
+export function applyViewerConstraints(Cesium, viewer, maxZoom = MAX_ZOOM_DISTANCE) {
   // 拉远上限：天地图 L1~2 是全球占位区，禁止进入
   const ssc = viewer.scene.screenSpaceCameraController
   ssc.minimumZoomDistance = 20_000
@@ -89,7 +99,8 @@ export function createMapViewer(Cesium, container, options = {}) {
 
   // 禁用 Cesium 默认双击缩放/追踪实体：双击是工具箱结束采点的通道(由独立
   // ScreenSpaceEventHandler 处理,不受影响),而默认 zoom 动画会在采点结束后
-  // 仍持续移动相机,让刚画完的实体投影漂移、后续点击拾取失配
+  // 仍持续移动相机,让刚画完的实体投影漂移、后续点击拾取失配。
+  // vue-cesium 的绘制/量测用自建 ScreenSpaceEventHandler,同样不受影响。
   viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(
     Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK
   )
@@ -102,7 +113,6 @@ export function createMapViewer(Cesium, container, options = {}) {
     const show = h <= IMG_VISIBLE_MAX_HEIGHT
     gated.forEach((layer) => { layer.show = show })
   })
-  return viewer
 }
 
 /** 切换天地图底图模式：'img' 卫星（矢量兜底+影像+注记）/ 'vec' 矢量（矢量+注记） */

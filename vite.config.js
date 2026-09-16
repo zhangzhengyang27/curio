@@ -113,6 +113,9 @@ export default defineConfig({
       { find: 'three/examples/jsm', replacement: fileURLToPath(new URL('./src/examples/jsm-compat', import.meta.url)) },
       { find: 'three/addons', replacement: fileURLToPath(new URL('./src/examples/jsm-compat', import.meta.url)) },
       { find: /^\/graphics\/assets\/external\/(.+)$/, replacement: path.resolve(fileURLToPath(new URL('./public/graphics/assets/external', import.meta.url)), '$1') },
+      // vue-cesium 混用了 CJS 版 lodash（cesium-helpers.mjs）；它被 optimizeDeps
+      // 排除后裸伺服，CJS 的 named export 失效，统一指到 ESM 版
+      { find: /^lodash$/, replacement: 'lodash-es' },
       { find: /^node:(module|worker_threads)$/, replacement: nodeEmptyStub }
     ]
   },
@@ -203,6 +206,11 @@ export default defineConfig({
       // ⚠ 不可再排除 @cesium-extends/measure 之类带 CJS 依赖链（turf→
       // polygon-clipping UMD）的包：裸伺服没有 ESM 互转，页面直接报错（实测）。
       '@cesium-extends/drawer', '@cesium-extends/common', '@cesium-extends/subscriber', '@cesium-extends/tooltip',
+      // vue-cesium 必须走预打包：裸伺服（exclude）下其依赖链里的 CJS 包
+      // （lodash、@zouyaoji/heatmap.js…）named export 失效，页面直接报错。
+      // 预打包模式下 VcNavigation 控件验证可用；其量测/绘制/分析组件在本
+      // 项目环境（Vite 8 Rolldown）点击链路静默失效，dev/preview 双形态
+      // 复现，暂不引入，见 docs/CHANGELOG.md 2026-09-16 条
     ],
   }
 })

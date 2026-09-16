@@ -571,10 +571,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import coordtransform from 'coordtransform'
-import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer, applyTdtStack } from '../map/createViewer.js'
-import { MapToolsController } from '../map/tools/mapToolsController.js'
-import { loadBookmarks, addBookmark, removeBookmark, renameBookmark, exportBookmarks, importBookmarks, flyToBookmark } from '../map/bookmarks.js'
+import { loadCesium } from '../../map/cesiumLoader.js'
+import { createMapViewer, applyTdtStack } from '../../map/createViewer.js'
+import { MapToolsController } from '../../map/tools/mapToolsController.js'
+import { loadBookmarks, addBookmark, removeBookmark, renameBookmark, exportBookmarks, importBookmarks, flyToBookmark } from '../../map/bookmarks.js'
 
 const containerRef = ref(null)
 const ready = ref(false)

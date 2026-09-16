@@ -40,7 +40,7 @@ test.describe('地图工具箱', () => {
   test('页面打开：Cesium 初始化完成，工具面板就绪，无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30_000 })
     await expect(page.locator('.cesium-viewer canvas').first()).toBeVisible()
     await expect(page.locator('[data-testid="status-coords"]')).toContainText('移动鼠标')
@@ -48,7 +48,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('量距：两次采点后状态栏给出总距离', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="distance"]').click()
     await expect(page.locator('[data-testid="status-hint"]')).toContainText('左键')
@@ -68,7 +68,7 @@ test.describe('地图工具箱', () => {
 
   test('量面积：闭合多边形后给出面积且产物登记', async ({ page }) => {
     // 回归：_buildResult 曾缺 area 分支，量面积整条链路静默失效
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="area"]').click()
     await page.mouse.move(700, 450)
@@ -85,7 +85,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('标点并导出 GeoJSON', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="point"]').click()
     await page.mouse.click(CANVAS_CLICK_A.x, CANVAS_CLICK_A.y)
@@ -102,7 +102,7 @@ test.describe('地图工具箱', () => {
   test('标线导出的 GeoJSON 坐标有效（非 null）', async ({ page }) => {
     // 回归：line 分支曾把坐标数组误传给期望单点的 _addRegistry，
     // 每个坐标变成 NaN → JSON 序列化为 null
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     await page.locator('[data-tool="line"]').click()
     await page.mouse.move(700, 450)
@@ -125,7 +125,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('书签：保存、刷新持久化、删除', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-right').waitFor()
 
     await page.locator('[data-testid="bookmark-add"]').click()
@@ -140,7 +140,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('工具结束后与 Esc 取消后,按钮高亮同步消除(回归:高亮与控制器状态脱钩)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
     const distanceBtn = page.locator('[data-tool="distance"]')
 
@@ -162,7 +162,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('debug HUD 反映真实相机状态(回归:曾在 1.142 上静默失效恒显 0)', async ({ page }) => {
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     const hud = page.locator('[data-testid="debug-hud"]')
     await expect(hud).toBeVisible()
@@ -173,7 +173,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('标绘持久化：刷新后标注恢复(M3)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
 
     // 标一个点 + 一条线
@@ -200,7 +200,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('GeoJSON 导入：导出→清空→导入,标注与画面恢复(M3)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
 
     // 标点 + 标面并导出
@@ -245,7 +245,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('地名搜索:输入回车出候选,点击飞达(M1)', async ({ page }) => {
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 拦截天地图搜索 API,返回固定候选(不依赖外部服务)
@@ -278,7 +278,7 @@ test.describe('地图工具箱', () => {
   test('地名搜索:天地图无权限时自动落高德兜底并纠偏坐标(M1 三通道)', async ({ page }) => {
     // 高德通道仅在 env 配了 key 时注册(构建期注入);未配时跳过,配 key 的环境可跑
     test.skip(!process.env.VITE_AMAP_KEY, '需 VITE_AMAP_KEY 环境变量(值任意)才能验证高德兜底通道')
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 天地图通道 404(个人认证无搜索权限的现状);高德返回 GCJ-02 坐标
@@ -319,7 +319,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('地名搜索:全部服务不可用时输入框区提示降级(M1)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     // 三通道都断供才降级
     await page.route('**/api.tianditu.gov.cn/search*', (route) => route.abort())
@@ -333,7 +333,7 @@ test.describe('地图工具箱', () => {
 
   test('标绘编辑:选中→改色→拖顶点→单删(M2)', async ({ page }) => {
     test.setTimeout(180_000)
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 标线(2 点)
@@ -388,7 +388,7 @@ test.describe('地图工具箱', () => {
     // 唯一两次整页加载(goto+reload)的用例:dev 下每次拉 30MB+ 未压缩 Cesium,
     // 全程贴着默认 60s 超时线,机器稍慢即在任意一步超时(报错位置漂移,实测)
     test.setTimeout(120_000)
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-right').waitFor({ timeout: 30_000 })
 
     await page.locator('[data-testid="bookmark-add"]').click({ force: true })
@@ -420,7 +420,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('量测记录:量距后记录入列,CSV 导出(M5)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     await page.locator('[data-tool="distance"]').evaluate((el) => el.click())
@@ -445,7 +445,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('矩形:对角两点自动成形并量面积(M6)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await page.locator('[data-tool="rectangle"]').click()
     await expect(page.locator('[data-testid="status-hint"]')).toContainText('对角')
@@ -463,7 +463,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('圆形:圆心+半径自动闭合(M6)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await page.locator('[data-tool="circle"]').click()
     await expect(page.locator('[data-testid="status-hint"]')).toContainText('圆心')
@@ -480,7 +480,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('矩形 GeoJSON 导出为 Polygon,刷新后恢复(M6)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await page.locator('[data-tool="rectangle"]').click()
     await page.mouse.move(700, 450)
@@ -505,7 +505,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('坐标转换:GCJ-02→WGS-84 批量转换与交换方向(M7)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('[data-testid="coord-card"]').waitFor({ timeout: 30_000 })
 
     // 默认 gcj02 → wgs84,两行批量
@@ -527,7 +527,7 @@ test.describe('地图工具箱', () => {
 
   test('快捷键:Enter 结束采集,Delete 删除选中(M8)', async ({ page }) => {
     test.setTimeout(120_000)
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // Enter 结束采线(等价右键/双击,geojson.io 惯例)
@@ -556,7 +556,7 @@ test.describe('地图工具箱', () => {
 
   test('编辑增删点:边上点击插点,顶点右键删点,面积记录刷新(M9)', async ({ page }) => {
     test.setTimeout(120_000)
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 画 3 点量面(带面积记录)
@@ -615,7 +615,7 @@ test.describe('地图工具箱', () => {
 
   test('标注列表:重命名持久化,点击飞达,单删(M10)', async ({ page }) => {
     test.setTimeout(120_000)
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 标点 + 标线 → 列表 2 条
@@ -650,7 +650,7 @@ test.describe('地图工具箱', () => {
 
   test('量测记录:点击条目飞达对应产物(M11)', async ({ page }) => {
     test.setTimeout(120_000)
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     // 量距(有量测记录),记录入列
@@ -682,7 +682,7 @@ test.describe('地图工具箱', () => {
   })
 
   test('快捷键帮助:开关与内容(M12)', async ({ page }) => {
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await expect(page.locator('[data-testid="help-popover"]')).toHaveCount(0)
 
@@ -699,7 +699,7 @@ test.describe('地图工具箱', () => {
     // 地形开关默认关:高程恒 0,贴地距离退化为平面测地值(数值有效即达标);
     // 真实地形值依赖 ArcGIS 服务,不在 e2e 依赖范围内
     test.setTimeout(120_000)
-    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     await page.locator('[data-tool="surfaceDistance"]').click()
@@ -725,7 +725,7 @@ test.describe('地图工具箱', () => {
     // (profile 高程 7.9~8.7km);e2e 不依赖外网服务,只验证开关语义与绘制可用性
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
-    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
 
     await page.locator('[data-testid="terrain-btn"]').evaluate((el) => el.click())
