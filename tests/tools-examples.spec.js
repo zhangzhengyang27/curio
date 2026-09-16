@@ -15,6 +15,12 @@ const NEW_PAGES = [
   { slug: 'print', ready: '[data-testid="print-trigger"]' },
   { slug: 'selection-indicator', ready: '[data-testid="example-status"]:has-text("等待拾取")' },
   { slug: 'navigation-sm', ready: '[data-testid="example-status"]:has-text("小屏导航就绪")' },
+  { slug: 'overlay-heatmap', ready: '[data-testid="example-status"]:has-text("热力点 360 个")' },
+  { slug: 'overlay-html', ready: '[data-testid="example-status"]:has-text("5 张卡片显示中")' },
+  { slug: 'overlay-echarts', ready: '[data-testid="example-status"]:has-text("8 节点 / 7 条飞线")' },
+  { slug: 'overlay-typhoon', ready: '[data-testid="example-status"]:has-text("9 个定位点")' },
+  { slug: 'overlay-wind', ready: '[data-testid="example-status"]:has-text("粒子流动中")' },
+  { slug: 'overlay-dynamic', ready: '[data-testid="example-status"]:has-text("巡飞中")' },
 ]
 
 test('示例列表:渲染全部卡片,点击进入对应示例', async ({ page }) => {
