@@ -694,4 +694,56 @@ test.describe('地图工具箱', () => {
     await page.locator('[data-testid="help-btn"]').click()
     await expect(page.locator('[data-testid="help-popover"]')).toHaveCount(0)
   })
+
+  test('贴地距离:两点采样出值,记录与登记(M13)', async ({ page }) => {
+    // 地形开关默认关:高程恒 0,贴地距离退化为平面测地值(数值有效即达标);
+    // 真实地形值依赖 ArcGIS 服务,不在 e2e 依赖范围内
+    test.setTimeout(120_000)
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    await page.locator('[data-tool="surfaceDistance"]').click()
+    await expect(page.locator('[data-testid="status-hint"]')).toContainText('左键')
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.click(820, 500, { button: 'right' })
+
+    // 异步采样完成(地形关时是 5s 兜底内的即时合成)
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('贴地距离', { timeout: 15_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km|m))/)
+    await expect(result).not.toContainText('NaN')
+    await expect(page.locator('[data-testid="measure-item"]')).toHaveCount(1)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+    // 高程剖面卡片随登记出现(地形关时高程恒 0,曲线为直线但结构有效)
+    await expect(page.locator('[data-testid="profile-svg"]')).toBeVisible()
+  })
+
+  test('贴地采样源:开关往返不影响绘制(M14)', async ({ page }) => {
+    // 真实地形链路(ArcGIS provider + sampleTerrain)已用珠峰区域坐标人工实测
+    // (profile 高程 7.9~8.7km);e2e 不依赖外网服务,只验证开关语义与绘制可用性
+    const errors = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/tools?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    await page.locator('[data-testid="terrain-btn"]').evaluate((el) => el.click())
+    expect(await page.evaluate(() => window.__tvMapDebug.controller._terrainOn)).toBe(true)
+    await page.locator('[data-testid="terrain-btn"]').evaluate((el) => el.click())
+    expect(await page.evaluate(() => window.__tvMapDebug.controller._terrainOn)).toBe(false)
+
+    // 开关往返后贴地距离仍可用(默认椭球源,数值即时合成)
+    await page.locator('[data-tool="surfaceDistance"]').evaluate((el) => el.click())
+    await page.mouse.move(700, 450)
+    await page.mouse.click(640, 400)
+    await page.mouse.click(820, 500)
+    await page.mouse.click(820, 500, { button: 'right' })
+    const result = page.locator('[data-testid="status-result"]')
+    await expect(result).toContainText('贴地距离', { timeout: 15_000 })
+    await expect(result).toContainText(/(\d+(\.\d+)? (km|m))/)
+    await expect(result).not.toContainText('NaN')
+    await expect(page.locator('[data-testid="profile-svg"]')).toBeVisible()
+    expect(errors).toEqual([])
+  })
 })

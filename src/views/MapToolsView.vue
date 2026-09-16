@@ -239,6 +239,26 @@
         </div>
       </template>
 
+      <!-- 高程剖面(M11):最新一次贴地距离的高程曲线 -->
+      <template v-if="profileData">
+        <p class="group-label">
+          高程剖面({{ profileData.minH }}~{{ profileData.maxH }}m)
+        </p>
+        <svg
+          class="profile-svg"
+          data-testid="profile-svg"
+          viewBox="0 0 186 64"
+          preserveAspectRatio="none"
+        >
+          <polyline
+            :points="profileData.points"
+            fill="none"
+            stroke="#80deea"
+            stroke-width="1.5"
+          />
+        </svg>
+      </template>
+
       <!-- 坐标转换(M7):BD-09/GCJ-02/WGS-84 纯前端互转,零网络 -->
       <p class="group-label">
         坐标转换
@@ -467,6 +487,15 @@
         >
           矢量地图
         </button>
+        <button
+          class="mini-btn"
+          :class="{ primary: terrainOn }"
+          data-testid="terrain-btn"
+          title="开启后贴地距离/剖面按 ArcGIS 真实地形采样;仅影响量测,不改变地形渲染"
+          @click="toggleTerrain"
+        >
+          {{ terrainOn ? '贴地采样:地形' : '贴地采样:平面' }}
+        </button>
       </div>
 
       <p class="group-label">
@@ -560,6 +589,7 @@ const records = ref([])
 const annotations = ref([])
 const annoRenamingId = ref(null)
 const annoRenameText = ref('')
+const profileData = ref(null)
 const editingEntry = ref(null)
 const renamingId = ref(null)
 const renameText = ref('')
@@ -569,6 +599,7 @@ const EDIT_COLORS = ['#4fc3f7', '#aed581', '#ff8a65', '#ba68c8', '#ffd54f', '#e5
 const measureTools = [
   { key: 'distance', label: '量距离', icon: '📏', desc: '测地线距离' },
   { key: 'area', label: '量面积', icon: '⬛', desc: '多边形面积' },
+  { key: 'surfaceDistance', label: '贴地距离', icon: '⛰️', desc: '沿地形采样距离' },
 ]
 
 // ---- 地名搜索(M1):三通道——天地图 V2.0 优先(个人认证暂无权限 404,企业认证后
@@ -781,6 +812,19 @@ function setBase(type) {
   if (debug.value) attachTileErrorWatch()
 }
 
+// ---- 贴地采样数据源开关(M11):只影响量测采样,不改场景渲染 ----
+const terrainOn = ref(false)
+
+function toggleTerrain() {
+  if (!controller) return
+  terrainOn.value = !terrainOn.value
+  controller.setTerrainSource(terrainOn.value)
+  status.value = {
+    ...status.value,
+    result: { text: terrainOn.value ? '贴地采样:真实地形(ArcGIS)' : '贴地采样:椭球平面' },
+  }
+}
+
 /**
  * 瓦片错误计数挂到每个 imagery provider 的 errorEvent 上。
  * ⚠ 不能用 Cesium.TileProviderError.addEventListener——1.142 里它是类而非
@@ -958,6 +1002,25 @@ onMounted(async () => {
         records.value = controller.records
         // 浅拷贝驱动列表渲染(拖拽/插删点会原地改 registry entry)
         annotations.value = registry.map((e) => ({ id: e.id, kind: e.kind, name: e.name }))
+        // 高程剖面:取最新带 profile 的产物(贴地距离,M11)
+        const withProfile = registry.filter((e) => e.profile?.length)
+        const last = withProfile[withProfile.length - 1]
+        if (last) {
+          const hs = last.profile.map((p) => p.h)
+          const minH = Math.min(...hs)
+          const maxH = Math.max(...hs)
+          const maxD = last.profile[last.profile.length - 1].d || 1
+          const span = maxH - minH || 1
+          profileData.value = {
+            minH: Math.round(minH),
+            maxH: Math.round(maxH),
+            points: last.profile
+              .map((p) => `${((p.d / maxD) * 184 + 1).toFixed(1)},${(60 - ((p.h - minH) / span) * 56).toFixed(1)}`)
+              .join(' '),
+          }
+        } else {
+          profileData.value = null
+        }
       },
       onToolChange: (tool) => {
         activeTool.value = tool
@@ -1104,6 +1167,15 @@ onUnmounted(() => {
 
 .measure-item {
   cursor: pointer;
+}
+
+.profile-svg {
+  width: 100%;
+  height: 64px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
+  background: rgba(20, 24, 30, 0.55);
+  margin-top: 6px;
 }
 
 .help-list {

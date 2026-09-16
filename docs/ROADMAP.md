@@ -106,8 +106,8 @@
 | 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
 | 临界超时用例排查 | 已修 M4（tools 书签）与 W2（workbench 报告模板）：均为「双整页加载/双报告导出」型用例，实测 52~57s 贴着默认 60s 超时线，机器稍慢即在任意一步超时（报错位置漂移）。已按 M2 先例 `test.setTimeout(120s)`。同型用例再出现超时漂移报错时，先查总时长再查逻辑 |
-| tools 地形接入（已评审：维持放弃） | 2026-09-16 深度评估后拍板**维持放弃**。两问结论：①**不收费**——swdx 属天地图标准服务，认证 key 配额内免费（本机 key 实测有权限），扩展包亦免费下载；②**不强制开源**——天地图是服务使用条款（key 合规/版权标识），非 copyleft。**不通过的原因是兼容性与形态**：官方扩展包为 49k 行 webpack UMD bundle（自带 worker 池/二进制高程解码/多层聚合），官方声明仅适配 Cesium 1.52/1.58/1.63.1（社区验证改 4 个 API 名可到 1.105）；我们 1.142 + window.Cesium 动态加载，直连试 6 种瓦片参数形态全部空体/异常——实际工作量≈先逆向再自研。重启条件：拿到官方扩展包的协议级文档，或明确接受逆向+自研成本 |
-| tools 贴地量测缓办 | 贴地距离/贴地面积需要地形 provider 才有独立数值——当前 `createViewer` 未接地形，globe.pick 高程恒为椭球面，贴地与平面量测结果相同，属伪功能；见上一条地形接入调研 |
+| tools 地形接入（**已接入，2026-09-16**） | 官方闭源扩展包评估不通过（49k 行 bundle/仅适配 1.52~1.63.1/协议黑盒，详见 CHANGELOG），最终改用 **Cesium 内置 `ArcGISTiledElevationTerrainProvider.fromUrl`** 接 ArcGIS World Elevation3D 公开高程服务（无需 token/无协议逆向）。**架构关键决策：provider 只做 sampleTerrain 的采样源，刻意不赋给 viewer.terrainProvider**——实测地形渲染在 CN 网络+全局串行调度下持续产生 3s 级长任务拖卡主线程；纯采样则零渲染开销、页面流畅。已实现：贴地距离（沿测地线插值 + sampleTerrain 高程 + 段内勾股合成，异步收尾）、高程剖面 SVG、编辑后重算。真实验证：珠峰区域采样高程 7.9~8.7km。换数据源只需改 `src/map/terrainSampler.js` |
+| tools 贴地面积缓办 | 贴地面积需要多边形网格细分 + 逐格高程采样 + 3D 面积累加（贴地距离的二维推广），在 sampleTerrain 通道上可实现但工作量独立；待下一轮 |
 
 ---
 

@@ -34,16 +34,17 @@ const TOOL_COLORS = {
   polygon: '#ffd54f',
   rectangle: '#4db6ac',
   circle: '#f06292',
+  surfaceDistance: '#80deea',
 }
 
 /** 各 kind 完成一次产物所需的最少顶点数(不足则不登记,导出 GeoJSON 才合法) */
-const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3, rectangle: 2, circle: 2 }
+const MIN_POINTS = { point: 1, line: 2, distance: 2, area: 3, polygon: 3, rectangle: 2, circle: 2, surfaceDistance: 2 }
 
 /** 闭合多边形类产物(描边要闭环,GeoJSON 导出为 Polygon) */
 const CLOSED_KINDS = ['area', 'polygon', 'rectangle', 'circle']
 
 /** 编辑态删点下限:GeoJSON Polygon 环至少 3 点,LineString 至少 2 点 */
-const REMOVE_FLOOR = { line: 2, distance: 2, area: 3, polygon: 3, rectangle: 3, circle: 3 }
+const REMOVE_FLOOR = { line: 2, distance: 2, area: 3, polygon: 3, rectangle: 3, circle: 3, surfaceDistance: 2 }
 
 /** 点到线段(屏幕坐标)的距离 */
 function distToSegment(p, a, b) {
@@ -56,7 +57,10 @@ function distToSegment(p, a, b) {
 }
 
 /** 由 Drawer 采集落点的工具（point 即放即成不走采集,右键/双击收尾） */
-const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon', 'rectangle', 'circle']
+const DRAW_TOOLS = ['line', 'distance', 'area', 'polygon', 'rectangle', 'circle', 'surfaceDistance']
+
+/** 异步收尾的工具(高程采样完成才登记产物) */
+const ASYNC_TOOLS = ['surfaceDistance']
 
 /** 达到落点数即自动收尾的工具（两点成形的面状工具） */
 const AUTO_FINISH = { rectangle: 2, circle: 2 }
@@ -69,6 +73,7 @@ const DRAWER_TYPE = {
   polygon: 'POLYLINE',
   rectangle: 'RECTANGLE',
   circle: 'CIRCLE',
+  surfaceDistance: 'POLYLINE',
 }
 
 const STORAGE_KEY = 'tv-map-annotations'
@@ -113,6 +118,8 @@ export class MapToolsController {
 
     this.drawer = null
     this._destroyed = false
+    /** 贴地采样数据源开关(M11):true 用真实地形高程, false 用椭球面(高差恒 0) */
+    this._terrainOn = false
     this._ready = ensureDrawer()
       .then((Drawer) => {
         if (this._destroyed) return null
@@ -183,6 +190,7 @@ export class MapToolsController {
       case 'polygon': return '左键依次点击多边形顶点，右键/双击/Enter 闭合'
       case 'rectangle': return '左键点击对角两点，自动成矩形'
       case 'circle': return '左键点圆心，再点半径位置自动闭合'
+      case 'surfaceDistance': return '左键依次点击采点，右键/双击/Enter 结束（沿地形采样）'
       default: return ''
     }
   }
@@ -451,7 +459,7 @@ export class MapToolsController {
     for (const x of entry.extras) {
       if (x.polyline) x.polyline.positions.setValue(linePositions)
       if (x.polygon) x.polygon.hierarchy.setValue(new Cesium.PolygonHierarchy(positions))
-      if (x.label && entry.kind === 'distance') {
+      if (x.label && (entry.kind === 'distance' || entry.kind === 'surfaceDistance')) {
         x.position.setValue(positions[Math.floor(positions.length / 2)])
         if (entry.record) x.label.text = entry.record.text
       }
@@ -463,6 +471,12 @@ export class MapToolsController {
   /** 量测类产物几何变更后重算记录与标签文案(拖拽/增删点后面积/距离不再失真) */
   _refreshRecord(entry) {
     if (!entry.record) return
+    if (entry.kind === 'surfaceDistance') {
+      // ⚠ 必须先于 record.kind==='distance' 分流:贴地距离的 record.kind 也是
+      // 'distance',走同步重算会把文案改写成「总距离」且丢掉高差
+      this._refreshSurfaceRecord(entry)
+      return
+    }
     if (entry.record.kind === 'distance') {
       const text = `总距离 ${formatDistance(this._computeDistance(entry.positions))}`
       entry.record.text = text
@@ -471,6 +485,21 @@ export class MapToolsController {
     } else if (entry.record.kind === 'area') {
       const prefix = entry.kind === 'rectangle' ? '矩形面积 ' : entry.kind === 'circle' ? '圆形面积 ' : '面积 '
       entry.record.text = `${prefix}${formatArea(this._computeArea(entry.positions))}`
+    }
+  }
+
+  /** 编辑后重算贴地距离(异步,fire-and-forget) */
+  async _refreshSurfaceRecord(entry) {
+    try {
+      const { total, profile } = await this._sampleSurfaceDistance(entry.positions)
+      const text = `贴地距离 ${formatDistance(total)}`
+      entry.record.text = text
+      entry.profile = profile
+      const label = entry.extras.find((x) => x.label)
+      if (label) label.label.text = text
+      this.onRegistryChange(this.registry)
+    } catch {
+      // 采样失败保留旧文案
     }
   }
 
@@ -541,6 +570,16 @@ export class MapToolsController {
       return
     }
     const positions = [...this.points]
+    if (ASYNC_TOOLS.includes(tool)) {
+      // 贴地距离:先退出采集并提示采样中,高程就绪后再登记产物(M11)
+      this._resetDrawer()
+      this.points = []
+      this.activeTool = null
+      this.onToolChange(null)
+      this.onStatus({ hint: '正在采样地形高程…' })
+      this._buildSurfaceDistance(positions)
+      return
+    }
     const kind = this._buildResult(tool, positions)
     this._resetDrawer()
     this.points = []
@@ -791,6 +830,11 @@ export class MapToolsController {
     if (entry) this.flyToEntry(entry.id)
   }
 
+  /** 贴地采样数据源开关(M11):只影响量测采样,不改变场景地形渲染 */
+  setTerrainSource(on) {
+    this._terrainOn = !!on
+  }
+
   _toDegrees(cartesian) {
     const carto = this.Cesium.Cartographic.fromCartesian(cartesian)
     return [
@@ -819,6 +863,96 @@ export class MapToolsController {
       return [Cesium.Math.toDegrees(c.longitude), Cesium.Math.toDegrees(c.latitude)]
     })
     return turfArea(turfPolygon([[...ring, ring[0]]]))
+  }
+
+  /** 贴地距离(M11):沿测地线逐段插值采样高程,段内勾股合成。
+   *  返回 {total, profile};地形关闭时高程恒 0,退化为平面测地值(明确标注「贴地」由开关状态决定) */
+  async _sampleSurfaceDistance(positions) {
+    const Cesium = this.Cesium
+    const SEG_SAMPLES = 8
+    const SAMPLE_LEVEL = 14
+    const cartos = []
+    for (let i = 1; i < positions.length; i++) {
+      const geo = new Cesium.EllipsoidGeodesic(
+        Cesium.Cartographic.fromCartesian(positions[i - 1]),
+        Cesium.Cartographic.fromCartesian(positions[i])
+      )
+      for (let k = 0; k < SEG_SAMPLES; k++) cartos.push(geo.interpolateUsingFraction(k / SEG_SAMPLES))
+      cartos.push(Cesium.Cartographic.fromCartesian(positions[i]))
+    }
+    // 采样源:开→ArcGIS 真实地形(单例,fromUrl 失败退椭球);关→椭球面(高差恒 0)
+    let provider = this.viewer.terrainProvider
+    if (this._terrainOn) {
+      try {
+        provider = await getArcgisTerrainSampler()
+      } catch {
+        provider = this.viewer.terrainProvider
+      }
+    }
+    // 5s 兜底:sampleTerrain 挂起(服务不可达)时按未采样高程(椭球面 0)合成
+    await Promise.race([
+      Cesium.sampleTerrain(provider, SAMPLE_LEVEL, cartos),
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+    ])
+    let total = 0
+    let cum = 0
+    const profile = []
+    for (let i = 1; i < positions.length; i++) {
+      const base = (i - 1) * (SEG_SAMPLES + 1)
+      let seg = 0
+      for (let k = 0; k < SEG_SAMPLES; k++) {
+        const a = cartos[base + k]
+        const b = cartos[base + k + 1]
+        const g = new Cesium.EllipsoidGeodesic(a, b).surfaceDistance
+        seg += Math.sqrt(g * g + (b.height - a.height) ** 2)
+      }
+      total += seg
+      for (let k = 0; k < SEG_SAMPLES; k++) {
+        const a = cartos[base + k]
+        cum += new Cesium.EllipsoidGeodesic(a, cartos[base + k + 1]).surfaceDistance
+        profile.push({ d: +cum.toFixed(1), h: +cartos[base + k + 1].height.toFixed(1) })
+      }
+    }
+    return { total, profile }
+  }
+
+  /** 贴地距离产物构建(M11):异步采样,完成后登记/广播;编辑后的重算见 _refreshRecord */
+  async _buildSurfaceDistance(positions) {
+    const Cesium = this.Cesium
+    const color = Cesium.Color.fromCssColorString(TOOL_COLORS.surfaceDistance)
+    const line = this.viewer.entities.add({
+      polyline: { positions, width: 3, material: color, clampToGround: true },
+    })
+    const mid = positions[Math.floor(positions.length / 2)]
+    const label = this.viewer.entities.add({
+      position: mid,
+      label: {
+        text: '贴地距离 采样中…',
+        font: '13px sans-serif',
+        fillColor: Cesium.Color.WHITE,
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromCssColorString('rgba(25,25,25,0.75)'),
+        pixelOffset: new Cesium.Cartesian2(0, -14),
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      },
+    })
+    this._registerEntity('surfaceDistance', line, positions, [label])
+    this.onRegistryChange(this.registry)
+    const entry = this.registry[this.registry.length - 1]
+    try {
+      const { total, profile } = await this._sampleSurfaceDistance(positions)
+      const text = `贴地距离 ${formatDistance(total)}`
+      entry.record = { kind: 'distance', text, at: Date.now() }
+      entry.profile = profile
+      label.label.text = text
+      this.lastResult = { kind: 'distance', text }
+      this.onStatus({ result: this.lastResult, hint: '' })
+      this.onRegistryChange(this.registry)
+      this._persist()
+    } catch {
+      label.label.text = '贴地距离 采样失败'
+      this.onStatus({ hint: '地形高程采样失败,可改用量距' })
+    }
   }
 
   undoLast() {
