@@ -17,7 +17,7 @@ const NEW_PAGES = [
   { slug: 'navigation-sm', ready: '[data-testid="example-status"]:has-text("小屏导航就绪")' },
   { slug: 'overlay-heatmap', ready: '[data-testid="example-status"]:has-text("热力点 360 个")' },
   { slug: 'overlay-html', ready: '[data-testid="example-status"]:has-text("5 张卡片显示中")' },
-  { slug: 'overlay-echarts', ready: '[data-testid="example-status"]:has-text("8 节点 / 7 条飞线")' },
+  { slug: 'overlay-echarts', ready: '[data-testid="example-status"]:has-text("8 节点 / 7 条航线")' },
   { slug: 'overlay-typhoon', ready: '[data-testid="example-status"]:has-text("9 个定位点")' },
   { slug: 'overlay-wind', ready: '[data-testid="example-status"]:has-text("粒子流动中")' },
   { slug: 'overlay-dynamic', ready: '[data-testid="example-status"]:has-text("巡飞中")' },
@@ -37,19 +37,21 @@ test('示例列表:渲染全部卡片,点击进入对应示例', async ({ page }
   await expect(page.locator('[data-testid="place-search"]')).toBeVisible({ timeout: 30_000 })
 })
 
-test('控件类新页:逐页可达且面板就绪', async ({ page }) => {
-  for (const p of NEW_PAGES) {
+// 每页独立用例(共享超时会因个别页在无头软渲染下偏慢而耗尽总预算):
+// 断言面板出现 + 就绪文案(ready 事件/状态面板,非仅容器可见)。
+for (const p of NEW_PAGES) {
+  test(`示例页冒烟:${p.slug}`, async ({ page }) => {
     await page.goto(`/tools/${p.slug}`, { waitUntil: 'domcontentloaded' })
     await expect(
       page.locator('[data-testid="example-panel"]'),
       `${p.slug} 面板未出现`,
-    ).toBeVisible({ timeout: 30_000 })
+    ).toBeVisible({ timeout: 45_000 })
     await expect(
       page.locator(p.ready),
       `${p.slug} 就绪状态未出现`,
-    ).toBeVisible({ timeout: 30_000 })
-  }
-})
+    ).toBeVisible({ timeout: 45_000 })
+  })
+}
 
 test('量测示例:激活距离量测,两点收线出结果', async ({ page }) => {
   await page.goto('/tools/measurements', { waitUntil: 'domcontentloaded' })

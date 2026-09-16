@@ -127,8 +127,8 @@ export const TOOLS_EXAMPLES = [
     title: 'ECharts 图层',
     icon: '📊',
     gradient: 'linear-gradient(135deg, #1a123a 0%, #5f2f9f 100%)',
-    tags: ['vue-cesium', 'ECharts', '飞线'],
-    desc: '武汉辐射 7 城的航线飞线图，effectScatter + lines 走 ECharts cesium 坐标系（VcOverlayEcharts）。',
+    tags: ['vue-cesium', 'ECharts', '航线'],
+    desc: '武汉辐射 7 城的航线辐射图，scatter + lines 走 ECharts cesium 坐标系（VcOverlayEcharts）。',
     component: () => import('./EchartsOverlayExample.vue'),
   },
   {

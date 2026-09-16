@@ -13,8 +13,7 @@
       </h3>
       <p class="panel-text">
         风场网格 {{ DATA.dimensions.lon }}×{{ DATA.dimensions.lat }}，约 {{ PARTICLES }} 个粒子沿风向流动。气旋中心约在 (125°E, 27°N)。
-      </p>
-      <button
+      </p>      <button
         class="tool-btn"
         data-testid="wind-toggle"
         @click="windShow = !windShow"
@@ -77,23 +76,28 @@ function buildWindData() {
   }
   return {
     dimensions: { lon: nx, lat: ny, lev: 1 },
-    lon: { array: [lons], min: lonMin, max: lonMax, delta: (lonMax - lonMin) / (nx - 1) },
-    lat: { array: [lats], min: latMin, max: latMax, delta: (latMax - latMin) / (ny - 1) },
+    // ⚠ array 必须是扁平 TypedArray:实现里 createTexture 直接把它当
+    // arrayBufferView、lon.array[0] 直接取数值;按 d.ts 注释的
+    // 「Array<Float32Array> 分层」传会被静默吞掉,粒子一个都不渲染(实测)
+    lon: { array: lons, min: lonMin, max: lonMax, delta: (lonMax - lonMin) / (nx - 1) },
+    lat: { array: lats, min: latMin, max: latMax, delta: (latMax - latMin) / (ny - 1) },
     lev: { array: new Float32Array([1]), min: 1, max: 1 },
-    U: { array: [U], min: uMin, max: uMax },
-    V: { array: [V], min: vMin, max: vMax },
+    U: { array: U, min: uMin, max: uMax },
+    V: { array: V, min: vMin, max: vMax },
   }
 }
 const DATA = buildWindData()
-const PARTICLES = 8192
+const PARTICLES = 2048
+// 粒子数/速度/拖尾都取保守值:8192 + speedFactor 4 时白色流线会铺满球面
+// 盖死底图(实测);2048 + 慢速短拖尾能同时看清风场与底图
 const WIND_OPTIONS = {
   maxParticles: PARTICLES,
   particleHeight: 100,
-  fadeOpacity: 0.994,
+  fadeOpacity: 0.97,
   dropRate: 0.003,
   dropRateBump: 0.01,
-  speedFactor: 4,
-  lineWidth: 2.5,
+  speedFactor: 1.2,
+  lineWidth: 1.5,
 }
 
 const windShow = ref(true)

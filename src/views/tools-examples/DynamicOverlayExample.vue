@@ -67,7 +67,9 @@ const running = ref(true)
 
 const clock = shallowRef(null)
 const currentTime = shallowRef(null)
-// DynamicOverlayOpts extends Cesium.Entity:必须在拿到 Cesium 后构造
+// VcOverlayDynamic 要求每个条目自带 sampledPositions 数组(组件内部逐条
+// addPosition 建 SampledPositionProperty);传 Entity 式 position 会在其
+// transform 阶段 sampledPositions.forEach 崩溃,打断渲染循环(球面全黑,实测)
 const OVERLAYS = shallowRef([])
 
 function onViewerReady(viewer, Cesium) {
@@ -76,26 +78,23 @@ function onViewerReady(viewer, Cesium) {
   clock.value = { start, stop }
   currentTime.value = Cesium.JulianDate.clone(start)
 
-  // 环形航线:24 个采样点,高度 9km,SampledPositionProperty 线性插值
-  const prop = new Cesium.SampledPositionProperty()
-  prop.setInterpolationOptions({ interpolationDegree: 2, interpolationAlgorithm: Cesium.HermitePolynomialApproximation })
+  // 环形航线:24 个采样点(10 分钟一圈),高度 9km
   const N = 24
+  const sampledPositions = []
   for (let i = 0; i <= N; i++) {
     const ang = (i / N) * Math.PI * 2
-    const time = Cesium.JulianDate.addSeconds(start, i * (600 / N), new Cesium.JulianDate())
-    prop.addSample(
-      time,
-      Cesium.Cartesian3.fromDegrees(114.3 + 0.36 * Math.cos(ang), 30.6 + 0.26 * Math.sin(ang), 9000),
-    )
+    sampledPositions.push({
+      id: `p-${i}`,
+      position: [114.3 + 0.36 * Math.cos(ang), 30.6 + 0.26 * Math.sin(ang), 9000],
+      time: Cesium.JulianDate.toIso8601(
+        Cesium.JulianDate.addSeconds(start, i * (600 / N), new Cesium.JulianDate()),
+      ),
+    })
   }
 
   OVERLAYS.value = [{
     id: 'uav-01',
     name: '巡检无人机 UAV-01',
-    availability: new Cesium.TimeIntervalCollection([
-      new Cesium.TimeInterval({ start, stop }),
-    ]),
-    position: prop,
     point: {
       pixelSize: 14,
       color: '#39ffc8',
@@ -116,6 +115,7 @@ function onViewerReady(viewer, Cesium) {
       width: 3,
       material: { type: 'PolylineGlow', color: [57, 255, 200, 160] },
     },
+    sampledPositions,
   }]
 }
 
