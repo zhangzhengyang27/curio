@@ -86,3 +86,4 @@
 | 测试 | map-tools E2E 16 → 19 条 | +M6 三条（矩形量面积/圆量面积/矩形 GeoJSON 往返+刷新恢复）+ M7 一条（按库期望值精确断言、含方向交换） |
 | 坑沉淀 | 临界超时用例两例修复 | M4（tools 书签增强）在 main 基线即挂：探针逐步复现证实应用逻辑全程正常，根因是该用例**两次整页加载**（goto+reload，dev 每次拉 30MB+ 未压缩 Cesium）使总时长贴着 60s 默认超时线，超时打在哪步、报错就漂到哪步（曾误归因为「导入链路缺陷」）。W2（workbench 报告模板）同型（双报告导出实测 53~57s）。均 `test.setTimeout(120s)` 修复；同型用例排查经验记入 ROADMAP P2 |
 | 增强 M9 | 编辑态顶点增删 + 修存量渲染崩溃 | 编辑态边上点击插点、顶点右键删点(带 GeoJSON 合法性下限),量测记录与标签同步重算。**修存量崩溃**:polygon.hierarchy 运行期 setValue 裸数组会被 GroundPolygon updater 判非法——TypeError 致整个渲染循环停止(拖拽多边形顶点必现,构造期数组会被规范化而运行期不会);改 setValue PolygonHierarchy,顺带修闭合描边拖拽丢闭合段。M2 之前只测线类拖拽,故该雷未爆 |
+| 增强 M10 | 标注列表管理 | 左面板标注列表(名称/飞达/重命名/单删),与书签同交互;标注名进持久化与 GeoJSON properties(往返稳定)。**地形可行性实测**:天地图 swdx 服务本机 key 补 Referer 后有权限,但协议非标准 quantized-mesh——官方走闭源 Cesium 扩展包、社区实现无许可证,自研 TerrainProvider 工作量大,贴地量测/剖面继续缓办(三选一待评审,见 ROADMAP P2) |

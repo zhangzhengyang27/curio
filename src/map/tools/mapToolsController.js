@@ -513,12 +513,8 @@ export class MapToolsController {
   deleteSelected() {
     const entry = this.selectedEntry
     if (!entry) return
-    this.viewer.entities.remove(entry.entity)
-    entry.extras.forEach((x) => this.viewer.entities.remove(x))
-    this.registry = this.registry.filter((en) => en.id !== entry.id)
     this._exitEdit()
-    this.onRegistryChange(this.registry)
-    this._persist()
+    this.removeEntry(entry.id)
   }
 
   _pickCartographic(windowPos) {
@@ -729,6 +725,8 @@ export class MapToolsController {
       id: entity.id,
       kind,
       entity,
+      /** 标注名(M10,列表展示/重命名) */
+      name: `标注 ${this.registry.length + 1}`,
       /** 附属实体（面积填充/距离标签），随主体一起撤销/清空 */
       extras,
       /** 拖拽顶点用的笛卡尔坐标序列(M2) */
@@ -744,6 +742,46 @@ export class MapToolsController {
     }
     this.registry.push(entry)
     this.onRegistryChange(this.registry)
+  }
+
+  /** 重命名标注(M10);名称为空不改动 */
+  renameEntry(id, name) {
+    const trimmed = String(name || '').trim()
+    if (!trimmed) return
+    const entry = this.registry.find((e) => e.id === id)
+    if (!entry) return
+    entry.name = trimmed
+    this._persist()
+    this.onRegistryChange(this.registry)
+  }
+
+  /** 删除指定标注(主体+附属),列表删除按钮与编辑态单删共用 */
+  removeEntry(id) {
+    const entry = this.registry.find((e) => e.id === id)
+    if (!entry) return
+    this.viewer.entities.remove(entry.entity)
+    entry.extras.forEach((x) => this.viewer.entities.remove(x))
+    this.registry = this.registry.filter((en) => en.id !== id)
+    this.onRegistryChange(this.registry)
+    this._persist()
+  }
+
+  /** 相机飞达标注(M10):以顶点包围矩形(外扩约 400m)为目标 */
+  flyToEntry(id) {
+    const entry = this.registry.find((e) => e.id === id)
+    if (!entry?.positions?.length) return
+    const Cesium = this.Cesium
+    const rect = Cesium.Rectangle.fromCartesianArray(entry.positions)
+    const pad = 0.004
+    this.viewer.camera.flyTo({
+      destination: Cesium.Rectangle(
+        rect.west - pad,
+        rect.south - pad,
+        rect.east + pad,
+        rect.north + pad
+      ),
+      duration: 1.6,
+    })
   }
 
   _toDegrees(cartesian) {
@@ -811,7 +849,7 @@ export class MapToolsController {
   }
 
   serialize() {
-    return this.registry.map((e) => ({ kind: e.kind, coords: e.coords, createdAt: e.createdAt }))
+    return this.registry.map((e) => ({ kind: e.kind, name: e.name, coords: e.coords, createdAt: e.createdAt }))
   }
 
   /** 恢复 localStorage 里的标注并重建实体;返回恢复条数 */
@@ -833,9 +871,10 @@ export class MapToolsController {
       const positions = this._coordsToPositions(r.kind, r.coords)
       if (!positions) continue
       this._buildResult(r.kind, positions)
-      // 恢复保持原始时间戳(GeoJSON 导出含 createdAt)
+      // 恢复保持原始时间戳与名称(GeoJSON 导出含两者)
       const entry = this.registry[this.registry.length - 1]
       if (entry && r.createdAt != null) entry.createdAt = r.createdAt
+      if (entry && r.name) entry.name = String(r.name)
       n++
     }
     if (n) this.onRegistryChange(this.registry)
@@ -861,11 +900,12 @@ export class MapToolsController {
       const g = f?.geometry
       if (!g) continue
       const propsKind = f.properties?.kind
+      const propsName = f.properties?.name
       if (g.type === 'Point') {
-        records.push({ kind: 'point', coords: [g.coordinates] })
+        records.push({ kind: 'point', name: propsName, coords: [g.coordinates] })
       } else if (g.type === 'LineString') {
         const kind = propsKind === 'distance' ? 'distance' : 'line'
-        records.push({ kind, coords: g.coordinates })
+        records.push({ kind, name: propsName, coords: g.coordinates })
       } else if (g.type === 'Polygon') {
         const ring = g.coordinates?.[0] || []
         // 去掉 GeoJSON 闭合环的尾点,回到顶点序列
@@ -875,7 +915,7 @@ export class MapToolsController {
           : ring
         // rectangle/circle 的产物本就是多边形,恢复时直接吃环坐标
         const kind = ['area', 'polygon', 'rectangle', 'circle'].includes(propsKind) ? propsKind : 'polygon'
-        records.push({ kind, coords: open })
+        records.push({ kind, name: propsName, coords: open })
       }
     }
     const n = this._restoreRecords(records)
@@ -899,7 +939,7 @@ export class MapToolsController {
         else geometry = { type: 'Polygon', coordinates: [[...e.coords, e.coords[0]]] }
         return {
           type: 'Feature',
-          properties: { kind: e.kind, createdAt: e.createdAt },
+          properties: { kind: e.kind, name: e.name, createdAt: e.createdAt },
           geometry,
         }
       }),

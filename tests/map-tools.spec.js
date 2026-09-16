@@ -612,4 +612,39 @@ test.describe('地图工具箱', () => {
     expect(n).toBe(3)
     await expect(page.locator('[data-testid="edit-panel"]')).toBeVisible()
   })
+
+  test('标注列表:重命名持久化,点击飞达,单删(M10)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto('/tools', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 标点 + 标线 → 列表 2 条
+    await page.locator('[data-tool="point"]').click()
+    await page.mouse.click(640, 400)
+    await page.locator('[data-tool="line"]').click()
+    await page.mouse.click(700, 450)
+    await page.mouse.click(820, 520)
+    await page.mouse.click(820, 520, { button: 'right' })
+    await expect(page.locator('[data-testid="anno-list"] .bookmark-item')).toHaveCount(2)
+
+    // 重命名第一条
+    await page.locator('[data-testid^="anno-rename-"]').first().click({ force: true })
+    const renameInput = page.locator('[data-testid^="anno-rename-input-"]')
+    await renameInput.fill('武汉点')
+    await renameInput.press('Enter')
+    await expect(page.locator('[data-testid="anno-list"]')).toContainText('武汉点')
+
+    // 刷新:名称随持久化恢复
+    await page.reload({ waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+    await expect(page.locator('[data-testid="anno-list"] .bookmark-item')).toHaveCount(2)
+    await expect(page.locator('[data-testid="anno-list"]')).toContainText('武汉点')
+
+    // 删除一条,点击另一条飞达(不报错且计数稳定)
+    await page.locator('[data-testid^="anno-del-"]').last().evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="anno-list"] .bookmark-item')).toHaveCount(1)
+    await page.locator('[data-testid^="anno-goto-"]').first().click()
+    await page.waitForTimeout(1800)
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
+  })
 })

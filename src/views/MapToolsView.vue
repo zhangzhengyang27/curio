@@ -110,6 +110,59 @@
         </button>
       </div>
 
+      <!-- 标注列表(M10):点击飞达/重命名/删除,与书签同交互 -->
+      <template v-if="annotations.length">
+        <p class="group-label">
+          标注列表({{ annotations.length }})
+        </p>
+        <ul
+          class="bookmark-list"
+          data-testid="anno-list"
+        >
+          <li
+            v-for="en in annotations"
+            :key="en.id"
+            class="bookmark-item"
+          >
+            <template v-if="annoRenamingId === en.id">
+              <input
+                v-model="annoRenameText"
+                class="place-input"
+                :data-testid="`anno-rename-input-${en.id}`"
+                @keyup.enter="commitAnnoRename(en.id)"
+                @blur="commitAnnoRename(en.id)"
+              >
+            </template>
+            <template v-else>
+              <button
+                class="bookmark-goto"
+                :data-testid="`anno-goto-${en.id}`"
+                :title="en.kind"
+                @click="controller?.flyToEntry(en.id)"
+              >
+                {{ en.name }}
+              </button>
+            </template>
+            <button
+              class="bookmark-del"
+              title="重命名"
+              :data-testid="`anno-rename-${en.id}`"
+              @click="startAnnoRename(en)"
+            >
+              ✎
+            </button>
+            <button
+              class="bookmark-del"
+              title="删除"
+              :data-testid="`anno-del-${en.id}`"
+              @click="removeAnnotation(en.id)"
+            >
+              ×
+            </button>
+          </li>
+        </ul>
+      </template>
+
       <!-- 编辑面板(M2):选中已绘产物后出现 -->
       <template v-if="editingEntry">
         <p class="group-label">
@@ -479,6 +532,9 @@ const status = ref({ coords: null, hint: '', result: null })
 const importInputRef = ref(null)
 const bmInputRef = ref(null)
 const records = ref([])
+const annotations = ref([])
+const annoRenamingId = ref(null)
+const annoRenameText = ref('')
 const editingEntry = ref(null)
 const renamingId = ref(null)
 const renameText = ref('')
@@ -738,6 +794,22 @@ function saveBookmark() {
   status.value = { ...status.value, result: { text: `已保存「${bm.name}」` } }
 }
 
+// ---- 标注列表(M10) ----
+function startAnnoRename(entry) {
+  annoRenamingId.value = entry.id
+  annoRenameText.value = entry.name
+}
+
+function commitAnnoRename(id) {
+  if (annoRenamingId.value !== id) return
+  controller?.renameEntry(id, annoRenameText.value)
+  annoRenamingId.value = null
+}
+
+function removeAnnotation(id) {
+  controller?.removeEntry(id)
+}
+
 function deleteBookmark(id) {
   bookmarks.value = removeBookmark(id)
 }
@@ -858,6 +930,8 @@ onMounted(async () => {
       onRegistryChange: (registry) => {
         registryCount.value = registry.length
         records.value = controller.records
+        // 浅拷贝驱动列表渲染(拖拽/插删点会原地改 registry entry)
+        annotations.value = registry.map((e) => ({ id: e.id, kind: e.kind, name: e.name }))
       },
       onToolChange: (tool) => {
         activeTool.value = tool

@@ -106,7 +106,8 @@
 | 示例层 console | 新增 `scripts/audit-console.mjs` 做分类审计。**结论：769 条里 676 条是有意的**（285 error / 21 warn / 67 个 `ElMessage` 替代实现 / 300 条教学演示输出），只清理了 47 条「无标签纯值转储」（`console.log(data)` 这类）。剩余 46 条经逐个核对多为示例的演示输出（导出结果、加载进度、着色器源码），**刻意保留**。若将来要批量降噪，建议在**生产构建**中丢弃 `console.log`（Vite `build.esbuild.pure`），而不是改示例源码 |
 | 超大 vendor 块 | `vendor-spark`(4.8 MB)、`vendor-web-ifc`(3.4 MB) 仍超过 `chunkSizeWarningLimit`；可用 `codeSplitting.groups` 的 `maxSize` 进一步切分（仅在确有收益前不动） |
 | 临界超时用例排查 | 已修 M4（tools 书签）与 W2（workbench 报告模板）：均为「双整页加载/双报告导出」型用例，实测 52~57s 贴着默认 60s 超时线，机器稍慢即在任意一步超时（报错位置漂移）。已按 M2 先例 `test.setTimeout(120s)`。同型用例再出现超时漂移报错时，先查总时长再查逻辑 |
-| tools 贴地量测缓办 | 贴地距离/贴地面积需要地形 provider 才有独立数值——当前 `createViewer` 未接地形，globe.pick 高程恒为椭球面，贴地与平面量测结果相同，属伪功能；待天地图 DEM 或 3D Tiles 接入后启用 |
+| tools 地形接入（贴地量测前置） | 天地图 swdx 地形服务**非标准 quantized-mesh/layer.json 协议**：本机 key 实测有服务权限（补 Referer 后通过校验），但瓦片协议是自定义参数，需官方闭源 Cesium 扩展包或第三方实现——社区实现（zhengjie9510/cesium-tdt）**无许可证声明**，不可安全移植；自研 TerrainProvider 工作量大。三选一需评审：①引入官方扩展包 ②自研 provider ③放弃。在 terrain 可用前贴地量测/剖面/等高线均缓办 |
+| tools 贴地量测缓办 | 贴地距离/贴地面积需要地形 provider 才有独立数值——当前 `createViewer` 未接地形，globe.pick 高程恒为椭球面，贴地与平面量测结果相同，属伪功能；见上一条地形接入调研 |
 
 ---
 
