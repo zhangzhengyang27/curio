@@ -6,6 +6,20 @@
 
 ## 2026-09 治理轮次
 
+### tools 工具箱改版为示例列表（2026-09-16）
+
+`/tools` 从单页工具改为「示例列表 → 点击进入单个示例」结构（与示例中心同模式），
+并引入 vue-cesium（MIT，Vue3 原生 Cesium 组件库）作为导航控件来源。
+
+| 项 | 说明 |
+|---|---|
+| 路由改版 | `/tools` → `MapToolsGallery`（卡片列表）；`/tools/:slug` → `MapToolsExampleView` 按 `src/views/tools-examples/index.js` 注册表懒加载。新增示例 = 注册表加条目 + 一个 .vue 文件，列表与路由自动生效。综合工具箱整体 `git mv` 至 `tools-examples/ToolboxExample.vue`（内容不变），现挂 `/tools/toolbox`——**27 条 E2E 仅同步 URL（`/tools` → `/tools/toolbox`），交互契约与断言零改动** |
+| 共享壳 | `ToolsExampleShell.vue`：`loadCesium()` 先建 `window.Cesium`（vue-cesium 的 `getCesiumScript` 首行 `if (!globalThis.Cesium)` 直接复用，源码级确认不产生双引擎）→ `VcConfigProvider` 必须包 `VcViewer`（否则 `globalConfig` 未初始化，`__scriptPromise` TypeError）→ viewer 由 vc-viewer 默认路径自建，`@ready` 后叠加 `applyTdtStack`（天地图栈）与 `applyViewerConstraints`（从 createViewer 抽出的缩放边界/双击禁用/影像门控，两条创建路径行为一致）。**必须显式传 `:camera`**：vc-viewer 会无条件用默认相机（105°E/30°N/1900 万米）覆盖初始化视角 |
+| vue-cesium 量测/绘制/分析不可用（重要结论） | VcMeasurements/VcDrawings/VcAnalyses/VcAnalysisFlood 的点击链路在本项目环境**静默失效**：组件挂载（cmpRef 有值）、FAB 激活（activeEvt 正常）、场景渲染（相机/瓦片/手动 ScreenSpaceEventHandler 均正常）逐一验证过，但地图点击始终不进入绘制处理链。**三形态复现**：dev 预打包、dev 裸伺服（optimizeDeps.exclude）、preview（Rolldown 全量打包）；且**纯官方三行接入形态**（VcConfigProvider+VcViewer+VcMeasurements，零自定义 props）同样复现，并伴随 FAB 动作按钮展开方向渲染反转（元素定位到视口外）。遂收缩交付：仅保留验证可靠的 VcNavigation（`/tools/navigation`，罗盘/缩放/定位/打印/状态栏），量测/绘制/贴地能力仍由自有 mapToolsController 提供（27 条 E2E 守护）。挂账见 ROADMAP P2「vue-cesium 量测/绘制组件集成（受阻挂账）」 |
+| vue-cesium 裸伺服不可行 | optimizeDeps.exclude 'vue-cesium' 后其依赖链里的 CJS 包在 dev 下 named export 失效：`lodash`（cesium-helpers.mjs 混用 CJS 版）、`@zouyaoji/heatmap.js` 等逐个爆错（与 KNOWN_PITFALLS 中 @cesium-extends/measure 的 turf→polygon-clipping 链同型，且 dev 无 tree-shaking 会拖出全量依赖图）。**vue-cesium 必须走预打包**；dev 下曾用 `resolve.alias { /^lodash$/ → 'lodash-es' }` 兜底，回滚 exclude 后保留（无害） |
+| E2E | 新增 `tests/tools-examples.spec.js` 3 条：列表渲染与点击进入、导航控件渲染、未知 slug 兜底。总 27+3 |
+| 依赖 | 新增 `vue-cesium@3.2.12`（MIT，承诺框架与文档永久免费；peerDep 仅 vue^3.5） |
+
 ### 四页面审查与增强（2026-09-15，任务书 `docs/PAGES_ENHANCEMENT_PLAN.md`）
 
 按 AI 任务书完成「审查 → 需求方确认 → 增强」全流程，产出

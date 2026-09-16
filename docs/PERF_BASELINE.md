@@ -56,7 +56,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 
 | 页面 | 就绪选择器 | 首屏传输预算（上限告警，非 CI 断言） | 备注 |
 |---|---|---|---|
-| `/tools` 地图工具箱 | `.panel-left` | 15 MB | Cesium + 天地图瓦片按串行加载（红线），页面自有 JS 极小 |
+| `/tools/toolbox` 地图工具箱 | `.panel-left` | 15 MB | Cesium + 天地图瓦片按串行加载（红线），页面自有 JS 极小。`/tools` 本身已是轻量列表页（2026-09-16 改版），不进 perf 度量 |
 | `/analysis` 全球数据分析 | `.panel-left` | 15 MB | 另有 worldZh/gdp/population/carbon 数据(~600 KB) |
 | `/monitor` 业务监控 | `.stats-bar` | 15 MB | 另有 earthquakes.json(~30 KB) |
 | `/workbench` 分析工作台 | `.panel-left` | 15 MB | echarts 动态 import,不进首屏关键路径 |
