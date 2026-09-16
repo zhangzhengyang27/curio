@@ -68,6 +68,42 @@ export const TOOLS_EXAMPLES = [
     desc: '罗盘、缩放、定位、打印、状态栏与距离比例尺等地图控件集合（vue-cesium VcNavigation）。',
     component: () => import('./NavigationExample.vue'),
   },
+  {
+    slug: 'overview-map',
+    title: '鹰眼图',
+    icon: '🗺️',
+    gradient: 'linear-gradient(135deg, #0f2f45 0%, #2f8fbf 100%)',
+    tags: ['vue-cesium', '小地图', '视野联动'],
+    desc: '与主图视野双向联动的小地图：红框指示当前范围，点击小窗定位（VcOverviewMap）。',
+    component: () => import('./OverviewMapExample.vue'),
+  },
+  {
+    slug: 'print',
+    title: '打印',
+    icon: '🖨️',
+    gradient: 'linear-gradient(135deg, #2c2c3a 0%, #7a7a9f 100%)',
+    tags: ['vue-cesium', '截图', '导出'],
+    desc: '一键把当前地图视图生成打印视图，可浏览器打印或另存 PDF（VcPrint）。',
+    component: () => import('./PrintExample.vue'),
+  },
+  {
+    slug: 'selection-indicator',
+    title: '拾取指示器',
+    icon: '🎯',
+    gradient: 'linear-gradient(135deg, #3a2412 0%, #bf7a2f 100%)',
+    tags: ['vue-cesium', '拾取', '取景框'],
+    desc: '点击地图要素后取景框锁定并跟随目标，替代 Cesium 自带选择框（VcSelectionIndicator）。',
+    component: () => import('./SelectionIndicatorExample.vue'),
+  },
+  {
+    slug: 'navigation-sm',
+    title: '小屏导航',
+    icon: '🧿',
+    gradient: 'linear-gradient(135deg, #12332f 0%, #2fa09f 100%)',
+    tags: ['vue-cesium', '罗盘', '缩放'],
+    desc: '紧凑版罗盘与「+/−」缩放控件，适合小尺寸地图容器（VcNavigationSm）。',
+    component: () => import('./NavigationSmExample.vue'),
+  },
 ]
 
 export function getToolsExample(slug) {

@@ -6,18 +6,42 @@
  * 量测用例走 FAB 悬浮球路径（面板按钮走同一 toggleAction，不重复覆盖）。
  */
 import { test, expect } from '@playwright/test'
+import { TOOLS_EXAMPLES } from '../src/views/tools-examples/index.js'
+
+// 新增示例页的「页面可达 + 示例面板就绪」冒烟清单（每页断言自己的面板）。
+// 交互链路（量测收线等）有独立用例，这里只守护页面骨架不白屏。
+const NEW_PAGES = [
+  { slug: 'overview-map', ready: '[data-testid="example-status"]:has-text("鹰眼图就绪")' },
+  { slug: 'print', ready: '[data-testid="print-trigger"]' },
+  { slug: 'selection-indicator', ready: '[data-testid="example-status"]:has-text("等待拾取")' },
+  { slug: 'navigation-sm', ready: '[data-testid="example-status"]:has-text("小屏导航就绪")' },
+]
 
 test('示例列表:渲染全部卡片,点击进入对应示例', async ({ page }) => {
   await page.goto('/tools', { waitUntil: 'domcontentloaded' })
   await page.getByTestId('tools-gallery').waitFor({ timeout: 30_000 })
 
   const cards = page.getByTestId('tools-example-card')
-  await expect(cards).toHaveCount(6)
+  await expect(cards).toHaveCount(TOOLS_EXAMPLES.length)
 
   await page.locator('[data-slug="toolbox"]').click()
   await expect(page).toHaveURL(/\/tools\/toolbox$/)
   // 综合工具箱页挂载完成后才有工具面板(等 Cesium + viewer 就绪)
   await expect(page.locator('[data-testid="place-search"]')).toBeVisible({ timeout: 30_000 })
+})
+
+test('控件类新页:逐页可达且面板就绪', async ({ page }) => {
+  for (const p of NEW_PAGES) {
+    await page.goto(`/tools/${p.slug}`, { waitUntil: 'domcontentloaded' })
+    await expect(
+      page.locator('[data-testid="example-panel"]'),
+      `${p.slug} 面板未出现`,
+    ).toBeVisible({ timeout: 30_000 })
+    await expect(
+      page.locator(p.ready),
+      `${p.slug} 就绪状态未出现`,
+    ).toBeVisible({ timeout: 30_000 })
+  }
 })
 
 test('量测示例:激活距离量测,两点收线出结果', async ({ page }) => {
