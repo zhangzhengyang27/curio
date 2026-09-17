@@ -105,6 +105,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | 新增依赖后路由组件完全不挂载、且无报错 | Vite 模块图变脏：`rm -rf node_modules/.vite && npm run dev` |
 | `npm run` 用久了 zsh 进入损坏态（`_load_nvm: command not found` / `maximum nested function level reached`） | 直接用绝对路径的 node 跑脚本 |
 | `test:e2e` 任务状态显示 failed，但输出里是 `N passed` | npm 收尾清理 `~/.npm/_logs` 被沙箱拦下所致。**看 `N passed`，不看退出状态** |
+| preview E2E 中所有 Cesium/示例页「地图引擎加载失败」而 dev 全绿 | 产物缺 `dist/node_modules` 运行时资源：裸 `vite build --outDir X` **不会**执行 `copy-example-deps.js`。补跑 `node scripts/copy-example-deps.js --outDir X`，或直接用 `npm run build` |
 
 ---
 
