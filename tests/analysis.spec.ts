@@ -19,6 +19,11 @@ test.describe('全球数据分析', () => {
   // 重着色让主线程持续满载,文件内并行用例互抢 CPU 时连 evaluate 都进不去
   // (本地实测);serial 消除该噪音,CI 本就 workers=1(见 KNOWN_PITFALLS C13)
   test.describe.configure({ mode: 'serial' })
+  // 平台页每条用例都要整页冷启动（Cesium 底座 + 大体积数据），实测 dev 空载 11.5~18.3s；
+  // expect/action 预算提到 30s 后，单步就可能吃掉默认 60s 的用例级超时，
+  // 表现为「Test timeout exceeded」而不是断言失败。slow 把用例预算一并放宽到 180s。
+  // 与 workbench.spec 同口径（详见 KNOWN_PITFALLS A5）。
+  test.slow()
   test('页面打开：国家列表就绪（166 国），无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))

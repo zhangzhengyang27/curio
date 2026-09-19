@@ -14,6 +14,11 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('业务监控', () => {
+  // 平台页每条用例都要整页冷启动（Cesium 底座 + 大体积数据），实测 dev 空载 11.5~18.3s；
+  // expect/action 预算提到 30s 后，单步就可能吃掉默认 60s 的用例级超时，
+  // 表现为「Test timeout exceeded」而不是断言失败。slow 把用例预算一并放宽到 180s。
+  // 与 workbench.spec 同口径（详见 KNOWN_PITFALLS A5）。
+  test.slow()
   test('页面打开：事件流与统计大盘就绪，无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))

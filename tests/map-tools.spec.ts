@@ -23,6 +23,11 @@ test.describe('地图工具箱', () => {
   // 画布 mouse 事件在 2 worker 并行(CPU 竞争)时会偶发丢失,probe 单跑稳定、
   // CI 本就是 workers=1;本地串行消除该噪音(见 KNOWN_PITFALLS C13)
   test.describe.configure({ mode: 'serial' })
+  // 平台页每条用例都要整页冷启动（Cesium 底座 + 大体积数据），实测 dev 空载 11.5~18.3s；
+  // expect/action 预算提到 30s 后，单步就可能吃掉默认 60s 的用例级超时，
+  // 表现为「Test timeout exceeded」而不是断言失败。slow 把用例预算一并放宽到 180s。
+  // 与 workbench.spec 同口径（详见 KNOWN_PITFALLS A5）。
+  test.slow()
 
   test.beforeEach(async ({ page }) => {
     // 书签/标注存 localStorage，测试间互不污染。
