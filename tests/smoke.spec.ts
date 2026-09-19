@@ -77,6 +77,33 @@ test.describe('冒烟测试：核心链路', () => {
     expect(pageErrors, `首页出现未捕获异常：\n${pageErrors.join('\n')}`).toEqual([])
   })
 
+  // 回归：EarthCanvas 的 onMounted 是 async（要等 worldZh.json 与 gdp-timeline 两个请求），
+  // 期间切走路由会先跑 onUnmounted；续跑随后打在已拆毁的状态上
+  // （tweenGroup 被置 null → new Tween 抛 TypeError），且被外层 catch 吞成一条
+  // console.error，界面上完全看不见。这里用延迟把竞态窗口强制打开。
+  test('首页数据在途时切走路由，初始化不在已卸载的组件上续跑', async ({ page }) => {
+    const initErrors: string[] = []
+    page.on('console', (m) => {
+      if (m.type() === 'error' && m.text().includes('EarthCanvas init error')) {
+        initErrors.push(m.text())
+      }
+    })
+    // 延迟 8s：只要 canvas 已挂载，就必然处于「onMounted 卡在 await」的状态
+    await page.route('**/data/worldZh.json', async (route) => {
+      await new Promise((r) => setTimeout(r, 8000))
+      await route.continue()
+    })
+
+    await page.goto('/')
+    await page.locator('canvas').waitFor({ timeout: 15_000 })
+    await page.evaluate(() => {
+      (document.querySelector('a[href="/three-globe"]') as HTMLElement | null)?.click()
+    })
+    await page.waitForTimeout(10_000) // 越过 8s 延迟点，续跑此时必然已发生
+
+    expect(initErrors, `卸载后仍有初始化续跑：\n${initErrors.join('\n')}`).toEqual([])
+  })
+
   test('首页不为顶栏预载示例注册表', async ({ page }) => {
     const registryRequests = []
     page.on('request', (req) => {

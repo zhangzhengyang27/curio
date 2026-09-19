@@ -104,6 +104,10 @@ let isRealisticEarth = false // 是否使用真实地球贴图
 let proceduralTexture: THREE.Texture | null = null // 程序生成的地球纹理备份
 let countryMeshStates: Array<{ mesh: CountryGdpMesh; opacity: number; transparent: boolean }> = [] // 国家 Mesh 的原始材质状态备份
 let realisticHighlightMesh: CountryGdpMesh | null = null // 真实地球模式下高亮的国家 Mesh
+// onMounted 是 async（要等 worldData / timeline 两个网络请求），期间切走路由会先跑
+// onUnmounted；此时 stopLoop 仍为 undefined，续跑会把 rAF 启动在已 dispose 的场景上，
+// 既永不退出又整体泄漏。所有 await 之后都要用这个标志早退。
+let disposed = false
 
 onMounted(async () => {
   try {
@@ -153,6 +157,7 @@ onMounted(async () => {
     proceduralTexture = (sphereMesh.material as THREE.MeshPhongMaterial).map ?? null
 
     const { world, gdpColorMap } = await loadWorldData()
+    if (disposed) return
     buildEarthFromData(earth, R, world, gdpColorMap)
     // 重新添加球体
     earth.add(sphereMesh)
@@ -224,6 +229,7 @@ onMounted(async () => {
       timelineStore.setYearlyData(tlData)
       // 默认不自动显示GDP柱状图，保持页面干净
     } catch (_e) { /* timeline data optional */ }
+    if (disposed) return
 
     const borderKids: THREE.Object3D[] = [], meshKids: THREE.Object3D[] = []
     earth.traverse(child => {
@@ -570,6 +576,7 @@ function updatePillars(year: number) {
 }
 
 onUnmounted(() => {
+  disposed = true
   stopLoop?.()
   stopWatch?.()
   stopWatchSelected?.()
