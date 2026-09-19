@@ -76,8 +76,17 @@ compare.value = ['y']     // → n 变 1
 **另一半原因**：本地 `workers: 2`、CI `workers: 1`。四平台页每条用例都整页冷启动
 （实测 dev 下 `/workbench` 到 `.panel-left` 可见 11.5~18.3s，空载单机），
 两个 worker 互抢 CPU 时成倍放大 —— 于是一批用例只在本地红、CI 绿。
-重型页的 spec 需 `test.describe.configure({ mode: 'serial' })` + `test.slow()`
-（只放宽 `expect` 不够，会先撞 60s 的用例级超时）。
+
+**收敛后的规则**：凡整页冷启动的页面 spec（analysis / map-tools / monitor / workbench /
+tour / viz-loading）一律 `test.describe.configure({ mode: 'serial' })` + `test.slow()`。
+只放宽 `expect` 会换个地方死：先撞 60s 的用例级超时（表现为
+`Test timeout of 60000ms exceeded` 而不是断言失败），而 `locator.waitFor()`/
+`.evaluate()`/`.click()` 走的是 `use.actionTimeout` 而不是 `expect.timeout`。
+三者已统一：`expect` 与 `actionTimeout` 各 30s，用例级由 `slow()` 放到 180s。
+
+图表类断言另用 `tests/helpers/timeouts.ts` 的 `CHART_FIRST_RENDER`（60s）：
+图表是在整页冷启动**之后**再 `await import('echarts')`（dev 下 1.1 MB 未打包 chunk）
+才挂上的，30s 在全量长跑满负荷时仍不够。
 
 ---
 

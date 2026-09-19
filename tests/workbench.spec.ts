@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { mockTianditu } from './helpers/tiles'
+import { CHART_FIRST_RENDER } from './helpers/timeouts'
 
 /**
  * 主题分析工作台（/workbench）冒烟测试。
@@ -24,7 +25,7 @@ test.describe('主题分析工作台', () => {
     await page.goto('/workbench')
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
     await expect(page.locator('[data-testid="ranking-list"] .rank-row')).toHaveCount(10)
-    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     await expect(page.locator('[data-testid="summary"]')).toContainText('合计')
     expect(errors).toEqual([])
   })
@@ -86,7 +87,7 @@ test.describe('主题分析工作台', () => {
   test('导出报告：下载自包含 HTML 报告', async ({ page }) => {
     await page.goto('/workbench')
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
-    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
 
     const downloadPromise = page.waitForEvent('download')
     // Cesium 页上 CDP 点击偶发丢事件致 download 事件迟迟不达(KNOWN_PITFALLS C13),走 DOM click
@@ -104,12 +105,12 @@ test.describe('主题分析工作台', () => {
 
   test('选国下钻:点排行出该国 GDP 趋势小图(W3)', async ({ page }) => {
     await page.goto('/workbench')
-    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     await expect(page.locator('[data-testid="drill-chart"]')).toHaveCount(0)
 
     const firstName = (await page.locator('[data-testid="rank-item-0"] .rank-name').innerText()).trim()
     await page.locator('[data-testid="rank-item-0"]').evaluate((el) => el.click())
-    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     await expect(page.locator('.panel-right')).toContainText(`${firstName} · GDP 走势`)
   })
 
@@ -117,7 +118,7 @@ test.describe('主题分析工作台', () => {
     // 双报告导出(两次完整 HTML 下载),实测 53~57s,贴着默认 60s 超时线
     test.setTimeout(120_000)
     await page.goto('/workbench')
-    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     const fs = await import('node:fs')
 
     // 摘要版
@@ -145,7 +146,7 @@ test.describe('主题分析工作台', () => {
 
   test('报告支持打印导出 PDF:含 @media print 与打印按钮(W4)', async ({ page }) => {
     await page.goto('/workbench')
-    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     const dl = page.waitForEvent('download')
     await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
     const d = await dl

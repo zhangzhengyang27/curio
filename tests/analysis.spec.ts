@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { mockTianditu } from './helpers/tiles'
+import { CHART_FIRST_RENDER } from './helpers/timeouts'
 
 /**
  * 全球数据分析页（/analysis）冒烟测试。
@@ -278,7 +279,7 @@ test.describe('全球数据分析', () => {
       await new Promise((r) => setTimeout(r, 300))
       document.querySelector('[data-testid="country-中国"]').click()
     })
-    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible()
+    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
     await expect(page.locator('.panel-right')).toContainText('GDP 走势(2000~2020)')
     expect(errors).toEqual([])
   })

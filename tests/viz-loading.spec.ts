@@ -32,6 +32,10 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('图层加载反馈', () => {
+  // 本页每条用例都要整页冷启动，与四平台页同口径：serial 消除互抢，
+  // slow 把用例预算放宽到 180s（详见 KNOWN_PITFALLS A5）。
+  test.describe.configure({ mode: 'serial' })
+  test.slow()
   test('切换异步图层显示加载提示，完成后消失并激活按钮', async ({ page }) => {
     await page.route('**/data/mock/population.json', async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 800))
