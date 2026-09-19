@@ -33,14 +33,21 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 2,
   // 单条用例整体超时（含 dev server 冷启动编译）
   timeout: 60 * 1000,
-  // 断言默认 5s 对本项目偏紧：首个访问某条路由的用例需要现编译对应模块
-  expect: { timeout: 15 * 1000 },
+  // 断言默认 5s 对本项目偏紧：首个访问某条路由的用例需要现编译对应模块。
+  // 15s 也不够——四平台页要等 Cesium 底座 + worldZh 2.4MB 多边形，
+  // 实测 dev 下 /workbench 冷启动到 .panel-left 可见即 11.5~18.3s（空载单机），
+  // 并行 worker 下成倍放大；原先散在各 spec 的 15s 断言正是最先到期的那一批。
+  // 30s 与各 spec 早已手工写死的 .panel-left 预算对齐。
+  expect: { timeout: 30 * 1000 },
   reporter: 'list',
   use: {
     baseURL: E2E_BASE_URL,
     trace: 'on-first-retry',
     navigationTimeout: 30 * 1000,
-    actionTimeout: 15 * 1000,
+    // 与上面 expect.timeout 同源：locator.waitFor() / .evaluate() 这类操作走的是
+    // actionTimeout 而不是 expect.timeout。重型页里裸调 waitFor() 的地方不少
+    // （如 /tools/toolbox 等 .panel-left），15s 同样撑不住 11.5~18.3s 的冷启动。
+    actionTimeout: 30 * 1000,
   },
   projects: [
     {

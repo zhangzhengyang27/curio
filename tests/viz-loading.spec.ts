@@ -45,7 +45,7 @@ test.describe('图层加载反馈', () => {
     const chip = await clickVizUntilChip(page, '人口')
     await expect(chip).toContainText('人口')
 
-    await expect(chip).toBeHidden({ timeout: 15_000 })
+    await expect(chip).toBeHidden()
     await expect(page.locator('.viz-btn', { hasText: '人口' })).toHaveClass(/active/)
   })
 
@@ -64,7 +64,7 @@ test.describe('图层加载反馈', () => {
     await page.locator('.viz-btn', { hasText: '默认' }).evaluate((el) => el.click())
     await expect(chip).toBeVisible()
 
-    await expect(chip).toBeHidden({ timeout: 15_000 })
+    await expect(chip).toBeHidden()
   })
 
   test('即时模式不出现加载提示', async ({ page }) => {

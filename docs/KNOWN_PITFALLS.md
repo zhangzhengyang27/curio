@@ -37,6 +37,48 @@
 **正确做法**：对依赖异步数据构建几何体的示例，截图前等待 `networkidle` 并做
 「非纯色/亮度方差」校验。参考 `scripts/screenshot-examples.mjs` 的 CDP 截图方案。
 
+### A4. 多源 `watch([ref, ref, refArray])` 不会跟踪数组的原地变更
+
+**现象**（2026-09-20 实测）：`/analysis` 勾选「对比」后对比表正常更新，地图高亮色却不动；
+取消勾选同样不动。只有点「清空对比」才生效。无任何报错。
+
+**根因**：Vue 的多源 watch 对每个源只做 `s.value`，**不做 traverse**；
+而 `toggleCompare` 用 `push`/`splice` 原地改数组 → 依赖没被收集，回调永不触发。
+「清空对比」之所以有效，是因为它写的是 `compare.value = []`（整值替换）。
+
+最小复现（可直接跑）：
+```js
+const compare = ref([]); let n = 0
+watch([year, compare], () => n++)
+compare.value.push('x')   // → n 仍是 0
+compare.value = ['y']     // → n 变 1
+```
+
+**正确做法**：把「能代表变更的标量」作为源，例如 `() => compare.value.length`；
+或改成整值替换。深响应 `{ deep: true }` 也能修，但会为整个数组建代理、代价更大。
+
+**顺带的测试教训**：这个缺陷存活了很久，因为已有用例断言的是**对比表**
+（模板直接 `v-for compare`，天然生效），而不是地图。断言必须打在真正受影响的那一侧——
+地图状态可从 `?debug=1` 暴露的 `window.__tvMapDebug` 读 Cesium 实体的 `material`。
+
+### A5. 改 `playwright.config` 的 `expect.timeout` 可能是空转
+
+**现象**（2026-09-20）：把全局 `expect.timeout` 从 15s 提到 30s 后，全量 E2E 依旧红，
+错误信息里仍写着 `Timeout: 15000ms`。
+
+**根因**：`tests/` 里有 32 处把 `{ timeout: 15_000 }` **显式写死**在断言上，
+显式值优先于全局配置 —— 改配置对这些断言完全无效。
+
+**正确做法**：调预算要么删掉 spec 内的字面量、让全局值成为单一来源（已如此处理，
+仅保留刻意更紧的 `10_000`），要么就逐条改字面量；**改完必须看错误里的
+`Timeout: NNNNms` 确认新值真的生效了**。
+
+**另一半原因**：本地 `workers: 2`、CI `workers: 1`。四平台页每条用例都整页冷启动
+（实测 dev 下 `/workbench` 到 `.panel-left` 可见 11.5~18.3s，空载单机），
+两个 worker 互抢 CPU 时成倍放大 —— 于是一批用例只在本地红、CI 绿。
+重型页的 spec 需 `test.describe.configure({ mode: 'serial' })` + `test.slow()`
+（只放宽 `expect` 不够，会先撞 60s 的用例级超时）。
+
 ---
 
 ## B. 不可逆 / 高危操作

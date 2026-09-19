@@ -71,7 +71,7 @@ test('量测示例:激活距离量测,两点收线出结果', async ({ page }) =
   await page.mouse.click(620, 380)
   await page.mouse.click(800, 480)
 
-  await expect(page.getByTestId('measure-status')).toContainText('量测完成', { timeout: 15_000 })
+  await expect(page.getByTestId('measure-status')).toContainText('量测完成')
 })
 
 test('导航示例:vc-navigation 控件集合渲染', async ({ page }) => {

@@ -19,7 +19,7 @@ test.describe('业务监控', () => {
     page.on('pageerror', (e) => errors.push(e.message))
     await page.goto('/monitor?nostream=1')
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
-    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10, { timeout: 15_000 })
+    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10)
     await expect(page.locator('[data-testid="stats-open"]')).toContainText('10')
     expect(errors).toEqual([])
   })
@@ -106,7 +106,7 @@ test.describe('业务监控', () => {
     await expect(toggle).toContainText('停止')
     // 开启后 7s 定时器应推送一条(最长等到 15s)
     await expect
-      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').count(), { timeout: 15_000 })
+      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').count())
       .toBe(count + 1)
     await toggle.evaluate((el) => el.click()) // 收尾停止,不干扰其它用例
     await expect(toggle).toContainText('开启')
@@ -115,7 +115,7 @@ test.describe('业务监控', () => {
   test('阈值告警:调低阈值后「重大」数与置顶即时重排(K2)', async ({ page }) => {
     await page.goto('/monitor?nostream=1')
     await page.locator('.stats-bar').waitFor({ timeout: 30000 })
-    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10, { timeout: 15_000 })
+    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10)
 
     // 读取数据文件计算期望:arrived 前 10 条(按日期降序)中 mag ≥ 阈值的数量
     const fs = await import('node:fs')
@@ -180,7 +180,7 @@ test.describe('业务监控', () => {
     await page.locator('[data-testid="replay-btn"]').evaluate((el) => el.click())
     await expect(page.locator('[data-testid="replay-btn"]')).toContainText('停止回放', { timeout: 5_000 })
     await expect
-      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').first().textContent(), { timeout: 15_000 })
+      .poll(async () => page.locator('[data-testid="feed-list"] .feed-item').first().textContent())
       .toContain(seventh.date.slice(0, 10))
 
     await page.locator('[data-testid="replay-btn"]').evaluate((el) => el.click()) // 收尾停止

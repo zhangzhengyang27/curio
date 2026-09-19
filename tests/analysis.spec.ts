@@ -24,7 +24,7 @@ test.describe('全球数据分析', () => {
     page.on('pageerror', (e) => errors.push(e.message))
     await page.goto('/analysis')
     await expect(page.locator('.panel-left')).toBeVisible({ timeout: 30000 })
-    await expect(page.locator('[data-testid="country-list"] .country-row')).toHaveCount(166, { timeout: 15_000 })
+    await expect(page.locator('[data-testid="country-list"] .country-row')).toHaveCount(166)
     expect(errors).toEqual([])
   })
 
@@ -38,7 +38,7 @@ test.describe('全球数据分析', () => {
     })
     await page.waitForTimeout(300)
     await page.locator('[data-testid="country-中国"]').evaluate((el) => el.click())
-    await expect(page.locator('.panel-right .panel-title')).toContainText('中国', { timeout: 15_000 })
+    await expect(page.locator('.panel-right .panel-title')).toContainText('中国')
     const gdp = page.locator('[data-testid="metric-gdp"]')
     await expect(gdp).toContainText(/万亿|亿/)
     await expect(gdp).not.toContainText('NaN')
@@ -64,7 +64,7 @@ test.describe('全球数据分析', () => {
         await sleep(150)
       }
     })
-    await expect(page.locator('[data-testid="compare-table"]')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('[data-testid="compare-table"]')).toBeVisible()
     await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(3) // 指标列 + 2 国
     await expect(page.locator('[data-testid="compare-table"]')).toContainText('美国')
   })
@@ -104,7 +104,7 @@ test.describe('全球数据分析', () => {
 
     // COMPARE_COLORS[0] = #e0457b，高亮 alpha 0.95
     await expect
-      .poll(() => fillOf('中国'), { timeout: 15_000, message: '中国多边形未获得对比高亮色' })
+      .poll(() => fillOf('中国'), { message: '中国多边形未获得对比高亮色' })
       .toBe('rgba(224,69,123,0.95)')
     expect(await fillOf('中国')).not.toBe(before)
   })
@@ -130,7 +130,7 @@ test.describe('全球数据分析', () => {
         await sleep(150)
       }
     })
-    await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(5, { timeout: 15_000 }) // 指标列 + 4 国
+    await expect(page.locator('[data-testid="compare-table"] th')).toHaveCount(5) // 指标列 + 4 国
 
     // 满员后第 5 国复选框禁用(悬停有说明),勾选不再静默丢弃
     await page.locator('[data-testid="country-search"]').evaluate((el) => {
@@ -158,7 +158,7 @@ test.describe('全球数据分析', () => {
     })
     // 双 worker 并行时 CPU 竞争会让 interval 变慢,用轮询容忍(而非固定 sleep 后读一次)
     await expect
-      .poll(async () => Number(await year.textContent()), { timeout: 15_000 })
+      .poll(async () => Number(await year.textContent()))
       .toBeGreaterThan(2000)
     // 收尾暂停,避免计时器跨用例
     await page.evaluate(async () => {
@@ -189,7 +189,7 @@ test.describe('全球数据分析', () => {
       }
     })
     await expect
-      .poll(async () => Number(await year.textContent()), { timeout: 15_000 })
+      .poll(async () => Number(await year.textContent()))
       .toBeGreaterThan(2000)
 
     // 暂停(页内点+验证)
@@ -273,7 +273,7 @@ test.describe('全球数据分析', () => {
       await new Promise((r) => setTimeout(r, 300))
       document.querySelector('[data-testid="country-中国"]').click()
     })
-    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible()
     await expect(page.locator('.panel-right')).toContainText('GDP 走势(2000~2020)')
     expect(errors).toEqual([])
   })

@@ -97,7 +97,7 @@ test.describe('数据巡游', () => {
     await page.goto('/?tour=earth-at-night&step=5')
     await expect(page.locator(BAR)).toBeVisible()
     await page.locator('[data-testid="tour-toggle"]').click()
-    await expect(page.locator(BAR)).toBeHidden({ timeout: 15000 })
+    await expect(page.locator(BAR)).toBeHidden()
     await expect(page).not.toHaveURL(/tour=/)
   })
 

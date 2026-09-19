@@ -501,7 +501,7 @@ test.describe('地图工具箱', () => {
     // 持久化:刷新后矩形恢复(M3 同路径)
     await page.reload({ waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
-    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1', { timeout: 15_000 })
+    await expect(page.locator('[data-testid="clear-btn"]')).toContainText('1')
   })
 
   test('坐标转换:GCJ-02→WGS-84 批量转换与交换方向(M7)', async ({ page }) => {
@@ -711,7 +711,7 @@ test.describe('地图工具箱', () => {
 
     // 异步采样完成(地形关时是 5s 兜底内的即时合成)
     const result = page.locator('[data-testid="status-result"]')
-    await expect(result).toContainText('贴地距离', { timeout: 15_000 })
+    await expect(result).toContainText('贴地距离')
     await expect(result).toContainText(/(\d+(\.\d+)? (km|m))/)
     await expect(result).not.toContainText('NaN')
     await expect(page.locator('[data-testid="measure-item"]')).toHaveCount(1)
@@ -740,7 +740,7 @@ test.describe('地图工具箱', () => {
     await page.mouse.click(820, 500)
     await page.mouse.click(820, 500, { button: 'right' })
     const result = page.locator('[data-testid="status-result"]')
-    await expect(result).toContainText('贴地距离', { timeout: 15_000 })
+    await expect(result).toContainText('贴地距离')
     await expect(result).toContainText(/(\d+(\.\d+)? (km|m))/)
     await expect(result).not.toContainText('NaN')
     await expect(page.locator('[data-testid="profile-svg"]')).toBeVisible()
