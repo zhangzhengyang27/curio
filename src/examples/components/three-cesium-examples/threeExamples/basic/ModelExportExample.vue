@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -59,7 +59,7 @@ function onReady(ctx) {
   button.style.position = 'absolute';
   button.style.top = '10px';
   button.style.left = '100px';
-  stageCtx.container.appendChild(button);
+  ctx.container.appendChild(button);
   
   button.onclick = async () => {
   
@@ -75,7 +75,7 @@ function onReady(ctx) {
           link.click()
           URL.revokeObjectURL(link.href)
   
-      }, { binary: true, onlyVisible: true, embedImages: true })
+      }, { binary: true, onlyVisible: true, embedImages: true } as any)
   
   }
 }

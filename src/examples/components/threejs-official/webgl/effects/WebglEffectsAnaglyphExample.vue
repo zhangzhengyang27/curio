@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { AnaglyphEffect } from 'three/examples/jsm/effects/AnaglyphEffect.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - effects - anaglyph<br/>\n\t\t\tskybox by <a href=\"https://www.pauldebevec.com/\" target=\"_blank\" rel=\"noopener\">Paul Debevec</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -37,9 +37,9 @@ function onReady(__stage) {
   
   
   
-  			let container, effect;
+  			let container, effect: any;
   
-  			const spheres = [];
+  			const spheres: any = [];
   
   			let mouseX = 0;
   			let mouseY = 0;
@@ -112,7 +112,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX ) / 100;
   				mouseY = ( event.clientY - windowHalfY ) / 100;
@@ -121,7 +121,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const timer = 0.0001 * Date.now();
     				camera.position.x += ( mouseX - camera.position.x ) * .05;

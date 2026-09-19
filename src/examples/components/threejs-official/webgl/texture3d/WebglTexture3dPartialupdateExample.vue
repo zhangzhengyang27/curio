@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl2 - volume - cloud"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -56,7 +56,7 @@ function onReady(__stage) {
   			let cloudTexture = null;
   
   			
-  			function generateCloudTexture( size, scaleFactor = 1.0 ) {
+  			function generateCloudTexture( size: any, scaleFactor = 1.0 ) {
   
   				const data = new Uint8Array( size * size * size );
   				const scale = scaleFactor * 10.0 / size;
@@ -101,7 +101,7 @@ function onReady(__stage) {
   				canvas.width = 1;
   				canvas.height = 32;
   
-  				const context = canvas.getContext( '2d' );
+  				const context = canvas.getContext( '2d' )!;
   				const gradient = context.createLinearGradient( 0, 0, 0, 32 );
   				gradient.addColorStop( 0.0, '#014a84' );
   				gradient.addColorStop( 0.5, '#0561a0' );
@@ -333,7 +333,7 @@ function onReady(__stage) {
   			const perElementPaddedSize = ( INITIAL_CLOUD_SIZE - margins ) / countPerRow;
   			const perElementSize = Math.floor( ( INITIAL_CLOUD_SIZE - 1 ) / countPerRow );
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now();
     				if ( time - prevTime > 1500.0 && curr < totalCount ) {
     					const position = new THREE.Vector3(

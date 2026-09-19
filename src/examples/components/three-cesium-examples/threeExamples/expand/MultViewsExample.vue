@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -28,26 +28,26 @@ const props = defineProps({
 
 const ORTHO = 500
 
-let renderer = null
-let scene = null
-let camera = null
-let mainComposer = null
-let subCams = []
-let subComposers = []
-let mainControls = null
-let subControls = []
-let mixer = null
-let clock = null
-let layoutState = null
+let renderer: any = null
+let scene: any = null
+let camera: any = null
+let mainComposer: any = null
+let subCams: any[] = []
+let subComposers: any[] = []
+let mainControls: any = null
+let subControls: any[] = []
+let mixer: any = null
+let clock: any = null
+let layoutState: any = null
 
-function layout(container) {
+function layout(container: any) {
   const W = container.clientWidth
   const H = container.clientHeight
   const subH = Math.floor(H * 0.35)
   return { W, H, subH, mainH: H - subH, subW: Math.floor(W / 3) }
 }
 
-function makeComposer(renderer, scene, cam, w, h) {
+function makeComposer(renderer: any, scene: any, cam: any, w: any, h: any) {
   const c = new EffectComposer(renderer)
   c.addPass(new RenderPass(scene, cam))
   c.addPass(new UnrealBloomPass(new THREE.Vector2(w, h), 0.8, 0, 0))
@@ -55,7 +55,7 @@ function makeComposer(renderer, scene, cam, w, h) {
   return c
 }
 
-function makeOrtho(pos, up, aspect) {
+function makeOrtho(pos: any, up: any, aspect: any) {
   const cam = new THREE.OrthographicCamera(-ORTHO * aspect, ORTHO * aspect, ORTHO, -ORTHO, 0.1, 5000)
   cam.position.copy(pos)
   cam.up.copy(up)
@@ -63,7 +63,7 @@ function makeOrtho(pos, up, aspect) {
   return cam
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   scene = ctx.scene
   camera = ctx.camera
   renderer = ctx.renderer
@@ -107,7 +107,7 @@ function onReady(ctx) {
   )
 
   loader.load(props.example?.globals?.FILE_HOST + '/files/model/LittlestTokyo.glb', gltf => {
-    gltf.scene.traverse(child => {
+    gltf.scene.traverse((child: any) => {
       if (child.isMesh) child.material.envMap = textureCube
     })
     scene.add(gltf.scene)
@@ -136,7 +136,7 @@ function onReady(ctx) {
   })
 }
 
-function onPointerDown(e) {
+function onPointerDown(e: any) {
   const rendererDom = renderer.domElement
   const rect = rendererDom.getBoundingClientRect()
   const containerLayout = layout(rendererDom.parentElement)
@@ -154,7 +154,7 @@ function onPointerDown(e) {
   }
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (!renderer || !camera) return
   const subH = Math.floor(height * 0.35)
   const mainH = height - subH

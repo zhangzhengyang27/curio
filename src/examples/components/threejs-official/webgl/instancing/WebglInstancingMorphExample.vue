@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -33,7 +33,7 @@ function onReady(__stage) {
   
   
   			
-  			let stats, mesh, mixer, dummy;
+  			let stats, mesh: any, mixer: any, dummy: any;
   
   			const offset = 5000;
   
@@ -154,7 +154,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const time = timer.getElapsed();

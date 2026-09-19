@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -67,10 +67,10 @@ function onReady(ctx) {
   const particlesRangeRadius = 0.8
   const particlesFloatSpeed = 0.01
 
-  const circleMeshes = []
-  const ring1Meshes = []
-  const ring2Meshes = []
-  const particles = []
+  const circleMeshes: any[] = []
+  const ring1Meshes: any[] = []
+  const ring2Meshes: any[] = []
+  const particles: any[] = []
 
   const group = new THREE.Group()
 
@@ -141,7 +141,7 @@ function onReady(ctx) {
     })
   })
 
-  function getParticles(radius, h, texture, pointMinSize, pointMaxSize, pointFloatSpeed) {
+  function getParticles(radius: number, h: number, texture: any, pointMinSize: number, pointMaxSize: number, pointFloatSpeed: number) {
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0]), 3))
     const material = new THREE.PointsMaterial({
@@ -162,10 +162,10 @@ function onReady(ctx) {
   }
 
   function getCylinderGeo(radius = 1, h = 1, segment = 64) {
-    const bottomPos = []
-    const topPos = []
-    const bottomUvs = []
-    const topUvs = []
+    const bottomPos: any[] = []
+    const topPos: any[] = []
+    const bottomUvs: any[] = []
+    const topUvs: any[] = []
     const angleOffset = (Math.PI * 2) / segment
     const uvOffset = 1 / (segment - 1)
     for (let i = 0; i < segment; i++) {
@@ -178,7 +178,7 @@ function onReady(ctx) {
     }
     const positions = bottomPos.concat(topPos)
     const uvs = bottomUvs.concat(topUvs)
-    const index = []
+    const index: any[] = []
     for (let i = 0; i < segment; i++) {
       if (i != segment - 1) {
         index.push(i + segment + 1, i, i + segment)

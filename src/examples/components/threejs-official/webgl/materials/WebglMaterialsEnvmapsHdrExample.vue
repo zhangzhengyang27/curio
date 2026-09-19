@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,8 +33,10 @@ const props = defineProps({
   }
 })
 
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - High dynamic range (RGBE) Image-based Lighting (IBL)<br />using run-time generated pre-filtered roughness mipmaps (PMREM)<br/>\n\t\t\tCreated by Prashant Sharma and <a href=\"http://clara.io/\" target=\"_blank\" rel=\"noopener\">Ben Houston</a>."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -56,9 +58,9 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let torusMesh, planeMesh;
-  			let generatedCubeRenderTarget, ldrCubeRenderTarget, hdrCubeRenderTarget;
-  			let ldrCubeMap, hdrCubeMap;
+  			let torusMesh: any, planeMesh: any;
+  			let generatedCubeRenderTarget: any, ldrCubeRenderTarget: any, hdrCubeRenderTarget: any;
+  			let ldrCubeMap: any, hdrCubeMap: any;
   
   			
   
@@ -74,7 +76,7 @@ function onReady(__stage) {
   
   				//
   
-  				let geometry = new THREE.TorusKnotGeometry( 18, 8, 150, 20 );
+  				let geometry: any = new THREE.TorusKnotGeometry( 18, 8, 150, 20 );
   				// let geometry = new THREE.SphereGeometry( 26, 64, 32 );
   				let material = new THREE.MeshStandardMaterial( {
   					color: 0xffffff,
@@ -87,7 +89,7 @@ function onReady(__stage) {
   
   
   				geometry = new THREE.PlaneGeometry( 200, 200 );
-  				material = new THREE.MeshBasicMaterial();
+  				(material as any) = new THREE.MeshBasicMaterial();
   
   				planeMesh = new THREE.Mesh( geometry, material );
   				planeMesh.position.y = - 50;
@@ -154,7 +156,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     torusMesh.material.roughness = params.roughness;

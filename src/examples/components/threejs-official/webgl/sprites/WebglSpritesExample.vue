@@ -13,9 +13,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
+
+let mapC: any;
+let group: any;
+let material: any;
+
 
 const props = defineProps({
   example: {
@@ -25,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - sprites"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -33,9 +38,9 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let cameraOrtho, sceneOrtho;
+  			let cameraOrtho, sceneOrtho: any;
   
-  			let spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+  			let spriteTL: any, spriteTR: any, spriteBL: any, spriteBR: any, spriteC: any;
   
   
   
@@ -126,14 +131,14 @@ function onReady(__stage) {
   			
   
   
-  			function createHUDSprites( texture ) {
+  			function createHUDSprites( texture: any ) {
   
   				texture.colorSpace = THREE.SRGBColorSpace;
   
   				const material = new THREE.SpriteMaterial( { map: texture } );
   
-  				const width = material.map.image.width;
-  				const height = material.map.image.height;
+  				const width = (material as any)!.map.image.width;
+  				const height = (material as any)!.map.image.height;
   
   				spriteTL = new THREE.Sprite( material );
   				spriteTL.center.set( 0.0, 1.0 );
@@ -179,7 +184,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() / 1000;
     				for ( let i = 0, l = group.children.length; i < l; i ++ ) {
     					const sprite = group.children[ i ];

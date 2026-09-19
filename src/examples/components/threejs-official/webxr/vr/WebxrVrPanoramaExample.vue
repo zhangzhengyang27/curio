@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -80,9 +80,9 @@ function onReady(__stage) {
   			
   
   
-  			function getTexturesFromAtlasFile( atlasImgUrl, tilesNum ) {
+  			function getTexturesFromAtlasFile( atlasImgUrl: any, tilesNum: any ) {
   
-  				const textures = [];
+  				const textures: any = [];
   
   				for ( let i = 0; i < tilesNum; i ++ ) {
   
@@ -99,7 +99,7 @@ function onReady(__stage) {
   					for ( let i = 0; i < textures.length; i ++ ) {
   
   						canvas = document.createElement( 'canvas' );
-  						context = canvas.getContext( '2d' );
+  						context = canvas.getContext( '2d' )!;
   						canvas.height = tileWidth;
   						canvas.width = tileWidth;
   						context.drawImage( imageObj, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth );

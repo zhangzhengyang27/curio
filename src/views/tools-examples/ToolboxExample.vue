@@ -96,7 +96,7 @@
           class="mini-btn"
           data-testid="undo-btn"
           :disabled="registryCount === 0"
-          @click="controller?.undoLast()"
+          @click="undoLast()"
         >
           撤销
         </button>
@@ -104,7 +104,7 @@
           class="mini-btn danger"
           data-testid="clear-btn"
           :disabled="registryCount === 0"
-          @click="controller?.clearAll()"
+          @click="clearAnnotations()"
         >
           清空标注（{{ registryCount }}）
         </button>
@@ -138,7 +138,7 @@
                 class="bookmark-goto"
                 :data-testid="`anno-goto-${en.id}`"
                 :title="en.kind"
-                @click="controller?.flyToEntry(en.id)"
+                @click="flyToEntryById(en.id)"
               >
                 {{ en.name }}
               </button>
@@ -191,7 +191,7 @@
               max="8"
               :value="editingEntry.style?.width ?? 3"
               data-testid="edit-width"
-              @input="applyStyle({ width: Number($event.target.value) })"
+              @input="applyStyle({ width: Number(($event.target as HTMLInputElement).value) })"
             >
           </label>
           <button
@@ -222,7 +222,7 @@
             class="measure-item"
             :title="r.text"
             data-testid="measure-item"
-            @click="controller?.flyToRecord(i)"
+            @click="flyToRecordByIndex(i)"
           >
             <span>{{ r.kind === 'distance' ? '📏' : '⬛' }}</span>
             <span class="measure-text">{{ r.text }}</span>
@@ -568,30 +568,44 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import coordtransform from 'coordtransform'
-import { loadCesium } from '../../map/cesiumLoader.js'
-import { createMapViewer, applyTdtStack } from '../../map/createViewer.js'
-import { MapToolsController } from '../../map/tools/mapToolsController.js'
-import { loadBookmarks, addBookmark, removeBookmark, renameBookmark, exportBookmarks, importBookmarks, flyToBookmark } from '../../map/bookmarks.js'
+import { loadCesium } from '../../map/cesiumLoader'
+import { createMapViewer, applyTdtStack } from '../../map/createViewer'
+import { MapToolsController } from '../../map/tools/mapToolsController'
+import type { MapEntry, ToolKind } from '../../map/tools/mapToolsController'
+import { loadBookmarks, addBookmark, removeBookmark, renameBookmark, exportBookmarks, importBookmarks, flyToBookmark } from '../../map/bookmarks'
+import type { MapBookmark } from '../../map/bookmarks'
 
-const containerRef = ref(null)
+/** 地名搜索统一结果（三通道归一化为 name/displayName/lon/lat） */
+interface PlaceResult {
+  name: string
+  displayName: string
+  lon: number
+  lat: number
+}
+
+const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
 const loadError = ref('')
-const activeTool = ref(null)
+const activeTool = ref<string | null>(null)
 const registryCount = ref(0)
 const bookmarks = ref(loadBookmarks())
-const status = ref({ coords: null, hint: '', result: null })
-const importInputRef = ref(null)
-const bmInputRef = ref(null)
-const records = ref([])
-const annotations = ref([])
-const annoRenamingId = ref(null)
+const status = ref<{
+  coords: { lon: number; lat: number; height: number } | null
+  hint: string
+  result: { text: string } | null
+}>({ coords: null, hint: '', result: null })
+const importInputRef = ref<HTMLInputElement | null>(null)
+const bmInputRef = ref<HTMLInputElement | null>(null)
+const records = ref<Array<{ kind: string; text: string; at?: number }>>([])
+const annotations = ref<Array<{ id: string; kind: string; name: string }>>([])
+const annoRenamingId = ref<string | null>(null)
 const annoRenameText = ref('')
-const profileData = ref(null)
-const editingEntry = ref(null)
-const renamingId = ref(null)
+const profileData = ref<{ minH: number; maxH: number; points: string } | null>(null)
+const editingEntry = ref<MapEntry | null>(null)
+const renamingId = ref<string | null>(null)
 const renameText = ref('')
 // 编辑面板可选颜色(M2)
 const EDIT_COLORS = ['#4fc3f7', '#aed581', '#ff8a65', '#ba68c8', '#ffd54f', '#e57373']
@@ -609,10 +623,10 @@ const measureTools = [
 const TDT_KEY = (import.meta.env.VITE_TDT_TOKEN || '').split(',')[0].trim()
 const AMAP_KEY = (import.meta.env.VITE_AMAP_KEY || '').trim()
 const placeQuery = ref('')
-const placeResults = ref([])
+const placeResults = ref<PlaceResult[]>([])
 const placeHint = ref('')
 
-async function fetchJson(url, timeoutMs = 8000) {
+async function fetchJson(url: string, timeoutMs = 8000) {
   // 超时兜底:跨域请求偶发挂起时也能落到降级提示
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
@@ -625,7 +639,7 @@ async function fetchJson(url, timeoutMs = 8000) {
   }
 }
 
-async function searchTdt(q) {
+async function searchTdt(q: string) {
   const postStr = JSON.stringify({
     keyWord: q,
     level: 12,
@@ -640,15 +654,15 @@ async function searchTdt(q) {
   const pois = Array.isArray(data.pois) ? data.pois : []
   return pois
     .slice(0, 8)
-    .map((p) => {
+    .map((p: any) => {
       const [lon, lat] = String(p.lonlat || '').split(',').map(Number)
-      return { name: p.name, lon, lat }
+      return { name: p.name, displayName: p.name, lon, lat }
     })
-    .filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
+    .filter((p: any) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
 }
 
 /** GCJ-02(高德/火星坐标)→ WGS-84:coordtransform 同源算法,纠偏只对中国大陆范围有意义,境外坐标原样返回 */
-function gcj02ToWgs84(lon, lat) {
+function gcj02ToWgs84(lon: number, lat: number) {
   if (lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271) {
     return { lon, lat }
   }
@@ -682,7 +696,7 @@ function convertCoord() {
     coordOutput.value = lines.join('\n')
     return
   }
-  const fn = COORD_CONVERTERS[coordFrom.value]?.[coordTo.value]
+  const fn = (COORD_CONVERTERS as Record<string, Record<string, (lon: number, lat: number) => [number, number]>>)[coordFrom.value]?.[coordTo.value]
   if (!fn) {
     coordError.value = '不支持的坐标系组合'
     return
@@ -709,7 +723,7 @@ async function copyCoord() {
   if (coordOutput.value) await navigator.clipboard.writeText(coordOutput.value)
 }
 
-async function searchAmap(q) {
+async function searchAmap(q: string) {
   const data = await fetchJson(
     `https://restapi.amap.com/v3/place/text?keywords=${encodeURIComponent(q)}&offset=8&page=1&key=${AMAP_KEY}`
   )
@@ -717,7 +731,7 @@ async function searchAmap(q) {
   if (data.status !== '1') throw new Error(String(data.info || 'amap error'))
   const pois = Array.isArray(data.pois) ? data.pois : []
   return pois
-    .map((p) => {
+    .map((p: any) => {
       const [gcjLon, gcjLat] = String(p.location || '').split(',').map(Number)
       if (!Number.isFinite(gcjLon) || !Number.isFinite(gcjLat)) return null
       const wgs = gcj02ToWgs84(gcjLon, gcjLat)
@@ -733,7 +747,7 @@ async function searchAmap(q) {
     .slice(0, 8)
 }
 
-async function searchNominatim(q) {
+async function searchNominatim(q: string) {
   // 公共实例限 1 请求/秒(演示调用频率远低于此);accept-language 优先返回中文名
   const data = await fetchJson(
     `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=jsonv2&limit=8&accept-language=zh-CN`
@@ -746,7 +760,7 @@ async function searchNominatim(q) {
       lon: +r.lon,
       lat: +r.lat,
     }))
-    .filter((p) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
+    .filter((p: any) => Number.isFinite(p.lon) && Number.isFinite(p.lat))
     .slice(0, 8)
 }
 
@@ -755,12 +769,11 @@ async function searchPlace() {
   if (!q) return
   placeResults.value = []
   placeHint.value = ''
-  const channels = [
-    TDT_KEY && (() => searchTdt(q)),
-    AMAP_KEY && (() => searchAmap(q)),
-    () => searchNominatim(q),
-  ].filter(Boolean)
-  let found = []
+  const channels: Array<() => Promise<PlaceResult[]>> = []
+  if (TDT_KEY) channels.push(() => searchTdt(q))
+  if (AMAP_KEY) channels.push(() => searchAmap(q))
+  channels.push(() => searchNominatim(q))
+  let found: PlaceResult[] = []
   let attempted = 0
   let errored = 0
   for (const run of channels) {
@@ -780,7 +793,7 @@ async function searchPlace() {
   }
 }
 
-function flyToPlace(p) {
+function flyToPlace(p: PlaceResult) {
   if (!viewer) return
   viewer.camera.flyTo({
     destination: window.Cesium.Cartesian3.fromDegrees(p.lon, p.lat, 80_000),
@@ -795,16 +808,16 @@ const drawTools = [
   { key: 'circle', label: '圆形', icon: '⭕', desc: '圆心+半径画圆' },
 ]
 
-let viewer = null
-let controller = null
+let viewer: any = null
+let controller: MapToolsController | null = null
 const baseType = ref('vec')
 // ?debug=1 时的自诊断角标：让页面自己报告相机高度/瓦片队列/图层状态，
 // 用于远程排查「用户浏览器里地图不可见」类问题
 const debug = ref(new URLSearchParams(window.location.search).has('debug'))
 const debugInfo = ref({ height: 0, pending: 0, layers: 0 })
-let debugTimer = null
+let debugTimer: ReturnType<typeof setInterval> | null = null
 
-function setBase(type) {
+function setBase(type: 'vec' | 'img') {
   if (!viewer || baseType.value === type) return
   applyTdtStack(viewer, type)
   baseType.value = type
@@ -836,7 +849,7 @@ function attachTileErrorWatch() {
   const n = viewer.imageryLayers.length
   for (let i = 0; i < n; i++) {
     const prov = viewer.imageryLayers.get(i).imageryProvider
-    prov.errorEvent?.addEventListener((err) => {
+    prov.errorEvent?.addEventListener((err: any) => {
       window.__tvMapDebug.tileErrors = (window.__tvMapDebug.tileErrors || 0) + 1
       window.__tvMapDebug.lastTileError = String(err?.message || err).slice(0, 200)
     })
@@ -850,11 +863,16 @@ const coordsText = computed(() => {
 const hintText = computed(() => status.value.hint || '')
 const resultText = computed(() => status.value.result?.text || '')
 
+function undoLast() { controller?.undoLast() }
+function clearAnnotations() { controller?.clearAll() }
+function flyToEntryById(id: string) { controller?.flyToEntry(id) }
+function flyToRecordByIndex(i: number) { controller?.flyToRecord(i) }
+
 // 按钮高亮以 controller 广播为准(单一事实源):工具结束/Esc 取消时
 // controller 侧状态归 null,若 View 另持一份 ref 会出现高亮脱钩(审查 P1)
-function toggleTool(key) {
+function toggleTool(key: string | null) {
   if (!controller) return
-  controller.setTool(controller.activeTool === key ? null : key)
+  controller.setTool((key as ToolKind) ?? null)
 }
 
 function saveBookmark() {
@@ -865,26 +883,26 @@ function saveBookmark() {
 }
 
 // ---- 标注列表(M10) ----
-function startAnnoRename(entry) {
+function startAnnoRename(entry: { id: string; name: string }) {
   annoRenamingId.value = entry.id
   annoRenameText.value = entry.name
 }
 
-function commitAnnoRename(id) {
+function commitAnnoRename(id: string) {
   if (annoRenamingId.value !== id) return
   controller?.renameEntry(id, annoRenameText.value)
   annoRenamingId.value = null
 }
 
-function removeAnnotation(id) {
+function removeAnnotation(id: string) {
   controller?.removeEntry(id)
 }
 
-function deleteBookmark(id) {
+function deleteBookmark(id: string) {
   bookmarks.value = removeBookmark(id)
 }
 
-function gotoBookmark(bm) {
+function gotoBookmark(bm: MapBookmark) {
   if (viewer) flyToBookmark(viewer.camera, bm)
 }
 
@@ -900,7 +918,7 @@ function exportGeoJSON() {
 function exportPNG() {
   if (!viewer) return
   viewer.render()
-  viewer.canvas.toBlob((blob) => {
+  viewer.canvas.toBlob((blob: any) => {
     if (!blob) return
     const url = URL.createObjectURL(blob)
     download(null, `terra-map-${Date.now()}.png`, 'image/png', url)
@@ -908,16 +926,16 @@ function exportPNG() {
   })
 }
 
-function onImportFile(e) {
-  const file = e.target.files?.[0]
-  e.target.value = '' // 允许连续导入同一文件
+function onImportFile(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  ;(e.target as HTMLInputElement).value = '' // 允许连续导入同一文件
   if (!file || !controller) return
   file
     .text()
     .then((text) => JSON.parse(text))
     .then((gj) => {
-      const n = controller.importGeoJSON(gj)
-      records.value = controller.records
+      const n = controller!.importGeoJSON(gj)
+      records.value = controller!.records
       status.value = {
         ...status.value,
         result: { text: n > 0 ? `已导入 ${n} 条标注` : '未识别到可导入的标注' },
@@ -929,7 +947,7 @@ function onImportFile(e) {
 }
 
 // ---- 标绘编辑(M2) ----
-function applyStyle(patch) {
+function applyStyle(patch: { colorCss?: string; width?: number }) {
   controller?.setSelectedStyle(patch)
 }
 
@@ -939,12 +957,12 @@ function deleteSelected() {
 }
 
 // ---- 书签增强(M4) ----
-function startRename(bm) {
+function startRename(bm: MapBookmark) {
   renamingId.value = bm.id
   renameText.value = bm.name
 }
 
-function commitRename(id) {
+function commitRename(id: string) {
   if (renamingId.value !== id) return
   bookmarks.value = renameBookmark(id, renameText.value)
   renamingId.value = null
@@ -954,9 +972,9 @@ function exportBmJson() {
   download(exportBookmarks(), `terra-bookmarks-${Date.now()}.json`, 'application/json')
 }
 
-function onImportBookmarks(e) {
-  const file = e.target.files?.[0]
-  e.target.value = ''
+function onImportBookmarks(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  ;(e.target as HTMLInputElement).value = ''
   if (!file) return
   file.text().then((text) => {
     const { list, imported } = importBookmarks(text)
@@ -971,16 +989,16 @@ function onImportBookmarks(e) {
 // ---- 量测记录导出(M5) ----
 function exportRecordsCsv() {
   const header = ['类型', '结果', '时间']
-  const rows = records.value.map((r) => [r.kind === 'distance' ? '量距' : '量面积', r.text, new Date(r.at).toLocaleString('zh-CN')])
-  const esc = (v) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)
+  const rows = records.value.map((r) => [r.kind === 'distance' ? '量距' : '量面积', r.text, new Date(r.at ?? 0).toLocaleString('zh-CN')])
+  const esc = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)
   const csv = '\uFEFF' + [header, ...rows].map((r) => r.map(esc).join(',')).join('\n')
   download(csv, `terra-measures-${Date.now()}.csv`, 'text/csv;charset=utf-8')
 }
 
-function download(content, filename, mime, objectUrl = null) {
+function download(content: string | null, filename: string, mime: string, objectUrl: string | null = null) {
   const a = document.createElement('a')
   a.download = filename
-  a.href = objectUrl || URL.createObjectURL(new Blob([content], { type: mime }))
+  a.href = objectUrl || URL.createObjectURL(new Blob([content ?? ""], { type: mime }))
   // 必须挂到 DOM 再点击：游离锚点的下载会让部分环境的导航调度器挂起
   document.body.appendChild(a)
   a.click()
@@ -999,22 +1017,23 @@ onMounted(async () => {
       },
       onRegistryChange: (registry) => {
         registryCount.value = registry.length
-        records.value = controller.records
+        records.value = controller!.records
         // 浅拷贝驱动列表渲染(拖拽/插删点会原地改 registry entry)
         annotations.value = registry.map((e) => ({ id: e.id, kind: e.kind, name: e.name }))
         // 高程剖面:取最新带 profile 的产物(贴地距离,M11)
         const withProfile = registry.filter((e) => e.profile?.length)
         const last = withProfile[withProfile.length - 1]
         if (last) {
-          const hs = last.profile.map((p) => p.h)
+          const prof = last.profile!
+          const hs = prof.map((p) => p.h)
           const minH = Math.min(...hs)
           const maxH = Math.max(...hs)
-          const maxD = last.profile[last.profile.length - 1].d || 1
+          const maxD = prof[prof.length - 1].d || 1
           const span = maxH - minH || 1
           profileData.value = {
             minH: Math.round(minH),
             maxH: Math.round(maxH),
-            points: last.profile
+            points: prof
               .map((p) => `${((p.d / maxD) * 184 + 1).toFixed(1)},${(60 - ((p.h - minH) / span) * 56).toFixed(1)}`)
               .join(' '),
           }
@@ -1030,8 +1049,8 @@ onMounted(async () => {
       },
     })
     // 恢复上次会话的标注(M3):清空/撤销会同步覆写存储
-    const restored = controller.restoreSaved()
-    records.value = controller.records
+    const restored = controller!.restoreSaved()
+    records.value = controller!.records
     if (restored > 0) {
       status.value = { ...status.value, result: { text: `已恢复 ${restored} 条标注` } }
     }
@@ -1044,7 +1063,7 @@ onMounted(async () => {
       try {
         window.__tvMapDebug = { viewer, Cesium, controller }
         attachTileErrorWatch()
-        viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen) => {
+        viewer.scene.globe.tileLoadProgressEvent.addEventListener((queueLen: number) => {
           debugInfo.value.pending = queueLen
         })
         debugTimer = setInterval(() => {

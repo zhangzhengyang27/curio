@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Video Panorama</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -83,7 +83,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				isUserInteracting = true;
   
@@ -95,7 +95,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( isUserInteracting === true ) {
   
@@ -112,7 +112,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     lat = Math.max( - 85, Math.min( 85, lat ) );
     				phi = THREE.MathUtils.degToRad( 90 - lat );

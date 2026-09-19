@@ -37,12 +37,12 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { VcPrint } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
 
-const printRef = ref(null)
+const printRef = ref<any>(null)
 const statusText = ref('就绪：点击按钮生成打印视图')
 function onReady() {
   statusText.value = '就绪：点击按钮生成打印视图'

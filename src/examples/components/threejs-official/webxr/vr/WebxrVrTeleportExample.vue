@@ -15,12 +15,16 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+
+let raycaster: any;
+let INTERSECTION: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - teleport"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,7 +48,7 @@ function onReady(__stage) {
   			let controller1, controller2;
   			let controllerGrip1, controllerGrip2;
   
-  			let room, marker, floor, baseReferenceSpace;
+  			let room, marker, floor, baseReferenceSpace: any;
   
   
   			const tempMatrix = new THREE.Matrix4();
@@ -90,13 +94,13 @@ function onReady(__stage) {
   				renderer.xr.addEventListener( 'sessionstart', () => baseReferenceSpace = renderer.xr.getReferenceSpace() );
   				// controllers
   
-  				function onSelectStart() {
+  				function onSelectStart( this: any ) {
   
   					this.userData.isSelecting = true;
   
   				}
   
-  				function onSelectEnd() {
+  				function onSelectEnd( this: any ) {
   
   					this.userData.isSelecting = false;
   
@@ -116,12 +120,12 @@ function onReady(__stage) {
   				controller1 = renderer.xr.getController( 0 );
   				controller1.addEventListener( 'selectstart', onSelectStart );
   				controller1.addEventListener( 'selectend', onSelectEnd );
-  				controller1.addEventListener( 'connected', function ( event ) {
+  				controller1.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					this.add( buildController( event.data ) );
   
   				} );
-  				controller1.addEventListener( 'disconnected', function () {
+  				controller1.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -131,12 +135,12 @@ function onReady(__stage) {
   				controller2 = renderer.xr.getController( 1 );
   				controller2.addEventListener( 'selectstart', onSelectStart );
   				controller2.addEventListener( 'selectend', onSelectEnd );
-  				controller2.addEventListener( 'connected', function ( event ) {
+  				controller2.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					this.add( buildController( event.data ) );
   
   				} );
-  				controller2.addEventListener( 'disconnected', function () {
+  				controller2.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -165,7 +169,7 @@ function onReady(__stage) {
   			
   
   
-  			function buildController( data ) {
+  			function buildController( data: any ) {
   
   				let geometry, material;
   
@@ -202,7 +206,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     INTERSECTION = undefined;
     				if ( controller1.userData.isSelecting === true ) {
     					tempMatrix.identity().extractRotation( controller1.matrixWorld );

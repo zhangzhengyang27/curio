@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js';
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,9 +29,9 @@ function onReady(ctx) {
 
   controls.autoRotate = true
   
-  let sampler = null
+  let sampler: any = null
   
-  let path = null
+  let path: any = null
   
   new OBJLoader().load(
   
@@ -39,7 +39,7 @@ function onReady(ctx) {
   
       (obj) => {
   
-          sampler = new MeshSurfaceSampler(obj.children[0]).build();
+          sampler = new MeshSurfaceSampler(obj.children[0] as THREE.Mesh).build();
   
           path = new Path();
   
@@ -52,6 +52,11 @@ function onReady(ctx) {
   const tempPosition = new THREE.Vector3();
   
   class Path {
+      vertices: any[]
+      geometry: THREE.BufferGeometry
+      material: THREE.LineBasicMaterial
+      line: THREE.Line
+      previousPoint: THREE.Vector3
       constructor() {
   
           this.vertices = [];

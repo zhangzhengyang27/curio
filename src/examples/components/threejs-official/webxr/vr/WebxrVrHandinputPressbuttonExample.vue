@@ -15,13 +15,14 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 import { OculusHandModel } from 'three/examples/jsm/webxr/OculusHandModel.js';
 import { createText } from 'three/examples/jsm/webxr/Text2D.js';
+// @ts-expect-error ecsy.module.js 为无类型声明的 JS 库
 import { World, System, Component, TagComponent, Types } from 'three/examples/jsm/libs/ecsy.module.js';
 
 const props = defineProps({
@@ -32,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\tvr - handinput - press button<br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,13 +44,17 @@ function onReady(__stage) {
   
   
   
-  		class Object3D extends Component { }
+  		class Object3D extends Component {
+  			static schema: any;
+  		}
   
   		Object3D.schema = {
   			object: { type: Types.Ref }
   		};
   
-  		class Button extends Component { }
+  		class Button extends Component {
+  			static schema: any;
+  		}
   
   		Button.schema = {
   			// button states: [resting, pressed, fully_pressed, recovering]
@@ -65,8 +70,16 @@ function onReady(__stage) {
   		};
   
   		class ButtonSystem extends System {
+	renderer: any;
+	soundAdded: any;
+	hands: any;
+	controllers: any;
+	camera: any;
+
+	static queries: any;
+  			declare queries: any;
   
-  			init( attributes ) {
+  			init( attributes: any ) {
   
   				this.renderer = attributes.renderer;
   				this.soundAdded = false;
@@ -75,7 +88,7 @@ function onReady(__stage) {
   
   			execute( /*delta, time*/ ) {
   
-  				let buttonPressSound, buttonReleaseSound;
+  				let buttonPressSound: any, buttonReleaseSound: any;
   				if ( this.renderer.xr.getSession() && ! this.soundAdded ) {
   
   					const xrCamera = this.renderer.xr.getCamera();
@@ -103,7 +116,7 @@ function onReady(__stage) {
   
   				}
   
-  				this.queries.buttons.results.forEach( entity => {
+  				this.queries.buttons.results.forEach( (entity: any) => {
   
   					const button = entity.getMutableComponent( Button );
   					const buttonMesh = entity.getComponent( Object3D ).object;
@@ -159,21 +172,25 @@ function onReady(__stage) {
   		class Pressable extends TagComponent { }
   
   		class FingerInputSystem extends System {
+	hands: any;
+
+	static queries: any;
+  			declare queries: any;
   
-  			init( attributes ) {
+  			init( attributes: any ) {
   
   				this.hands = attributes.hands;
   
   			}
   
-  			execute( delta/*, time*/ ) {
+  			execute( delta: any/*, time*/ ) {
   
-  				this.queries.pressable.results.forEach( entity => {
+  				this.queries.pressable.results.forEach( (entity: any) => {
   
   					const button = entity.getMutableComponent( Button );
   					const object = entity.getComponent( Object3D ).object;
-  					const pressingDistances = [];
-  					this.hands.forEach( hand => {
+  					const pressingDistances: any = [];
+  					this.hands.forEach( (hand: any) => {
   
   						if ( hand && hand.intersectBoxObject( object ) ) {
   
@@ -231,10 +248,13 @@ function onReady(__stage) {
   		class Rotating extends TagComponent { }
   
   		class RotatingSystem extends System {
+
+  			static queries: any;
+  			declare queries: any;
+
+  			execute( delta: any/*, time*/ ) {
   
-  			execute( delta/*, time*/ ) {
-  
-  				this.queries.rotatingObjects.results.forEach( entity => {
+  				this.queries.rotatingObjects.results.forEach( (entity: any) => {
   
   					const object = entity.getComponent( Object3D ).object;
   					object.rotation.x += 0.4 * delta;
@@ -255,8 +275,12 @@ function onReady(__stage) {
   		class HandsInstructionText extends TagComponent { }
   
   		class InstructionSystem extends System {
+	controllers: any;
+
+	static queries: any;
+  			declare queries: any;
   
-  			init( attributes ) {
+  			init( attributes: any ) {
   
   				this.controllers = attributes.controllers;
   
@@ -265,7 +289,7 @@ function onReady(__stage) {
   			execute( /*delta, time*/ ) {
   
   				let visible = false;
-  				this.controllers.forEach( controller => {
+  				this.controllers.forEach( (controller: any) => {
   
   					if ( controller.visible ) {
   
@@ -275,7 +299,7 @@ function onReady(__stage) {
   
   				} );
   
-  				this.queries.instructionTexts.results.forEach( entity => {
+  				this.queries.instructionTexts.results.forEach( (entity: any) => {
   
   					const object = entity.getComponent( Object3D ).object;
   					object.visible = visible;
@@ -292,7 +316,9 @@ function onReady(__stage) {
   			}
   		};
   
-  		class OffsetFromCamera extends Component { }
+  		class OffsetFromCamera extends Component {
+  			static schema: any;
+  		}
   
   		OffsetFromCamera.schema = {
   			x: { type: Types.Number, default: 0 },
@@ -303,8 +329,13 @@ function onReady(__stage) {
   		class NeedCalibration extends TagComponent { }
   
   		class CalibrationSystem extends System {
+	camera: any;
+	renderer: any;
+
+	static queries: any;
+  			declare queries: any;
   
-  			init( attributes ) {
+  			init( attributes: any ) {
   
   				this.camera = attributes.camera;
   				this.renderer = attributes.renderer;
@@ -313,7 +344,7 @@ function onReady(__stage) {
   
   			execute( /*delta, time*/ ) {
   
-  				this.queries.needCalibration.results.forEach( entity => {
+  				this.queries.needCalibration.results.forEach( (entity: any) => {
   
   					if ( this.renderer.xr.getSession() ) {
   
@@ -345,7 +376,7 @@ function onReady(__stage) {
   
   
   		
-  		function makeButtonMesh( x, y, z, color ) {
+  		function makeButtonMesh( x: any, y: any, z: any, color: any ) {
   
   			const geometry = new THREE.BoxGeometry( x, y, z );
   			const material = new THREE.MeshPhongMaterial( { color: color } );
@@ -505,7 +536,7 @@ function onReady(__stage) {
   			obEntity.addComponent( Object3D, { object: orangeButton } );
   			const obAction = function () {
   
-  				torusKnot.material.color.setHex( 0xffd3b5 );
+  				( torusKnot.material as any ).color.setHex( 0xffd3b5 );
   
   			};
   
@@ -516,7 +547,7 @@ function onReady(__stage) {
   			pbEntity.addComponent( Object3D, { object: pinkButton } );
   			const pbAction = function () {
   
-  				torusKnot.material.color.setHex( 0xe84a5f );
+  				( torusKnot.material as any ).color.setHex( 0xe84a5f );
   
   			};
   
@@ -527,7 +558,7 @@ function onReady(__stage) {
   			rbEntity.addComponent( Object3D, { object: resetButton } );
   			const rbAction = function () {
   
-  				torusKnot.material.color.setHex( 0xffffff );
+  				( torusKnot.material as any ).color.setHex( 0xffffff );
   
   			};
   
@@ -564,7 +595,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     			const delta = timer.getDelta();
     			const elapsedTime = timer.getElapsed();

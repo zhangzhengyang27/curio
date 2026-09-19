@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> character controller\n\t\t\t<p>WASD or Arrow keys to move</p>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,8 +42,8 @@ async function onReady(__stage) {
   
   
   			let stats;
-  			let physics, characterController, physicsHelper;
-  			let player, movement;
+  			let physics: any, characterController: any, physicsHelper: any;
+  			let player: any, movement;
   
   			
   
@@ -140,7 +140,7 @@ async function onReady(__stage) {
   			
   
   
-  			function random( min, max ) {
+  			function random( min: any, max: any ) {
   
   				return Math.random() * ( max - min ) + min;
   
@@ -206,7 +206,7 @@ async function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( physicsHelper ) physicsHelper.update();
     				if ( physics && characterController ) {
     					const deltaTime = 1 / 60;

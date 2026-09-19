@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -155,7 +155,7 @@ function onReady(ctx) {
     }
     
     // 支持多种波形混合
-    noise4d(x, y, z, w) {
+    noise4d(x: number, y: number, z: number, w: number) {
       // 混合多种波形，创造更复杂的模式
       const noise1 = Math.sin(x*10 + w) * Math.cos(y*8 - w*0.5) * Math.sin(z*5);
       const noise2 = Math.cos(x*5 - w*0.7) * Math.sin(y*4 + w*0.3) * Math.cos(z*3);
@@ -177,10 +177,10 @@ function onReady(ctx) {
   
   const noise = new EnhancedNoise();
   let iteration = 0;
-  const shapes = [];
+  const shapes: any[] = [];
   
   // 色彩计算器
-  function getColor(height, x, z) {
+  function getColor(height: number, x: number, z: number) {
     const normalizedHeight = (height + params.simplexAmp) / (2 * params.simplexAmp);
     
     switch(params.colorMode) {
@@ -225,7 +225,7 @@ function onReady(ctx) {
   }
   
   // 创建单个形状
-  function Shape(x, z) {
+  const Shape: any = function (this: any, x: number, z: number) {
     this.originalX = x;
     this.originalZ = z;
     
@@ -429,12 +429,12 @@ function onReady(ctx) {
       .onChange(value => bloomPass.threshold = value);
     
     // 相机控制
-    Folder = gui.addFolder('相机设置');
+    const cameraFolder = gui.addFolder('相机设置');
     cameraFolder.add(params, 'autoRotate').name('自动旋转')
-      .onChange(value => controls.autoRotate = value);
+      .onChange((value: any) => controls.autoRotate = value);
     cameraFolder.add(params, 'rotateSpeed', 0.1, 5)
       .name('旋转速度')
-      .onChange(value => controls.autoRotateSpeed = value);
+      .onChange((value: any) => controls.autoRotateSpeed = value);
     cameraFolder.add(params, 'resetCamera').name('重置相机');
     
     // 动作按钮
@@ -467,10 +467,10 @@ function onReady(ctx) {
   // 添加交互
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  let hoveredObject = null;
+  let hoveredObject: any = null;
   let originalColor = null;
   
-  function onMouseMove(event) {
+  function onMouseMove(event: any) {
     // 转换鼠标坐标为归一化设备坐标
     mouse.x = (event.clientX / ctx.container?.clientWidth) * 2 - 1;
     mouse.y = -(event.clientY / ctx.container?.clientHeight) * 2 + 1;

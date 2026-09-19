@@ -16,15 +16,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let timer: any;
 
 const props = defineProps({
   example: {
@@ -34,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "This demo shows the usage of <strong>SkeletonUtils.clone()</strong> and how to setup a shared skeleton.<br/>\n\t\t\tSoldier model from <a href=\"https://www.mixamo.com\" target=\"_blank\" rel=\"noopener\">https://www.mixamo.com</a>."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,9 +48,9 @@ function onReady(__stage) {
   
   
   
-  			let model, animations;
+  			let model: any, animations: any;
   
-  			const mixers = [], objects = [];
+  			const mixers: any = [], objects: any = [];
   
   			const params = {
   				sharedSkeleton: false
@@ -98,7 +100,7 @@ function onReady(__stage) {
   					model = gltf.scene;
   					animations = gltf.animations;
   
-  					model.traverse( function ( object ) {
+  					model.traverse( function ( object: any ) {
   
   						if ( object.isMesh ) object.castShadow = true;
   
@@ -154,7 +156,7 @@ function onReady(__stage) {
   
   					scene.remove( object );
   
-  					scene.traverse( function ( child ) {
+  					scene.traverse( function ( child: any ) {
   
   						if ( child.isSkinnedMesh ) child.skeleton.dispose();
   
@@ -198,9 +200,9 @@ function onReady(__stage) {
   				// all models share the same animation state
   
   				const sharedModel = SkeletonUtils.clone( model );
-  				const shareSkinnedMesh = sharedModel.getObjectByName( 'vanguard_Mesh' );
+  				const shareSkinnedMesh = sharedModel.getObjectByName( 'vanguard_Mesh' ) as any;
   				const sharedSkeleton = shareSkinnedMesh.skeleton;
-  				const sharedParentBone = sharedModel.getObjectByName( 'mixamorigHips' );
+  				const sharedParentBone = sharedModel.getObjectByName( 'mixamorigHips' )!;
   				scene.add( sharedParentBone ); // the bones need to be in the scene for the animation to work
   
   				const model1 = shareSkinnedMesh.clone();
@@ -244,7 +246,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				for ( const mixer of mixers ) mixer.update( delta );

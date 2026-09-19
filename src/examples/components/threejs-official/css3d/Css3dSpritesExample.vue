@@ -16,7 +16,7 @@
   </CSS3DExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CSS3DExampleScene from '@/examples/components/CSS3DExampleScene.vue'
 import * as THREE from 'three';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> css3d - sprites"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,8 +42,8 @@ function onReady(__stage) {
   
   
   			const particlesTotal = 512;
-  			const positions = [];
-  			const objects = [];
+  			const positions: any = [];
+  			const objects: any = [];
   			let current = 0;
   
   				const image = document.createElement( 'img' );
@@ -51,7 +51,7 @@ function onReady(__stage) {
   
   					for ( let i = 0; i < particlesTotal; i ++ ) {
   
-  						const object = new CSS3DSprite( image.cloneNode() );
+  						const object = new CSS3DSprite( (image.cloneNode as any)() );
   						object.position.x = Math.random() * 4000 - 2000,
   						object.position.y = Math.random() * 4000 - 2000,
   						object.position.z = Math.random() * 4000 - 2000;
@@ -148,7 +148,7 @@ function onReady(__stage) {
   
   			
   
-  			function transition() {
+  			function transition( this: any ) {
   
   				const offset = current * particlesTotal * 3;
   				const duration = 2000;
@@ -177,7 +177,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     				const time = performance.now();
     				for ( let i = 0, l = objects.length; i < l; i ++ ) {

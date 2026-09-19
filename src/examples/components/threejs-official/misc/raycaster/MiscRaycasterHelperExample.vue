@@ -14,9 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three/webgpu';
+// @ts-expect-error CDN URL 模块无类型声明(运行时由 Vite 解析)
 import { RaycasterHelper } from 'https://cdn.jsdelivr.net/npm/@gsimone/three-raycaster-helper@0.1.0/dist/gsimone-three-raycaster-helper.esm.js';
 
 const props = defineProps({
@@ -27,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - raycaster - helper<br/>\n\t\t\tSee external <a href=\"https://github.com/gsimone/things?tab=readme-ov-file#raycasterhelper\" target=\"_blank\" rel=\"noopener\">RaycasterHelper</a> for more information."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -36,8 +37,8 @@ function onReady(__stage) {
   
   
   
-  			let capsule1, capsule2, capsule3;
-  			let raycaster, raycasterHelper;
+  			let capsule1: any, capsule2: any, capsule3: any;
+  			let raycaster: any, raycasterHelper: any;
   
   			
   
@@ -85,7 +86,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				const elapsedTime = time / 1000; // ms to s
   

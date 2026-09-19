@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,11 +27,12 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const container = gContainer.value.querySelector('#container')
+  const container = gContainer.value!.querySelector('#container')
   await loadScript("/graphics/assets/external/spritejs.js");
   await loadScript("/graphics/assets/external/sprite-extend-3d.js");
   await loadScript("/graphics/assets/external/d3-array.v2.min.js");
   await loadScript("/graphics/assets/external/d3-geo.v2.min.js");
+  const d3: any = (globalThis as any).d3 // d3 由上方 loadScript 注入为全局；用局部 any 别名屏蔽 UMD 全局类型，保持脚本加载通道不变
   await loadScript("/graphics/assets/external/topojson.js");
   {
     const mapWidth = 960;
@@ -45,11 +46,11 @@ async function initGraphicsExample() {
     
         const topojsonData = '/graphics/assets/external/843bbd2c37f94f26.json';
         
-        async function loadMap(src = topojsonData, {strokeColor, fillColor} = {}) {
+        async function loadMap(src = topojsonData, {strokeColor, fillColor}: any = {}) {
           const data = await (await fetch(src)).json();
           const countries = topojson.feature(data, data.objects.countries);
           const canvas = new OffscreenCanvas(mapScale * mapWidth, mapScale * mapHeight);
-          const context = canvas.getContext('2d');
+          const context = canvas.getContext('2d')!;
           context.imageSmoothingEnabled = false;
     
           return drawMap({context, countries, strokeColor, fillColor});
@@ -62,7 +63,7 @@ async function initGraphicsExample() {
           strokeColor = '#666',
           fillColor = '#000',
           strokeWidth = 1.5,
-        } = {}) {
+        }: any = {}) {
           const path = d3.geoPath(projection).context(context);
     
           context.save();
@@ -142,7 +143,7 @@ async function initGraphicsExample() {
           } 
         `;
     
-        const container = gContainer.value.querySelector('#container');
+        const container = gContainer.value!.querySelector('#container');
         const scene = new Scene({
           container,
         });
@@ -232,7 +233,7 @@ async function initGraphicsExample() {
           }
         `;
     
-        function createSky(layer, skyProgram) {
+        function createSky(layer: any, skyProgram?: any) {
           skyProgram = skyProgram || layer.createProgram({
             vertex: skyVertex,
             fragment: skyFragment,

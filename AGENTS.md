@@ -20,7 +20,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | 主线 | 入口 | 规模 |
 |---|---|---|
 | 首页 3D 地球应用 | `/` → `src/views/EarthView.vue` | 多类数据可视化图层（`src/three/layers/`） |
-| 示例中心 | `/examples` → `src/examples/` | **11 个来源 / 1417 条示例 / 1429 个 `.vue` 组件** |
+| 示例中心 | `/examples` → `src/examples/` | **11 个来源 / 1417 条示例 / 1523 个 `.vue` 组件(2026-09 TS 迁移后全部 `lang="ts"`,平台侧无 `.js` 残留)** |
 
 - 路由表：`/`、`/three-globe`、`/three-globe/:example`、`/examples`、
   `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）、`/monitor`（数字地球平台·业务监控）。
@@ -54,7 +54,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | **R3** | 改示例 `id` 必须同步改组件文件名（`git mv`），反之亦然。 | `id` → `PascalCase(id)Example.vue` 是**无类型保护的约定**，失配只表现为用户侧「未找到 Vue 组件」白屏，**没有任何构建报错**。 |
 | **R4** | 凭据只写 `.env.local`（已 gitignore）。新增变量要三件事齐做：登记 `.env.example`、在 `env.d.ts` 的 `ImportMetaEnv` 补类型、实现「未配置时优雅降级」。 | `npm run check:secrets` 在本地 git 钩子与 CI 双重拦截。 |
 | **R5** | **不要写死本机绝对路径**（配置文件、脚本都不行）。生成脚本用 `new URL('./...', import.meta.url)` 推导。 | 历史上 `.npmrc` 写过他人机器的 `store-dir`，换机器/换 CI 直接失败。 |
-| **R6** | **不要改 `node_modules/three` 来「验证」问题** —— 改动不会生效。 | `three` / `three/webgpu` / `three/tsl` 被 `vite.config.js` 的 `threeCompatResolver` 重定向到 `src/examples/three-build-compat/`；`three/examples/jsm`、`three/addons` → `src/examples/jsm-compat/`。 |
+| **R6** | **不要改 `node_modules/three` 来「验证」问题** —— 改动不会生效。 | `three` / `three/webgpu` / `three/tsl` 被 `vite.config.ts` 的 `threeCompatResolver` 重定向到 `src/examples/three-build-compat/`；`three/examples/jsm`、`three/addons` → `src/examples/jsm-compat/`。 |
 | **R7** | 分包只用 `codeSplitting.groups`，**不要用 `manualChunks`**。给某个库新增分组前，先确认它是否真的出现在首页/常用页的依赖图里。 | Vite 8 内核是 Rolldown，`manualChunks` 已废弃且**静默失效**；而分组会把库变成**共享 chunk** 并被提升进 `modulepreload` —— 曾因此让首页预载 1.7 MB 用不到的高斯泼溅库。 |
 | **R8** | 删除示例严格按顺序：`git rm` 源文件 → 手动编辑 registry 删条目 → 清 `scripts/_thumb_map.json` 映射 → 删缩略图 → 清生成器里的死键 → `npm run verify`。**不要靠重跑生成器「自动清理」。** | 顺序错会出现「registry 引用不存在的文件」，且没有构建报错。 |
 | **R9** | 不要 `--no-verify` 跳过钩子，不要直接 push `main`。 | 闸门失败请修问题，而不是绕开。 |
@@ -90,7 +90,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 - **dev 与 preview 都要跑。** dev server 按需编译、不经过生产打包，
   因此「分包错乱、产物模块初始化顺序、构建期 env 注入失败」这类问题在 dev 下永远测不出
   —— 历史上 `manualChunks` 静默失效、以及一条 E2E 选择器歧义，都是 preview 才暴露的。
-- 改动涉及 `vite.config.js` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
+- 改动涉及 `vite.config.ts` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
 - `npm run verify:drift` 是 `verify` 的第 3 环，也是判断「registry 与生成器是否一致」的唯一可靠手段。
 
 ---
@@ -136,6 +136,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | 架构与关键机制（示例解析、资源清理、兼容层、分包） | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) |
 | **历史坑与不可逆操作** | [`docs/KNOWN_PITFALLS.md`](./docs/KNOWN_PITFALLS.md) |
 | 范围声明、待办与优先级 | [`docs/ROADMAP.md`](./docs/ROADMAP.md) |
+| TypeScript 整体迁移的范围、批次与进度 | [`docs/TS_MIGRATION.md`](./docs/TS_MIGRATION.md) |
 | 治理轮次的已完成项归档 | [`docs/CHANGELOG.md`](./docs/CHANGELOG.md) |
 | 部署形态、托管要求与发布前校验 | [`docs/DEPLOY.md`](./docs/DEPLOY.md) |
 | three.js 兼容层机制与退出步骤 | [`docs/THREE_UPGRADE.md`](./docs/THREE_UPGRADE.md) |

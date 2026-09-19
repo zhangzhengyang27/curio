@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,8 +17,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
 
@@ -36,7 +36,7 @@ const viewerOptions = {
 
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -44,8 +44,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const layer = Cesium.ImageryLayer.fromProviderAsync(Cesium.ArcGisMapServerImageryProvider.fromUrl(GLOBAL_CONFIG.getLayerUrl()))
@@ -87,7 +87,7 @@ function onReady(ctx) {
   })
   
   const numPoints = 1000 // 插值点数量
-  const interpolatedPoints = []
+  const interpolatedPoints: any[] = []
   for (let i = 0; i < numPoints; i++) {
       const t = i / (numPoints - 1)
       const point = catmullRomSpline.evaluate(t)
@@ -116,7 +116,7 @@ function onReady(ctx) {
   const speedFactor = 50 // 设置速度因子，值越大速度越快
   let stop = Cesium.JulianDate.addSeconds(start, interpolatedPoints.length / speedFactor, new Cesium.JulianDate())
   
-  function setProperty(t1, t2) {
+  function setProperty(t1: unknown, t2: unknown) {
       const property = new Cesium.SampledPositionProperty()
       for (let i = 0; i < interpolatedPoints.length; i++)  property.addSample(Cesium.JulianDate.addSeconds(t1, i / speedFactor, new Cesium.JulianDate()), interpolatedPoints[i])
       entity.position = property
@@ -127,7 +127,7 @@ function onReady(ctx) {
   setProperty(start, stop)
   
   // 监听飞机的位置属性，当飞机到达终点时重新设置位置属性
-  viewer.clock.onTick.addEventListener(function (clock) {
+  viewer.clock.onTick.addEventListener(function (clock: any) {
       if (Cesium.JulianDate.compare(clock.currentTime, stop) >= 0) {
           const newStart = Cesium.JulianDate.clone(stop);
           stop = Cesium.JulianDate.addSeconds(newStart, interpolatedPoints.length / speedFactor, new Cesium.JulianDate());

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - cameras - logarithmic depth buffer<br/>\n\t\t\tmousewheel to dolly out"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -51,8 +51,8 @@ function onReady(__stage) {
   			let zoompos = - 100, minzoomspeed = .015;
   			let zoomspeed = minzoomspeed;
   
-  			let container, border, stats;
-  			const objects = {};
+  			let container, border: any, stats: any;
+  			const objects: any = {};
   
   			// Generate a number of text labels, from 1µm in size up to 100,000,000 light years
   			// Try to use some descriptive real-world examples of objects at each scale
@@ -107,7 +107,7 @@ function onReady(__stage) {
   			
   
   
-  			function initView( scene, name, logDepthBuf ) {
+  			function initView( scene: any, name: any, logDepthBuf: any ) {
   
   				const framecontainer = __stage.container;
   
@@ -125,7 +125,7 @@ function onReady(__stage) {
   
   			}
   
-  			function initScene( font ) {
+  			function initScene( font: any ) {
   
   
   
@@ -135,7 +135,7 @@ function onReady(__stage) {
   				light.position.set( 100, 100, 100 );
   				scene.add( light );
   
-  				const materialargs = {
+  				const materialargs: any = {
   					color: 0xffffff,
   					specular: 0x050505,
   					shininess: 50,
@@ -157,7 +157,7 @@ function onReady(__stage) {
   					labelgeo.computeBoundingSphere();
   
   					// center text
-  					labelgeo.translate( - labelgeo.boundingSphere.radius, 0, 0 );
+  					labelgeo.translate( - labelgeo.boundingSphere!.radius, 0, 0 );
   
   					materialargs.color = new THREE.Color().setHSL( Math.random(), 0.5, 0.5 );
   
@@ -209,7 +209,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     // Put some limits on zooming
     				const minzoom = labeldata[ 0 ].size * labeldata[ 0 ].scale * 1;
@@ -309,7 +309,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onBorderPointerMove( ev ) {
+  			function onBorderPointerMove( ev: any ) {
   
   				screensplit = Math.max( 0, Math.min( 1, ev.clientX / (__stage.container?.clientWidth || window.innerWidth) ) );
   
@@ -322,14 +322,14 @@ function onReady(__stage) {
   
   			}
   
-  			function onMouseMove( ev ) {
+  			function onMouseMove( ev: any ) {
   
   				mouse[ 0 ] = ev.clientX / (__stage.container?.clientWidth || window.innerWidth);
   				mouse[ 1 ] = ev.clientY / (__stage.container?.clientHeight || window.innerHeight);
   
   			}
   
-  			function onMouseWheel( ev ) {
+  			function onMouseWheel( ev: any ) {
   
   				const amount = ev.deltaY;
   				if ( amount === 0 ) return;

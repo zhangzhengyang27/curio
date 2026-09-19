@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   BoxGeometry,
   EquirectangularReflectionMapping,
@@ -25,10 +25,11 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import ExampleScene from '../../ExampleScene.vue'
 
 class ResourceTracker {
+  resources: Set<any>
   constructor() {
     this.resources = new Set()
   }
-  track(resource) {
+  track(resource: any) {
     if (Array.isArray(resource)) {
       for (const child of resource) {
         this.track(child)
@@ -42,9 +43,9 @@ class ResourceTracker {
           }
         }
         if ('uniforms' in resource) {
-          for (const uniform of Object.values(resource.uniforms)) {
+          for (const uniform of Object.values((resource as any).uniforms)) {
             if (!uniform) continue
-            const uniformValue = uniform.value
+            const uniformValue = (uniform as { value?: unknown }).value
             if (uniformValue instanceof Texture || Array.isArray(uniformValue)) {
               this.track(uniformValue)
             }
@@ -61,7 +62,7 @@ class ResourceTracker {
     }
     return resource
   }
-  untrack(resource) {
+  untrack(resource: any) {
     this.resources.delete(resource)
   }
   dispose() {
@@ -76,7 +77,7 @@ class ResourceTracker {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene } = ctx
 
   const resTracker = new ResourceTracker()
@@ -111,7 +112,7 @@ function onReady(ctx) {
       resTracker.track(map)
     })
 
-  ctx.addUpdateCallback((delta, elapsed) => {
+  ctx.addUpdateCallback((delta: number, elapsed: number) => {
     box.rotation.y = elapsed * 0.001
   })
 }

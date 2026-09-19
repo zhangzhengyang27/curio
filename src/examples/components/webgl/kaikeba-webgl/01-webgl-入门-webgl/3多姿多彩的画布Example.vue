@@ -2,16 +2,16 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {Color} from 'three'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
   
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
       // 声明颜色 rgba
       gl.clearColor(1, 1, 0, 1);
       // 刷底色

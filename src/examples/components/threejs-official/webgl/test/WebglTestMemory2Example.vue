@@ -14,9 +14,12 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
+
+let geometry: any;
+
 
 const props = defineProps({
   example: {
@@ -25,7 +28,7 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - memory test II"
 
@@ -44,7 +47,7 @@ const fragmentShaderSource = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -60,9 +63,9 @@ function onReady(__stage) {
   
   
   
-  			const meshes = [];
+  			const meshes: any = [];
   
-  			let fragmentShader, vertexShader;
+  			let fragmentShader: any, vertexShader: any;
   
   			
   			_intervalId = setInterval( render, 1000 / 60 );

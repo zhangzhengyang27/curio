@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const shape = new THREE.Shape()
   shape.moveTo(0, 0)
   shape.bezierCurveTo(1, 1, -1, 1, 0, 0)

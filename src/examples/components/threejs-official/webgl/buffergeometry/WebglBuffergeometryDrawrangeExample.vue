@@ -14,15 +14,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+let particlePositions: any;
 
 const props = defineProps({
   example: {
@@ -32,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - buffergeometry drawrange<br/>\n\t\t\tby <a href=\"https://twitter.com/fernandojsg\">fernandojsg</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,15 +45,15 @@ function onReady(__stage) {
   
   
   
-  			let group;
+  			let group: any;
   			let container, stats;
-  			const particlesData = [];
+  			const particlesData: any = [];
   
   			let positions, colors;
-  			let particles;
-  			let pointCloud;
+  			let particles: any;
+  			let pointCloud: any;
   
-  			let linesMesh;
+  			let linesMesh: any;
   
   			const maxParticleCount = 1000;
   			let particleCount = 500;
@@ -72,12 +74,12 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( effectController, 'showDots' ).onChange( function ( value ) {
+  				gui.add( effectController, 'showDots' ).onChange( function ( value: any ) {
   
   					pointCloud.visible = value;
   
   				} );
-  				gui.add( effectController, 'showLines' ).onChange( function ( value ) {
+  				gui.add( effectController, 'showLines' ).onChange( function ( value: any ) {
   
   					linesMesh.visible = value;
   
@@ -85,7 +87,7 @@ function onReady(__stage) {
   				gui.add( effectController, 'minDistance', 10, 300 );
   				gui.add( effectController, 'limitConnections' );
   				gui.add( effectController, 'maxConnections', 0, 30, 1 );
-  				gui.add( effectController, 'particleCount', 0, maxParticleCount, 1 ).onChange( function ( value ) {
+  				gui.add( effectController, 'particleCount', 0, maxParticleCount, 1 ).onChange( function ( value: any ) {
   
   					particleCount = value;
   					particles.setDrawRange( 0, particleCount );
@@ -115,7 +117,7 @@ function onReady(__stage) {
   				scene.add( group );
   
   				const helper = new THREE.BoxHelper( new THREE.Mesh( new THREE.BoxGeometry( r, r, r ) ) );
-  				helper.material.color.setHex( 0x474747 );
+  				(helper.material as any).color.setHex( 0x474747 );
   				helper.material.blending = THREE.AdditiveBlending;
   				helper.material.transparent = true;
   				group.add( helper );
@@ -196,7 +198,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     let vertexpos = 0;
     				let colorpos = 0;
     				let numConnected = 0;

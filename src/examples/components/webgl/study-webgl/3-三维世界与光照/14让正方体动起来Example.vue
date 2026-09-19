@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern("/webgl/study-webgl/libs/gl-matrix.js");
   let vertexstring = `
           attribute vec4 a_position;
@@ -30,14 +30,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
   
-          var webgl;
-          var angle = 45;
-          var webglDiv
-          var uniformTexture;
+          var webgl: any;          var angle = 45;
+          var webglDiv: any;          var uniformTexture: any;
           var texture;
-          var moveState;
-          var mouseDownX;
-          var mouseDownY;
+          var moveState: any;
+          var mouseDownX: any;
+          var mouseDownY: any;
           var offsetX = 0;
           var offsetY = 0;
           var wheelMove = 0;
@@ -52,18 +50,18 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               document.onmousedown = mouseDown;
               document.onmousemove = mouseMove;
               document.onmouseup = mouseUp;
-              document.onmousewheel = onmouseWheel;
+              (document as any).onmousewheel = onmouseWheel;
   
           }
   
-          function mouseDown(e) {
+          function mouseDown(e: any) {
               moveState = true;
   
               mouseDownX = e.clientX;
               mouseDownY = e.clientY;
           }
   
-          function mouseMove(e) {
+          function mouseMove(e: any) {
               if (!moveState) {
                   return
               } else {
@@ -73,12 +71,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               initBuffer();
           }
   
-          function mouseUp(e) {
+          function mouseUp(e: any) {
               moveState = false;
   
           }
   
-          function onmouseWheel(e) {
+          function onmouseWheel(e: any) {
               wheelMove += e.wheelDelta / 100;
               initBuffer();
               // offsetWheel =
@@ -86,15 +84,15 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
   
           }
   
           function initShader() {
   
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               webgl.shaderSource(vsshader, vertexstring);
               webgl.shaderSource(fsshader, fragmentstring);
@@ -116,7 +114,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.attachShader(program, fsshader)
               webgl.linkProgram(program);
               webgl.useProgram(program);
-              webgl.program = program
+              (webgl as any).program = program
   
           }
   
@@ -150,14 +148,14 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               ]
   
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 6 * 4, 0);
   
-              let attribOutUV = webgl.getAttribLocation(webgl.program, "a_outUV");
+              let attribOutUV = webgl.getAttribLocation((webgl as any).program, "a_outUV");
               webgl.enableVertexAttribArray(attribOutUV);
               webgl.vertexAttribPointer(attribOutUV, 2, webgl.FLOAT, false, 6 * 4, 4 * 4);
   
@@ -168,7 +166,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               //角度小，看到的物体大，角度大，看到的物体小。
               glMatrix.mat4.perspective(ProjMatrix, angle * Math.PI / 180, webglDiv.clientWidth / webglDiv.clientHeight, 1, 1000);//修改可视域范围
   
-              let uniformMatrix1 = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix1 = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
   
               let ModelMatrixx = glMatrix.mat4.create();
               glMatrix.mat4.identity(ModelMatrixx);
@@ -201,15 +199,15 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               glMatrix.mat4.multiply(mvpMatrix, ProjMatrix, mvMatrix);
               webgl.uniformMatrix4fv(uniformMatrix1, false, mvpMatrix)
               //纹理绘制
-              uniformTexture = webgl.getUniformLocation(webgl.program, "texture");
+              uniformTexture = webgl.getUniformLocation((webgl as any).program, "texture");
   
               texture = initTexture("/webgl/study-webgl/3-三维世界与光照/images/container2_specular.png");
   
   
           }
   
-          function initTexture(imageFile) {
-              let textureHandle = webgl.createTexture();
+          function initTexture(imageFile: any) {
+              let textureHandle = webgl.createTexture()!;
               textureHandle.image = new Image();
               textureHandle.image.src = imageFile;
               textureHandle.image.onload = function () {
@@ -218,7 +216,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               return textureHandle;
           }
   
-          function handleLoadedTexture(texture) {
+          function handleLoadedTexture(texture: any) {
   
   
               webgl.bindTexture(webgl.TEXTURE_2D, texture);

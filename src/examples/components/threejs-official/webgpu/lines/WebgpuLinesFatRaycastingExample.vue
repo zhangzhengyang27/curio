@@ -17,7 +17,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -27,6 +27,8 @@ import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeome
 import { Line2 } from 'three/examples/jsm/lines/webgpu/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 
+let timer: any;
+
 const props = defineProps({
   example: {
     type: Object,
@@ -35,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Fat Lines</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -49,9 +51,9 @@ function onReady(__stage) {
   
   			//
   
-  			let line, thresholdLine, segments, thresholdSegments;
+  			let line: any, thresholdLine: any, segments: any, thresholdSegments: any;
   
-  			let sphereInter, sphereOnLine;
+  			let sphereInter: any, sphereOnLine: any;
   			let gui;
   
   
@@ -61,8 +63,8 @@ function onReady(__stage) {
   
   			const raycaster = new THREE.Raycaster();
   
-  			raycaster.params.Line2 = {};
-  			raycaster.params.Line2.threshold = 0;
+  			(raycaster.params as any).Line2 = {};
+  			(raycaster.params as any).Line2.threshold = 0;
   
   			const matLine = new THREE.Line2NodeMaterial( {
   
@@ -95,7 +97,7 @@ function onReady(__stage) {
   				'visualize threshold': matThresholdLine.visible,
   				'width': matLine.linewidth,
   				'alphaToCoverage': matLine.alphaToCoverage,
-  				'threshold': raycaster.params.Line2.threshold,
+  				'threshold': (raycaster.params as any).Line2.threshold,
   				'translation': 0,
   				'animate': true
   
@@ -205,23 +207,31 @@ function onReady(__stage) {
   				//
   
   				document.addEventListener( 'pointermove', onPointerMove );
-  				
+
   				onWindowResize();
-  
+
+				function onWindowResize() {
+					const w = __stage.container?.clientWidth || window.innerWidth
+					const h = __stage.container?.clientHeight || window.innerHeight
+					camera.aspect = w / h
+					camera.updateProjectionMatrix()
+					renderer.setSize( w, h )
+				}
+
   				initGui();
   
   			}
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
   
   			}
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				const obj = line.visible ? line : segments;
@@ -242,7 +252,7 @@ function onReady(__stage) {
     					sphereOnLine.position.copy( intersects[ 0 ].pointOnLine );
     					const index = intersects[ 0 ].faceIndex;
     					const colors = obj.geometry.getAttribute( 'instanceColorStart' );
-    					color.fromBufferAttribute( colors, index );
+    					color.fromBufferAttribute( colors, index as any );
     					sphereInter.material.color.copy( color ).offsetHSL( 0.3, 0, 0 );
     					sphereOnLine.material.color.copy( color ).offsetHSL( 0.7, 0, 0 );
     					renderer.domElement.style.cursor = 'crosshair';
@@ -255,7 +265,7 @@ function onReady(__stage) {
   
   			//
   
-  			function switchLine( val ) {
+  			function switchLine( val: any ) {
   
   				switch ( val ) {
   
@@ -285,13 +295,13 @@ function onReady(__stage) {
   
   				gui = renderer.inspector.createParameters( 'Settings' );
   
-  				gui.add( params, 'line type', { 'LineGeometry': 0, 'LineSegmentsGeometry': 1 } ).onChange( function ( val ) {
+  				gui.add( params, 'line type', { 'LineGeometry': 0, 'LineSegmentsGeometry': 1 } ).onChange( function ( val: any ) {
   
   					switchLine( val );
   
   				} );
   
-  				gui.add( params, 'world units' ).onChange( function ( val ) {
+  				gui.add( params, 'world units' ).onChange( function ( val: any ) {
   
   					matLine.worldUnits = val;
   					matLine.needsUpdate = true;
@@ -301,33 +311,33 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'visualize threshold' ).onChange( function ( val ) {
+  				gui.add( params, 'visualize threshold' ).onChange( function ( val: any ) {
   
   					matThresholdLine.visible = val;
   
   				} );
   
-  				gui.add( params, 'width', 1, 10 ).onChange( function ( val ) {
+  				gui.add( params, 'width', 1, 10 ).onChange( function ( val: any ) {
   
   					matLine.linewidth = val;
-  					matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
+  					matThresholdLine.linewidth = matLine.linewidth + (raycaster.params as any).Line2.threshold;
   
   				} );
   
-  				gui.add( params, 'alphaToCoverage' ).onChange( function ( val ) {
+  				gui.add( params, 'alphaToCoverage' ).onChange( function ( val: any ) {
   
   					matLine.alphaToCoverage = val;
   
   				} );
   
-  				gui.add( params, 'threshold', 0, 10 ).onChange( function ( val ) {
+  				gui.add( params, 'threshold', 0, 10 ).onChange( function ( val: any ) {
   
-  					raycaster.params.Line2.threshold = val;
-  					matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
+  					(raycaster.params as any).Line2.threshold = val;
+  					matThresholdLine.linewidth = matLine.linewidth + (raycaster.params as any).Line2.threshold;
   
   				} );
   
-  				gui.add( params, 'translation', 0, 10 ).onChange( function ( val ) {
+  				gui.add( params, 'translation', 0, 10 ).onChange( function ( val: any ) {
   
   					line.position.x = val;
   					segments.position.x = val;

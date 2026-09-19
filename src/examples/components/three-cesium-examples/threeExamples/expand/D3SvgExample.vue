@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 import * as d3 from "d3";
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,14 +29,14 @@ async function onReady(ctx) {
 
   scene.add(new THREE.AxesHelper(100), new THREE.GridHelper(100, 10))
   
-  const data = await d3.json(props.example?.globals?.FILE_HOST + "other/volcano.json");
+  const data: any = await d3.json(props.example?.globals?.FILE_HOST + "other/volcano.json");
   const n = data.width;
   const m = data.height;
   const width = 928;
   const height = Math.round(m / n * width);
   const path = d3.geoPath().projection(d3.geoIdentity().scale(width / n));
   const contours = d3.contours().size([n, m]);
-  const color = d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(data.values)).nice();
+  const color = (d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(data.values as number[]) as [number, number]) as any).nice();
   
   const svg = d3.create("svg")
     .attr("width", width)
@@ -49,16 +49,16 @@ async function onReady(ctx) {
     .selectAll()
     .data(color.ticks(20))
     .join("path")
-    .attr("d", d => path(contours.contour(data.values, d)))
+    .attr("d", (d: any) => path(contours.contour(data.values, d)))
     .attr("fill", color);
   
   const div = document.createElement('div');
   div.style.position = 'absolute';
   div.style.width = '300px';
-  div.appendChild(svg.node());
+  div.appendChild(svg.node()!);
   document.body.appendChild(div);
   
-  const svgString = new XMLSerializer().serializeToString(svg.node());
+  const svgString = new XMLSerializer().serializeToString(svg.node()!);
   
   const svgData = new Blob([svgString], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(svgData);
@@ -81,7 +81,7 @@ async function onReady(ctx) {
         let pathColor = 0x00ff00; // 默认绿色
   
         if (path.userData && path.userData.style) {
-          const fillMatch = path.userData.style.fill;
+          const fillMatch = (path.userData.style as any).fill;
           if (fillMatch && fillMatch !== 'none') pathColor = fillMatch;
         }
   
@@ -97,7 +97,7 @@ async function onReady(ctx) {
         shapes.forEach(shape => {
           const geometry = new THREE.ShapeGeometry(shape);
           geometry.computeBoundingBox();
-          const center = geometry.boundingBox.getCenter(new THREE.Vector3());
+          const center = geometry.boundingBox!.getCenter(new THREE.Vector3());
           geometry.translate(-center.x, -center.y, 0);
           const mesh = new THREE.Mesh(geometry, material);
           mesh.position.set(0, 0, index * 0.1); // 轻微分层避免z-fighting

@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - handinput - cubes<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   			let container;
   
-  			let hand1, hand2;
+  			let hand1, hand2: any;
   			let controller1, controller2;
   			let controllerGrip1, controllerGrip2;
   
@@ -59,7 +59,7 @@ function onReady(__stage) {
   				initialScale: 1
   			};
   
-  			const spheres = [];
+  			const spheres: any = [];
   
   			
   
@@ -164,7 +164,7 @@ function onReady(__stage) {
   			
   
   			const SphereRadius = 0.05;
-  			function onPinchStartLeft( event ) {
+  			function onPinchStartLeft( event: any ) {
   
   				const controller = event.target;
   
@@ -210,7 +210,7 @@ function onReady(__stage) {
   
   			}
   
-  			function collideObject( indexTip ) {
+  			function collideObject( indexTip: any ) {
   
   				for ( let i = 0; i < spheres.length; i ++ ) {
   
@@ -229,7 +229,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPinchStartRight( event ) {
+  			function onPinchStartRight( event: any ) {
   
   				const controller = event.target;
   				const indexTip = controller.joints[ 'index-finger-tip' ];
@@ -245,7 +245,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPinchEndRight( event ) {
+  			function onPinchEndRight( event: any ) {
   
   				const controller = event.target;
   
@@ -266,13 +266,13 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( scaling.active ) {
     					const indexTip1Pos = hand1.joints[ 'index-finger-tip' ].position;
     					const indexTip2Pos = hand2.joints[ 'index-finger-tip' ].position;
     					const distance = indexTip1Pos.distanceTo( indexTip2Pos );
     					const newScale = scaling.initialScale + distance / scaling.initialDistance - 1;
-    					scaling.object.scale.setScalar( newScale );
+    					( scaling.object as any ).scale.setScalar( newScale );
     				}
   })
   

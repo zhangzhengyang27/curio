@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -29,8 +29,8 @@ function onReady(__stage) {
   
   
   
-  			let container, stats;
-  			let raycaster, parentTransform, sphereInter;
+  			let container: any, stats: any;
+  			let raycaster: any, parentTransform: any, sphereInter: any;
   
   			const pointer = new THREE.Vector2();
   			const radius = 100;
@@ -146,7 +146,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -155,7 +155,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     theta += 0.1;
     				camera.position.x = radius * Math.sin( THREE.MathUtils.degToRad( theta ) );

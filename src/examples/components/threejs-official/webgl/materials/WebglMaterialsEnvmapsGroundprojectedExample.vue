@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -37,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - Ground projected environment mapping.<br>\n\t\t\tFerrari 458 Italia model by <a href=\"https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6\" target=\"_blank\" rel=\"noopener\">vicent091036</a><br>\n\t\t\t<a href=\"https://polyhaven.com/a/blouberg_sunrise_2\" target=\"_blank\" rel=\"noopener\">Blouberg Sunrise 2</a> by <a href=\"https://gregzaal.com/\" target=\"_blank\" rel=\"noopener\">Greg Zaal</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -54,7 +54,9 @@ async function onReady(__stage) {
   			};
   
   			let skybox;
-  
+
+  			async function init() { } // init body flattened into onReady below (await-based)
+
   			init().then( render );
   
   
@@ -102,15 +104,15 @@ async function onReady(__stage) {
   					carModel.scale.multiplyScalar( 4 );
   					carModel.rotation.y = Math.PI;
   
-  					carModel.getObjectByName( 'body' ).material = bodyMaterial;
-  
-  					carModel.getObjectByName( 'rim_fl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_fr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'trim' ).material = detailsMaterial;
-  
-  					carModel.getObjectByName( 'glass' ).material = glassMaterial;
+  				carModel!.getObjectByName( 'body' )!.material = bodyMaterial;
+
+  				carModel!.getObjectByName( 'rim_fl' )!.material = detailsMaterial;
+  				carModel!.getObjectByName( 'rim_fr' )!.material = detailsMaterial;
+  				carModel!.getObjectByName( 'rim_rr' )!.material = detailsMaterial;
+  				carModel!.getObjectByName( 'rim_rl' )!.material = detailsMaterial;
+  				carModel!.getObjectByName( 'trim' )!.material = detailsMaterial;
+
+  				carModel!.getObjectByName( 'glass' )!.material = glassMaterial;
   
   					// shadow
   					const mesh = new THREE.Mesh(
@@ -151,7 +153,7 @@ async function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'enabled' ).name( 'Grounded' ).onChange( function ( value ) {
+  				gui.add( params, 'enabled' ).name( 'Grounded' ).onChange( function ( value: any ) {
   
   					if ( value ) {
   

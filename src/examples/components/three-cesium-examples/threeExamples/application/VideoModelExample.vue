@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -54,11 +54,11 @@ async function onReady(ctx) {
     gltf.scene.traverse((child) => {
   
       if (child.isMesh) {
-  
-        child.material.map = texture
-  
-        child.material.envMap = textureCube
-  
+
+        (child.material as THREE.MeshStandardMaterial).map = texture as THREE.VideoTexture
+
+        ;(child.material as THREE.MeshStandardMaterial).envMap = textureCube
+
       }
   
     })

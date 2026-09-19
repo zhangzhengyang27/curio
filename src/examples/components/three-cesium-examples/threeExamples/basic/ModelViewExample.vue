@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'lil-gui'
@@ -25,7 +25,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -33,7 +33,7 @@ function onReady(ctx) {
 
   controls.enableDamping = true
   
-  let model
+  let model: any = null
   
   gui = new GUI()
   
@@ -45,9 +45,9 @@ function onReady(ctx) {
   
           model = scene.add(gltf.scene)
   
-          const { frontView, target, rightView, topView, bottomView, backView, maxView } = getObjectViews(model)
+          const { frontView, target, rightView, topView, bottomView, backView } = getObjectViews(model)
   
-          const setView = view => {
+          const setView = (view: any) => {
   
               createGsapAnimation(controls.object.position, view)
   
@@ -65,7 +65,7 @@ function onReady(ctx) {
   
   )
   
-  function getObjectViews(object, fov = 50) {
+  function getObjectViews(object: any, fov = 50) {
   
       const box = new THREE.Box3().setFromObject(object)
   
@@ -99,7 +99,7 @@ function onReady(ctx) {
   
   }
   
-  function createGsapAnimation(position, position_) {
+  function createGsapAnimation(position: any, position_: any) {
   
       return gsap.to(
   

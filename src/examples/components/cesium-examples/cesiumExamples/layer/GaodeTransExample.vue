@@ -6,10 +6,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
+// 转换遗留:原 HTML 第三方脚本全局类(高德投影),保持行为声明
+let AmapMercatorTilingScheme: any
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,8 +22,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
 
@@ -39,7 +41,7 @@ const viewerOptions = {
 
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -47,8 +49,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.imageryLayers.addImageryProvider(
@@ -93,8 +95,8 @@ function onReady(ctx) {
   };
   
   // 飞行到指定位置
-  function flyToLocation(name) {
-      const position = locations[name];
+  function flyToLocation(name: string) {
+      const position = (locations as Record<string, any>)[name];
       if (position) {
           viewer.camera.flyTo({
               destination: Cesium.Cartesian3.fromDegrees(position[0], position[1], position[2]),
@@ -107,7 +109,7 @@ function onReady(ctx) {
   const mapFolder = gui.addFolder('坐标纠偏对比');
   
   // 添加地图类型选择
-  mapFolder.add(mapParams, 'mapType', ['纠偏校正', '未纠正']).name('地图类型').onChange(function (value) {
+  mapFolder.add(mapParams, 'mapType', ['纠偏校正', '未纠正']).name('地图类型').onChange(function (value: any) {
       viewer.imageryLayers.removeAll();
       viewer.imageryLayers.addImageryProvider(
           new Cesium.UrlTemplateImageryProvider({
@@ -120,7 +122,7 @@ function onReady(ctx) {
   
   // 添加位置选择
   mapFolder.add(mapParams, 'locations', Object.keys(locations)).name('常用位置')
-      .onChange(function (value) {
+      .onChange(function (value: any) {
           flyToLocation(value);
       });
   

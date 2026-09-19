@@ -129,7 +129,7 @@ npm install --legacy-peer-deps
 
 ### C3. `three` 相关 import 被重定向到本地兼容层
 
-`three` / `three/webgpu` / `three/tsl` 由 `vite.config.js` 的 `threeCompatResolver`
+`three` / `three/webgpu` / `three/tsl` 由 `vite.config.ts` 的 `threeCompatResolver`
 指向 `src/examples/three-build-compat/`，`three/examples/jsm` 与 `three/addons`
 指向 `src/examples/jsm-compat/`。
 
@@ -143,7 +143,7 @@ npm install --legacy-peer-deps
 
 **根因**：macOS 文件名的 NFC/NFD 规范化 + vite 静态中间件解码不匹配。
 
-**现状**：`vite.config.js` 的 `serveUnicodePublic` 插件（仅 `apply: 'serve'`）
+**现状**：`vite.config.ts` 的 `serveUnicodePublic` 插件（仅 `apply: 'serve'`）
 用 Node `fs` 按解码后的中文路径直接读 `public/` 并返回。生产环境由真实静态服务器处理，无需该插件。
 
 **注意**：脚本里「磁盘中文路径」与「HTTP 编码 URL」是有意不对称的，改截图/校验脚本时不要"顺手统一"。
@@ -475,3 +475,105 @@ L3~4 整片占位（带字 jpg 4769B，主色深藏青 (7,6,40)）；**L5 瓦片
    （更早版本曾用 3，48 并发实测必触发限流，见上文复现实验）；
 6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量。
 
+
+## E. TypeScript 迁移(TS_MIGRATION.md)引入的操作坑(2026-09-17)
+
+### E1. 给 `.vue` 的 JS 代码插类型断言时,行首 `(` 会与上一行拼成函数调用(ASI 陷阱)
+
+**现象**:用 perl/sed 给参数补 `: any` 时写出 `(obj.material as any).xxx = ...`,
+若上一行是 `const x = new Foo()`(无分号,JS 靠 ASI),则两行被解析为
+`new Foo()(...)` —— 报 `TS2349: This expression is not callable`,甚至悄悄改变运行时行为。
+波4(MachineRoom/Universe)与波9 各踩过一次。
+
+**规则**:在无分号风格的 JS 代码中插入以 `(` 开头的断言表达式,**行首必须补分号**
+(`;(obj.material as any).xxx`),或改用临时变量承接断言结果。
+同风险:`[` 开头的行(成员访问/元素访问)。
+
+### E2. `@ts-nocheck` 是全局级消音:它会掩盖「新增代码的类型错误」
+
+M4 给 903 个三方示例组件登记了 `@ts-nocheck`(预算偏离见 TS_MIGRATION.md §3.3)。
+这些文件内**任何后续新增代码都不再被类型检查**,包括将来真正想引入的 bug。
+**规则**:在这些文件里改代码时,不能依赖 `npm run typecheck` 兜底;
+若改动较大,顺手移除该文件的 nocheck 行、跑一次 vue-tsc、修完再放回。
+追平方法与优先级见 TS_MIGRATION.md §3.3。
+
+### E3. vite.config.js / registry/index.js 改名会连带破坏闸门脚本(迁移期同步清单)
+
+闸门脚本硬编码了字面路径,漏改即「CI 假红/假绿」:
+- `verify-three-compat.mjs` 检查 `vite.config.ts` 是否注册 threeCompatResolver(迁移中同步过);
+- `verify-registry.mjs` / `verify-thumbnails.mjs` 动态 `import()` registry barrel,
+  registry 转 .ts 后 npm script 需加 `--experimental-strip-types`(CI Node 22.6+ 支持,
+  本机 Node 24 原生);
+- registry/index.ts 内部 11 个分片 import 必须带**显式 `.ts` 扩展**
+  (Node ESM 无扩展名解析失败),tsconfig 已开 `allowImportingTsExtensions`。
+**规则**:任何 registry/vite.config 文件名变动,先 grep
+`scripts/` 下对路径的字符串引用再动手。
+
+### E4. lang="ts" 让存量 JS 的「隐式坏死」显形 —— 先归因再修
+
+迁移中 TS 强制暴露了一批**迁移前就坏**的代码(并非迁移引入):
+- mygrapics/graphics 共 84 个 demo `new GlRenderer()` 缺 import(HTML 转换丢失,
+  运行时 ReferenceError)——已批量补回 ogl Renderer 别名导入;
+- mapToolsController 缺 `getArcgisTerrainSampler` import(被 try/catch 掩盖,
+  贴地采样静默退化)——已补回;
+- CodeDrawerHeader 复制按钮调用不存在的 `copySection`(点击必抛错)——已改 $emit。
+**规则**:lang=ts 后出现的错误先区分「迁移引入」与「存量显形」;
+存量显形属于迁移的收益,修不修单独决策,但必须在提交信息里写明,不得静默绕过。
+
+### E5. Node <23.6 跑 `verify:drift` 会静默假红:registry .ts 动态 import 失败被吞成空数组
+
+registry 转 .ts 后,生成器用 `loadExistingExamples()` 动态 `import()` registry 文件做
+「人工字段合并」;该函数 **catch 后静默返回 `[]`**(registry-guard.mjs 的容错设计)。
+在默认不开启 type-stripping 的 Node(<23.6,含 CI 钉的 Node 22)上,
+npm script 若漏带 `--experimental-strip-types`,import 直接抛
+`ERR_UNKNOWN_FILE_EXTENSION` → 被吞掉 → 生成器以为「现有 registry 为空」,
+不保留人工字段 → `--check` 报 29 张缩略图/精修文案「漂移」的**假红**。
+2026-09-18 实锤:同一条命令 shell 直跑(经 nvm 解析到 Node 24)通过、
+`npm run` 内(Node 22)失败,差异只在 node 版本;verify:drift 三段命令中
+只有第一段带 flag,后两段漏带(已补齐)。
+**排查口诀**:漂移报告里出现「缩略图 N→0」「description 退回标题」且
+无「已保留已有字段」日志行,先查 node 版本与 strip-types flag,再怀疑真漂移。
+顺带教训:工具 shell 里 `which node` 与 npm run 内的 node 可能不同(nvm 多版本),
+闸门失败先打印两边的 `node --version`。
+
+### E6. 波7 three-project 的 12 个 lint 错自 2026-09 起潜伏:lint:ci 在 HEAD 上曾为假绿
+
+波7(9d832eb)为 three-project 8 个 .vue + firework.ts 加 @ts-nocheck 时,该目录**不在
+eslint ignores**(与 webgl/graphics 等源不同),`ban-ts-comment` 12 错当时即已产生,
+但后续多批次记录「lint:ci 绿」——实际是闸门未真跑或跑时被别的因素掩盖。
+2026-09-18 批次3 移除这批 nocheck 后 lint 才真正回绿。
+**规则**:每个批次的闸门结果以「本次会话亲跑、记录退出码」为准;
+接手他人/前期批次时,闸门状态要重新验证,不沿用历史记录。
+
+### E7. 并行子代理的「自报完成」不可作为闸门依据(2026-09-18 nocheck 追平并行波实证)
+
+并行代理各自清错时,主会话**提交前必须独立复验**(过滤本目录的
+`vue-tsc --noEmit | grep '该目录'`),不能信代理的最终报告。实证两种翻车:
+- **假 0 错**:graphics 代理报告「0 错」,主会话复验实测 467 错——其验证轮的
+  vue-tsc 疑似跑挂后 grep 到空输出被当成通过。幸在提交前拦截。
+- **codemod 语法损坏**:同一代理的按行列插 `: any` 脚本把 5 处无括号单参箭头
+  `d =>` 插成 `d: any =>`(TS1005 语法错 ×17),且其第一版修复脚本本身又因
+  负向断言写反而全空转。语法错(TS1xxx)与类型错(TS2xxx/TS7xxx)要分开看,
+  前者说明文件已被改坏,优先人工检查。
+- **时序错位**:代理可能在主会话已提交某目录后继续追加「润色」——
+  提交后要留意该目录是否又出现未提交改动,作为补遗小提交处理。
+**协作协议**:每目录一个代理、目录间零交集;代理禁止一切 git 写操作与
+env.d.ts/共享配置修改(新全局用 `(globalThis as any)` 局部断言并上报);
+主会话统一复验、统一提交、统一跑 build/E2E;验收证据要求代理贴
+「最后一轮完整命令实际输出」而非结论数字。
+
+### E8. 长跑并行代理会死于模型超时/流停滞——按现场接管,不要盲目 resume
+
+并行波2 的 4 个代理里 3 个在 5-8 小时后死于 `Model request timed out` /
+`Model stream stalled`(token 用量 1.6M-17.5M)。死亡前它们往往已接近完成:
+shader 代理死时自己的 47 文件已 0 错;basic+particle 死时只剩 8 错。
+**接管流程**:(1) 数 nocheck 残留与改动文件数,确定死时进度;
+(2) 全量 typecheck 查错误余量与 TS10xx/TS11xx 语法错(有语法错说明死在
+codemod 中途,优先人工修复);(3) 剩余错误走既定 codemod 管线
+(参数/声明注解 → 结构点手工 → ASI 扫描);(4) 按切片提交。
+**切片粒度教训**:单代理任务以 2 小时内可完成为度(约 20-40 文件),
+118 文件的切片必须再拆;主会话复验期间的 typecheck 会与幸存代理的
+验证轮抢 CPU,单轮可拖到 10 分钟以上,属正常,不要误判为挂死。
+另:代理死后的「润色」可能已落盘一半(如 PointCloudFpsOctree 的
+`children = [] as any` 补丁没打在根因上),接管时要重读现场而不是
+沿用死代理的思路。

@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const geometry = new THREE.TorusKnotGeometry(0.5, 0.1, 128, 3, 8, 9)
 
   const material = new THREE.MeshNormalMaterial({

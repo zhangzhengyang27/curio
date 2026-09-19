@@ -7,16 +7,20 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
+let _onPointerLockClick: any = null
+let _onMouseMove: any = null
+let _onKeyDown: any = null
+let _onKeyUp: any = null
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { MeshBVH, acceleratedRaycast, computeBoundsTree } from 'three-mesh-bvh';
-import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
 const props = defineProps({
@@ -26,7 +30,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -38,7 +42,7 @@ function onReady(ctx) {
   // 初始化场景、相机和渲染器
   
   // 创建赛博朋克着色器材质
-  function createCyberpunkMaterial(originalColor) {
+  function createCyberpunkMaterial(originalColor: any) {
     const cyberpunkVertexShader = `
       varying vec3 vPosition;
       varying vec3 vNormal;
@@ -135,8 +139,8 @@ function onReady(ctx) {
   
   // 加载模型 fbx
   let cityModel;
-  const collidableObjects = []; // 存储所有可碰撞对象
-  const cyberpunkMaterials = []; // 存储赛博朋克材质以便更新
+  const collidableObjects: any[] = []; // 存储所有可碰撞对象
+  const cyberpunkMaterials: any[] = []; // 存储赛博朋克材质以便更新
   
   new FBXLoader().load(props.example?.globals?.HOST + '/files/model/city.FBX', (object3d) => {
       object3d.scale.multiplyScalar(0.01)
@@ -145,7 +149,7 @@ function onReady(ctx) {
       cityModel = object3d;
       
       // 为所有网格生成 BVH 用于碰撞检测，并应用赛博朋克着色器
-      object3d.traverse((child) => {
+      object3d.traverse((child: any) => {
           if (child.isMesh) {
               child.geometry.computeBoundsTree = computeBoundsTree;
               child.geometry.computeBoundsTree();
@@ -172,7 +176,7 @@ function onReady(ctx) {
       scene.add(car);
       
       // 为汽车添加碰撞检测，并移除贴图
-      car.traverse((child) => {
+      car.traverse((child: any) => {
           if (child.isMesh) {
               child.geometry.computeBoundsTree = computeBoundsTree;
               child.geometry.computeBoundsTree();
@@ -200,7 +204,7 @@ function onReady(ctx) {
       scene.add(plane);
       
       // 为飞机添加碰撞检测，并移除贴图
-      plane.traverse((child) => {
+      plane.traverse((child: any) => {
           if (child.isMesh) {
               child.geometry.computeBoundsTree = computeBoundsTree;
               child.geometry.computeBoundsTree();
@@ -228,7 +232,7 @@ function onReady(ctx) {
       scene.add(elegant);
       
       // 为模型添加碰撞检测，并移除贴图
-      elegant.traverse((child) => {
+      elegant.traverse((child: any) => {
           if (child.isMesh) {
               child.geometry.computeBoundsTree = computeBoundsTree;
               child.geometry.computeBoundsTree();
@@ -660,7 +664,7 @@ function onReady(ctx) {
   scene.add(rimLight);
   
   // 创建体积光聚光灯着色器 - 增加戏剧性光束效果
-  function createVolumetricSpotlight(color, position, target) {
+  function createVolumetricSpotlight(color: any, position: any, target: any) {
     const spotlightVertexShader = `
       varying vec3 vWorldPosition;
       varying vec3 vNormal;
@@ -764,7 +768,7 @@ function onReady(ctx) {
   }
   
   // 创建动态霓虹灯点光源着色器
-  function createNeonPointLight(color1, color2, position, radius) {
+  function createNeonPointLight(color1: any, color2: any, position: any, radius: any) {
     const neonVertexShader = `
       varying vec3 vWorldPosition;
       varying vec2 vUv;
@@ -1128,7 +1132,7 @@ function onReady(ctx) {
   const rimLightingGenerator = createEnvironmentalRimLighting();
   
   // 创建程序化闪电效果着色器
-  function createProceduralLightning(startPos, endPos) {
+  function createProceduralLightning(startPos: any, endPos: any) {
     const lightningVertexShader = `
       varying vec2 vUv;
       varying vec3 vPosition;
@@ -1440,8 +1444,8 @@ function onReady(ctx) {
   };
   
   // 加载角色模型
-  let character;
-  let jetpackParticles; // 喷气背包粒子系统
+  let character: any;
+  let jetpackParticles: any; // 喷气背包粒子系统
   new GLTFLoader().load(props.example?.globals?.FILE_HOST + "files/model/Fox.glb", (gltf) => {
     character = gltf.scene;
     scene.add(character);
@@ -1471,8 +1475,8 @@ function onReady(ctx) {
   });
   
   // 鼠标锁定和视角控制
-  const _onPointerLockClick = () => document.body.requestPointerLock()
-  const _onMouseMove = (event) => {
+  _onPointerLockClick = () => document.body.requestPointerLock()
+  _onMouseMove = (event: any) => {
     if (document.pointerLockElement !== document.body) return;
     
     state.view.yaw -= event.movementX * state.view.mouseSensitivity;
@@ -1482,7 +1486,7 @@ function onReady(ctx) {
     
     if (character) character.rotation.y = state.view.yaw + Math.PI;
   };
-  const _onKeyDown = ({ key }) => {
+  _onKeyDown = ({ key }: any) => {
     switch(key.toLowerCase()) {
       case 'w': state.keys.w = true; break;
       case 'a': state.keys.a = true; break;
@@ -1502,13 +1506,13 @@ function onReady(ctx) {
       case 'shift': state.keys.shift = true; break;
     }
   };
-  const _onKeyUp = ({ key }) => {
+  _onKeyUp = ({ key }: any) => {
     const k = key.toLowerCase();
     if (k === ' ') {
       state.keys.space = false;
       state.jetpack.active = false;
     } else if (k in state.keys) {
-      state.keys[k] = false;
+      (state.keys as any)[k] = false;
     }
   };
 
@@ -1518,7 +1522,7 @@ function onReady(ctx) {
   document.addEventListener('keyup', _onKeyUp);
   
   // 改进的碰撞检测函数
-  function checkCollision(position, velocity) {
+  function checkCollision(position: any, velocity: any) {
     if (collidableObjects.length === 0) return { collided: false, correction: new THREE.Vector3() };
     
     const correction = new THREE.Vector3();
@@ -1533,7 +1537,7 @@ function onReady(ctx) {
     ];
     
     // 16个方向进行射线检测，提高碰撞检测精度
-    const directions = [];
+    const directions: any[] = [];
     for (let i = 0; i < 16; i++) {
       const angle = (i / 16) * Math.PI * 2;
       directions.push(new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle)));
@@ -1796,7 +1800,7 @@ function onReady(ctx) {
     }
     
     // 更新相机（应用眩晕抖动）
-    Rotation = new THREE.Quaternion().setFromEuler(
+    const cameraRotation = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(
         state.view.pitch + state.dizziness.shakeOffset.y, 
         state.view.yaw + state.dizziness.shakeOffset.x, 
@@ -1964,7 +1968,7 @@ function onReady(ctx) {
     // 喷气背包设置
     const jetpackFolder = gui.addFolder('🚀 喷气背包系统');
     jetpackFolder.add(state.jetpack, 'enabled').name('● 系统启用')
-      .onChange((value) => {
+      .onChange((value: any) => {
         if (!value) {
           state.jetpack.active = false;
         }
@@ -1977,7 +1981,7 @@ function onReady(ctx) {
     jetpackFolder.open();
     
     // 相机设置
-    Folder = gui.addFolder('📷 视角控制');
+    const cameraFolder = gui.addFolder('📷 视角控制');
     cameraFolder.add(state.camera, 'height', 0.2, 2.0, 0.05).name('↕ 相机高度');
     cameraFolder.add(camera, 'fov', 60, 120, 1).name('👁 视野角度')
       .onChange(() => camera.updateProjectionMatrix());
@@ -2064,7 +2068,7 @@ function onReady(ctx) {
   }
   
   // 显示操作提示
-  GLOBAL_CONFIG.ElMessage('🚀 WASD移动，鼠标视角，空格喷气飞行，Shift加速。喷气背包已启用！赛博朋克城市等你探索！💡 新增：体积光聚光灯、霓虹灯点光源、神光效果、大气发光、闪电效果等多种动态光效着色器！碰撞会触发眩晕效果。')
+  (globalThis as any).GLOBAL_CONFIG.ElMessage('🚀 WASD移动，鼠标视角，空格喷气飞行，Shift加速。喷气背包已启用！赛博朋克城市等你探索！💡 新增：体积光聚光灯、霓虹灯点光源、神光效果、大气发光、闪电效果等多种动态光效着色器！碰撞会触发眩晕效果。')
 }
 
 function onBeforeDispose() {

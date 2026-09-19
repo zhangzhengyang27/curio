@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const vertices = [
     { pos: [-1, -1, 1], norm: [0, 0, 1], uv: [0, 0] },
     { pos: [1, -1, 1], norm: [0, 0, 1], uv: [1, 0] },
@@ -56,9 +56,9 @@ function onReady(ctx) {
     { pos: [-1, -1, -1], norm: [0, -1, 0], uv: [1, 1] },
   ]
 
-  const positions = []
-  const normals = []
-  const uvs = []
+  const positions: any[] = []
+  const normals: any[] = []
+  const uvs: any[] = []
   for (const vertex of vertices) {
     positions.push(...vertex.pos)
     normals.push(...vertex.norm)

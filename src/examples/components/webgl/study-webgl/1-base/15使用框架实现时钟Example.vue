@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   let vertexstring = `
           attribute vec4 a_position;
@@ -21,8 +21,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
           var projMat4 = glMatrix.mat4.create();
-          var webgl;
-          var count = 0;
+          var webgl: any;          var count = 0;
   
           function webglStart() {
               init();
@@ -45,7 +44,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               let webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               //glMatrix.mat4.ortho(projMat4, 0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0)
           }
@@ -77,7 +76,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.linkProgram(program);
               webgl.useProgram(program);
   
-              webgl.program = program
+              (webgl as any).program = program
           }
   
           function initBuffer1() {
@@ -101,7 +100,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
               ]
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
@@ -109,7 +108,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 4 * 4, 0);
   
   
-              let uniformMatrix = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
               webgl.uniformMatrix4fv(uniformMatrix, false, modelView)
   
               webgl.clearColor(0.0, 1.0, 0.0, 1.0);
@@ -137,7 +136,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
               ]
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
@@ -145,7 +144,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 4 * 4, 0);
   
   
-              let uniformMatrix = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
               webgl.uniformMatrix4fv(uniformMatrix, false, modelView1)
   
               webgl.drawArrays(webgl.TRIANGLES, 0, 6);
@@ -170,7 +169,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
               ]
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
@@ -178,7 +177,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 4 * 4, 0);
   
   
-              let uniformMatrix = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
               webgl.uniformMatrix4fv(uniformMatrix, false, modelView1)
   
               webgl.drawArrays(webgl.TRIANGLES, 0, 6);
@@ -189,7 +188,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
   
               // //纹理变动
-              // uniformAnim = webgl.getUniformLocation(webgl.program, "anim");
+              // uniformAnim = webgl.getUniformLocation((webgl as any).program, "anim");
   
               // webgl.uniform1f(uniformAnim, count);
   

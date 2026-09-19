@@ -16,13 +16,17 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, storage, Fn, instancedBufferAttribute, instanceIndex, sin, time, float, uniform, shapeCircle, mix, vec3 } from 'three/tsl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import * as GeometryUtils from 'three/examples/jsm/utils/GeometryUtils.js';
+
+let effectController: any;
+let material: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Instanced Points</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,12 +48,12 @@ function onReady(__stage) {
   
   
   
-  			let camera2, backgroundNode;
+  			let camera2: any, backgroundNode;
   
   
   
   			// viewport
-  			let insetWidth;
+  			let insetWidth: any, insetHeight: any;
   
   
   			// compute
@@ -127,7 +131,7 @@ function onReady(__stage) {
   				// Material / Sprites
   
   				const attributeRange = instancedBufferAttribute( instanceSizeBufferAttribute );
-  				const pointColors = mix( vec3( 0.0 ), instancedBufferAttribute( colorsAttribute ), attributeRange.div( float( effectController.maxWidth ) ) );
+  				const pointColors = mix( vec3( 0.0 ), (instancedBufferAttribute as any)( colorsAttribute ), (attributeRange as any).div( float( effectController.maxWidth ) ) );
   
   				material = new THREE.PointsNodeMaterial( {
   
@@ -162,7 +166,19 @@ function onReady(__stage) {
   
   				
   				onWindowResize();
-  
+
+  				function onWindowResize() {
+  					const w = __stage.container?.clientWidth || window.innerWidth
+  					const h = __stage.container?.clientHeight || window.innerHeight
+  					camera.aspect = w / h
+  					camera.updateProjectionMatrix()
+  					renderer.setSize( w, h )
+  					insetWidth = h / 4 // square
+  					insetHeight = h / 4
+  					camera2.aspect = insetWidth / insetHeight
+  					camera2.updateProjectionMatrix()
+  				}
+
   				// GUI
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
@@ -178,7 +194,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // compute
     				renderer.compute( computeSize );
     				// main scene

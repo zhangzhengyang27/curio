@@ -4,17 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+// @ts-expect-error 运行时从 public 目录按 URL 引入的 spritejs ESM（无类型、非 npm 模块），保持原加载方式
 import {Scene} from '/graphics/assets/external/spritejs.esm.js'
+// @ts-expect-error 运行时从 public 目录按 URL 引入的 sprite-extend-3d ESM（无类型、非 npm 模块），保持原加载方式
 import {Cube, Light, shaders} from '/graphics/assets/external/sprite-extend-3d.esm.js'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -29,14 +31,15 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const stage = gContainer.value.querySelector('#stage')
+  const stage = gContainer.value!.querySelector('#stage')
   await loadScript("/graphics/assets/external/d3.v5.js");
+  const d3: any = (globalThis as any).d3 // d3 由上方 loadScript 注入为全局；用局部 any 别名屏蔽 UMD 全局类型，保持脚本加载通道不变
   {
-    let cache = null;
+    let cache: any = null;
         async function getData(toDate = new Date()) {
           if(!cache) {
             const data = await (await fetch('/graphics/assets/github_contributions_akira-cn.json')).json();
-            cache = data.contributions.map((o) => {
+            cache = data.contributions.map((o: any) => {
               o.date = new Date(o.date.replace(/-/g, '/'));
               return o;
             });
@@ -74,7 +77,7 @@ async function initGraphicsExample() {
         }
     
         (async function () {
-          const container = gContainer.value.querySelector('#stage');
+          const container = gContainer.value!.querySelector('#stage');
     
           const scene = new Scene({
             container,
@@ -104,7 +107,7 @@ async function initGraphicsExample() {
           });
     
           const dataset = await getData();
-          const max = d3.max(dataset, (a) => {
+          const max = d3.max(dataset, (a: any) => {
             return a.count;
           });
     
@@ -125,7 +128,7 @@ async function initGraphicsExample() {
             // .attr('scaleY', (d) => {
             //   return d.count / max;
             // })
-            .attr('pos', (d, i) => {
+            .attr('pos', (d: any, i: any) => {
               const x0 = -3.8 + 0.0717 + 0.0015;
               const z0 = -0.5 + 0.05 + 0.0015;
               const x = x0 + 0.143 * Math.floor(i / 7);
@@ -133,7 +136,7 @@ async function initGraphicsExample() {
               // return [x, 0.5 * d.count / max, z];
               return [x, 0, z];
             })
-            .attr('colors', (d, i) => {
+            .attr('colors', (d: any, i: any) => {
               return d.color;
             });
     
@@ -174,16 +177,16 @@ async function initGraphicsExample() {
     
           chart.transition()
             .duration(2000)
-            .attr('scaleY', (d, i) => {
+            .attr('scaleY', (d: any, i: any) => {
               return linear(d.count);
             })
-            .attr('y', (d, i) => {
+            .attr('y', (d: any, i: any) => {
               return 0.5 * linear(d.count);
             });
     
           layer.setOrbit();
     
-          window.layer = layer;
+          (window as any).layer = layer;
         }());
   }
 }

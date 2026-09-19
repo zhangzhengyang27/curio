@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -71,7 +71,7 @@ function onReady(__stage) {
   
   					const modifier = new SimplifyModifier();
   
-  					const simplified = mesh.clone();
+  					const simplified = mesh.clone() as any;
   					simplified.material = simplified.material.clone();
   					simplified.material.flatShading = true;
   					const count = Math.floor( simplified.geometry.attributes.position.count * 0.875 ); // number of vertices to remove

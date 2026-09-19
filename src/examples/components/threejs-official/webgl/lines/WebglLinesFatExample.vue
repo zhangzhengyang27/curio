@@ -17,10 +17,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\">three.js</a> - fat lines"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -50,14 +50,14 @@ function onReady(__stage) {
   
   
   
-  			let line, camera2;
-  			let line1;
-  			let matLine, matLineBasic, matLineDashed;
+  			let line: any, camera2: any;
+  			let line1: any;
+  			let matLine: any, matLineBasic: any, matLineDashed: any;
   
   
   			// viewport
-  			let insetWidth;
-  			let insetHeight;
+  			let insetWidth: any;
+  			let insetHeight: any;
   
   			
   
@@ -141,15 +141,31 @@ function onReady(__stage) {
   
   				
   				onWindowResize();
-  
+
   				initGui();
+
+  		function onWindowResize() {
+  			const w = __stage.container?.clientWidth || window.innerWidth
+  			const h = __stage.container?.clientHeight || window.innerHeight
+  			camera.aspect = w / h;
+  			camera.updateProjectionMatrix();
+
+  			renderer.setSize( w, h );
+
+  			insetWidth = h / 4; // square
+  			insetHeight = h / 4;
+
+  			camera2.aspect = insetWidth / insetHeight;
+  			camera2.updateProjectionMatrix();
+
+  		}
   
   			
   
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // main scene
     				renderer.setClearColor( 0x000000, 0 );
     				renderer.setViewport( 0, 0, (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
@@ -181,7 +197,7 @@ function onReady(__stage) {
   					'dash / gap': 1
   				};
   
-  				gui.add( param, 'line type', { 'LineGeometry': 0, 'gl.LINE': 1 } ).onChange( function ( val ) {
+  				gui.add( param, 'line type', { 'LineGeometry': 0, 'gl.LINE': 1 } ).onChange( function ( val: any ) {
   
   					switch ( val ) {
   
@@ -203,7 +219,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( param, 'world units' ).onChange( function ( val ) {
+  				gui.add( param, 'world units' ).onChange( function ( val: any ) {
   
   					matLine.worldUnits = val;
   					matLine.needsUpdate = true;
@@ -219,33 +235,33 @@ function onReady(__stage) {
   
   				} );
   
-  				const widthController = gui.add( param, 'width', 1, 10 ).name( 'width (pixels)' ).onChange( function ( val ) {
+  				const widthController = gui.add( param, 'width', 1, 10 ).name( 'width (pixels)' ).onChange( function ( val: any ) {
   
   					matLine.linewidth = val;
   
   				} );
   
-  				gui.add( param, 'alphaToCoverage' ).onChange( function ( val ) {
+  				gui.add( param, 'alphaToCoverage' ).onChange( function ( val: any ) {
   
   					matLine.alphaToCoverage = val;
   
   				} );
   
-  				gui.add( param, 'dashed' ).onChange( function ( val ) {
+  				gui.add( param, 'dashed' ).onChange( function ( val: any ) {
   
   					matLine.dashed = val;
   					line1.material = val ? matLineDashed : matLineBasic;
   
   				} );
   
-  				gui.add( param, 'dash scale', 0.5, 2, 0.1 ).onChange( function ( val ) {
+  				gui.add( param, 'dash scale', 0.5, 2, 0.1 ).onChange( function ( val: any ) {
   
   					matLine.dashScale = val;
   					matLineDashed.scale = val;
   
   				} );
   
-  				gui.add( param, 'dash / gap', { '2 : 1': 0, '1 : 1': 1, '1 : 2': 2 } ).onChange( function ( val ) {
+  				gui.add( param, 'dash / gap', { '2 : 1': 0, '1 : 1': 1, '1 : 2': 2 } ).onChange( function ( val: any ) {
   
   					switch ( val ) {
   

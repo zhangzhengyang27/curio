@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - NURBS curve and surface example"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let group;
+  			let group: any;
   
   			let targetRotation = 0;
   			let targetRotationOnPointerDown = 0;
@@ -115,7 +115,7 @@ function onReady(__stage) {
   				group.add( nurbsLine );
   
   				const nurbsControlPointsGeometry = new THREE.BufferGeometry();
-  				nurbsControlPointsGeometry.setFromPoints( nurbsCurve.controlPoints );
+  				nurbsControlPointsGeometry.setFromPoints( nurbsCurve.controlPoints as any );
   
   				const nurbsControlPointsMaterial = new THREE.LineBasicMaterial( { color: 0x333333, opacity: 0.25, transparent: true } );
   
@@ -157,7 +157,7 @@ function onReady(__stage) {
   					map.anisotropy = 16;
   					map.colorSpace = THREE.SRGBColorSpace;
   
-  					function getSurfacePoint( u, v, target ) {
+  					function getSurfacePoint( u: any, v: any, target: any ) {
   
   						return nurbsSurface.getPoint( u, v, target );
   
@@ -248,31 +248,31 @@ function onReady(__stage) {
   					// we create evaluation functions for different surfaces with one of the three
   					// parameter values (u, v, w) kept constant and create multiple THREE.Mesh
   					// objects one for each surface
-  					function getSurfacePointFront( u, v, target ) {
+  					function getSurfacePointFront( u: any, v: any, target: any ) {
   
   						return nurbsVolume.getPoint( u, v, 0, target );
   
   					}
   
-  					function getSurfacePointMiddle( u, v, target ) {
+  					function getSurfacePointMiddle( u: any, v: any, target: any ) {
   
   						return nurbsVolume.getPoint( u, v, 0.5, target );
   
   					}
   
-  					function getSurfacePointBack( u, v, target ) {
+  					function getSurfacePointBack( u: any, v: any, target: any ) {
   
   						return nurbsVolume.getPoint( u, v, 1, target );
   
   					}
   
-  					function getSurfacePointTop( u, w, target ) {
+  					function getSurfacePointTop( u: any, w: any, target: any ) {
   
   						return nurbsVolume.getPoint( u, 1, w, target );
   
   					}
   
-  					function getSurfacePointSide( v, w, target ) {
+  					function getSurfacePointSide( v: any, w: any, target: any ) {
   
   						return nurbsVolume.getPoint( 0, v, w, target );
   
@@ -323,6 +323,7 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
+  				container = __stage.container;
   				container.style.touchAction = 'none';
   				container.addEventListener( 'pointerdown', onPointerDown );
   
@@ -337,7 +338,7 @@ function onReady(__stage) {
   
   			//
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -349,7 +350,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -359,7 +360,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -370,7 +371,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     group.rotation.y += ( targetRotation - group.rotation.y ) * 0.05;
     }

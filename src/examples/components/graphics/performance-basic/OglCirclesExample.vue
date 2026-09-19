@@ -4,13 +4,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Program, Geometry, Transform, Mesh} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -18,7 +18,7 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 async function initGraphicsExample() {
   {
-    const canvas = gContainer.value.querySelector('canvas');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
           canvas,
           antialias: true,
@@ -28,7 +28,7 @@ async function initGraphicsExample() {
         const gl = renderer.gl;
         gl.clearColor(1, 1, 1, 1);
     
-        function circleGeometry(gl, radius = 0.04, count = 3000, segments = 20) {
+        function circleGeometry(gl: any, radius = 0.04, count = 3000, segments = 20) {
           const tau = Math.PI * 2;
           const position = new Float32Array(segments * 2 + 2);
           const index = new Uint16Array(segments * 3);
@@ -126,7 +126,7 @@ async function initGraphicsExample() {
         const mesh = new Mesh(gl, {geometry, program});
         mesh.setParent(scene);
     
-        function update(t) {
+        function update(t: number) {
           program.uniforms.uTime.value = t / 1000;
           renderer.render({scene});
           requestAnimationFrame(update);

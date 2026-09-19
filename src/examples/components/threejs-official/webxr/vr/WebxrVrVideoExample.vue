@@ -13,7 +13,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - 360 stereo video<br />\n\t\t\tstereoscopic panoramic render by <a href=\"http://pedrofe.com/rendering-for-oculus-rift-with-arnold/\" target=\"_blank\" rel=\"noopener\">pedrofe</a>. scene from <a href=\"http://www.meryproject.com/\" target=\"_blank\" rel=\"noopener\">mery project</a>."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera

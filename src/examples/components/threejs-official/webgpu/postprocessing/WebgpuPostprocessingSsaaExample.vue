@@ -13,11 +13,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { ssaaPass } from 'three/examples/jsm/tsl/display/SSAAPassNode.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let timer: any;
+let ssaaRenderPass: any;
+
 
 const props = defineProps({
   example: {
@@ -27,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSAA</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -158,7 +162,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( params.autoRotate ) {
     					const delta = timer.getDelta();

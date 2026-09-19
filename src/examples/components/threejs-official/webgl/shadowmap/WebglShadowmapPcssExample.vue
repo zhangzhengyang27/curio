@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "Percent Closer Soft-Shadows (PCSS) by <a href=\"http://eduperiment.com\">spidersharma03</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -185,7 +185,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() / 1000;
     				group.traverse( function ( child ) {
     					if ( 'phase' in child.userData ) {

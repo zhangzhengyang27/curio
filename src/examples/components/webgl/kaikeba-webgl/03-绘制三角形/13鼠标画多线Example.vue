@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {initShaders, getMousePosInWebgl} from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Poly.js'
@@ -28,7 +28,7 @@ const fragmentShader = `precision mediump float;
         }
       }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -40,7 +40,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
   
-      const gl = canvas.getContext("webgl")
+      const gl = canvas.getContext("webgl")!
   
       initShaders(gl, vsSource, fsSource);
   
@@ -52,7 +52,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       //夜空
       const sky = new Sky(gl)
       //当前正在绘制的多边形
-      let poly = null
+      let poly: any = null
   
       //取消右击提示
       canvas.oncontextmenu = function () {
@@ -88,7 +88,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       }
   
       //创建多边形
-      function crtPoly(x, y) {
+      function crtPoly(x: number, y: number) {
           poly = new Poly({
               vertices: [x, y, x, y],
               types: ['POINTS', 'LINE_STRIP'],

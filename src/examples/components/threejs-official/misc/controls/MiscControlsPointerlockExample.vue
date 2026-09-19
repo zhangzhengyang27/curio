@@ -8,10 +8,13 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+
+let raycaster: any;
+
 
 const props = defineProps({
   example: {
@@ -20,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -28,7 +31,7 @@ function onReady(__stage) {
 
   
   
-  			const objects = [];
+  			const objects: any = [];
   
   
   
@@ -90,7 +93,7 @@ function onReady(__stage) {
   
   				scene.add( controls.object );
   
-  				const onKeyDown = function ( event ) {
+  				const onKeyDown = function ( event: any ) {
   
   					switch ( event.code ) {
   
@@ -123,7 +126,7 @@ function onReady(__stage) {
   
   				};
   
-  				const onKeyUp = function ( event ) {
+  				const onKeyUp = function ( event: any ) {
   
   					switch ( event.code ) {
   
@@ -177,7 +180,7 @@ function onReady(__stage) {
   
   				}
   
-  				floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
+  				(floorGeometry as any) = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
   
   				position = floorGeometry.attributes.position;
   				const colorsFloor = [];
@@ -215,7 +218,7 @@ function onReady(__stage) {
   				for ( let i = 0; i < 500; i ++ ) {
   
   					const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
-  					boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+  					(boxMaterial as any)!.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
   
   					const box = new THREE.Mesh( boxGeometry, boxMaterial );
   					box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -241,7 +244,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now();
     				if ( controls.isLocked === true ) {
     					raycaster.ray.origin.copy( controls.object.position );

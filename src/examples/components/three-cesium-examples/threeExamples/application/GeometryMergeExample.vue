@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -44,7 +44,7 @@ function onReady(ctx) {
   // 动画循环
   
   // 几何体合并函数
-  function mergeModelGeometries(model, options = {}) {
+  function mergeModelGeometries(model: any, options: any = {}) {
       const { 
           material = new THREE.MeshStandardMaterial({ 
               color: 0x666666, metalness: 0.5, roughness: 0.5,
@@ -57,8 +57,8 @@ function onReady(ctx) {
       model.updateWorldMatrix(true, true);
       
       // 收集网格
-      const meshes = [];
-      model.traverse(object => {
+      const meshes: any[] = [];
+      model.traverse((object: any) => {
           if (object.isMesh && object.geometry && (!ignoreHidden || object.visible)) {
               meshes.push(object);
           }
@@ -67,8 +67,8 @@ function onReady(ctx) {
       if (meshes.length === 0) return null;
       
       // 找出共有属性
-      const commonAttribs = new Set();
-      let refGeom = null;
+      const commonAttribs = new Set<string>();
+      let refGeom: any = null;
       
       meshes.forEach(mesh => {
           const geom = mesh.geometry;
@@ -112,8 +112,8 @@ function onReady(ctx) {
           
           const mergedGeometry = BufferGeometryUtils.mergeGeometries(geometries);
           
-          if (mergeThreshold > 0 && mergedGeometry.mergeVertices) {
-              mergedGeometry.mergeVertices(mergeThreshold);
+          if (mergeThreshold > 0 && (mergedGeometry as any).mergeVertices) {
+              (mergedGeometry as any).mergeVertices(mergeThreshold);
           }
           
           return new THREE.Mesh(mergedGeometry, material);

@@ -133,4 +133,7 @@
 - **巡游路线不包含疫情主题**（2026-09-14 拍板；`disease` 图层保留在应用中，但不进巡游分镜）。
 - 不为历史遗留的转换产物（`src/examples/components/{webgl,graphics,mygrapics}` 等由 HTML 批量转换而来的示例）
   做逐文件代码风格整改 —— 它们在 ESLint 配置中已被整体豁免，视为「保留原始风格的外部代码」。
-- 不追求把 1429 个示例组件全部纳入 TypeScript。
+- ~~不追求把 1429 个示例组件全部纳入 TypeScript。~~
+  （**2026-09-17 推翻**：拍板对 src 做 TypeScript 整体迁移，示例组件按 11 个来源分波纳入，
+  见 [`docs/TS_MIGRATION.md`](./TS_MIGRATION.md)。
+  上一条的「外部代码」豁免语义不变 —— `jsm-compat` / `three-build-compat` 等三方副本仍不迁移。）

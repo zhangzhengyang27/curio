@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -26,7 +26,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Basic Material</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -34,7 +35,7 @@ function onReady(__stage) {
 
   
   
-  			const spheres = [];
+  			const spheres: any = [];
   
   			let mouseX = 0;
   			let mouseY = 0;
@@ -104,21 +105,21 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.addColor( params, 'color' ).onChange( ( value ) => material.color.set( value ) );
-  				gui.add( params, 'mapping', mappings ).onChange( ( value ) => {
+  				gui.addColor( params, 'color' ).onChange( ( value: any ) => (material as any)!.color.set( value ) );
+  				gui.add( params, 'mapping', mappings ).onChange( ( value: any ) => {
   
   					textureCube.mapping = value;
   					material.needsUpdate = true;
   			
   				} );
-  				gui.add( params, 'refractionRatio', 0, 1, 0.01 ).onChange( ( value ) => material.refractionRatio = value );
-  				gui.add( params, 'transparent' ).onChange( ( value ) => {
+  				gui.add( params, 'refractionRatio', 0, 1, 0.01 ).onChange( ( value: any ) => material.refractionRatio = value );
+  				gui.add( params, 'transparent' ).onChange( ( value: any ) => {
   			
   					material.transparent = value;
   					material.needsUpdate = true;
   
   				} );
-  				gui.add( params, 'opacity', 0, 1, 0.01 ).onChange( ( value ) => material.opacity = value );
+  				gui.add( params, 'opacity', 0, 1, 0.01 ).onChange( ( value: any ) => material.opacity = value );
   
   				//
   
@@ -129,7 +130,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX ) / 100;
   				mouseY = ( event.clientY - windowHalfY ) / 100;
@@ -138,7 +139,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = 0.0001 * Date.now();
     				camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y += ( - mouseY - camera.position.y ) * .05;

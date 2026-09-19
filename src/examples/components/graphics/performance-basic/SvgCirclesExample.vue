@@ -4,12 +4,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -21,27 +21,27 @@ async function initGraphicsExample() {
           return `hsl(${Math.random() * 360}, 100%, 50%)`;
         }
     
-        const root = gContainer.value.querySelector('svg');
+        const root = gContainer.value!.querySelector('svg');
         const COUNT = 500;
         const WIDTH = 500;
         const HEIGHT = 500;
     
         function initCircles(count = COUNT) {
           for(let i = 0; i < count; i++) {
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            root.appendChild(circle);
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle') as SVGCircleElement;
+            root!.appendChild(circle);
           }
-          return [...root.querySelectorAll('circle')];
+          return [...root!.querySelectorAll('circle')];
         }
         const circles = initCircles();
     
-        function drawCircle(circle, radius = 200) {
+        function drawCircle(circle: SVGCircleElement, radius = 200) {
           const x = Math.random() * WIDTH;
           const y = Math.random() * HEIGHT;
           const fillColor = randomColor();
-          circle.setAttribute('cx', x);
-          circle.setAttribute('cy', y);
-          circle.setAttribute('r', radius);
+          circle.setAttribute('cx', String(x));
+          circle.setAttribute('cy', String(y));
+          circle.setAttribute('r', String(radius));
           circle.setAttribute('fill', fillColor);
         }
     

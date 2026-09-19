@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { If, vec4, uv, ivec2, texture, Fn } from 'three/tsl';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Texture Gather</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -142,7 +142,7 @@ function onReady(__stage) {
   				renderer.setRenderTarget( null );
   
   				colorNode.value = rt.texture;
-  				depthNode.value = rt.depthTexture;
+  				depthNode.value = rt.depthTexture!;
   
   				//
   

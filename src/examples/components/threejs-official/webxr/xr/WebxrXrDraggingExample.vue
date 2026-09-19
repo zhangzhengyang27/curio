@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - dragging"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,11 +45,11 @@ function onReady(__stage) {
   			let controller1, controller2;
   			let controllerGrip1, controllerGrip2;
   
-  			let raycaster;
+  			let raycaster: any;
   
-  			const intersected = [];
+  			const intersected: any = [];
   
-  			let group;
+  			let group: any;
   
   			
   
@@ -177,7 +177,7 @@ function onReady(__stage) {
   
   			
   
-  			function onSelectStart( event ) {
+  			function onSelectStart( event: any ) {
   
   				const controller = event.target;
   
@@ -199,7 +199,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onSelectEnd( event ) {
+  			function onSelectEnd( event: any ) {
   
   				const controller = event.target;
   
@@ -215,7 +215,7 @@ function onReady(__stage) {
   
   			}
   
-  			function getIntersections( controller ) {
+  			function getIntersections( controller: any ) {
   
   				controller.updateMatrixWorld();
   
@@ -225,7 +225,7 @@ function onReady(__stage) {
   
   			}
   
-  			function intersectObjects( controller ) {
+  			function intersectObjects( controller: any ) {
   
   				// Do not highlight in mobile-ar
   
@@ -269,7 +269,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     while ( intersected.length ) {
     					const object = intersected.pop();

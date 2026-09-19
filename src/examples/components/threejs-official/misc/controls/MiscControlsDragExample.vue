@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - drag controls<br />\n\t\t\tUse \"Shift+Click\" to add/remove objects to/from a group.<br />\n\t\t\tUse \"M\" to toggle between rotate and pan mode (touch only).<br />\n\t\t\tGrouped objects can be transformed as a union."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,10 +40,10 @@ function onReady(__stage) {
   
   			let container;
   
-  			let group;
+  			let group: any;
   			let enableSelection = false;
   
-  			const objects = [];
+  			const objects: any = [];
   
   			const mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
   
@@ -127,7 +127,7 @@ function onReady(__stage) {
   
   			
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				enableSelection = ( event.keyCode === 16 ) ? true : false;
   			
@@ -145,7 +145,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onClick( event ) {
+  			function onClick( event: any ) {
   
   				event.preventDefault();
   
@@ -167,12 +167,12 @@ function onReady(__stage) {
   
   						if ( group.children.includes( object ) === true ) {
   
-  							object.material.emissive.set( 0x000000 );
+  							(object!.material as any).emissive.set( 0x000000 );
   							scene.attach( object );
   
   						} else {
   
-  							object.material.emissive.set( 0xaaaaaa );
+  							(object!.material as any).emissive.set( 0xaaaaaa );
   							group.attach( object );
   
   						}

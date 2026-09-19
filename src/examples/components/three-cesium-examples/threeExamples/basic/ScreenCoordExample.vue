@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,7 +29,7 @@ function onReady(ctx) {
   
   const R = () => Math.random() * 10 - 5
   
-  const list = []
+  const list: any[] = []
   
   for (let i = 0; i < 30; i++) {
   
@@ -41,7 +41,7 @@ function onReady(ctx) {
   
       scene.add(mesh)
   
-      mesh.div = div
+      ;(mesh as any).div = div
   
       list.push(mesh)
   
@@ -76,7 +76,7 @@ function onReady(ctx) {
   })
   
   // 创建dom
-  function createDom(text) {
+  function createDom(text: any) {
   
       const div = document.createElement('div')
   

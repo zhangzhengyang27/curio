@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,14 +18,15 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class DepthData extends THREE.WebGLRenderTarget{
-    constructor(size, camParams){
+    depthCam: THREE.OrthographicCamera
+    constructor(size: number, camParams: any){
       super(size, size);
       this.texture.minFilter = THREE.NearestFilter;
       this.texture.magFilter = THREE.NearestFilter;
@@ -51,10 +52,10 @@ function onReady(ctx) {
   }
   
   class Rain extends THREE.Line{
-    constructor(size, amount){
+    constructor(size: any, amount: number){
       let v = new THREE.Vector3();
       let gBase = new THREE.BufferGeometry().setFromPoints([new THREE.Vector2(0, 0), new THREE.Vector2(0, 1)])
-      let g = new THREE.InstancedBufferGeometry().copy(gBase)
+      let g = new THREE.InstancedBufferGeometry().copy(gBase as any)
       g.setAttribute("instPos", new THREE.InstancedBufferAttribute(
         new Float32Array(
           Array.from({length: amount}, () => {
@@ -70,7 +71,7 @@ function onReady(ctx) {
       let m = new THREE.LineBasicMaterial({
         color: 0x4488ff,
         transparent: true,
-        onBeforeCompile: shader => {
+        onBeforeCompile: (shader: any) => {
           shader.uniforms.depthData = gu.depthData;
           shader.uniforms.time = gu.time;
           shader.vertexShader = `
@@ -124,7 +125,7 @@ function onReady(ctx) {
           );
           //console.log(shader.fragmentShader);
         }
-      })
+      } as any)
       super(g, m);
       this.frustumCulled = false;
     }
@@ -178,7 +179,7 @@ function onReady(ctx) {
   
   let t = 0;
 
-  ctx.addUpdateCallback((delta) => {
+  ctx.addUpdateCallback((delta: number) => {
     t += delta
     gu.time.value = t
     tent.position.x = Math.sin(t * 0.2) * 7

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - simple text from json fonts"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -113,7 +113,7 @@ function onReady(__stage) {
   			
    // end init
   
-  			function generateStrokeText( font, material, message, size, direction = 'ltr' ) {
+  			function generateStrokeText( font: any, material: any, message: any, size: any, direction = 'ltr' ) {
   
   				const shapes = font.generateShapes( message, size, direction );
   
@@ -123,7 +123,7 @@ function onReady(__stage) {
   
   				geometry.computeBoundingBox();
   
-  				const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+  				const xMid = - 0.5 * ( (geometry!.boundingBox as any).max.x - (geometry!.boundingBox as any).min.x );
   
   				geometry.translate( xMid, 0, 0 );
   

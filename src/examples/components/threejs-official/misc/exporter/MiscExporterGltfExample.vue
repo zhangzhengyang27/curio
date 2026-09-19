@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - exporter - gltf"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   
   
-  			function exportGLTF( input ) {
+  			function exportGLTF( input: any ) {
   
   				const gltfExporter = new GLTFExporter().setTextureUtils( TextureUtils );
   
@@ -88,7 +88,7 @@ function onReady(__stage) {
   			link.style.display = 'none';
   			document.body.appendChild( link ); // Firefox workaround, see #6594
   
-  			function save( blob, filename ) {
+  			function save( blob: any, filename: any ) {
   
   				link.href = URL.createObjectURL( blob );
   				link.download = filename;
@@ -98,14 +98,14 @@ function onReady(__stage) {
   
   			}
   
-  			function saveString( text, filename ) {
+  			function saveString( text: any, filename: any ) {
   
   				save( new Blob( [ text ], { type: 'text/plain' } ), filename );
   
   			}
   
   
-  			function saveArrayBuffer( buffer, filename ) {
+  			function saveArrayBuffer( buffer: any, filename: any ) {
   
   				save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
   
@@ -113,8 +113,8 @@ function onReady(__stage) {
   
   
   
-  			let object, object2, material, geometry, scene1, scene2;
-  			let gridHelper, sphere, model, coffeemat, webpBox;
+  			let object, object2, material, geometry, scene1: any, scene2: any;
+  			let gridHelper: any, sphere: any, model: any, coffeemat: any, webpBox: any;
   
   			const params = {
   				trs: false,
@@ -518,7 +518,7 @@ function onReady(__stage) {
   				const canvas = document.createElement( 'canvas' );
   				canvas.width = 64;
   				canvas.height = 64;
-  				const ctx = canvas.getContext( '2d' );
+  				const ctx = canvas.getContext( '2d' )!;
   				ctx.fillStyle = '#005BBB';
   				ctx.fillRect( 0, 0, 64, 64 );
   				ctx.fillStyle = '#FFD500';
@@ -613,7 +613,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = Date.now() * 0.0001;
     				camera.position.x = Math.cos( timer ) * 800;
     				camera.position.z = Math.sin( timer ) * 800;

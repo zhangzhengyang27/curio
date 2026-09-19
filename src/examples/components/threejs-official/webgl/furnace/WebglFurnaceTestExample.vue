@@ -15,12 +15,16 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let radianceMap: any;
+let gui: any = null;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\t\t\t<a href=\"https://google.github.io/filament/Filament.md.html#toc4.7.2\" target=\"_blank\" rel=\"noopener\">White Furnace</a> energy conservation test by <a href=\"https://jsantell.com/\" target=\"_blank\" rel=\"noopener\">Jordan Santell</a>\n\t\t\t\t<br>Roughness increases left to right\n\t\t\t\t<br>Metalness increases top to bottom"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -69,10 +73,10 @@ function onReady(__stage) {
   
   
   				//
-  
-  				initGui();
-  
-  				
+
+  				// 原版 init() 内的 renderer/scene/camera 由 ExampleScene 接管，initGui() 保留在 init 内
+
+
   
   			
   
@@ -137,7 +141,7 @@ function onReady(__stage) {
   
   				gui.add( param, 'tint' ).name( 'Tint for Visibility' ).onChange( function ( val ) {
   
-  					scene.traverse( function ( child ) {
+  					scene.traverse( function ( child: any ) {
   
   						const tint = val ? 0xccccff : 0xffffff;
   
@@ -151,6 +155,12 @@ function onReady(__stage) {
   
   			}
   
+  			function init() {
+
+  				initGui();
+
+  			}
+
   			Promise.resolve()
   				.then( init )
   				.then( createEnvironment )

@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - mirror"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -186,7 +186,7 @@ function onReady(__stage) {
   				const folder = gui.addFolder( 'Mirrors' );
   
   				folder.add( params, 'resolution', 0.2, 1, 0.1 )
-  					.onChange( function ( val ) {
+  					.onChange( function ( val: any ) {
   
   						resolutionScale = val;
   						onWindowResize();
@@ -194,6 +194,14 @@ function onReady(__stage) {
   					} );
   
   				folder.open();
+
+  				function onWindowResize() {
+  					const w = __stage.container?.clientWidth || window.innerWidth
+  					const h = __stage.container?.clientHeight || window.innerHeight
+  					camera.aspect = w / h
+  					camera.updateProjectionMatrix()
+  					renderer.setSize(w, h)
+  				}
   
   				
   
@@ -202,7 +210,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = Date.now() * 0.01;
     				sphereGroup.rotation.y -= 0.002;
     				smallSphere.position.set(

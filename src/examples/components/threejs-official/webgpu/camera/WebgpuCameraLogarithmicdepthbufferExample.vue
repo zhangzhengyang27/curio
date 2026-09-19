@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Logarithmic Depth Buffer</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -50,8 +50,8 @@ async function onReady(__stage) {
   			let zoompos = - 100, minzoomspeed = .015;
   			let zoomspeed = minzoomspeed;
   
-  			let border;
-  			const objects = {};
+  			let border: any;
+  			const objects: any = {};
   
   			// Generate a number of text labels, from 1µm in size up to 100,000,000 light years
   			// Try to use some descriptive real-world examples of objects at each scale
@@ -74,6 +74,9 @@ async function onReady(__stage) {
   				{ size: 1e19, scale: 1.0, label: 'mind boggling (1000 light years)' }
   			];
   
+  			// animate 的函数体已在转换时内联进 addUpdateCallback，此处仅维持 promise 链时序
+  			function animate() {}
+
   			init().then( animate );
   
   			async function init() {
@@ -99,7 +102,7 @@ async function onReady(__stage) {
   
   			}
   
-  			async function initView( scene, name, logDepthBuf ) {
+  			async function initView( scene: any, name: any, logDepthBuf: any ) {
   
   				const framecontainer = __stage.container;
   
@@ -118,7 +121,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function initScene( font ) {
+  			function initScene( font: any ) {
   
   
   				scene.background = new THREE.Color( 0x000000 );
@@ -129,7 +132,7 @@ async function onReady(__stage) {
   				light.position.set( 100, 100, 100 );
   				scene.add( light );
   
-  				const materialargs = {
+  				const materialargs: any = {
   					color: 0xffffff,
   					specular: 0x050505,
   					shininess: 50,
@@ -151,7 +154,7 @@ async function onReady(__stage) {
   					labelgeo.computeBoundingSphere();
   
   					// center text
-  					labelgeo.translate( - labelgeo.boundingSphere.radius, 0, 0 );
+  					labelgeo.translate( - labelgeo.boundingSphere!.radius, 0, 0 );
   
   					materialargs.color = new THREE.Color().setHSL( Math.random(), 0.5, 0.5 );
   
@@ -203,7 +206,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // Put some limits on zooming
     				const minzoom = labeldata[ 0 ].size * labeldata[ 0 ].scale * 1;
     				const maxzoom = labeldata[ labeldata.length - 1 ].size * labeldata[ labeldata.length - 1 ].scale * 100;
@@ -240,7 +243,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function onBorderPointerMove( ev ) {
+  			function onBorderPointerMove( ev: any ) {
   
   				screensplit = Math.max( 0, Math.min( 1, ev.clientX / (__stage.container?.clientWidth || window.innerWidth) ) );
   
@@ -253,14 +256,14 @@ async function onReady(__stage) {
   
   			}
   
-  			function onMouseMove( ev ) {
+  			function onMouseMove( ev: any ) {
   
   				mouse[ 0 ] = ev.clientX / (__stage.container?.clientWidth || window.innerWidth);
   				mouse[ 1 ] = ev.clientY / (__stage.container?.clientHeight || window.innerHeight);
   
   			}
   
-  			function onMouseWheel( ev ) {
+  			function onMouseWheel( ev: any ) {
   
   				const amount = ev.deltaY;
   				if ( amount === 0 ) return;

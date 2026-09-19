@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - THREE.RectAreaLight<br/>\n\t\t\tby <a href=\"http://github.com/abelnation\" target=\"_blank\" rel=\"noopener\">abelnation</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -99,7 +99,7 @@ function onReady(__stage) {
   				canvas.width = 2;
   				canvas.height = 2;
   
-  				const ctx = canvas.getContext( '2d' );
+  				const ctx = canvas.getContext( '2d' )!;
   				ctx.fillStyle = '#000';
   				ctx.fillRect( 0, 0, 2, 2 );
   				ctx.fillStyle = '#fff';
@@ -118,7 +118,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				rectLight1.rotation.y += - delta;

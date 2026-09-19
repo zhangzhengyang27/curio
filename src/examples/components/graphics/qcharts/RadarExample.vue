@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,7 +27,7 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const app = gContainer.value.querySelector('#app')
+  const app = gContainer.value!.querySelector('#app')
   await loadScript("/graphics/assets/external/spritejs.min.js");
   await loadScript("/graphics/assets/external/index.js");
   {
@@ -52,7 +52,7 @@ async function initGraphicsExample() {
         });
     
         const radar = new Radar().style('scale', false);
-        radar.style('section', (d) => ({ opacity: 0.3 }));
+        radar.style('section', (d: any) => ({ opacity: 0.3 }));
     
         const legend = new Legend({ align: ['center', '90%'] });
         const tooltip = new Tooltip();

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> car materials<br/>\n\t\t\tFerrari 458 Italia model by <a href=\"https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6\" target=\"_blank\" rel=\"noopener\">vicent091036</a>\n\t\t\t<br><br>\n\t\t\t<span class=\"colorPicker\"><input id=\"body-color\" type=\"color\" value=\"#ff0000\"></input><br/>Body</span>\n\t\t\t<span class=\"colorPicker\"><input id=\"details-color\" type=\"color\" value=\"#ffffff\"></input><br/>Details</span>\n\t\t\t<span class=\"colorPicker\"><input id=\"glass-color\" type=\"color\" value=\"#ffffff\"></input><br/>Glass</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,7 +46,7 @@ function onReady(__stage) {
   			let grid;
   
   
-  			const wheels = [];
+  			const wheels: any = [];
   
   			
   
@@ -109,7 +109,7 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild( bodyColorInput );
   				bodyColorInput.addEventListener( 'input', function () {
   
-  					bodyMaterial.color.set( this.value );
+  					( bodyMaterial as any ).color.set( (this as any).value );
   
   				} );
   
@@ -120,7 +120,7 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild( detailsColorInput );
   				detailsColorInput.addEventListener( 'input', function () {
   
-  					detailsMaterial.color.set( this.value );
+  					( detailsMaterial as any ).color.set( (this as any).value );
   
   				} );
   
@@ -131,7 +131,7 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild( glassColorInput );
   				glassColorInput.addEventListener( 'input', function () {
   
-  					glassMaterial.color.set( this.value );
+  					( glassMaterial as any ).color.set( (this as any).value );
   
   				} );
   
@@ -149,15 +149,15 @@ function onReady(__stage) {
   
   					const carModel = gltf.scene.children[ 0 ];
   
-  					carModel.getObjectByName( 'body' ).material = bodyMaterial;
+  					( carModel!.getObjectByName( 'body' ) as any ).material = bodyMaterial;
   
-  					carModel.getObjectByName( 'rim_fl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_fr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'trim' ).material = detailsMaterial;
+  					( carModel!.getObjectByName( 'rim_fl' ) as any ).material = detailsMaterial;
+  					( carModel!.getObjectByName( 'rim_fr' ) as any ).material = detailsMaterial;
+  					( carModel!.getObjectByName( 'rim_rr' ) as any ).material = detailsMaterial;
+  					( carModel!.getObjectByName( 'rim_rl' ) as any ).material = detailsMaterial;
+  					( carModel!.getObjectByName( 'trim' ) as any ).material = detailsMaterial;
   
-  					carModel.getObjectByName( 'glass' ).material = glassMaterial;
+  					( carModel!.getObjectByName( 'glass' ) as any ).material = glassMaterial;
   
   					wheels.push(
   						carModel.getObjectByName( 'wheel_fl' ),
@@ -186,7 +186,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = - performance.now() / 1000;
     				for ( let i = 0; i < wheels.length; i ++ ) {
     					wheels[ i ].rotation.x = time * Math.PI * 2;

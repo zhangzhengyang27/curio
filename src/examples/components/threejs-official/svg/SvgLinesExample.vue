@@ -13,7 +13,7 @@
   </SVGExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SVGExampleScene from '@/examples/components/SVGExampleScene.vue'
 import * as THREE from 'three';
 import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> svg - lines"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -99,10 +99,10 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     let count = 0;
     				const time = performance.now() / 1000;
-    				scene.traverse( function ( child ) {
+    				scene.traverse( function ( child: any ) {
     					child.rotation.x = count + ( time / 3 );
     					child.rotation.z = count + ( time / 4 );
     					count ++;

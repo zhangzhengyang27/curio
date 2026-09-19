@@ -12,7 +12,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -136,7 +136,7 @@ function onReady(__stage) {
   
   			
   
-  			function onMouseMove( event ) {
+  			function onMouseMove( event: any ) {
   
   				const x = event.clientX;
   				const y = event.clientY;
@@ -151,7 +151,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.compute( computeNode );
   })
   

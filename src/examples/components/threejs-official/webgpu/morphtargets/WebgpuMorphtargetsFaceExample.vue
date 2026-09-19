@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgpu - morph face targets<br/>\n\t\t\tmodel by <a href=\"https://www.bannaflak.com/face-cap\" target=\"_blank\" rel=\"noopener\">Face Cap</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -49,7 +49,7 @@ async function onReady(__stage) {
   			
   
   
-  				let mixer;
+  				let mixer: any;
   
   				const timer = new THREE.Timer();
   				timer.connect( document );
@@ -91,14 +91,14 @@ async function onReady(__stage) {
   						// GUI
   
   						const head = mesh.getObjectByName( 'mesh_2' );
-  						const influences = head.morphTargetInfluences;
+  						const influences = (head! as any).morphTargetInfluences;
   
   						const gui = renderer.inspector.createParameters( 'Morph Targets' );
   
-  						for ( const [ key, value ] of Object.entries( head.morphTargetDictionary ) ) {
+  						for ( const [ key, value ] of Object.entries( (head! as any).morphTargetDictionary ) ) {
   
   							gui.add( influences, value, 0, 1, 0.01 )
-  								.name( key.replace( 'blendShape1.', '' ) )
+  								.name( (key as any).replace( 'blendShape1.', '' ) )
   								.listen();
   
   						}
@@ -116,7 +116,7 @@ async function onReady(__stage) {
   				controls.maxPolarAngle = Math.PI / 1.8;
   				controls.target.set( 0, 0.15, - 0.2 );
   
-  				__stage.addUpdateCallback((_delta, _elapsed) => {
+  				__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     					const delta = timer.getDelta();
     					if ( mixer ) {

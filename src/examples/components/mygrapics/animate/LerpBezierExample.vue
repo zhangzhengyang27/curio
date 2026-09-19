@@ -6,14 +6,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {Animator} from '@/examples/jsm-compat/mygrapics/common/lib/animator/index.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -26,10 +26,10 @@ async function loadScript(src) {
 async function initMyGrapicsExample() {
   await loadScript("/mygrapics/assets/external/cd8674562cacba19.js");
   {
-    const block = mgContainer.value.querySelector('.block');
-        const animator = new Animator({duration: 3000, easing: BezierEasing(0.5, -1.5, 0.5, 2.5)});
+    const block = mgContainer.value!.querySelector('.block') as HTMLElement;
+        const animator = new Animator({duration: 3000, easing: (globalThis as any).BezierEasing(0.5, -1.5, 0.5, 2.5)});
         document.addEventListener('click', () => {
-          animator.animate({el: block, start: 100, end: 400}, ({target: {el, start, end}, timing: {p}}) => {
+          animator.animate({el: block, start: 100, end: 400}, ({target: {el, start, end}, timing: {p}}: any) => {
             const left = start * (1 - p) + end * p;
             el.style.left = `${left}px`;
           });

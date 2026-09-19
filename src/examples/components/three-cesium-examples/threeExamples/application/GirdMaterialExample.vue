@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -86,11 +86,11 @@ function onReady(ctx) {
   gui = new GUI()
   const params = { geometry: 'TorusKnot', color: '#00ffff' }
   
-  gui.add(params, 'geometry', Object.keys(geometries)).name('几何体').onChange(v => mesh.geometry = geometries[v])
+  gui.add(params, 'geometry', Object.keys(geometries)).name('几何体').onChange((v: any) => mesh.geometry = (geometries as any)[v])
   gui.add(gridMaterial.uniforms.gridX, 'value', 1, 100).name('横向网格')
   gui.add(gridMaterial.uniforms.gridY, 'value', 1, 100).name('纵向网格')
   gui.add(gridMaterial.uniforms.lineWidth, 'value', 0.1, 5).name('线条粗细')
-  gui.addColor(params, 'color').name('颜色').onChange(v => gridMaterial.uniforms.color.value.set(v))
+  gui.addColor(params, 'color').name('颜色').onChange((v: any) => gridMaterial.uniforms.color.value.set(v))
 }
 
 onUnmounted(() => {

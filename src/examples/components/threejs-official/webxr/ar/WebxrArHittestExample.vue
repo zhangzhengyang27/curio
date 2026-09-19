@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> ar - hit test<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,9 +41,9 @@ function onReady(__stage) {
   
   			let controller1, controller2;
   
-  			let reticle;
+  			let reticle: any;
   
-  			let hitTestSource = null;
+  			let hitTestSource: any = null;
   			let hitTestSourceRequested = false;
   
   			
@@ -111,7 +111,7 @@ function onReady(__stage) {
   
   			//
   
-  			function animate( timestamp, frame ) {
+  			function animate( timestamp: any, frame: any ) {
   
   				if ( frame ) {
   
@@ -120,9 +120,9 @@ function onReady(__stage) {
   
   					if ( hitTestSourceRequested === false ) {
   
-  						session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+  						session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace: any ) {
   
-  							session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+  							session.requestHitTestSource( { space: referenceSpace } ).then( function ( source: any ) {
   
   								hitTestSource = source;
   

@@ -15,12 +15,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let gui: any = null
 import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
@@ -33,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - arcball controls<br/>\n\t\t\t<a href=\"http://www.polycount.com/forum/showthread.php?t=130641\" target=\"_blank\" rel=\"noopener\">Cerberus(FFVII Gun) model</a> by Andrew Maximov."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,8 +53,7 @@ function onReady(__stage) {
   
   			const perspectiveDistance = 2.5;
   			const orthographicDistance = 120;
-  			let gui;
-  			let folderOptions, folderAnimations;
+    			let folderOptions: any, folderAnimations: any;
   
   			const arcballGui = {
   
@@ -231,7 +232,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				if ( event.key === 'c' ) {
   
@@ -253,7 +254,7 @@ function onReady(__stage) {
   
   			}
   
-  			function setCamera( type ) {
+  			function setCamera( type: any ) {
   
   				if ( type == 'Orthographic' ) {
   

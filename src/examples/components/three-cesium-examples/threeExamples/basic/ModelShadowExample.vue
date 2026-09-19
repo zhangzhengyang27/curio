@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -90,7 +90,7 @@ function onReady(ctx) {
   
   folder.add(renderer.shadowMap, 'enabled').name('shadowEnabled').onChange(() => {
   
-    scene.traverse((object) => {
+    scene.traverse((object: any) => {
   
       if (object.material) object.material.needsUpdate = true;
       
@@ -100,7 +100,7 @@ function onReady(ctx) {
   
   folder.add(renderer.shadowMap, 'type', shadowMapList).name('shadowType').onChange(() => {
   
-    scene.traverse((object) => {
+    scene.traverse((object: any) => {
   
       if (object.material) object.material.needsUpdate = true;
   

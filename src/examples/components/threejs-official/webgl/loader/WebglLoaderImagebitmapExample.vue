@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Texture loader using ImageBitmap"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -36,7 +36,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let group, cubes;
+  			let group, cubes: any;
   
   			
   			function addImageBitmap() {
@@ -84,7 +84,7 @@ function onReady(__stage) {
   
   			const geometry = new THREE.BoxGeometry();
   
-  			function addCube( material ) {
+  			function addCube( material: any ) {
   
   				const cube = new THREE.Mesh( geometry, material );
   				cube.position.set( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 );
@@ -141,11 +141,11 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     group.rotation.y = performance.now() / 3000;
   })
   
-  			function disposeImageBitmap( texture ) {
+  			function disposeImageBitmap( texture: any ) {
   
   				texture.source.data.close();
   				texture.onUpdate = null; // make sure this callback is executed only once per texture

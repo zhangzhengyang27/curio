@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,9 +29,9 @@ function onReady(ctx) {
 
   controls.autoRotate = true
   
-  const vertices = []
+  const vertices: any[] = []
   
-  const colors = []
+  const colors: any[] = []
   
   const sparklesGeometry = new THREE.BufferGeometry()
   
@@ -41,9 +41,9 @@ function onReady(ctx) {
   
   scene.add(points)
   
-  let sampler = null
+  let sampler: any = null
   
-  let mesh = null
+  let mesh: any = null
   
   new OBJLoader().load(
   

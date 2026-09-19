@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, attribute, varyingProperty, time, uniform, wgslFn, texture, sampler, uv, clamp, float, vec2, vec3, fract, floor, positionGeometry, sin } from 'three/tsl';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>WGSL/TSL Interoperability</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -239,12 +239,12 @@ function onReady(__stage) {
   					const borderClamp = clampX.mul( clampY );
   					maskColor = maskColor.mul( borderClamp );
   
-  					color = color.mul( maskColor );
+  					(color as any) = color.mul( maskColor );
   
   					const pixelDampen = pixel.y.div( pulseWidthUniform );
   					let pulse = sin( pixelDampen.add( time.mul( pulseRateUniform ) ) );
   					pulse = pulse.mul( pulseIntensityUniform );
-  					color = color.mul( float( 1.0 ).add( pulse ) );
+  					(color as any) = color.mul( float( 1.0 ).add( pulse ) );
   
   					return color;
   

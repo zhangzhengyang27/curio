@@ -4,19 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    function loadImage(src) {
+    function loadImage(src: any) {
           const img = new Image();
           img.crossOrigin = 'anonymous';
-          return new Promise((resolve) => {
+          return new Promise<any>((resolve) => {
             img.onload = () => {
               resolve(img);
             };
@@ -24,8 +24,8 @@ async function initMyGrapicsExample() {
           });
         }
     
-        const canvas = mgContainer.value.querySelector('#paper');
-        const context = canvas.getContext('2d');
+        const canvas = mgContainer.value!.querySelector('#paper') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
     
         (async function () {
           const img = await loadImage('assets/girl1.jpg');

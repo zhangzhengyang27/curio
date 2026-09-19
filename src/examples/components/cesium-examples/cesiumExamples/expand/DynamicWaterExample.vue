@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let waterSurface = null
-let waterGui = null
+let Cesium: any = null
+let viewer: any = null
+let waterSurface: any = null
+let waterGui: any = null
 
 const WATER_RANGE_MODES = {
   RECTANGLE: "rectangle",
@@ -285,7 +285,14 @@ const WATER_FRAGMENT_SHADER = `
 `
 
 class DynamicWaterSurface {
-  constructor({ viewer, params = {} }) {
+  viewer: any
+  params: any
+  primitive: any
+  uniforms: any
+  area: any
+  startTime: any
+  preRenderListener: any
+  constructor({ viewer, params = {} }: any) {
     this.viewer = viewer
     this.params = createWaterParams(params)
     this.primitive = null
@@ -413,7 +420,7 @@ class DynamicWaterSurface {
   }
 }
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
         animation: false,
         baseLayerPicker: false,
@@ -431,7 +438,7 @@ function viewerOptions(Cesium) {
     }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -439,8 +446,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer._cesiumWidget._creditContainer.style.display = "none";
@@ -459,9 +466,9 @@ function onReady(ctx) {
   waterGui = addWaterGui(waterSurface);
 }
   
-  function addWaterGui(waterSurface) {
+  function addWaterGui(waterSurface: any) {
       const params = waterSurface.params;
-      gui = new GUI({ name: "Dynamic Water" });
+      gui = new GUI({ name: "Dynamic Water" } as any);
   
       params.rebuildWater = () => {
           waterSurface.rebuild();
@@ -526,7 +533,7 @@ function onReady(ctx) {
       return gui;
   }
   
-  function resolveWaterArea(params) {
+  function resolveWaterArea(params: any) {
       const polygonPositions = normalizePolygonPositions(params.polygonPositions);
   
       if (params.rangeMode === WATER_RANGE_MODES.POLYGON && polygonPositions.length >= 3) {
@@ -536,7 +543,7 @@ function onReady(ctx) {
       return createRectangleArea(params);
   }
   
-  function createRectangleArea(params) {
+  function createRectangleArea(params: any) {
       const width = Math.max(1, params.planeWidth);
       const depth = Math.max(1, params.planeDepth);
       const center = createCenterFrame(params.planeLon, params.planeLat, params.planeHeight);
@@ -557,19 +564,19 @@ function onReady(ctx) {
       };
   }
   
-  function createPolygonArea(params, polygonPositions) {
+  function createPolygonArea(params: any, polygonPositions: any) {
       const centerLon =
-          polygonPositions.reduce((total, point) => total + point.lon, 0) /
+          polygonPositions.reduce((total: any, point: any) => total + point.lon, 0) /
           polygonPositions.length;
       const centerLat =
-          polygonPositions.reduce((total, point) => total + point.lat, 0) /
+          polygonPositions.reduce((total: any, point: any) => total + point.lat, 0) /
           polygonPositions.length;
       const center = createCenterFrame(centerLon, centerLat, params.planeHeight);
       const inverseFrame = Cesium.Matrix4.inverseTransformation(
           center.modelMatrix,
           new Cesium.Matrix4()
       );
-      const localPolygon = polygonPositions.map((point) => {
+      const localPolygon = polygonPositions.map((point: any) => {
           const world = Cesium.Cartesian3.fromDegrees(point.lon, point.lat, params.planeHeight);
           const local = Cesium.Matrix4.multiplyByPoint(
               inverseFrame,
@@ -597,11 +604,11 @@ function onReady(ctx) {
           maxY: bounds.maxY,
           modelMatrix: center.modelMatrix,
           polygon: localPolygon,
-          containsPoint: (x, y) => isPointInPolygon(x, y, localPolygon),
+          containsPoint: (x: any, y: any) => isPointInPolygon(x, y, localPolygon),
       };
   }
   
-  function createCenterFrame(lon, lat, height) {
+  function createCenterFrame(lon: any, lat: any, height: any) {
       const center = Cesium.Cartesian3.fromDegrees(lon, lat, height);
   
       return {
@@ -610,7 +617,7 @@ function onReady(ctx) {
       };
   }
   
-  function normalizePolygonPositions(positions = []) {
+  function normalizePolygonPositions(positions: any[] = []) {
       if (!Array.isArray(positions)) {
           return [];
       }
@@ -645,9 +652,9 @@ function onReady(ctx) {
       return normalized;
   }
   
-  function getLocalBounds(points) {
+  function getLocalBounds(points: any) {
       return points.reduce(
-          (bounds, point) => ({
+          (bounds: any, point: any) => ({
               minX: Math.min(bounds.minX, point.x),
               maxX: Math.max(bounds.maxX, point.x),
               minY: Math.min(bounds.minY, point.y),
@@ -662,7 +669,7 @@ function onReady(ctx) {
       );
   }
   
-  function isPointInPolygon(x, y, polygon) {
+  function isPointInPolygon(x: any, y: any, polygon: any) {
       let inside = false;
   
       for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -683,7 +690,7 @@ function onReady(ctx) {
       return inside;
   }
   
-  function createWaterMeshGeometry(params, area) {
+  function createWaterMeshGeometry(params: any, area: any) {
       const xSegments = Math.max(8, Math.floor(params.meshSegments));
       const ySegments = Math.max(8, Math.floor(xSegments * (area.depth / area.width)));
       const gridWidth = Math.max(1, area.width);
@@ -752,7 +759,7 @@ function onReady(ctx) {
       });
   }
   
-  function shouldKeepPolygonVertex(x, y, xSegments, ySegments, area) {
+  function shouldKeepPolygonVertex(x: any, y: any, xSegments: any, ySegments: any, area: any) {
       const halfCellX = (area.width / xSegments) * 0.5;
       const halfCellY = (area.depth / ySegments) * 0.5;
       const px = area.minX + (x / xSegments) * area.width;
@@ -776,7 +783,7 @@ function onReady(ctx) {
       batchIds,
       indices,
       boundingRadius,
-  }) {
+  }: any) {
       return new Cesium.Geometry({
           attributes: {
               position: new Cesium.GeometryAttribute({
@@ -816,17 +823,17 @@ function onReady(ctx) {
       });
   }
   
-  function createTypedIndices(indices, vertexCount) {
+  function createTypedIndices(indices: any, vertexCount: any) {
       const IndexArray = vertexCount > 65535 ? Uint32Array : Uint16Array;
   
       return new IndexArray(indices);
   }
   
-  function getGridKey(x, y) {
+  function getGridKey(x: any, y: any) {
       return `${x}:${y}`;
   }
   
-  function createWaterParams(overrides) {
+  function createWaterParams(overrides: any) {
       return {
           ...DEFAULT_WATER_PARAMS,
           deepColor: [...DEFAULT_WATER_PARAMS.deepColor],
@@ -865,7 +872,7 @@ function onReady(ctx) {
       };
   }
   
-  function colorArrayToVec4(value, alpha) {
+  function colorArrayToVec4(value: any, alpha: any) {
       return new Cesium.Cartesian4(
           value[0] / 255,
           value[1] / 255,

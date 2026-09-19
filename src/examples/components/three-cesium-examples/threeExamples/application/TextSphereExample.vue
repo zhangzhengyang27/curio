@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -92,11 +92,11 @@ async function onReady(ctx) {
   const sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
   
-  const font = await new Promise((resolve) => new FontLoader().load('/external-examples/3d-file-server/files/font/cn1.json', (f) => resolve(f)))
+  const font = await new Promise<any>((resolve) => new FontLoader().load('/external-examples/3d-file-server/files/font/cn1.json', (f) => resolve(f)))
   
   const totalCount = positions.length;
   
-  const savePos = [];
+  const savePos: any[] = [];
   const textMeshes = []; // 存储文本网格的数组
   
   // 创建并布局文本网格
@@ -126,8 +126,8 @@ async function onReady(ctx) {
   
       if (textGeometry) {
           // 根据文本几何体计算布局位置
-          const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
-          const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y;
+          const textWidth = textGeometry.boundingBox!.max.x - textGeometry.boundingBox!.min.x;
+          const textHeight = textGeometry.boundingBox!.max.y - textGeometry.boundingBox!.min.y;
           const textCenterX = -textWidth / 2;
           const textCenterY = -textHeight / 2;
           // 平移到球体表面

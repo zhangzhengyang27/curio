@@ -4,13 +4,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -53,7 +54,7 @@ async function initMyGrapicsExample() {
           }
         `;
     
-        const canvas = mgContainer.value.querySelector('canvas');
+        const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas);
         const program = renderer.compileSync(fragment, vertex);
         renderer.useProgram(program);
@@ -61,7 +62,7 @@ async function initMyGrapicsExample() {
         renderer.uniforms.uMouse = [-1, -1];
         renderer.uniforms.uOrigin = [0.5, 0.5];
     
-        canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('mousemove', (e: any) => {
           const {x, y, width, height} = e.target.getBoundingClientRect();
           renderer.uniforms.uMouse = [
             (e.x - x) / width,

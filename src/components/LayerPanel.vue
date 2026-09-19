@@ -37,7 +37,7 @@
               :checked="layer.visible"
               class="layer-checkbox"
               @click.stop
-              @change="toggle(layer, $event.target.checked)"
+              @change="toggle(layer, ($event.target as HTMLInputElement).checked)"
             >
             <svg
               class="arrow-icon"
@@ -102,18 +102,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps({
-  layers: Array,
-  onToggle: Function,
-  onOpacity: Function
-})
+/** 图层树节点（与 useLayerStore 的 LayerNode 结构对齐） */
+interface LayerNodeLike {
+  id: string
+  name: string
+  visible: boolean
+  opacity: number
+  children?: unknown[]
+}
 
-const expandedIds = ref(new Set())
+const props = defineProps<{
+  layers: LayerNodeLike[]
+  onToggle?: (id: string, visible: boolean) => void
+  onOpacity?: (id: string, opacity: number) => void
+}>()
 
-const iconMap = {
+const expandedIds = ref(new Set<string>())
+
+const iconMap: Record<string, string> = {
   borders: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
   countries: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>`,
   atmosphere: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19c0-1.7-1.3-3-3-3h-5c-1.7 0-3 1.3-3 3"/><path d="M17.5 14c0-1.7-1.3-3-3-3h-5c-1.7 0-3 1.3-3 3"/><path d="M17.5 9c0-1.7-1.3-3-3-3h-5c-1.7 0-3 1.3-3 3"/></svg>`,
@@ -124,15 +133,15 @@ const iconMap = {
   default: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>`
 }
 
-function getIcon(id) {
+function getIcon(id: string) {
   return iconMap[id] || iconMap.default
 }
 
-function isExpanded(id) {
+function isExpanded(id: string) {
   return expandedIds.value.has(id)
 }
 
-function toggle(layer, forcedValue) {
+function toggle(layer: LayerNodeLike, forcedValue?: boolean) {
   const visible = typeof forcedValue === 'boolean' ? forcedValue : !layer.visible
   props.onToggle?.(layer.id, visible)
   if (visible && !expandedIds.value.has(layer.id)) {
@@ -140,8 +149,8 @@ function toggle(layer, forcedValue) {
   }
 }
 
-function setOpacity(layer, event) {
-  props.onOpacity?.(layer.id, event.target.value / 100)
+function setOpacity(layer: LayerNodeLike, event: Event) {
+  props.onOpacity?.(layer.id, Number((event.target as HTMLInputElement).value) / 100)
 }
 </script>
 

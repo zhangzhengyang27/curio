@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -31,13 +31,13 @@ function onReady(ctx) {
 
   controls.enableDamping = true
   
-  let group;
-  let particlesData = [];
-  let positions, colors;
-  let particles;
-  let pointCloud;
-  let particlePositions;
-  let linesMesh;
+  let group: any;
+  let particlesData: any[] = [];
+  let positions: any, colors: any;
+  let particles: any;
+  let pointCloud: any;
+  let particlePositions: any;
+  let linesMesh: any;
   
   let maxParticleCount = 1000;
   let particleCount = 500;
@@ -71,7 +71,7 @@ function onReady(ctx) {
   particles = new THREE.BufferGeometry();
   particlePositions = new Float32Array(maxParticleCount * 3);
   
-  function getPos(radius, a, b) {
+  function getPos(radius: any, a: any, b: any) {
       const x = radius * Math.sin(a) * Math.cos(b);
       const y = radius * Math.sin(a) * Math.sin(b);
       const z = radius * Math.cos(a);
@@ -184,12 +184,12 @@ function onReady(ctx) {
   
   gui = new GUI()
   
-  gui.add(effectController, "showDots").onChange(function (value) {
+  gui.add(effectController, "showDots").onChange(function (value: any) {
   
       pointCloud.visible = value;
   
   });
-  gui.add(effectController, "showLines").onChange(function (value) {
+  gui.add(effectController, "showLines").onChange(function (value: any) {
   
       linesMesh.visible = value;
   
@@ -197,7 +197,7 @@ function onReady(ctx) {
   gui.add(effectController, "minDistance", 10, 300);
   gui.add(effectController, "limitConnections");
   gui.add(effectController, "maxConnections", 0, 30, 1);
-  gui.add(effectController, "particleCount", 0, maxParticleCount, 1).onChange(function (value) {
+  gui.add(effectController, "particleCount", 0, maxParticleCount, 1).onChange(function (value: any) {
   
       particleCount = parseInt(value);
       particles.setDrawRange(0, particleCount);

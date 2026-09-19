@@ -16,13 +16,17 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+let group: any;
+let raycaster: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - controls - transform"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,7 +48,7 @@ function onReady(__stage) {
   			let container;
   
   			let bloomPass;
-  			let controller1, controller2, line;
+  			let controller1: any, controller2: any, line: any;
   			let controllerGrip1, controllerGrip2;
   
   
@@ -183,7 +187,7 @@ function onReady(__stage) {
   			
   
   
-  			function onSelect( event ) {
+  			function onSelect( event: any ) {
   
   				const controller = event.target;
   
@@ -216,7 +220,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onControllerEvent( event ) {
+  			function onControllerEvent( event: any ) {
   
   				const controller = event.target;
   

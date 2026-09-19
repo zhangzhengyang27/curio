@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // 示例中心分页器。页码窗口（含省略号）由父组件的 visiblePages 计算好传进来，
 // 本组件只负责渲染与派发页码变化。
 defineProps({

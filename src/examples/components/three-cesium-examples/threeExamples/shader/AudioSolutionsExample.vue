@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,14 +18,14 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  let mediaElement;
-  let analyser;
+  let mediaElement: any;
+  let analyser: any;
   
   
   

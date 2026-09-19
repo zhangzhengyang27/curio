@@ -56,7 +56,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcPostProcessStageScan, VcPostProcessStage, VcPostProcessStageCollection } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'

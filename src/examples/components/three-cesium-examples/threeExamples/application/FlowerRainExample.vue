@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const { width, height } = ctx.size
   const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-file-server/'

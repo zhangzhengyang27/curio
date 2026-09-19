@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -29,6 +29,8 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass.js';
 
+let gui: any = null;
+
 const props = defineProps({
   example: {
     type: Object,
@@ -37,7 +39,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Rolex + aomap - 1200 ko"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,11 +48,12 @@ function onReady(__stage) {
   
 
   
-  			let gui, dirLight, pointLight, bloomPass, taaPass;
+  			// gui 声明提升至模块级（onUnmounted 需访问）
+  			let dirLight, pointLight, bloomPass: any, taaPass: any;
   			let ready = false;
-  
-  			const meshes = {};
-  			const materials = {};
+
+  			const meshes: any = {};
+  			const materials: any = {};
   			const torad = Math.PI / 180;
   
   			const setting = {
@@ -109,7 +112,7 @@ function onReady(__stage) {
   
   							gltf.scene.rotation.x = Math.PI * 0.25;
   
-  							gltf.scene.traverse( ( child ) => {
+  							gltf.scene.traverse( ( child: any ) => {
   
   								if ( child.isMesh || child.isGroup ) {
   
@@ -221,7 +224,7 @@ function onReady(__stage) {
   
   			}
   
-  			function postProcess( b ) {
+  			function postProcess( b: any ) {
   
   				if ( b ) {
   
@@ -293,7 +296,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     				if ( ready ) getTime();
   })

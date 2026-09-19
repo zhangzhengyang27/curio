@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { struct, storage, sin, cross, normalize, abs, mix, Fn, vec4, max, pow, time, varyingProperty, attribute, uint, atomicStore } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Draw Indirect</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -183,13 +183,13 @@ function onReady(__stage) {
   					// Convert slowed sign range of (-1 to 1) to range of (1 -> 0 / 0.5 -> 3)
   					const oscilationRange = max( abs( halfTime.mul( 2.0 ).add( 1.0 ) ), 0.5 );
   
-  					const sphereOscilation = offset.mul( oscilationRange ).add( position ).toVar();
+  					const sphereOscilation = (offset as any).mul( oscilationRange ).add( position ).toVar();
   
-  					const orientation = normalize( mix( orientationStart, orientationEnd, halfTime ) );
-  					const vcV = cross( orientation.xyz, sphereOscilation );
-  					const crossvcV = cross( orientation.xyz, vcV );
+  					const orientation = (mix as any)( orientationStart, orientationEnd, halfTime );
+  					const vcV = cross( (orientation as any).xyz, sphereOscilation );
+  					const crossvcV = cross( (orientation as any).xyz, vcV );
   
-  					vPosition.assign( vcV.mul( orientation.w.mul( 2.0 ) ).add( crossvcV.mul( 2.0 ).add( sphereOscilation ) ) );
+  					vPosition.assign( vcV.mul( (orientation as any).w.mul( 2.0 ) ).add( crossvcV.mul( 2.0 ).add( sphereOscilation ) ) );
   					vColor.assign( color );
   
   					return vPosition;
@@ -223,7 +223,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.compute( computeInitDrawBuffer );
     				renderer.compute( computeDrawBuffer );
   })

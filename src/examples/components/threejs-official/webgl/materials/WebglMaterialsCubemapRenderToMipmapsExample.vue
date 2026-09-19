@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - rendering to cubemap mip levels demo.<br/>\n\t\t\tLeft: original cubemap<br/>\n\t\t\tRight: generated cubemap<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -94,7 +94,7 @@ function onReady(__stage) {
   
   
   			
-  			async function loadCubeTexture( urls ) {
+  			async function loadCubeTexture( urls: any ) {
   
   				return new Promise( function ( resolve ) {
   
@@ -109,7 +109,7 @@ function onReady(__stage) {
   
   			}
   
-  			function allocateCubemapRenderTarget( cubeMapSize ) {
+  			function allocateCubemapRenderTarget( cubeMapSize: any ) {
   
   				const params = {
   					magFilter: THREE.LinearFilter,
@@ -124,14 +124,14 @@ function onReady(__stage) {
   				const rt = new THREE.WebGLCubeRenderTarget( cubeMapSize, params );
   
   				const mipLevels = Math.log( cubeMapSize ) * Math.LOG2E + 1.0;
-  				for ( let i = 0; i < mipLevels; i ++ ) rt.texture.mipmaps.push( {} );
+  				for ( let i = 0; i < mipLevels; i ++ ) rt.texture.mipmaps.push( {} as any );
   
   				rt.texture.mapping = THREE.CubeReflectionMapping;
   				return rt;
   
   			}
   
-  			function renderToCubeTexture( cubeMapRenderTarget, sourceCubeTexture ) {
+  			function renderToCubeTexture( cubeMapRenderTarget: any, sourceCubeTexture: any ) {
   
   				const geometry = new THREE.BoxGeometry( 5, 5, 5 );
   
@@ -201,7 +201,7 @@ function onReady(__stage) {
   
   					// Create geometry
   					const sphere = new THREE.SphereGeometry( 100, 128, 128 );
-  					let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: cubeTexture } );
+  					let material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: cubeTexture as any } );
   
   					let mesh = new THREE.Mesh( sphere, material );
   					mesh.position.set( - 100, 0, 0 );

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -31,7 +31,7 @@ function onReady(ctx) {
 
   class MeshEdgesGeometry extends BufferGeometry {
   
-      constructor(object, thresholdAngle = 1) {
+      constructor(object: any, thresholdAngle = 1) {
   
           super();
   
@@ -43,11 +43,10 @@ function onReady(ctx) {
   
       } // MeshEdgesGeometry.constructor
   
-      extractEdges(object, thresholdAngle) {
-  
-          var attributes = [];
-  
-          object.traverse(child => {
+      extractEdges(object: any, thresholdAngle: number) {
+
+          var attributes: any[] = [];
+          object.traverse((child: any) => {
   
               if (child.geometry) {
   

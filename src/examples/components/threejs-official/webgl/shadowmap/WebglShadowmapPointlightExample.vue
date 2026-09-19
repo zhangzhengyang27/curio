@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - PointLight ShadowMap"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -54,7 +54,7 @@ function onReady(__stage) {
   
   				// lights
   
-  				function createLight( color ) {
+  				function createLight( color: any ) {
   
   					const intensity = 200;
   
@@ -65,8 +65,8 @@ function onReady(__stage) {
   					light.shadow.radius = 10;
   
   					let geometry = new THREE.SphereGeometry( 0.3, 12, 6 );
-  					let material = new THREE.MeshBasicMaterial( { color: color } );
-  					material.color.multiplyScalar( intensity );
+  					let material: any = new THREE.MeshBasicMaterial( { color: color } );
+  					(material as any)!.color.multiplyScalar( intensity );
   					let sphere = new THREE.Mesh( geometry, material );
   					light.add( sphere );
   
@@ -145,14 +145,14 @@ function onReady(__stage) {
   				canvas.height = 2;
   
   				const context = canvas.getContext( '2d' );
-  				context.fillStyle = 'white';
-  				context.fillRect( 0, 1, 2, 1 );
+  				context!.fillStyle = 'white';
+  				context!.fillRect( 0, 1, 2, 1 );
   
   				return canvas;
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     let time = performance.now() * 0.001;
     				pointLight.position.x = Math.sin( time * 0.6 ) * 9;
     				pointLight.position.y = Math.sin( time * 0.7 ) * 9 + 6;

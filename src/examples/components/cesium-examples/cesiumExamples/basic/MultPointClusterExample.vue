@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer._cesiumWidget._creditContainer.style.display = "none"
@@ -56,10 +56,10 @@ async function onReady(ctx) {
   
   const citys = await fetch('/external-examples/3d-file-server/files/other/city.json').then(res => res.json()) // 获取城市数据
   
-  const points = Object.values(citys).map((val, k) => ({ type: 'Feature', pid: k + '-' + val[0] + '-' + val[1], geometry: { coordinates: val } }))
+  const points = Object.values(citys).map((val: any, k) => ({ type: 'Feature', pid: k + '-' + val[0] + '-' + val[1], geometry: { coordinates: val } }))
   
   // 建立聚合
-  setClusterCollection(viewer, points, (billboards, data) => {
+  setClusterCollection(viewer, points, (billboards: any, data: any) => {
   
       const [longitude, latitude] = data.geometry.coordinates
   
@@ -82,9 +82,10 @@ async function onReady(ctx) {
   })
   
   /* 聚合方法 */
-  function setClusterCollection(viewer, points, callback = () => { }, options = {}) {
+  function setClusterCollection(viewer: any, points: any, callback: any = () => { }, options: any = {}) {
   
       // 创建聚合
+      const Supercluster = (globalThis as any).Supercluster
       const supercluster = new Supercluster({ radius: 40, extent: 512, minZoom: 0, maxZoom: 16, ...options }) // 密集程度 radius, 切片大小 extent, 最小层级 minZoom, 最大层级 maxZoom
   
       supercluster.load(points)
@@ -117,7 +118,7 @@ async function onReady(ctx) {
       // 创建billboard集合对象
       const billboards = viewer.scene.primitives.add(new Cesium.BillboardCollection())
   
-      const setBillboards = arr => arr.forEach((cluster) => {
+      const setBillboards = (arr: any) => arr.forEach((cluster: any) => {
   
           let returnCluster = cluster
   
@@ -133,7 +134,7 @@ async function onReady(ctx) {
               // 初始化最小距离和最接近的点
               let minDistance = Infinity
   
-              let closestPoint = null
+              let closestPoint: any = null
   
               // 遍历所有原始点
               for (const leaf of leaves) {

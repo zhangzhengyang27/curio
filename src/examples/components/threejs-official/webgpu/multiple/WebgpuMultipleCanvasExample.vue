@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three/webgpu'
 import { color } from 'three/tsl'
@@ -20,20 +20,20 @@ import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js'
 const containerRef = ref(null)
 const webgpuAvailable = ref(true)
 
-let animationId = null
-let renderer = null
-const scenes = []
+let animationId: any = null
+let renderer: any = null
+const scenes: any[] = []
 
 onMounted(() => {
   if (!containerRef.value) return
 
   if (WebGPU.isAvailable() === false) {
-    webgpuAvailable.value = false
-    containerRef.value.appendChild(WebGPU.getErrorMessage())
+    webgpuAvailable.value = false;
+    (containerRef.value as HTMLElement).appendChild(WebGPU.getErrorMessage())
     return
   }
 
-  const container = containerRef.value
+  const container = containerRef.value as HTMLElement
 
   const content = document.createElement('div')
   content.id = 'content'
@@ -72,7 +72,7 @@ onMounted(() => {
     camera.position.z = 2
     scene.userData.camera = camera
 
-    const controls = new OrbitControls(camera, canvasTarget.domElement)
+    const controls = new OrbitControls(camera, canvasTarget.domElement as HTMLElement)
     controls.minDistance = 2
     controls.maxDistance = 5
     controls.enablePan = false

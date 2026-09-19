@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -23,6 +23,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+
+let gui: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Shadow Map</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -60,7 +63,9 @@ async function onReady(__stage) {
   				Neutral: THREE.NeutralToneMapping
   			};
   
-  			init().catch( function ( err ) {
+  			async function init() { } // init body flattened into onReady below
+
+  			init().catch( function ( err: any ) {
   
   				console.error( err );
   
@@ -74,7 +79,7 @@ async function onReady(__stage) {
   				renderer.inspector = new Inspector();
   
   
-  				renderer.toneMapping = toneMappingOptions[ params.toneMapping ];
+  				renderer.toneMapping = (toneMappingOptions as any)[ params.toneMapping ];
   				renderer.toneMappingExposure = params.exposure;
   
   				
@@ -135,13 +140,13 @@ async function onReady(__stage) {
   					.name( 'type' )
   					.onChange( function () {
   
-  						renderer.toneMapping = toneMappingOptions[ params.toneMapping ];
+  						renderer.toneMapping = (toneMappingOptions as any)[ params.toneMapping ];
   
   					} );
   
   				toneMappingFolder.add( params, 'exposure', 0, 2 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						renderer.toneMappingExposure = value;
   
@@ -151,7 +156,7 @@ async function onReady(__stage) {
   
   				backgroundFolder.add( params, 'blurriness', 0, 1 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						scene.backgroundBlurriness = value;
   
@@ -159,7 +164,7 @@ async function onReady(__stage) {
   
   				backgroundFolder.add( params, 'intensity', 0, 1 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						scene.backgroundIntensity = value;
   

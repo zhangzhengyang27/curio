@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { KTXLoader } from 'three/examples/jsm/loaders/KTXLoader.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - compressed KTX textures<br />\n\t<a href=\"https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/\">Khronos Texture</a> is a lightweight file format for OpenGL"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -52,7 +52,7 @@ function onReady(__stage) {
   	ASTC_4x4, ASTC8x8 - transparent textures with full alpha range
   	*/
   
-  	const meshes = [];
+  	const meshes: any = [];
   
   	
   
@@ -91,14 +91,14 @@ function onReady(__stage) {
   			material1 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/disturb_PVR2bpp.ktx' )
   			} );
-  			material1.map.colorSpace = THREE.SRGBColorSpace;
+  			material1.map!.colorSpace = THREE.SRGBColorSpace;
   			material2 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/lensflare_PVR4bpp.ktx' ),
   				depthTest: false,
   				transparent: true,
   				side: THREE.DoubleSide
   			} );
-  			material2.map.colorSpace = THREE.SRGBColorSpace;
+  			material2.map!.colorSpace = THREE.SRGBColorSpace;
   
   			meshes.push( new THREE.Mesh( geometry, material1 ) );
   			meshes.push( new THREE.Mesh( geometry, material2 ) );
@@ -110,14 +110,14 @@ function onReady(__stage) {
   			material1 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/disturb_BC1.ktx' )
   			} );
-  			material1.map.colorSpace = THREE.SRGBColorSpace;
+  			material1.map!.colorSpace = THREE.SRGBColorSpace;
   			material2 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/lensflare_BC3.ktx' ),
   				depthTest: false,
   				transparent: true,
   				side: THREE.DoubleSide
   			} );
-  			material2.map.colorSpace = THREE.SRGBColorSpace;
+  			material2.map!.colorSpace = THREE.SRGBColorSpace;
   			material3 = new THREE.MeshStandardMaterial( {
   				normalMap: loader.load( ASSET_HOST + 'textures/compressed/normal.bc5.ktx' )
   			} );
@@ -153,14 +153,14 @@ function onReady(__stage) {
   			material1 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/disturb_ASTC4x4.ktx' )
   			} );
-  			material1.map.colorSpace = THREE.SRGBColorSpace;
+  			material1.map!.colorSpace = THREE.SRGBColorSpace;
   			material2 = new THREE.MeshBasicMaterial( {
   				map: loader.load( ASSET_HOST + 'textures/compressed/lensflare_ASTC8x8.ktx' ),
   				depthTest: false,
   				transparent: true,
   				side: THREE.DoubleSide
   			} );
-  			material2.map.colorSpace = THREE.SRGBColorSpace;
+  			material2.map!.colorSpace = THREE.SRGBColorSpace;
   
   			meshes.push( new THREE.Mesh( geometry, material1 ) );
   			meshes.push( new THREE.Mesh( geometry, material2 ) );
@@ -194,7 +194,7 @@ function onReady(__stage) {
   
   	
   
-  	__stage.addUpdateCallback((_delta, _elapsed) => {
+  	__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     		for ( let i = 0; i < meshes.length; i ++ ) {
     			const mesh = meshes[ i ];

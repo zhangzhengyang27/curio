@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { GUI } from 'lil-gui'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -35,11 +35,11 @@ function onReady(ctx) {
   gidHelper.rotation.x = Math.PI / 2
   scene.add(gidHelper)
   
-  function createMesh(color = 0xffffff, p, size = 1) {
+  function createMesh(color = 0xffffff, p?: any, size = 1) {
       const geometry = new THREE.BoxGeometry(size, size, size)
       const material = new THREE.MeshBasicMaterial({ color })
       const mesh = new THREE.Mesh(geometry, material)
-      if (p) mesh.position.set(...p)
+      if (p) mesh.position.set(...(p as [number, number, number]))
       scene.add(mesh)
       return mesh
   }
@@ -99,13 +99,13 @@ function onReady(ctx) {
   folder1.add({ kill: () => tween.kill() }, 'kill').name('终止动画') // 终止动画并将其从内存中移除，无法再对其进行控制
   
   // 不会终止 tween 的播放，但会将其时间跳转设置为 value 的值
-  folder1.add({ seek: 0 }, 'seek').step(0.01).onChange(value => tween.seek(value, false)).name('跳转到指定时间') // 第二个参数表示是否跳过 delay 的时间
+  folder1.add({ seek: 0 }, 'seek').step(0.01).onChange((value: any) => tween.seek(value, false)).name('跳转到指定时间') // 第二个参数表示是否跳过 delay 的时间
   
   folder1.add({
       fn: () => {
   
           // 由于gsap3 本身就是全局时间线, 所以可以接受第三个参数 => 位置参数  
-          gsap.to(mesh.position, {
+          (gsap.to as any)(mesh.position, {
               y: 30,
               duration: 0.5,
               repeat: 1
@@ -177,7 +177,7 @@ function onReady(ctx) {
   const folder2 = gui.addFolder('时间线')
   folder2.open()
   
-  folder2.addFn = (fn) => {
+  folder2.addFn = (fn: any) => {
       const obj = { fn }
       return folder2.add(obj, 'fn')
   }
@@ -281,7 +281,7 @@ function onReady(ctx) {
   folder2.addFn(() => mainTl.pause()).name('6-tl.pause()')
   folder2.addFn(() => mainTl.reverse()).name('6-tl.reverse()')
   folder2.addFn(() => mainTl.restart()).name('6-tl.restart()')
-  folder2.add({ progress: 0 }, 'progress', 0, 1).step(0.01).onChange(v => {
+  folder2.add({ progress: 0 }, 'progress', 0, 1).step(0.01).onChange((v: any) => {
       mainTl.progress(v) // 拖拽滑块控制整条时间线的进度
   }).name('6-tl.progress滑块')
   
@@ -306,7 +306,7 @@ function onReady(ctx) {
   
   // ========== 第5步：嵌套时间线 ==========
   // 时间线可以嵌套，把复杂动画拆分成可复用的小段
-  function bounceUp(target) {
+  function bounceUp(target: any) {
       // 返回一个独立的小时间线
       const tl = gsap.timeline()
       tl.to(target.position, { y: 12, duration: 0.3, ease: 'none' })
@@ -314,7 +314,7 @@ function onReady(ctx) {
       return tl
   }
   
-  function slideRight(target, distance = 10) {
+  function slideRight(target: any, distance = 10) {
       const tl = gsap.timeline()
       tl.to(target.position, { x: `+=${distance}`, duration: 0.5, ease: 'power1.inOut' })
       return tl

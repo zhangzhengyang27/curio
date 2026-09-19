@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,6 +23,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let gui: any;
 
 const props = defineProps({
   example: {
@@ -32,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> css2d - label"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,8 +45,6 @@ function onReady(__stage) {
   
   
   
-  
-  			let gui;
   
   			let labelRenderer;
   
@@ -109,7 +109,7 @@ function onReady(__stage) {
   					normalMap: textureLoader.load( ASSET_HOST + 'textures/planets/earth_normal_2048.jpg' ),
   					normalScale: new THREE.Vector2( 0.85, 0.85 )
   				} );
-  				earthMaterial.map.colorSpace = THREE.SRGBColorSpace;
+  				earthMaterial.map!.colorSpace = THREE.SRGBColorSpace;
   				const earth = new THREE.Mesh( earthGeometry, earthMaterial );
   				scene.add( earth );
   
@@ -118,7 +118,7 @@ function onReady(__stage) {
   					shininess: 5,
   					map: textureLoader.load( ASSET_HOST + 'textures/planets/moon_1024.jpg' )
   				} );
-  				moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
+  				moonMaterial.map!.colorSpace = THREE.SRGBColorSpace;
   				moon = new THREE.Mesh( moonGeometry, moonMaterial );
   				scene.add( moon );
   
@@ -200,7 +200,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const elapsed = timer.getElapsed();
     				moon.position.set( Math.sin( elapsed ) * 5, 0, Math.cos( elapsed ) * 5 );

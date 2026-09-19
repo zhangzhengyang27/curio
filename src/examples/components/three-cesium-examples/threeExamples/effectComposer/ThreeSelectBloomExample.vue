@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -80,7 +80,7 @@ function onReady(ctx) {
   
   // 点击切换辉光
   window.addEventListener("click", onClick)
-  function onClick(event) {
+  function onClick(event: any) {
       const raycaster = new THREE.Raycaster()
       const mouse = new THREE.Vector2(
           (event.offsetX / event.target.clientWidth) * 2 - 1,
@@ -97,17 +97,17 @@ function onReady(ctx) {
   bloomLayer.set(1)
   
   const darkMaterial = new THREE.MeshBasicMaterial({ color: "black" })
-  const materials = {}
+  const materials: any = {}
   
   ctx.addUpdateCallback(() => {
-    scene.traverse(obj => {
+    scene.traverse((obj: any) => {
             if (obj.isMesh && bloomLayer.test(obj.layers) === false) {
                 materials[obj.uuid] = obj.material // 保存原材质
                 obj.material = darkMaterial	// 替换材质
             }
         })
         bloomComposer.render() // 渲染到bloomComposer
-        scene.traverse(obj => {
+        scene.traverse((obj: any) => {
             if (materials[obj.uuid]) {
                 obj.material = materials[obj.uuid] // 恢复原材质
                 delete materials[obj.uuid] // 删除原材质

@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -25,13 +25,13 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const mixerFrames = []
+  const mixerFrames: any[] = []
   
   ctx.addUpdateCallback(() => {
     mixerFrames.forEach(i => i?.mixerAnimateRender?.())
@@ -52,7 +52,7 @@ function onReady(ctx) {
   
       gltf => {
   
-          const group = gltf.scene
+          const group: any = gltf.scene
   
           group.animations = gltf.animations
   
@@ -69,15 +69,15 @@ function onReady(ctx) {
   gui = new GUI()
   
   // 模型加载完成
-  const createModeAnimates = model => {
+  const createModeAnimates = (model: any) => {
   
-      model.animations.forEach((_, k) => {
+      model.animations.forEach((_: any, k: any) => {
   
           gui.add({
 
               fn: () => {
 
-                  model.actionIndexs.forEach((_, _k, arr) => arr[_k] = _k === k)
+                  model.actionIndexs.forEach((_: any, _k: any, arr: any) => arr[_k] = _k === k)
 
                   modelAnimationPlay(model, model.animations)
 
@@ -94,11 +94,11 @@ function onReady(ctx) {
   
               const _actions = [1, 2] // 同时播放 第三个和第四个动画
   
-              model.actionIndexs.forEach((_, k, arr) => arr[k] = _actions.includes(k))
+              model.actionIndexs.forEach((_: any, k: any, arr: any) => arr[k] = _actions.includes(k))
   
               const { actions } = modelAnimationPlay(model, model.animations)
   
-              setTimeout(() => actions.forEach((v => v.stop())), 4000)
+              setTimeout(() => actions.forEach(((v: any) => v.stop())), 4000)
   
           }
           
@@ -106,7 +106,7 @@ function onReady(ctx) {
   
   }
   
-  function modelAnimationPlay(group) {
+  function modelAnimationPlay(group: any, animations?: any) {
   
       const clock = new THREE.Clock()
   
@@ -120,7 +120,7 @@ function onReady(ctx) {
   
       }
   
-      const actions = group.actionIndexs.map((i, k) => {
+      const actions = group.actionIndexs.map((i: any, k: any) => {
   
           if(i) {
   
@@ -140,7 +140,7 @@ function onReady(ctx) {
   
           }
   
-      }).filter(i => i)
+      }).filter((i: any) => i)
   
       !mixerFrames.find(i => i === group) && mixerFrames.push(group)
   

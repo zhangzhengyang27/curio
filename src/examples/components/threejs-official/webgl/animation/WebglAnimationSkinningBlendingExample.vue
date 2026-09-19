@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Skeletal Animation Blending\n\t\t\t(model from <a href=\"https://www.mixamo.com/\" target=\"_blank\" rel=\"noopener\">mixamo.com</a>)<br/>\n\t\t\tNote: crossfades are possible with blend weights being set to (1,0,0), (0,1,0) or (0,0,1)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,13 +44,13 @@ function onReady(__stage) {
   
   
   			let stats;
-  			let model, skeleton, mixer, timer;
+  			let model: any, skeleton: any, mixer: any, timer;
   
-  			const crossFadeControls = [];
+  			const crossFadeControls: any = [];
   
-  			let idleAction, walkAction, runAction;
-  			let idleWeight, walkWeight, runWeight;
-  			let actions, settings;
+  			let idleAction: any, walkAction: any, runAction: any;
+  			let idleWeight: any, walkWeight: any, runWeight: any;
+  			let actions: any, settings: any;
   
   			let singleStepMode = false;
   			let sizeOfNextStep = 0;
@@ -101,7 +101,7 @@ function onReady(__stage) {
   					model = gltf.scene;
   					scene.add( model );
   
-  					model.traverse( function ( object ) {
+  					model.traverse( function ( object: any ) {
   
   						if ( object.isMesh ) object.castShadow = true;
   
@@ -235,21 +235,21 @@ function onReady(__stage) {
   			}
   
   
-  			function showModel( visibility ) {
+  			function showModel( visibility: any ) {
   
   				model.visible = visibility;
   
   			}
   
   
-  			function showSkeleton( visibility ) {
+  			function showSkeleton( visibility: any ) {
   
   				skeleton.visible = visibility;
   
   			}
   
   
-  			function modifyTimeScale( speed ) {
+  			function modifyTimeScale( speed: any ) {
   
   				mixer.timeScale = speed;
   
@@ -258,7 +258,7 @@ function onReady(__stage) {
   
   			function deactivateAllActions() {
   
-  				actions.forEach( function ( action ) {
+  				actions.forEach( function ( action: any ) {
   
   					action.stop();
   
@@ -272,7 +272,7 @@ function onReady(__stage) {
   				setWeight( walkAction, settings[ 'modify walk weight' ] );
   				setWeight( runAction, settings[ 'modify run weight' ] );
   
-  				actions.forEach( function ( action ) {
+  				actions.forEach( function ( action: any ) {
   
   					action.play();
   
@@ -305,7 +305,7 @@ function onReady(__stage) {
   
   			function pauseAllActions() {
   
-  				actions.forEach( function ( action ) {
+  				actions.forEach( function ( action: any ) {
   
   					action.paused = true;
   
@@ -315,7 +315,7 @@ function onReady(__stage) {
   
   			function unPauseAllActions() {
   
-  				actions.forEach( function ( action ) {
+  				actions.forEach( function ( action: any ) {
   
   					action.paused = false;
   
@@ -332,7 +332,7 @@ function onReady(__stage) {
   
   			}
   
-  			function prepareCrossFade( startAction, endAction, defaultDuration ) {
+  			function prepareCrossFade( startAction: any, endAction: any, defaultDuration: any ) {
   
   				// Switch default / custom crossfade duration (according to the user's choice)
   
@@ -358,7 +358,7 @@ function onReady(__stage) {
   
   			}
   
-  			function setCrossFadeDuration( defaultDuration ) {
+  			function setCrossFadeDuration( defaultDuration: any ) {
   
   				// Switch default crossfade duration <-> custom crossfade duration
   
@@ -374,11 +374,11 @@ function onReady(__stage) {
   
   			}
   
-  			function synchronizeCrossFade( startAction, endAction, duration ) {
+  			function synchronizeCrossFade( startAction: any, endAction: any, duration: any ) {
   
   				mixer.addEventListener( 'loop', onLoopFinished );
   
-  				function onLoopFinished( event ) {
+  				function onLoopFinished( event: any ) {
   
   					if ( event.action === startAction ) {
   
@@ -392,7 +392,7 @@ function onReady(__stage) {
   
   			}
   
-  			function executeCrossFade( startAction, endAction, duration ) {
+  			function executeCrossFade( startAction: any, endAction: any, duration: any ) {
   
   				// Not only the start action, but also the end action must get a weight of 1 before fading
   				// (concerning the start action this is already guaranteed in this place)
@@ -409,7 +409,7 @@ function onReady(__stage) {
   			// This function is needed, since animationAction.crossFadeTo() disables its start action and sets
   			// the start action's timeScale to ((start animation's duration) / (end animation's duration))
   
-  			function setWeight( action, weight ) {
+  			function setWeight( action: any, weight: any ) {
   
   				action.enabled = true;
   				action.setEffectiveTimeScale( 1 );
@@ -462,7 +462,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				idleWeight = idleAction.getEffectiveWeight();
     				walkWeight = walkAction.getEffectiveWeight();

@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -66,7 +66,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -157,14 +157,14 @@ function onReady(__stage) {
   
   			const bloomFolder = gui.addFolder( 'bloom' );
   
-  			bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value ) {
+  			bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value: any ) {
   
   				bloomPass.threshold = Number( value );
   				render();
   
   			} );
   
-  			bloomFolder.add( params, 'strength', 0.0, 3 ).onChange( function ( value ) {
+  			bloomFolder.add( params, 'strength', 0.0, 3 ).onChange( function ( value: any ) {
   
   				bloomPass.strength = Number( value );
   				mixPass.material.uniforms.bloomStrength.value = bloomPass.strength;
@@ -173,7 +173,7 @@ function onReady(__stage) {
   
   			} );
   
-  			bloomFolder.add( params, 'radius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
+  			bloomFolder.add( params, 'radius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value: any ) {
   
   				bloomPass.radius = Number( value );
   				render();
@@ -182,7 +182,7 @@ function onReady(__stage) {
   
   			const toneMappingFolder = gui.addFolder( 'tone mapping' );
   
-  			toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value ) {
+  			toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value: any ) {
   
   				renderer.toneMappingExposure = Math.pow( value, 4.0 );
   				render();
@@ -191,7 +191,7 @@ function onReady(__stage) {
   
   			setupScene();
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				mouse.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				mouse.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -239,7 +239,7 @@ function onReady(__stage) {
   
   			}
   
-  			function disposeMaterial( obj ) {
+  			function disposeMaterial( obj: any ) {
   
   				if ( obj.material ) {
   
@@ -260,23 +260,23 @@ function onReady(__stage) {
   
   			}
   
-  			function darkenNonBloomed( obj ) {
+  			function darkenNonBloomed( obj: any ) {
   
   				if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
   
-  					materials[ obj.uuid ] = obj.material;
+  					(materials as any)[ obj.uuid ] = obj.material;
   					obj.material = darkMaterial;
   
   				}
   
   			}
   
-  			function restoreMaterial( obj ) {
+  			function restoreMaterial( obj: any ) {
   
-  				if ( materials[ obj.uuid ] ) {
+  				if ( (materials as any)[ obj.uuid ] ) {
   
-  					obj.material = materials[ obj.uuid ];
-  					delete materials[ obj.uuid ];
+  					obj.material = (materials as any)[ obj.uuid ];
+  					delete (materials as any)[ obj.uuid ];
   
   				}
   

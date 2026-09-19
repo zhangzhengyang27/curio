@@ -16,15 +16,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+
+let timer: any;
 
 const props = defineProps({
   example: {
@@ -34,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - solid geometry with clip planes and stencil materials"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -75,7 +77,7 @@ function onReady(__stage) {
   			};
   
   			
-  			function createPlaneStencilGroup( geometry, plane, renderOrder ) {
+  			function createPlaneStencilGroup( geometry: any, plane: any, renderOrder: any ) {
   
   				const group = new THREE.Group();
   				const baseMat = new THREE.MeshBasicMaterial();
@@ -256,8 +258,8 @@ function onReady(__stage) {
   				gui.add( params, 'animate' );
   
   				const planeX = gui.addFolder( 'planeX' );
-  				planeX.add( params.planeX, 'displayHelper' ).onChange( v => planeHelpers[ 0 ].visible = v );
-  				planeX.add( params.planeX, 'constant' ).min( - 1 ).max( 1 ).onChange( d => planes[ 0 ].constant = d );
+  				planeX.add( params.planeX, 'displayHelper' ).onChange( (v: any) => planeHelpers[ 0 ].visible = v );
+  				planeX.add( params.planeX, 'constant' ).min( - 1 ).max( 1 ).onChange( (d: any) => planes[ 0 ].constant = d );
   				planeX.add( params.planeX, 'negated' ).onChange( () => {
   
   					planes[ 0 ].negate();
@@ -267,8 +269,8 @@ function onReady(__stage) {
   				planeX.open();
   
   				const planeY = gui.addFolder( 'planeY' );
-  				planeY.add( params.planeY, 'displayHelper' ).onChange( v => planeHelpers[ 1 ].visible = v );
-  				planeY.add( params.planeY, 'constant' ).min( - 1 ).max( 1 ).onChange( d => planes[ 1 ].constant = d );
+  				planeY.add( params.planeY, 'displayHelper' ).onChange( (v: any) => planeHelpers[ 1 ].visible = v );
+  				planeY.add( params.planeY, 'constant' ).min( - 1 ).max( 1 ).onChange( (d: any) => planes[ 1 ].constant = d );
   				planeY.add( params.planeY, 'negated' ).onChange( () => {
   
   					planes[ 1 ].negate();
@@ -278,8 +280,8 @@ function onReady(__stage) {
   				planeY.open();
   
   				const planeZ = gui.addFolder( 'planeZ' );
-  				planeZ.add( params.planeZ, 'displayHelper' ).onChange( v => planeHelpers[ 2 ].visible = v );
-  				planeZ.add( params.planeZ, 'constant' ).min( - 1 ).max( 1 ).onChange( d => planes[ 2 ].constant = d );
+  				planeZ.add( params.planeZ, 'displayHelper' ).onChange( (v: any) => planeHelpers[ 2 ].visible = v );
+  				planeZ.add( params.planeZ, 'constant' ).min( - 1 ).max( 1 ).onChange( (d: any) => planes[ 2 ].constant = d );
   				planeZ.add( params.planeZ, 'negated' ).onChange( () => {
   
   					planes[ 2 ].negate();
@@ -293,7 +295,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( params.animate ) {

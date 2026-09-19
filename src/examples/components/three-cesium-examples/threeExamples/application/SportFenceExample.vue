@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -62,7 +62,7 @@ function onReady(ctx) {
   }));
   scene.add(fence2);
   
-  function createFenceGeometry(points, height) {
+  function createFenceGeometry(points: THREE.Vector3[], height: number) {
       const positions = [];
       const uvs = [];
       const indices = [];
@@ -122,8 +122,8 @@ function onReady(ctx) {
   })
   
   new GUI().addColor({ color: color.getHex() }, 'color').onChange(value => {
-      material.color.set(value);
-      fence2.material.color.set(value);
+      (material.color as THREE.Color).set(value);
+      ((fence2.material as THREE.MeshBasicMaterial).color as THREE.Color).set(value);
   });
 }
 </script>

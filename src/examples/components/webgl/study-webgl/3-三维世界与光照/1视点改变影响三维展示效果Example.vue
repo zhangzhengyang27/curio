@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern("/webgl/study-webgl/libs/gl-matrix.js");
   let vertexstring = `
           attribute vec4 a_position;
@@ -25,8 +25,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
   
-          var webgl;
-          var uniformAnim = 0;
+          var webgl: any;          var uniformAnim = 0;
           var count = 0;
           var projMatrix = glMatrix.mat4.create()
   
@@ -39,7 +38,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               let webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
           }
   
           function initShader() {
@@ -67,7 +66,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.attachShader(program, fsshader)
               webgl.linkProgram(program);
               webgl.useProgram(program);
-              webgl.program = program
+              (webgl as any).program = program
   
           }
   
@@ -100,7 +99,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               ]
   
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
@@ -108,7 +107,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
               // 8 * 4 绘制一个点所需要的字节数，一个坐标代表 4 个字节
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 8 * 4, 0);
-              let aColor = webgl.getAttribLocation(webgl.program, "a_color");
+              let aColor = webgl.getAttribLocation((webgl as any).program, "a_color");
               webgl.enableVertexAttribArray(aColor);
               // 4 * 4 偏移量
               webgl.vertexAttribPointer(aColor, 4, webgl.FLOAT, false, 8 * 4, 4 * 4);
@@ -118,7 +117,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               modelView = glMatrix.mat4.lookAt(modelView, [0, 0, 0.2], [0, 0, 0], [0, 1, 0]);
               console.log(modelView);
   
-              let uniformMatrix1 = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix1 = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
               webgl.uniformMatrix4fv(uniformMatrix1, false, modelView);
           }
   

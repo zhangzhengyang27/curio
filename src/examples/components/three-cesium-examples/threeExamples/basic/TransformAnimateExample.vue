@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import gsap from 'gsap'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -38,7 +38,7 @@ function onReady(ctx) {
   })
   
   // 变换动画
-  function setTransformAnimate(mesh) {
+  function setTransformAnimate(mesh: any) {
   
       const position = mesh.position.clone()
       
@@ -64,11 +64,11 @@ function onReady(ctx) {
       
               gsap.to(mesh[i], {
       
-                  x: transformInfo_[i].x,
-      
-                  y: transformInfo_[i].y,
-      
-                  z: transformInfo_[i].z,
+                  x: (transformInfo_ as any)[i].x,
+
+                  y: (transformInfo_ as any)[i].y,
+
+                  z: (transformInfo_ as any)[i].z,
       
                   //间隔时间
                   duration: 3,

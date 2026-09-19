@@ -12,7 +12,7 @@ const ROOT = resolve(fileURLToPath(import.meta.url), '../..')
 const REG_DIR = join(ROOT, 'src/examples/registry')
 const PUBLIC = join(ROOT, 'public')
 
-const idx = await import(join(REG_DIR, 'index.js'))
+const idx = await import(join(REG_DIR, 'index.ts'))
 // 注意：registry/index.js 已改为按 source 懒加载。必须用异步版本触发加载，
 // 否则同步的 getAllExamples() 会返回空数组，校验静默「全部通过」（假阳性）。
 const all = await idx.getAllExamplesAsync()

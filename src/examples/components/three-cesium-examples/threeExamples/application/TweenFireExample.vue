@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 import { GUI } from 'lil-gui'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -52,7 +52,7 @@ function onReady(ctx) {
   const canvas = document.createElement('canvas');
   canvas.width = 256;
   canvas.height = 256;
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext('2d')!;
   context.clearRect(0, 0, canvas.width, canvas.height);
   const gradient = context.createRadialGradient(
       canvas.width / 2, canvas.height / 2, 0,
@@ -125,9 +125,9 @@ function onReady(ctx) {
   scene.add(sprites);
   
   // 初始化粒子
-  function initParticle(particle, delay) {
+  function initParticle(particle: any, delay: any, sprites?: any) {
   
-      const r_v = v => Math.random() * v - v / 2;
+      const r_v = (v: number) => Math.random() * v - v / 2;
   
       // 初始化位置和大小
       particle.position.set(r_v(config.r_p), r_v(config.r_p), r_v(config.r_p));

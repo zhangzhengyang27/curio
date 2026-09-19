@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - handinput - profiles<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -47,7 +47,7 @@ function onReady(__stage) {
   			let controller1, controller2;
   			let controllerGrip1, controllerGrip2;
   
-  			const handModels = {
+  			const handModels: any = {
   				left: null,
   				right: null
   			};
@@ -132,7 +132,7 @@ function onReady(__stage) {
   
   				}
   
-  				hand1.addEventListener( 'pinchend', function () {
+  				hand1.addEventListener( 'pinchend', function ( this: any ) {
   
   					handModels.left[ this.userData.currentHandModel ].visible = false;
   					this.userData.currentHandModel = ( this.userData.currentHandModel + 1 ) % 3;
@@ -164,7 +164,7 @@ function onReady(__stage) {
   
   				}
   
-  				hand2.addEventListener( 'pinchend', function () {
+  				hand2.addEventListener( 'pinchend', function ( this: any ) {
   
   					handModels.right[ this.userData.currentHandModel ].visible = false;
   					this.userData.currentHandModel = ( this.userData.currentHandModel + 1 ) % 3;

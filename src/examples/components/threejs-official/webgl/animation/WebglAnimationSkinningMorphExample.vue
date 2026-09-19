@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - skinning and morphing<br />\n\t\t\t<p>\n\t\t\t\tThe animation system allows clips to be played individually, looped, or crossfaded with other clips. This example shows a character looping in one of several base animation states, then transitioning smoothly to one-time actions. Facial expressions are controlled independently with morph targets.\n\t\t\t</p>\n\t\t\tModel by\n\t\t\t<a href=\"https://www.patreon.com/quaternius\" target=\"_blank\" rel=\"noopener\">Tomás Laulhé</a>,\n\t\t\tmodifications by <a href=\"https://donmccurdy.com/\" target=\"_blank\" rel=\"noopener\">Don McCurdy</a>. CC0.<br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,10 +46,10 @@ function onReady(__stage) {
   
   
   
-  			let container, stats, timer, gui, mixer, actions, activeAction, previousAction;
+  			let container, stats, timer, gui, mixer: any, actions: any, activeAction: any, previousAction;
   			let model, face;
   
-  			const api = { state: 'Walking' };
+  			const api: Record<string, any> = { state: 'Walking' };
   
   			
   
@@ -114,7 +114,7 @@ function onReady(__stage) {
   			
   
   
-  			function createGUI( model, animations ) {
+  			function createGUI( model: any, animations: any ) {
   
   				const states = [ 'Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing' ];
   				const emotes = [ 'Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp' ];
@@ -158,7 +158,7 @@ function onReady(__stage) {
   
   				const emoteFolder = gui.addFolder( 'Emotes' );
   
-  				function createEmoteCallback( name ) {
+  				function createEmoteCallback( name: any ) {
   
   					api[ name ] = function () {
   
@@ -197,7 +197,7 @@ function onReady(__stage) {
   
   				for ( let i = 0; i < expressions.length; i ++ ) {
   
-  					expressionFolder.add( face.morphTargetInfluences, i, 0, 1, 0.01 ).name( expressions[ i ] );
+  					expressionFolder.add( face.morphTargetInfluences, i as any, 0, 1, 0.01 ).name( expressions[ i ] );
   
   				}
   
@@ -208,7 +208,7 @@ function onReady(__stage) {
   
   			}
   
-  			function fadeToAction( name, duration ) {
+  			function fadeToAction( name: any, duration: any ) {
   
   				previousAction = activeAction;
   				activeAction = actions[ name ];
@@ -232,7 +232,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const dt = timer.getDelta();
     				if ( mixer ) mixer.update( dt );

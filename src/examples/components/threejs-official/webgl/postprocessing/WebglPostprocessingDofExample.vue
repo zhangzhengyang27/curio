@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl depth-of-field with bokeh example<br/>\n\t\t\tshader by <a href=\"http://artmartinsh.blogspot.com/2010/02/glsl-lens-blur-filter-with-bokeh.html\">Martins Upitis</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   
   
-  			let stats, singleMaterial, zmaterial, parameters, nobjects, cubeMaterial;
+  			let stats, singleMaterial: any, zmaterial, parameters, nobjects: any, cubeMaterial;
   
   			let mouseX = 0, mouseY = 0;
   
@@ -57,7 +57,7 @@ function onReady(__stage) {
   			let width = (__stage.container?.clientWidth || window.innerWidth);
   			let height = (__stage.container?.clientHeight || window.innerHeight);
   
-  			const materials = [], objects = [];
+  			const materials: any = [], objects = [];
   
   			const postprocessing = {};
   
@@ -147,6 +147,7 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
+  				const container = __stage.container;
   				container.style.touchAction = 'none';
   				container.addEventListener( 'pointermove', onPointerMove );
   
@@ -162,9 +163,9 @@ function onReady(__stage) {
   
   				const matChanger = function ( ) {
   
-  					postprocessing.bokeh.uniforms[ 'focus' ].value = effectController.focus;
-  					postprocessing.bokeh.uniforms[ 'aperture' ].value = effectController.aperture * 0.00001;
-  					postprocessing.bokeh.uniforms[ 'maxblur' ].value = effectController.maxblur;
+  					(postprocessing as any).bokeh.uniforms[ 'focus' ].value = effectController.focus;
+  					(postprocessing as any).bokeh.uniforms[ 'aperture' ].value = effectController.aperture * 0.00001;
+  					(postprocessing as any).bokeh.uniforms[ 'maxblur' ].value = effectController.maxblur;
   
   				};
   
@@ -179,7 +180,7 @@ function onReady(__stage) {
   			
   
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -208,12 +209,12 @@ function onReady(__stage) {
   				composer.addPass( bokehPass );
   				composer.addPass( outputPass );
   
-  				postprocessing.composer = composer;
-  				postprocessing.bokeh = bokehPass;
+  				(postprocessing as any).composer = composer;
+  				(postprocessing as any).bokeh = bokehPass;
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     const time = Date.now() * 0.00005;
@@ -225,7 +226,7 @@ function onReady(__stage) {
     						materials[ i ].color.setHSL( h, 1, 0.5 );
     					}
     				}
-    				postprocessing.composer.render( 0.1 );
+    				(postprocessing as any).composer.render( 0.1 );
     }
     				stats.end();
   })
@@ -250,7 +251,7 @@ function onReady(__stage) {
   
   				}
   
-  				postprocessing.composer.render( 0.1 );
+  				(postprocessing as any).composer.render( 0.1 );
   
   			}
   

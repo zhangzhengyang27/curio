@@ -14,7 +14,7 @@
   </CSS3DExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CSS3DExampleScene from '@/examples/components/CSS3DExampleScene.vue'
 import * as THREE from 'three';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> css3d - periodic table."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -163,8 +163,8 @@ function onReady(__stage) {
   
   
   
-  			const objects = [];
-  			const targets = { table: [], sphere: [], helix: [], grid: [] };
+  			const objects: any = [];
+  			const targets: any = { table: [], sphere: [], helix: [], grid: [] };
   
   				camera.position.z = 3000;
   
@@ -180,12 +180,12 @@ function onReady(__stage) {
   
   					const number = document.createElement( 'div' );
   					number.className = 'number';
-  					number.textContent = ( i / 5 ) + 1;
+  					(number.textContent as any) = ( i / 5 ) + 1;
   					element.appendChild( number );
   
   					const symbol = document.createElement( 'div' );
   					symbol.className = 'symbol';
-  					symbol.textContent = table[ i ];
+  					(symbol.textContent as any) = table[ i ];
   					element.appendChild( symbol );
   
   					const details = document.createElement( 'div' );
@@ -204,10 +204,10 @@ function onReady(__stage) {
   					//
   
   					const object = new THREE.Object3D();
-  					object.position.x = ( table[ i + 3 ] * 140 ) - 1330;
-  					object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
+  					object.position.x = ( (table as any)[ i + 3 ] * 140 ) - 1330;
+  					object.position.y = - ( (table as any)[ i + 4 ] * 180 ) + 990;
   
-  					targets.table.push( object );
+  					targets.table.push( ((object as any) as any) );
   
   				}
   
@@ -228,7 +228,7 @@ function onReady(__stage) {
   
   					object.lookAt( vector );
   
-  					targets.sphere.push( object );
+  					targets.sphere.push( ((object as any) as any) );
   
   				}
   
@@ -249,7 +249,7 @@ function onReady(__stage) {
   
   					object.lookAt( vector );
   
-  					targets.helix.push( object );
+  					targets.helix.push( ((object as any) as any) );
   
   				}
   
@@ -263,7 +263,7 @@ function onReady(__stage) {
   					object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
   					object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
   
-  					targets.grid.push( object );
+  					targets.grid.push( ((object as any) as any) );
   
   				}
   
@@ -283,7 +283,7 @@ function onReady(__stage) {
   				const btnContainer = document.createElement( 'div' );
   				btnContainer.style.cssText = 'position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;';
   				__stage.overlay?.appendChild( btnContainer );
-  				const mkBtn = (label) => { const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'padding:6px 12px;cursor:pointer;'; btnContainer.appendChild(b); return b; };
+  				const mkBtn = (label: any) => { const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'padding:6px 12px;cursor:pointer;'; btnContainer.appendChild(b); return b; };
   
   				const buttonTable = mkBtn( 'table' );
   				buttonTable.addEventListener( 'click', function () {
@@ -322,7 +322,7 @@ function onReady(__stage) {
   			
   
   
-  			function transform( targets, duration ) {
+  			function transform( this: any, targets: any, duration: any ) {
   
   				TWEEN.removeAll();
   
@@ -352,7 +352,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
   })
   

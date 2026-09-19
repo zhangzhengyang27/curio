@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -36,7 +36,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -54,11 +54,13 @@ function onReady(ctx) {
   scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 
   class Reflector extends Mesh {
-    constructor(geometry, options = {}) {
+    [key: string]: any
+    static ReflectorShader: any
+    constructor(geometry: any, options: any = {}) {
       super(geometry)
 
       this.isReflector = true
-      this.type = 'Reflector'
+      ;(this as any).type = 'Reflector'
       this.camera = new PerspectiveCamera()
 
       const scope = this
@@ -105,7 +107,7 @@ function onReady(ctx) {
 
       this.material = material
       this.count = 0
-      this.onBeforeRender = (renderer, scene, camera) => {
+      this.onBeforeRender = (renderer: any, scene: any, camera: any) => {
         this.count++
 
         reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld)
@@ -186,14 +188,14 @@ function onReady(ctx) {
 
         if (renderer.autoClear === false) renderer.clear()
 
-        options.filter.forEach((name) => {
+        options.filter.forEach((name: any) => {
           const mesh = scene.getObjectByName(name)
           mesh.visible = false
         })
 
         renderer.render(scene, virtualCamera)
 
-        options.filter.forEach((name) => {
+        options.filter.forEach((name: any) => {
           const mesh = scene.getObjectByName(name)
           mesh.visible = true
         })
@@ -217,7 +219,7 @@ function onReady(ctx) {
 
       this.dispose = function () {
         renderTarget.dispose()
-        scope.material.dispose()
+        ;(scope.material as any).dispose()
       }
     }
   }
@@ -261,7 +263,7 @@ function onReady(ctx) {
       }`,
   }
 
-  function addReflectorEffect(mesh, options = { filter: [] }) {
+  function addReflectorEffect(mesh: any, options: any = { filter: [] }) {
     const material = mesh.material
     const virtualCamera = new PerspectiveCamera()
 
@@ -295,7 +297,7 @@ function onReady(ctx) {
       refTextureMatrix: { value: textureMatrix },
     }
 
-    material.onBeforeCompile = (shader) => {
+    material.onBeforeCompile = (shader: any) => {
       Object.assign(shader.uniforms, appendUniforms)
       shader.vertexShader = shader.vertexShader.replace(
         '#include <common>',
@@ -330,7 +332,7 @@ function onReady(ctx) {
       )
     }
 
-    mesh.material.onBeforeRender = (renderer, scene, camera) => {
+    mesh.material.onBeforeRender = (renderer: any, scene: any, camera: any) => {
       reflectorWorldPosition.setFromMatrixPosition(mesh.matrixWorld)
       cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld)
 
@@ -409,14 +411,14 @@ function onReady(ctx) {
 
       if (renderer.autoClear === false) renderer.clear()
 
-      options.filter.forEach((name) => {
+      options.filter.forEach((name: any) => {
         const mesh = scene.getObjectByName(name)
         mesh.visible = false
       })
 
       renderer.render(scene, virtualCamera)
 
-      options.filter.forEach((name) => {
+      options.filter.forEach((name: any) => {
         const mesh = scene.getObjectByName(name)
         mesh.visible = true
       })

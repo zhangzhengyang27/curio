@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { PVRLoader } from 'three/examples/jsm/loaders/PVRLoader.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - PVR compressed textures"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -35,7 +35,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			const meshes = [];
+  			const meshes: any = [];
   
   			
   
@@ -49,7 +49,7 @@ function onReady(__stage) {
   
   				//
   
-  				const onCube1Loaded = function ( texture ) {
+  				const onCube1Loaded = function ( texture: any ) {
   
   					texture.magFilter = THREE.LinearFilter;
   					texture.minFilter = THREE.LinearFilter;
@@ -59,7 +59,7 @@ function onReady(__stage) {
   
   				};
   
-  				const onCube2Loaded = function ( texture ) {
+  				const onCube2Loaded = function ( texture: any ) {
   
   					texture.magFilter = THREE.LinearFilter;
   					// texture.minFilter = LinearMipmapNearestFilter;
@@ -112,7 +112,7 @@ function onReady(__stage) {
   
   				//
   
-  				let mesh = new THREE.Mesh( geometry, material1 );
+  				let mesh: any = new THREE.Mesh( geometry, material1 );
   				mesh.position.x = - 500;
   				mesh.position.y = 200;
   				scene.add( mesh );
@@ -174,7 +174,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     				for ( let i = 0; i < meshes.length; i ++ ) {
     					const mesh = meshes[ i ];

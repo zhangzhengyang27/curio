@@ -214,15 +214,15 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useInteractionStore } from '../stores/useInteractionStore.js'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useInteractionStore } from '../stores/useInteractionStore'
+import { useEarthStore } from '../stores/useEarthStore'
 
 const interactionStore = useInteractionStore()
 const earthStore = useEarthStore()
 
-const countryFlags = {
+const countryFlags: Record<string, string> = {
   '中国': '🇨🇳', '美国': '🇺🇸', '日本': '🇯🇵', '英国': '🇬🇧', '法国': '🇫🇷',
   '德国': '🇩🇪', '俄罗斯': '🇷🇺', '印度': '🇮🇳', '巴西': '🇧🇷', '加拿大': '🇨🇦',
   '澳大利亚': '🇦🇺', '韩国': '🇰🇷', '意大利': '🇮🇹', '西班牙': '🇪🇸', '墨西哥': '🇲🇽',
@@ -231,10 +231,10 @@ const countryFlags = {
 }
 
 const flag = computed(() => {
-  return countryFlags[interactionStore.infoPanelData?.name] || ''
+  return countryFlags[interactionStore.infoPanelData?.name ?? ''] || ''
 })
 
-function formatCoord(val, type) {
+function formatCoord(val: number | null | undefined, type: 'lon' | 'lat') {
   if (val === undefined || val === null) return '--'
   const abs = Math.abs(val).toFixed(4)
   if (type === 'lon') return `${abs}° ${val >= 0 ? 'E' : 'W'}`

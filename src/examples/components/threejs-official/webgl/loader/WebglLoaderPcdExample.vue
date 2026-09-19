@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,11 +30,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t<a href=\"https://pointclouds.org/documentation/tutorials/pcd_file_format.html\" target=\"_blank\" rel=\"noopener\">PCD File format</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
   
   
@@ -64,7 +65,7 @@ function onReady(__stage) {
   
   				const loader = new PCDLoader();
   
-  				const loadPointCloud = function ( file ) {
+  				const loadPointCloud = function ( file: any ) {
   
   					loader.load( ASSET_HOST + 'models/pcd/' + file, function ( points ) {
   
@@ -76,9 +77,9 @@ function onReady(__stage) {
   						const gui = new GUI();
   
   						gui.add( points.material, 'size', 0.001, 0.01 ).onChange( render );
-  						const pcdColorDebug = { color: points.material.color.getHex() }
+  						const pcdColorDebug = { color: points.material.color!.getHex() }
   						gui.addColor( pcdColorDebug, 'color' ).name( 'color' ).onChange( ( val) => {
-  							points.material.color.set( val );
+  							points.material.color!.set( val );
   							render();
   						} );
   						gui.add( points, 'name', [

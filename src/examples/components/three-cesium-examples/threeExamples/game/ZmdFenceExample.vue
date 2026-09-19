@@ -9,10 +9,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
+let _resizeObserver: any = null
+
+function onBeforeDispose() {
+  if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+}
 import * as THREE from "three";
 import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -24,7 +29,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -49,7 +54,7 @@ function onReady(ctx) {
     /** ### 创建围栏
      * @param {Fence_Constructor_Opts} opts
      */
-    constructor(opts) {
+    constructor(opts: any) {
       super();
   
       // 复制参数并创建参数中对象的副本
@@ -171,28 +176,28 @@ function onReady(ctx) {
     /** ### 更新时间
      * @param {number} elapsed 场景时间
      */
-    update(elapsed) {
+    update(elapsed: any) {
       this.part_1.material.uniforms.U_time.value = elapsed;
     }
   
     /** ### 重设围栏参数
      * @param {Partial<Fence_Constructor_Opts>} opts
      */
-    setParams(opts) {
+    setParams(opts: any) {
       if (this.disposed) {
         console.warn("围栏已被销毁，设置参数无效");
         return;
       }
-  
+
       for (const key in opts) {
-        const oldValue = this.params[key];
+        const oldValue = (this.params as any)[key];
         const newValue = opts[key];
         if (oldValue instanceof THREE.Vector3) {
           oldValue.copy(newValue);
         } else if (oldValue instanceof THREE.Color) {
           oldValue.set(newValue);
         } else {
-          this.params[key] = newValue;
+          (this.params as any)[key] = newValue;
         }
       }
     }
@@ -208,11 +213,11 @@ function onReady(ctx) {
       this.part_0.material[0].dispose();
       this.part_0.material[1].dispose();
       this.part_0.removeFromParent();
-      this.part_0 = null;
-  
+      this.part_0 = null as any;
+
       this.part_1.material.dispose();
       this.part_1.removeFromParent();
-      this.part_1 = null;
+      this.part_1 = null as any;
   
       this.disposed = true;
     }
@@ -220,28 +225,28 @@ function onReady(ctx) {
     /** ### part_0 geometry
      * @type {THREE.BufferGeometry}
      */
-    static part_0_geo;
+    static part_0_geo: any;
     /** ### part_1 geometry
      * @type {THREE.BufferGeometry}
      */
-    static part_1_geo;
+    static part_1_geo: any;
   
     /** ### part_0 material vertexShader
      * @type {string}
      */
-    static part_0_mat_vs;
+    static part_0_mat_vs: any;
     /** ### part_0 material fragmentShader
      * @type {string}
      */
-    static part_0_mat_fs;
+    static part_0_mat_fs: any;
     /** ### part_1 material vertexShader
      * @type {string}
      */
-    static part_1_mat_vs;
+    static part_1_mat_vs: any;
     /** ### part_1 material fragmentShader
      * @type {string}
      */
-    static part_1_mat_fs;
+    static part_1_mat_fs: any;
   }
   
   // 由于需要频繁更新围栏范围，所以 attribute position 存储归一化坐标，在着色器中计算实际位置
@@ -559,7 +564,7 @@ function onReady(ctx) {
   
   const timer = new THREE.Timer();
   
-  const tick = (delta, elapsed) => {
+  const tick = (delta: number, elapsed: number) => {
     controls.update(delta);
   
     fence.update(elapsed);
@@ -640,13 +645,7 @@ function onReady(ctx) {
   gui.add(data, "width", 0.1, 1.0, 0.001).name("围栏宽度");
   gui.addColor(data, "color").name("围栏颜色");
   gui.add(data, "useSimp").name("启用简化");
-  
-  let _resizeObserver = null
-  
-  function onBeforeDispose() {
-    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
-  }
-  
+
   _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;

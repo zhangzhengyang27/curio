@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> vehicle controller\n\t\t\t<p>WASD or Arrow keys to move</p>\n\t\t\t<p>Space to brake</p>\n   \t\t\t<p>R to reset</p>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,8 +43,8 @@ async function onReady(__stage) {
   
   
   			let stats;
-  			let physics, physicsHelper;
-  			let car, chassis, wheels, movement, vehicleController;
+  			let physics: any, physicsHelper: any;
+  			let car: any, chassis: any, wheels: any, movement: any, vehicleController: any;
   
   			
   
@@ -193,7 +193,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function addWheel( index, pos, carMesh ) {
+  			function addWheel( index: any, pos: any, carMesh: any ) {
   
   				// Define wheel properties
   				const wheelRadius = 0.3;
@@ -246,7 +246,7 @@ async function onReady(__stage) {
   
   				//const chassisPosition = chassis.translation();
   
-  				wheels.forEach( ( wheel, index ) => {
+  				wheels.forEach( ( wheel: any, index: any ) => {
   
   					const wheelAxleCs = vehicleController.wheelAxleCs( index );
   					const connection = vehicleController.wheelChassisConnectionPointCs( index ).y || 0;
@@ -349,7 +349,7 @@ async function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( vehicleController ) {
     {
     if ( movement.reset ) {
@@ -403,7 +403,7 @@ async function onReady(__stage) {
     				const wheelRotationQuat = new THREE.Quaternion();
     				const up = new THREE.Vector3( 0, 1, 0 );
     				//const chassisPosition = chassis.translation();
-    				wheels.forEach( ( wheel, index ) => {
+    				wheels.forEach( ( wheel: any, index: any ) => {
     					const wheelAxleCs = vehicleController.wheelAxleCs( index );
     					const connection = vehicleController.wheelChassisConnectionPointCs( index ).y || 0;
     					const suspension = vehicleController.wheelSuspensionLength( index ) || 0;

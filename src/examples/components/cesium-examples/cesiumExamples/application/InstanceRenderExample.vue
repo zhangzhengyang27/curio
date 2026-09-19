@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const props = defineProps({
@@ -16,11 +16,11 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let primitive = null
+let Cesium: any = null
+let viewer: any = null
+let primitive: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -31,7 +31,7 @@ function viewerOptions(Cesium) {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -39,8 +39,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const defaultvs = `
@@ -72,7 +72,13 @@ function onReady(ctx) {
   `
 
   class GridPrimitive {
-    constructor(modelMatrix, vs, fs, row, uniformMap) {
+    modelMatrix: any
+    drawCommand: any
+    vs: any
+    fs: any
+    row: any
+    uniformMap: any
+    constructor(modelMatrix: any, vs: any, fs: any, row: any, uniformMap?: any) {
       this.modelMatrix = modelMatrix || Cesium.Matrix4.IDENTITY.clone()
       this.drawCommand = null
       this.vs = vs || defaultvs
@@ -85,7 +91,7 @@ function onReady(ctx) {
       return false
     }
 
-    createCommand(context) {
+    createCommand(context: any) {
       const modelMatrix = this.modelMatrix
       const box = new Cesium.BoxGeometry({
         maximum: new Cesium.Cartesian3(250.0, 250.0, 250.0),
@@ -135,7 +141,7 @@ function onReady(ctx) {
       })
     }
 
-    update(frameState) {
+    update(frameState: any) {
       if (!this.drawCommand) {
         this.createCommand(frameState.context)
       }

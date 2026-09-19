@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t-\n\t\t\tIFC loader using\n\t\t\t<a href=\"https://github.com/ThatOpen/engine_web-ifc\" target=\"_blank\" rel=\"noopener\">web-ifc</a>.\n\t\t\tSee <a href=\"https://github.com/ThatOpen\" target=\"_blank\" rel=\"noopener\">main project repository</a> for more information and BIM tools."
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -93,13 +93,13 @@ async function onReady(__stage) {
   			
   
   
-  			function loadAllGeometry( ifcAPI, modelID ) {
+  			function loadAllGeometry( ifcAPI: any, modelID: any ) {
   
-  				const opaqueGeometries = [];
-  				const transparentGeometries = [];
+  				const opaqueGeometries: any = [];
+  				const transparentGeometries: any = [];
   				const materialCache = {};
   
-  				ifcAPI.StreamAllMeshes( modelID, ( flatMesh ) => {
+  				ifcAPI.StreamAllMeshes( modelID, ( flatMesh: any ) => {
   
   					const placedGeometries = flatMesh.geometries;
   
@@ -145,7 +145,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function getPlacedGeometry( ifcAPI, modelID, placedGeometry, materialCache ) {
+  			function getPlacedGeometry( ifcAPI: any, modelID: any, placedGeometry: any, materialCache: any ) {
   
   				const geometry = getBufferGeometry( ifcAPI, modelID, placedGeometry );
   				const material = getMeshMaterial( placedGeometry.color, materialCache );
@@ -156,7 +156,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function getBufferGeometry( ifcAPI, modelID, placedGeometry ) {
+  			function getBufferGeometry( ifcAPI: any, modelID: any, placedGeometry: any ) {
   
   				const geometry = ifcAPI.GetGeometry( modelID, placedGeometry.geometryExpressID );
   				const vertexData = ifcAPI.GetVertexArray( geometry.GetVertexData(), geometry.GetVertexDataSize() );
@@ -170,7 +170,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function getMeshMaterial( color, materialCache ) {
+  			function getMeshMaterial( color: any, materialCache: any ) {
   
   				const id = `${ color.x }-${ color.y }-${ color.z }-${ color.w }`;
   				const cached = materialCache[ id ];
@@ -195,7 +195,7 @@ async function onReady(__stage) {
   
   			const _tmpColor = new THREE.Color();
   
-  			function ifcGeometryToBuffer( color, vertexData, indexData ) {
+  			function ifcGeometryToBuffer( color: any, vertexData: any, indexData: any ) {
   
   				// web-ifc returns interleaved [px, py, pz, nx, ny, nz] per vertex.
   				const vertexCount = vertexData.length / 6;

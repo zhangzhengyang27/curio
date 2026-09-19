@@ -7,22 +7,23 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import { AxesHelper, GridHelper, Group, Mesh, MeshPhongMaterial, PointLight, SphereGeometry } from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '../../ExampleScene.vue'
 
 class AxesGridHelper {
-  constructor(obj, size = 2) {
-    const axes = new AxesHelper()
-    axes.material.depthTest = false
+  [key: string]: any
+  constructor(obj: any, size = 2) {
+    const axes = new AxesHelper();
+    (axes.material as any).depthTest = false
     obj.add(axes)
 
-    const grid = new GridHelper(size)
-    grid.material.depthTest = false
+    const grid = new GridHelper(size);
+    (grid.material as any).depthTest = false
     obj.add(grid)
 
     this.grid = grid
@@ -33,14 +34,14 @@ class AxesGridHelper {
   get visible() {
     return this._visible
   }
-  set visible(v) {
+  set visible(v: boolean) {
     this._visible = v
     this.grid.visible = v
     this.axes.visible = v
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene, camera, addUpdateCallback, overlay } = ctx
 
   camera.up.set(0, 0, -1)
@@ -54,7 +55,7 @@ function onReady(ctx) {
   const heightSegments = 16
   const sphereGeometry = new SphereGeometry(radius, widthSegments, heightSegments)
 
-  const objects = []
+  const objects: any[] = []
 
   const solarSystem = new Group()
   scene.add(solarSystem)
@@ -90,7 +91,7 @@ function onReady(ctx) {
   moonMesh.scale.set(0.2, 0.2, 0.2)
   moonSystem.add(moonMesh)
 
-  addUpdateCallback((delta, elapsed) => {
+  addUpdateCallback((delta: number, elapsed: number) => {
     objects.forEach((obj) => {
       obj.rotation.y = elapsed
     })
@@ -100,7 +101,7 @@ function onReady(ctx) {
   makeAxesGrid(solarSystem, 'solarSystem')
   makeAxesGrid(earthSystem, 'earthSystem')
   makeAxesGrid(moonSystem, 'moonSystem')
-  function makeAxesGrid(obj, label) {
+  function makeAxesGrid(obj: any, label: any) {
     const helper = new AxesGridHelper(obj)
     gui.add(helper, 'visible').name(label)
   }

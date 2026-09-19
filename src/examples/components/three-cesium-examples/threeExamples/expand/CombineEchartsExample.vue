@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
@@ -23,10 +23,10 @@ const props = defineProps({
   }
 })
 
-let css3DRender = null
-let resizeCss3D = null
+let css3DRender: any = null
+let resizeCss3D: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const controls = ctx.controls
@@ -143,7 +143,7 @@ function onReady(ctx) {
   scene.add(css3DObject2)
 }
 
-function onBeforeDispose(ctx) {
+function onBeforeDispose(ctx: any) {
   const container = ctx.container
 
   if (resizeCss3D) window.removeEventListener('resize', resizeCss3D)

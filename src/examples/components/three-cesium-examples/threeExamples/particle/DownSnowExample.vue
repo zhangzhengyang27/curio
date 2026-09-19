@@ -5,7 +5,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -16,7 +16,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -24,8 +24,8 @@ function onReady(ctx) {
 
   
   
-  let mesh, uniforms, geometry;
-  let snowMaterial;
+  let mesh: any, uniforms: any, geometry: any;
+  let snowMaterial: any;
   const particles = 1000;
   
   init();
@@ -55,7 +55,7 @@ function onReady(ctx) {
   		new THREE.Float32BufferAttribute(positions, 3)
   	);
   
-  	snowMaterial.onBeforeCompile = (shader) => {
+  	snowMaterial.onBeforeCompile = (shader: any) => {
   		shader.uniforms.uColor = {
   			value: new THREE.Color(0xffffff),
   		};
@@ -103,7 +103,7 @@ function onReady(ctx) {
     render();
   })
   
-  function update(time, position) {
+  function update(time?: any, position?: any) {
   	if (snowMaterial) {
   		const positions = mesh.geometry.getAttribute("position").array;
   		for (let i = 0; i < positions.length; i += 3) {

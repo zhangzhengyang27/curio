@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
   animation: false,           // 是否创建动画小器件，左下角仪表    
   baseLayerPicker: false,     // 是否显示图层选择器，右上角图层选择按钮
@@ -34,7 +34,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -42,8 +42,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   ;
@@ -61,7 +61,7 @@ function onReady(ctx) {
   
   // ==================== 状态管理区域 ====================
   // 定义事件组 - 用于跟踪键盘按键状态
-  let flags = {
+  let flags: any = {
     // 相机姿态控制相关标志
     pitchUp: false,      // 俯仰角向上
     pitchDown: false,    // 俯仰角向下
@@ -89,15 +89,15 @@ function onReady(ctx) {
   };
   
   // 相机相关变量
-  let cameraHeight;  // 相机高度
-  let heading;       // 相机偏航角
-  let pitch;         // 相机俯仰角
-  let roll;          // 相机翻滚角
+  let cameraHeight: any;  // 相机高度
+  let heading: any;       // 相机偏航角
+  let pitch: any;         // 相机俯仰角
+  let roll: any;          // 相机翻滚角
   
   // 事件处理器引用 - 用于后续移除事件监听器
-  let tickHandler;      // 帧更新事件处理器
-  let keyDownHandler;   // 键盘按下事件处理器
-  let keyUpHandler;     // 键盘释放事件处理器
+  let tickHandler: any;      // 帧更新事件处理器
+  let keyDownHandler: any;   // 键盘按下事件处理器
+  let keyUpHandler: any;     // 键盘释放事件处理器
   
   // 启用地形深度测试，确保正确渲染
   viewer.scene.globe.depthTestAgainstTerrain = true;
@@ -161,7 +161,7 @@ function onReady(ctx) {
    * 键盘漫游加载方法
    * @param {Number} setStep - 相机视角移动步长
    */
-  function startKeyboardRoam(setStep) {
+  function startKeyboardRoam(setStep: any) {
     // 如果已经存在漫游功能，先停止它
     if (tickHandler) {
       quitKeyboardRoam();
@@ -170,7 +170,7 @@ function onReady(ctx) {
     // 添加键盘按下事件监听器
     document.addEventListener(
       "keydown",
-      keyDownHandler = function (e) {
+      keyDownHandler = function (e: any) {
         let flagName = getFlagFromKeyboard(e);
         if (typeof flagName !== "undefined") {
           flags[flagName] = true;
@@ -186,7 +186,7 @@ function onReady(ctx) {
     // 添加键盘释放事件监听器
     document.addEventListener(
       "keyup",
-      keyUpHandler = function (e) {
+      keyUpHandler = function (e: any) {
         let flagName = getFlagFromKeyboard(e);
         if (typeof flagName !== "undefined") {
           flags[flagName] = false;
@@ -280,7 +280,7 @@ function onReady(ctx) {
    * @param {number} p - 俯仰角调整量
    * @param {number} r - 翻滚角调整量
    */
-  function hprSetting(h, p, r) {
+  function hprSetting(h: any, p: any, r: any) {
     viewer.camera.setView({
       orientation: {
         heading: heading + h,  // 偏航角
@@ -295,7 +295,7 @@ function onReady(ctx) {
    * @param {KeyboardEvent} k - 键盘事件
    * @returns {string|undefined} 对应的标志名称
    */
-  function getFlagFromKeyboard(k) {
+  function getFlagFromKeyboard(k: any) {
     switch (k.key) {
       // 按字符的Unicode编码
       // 相机姿态操控（WASDQE控制相机视角）

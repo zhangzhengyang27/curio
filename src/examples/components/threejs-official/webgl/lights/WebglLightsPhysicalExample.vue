@@ -13,10 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Physically accurate incandescent bulb by <a href=\"http://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a><br />\n\t\t\tReal world scale: Brick cube is 50 cm in size. Globe is 50 cm in diameter.<br/>\n\t\t\tReinhard inline tonemapping with real-world light falloff (decay = 2)."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -264,7 +264,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.toneMappingExposure = Math.pow( params.exposure, 5.0 ); // to allow for very bright scenes.
     				renderer.shadowMap.enabled = params.shadows;
     				bulbLight.castShadow = params.shadows;

@@ -18,15 +18,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useWebXRExampleStage } from '../composables/useWebXRExampleStage.js'
+import { useWebXRExampleStage } from '../composables/useWebXRExampleStage'
 
 const props = defineProps({
   camera: {
     type: String,
     default: 'perspective',
-    validator: (v) => ['perspective', 'orthographic'].includes(v),
+    validator: (v: any) => ['perspective', 'orthographic'].includes(v),
   },
   cameraOptions: {
     type: Object,
@@ -108,15 +108,15 @@ const containerRef = ref(null)
 const canvasRef = ref(null)
 const overlayRef = ref(null)
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   emit('ready', ctx)
 }
 
-function onResize(size) {
+function onResize(size: any) {
   emit('resize', size)
 }
 
-function onBeforeDispose(ctx) {
+function onBeforeDispose(ctx: any) {
   emit('before-dispose', ctx)
 }
 

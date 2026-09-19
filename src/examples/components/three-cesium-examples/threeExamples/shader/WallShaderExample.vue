@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -31,7 +31,7 @@ function onReady(ctx) {
   const geometry = new THREE.TubeGeometry(curve, 20, 5, 300, false);
   
   geometry.computeBoundingBox()
-  const { max, min } = geometry.boundingBox
+  const { max, min } = geometry.boundingBox!
   
   // 创建材质
   const material = new THREE.ShaderMaterial({
@@ -67,7 +67,7 @@ function onReady(ctx) {
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
   
-  let time = 0
+  let time: number = 0
   
   ctx.addUpdateCallback(() => {
     if (time >= 1) time = 0

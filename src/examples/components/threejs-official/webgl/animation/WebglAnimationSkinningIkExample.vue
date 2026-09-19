@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - inverse kinematics<br />\n\t\t\tCharacter model by <a href=\"https://assetstore.unity.com/packages/3d/characters/humanoids/humans/kira-lowpoly-character-100303\" target=\"_blank\" rel=\"noopener\">Aki</a>, furnitures from <a href=\"https://poly.pizza\" target=\"_blank\" rel=\"noopener\">poly.pizza</a>, scene by <a href=\"https://abernier.link/edin\" target=\"_blank\" rel=\"noopener\">abernier</a>. CC0."
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,8 +51,8 @@ async function onReady(__stage) {
   		let orbitControls, transformControls;
   		let mirrorSphereCamera;
   
-  		const OOI = {};
-  		let IKSolver;
+  		const OOI: Record<string, any> = {};
+  		let IKSolver: any;
   
   		let stats, gui, conf;
   		const v0 = new THREE.Vector3();
@@ -171,7 +171,7 @@ async function onReady(__stage) {
   		
   
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( OOI.sphere && mirrorSphereCamera ) {
     				OOI.sphere.visible = false;
     				OOI.sphere.getWorldPosition( mirrorSphereCamera.position );
@@ -192,7 +192,7 @@ async function onReady(__stage) {
     			if ( conf.ik_solver ) {
     {
     if ( IKSolver ) IKSolver.update();
-    			scene.traverse( function ( object ) {
+    			scene.traverse( function ( object: any ) {
     				if ( object.isSkinnedMesh ) object.computeBoundingSphere();
     			} );
     }
@@ -205,7 +205,7 @@ async function onReady(__stage) {
   
   			if ( IKSolver ) IKSolver.update();
   
-  			scene.traverse( function ( object ) {
+  			scene.traverse( function ( object: any ) {
   
   				if ( object.isSkinnedMesh ) object.computeBoundingSphere();
   

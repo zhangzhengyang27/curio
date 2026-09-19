@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - simple global illumination (<a href=\"http://www.iquilezles.org/www/articles/simplegi/simplegi.htm\">article</a>)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -39,7 +39,7 @@ function onReady(__stage) {
   
   			class GIMesh extends THREE.Mesh {
   
-  				copy( source ) {
+  				copy( source: any ) {
   
   					super.copy( source );
   
@@ -53,7 +53,7 @@ function onReady(__stage) {
   
   			//
   
-  			const SimpleGI = function ( renderer, scene ) {
+  			const SimpleGI: any = function ( renderer: any, scene: any ) {
   
   				const SIZE = 32, SIZE2 = SIZE * SIZE;
   
@@ -77,7 +77,7 @@ function onReady(__stage) {
   				const color = new Float32Array( 3 );
   				const buffer = new Uint8Array( SIZE2 * 4 );
   
-  				__stage.addUpdateCallback((_delta, _elapsed) => {
+  				__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( bounces === 3 ) return;
     					const object = scene.children[ 0 ]; // torusKnot
     					const geometry = object.geometry;
@@ -177,7 +177,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.setRenderTarget( null );
   })
   

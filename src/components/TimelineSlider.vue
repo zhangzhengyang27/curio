@@ -13,13 +13,13 @@
       :max="timelineStore.yearRange[1]"
       :value="timelineStore.currentYear"
       class="year-slider"
-      @input="timelineStore.setYear(parseInt($event.target.value))"
+      @input="timelineStore.setYear(parseInt(($event.target as HTMLInputElement).value))"
     >
     <span class="year-label">{{ timelineStore.currentYear }}</span>
     <select
       class="speed-select"
       :value="timelineStore.speed"
-      @change="timelineStore.setSpeed(parseInt($event.target.value))"
+      @change="timelineStore.setSpeed(parseInt(($event.target as HTMLInputElement).value))"
     >
       <option :value="1">
         1×
@@ -42,8 +42,8 @@
   </div>
 </template>
 
-<script setup>
-import { useTimelineStore } from '../stores/useTimelineStore.js'
+<script setup lang="ts">
+import { useTimelineStore } from '../stores/useTimelineStore'
 const timelineStore = useTimelineStore()
 </script>
 

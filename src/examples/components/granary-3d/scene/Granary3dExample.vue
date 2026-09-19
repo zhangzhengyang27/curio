@@ -22,34 +22,34 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import * as THREE from 'three'
 import TWEEN from 'three/examples/jsm/libs/tween.module.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import ExampleScene from '../../ExampleScene.vue'
-import messageData from '../messageData.js'
+import messageData from '../messageData'
 
 const sceneRef = ref(null)
 const isLoading = ref(true)
 
-let scene = null
-let camera = null
-let renderer = null
-let addUpdateCallback = null
+let scene: any = null
+let camera: any = null
+let renderer: any = null
+let addUpdateCallback: any = null
 
 const modelGroup = new THREE.Group()
-const granaryArr = []
-const flames = []
-const timeouts = []
-let selectedMesh = null
-let hoverMesh = null
-let gltfScene = null
-let infoPanelDom = null
-let infoPanelLabel = null
-let infoPanelElements = null
-let weightTween = null
+const granaryArr: any[] = []
+const flames: any[] = []
+const timeouts: any[] = []
+let selectedMesh: any = null
+let hoverMesh: any = null
+let gltfScene: any = null
+let infoPanelDom: any = null
+let infoPanelLabel: any = null
+let infoPanelElements: any = null
+let weightTween: any = null
 
 let showInfoPanel = false
 let infoData = {
@@ -63,10 +63,10 @@ let infoData = {
 }
 let displayedWeight = 0
 
-let pointerDownPos = null
+let pointerDownPos: any = null
 let isDragging = false
 
-function pushTimeout(fn, delay) {
+function pushTimeout(fn: () => void, delay: number) {
   const id = setTimeout(fn, delay)
   timeouts.push(id)
   return id
@@ -77,7 +77,7 @@ function clearAllTimeouts() {
   timeouts.length = 0
 }
 
-function createNameTag(name) {
+function createNameTag(name: string) {
   const div = document.createElement('div')
   div.className = 'granary-name-tag'
   div.textContent = name
@@ -86,7 +86,7 @@ function createNameTag(name) {
   return label
 }
 
-function createInfoTag(name) {
+function createInfoTag(name: string) {
   const div = document.createElement('div')
   div.className = 'granary-fire-tag'
   div.textContent = name
@@ -142,7 +142,7 @@ function createInfoPanel() {
     grainHeight: div.querySelector('.grain-height-value'),
   }
 
-  elements.closeBtn.addEventListener('click', closeInfoPanel)
+  elements.closeBtn!.addEventListener('click', closeInfoPanel)
 
   const label = new CSS2DObject(div)
   return { div, label, elements }
@@ -161,7 +161,7 @@ function updateInfoPanel() {
   infoPanelDom.style.visibility = showInfoPanel ? 'visible' : 'hidden'
 }
 
-function animateWeight(target) {
+function animateWeight(target: number) {
   if (weightTween) weightTween.stop()
   displayedWeight = 0
   const obj = { value: 0 }
@@ -178,8 +178,8 @@ function animateWeight(target) {
     .start()
 }
 
-function openInfoPanel(mesh, point) {
-  const data = messageData[mesh.name]
+function openInfoPanel(mesh: any, point: any) {
+  const data = (messageData as Record<string, any>)[mesh.name]
   if (!data) return
   selectedMesh = mesh
   infoData = { ...data }
@@ -202,27 +202,27 @@ function closeInfoPanel() {
   }
 }
 
-function getGranaryHeightOffset(parentName) {
+function getGranaryHeightOffset(parentName: string) {
   if (parentName === '立筒仓') return 36
   if (parentName === '浅圆仓') return 20
   if (parentName === '平房仓') return 17
   return 0
 }
 
-function disposeFlame(flame) {
+function disposeFlame(flame: any) {
   const geometries = new Set()
   const materials = new Set()
   const textures = new Set()
-  flame.traverse((obj) => {
+  flame.traverse((obj: any) => {
     if (obj.geometry) geometries.add(obj.geometry)
     if (obj.material) {
       materials.add(obj.material)
       if (obj.material.map) textures.add(obj.material.map)
     }
   })
-  geometries.forEach((g) => g.dispose())
-  textures.forEach((t) => t.dispose())
-  materials.forEach((m) => m.dispose())
+  geometries.forEach((g: any) => g.dispose())
+  textures.forEach((t: any) => t.dispose())
+  materials.forEach((m: any) => m.dispose())
 }
 
 function createFlame() {
@@ -254,7 +254,7 @@ function createFlame() {
   )
 
   let t = 0
-  let rafId = null
+  let rafId: number | null = null
 
   function updateLoop() {
     t += 0.1
@@ -265,7 +265,7 @@ function createFlame() {
 
   updateLoop()
 
-  flame.stop = () => {
+  ;(flame as any).stop = () => {
     if (rafId) cancelAnimationFrame(rafId)
     rafId = null
   }
@@ -273,7 +273,7 @@ function createFlame() {
   return flame
 }
 
-function createGranaryFlame(gltfScene, name) {
+function createGranaryFlame(gltfScene: any, name: string) {
   const granary = gltfScene.getObjectByName(name)
   if (!granary || !granary.parent) return null
   const pos = new THREE.Vector3()
@@ -290,26 +290,26 @@ function createGranaryFlame(gltfScene, name) {
   return flame
 }
 
-function onModelLoaded(gltf) {
+function onModelLoaded(gltf: any) {
   if (!scene) return
   isLoading.value = false
   gltfScene = gltf.scene
   console.log('粮仓模型加载完成', gltf)
 
-  gltf.scene.traverse((object) => {
+  gltf.scene.traverse((object: any) => {
     if (object.type === 'Mesh') {
       const newMaterial = new THREE.MeshLambertMaterial({
         map: object.material?.map,
         color: object.material?.color ? object.material.color.clone() : 0xffffff,
       })
       object.material = newMaterial
-      object.userData.originalColor = newMaterial.color.clone()
+      object.userData.originalColor = newMaterial.color!.clone()
     }
   })
 
   const granaryGroup = gltf.scene.getObjectByName('粮仓')
   if (granaryGroup) {
-    granaryGroup.traverse((obj) => {
+    granaryGroup.traverse((obj: any) => {
       if (obj.type === 'Mesh') {
         granaryArr.push(obj)
 
@@ -346,7 +346,7 @@ function onModelLoaded(gltf) {
     pushTimeout(() => {
       if (!scene) return
       disposeFlame(p05Flame)
-      p05Flame.stop()
+      ;(p05Flame as any).stop()
       modelGroup.remove(p05Flame)
       if (p05Flame.userData.tag) {
         p05Flame.remove(p05Flame.userData.tag)
@@ -357,12 +357,12 @@ function onModelLoaded(gltf) {
   }
 }
 
-function onModelError(error) {
+function onModelError(error: unknown) {
   isLoading.value = false
   console.error('粮仓模型加载失败', error)
 }
 
-function updateHoverState(event) {
+function updateHoverState(event: PointerEvent) {
   if (!camera || !renderer || granaryArr.length === 0) return
 
   const rect = renderer.domElement.getBoundingClientRect()
@@ -379,9 +379,10 @@ function updateHoverState(event) {
   }
 
   if (intersects.length > 0) {
-    const mesh = intersects[0].object
+    const mesh = intersects[0].object as THREE.Mesh
     if (mesh !== selectedMesh) {
-      mesh.material.color.set(0x88ffff)
+      const hoverMat = mesh.material as THREE.MeshPhongMaterial & { color: THREE.Color }
+      hoverMat.color.set(0x88ffff)
       hoverMesh = mesh
       renderer.domElement.style.cursor = 'pointer'
     }
@@ -390,12 +391,12 @@ function updateHoverState(event) {
   }
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
   pointerDownPos = { x: event.clientX, y: event.clientY }
   isDragging = false
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
   if (pointerDownPos) {
     const dx = event.clientX - pointerDownPos.x
     const dy = event.clientY - pointerDownPos.y
@@ -410,7 +411,7 @@ function onPointerUp() {
   pointerDownPos = null
 }
 
-function handleClick(event) {
+function handleClick(event: MouseEvent) {
   if (!camera || !renderer || isDragging) return
 
   const rect = renderer.domElement.getBoundingClientRect()
@@ -422,11 +423,11 @@ function handleClick(event) {
   const intersects = raycaster.intersectObjects(granaryArr)
 
   if (intersects.length > 0) {
-    const mesh = intersects[0].object
+    const mesh = intersects[0].object as THREE.Mesh
     if (selectedMesh && selectedMesh !== mesh) {
-      selectedMesh.material.color.copy(selectedMesh.userData.originalColor)
+      ;(selectedMesh.material as THREE.MeshPhongMaterial & { color: THREE.Color }).color.copy(selectedMesh.userData.originalColor)
     }
-    mesh.material.color.set(0x00ffff)
+    ;(mesh.material as THREE.MeshPhongMaterial & { color: THREE.Color }).color.set(0x00ffff)
     openInfoPanel(mesh, intersects[0].point)
   } else {
     closeInfoPanel()
@@ -456,7 +457,7 @@ function updateLabelVisibility() {
   })
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   scene = ctx.scene
   camera = ctx.camera
   renderer = ctx.renderer

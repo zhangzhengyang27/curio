@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -82,7 +82,7 @@ function onReady(ctx) {
   }
   
   //  
-  function addColor(shader) {
+  function addColor(shader: any) {
       //   获取物体的高度差
       const uHeight = 1200
   
@@ -140,7 +140,7 @@ function onReady(ctx) {
   /**
    *添加扩散波
    * */
-  function addWave(shader) {
+  function addWave(shader: any) {
       // 设置扩散的中心点
       shader.uniforms.uSpreadCenter = { value: new THREE.Vector2(0, 0) }
       //   扩散的时间
@@ -182,7 +182,7 @@ function onReady(ctx) {
       })
   }
   
-  function addLightLine(shader) {
+  function addLightLine(shader: any) {
       //   扩散的时间
       shader.uniforms.uLightLineTime = { value: -1500 }
       //   设置条带的宽度
@@ -220,7 +220,7 @@ function onReady(ctx) {
       })
   }
   
-  function addToTopLine(shader) {
+  function addToTopLine(shader: any) {
       //   扩散的时间
       shader.uniforms.uToTopTime = { value: 0 }
       //   设置条带的宽度

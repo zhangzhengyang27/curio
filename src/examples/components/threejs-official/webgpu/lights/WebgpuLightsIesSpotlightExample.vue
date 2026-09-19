@@ -15,12 +15,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { IESLoader } from 'three/examples/jsm/loaders/IESLoader.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let lights: any;
+
 
 const props = defineProps({
   example: {
@@ -29,8 +32,10 @@ const props = defineProps({
   }
 })
 
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>IES Spot Light</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -153,7 +158,7 @@ async function onReady(__stage) {
   
   				//
   
-  				function setHelperVisible( value ) {
+  				function setHelperVisible( value: any ) {
   
   					for ( let i = 0; i < lights.length; i ++ ) {
   
@@ -168,7 +173,7 @@ async function onReady(__stage) {
   				//
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
-  				gui.add( { helper: false }, 'helper' ).onChange( ( v ) => setHelperVisible( v ) );
+  				gui.add( { helper: false }, 'helper' ).onChange( ( v: any ) => setHelperVisible( v ) );
   
   				//
   
@@ -178,7 +183,7 @@ async function onReady(__stage) {
   
   			
   
-  			function render( time ) {
+  			function render( time: any ) {
   
   				time = time / 1000;
   

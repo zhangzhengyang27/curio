@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,7 +27,7 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const container = gContainer.value.querySelector('#container')
+  const container = gContainer.value!.querySelector('#container')
   await loadScript("/graphics/assets/external/spritejs.js");
   await loadScript("/graphics/assets/external/sprite-extend-3d.js");
   // TODO: missing local script /lib/spritejs.js
@@ -35,7 +35,7 @@ async function initGraphicsExample() {
   // TODO: missing local script /js/sprite-geo-earth.js
   {
     const {Scene} = spritejs;
-        const container = gContainer.value.querySelector('#container');
+        const container = gContainer.value!.querySelector('#container');
         const scene = new Scene({
           container,
         });

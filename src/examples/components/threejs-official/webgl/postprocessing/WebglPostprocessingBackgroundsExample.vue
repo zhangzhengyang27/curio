@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Backgrounds: ClearPass, TexturePass and CubeTexturePass<br/>\n\t\t\tby <a href=\"https://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   const camera = __stage.camera
@@ -49,8 +49,8 @@ function onReady(__stage) {
   
   			let composer;
   			let clearPass, texturePass, renderPass;
-  			let cameraP, cubeTexturePassP;
-  			let gui, stats;
+  			let cameraP, cubeTexturePassP: any;
+  			let gui: any, stats;
   
   			const params = {
   
@@ -141,14 +141,14 @@ function onReady(__stage) {
   				const material = new THREE.MeshStandardMaterial();
   				material.roughness = 0.5 * Math.random() + 0.25;
   				material.metalness = 0;
-  				material.color.setHSL( Math.random(), 1.0, 0.3 );
+  				(material as any).color.setHSL( Math.random(), 1.0, 0.3 );
   
   				const mesh = new THREE.Mesh( geometry, material );
   				group.add( mesh );
   
   				// postprocessing
   
-  				const genCubeUrls = function ( prefix, postfix ) {
+  				const genCubeUrls = function ( prefix: any, postfix: any ) {
   
   					return [
   						prefix + 'px' + postfix, prefix + 'nx' + postfix,
@@ -201,7 +201,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     				cameraP.updateMatrixWorld( true );
     				let newColor = clearPass.clearColor;

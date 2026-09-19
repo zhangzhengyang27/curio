@@ -4,16 +4,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-let gui = null
+let gui: any = null
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Geometry, Mesh, Orbit, Texture} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
 import { GUI } from 'lil-gui'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -21,7 +21,7 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 async function initGraphicsExample() {
   {
-    const canvas = gContainer.value.querySelector('canvas');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
           canvas,
           width: 512,
@@ -65,7 +65,7 @@ async function initGraphicsExample() {
           }
         `;
     
-        async function loadModel(src) {
+        async function loadModel(src: any) {
           const data = await (await fetch(src)).json();
     
           const geometry = new Geometry(gl, {
@@ -77,7 +77,7 @@ async function initGraphicsExample() {
           return geometry;
         }
     
-        function loadTexture(src) {
+        function loadTexture(src: any) {
           const texture = new Texture(gl);
           return new Promise((resolve) => {
             const img = new Image();
@@ -110,15 +110,15 @@ async function initGraphicsExample() {
             beta: 0,
             theta: 0,
           };
-          gui.add(palette, 'alpha', -180, 180).onChange((val) => {
+          gui.add(palette, 'alpha', -180, 180).onChange((val: any) => {
             mesh.rotation.y = val / 180 * Math.PI;
             renderer.render({scene, camera});
           });
-          gui.add(palette, 'beta', -180, 180).onChange((val) => {
+          gui.add(palette, 'beta', -180, 180).onChange((val: any) => {
             mesh.rotation.x = val / 180 * Math.PI;
             renderer.render({scene, camera});
           });
-          gui.add(palette, 'theta', -180, 180).onChange((val) => {
+          gui.add(palette, 'theta', -180, 180).onChange((val: any) => {
             mesh.rotation.z = val / 180 * Math.PI;
             renderer.render({scene, camera});
           });

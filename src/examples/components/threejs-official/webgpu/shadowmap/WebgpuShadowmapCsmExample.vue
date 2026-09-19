@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Cascaded Shadow Maps</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,7 +44,7 @@ function onReady(__stage) {
   
   
   
-  			let orthoCamera, csm, csmHelper, csmDirectionalLight;
+  			let orthoCamera: any, csm: any, csmHelper: any, csmDirectionalLight;
   
   			const params = {
   				orthographic: false,
@@ -125,7 +125,7 @@ function onReady(__stage) {
   				csmDirectionalLight.shadow.camera.left = - 1000;
   				csmDirectionalLight.shadow.camera.right = 1000;
   
-  				csm = new CSMShadowNode( csmDirectionalLight, { cascades: 4, maxFar: params.maxFar, mode: params.mode } );
+  				csm = new CSMShadowNode( csmDirectionalLight, { cascades: 4, maxFar: params.maxFar, mode: params.mode as any } );
   
   				csmDirectionalLight.position.set( params.lightX, params.lightY, params.lightZ ).normalize().multiplyScalar( - 200 );
   
@@ -171,7 +171,7 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
   
-  				gui.add( params, 'orthographic' ).onChange( function ( value ) {
+  				gui.add( params, 'orthographic' ).onChange( function ( value: any ) {
   
   					csm.camera = value ? orthoCamera : camera;
   					csm.updateFrustums();
@@ -186,20 +186,20 @@ function onReady(__stage) {
   
   				// } );
   
-  				gui.add( params, 'shadows' ).onChange( function ( value ) {
+  				gui.add( params, 'shadows' ).onChange( function ( value: any ) {
   
   					csmDirectionalLight.castShadow = value;
   
   				} );
   
-  				gui.add( params, 'maxFar', 1, 5000, 1 ).name( 'max shadow far' ).onChange( function ( value ) {
+  				gui.add( params, 'maxFar', 1, 5000, 1 ).name( 'max shadow far' ).onChange( function ( value: any ) {
   
   					csm.maxFar = value;
   					csm.updateFrustums();
   
   				} );
   
-  				gui.add( params, 'mode', [ 'uniform', 'logarithmic', 'practical' ] ).name( 'frustum split mode' ).onChange( function ( value ) {
+  				gui.add( params, 'mode', [ 'uniform', 'logarithmic', 'practical' ] ).name( 'frustum split mode' ).onChange( function ( value: any ) {
   
   					csm.mode = value;
   					csm.updateFrustums();
@@ -224,13 +224,13 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'margin', 0, 200 ).name( 'light margin' ).onChange( function ( value ) {
+  				gui.add( params, 'margin', 0, 200 ).name( 'light margin' ).onChange( function ( value: any ) {
   
   					csm.lightMargin = value;
   
   				} );
   
-  				gui.add( params, 'shadowNear', 1, 10000 ).name( 'shadow near' ).onChange( function ( value ) {
+  				gui.add( params, 'shadowNear', 1, 10000 ).name( 'shadow near' ).onChange( function ( value: any ) {
   
   					for ( let i = 0; i < csm.lights.length; i ++ ) {
   
@@ -241,7 +241,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'shadowFar', 1, 10000 ).name( 'shadow far' ).onChange( function ( value ) {
+  				gui.add( params, 'shadowFar', 1, 10000 ).name( 'shadow far' ).onChange( function ( value: any ) {
   
   					for ( let i = 0; i < csm.lights.length; i ++ ) {
   
@@ -293,7 +293,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     camera.updateMatrixWorld();
     				if ( params.orthographic ) {
     {

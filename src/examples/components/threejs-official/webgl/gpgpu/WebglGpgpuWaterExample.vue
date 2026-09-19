@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,6 +31,13 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
+let sun: any;
+let heightmapVariable: any;
+let meshRay: any;
+let gpuCompute: any;
+let readWaterLevelImage: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -39,7 +46,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - <span id=\"waterSize\"></span> webgl gpgpu water<br/>\n\t\t\tClick and Move mouse to disturb water."
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -79,11 +86,11 @@ async function onReady(__stage) {
   			const BOUNDS = 6;
   			const BOUNDS_HALF = BOUNDS * 0.5;
   
-  			let tmpHeightmap = null;
+  			let tmpHeightmap: any = null;
   			const tmpQuat = new THREE.Quaternion();
   			const tmpQuatX = new THREE.Quaternion();
   			const tmpQuatZ = new THREE.Quaternion();
-  			let duckModel = null;
+  			let duckModel: any = null;
   
   			let container, stats;
   
@@ -92,19 +99,19 @@ async function onReady(__stage) {
   			const raycaster = new THREE.Raycaster();
   
   
-  			let waterMesh;
-  			let poolBorder;
+  			let waterMesh: any;
+  			let poolBorder: any;
   
   
   
   			// let smoothShader;
-  			let readWaterLevelShader;
-  			let readWaterLevelRenderTarget;
+  			let readWaterLevelShader: any;
+  			let readWaterLevelRenderTarget: any;
   
   			const waterNormal = new THREE.Vector3();
   
   			const NUM_DUCK = 12;
-  			const ducks = [];
+  			const ducks: any = [];
   			let ducksEnabled = true;
   
   			const simplex = new SimplexNoise();
@@ -146,10 +153,10 @@ async function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
-  				container.style.touchAction = 'none';
-  				container.addEventListener( 'pointermove', onPointerMove );
-  				container.addEventListener( 'pointerdown', onPointerDown );
-  				container.addEventListener( 'pointerup', onPointerUp );
+  				container!.style.touchAction = 'none';
+  				container!.addEventListener( 'pointermove', onPointerMove );
+  				container!.addEventListener( 'pointerdown', onPointerDown );
+  				container!.addEventListener( 'pointerup', onPointerUp );
   
   				
   
@@ -194,7 +201,7 @@ async function onReady(__stage) {
   				gui.add( effectController, 'viscosity', 0.9, 0.999, 0.001 ).onChange( valuesChanger );
   				gui.add( effectController, 'speed', 1, 6, 1 );
   				gui.add( effectController, 'ducksEnabled' ).onChange( valuesChanger );
-  				gui.add( effectController, 'wireframe' ).onChange( ( v )=>{
+  				gui.add( effectController, 'wireframe' ).onChange( ( v: any )=>{
   
   					waterMesh.material.wireframe = v;
   					poolBorder.material.wireframe = v;
@@ -304,11 +311,11 @@ async function onReady(__stage) {
   
   			}
   
-  			function fillTexture( texture ) {
+  			function fillTexture( texture: any ) {
   
   				const waterMaxHeight = 0.1;
   
-  				function noise( x, y ) {
+  				function noise( x: any, y: any ) {
   
   					let multR = waterMaxHeight;
   					let mult = 0.025;
@@ -348,7 +355,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function addShadow( v ) {
+  			function addShadow( v: any ) {
   
   				renderer.shadowMap.enabled = v;
   				sun.castShadow = v;
@@ -518,7 +525,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				const dom = renderer.domElement;
   				mouseCoords.set( ( event.clientX / dom.clientWidth ) * 2 - 1, - ( event.clientY / dom.clientHeight ) * 2 + 1 );
@@ -555,7 +562,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     {
     // Set uniforms: mouse interaction
@@ -619,8 +626,11 @@ async function onReady(__stage) {
   			//----------------------
   
   			class WaterMaterial extends THREE.MeshStandardMaterial {
+	defines: any;
+	extra: any;
+
   
-  				constructor( parameters ) {
+  				constructor( parameters: any ) {
   
   					super();
   
@@ -641,7 +651,7 @@ async function onReady(__stage) {
   
   				}
   
-  				addParameter( name, value ) {
+  				addParameter( name: any, value: any ) {
   
   					this.extra[ name ] = value;
   					Object.defineProperty( this, name, {
@@ -656,7 +666,7 @@ async function onReady(__stage) {
   
   				}
   
-  				onBeforeCompile( shader ) {
+  				onBeforeCompile( shader: any ) {
   
   					for ( const name in this.extra ) {
   

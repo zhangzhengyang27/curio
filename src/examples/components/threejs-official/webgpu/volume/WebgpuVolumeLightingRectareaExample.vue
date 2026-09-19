@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, checker, uv } from 'three/tsl';
@@ -25,6 +25,9 @@ import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { bayer16 } from 'three/examples/jsm/tsl/math/Bayer.js';
 import { gaussianBlur } from 'three/examples/jsm/tsl/display/GaussianBlurNode.js';
 
+let timer: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -33,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Lighting Rect Area</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -125,13 +128,13 @@ function onReady(__stage) {
   				const volumetricMaterial = new THREE.VolumeNodeMaterial();
   				volumetricMaterial.steps = 12;
   				volumetricMaterial.offsetNode = bayer16( screenCoordinate ); // Add dithering to reduce banding
-  				volumetricMaterial.scatteringNode = Fn( ( { positionRay } ) => {
+  				volumetricMaterial.scatteringNode = Fn( ( { positionRay }: any ) => {
   
   					// Return the amount of fog based on the noise texture
   
   					const timeScaled = vec3( time, 0, time.mul( .3 ) );
   
-  					const sampleGrain = ( scale, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
+  					const sampleGrain = ( scale: any, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
   
   					let density = sampleGrain( .1 );
   					density = density.mul( sampleGrain( .05, 1 ) );
@@ -167,7 +170,7 @@ function onReady(__stage) {
   
   				//
   
-  				const createRectLightMesh = ( rectLight ) => {
+  				const createRectLightMesh = ( rectLight: any ) => {
   
   					const geometry = new THREE.PlaneGeometry( 4, 10 );
   					const frontMaterial = new THREE.MeshBasicMaterial( { color: rectLight.color, side: THREE.BackSide } );
@@ -255,14 +258,14 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Volumetric Lighting' );
   
   				const rayMarching = gui.addFolder( 'Ray Marching' );
-  				rayMarching.add( params, 'resolution', .1, 1 ).onChange( ( resolution ) => {
+  				rayMarching.add( params, 'resolution', .1, 1 ).onChange( ( resolution: any ) => {
   
   					volumetricPass.setResolutionScale( resolution );
   
   				} );
   				rayMarching.add( volumetricMaterial, 'steps', 2, 16 ).name( 'step count' );
   				rayMarching.add( denoiseStrength, 'value', 0, 1 ).name( 'denoise strength' );
-  				rayMarching.add( params, 'denoise' ).onChange( ( denoise ) => {
+  				rayMarching.add( params, 'denoise' ).onChange( ( denoise: any ) => {
   
   					const volumetric = denoise ? blurredVolumetricPass : volumetricPass;
   
@@ -284,7 +287,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				rectLight1.rotation.y += - delta;

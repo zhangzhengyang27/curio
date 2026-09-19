@@ -2,13 +2,13 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
-          var webgl = null;
+          var webgl: any = null;
           // 定义 顶点数组
           var projMat4 = glMatrix.mat4.create();
   
@@ -41,7 +41,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function initWebgl() {
               let webglDiv = canvas;
               // 通过容器获取上下文
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               // 设置投影矩阵
@@ -86,16 +86,15 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.useProgram(program);
   
               // 将程序对象保存到 webgl 容器中
-              webgl.program = program
+              (webgl as any).program = program
           }
   
-          var points = [];
-          var colors = [];
-  
+          var points: any[] = [];
+          var colors: any[] = [];
           // 初始化缓冲区
           function initBuffer() {
               // 创建缓冲区对象 获取 a_position 的位置
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               // 顶点坐标  三个数构成一个坐标() vec3
               let arr = [100.0, 100.0, 0, 200.0, 200.0, 0, 300.0, 200.0, 0, 400, 600, 0];
   
@@ -109,7 +108,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.vertexAttribPointer(aPsotion, 3, webgl.FLOAT, false, 0, 0);
   
               // 获取投影矩阵的位置
-              let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
+              let uniformProj = webgl.getUniformLocation((webgl as any).program, "proj");
               // 将投影矩阵传入到着色器中  false 是否转秩
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
           }

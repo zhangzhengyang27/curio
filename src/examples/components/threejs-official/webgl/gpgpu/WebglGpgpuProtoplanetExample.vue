@@ -13,10 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,11 +32,15 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - <span id=\"protoplanets\"></span> webgl gpgpu debris"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let gpuCompute: any;
+  let particleUniforms: any;
+  let effectController: any;
+  let geometry: any;
 
   // Inlined shaders (originally from script tags in the HTML)
   const computeShaderVelocity = `
@@ -123,9 +127,9 @@ function onReady(__stage) {
   			const PARTICLES = WIDTH * WIDTH;
   
   
-  			let velocityVariable;
-  			let positionVariable;
-  			let velocityUniforms;
+  			let velocityVariable: any;
+  			let positionVariable: any;
+  			let velocityUniforms: any;
   
   
   
@@ -273,7 +277,7 @@ function onReady(__stage) {
   
   			}
   
-  			function fillTextures( texturePosition, textureVelocity ) {
+  			function fillTextures( texturePosition: any, textureVelocity: any ) {
   
   				const posArray = texturePosition.image.data;
   				const velArray = textureVelocity.image.data;
@@ -375,14 +379,14 @@ function onReady(__stage) {
   
   			}
   
-  			function getCameraConstant( camera ) {
+  			function getCameraConstant( camera: any ) {
   
   				return (__stage.container?.clientHeight || window.innerHeight) / ( Math.tan( THREE.MathUtils.DEG2RAD * 0.5 * camera.fov ) / camera.zoom );
   
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     gpuCompute.compute();
     				particleUniforms[ 'texturePosition' ].value = gpuCompute.getCurrentRenderTarget( positionVariable ).texture;

@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\">Three.js</a> cube map refraction demo<br/>\n\t\t\tLucy model from <a href=\"http://graphics.stanford.edu/data/3Dscanrep/\">Stanford 3d scanning repository<br/>\n\t\t\tTexture by <a href=\"http://www.humus.name/index.php?page=Textures\" target=\"_blank\" rel=\"noopener\">Humus</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -107,7 +107,7 @@ function onReady(__stage) {
   
   			
   
-  			function createScene( geometry, m1, m2, m3 ) {
+  			function createScene( geometry: any, m1: any, m2: any, m3: any ) {
   
   				geometry.computeVertexNormals();
   
@@ -129,7 +129,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX ) * 4;
   				mouseY = ( event.clientY - windowHalfY ) * 4;
@@ -138,7 +138,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y += ( - mouseY - camera.position.y ) * .05;

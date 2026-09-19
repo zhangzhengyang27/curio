@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - shadowmap - models by <a href=\"https://mirada.com/\" target=\"_blank\" rel=\"noopener\">mirada</a> from <a href=\"http://www.ro.me\" target=\"_blank\" rel=\"noopener\">rome</a><br />\n\t\tt: toggle HUD"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -56,12 +56,12 @@ function onReady(__stage) {
   
   			const NEAR = 10, FAR = 3000;
   
-  			let mixer;
+  			let mixer: any;
   
-  			const morphs = [];
+  			const morphs: any = [];
   
-  			let light;
-  			let lightShadowMapViewer;
+  			let light: any;
+  			let lightShadowMapViewer: any;
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -144,7 +144,7 @@ function onReady(__stage) {
   
   			
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				switch ( event.keyCode ) {
   
@@ -205,7 +205,7 @@ function onReady(__stage) {
   					} );
   
   					textGeo.computeBoundingBox();
-  					const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+  					const centerOffset = - 0.5 * ( (textGeo as any)!.boundingBox.max.x - (textGeo as any)!.boundingBox.min.x );
   
   					const textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
   
@@ -246,7 +246,7 @@ function onReady(__stage) {
   
   				mixer = new THREE.AnimationMixer( scene );
   
-  				function addMorph( mesh, clip, speed, duration, x, y, z, fudgeColor ) {
+  				function addMorph( mesh: any, clip: any, speed: any, duration: any, x: any, y: any, z: any, fudgeColor: any ) {
   
   					mesh = mesh.clone();
   					mesh.material = mesh.material.clone();
@@ -300,7 +300,7 @@ function onReady(__stage) {
   					const mesh = gltf.scene.children[ 0 ];
   					const clip = gltf.animations[ 0 ];
   
-  					addMorph( mesh, clip, 500, 1, 500 - Math.random() * 500, FLOOR + 350, 40 );
+  					(addMorph as any)( mesh, clip, 500, 1, 500 - Math.random() * 500, FLOOR + 350, 40 );
   
   				} );
   
@@ -309,7 +309,7 @@ function onReady(__stage) {
   					const mesh = gltf.scene.children[ 0 ];
   					const clip = gltf.animations[ 0 ];
   
-  					addMorph( mesh, clip, 350, 1, 500 - Math.random() * 500, FLOOR + 350, 340 );
+  					(addMorph as any)( mesh, clip, 350, 1, 500 - Math.random() * 500, FLOOR + 350, 340 );
   
   				} );
   
@@ -318,13 +318,13 @@ function onReady(__stage) {
   					const mesh = gltf.scene.children[ 0 ];
   					const clip = gltf.animations[ 0 ];
   
-  					addMorph( mesh, clip, 450, 0.5, 500 - Math.random() * 500, FLOOR + 300, 700 );
+  					(addMorph as any)( mesh, clip, 450, 0.5, 500 - Math.random() * 500, FLOOR + 300, 700 );
   
   				} );
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

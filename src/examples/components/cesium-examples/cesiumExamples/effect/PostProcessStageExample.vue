@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     // 禁用动画控件（左下角仪表）
     animation: false,
@@ -40,7 +40,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -48,8 +48,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 启用地形深度检测，使墙体能够贴合地形
@@ -87,7 +87,7 @@ function onReady(ctx) {
    * 应用指定名称的滤镜效果
    * @param {string} name - 滤镜名称
    */
-  function applyFilter(name) {
+  function applyFilter(name: string) {
       clearAll(); // 先清空所有特效
       switch (name) {
           case 'fxaa':

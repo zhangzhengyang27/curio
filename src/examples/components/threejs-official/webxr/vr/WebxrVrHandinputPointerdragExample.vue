@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -23,6 +23,7 @@ import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerM
 import { OculusHandModel } from 'three/examples/jsm/webxr/OculusHandModel.js';
 import { OculusHandPointerModel } from 'three/examples/jsm/webxr/OculusHandPointerModel.js';
 import { createText } from 'three/examples/jsm/webxr/Text2D.js';
+// @ts-expect-error ecsy.module.js 为无类型声明的 JS 库
 import { World, System, Component, TagComponent, Types } from 'three/examples/jsm/libs/ecsy.module.js';
 
 const props = defineProps({
@@ -33,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - handinput - point and drag<br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,13 +44,17 @@ function onReady(__stage) {
   
   
   
-  		class Object3D extends Component { }
+  		class Object3D extends Component {
+  			static schema: any;
+  		}
   
   		Object3D.schema = {
   			object: { type: Types.Ref }
   		};
   
-  		class Button extends Component { }
+  		class Button extends Component {
+  			static schema: any;
+  		}
   
   		Button.schema = {
   			// button states: [none, hovered, pressed]
@@ -59,10 +64,13 @@ function onReady(__stage) {
   		};
   
   		class ButtonSystem extends System {
-  
+
+  			static queries: any;
+  			declare queries: any;
+
   			execute( /*delta, time*/ ) {
   
-  				this.queries.buttons.results.forEach( entity => {
+  				this.queries.buttons.results.forEach( (entity: any) => {
   
   					const button = entity.getMutableComponent( Button );
   					const buttonMesh = entity.getComponent( Object3D ).object;
@@ -99,7 +107,9 @@ function onReady(__stage) {
   			}
   		};
   
-  		class Draggable extends Component { }
+  		class Draggable extends Component {
+  			static schema: any;
+  		}
   
   		Draggable.schema = {
   			// draggable states: [detached, hovered, to-be-attached, attached, to-be-detached]
@@ -109,10 +119,13 @@ function onReady(__stage) {
   		};
   
   		class DraggableSystem extends System {
-  
+
+  			static queries: any;
+  			declare queries: any;
+
   			execute( /*delta, time*/ ) {
   
-  				this.queries.draggable.results.forEach( entity => {
+  				this.queries.draggable.results.forEach( (entity: any) => {
   
   					const draggable = entity.getMutableComponent( Draggable );
   					const object = entity.getComponent( Object3D ).object;
@@ -152,8 +165,12 @@ function onReady(__stage) {
   		class Intersectable extends TagComponent { }
   
   		class HandRaySystem extends System {
-  
-  			init( attributes ) {
+
+  			static queries: any;
+  			declare queries: any;
+  			declare handPointers: any;
+
+  			init( attributes: any ) {
   
   				this.handPointers = attributes.handPointers;
   
@@ -161,11 +178,11 @@ function onReady(__stage) {
   
   			execute( /*delta, time*/ ) {
   
-  				this.handPointers.forEach( hp => {
+  				this.handPointers.forEach( (hp: any) => {
   
-  					let distance = null;
-  					let intersectingEntity = null;
-  					this.queries.intersectable.results.forEach( entity => {
+  					let distance: any = null;
+  				let intersectingEntity: any = null;
+  					this.queries.intersectable.results.forEach( (entity: any) => {
   
   						const object = entity.getComponent( Object3D ).object;
   						const intersections = hp.intersectObject( object, false );
@@ -250,8 +267,12 @@ function onReady(__stage) {
   		class HandsInstructionText extends TagComponent { }
   
   		class InstructionSystem extends System {
-  
-  			init( attributes ) {
+
+  			static queries: any;
+  			declare queries: any;
+  			declare controllers: any;
+
+  			init( attributes: any ) {
   
   				this.controllers = attributes.controllers;
   
@@ -260,7 +281,7 @@ function onReady(__stage) {
   			execute( /*delta, time*/ ) {
   
   				let visible = false;
-  				this.controllers.forEach( controller => {
+  				this.controllers.forEach( (controller: any) => {
   
   					if ( controller.visible ) {
   
@@ -270,7 +291,7 @@ function onReady(__stage) {
   
   				} );
   
-  				this.queries.instructionTexts.results.forEach( entity => {
+  				this.queries.instructionTexts.results.forEach( (entity: any) => {
   
   					const object = entity.getComponent( Object3D ).object;
   					object.visible = visible;
@@ -287,7 +308,9 @@ function onReady(__stage) {
   			}
   		};
   
-  		class OffsetFromCamera extends Component { }
+  		class OffsetFromCamera extends Component {
+  			static schema: any;
+  		}
   
   		OffsetFromCamera.schema = {
   			x: { type: Types.Number, default: 0 },
@@ -298,8 +321,13 @@ function onReady(__stage) {
   		class NeedCalibration extends TagComponent { }
   
   		class CalibrationSystem extends System {
-  
-  			init( attributes ) {
+
+  			static queries: any;
+  			declare queries: any;
+  			declare camera: any;
+  			declare renderer: any;
+
+  			init( attributes: any ) {
   
   				this.camera = attributes.camera;
   				this.renderer = attributes.renderer;
@@ -308,7 +336,7 @@ function onReady(__stage) {
   
   			execute( /*delta, time*/ ) {
   
-  				this.queries.needCalibration.results.forEach( entity => {
+  				this.queries.needCalibration.results.forEach( (entity: any) => {
   
   					if ( this.renderer.xr.getSession() ) {
   
@@ -337,7 +365,11 @@ function onReady(__stage) {
   		class Randomizable extends TagComponent { }
   
   		class RandomizerSystem extends System {
-  
+
+  			static queries: any;
+  			declare queries: any;
+  			declare needRandomizing: any;
+
   			init( /*attributes*/ ) {
   
   				this.needRandomizing = true;
@@ -352,7 +384,7 @@ function onReady(__stage) {
   
   				}
   
-  				this.queries.randomizable.results.forEach( entity => {
+  				this.queries.randomizable.results.forEach( (entity: any) => {
   
   					const object = entity.getComponent( Object3D ).object;
   
@@ -389,7 +421,7 @@ function onReady(__stage) {
   
   
   		
-  		function makeButtonMesh( x, y, z, color ) {
+  		function makeButtonMesh( x: any, y: any, z: any, color: any ) {
   
   			const geometry = new THREE.BoxGeometry( x, y, z );
   			const material = new THREE.MeshPhongMaterial( { color: color } );
@@ -584,7 +616,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     			const delta = timer.getDelta();
     			const elapsedTime = timer.getElapsed();

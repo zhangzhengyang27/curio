@@ -4,19 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const block = mgContainer.value.querySelector('.block');
+    const block = mgContainer.value!.querySelector('.block') as HTMLElement;
       const startAngle = 0;
       const T = 2000;
-      let startTime = null;
+      let startTime: number | null = null;
       function update() {
         startTime = startTime == null ? Date.now() : startTime;
         const p = (Date.now() - startTime) / T;

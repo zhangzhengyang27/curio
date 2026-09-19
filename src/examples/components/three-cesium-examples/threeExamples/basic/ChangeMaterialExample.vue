@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -45,7 +45,7 @@ function onReady(ctx) {
   
   scene.add(directionalLight)
   
-  let group
+  let group: any = null
   
   // 加载模型 gltf/ glb  draco解码器
   const loader = new GLTFLoader()
@@ -75,11 +75,11 @@ function onReady(ctx) {
   
   function changeMaterial() {
   
-      let material
+      let material: any = null
   
       if (!group) return
   
-      group.traverse(child => {
+      group.traverse((child: any) => {
   
           if (child.isMesh && child.name === '网格138_3') {
   

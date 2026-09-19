@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern("/webgl/study-webgl/libs/gl-matrix.js");
   let vertexstring = `
           attribute vec4 a_position;
@@ -33,10 +33,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
   
-          var webgl;
-          var angle = 45;
-          var webglDiv;
-          var indices
+          var webgl: any;          var angle = 45;
+          var webglDiv: any;          var indices
           var g_joint1Angle = 0.0;
           var ANGLE_STEP = 3.0;
           var g_arm1Angle = -90.0;
@@ -60,7 +58,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
   
           }
@@ -90,7 +88,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.attachShader(program, fsshader)
               webgl.linkProgram(program);
               webgl.useProgram(program);
-              webgl.program = program
+              (webgl as any).program = program
   
           }
   
@@ -101,12 +99,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           //矩阵变换  g_joint1Angle
-          function initTransformation(angele, rotateArr, ModelMatrix = glMatrix.mat4.create()) {
+          function initTransformation(angele: any, rotateArr: any, ModelMatrix = glMatrix.mat4.create()) {
               let ProjMatrix = glMatrix.mat4.create();
               glMatrix.mat4.identity(ProjMatrix);
               glMatrix.mat4.perspective(ProjMatrix, angle * Math.PI / 180, webglDiv.clientWidth / webglDiv.clientHeight, 1, 1000)    //修改可视域范围
   
-              let uniformMatrix1 = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix1 = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
   
               glMatrix.mat4.rotate(ModelMatrix, ModelMatrix, degreesToRads(angele), rotateArr);
               let ViewMatrix = glMatrix.mat4.create();
@@ -130,11 +128,11 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           function initLight() {
-              let u_DiffuseLight = webgl.getUniformLocation(webgl.program, 'u_DiffuseLight');
+              let u_DiffuseLight = webgl.getUniformLocation((webgl as any).program, 'u_DiffuseLight');
               webgl.uniform3f(u_DiffuseLight, 1.0, 1.0, 1.0);
-              let u_LightDirection = webgl.getUniformLocation(webgl.program, 'u_PointLightPosition');
+              let u_LightDirection = webgl.getUniformLocation((webgl as any).program, 'u_PointLightPosition');
               webgl.uniform3fv(u_LightDirection, [3.0, 3.0, 4.0]);
-              let u_AmbientLight = webgl.getUniformLocation(webgl.program, 'u_AmbientLight');
+              let u_AmbientLight = webgl.getUniformLocation((webgl as any).program, 'u_AmbientLight');
               webgl.uniform3f(u_AmbientLight, 0.8, 0.8, 0.8);
           }
   
@@ -171,14 +169,14 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
   
               let pointPosition = new Float32Array(vertices);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 3, webgl.FLOAT, false, 0, 0);
   
-              let aNormal = webgl.getAttribLocation(webgl.program, "a_Normal");
+              let aNormal = webgl.getAttribLocation((webgl as any).program, "a_Normal");
               let normalsBuffer = webgl.createBuffer();
               let normalsArr = new Float32Array(normals);
               webgl.bindBuffer(webgl.ARRAY_BUFFER, normalsBuffer);
@@ -195,7 +193,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           }
   
-          function keydown(ev) {
+          function keydown(ev: any) {
               switch (ev.keyCode) {
                   case 38:
                       if (g_joint1Angle < 135.0) g_joint1Angle += ANGLE_STEP;
@@ -216,7 +214,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               draw();
           }
   
-          function degreesToRads(deg) {
+          function degreesToRads(deg: any) {
               let rads = (deg * Math.PI) / 180.0;
               return rads;
           }

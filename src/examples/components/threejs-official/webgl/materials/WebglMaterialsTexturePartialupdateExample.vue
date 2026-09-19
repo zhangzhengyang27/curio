@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener noreferrer\">three.js</a> - partial texture update <br/>\n\t\t\treplace parts of an existing texture with all data of another texture"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -88,7 +88,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const elapsedTime = timer.getElapsed();
     				if ( elapsedTime - last > 0.1 ) {
@@ -102,7 +102,7 @@ async function onReady(__stage) {
     				}
   })
   
-  			function updateDataTexture( texture ) {
+  			function updateDataTexture( texture: any ) {
   
   				const size = texture.image.width * texture.image.height;
   				const data = texture.image.data;

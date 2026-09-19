@@ -15,12 +15,29 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
+// 原 HTML 以 <script> 注入全局 Ammo,转换期丢失;按 jsm-compat/physics/AmmoPhysics.js 同源恢复懒加载
+async function loadAmmo(): Promise<any> {
+	if ( typeof ( globalThis as any ).Ammo === 'undefined' ) {
+		await new Promise( ( resolve, reject ) => {
+			const script = document.createElement( 'script' );
+			script.src = 'https://cdn.jsdelivr.net/gh/kripken/ammo.js@79190a1f03845794b1bba1777f30037349967658/builds/ammo.wasm.js';
+			script.onload = resolve;
+			script.onerror = reject;
+			document.head.appendChild( script );
+		} );
+	}
+	return ( globalThis as any ).Ammo();
+}
+
+// Ammo.js 全局工厂(原示例经 HTML script 标签注入;转模块后需显式声明,否则 strict 模式赋值未声明名抛 ReferenceError)
+let Ammo: any;
 
 const props = defineProps({
   example: {
@@ -30,7 +47,7 @@ const props = defineProps({
 })
 
 const infoHtml = "Ammo.js physics soft body volume demo<br/>\n\t\t\tClick to throw a ball"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,9 +62,9 @@ function onReady(__stage) {
   
   
   			// Graphics variables
-  			let container, stats;
+  			let container, stats: any;
   
-  			let textureLoader;
+  			let textureLoader: any;
   			const timer = new THREE.Timer();
   			timer.connect( document );
   			let clickRequest = false;
@@ -60,13 +77,16 @@ function onReady(__stage) {
   			// Physics variables
   			const gravityConstant = - 9.8;
   
-  			const rigidBodies = [];
-  			const softBodies = [];
+  			const rigidBodies: any = [];
+  			const softBodies: any = [];
   			const margin = 0.05;
+  			let transformAux1: any;
+  			let physicsWorld: any;
+  			let softBodyHelpers: any;
   
   
   
-  			Ammo().then( function ( AmmoLib ) {
+  			loadAmmo().then( function ( AmmoLib: any ) {
   
   				Ammo = AmmoLib;
   
@@ -166,7 +186,7 @@ function onReady(__stage) {
   				const ground = createParalellepiped( 40, 1, 40, 0, pos, quat, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
   				ground.castShadow = true;
   				ground.receiveShadow = true;
-  				textureLoader.load( ASSET_HOST + 'textures/grid.png', function ( texture ) {
+  				textureLoader.load( ASSET_HOST + 'textures/grid.png', function ( texture: any ) {
   
   					texture.colorSpace = THREE.SRGBColorSpace;
   					texture.wrapS = THREE.RepeatWrapping;
@@ -197,7 +217,7 @@ function onReady(__stage) {
   
   			}
   
-  			function processGeometry( bufGeometry ) {
+  			function processGeometry( bufGeometry: any ) {
   
   				// Ony consider the position values when merging the vertices
   				const posOnlyBufGeometry = new THREE.BufferGeometry();
@@ -212,7 +232,7 @@ function onReady(__stage) {
   
   			}
   
-  			function isEqual( x1, y1, z1, x2, y2, z2 ) {
+  			function isEqual( x1: any, y1: any, z1: any, x2: any, y2: any, z2: any ) {
   
   				const delta = 0.000001;
   				return Math.abs( x2 - x1 ) < delta &&
@@ -221,7 +241,7 @@ function onReady(__stage) {
   
   			}
   
-  			function mapIndices( bufGeometry, indexedBufferGeom ) {
+  			function mapIndices( bufGeometry: any, indexedBufferGeom: any ) {
   
   				// Creates ammoVertices, ammoIndices and ammoIndexAssociation in bufGeometry
   
@@ -238,7 +258,7 @@ function onReady(__stage) {
   
   				for ( let i = 0; i < numIdxVertices; i ++ ) {
   
-  					const association = [];
+  					const association: any = [];
   					bufGeometry.ammoIndexAssociation.push( association );
   
   					const i3 = i * 3;
@@ -259,7 +279,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createSoftVolume( bufferGeom, mass, pressure ) {
+  			function createSoftVolume( bufferGeom: any, mass: any, pressure: any ) {
   
   				processGeometry( bufferGeom );
   
@@ -269,7 +289,7 @@ function onReady(__stage) {
   				volume.frustumCulled = false;
   				scene.add( volume );
   
-  				textureLoader.load( ASSET_HOST + 'textures/colors.png', function ( texture ) {
+  				textureLoader.load( ASSET_HOST + 'textures/colors.png', function ( texture: any ) {
   
   					volume.material.map = texture;
   					volume.material.needsUpdate = true;
@@ -313,7 +333,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createParalellepiped( sx, sy, sz, mass, pos, quat, material ) {
+  			function createParalellepiped( sx: any, sy: any, sz: any, mass: any, pos: any, quat: any, material: any ) {
   
   				const threeObject = new THREE.Mesh( new THREE.BoxGeometry( sx, sy, sz, 1, 1, 1 ), material );
   				const shape = new Ammo.btBoxShape( new Ammo.btVector3( sx * 0.5, sy * 0.5, sz * 0.5 ) );
@@ -325,7 +345,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createRigidBody( threeObject, physicsShape, mass, pos, quat ) {
+  			function createRigidBody( threeObject: any, physicsShape: any, mass: any, pos: any, quat: any ) {
   
   				threeObject.position.copy( pos );
   				threeObject.quaternion.copy( quat );
@@ -413,7 +433,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const deltaTime = timer.getDelta();
@@ -456,7 +476,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updatePhysics( deltaTime ) {
+  			function updatePhysics( deltaTime: any ) {
   
   				// Step world
   				physicsWorld.stepSimulation( deltaTime, 10 );
@@ -469,7 +489,7 @@ function onReady(__stage) {
   					const softBody = volume.userData.physicsBody;
   					const volumePositions = geometry.attributes.position.array;
   					const volumeNormals = geometry.attributes.normal.array;
-  					const association = geometry.ammoIndexAssociation;
+  					const association: any = geometry.ammoIndexAssociation;
   					const numVerts = association.length;
   					const nodes = softBody.get_m_nodes();
   					for ( let j = 0; j < numVerts; j ++ ) {

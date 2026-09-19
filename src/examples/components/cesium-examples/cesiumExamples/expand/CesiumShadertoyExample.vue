@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const props = defineProps({
@@ -16,14 +16,14 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let appearance = null
-let primitive = null
-let preRenderListener = null
-let lastTime = 0
+let Cesium: any = null
+let viewer: any = null
+let appearance: any = null
+let primitive: any = null
+let preRenderListener: any = null
+let lastTime: number = 0
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -36,7 +36,7 @@ function viewerOptions(Cesium) {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -44,8 +44,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || '/external-examples/three-cesium-examples/'
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const customMaterial = new Cesium.Material({

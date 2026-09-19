@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Anisotropic Texture Filtering</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -115,8 +115,8 @@ function onReady(__stage) {
   
   				if ( maxAnisotropy > 0 ) {
   
-  					valLeftEl.innerHTML = texture1.anisotropy;
-  					valRightEl.innerHTML = texture2.anisotropy;
+  					valLeftEl.innerHTML = texture1.anisotropy as any;
+  					valRightEl.innerHTML = texture2.anisotropy as any;
   
   				} else {
   
@@ -151,7 +151,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				const windowHalfX = (__stage.container?.clientWidth || window.innerWidth) / 2;
   				const windowHalfY = (__stage.container?.clientHeight || window.innerHeight) / 2;
@@ -161,7 +161,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const SCREEN_WIDTH = (__stage.container?.clientWidth || window.innerWidth);
     				const SCREEN_HEIGHT = (__stage.container?.clientHeight || window.innerHeight);
     				camera.position.x += ( mouseX - camera.position.x ) * .05;

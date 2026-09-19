@@ -102,7 +102,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, shallowRef, computed, defineAsyncComponent, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import EarthCanvas from '../components/EarthCanvas.vue'
@@ -115,17 +115,18 @@ import LayerPanel from '../components/LayerPanel.vue'
 import TimelineSlider from '../components/TimelineSlider.vue'
 import LegendBar from '../components/LegendBar.vue'
 import CompareView from './CompareView.vue'
-import { useTourEngine } from '../composables/useTourEngine.js'
-import { useEarthStore } from '../stores/useEarthStore.js'
-import { useLayerStore } from '../stores/useLayerStore.js'
-import { useTimelineStore } from '../stores/useTimelineStore.js'
+import { useTourEngine } from '../composables/useTourEngine'
+import { useEarthStore } from '../stores/useEarthStore'
+import { useLayerStore } from '../stores/useLayerStore'
+import { useTimelineStore } from '../stores/useTimelineStore'
+import type { TourRouteWithDuration } from '../three/tours/routes'
 
 const earthStore = useEarthStore()
 const layerStore = useLayerStore()
 const timelineStore = useTimelineStore()
-const earthCanvasRef = ref(null)
+const earthCanvasRef = ref<InstanceType<typeof EarthCanvas> | null>(null)
 const splitMode = ref(false)
-const fileInput = ref(null)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const vizModes = [
   { key: 'gdp', label: 'GDP', icon: '💰' },
@@ -144,19 +145,19 @@ const vizModes = [
 
 const vizLoadingLabel = computed(() => vizModes.find(m => m.key === earthStore.vizLoading)?.label ?? earthStore.vizLoading)
 
-function switchViz(mode) {
+function switchViz(mode: string) {
   earthCanvasRef.value?.switchVisualization(mode)
 }
 
 const layerList = computed(() => layerStore.layers)
 
-function onSearchSelect(item) {
+function onSearchSelect(item: { lon: number; lat: number; name: string; flag: string }) {
   if (item.lon !== undefined && item.lat !== undefined) {
     earthCanvasRef.value?.flyTo(item.lon, item.lat)
   }
 }
 
-function handleFlyTo(lon, lat) {
+function handleFlyTo(lon: number, lat: number) {
   if (lon !== undefined && lat !== undefined) {
     earthCanvasRef.value?.flyTo(lon, lat)
   }
@@ -172,11 +173,11 @@ function handleScreenshot() {
   link.click()
 }
 
-function handleLayerToggle(id, visible) {
+function handleLayerToggle(id: string, visible: boolean) {
   layerStore.setVisible(id, visible)
 }
 
-function handleLayerOpacity(id, opacity) {
+function handleLayerOpacity(id: string, opacity: number) {
   layerStore.setOpacity(id, opacity)
 }
 
@@ -200,8 +201,8 @@ function handleSplitScreen() {
   splitMode.value = true
 }
 
-function handleKeydown(e) {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return
+function handleKeydown(e: KeyboardEvent) {
+  if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'SELECT') return
   // 巡游界面打开期间全局快捷键整体让位（空格/相机类按键归播放器管，
   // 且 document 先于 window 收到事件，播放器侧 preventDefault 拦不住这里）
   if (tourUIVisible.value) return
@@ -213,7 +214,7 @@ function handleKeydown(e) {
     case 'n': handleNightToggle(); break
     case 'f': {
       const sel = earthStore.selectedCountry
-      const idx = earthStore.searchIndex[sel]
+      const idx = sel ? earthStore.searchIndex[sel] : undefined
       if (idx) earthCanvasRef.value?.flyTo(idx.lon, idx.lat)
       break
     }
@@ -223,8 +224,8 @@ onMounted(() => { document.addEventListener('keydown', handleKeydown) })
 onUnmounted(() => { document.removeEventListener('keydown', handleKeydown) })
 
 let gifRecording = false
-let gifFrames = []
-let gifInterval = null
+let gifFrames: string[] = []
+let gifInterval: ReturnType<typeof setInterval> | null = null
 function handleRecordGif() {
   gifRecording = !gifRecording
   if (gifRecording) {
@@ -236,7 +237,7 @@ function handleRecordGif() {
       if (gifFrames.length > 60) { gifFrames.shift() }
     }, 200)
   } else {
-    clearInterval(gifInterval)
+    clearInterval(gifInterval!)
     if (gifFrames.length > 0) {
       downloadFrames()
     }
@@ -258,7 +259,7 @@ function downloadFrames() {
 onUnmounted(() => {
   if (gifRecording) {
     gifRecording = false
-    clearInterval(gifInterval)
+    clearInterval(gifInterval!)
     gifFrames = []
   }
   timelineStore.pause()
@@ -268,8 +269,8 @@ function openFileImport() {
   fileInput.value?.click()
 }
 
-async function handleFileImport(e) {
-  const file = e.target.files?.[0]
+async function handleFileImport(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
   try {
     const text = await file.text()
@@ -285,16 +286,16 @@ async function handleFileImport(e) {
     if (!points.length) { alert('无有效数据点'); return }
     earthCanvasRef.value?.loadCustomScatter(points)
     alert(`已导入 ${points.length} 个数据点`)
-  } catch (err) { console.error(err); alert('文件解析失败: ' + err.message) }
-  e.target.value = ''
+  } catch (err) { console.error(err); alert('文件解析失败: ' + (err instanceof Error ? err.message : String(err))) }
+  ;(e.target as HTMLInputElement).value = ''
 }
 
-function parseCSV(text) {
+function parseCSV(text: string) {
   const lines = text.trim().split('\n')
   const headers = lines[0].split(',').map(h => h.trim().replace(/^\"|\"$/g, ''))
   return lines.slice(1).map(line => {
     const vals = line.split(',').map(v => v.trim().replace(/^\"|\"$/g, ''))
-    const obj = {}
+    const obj: Record<string, string> = {}
     headers.forEach((h, i) => obj[h] = vals[i])
     return obj
   })
@@ -314,22 +315,22 @@ const routeInfo = useRoute()
 const router = useRouter()
 
 const tour = useTourEngine({
-  switchMode: (mode) => earthCanvasRef.value?.switchVisualization(mode),
-  flyTo: (lon, lat, duration) => earthCanvasRef.value?.flyTo(lon, lat, duration)
+  switchMode: (mode: string) => earthCanvasRef.value?.switchVisualization(mode),
+  flyTo: (lon: number, lat: number, duration?: number) => earthCanvasRef.value?.flyTo(lon, lat, duration)
 })
-const tourRoutes = shallowRef(null)
+const tourRoutes = shallowRef<TourRouteWithDuration[] | null>(null)
 const tourPickerVisible = ref(false)
 const tourUIVisible = computed(() => tourPickerVisible.value || tour.status.value !== 'idle')
 
 async function openTourPicker() {
   if (!tourRoutes.value) {
-    const mod = await import('../three/tours/routes.js')
+    const mod = await import('../three/tours/routes')
     tourRoutes.value = mod.routes
   }
   tourPickerVisible.value = true
 }
 
-function handleTourPick(r) {
+function handleTourPick(r: TourRouteWithDuration) {
   tourPickerVisible.value = false
   tour.start(r, 0)
 }
@@ -340,8 +341,8 @@ function handleTourClose() {
 }
 
 // 播放开始时暂停自转并记住现场；退出/播完时还原可视化模式与自转
-let tourSavedViz = null
-let tourSavedRotate = null
+let tourSavedViz: string | null = null
+let tourSavedRotate: boolean | null = null
 watch(tour.status, (s) => {
   if (s !== 'idle' && tourSavedViz === null) {
     tourSavedViz = earthStore.currentVisualization
@@ -349,7 +350,7 @@ watch(tour.status, (s) => {
     earthStore.isRotating = false
   }
   if (s === 'idle' && tourSavedViz !== null) {
-    earthStore.isRotating = tourSavedRotate
+    earthStore.isRotating = tourSavedRotate!
     if (tourSavedViz !== earthStore.currentVisualization) earthCanvasRef.value?.switchVisualization(tourSavedViz)
     tourSavedViz = null
   }
@@ -361,7 +362,7 @@ watch([tour.status, tour.stepIndex], ([status, idx]) => {
     if (routeInfo.query.tour !== undefined) router.replace({ query: {} })
     return
   }
-  const next = { tour: tour.route.value.id, step: String(idx + 1) }
+  const next = { tour: (tour.route.value as TourRouteWithDuration).id, step: String(idx + 1) }
   if (routeInfo.query.tour !== next.tour || routeInfo.query.step !== next.step) {
     router.replace({ query: next })
   }
@@ -369,7 +370,7 @@ watch([tour.status, tour.stepIndex], ([status, idx]) => {
 
 // 分享链接直达：定位到指定步骤但不自动播放
 if (routeInfo.query.tour) {
-  import('../three/tours/routes.js')
+  import('../three/tours/routes')
     .then((mod) => {
       const r = mod.routes.find((x) => x.id === routeInfo.query.tour)
       const step = Math.max(1, Number(routeInfo.query.step) || 1)

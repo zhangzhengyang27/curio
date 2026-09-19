@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -30,7 +30,7 @@ function onReady(ctx) {
   controls.target.set(0, 0.5, 0)
 
   // 核心变量
-  const clock = new THREE.Clock(), particles = [];
+  const clock = new THREE.Clock(), particles: any[] = [];
   let delta = 0, emitTime = 0;
   
   // 粒子配置
@@ -46,8 +46,8 @@ function onReady(ctx) {
   };
   
   // 工具函数
-  const rand = (a, b) => a + Math.random() * (b - a);
-  const randCircle = (r) => {
+  const rand: any = (a: any, b: any) => a + Math.random() * (b - a);
+  const randCircle = (r: any) => {
       const rad = r * Math.sqrt(Math.random()), ang = Math.PI * 2 * Math.random();
       return [rad * Math.cos(ang), rad * Math.sin(ang)];
   };
@@ -59,8 +59,8 @@ function onReady(ctx) {
   
   // 创建实例属性
   const attrDefs = [["offset",3],["scale",2],["quaternion",3],["rotation",1],["color",4],["blend",1],["texture",1]];
-  const attrs = {};
-  attrDefs.forEach(([name, size]) => {
+  const attrs: any = {};
+  attrDefs.forEach(([name, size]: any) => {
       attrs[name] = new Float32Array(100 * size);
       geo.setAttribute(name, new THREE.InstancedBufferAttribute(attrs[name], size));
   });

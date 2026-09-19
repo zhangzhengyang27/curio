@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import * as GeometryUtils from 'three/examples/jsm/utils/GeometryUtils.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - color lines<br/>\n\t\t\t<a href=\"http://en.wikipedia.org/wiki/Hilbert_curve\">Hilbert curve</a> thanks to <a href=\"https://openprocessing.org/user/5654\">Thomas Diewald</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -140,7 +140,7 @@ function onReady(__stage) {
   
   				const material = new THREE.LineBasicMaterial( { color: 0xffffff, vertexColors: true } );
   
-  				let line, p;
+  				let line: any, p: any;
   				const scale = 0.3, d = 225;
   
   				const parameters = [
@@ -181,7 +181,7 @@ function onReady(__stage) {
   
   			//
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -192,7 +192,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     camera.position.x += ( mouseX - camera.position.x ) * 0.05;
     				camera.position.y += ( - mouseY + 200 - camera.position.y ) * 0.05;
     				const time = Date.now() * 0.0005;

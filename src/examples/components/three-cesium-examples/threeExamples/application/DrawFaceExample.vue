@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -47,7 +47,7 @@ function onReady(ctx) {
   // 事件
   const raycaster = new THREE.Raycaster()
   
-  const getPoint = event => {
+  const getPoint = (event: any) => {
   
     const mouse = new THREE.Vector2(
   
@@ -65,7 +65,7 @@ function onReady(ctx) {
   
   }
   
-  const setPointBox = point => {
+  const setPointBox = (point: any) => {
   
     const box = new THREE.BoxGeometry(0.04, 0.04, 0.04)
   
@@ -80,7 +80,7 @@ function onReady(ctx) {
   }
   
   /* 开始绘制 */
-  const pointList = []; let drawMesh = null; let stop = false
+  const pointList: any[] = []; let drawMesh: any = null; let stop = false
   
   ctx.container?.addEventListener('contextmenu', () => {
   
@@ -93,7 +93,7 @@ function onReady(ctx) {
   })
   
   // 移动
-  ctx.container?.addEventListener('mousemove', (event) => {
+  ctx.container?.addEventListener('mousemove', (event: any) => {
   
     if (stop) return
   
@@ -107,7 +107,7 @@ function onReady(ctx) {
   
   })
   
-  ctx.container?.addEventListener('click', (event) => {
+  ctx.container?.addEventListener('click', (event: any) => {
   
     const point = getPoint(event)
   
@@ -140,13 +140,13 @@ function onReady(ctx) {
   })
   
   /* 处理顶点算法 */
-  function multShapeGroup(pList) {
+  function multShapeGroup(pList: any) {
   
-    const indexGroup = pList.map((_, k) => (k >= 2) ? [0, k - 1, k] : false).filter((i) => i).reduce((i, j) => [...i, ...j], [])
+    const indexGroup = pList.map((_: any, k: any) => (k >= 2) ? [0, k - 1, k] : false).filter((i: any) => i).reduce((i: any, j: any) => [...i, ...j], [])
   
-    const faceGroup = pList.reduce((j, i) => [...j, i.x, i.y, i.z], [])
+    const faceGroup = pList.reduce((j: any, i: any) => [...j, i.x, i.y, i.z], [])
   
-    const uvMaxMin = pList.reduce((p, i) => ({ x: [...p['x'], i['x']], y: [...p['y'], i['y']], z: [...p['z'], i['z']] }), { x: [], y: [], z: [] })
+    const uvMaxMin = pList.reduce((p: any, i: any) => ({ x: [...p['x'], i['x']], y: [...p['y'], i['y']], z: [...p['z'], i['z']] }), { x: [], y: [], z: [] })
   
     // vu 点计算 二维面
     const Maxp = new THREE.Vector3(Math.max(...uvMaxMin.x), Math.max(...uvMaxMin.y), Math.max(...uvMaxMin.z))  // 最大点
@@ -160,14 +160,14 @@ function onReady(ctx) {
     const L = W > H ? W : H  // 以最大为基准
   
     // 顶点uv计算
-    const uvGroup = pList.map(i => new THREE.Vector2((i.x - Minp.x) / L, (i.y - Minp.y) / L)).reduce((i, j) => [...i, ...j], [])
+    const uvGroup = pList.map((i: any) => new THREE.Vector2((i.x - Minp.x) / L, (i.y - Minp.y) / L)).reduce((i: any, j: any) => [...i, ...j], [])
   
     return { indexGroup, faceGroup, uvGroup }
   
   }
   
   /* 根据顶点组生成物体 */
-  function multShapePlaneGeometry(faceGroup, indexGroup, uvGroup) {
+  function multShapePlaneGeometry(faceGroup: any, indexGroup: any, uvGroup: any) {
   
     const geometry = new THREE.BufferGeometry()
   
@@ -198,7 +198,7 @@ function onReady(ctx) {
   }
   
   /* 更新顶点 */
-  function updateMultShapePlaneGeometry(geometry, faceGroup, indexGroup, uvGroup) {
+  function updateMultShapePlaneGeometry(geometry: any, faceGroup: any, indexGroup: any, uvGroup: any) {
   
     geometry.setIndex(indexGroup)
   

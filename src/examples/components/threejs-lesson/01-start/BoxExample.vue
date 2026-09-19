@@ -8,19 +8,19 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-let cube = null
+let cube: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const geometry = new THREE.BoxGeometry()
   const material = new THREE.MeshNormalMaterial()
   cube = new THREE.Mesh(geometry, material)
   ctx.scene.add(cube)
 
-  ctx.addUpdateCallback((delta) => {
+  ctx.addUpdateCallback((delta: number) => {
     cube.rotation.x += delta
     cube.rotation.y += delta
   })

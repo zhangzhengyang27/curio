@@ -13,12 +13,13 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// @ts-expect-error CDN URL 模块无类型声明(运行时由 Vite 解析)
 import lottie from 'https://cdn.jsdelivr.net/npm/lottie-web@5.13.0/+esm';
 
 const props = defineProps({
@@ -29,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - lottie<br/></br>\n\t\t\t<input id=\"scrubber\" type=\"range\" value=\"0\" style=\"width: 300px\">"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -57,8 +58,8 @@ function onReady(__stage) {
   
   					const container = document.createElement( 'div' );
   					const dpr = window.devicePixelRatio;
-  					container.style.width = data.w * dpr + 'px';
-  					container.style.height = data.h * dpr + 'px';
+  					container.style.width = ( data as any ).w * dpr + 'px';
+  					container.style.height = ( data as any ).h * dpr + 'px';
   					document.body.appendChild( container );
   
   					const animation = lottie.loadAnimation( {
@@ -116,7 +117,7 @@ function onReady(__stage) {
   			
   
   
-  			function setupControls( animation ) {
+  			function setupControls( animation: any ) {
   
   				// Lottie animation API
   				// https://airbnb.io/lottie/#/web

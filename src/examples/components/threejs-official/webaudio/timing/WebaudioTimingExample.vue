@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener noreferrer\">three.js</a> webaudio - timing<br/>\n\t\tsound effect by <a href=\"https://freesound.org/people/michorvath/sounds/269718/\" target=\"_blank\" rel=\"noopener noreferrer\">michorvath</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,7 +40,7 @@ function onReady(__stage) {
   
   
   
-  		const objects = [];
+  		const objects: any[] = []
   
   		const speed = 2.5;
   		const height = 3;
@@ -157,8 +157,8 @@ function onReady(__stage) {
 
 		}
 
-		let timer;
-		__stage.addUpdateCallback((_delta, _elapsed) => {
+		let timer: any;
+		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
 			if (!timer) return;
 			timer.update();
 			const time = timer.getElapsed();

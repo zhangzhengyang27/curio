@@ -16,12 +16,13 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
+let kinematics: any;
 
 const props = defineProps({
   example: {
@@ -31,11 +32,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> collada loader - kinematics<br/>\n\t\t\trobot from <a href=\"https://github.com/rdiankov/collada_robots\" target=\"_blank\" rel=\"noopener\">collada robots</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
   
   
@@ -48,17 +50,17 @@ function onReady(__stage) {
   
   
   			let kinematicsTween;
-  			const tweenParameters = {};
+  			const tweenParameters: any = {};
   
   			const loader = new ColladaLoader();
   			loader.load( ASSET_HOST + 'models/collada/abb_irb52_7_120.dae', function ( collada ) {
   
-  				dae = collada.scene;
+  				dae = collada!.scene;
   
   				dae.scale.x = dae.scale.y = dae.scale.z = 10.0;
   				dae.updateMatrix();
   
-  				kinematics = collada.kinematics;
+  				kinematics = collada!.kinematics;
   
   				
   			} );
@@ -104,7 +106,7 @@ function onReady(__stage) {
   
   				const duration = THREE.MathUtils.randInt( 1000, 5000 );
   
-  				const target = {};
+  				const target: any = {};
   
   				for ( const prop in kinematics.joints ) {
   
@@ -130,7 +132,7 @@ function onReady(__stage) {
   
   				kinematicsTween = new TWEEN.Tween( tweenParameters ).to( target, duration ).easing( TWEEN.Easing.Quadratic.Out );
   
-  				kinematicsTween.onUpdate( function ( object ) {
+  				kinematicsTween.onUpdate( function ( object: any ) {
   
   					for ( const prop in kinematics.joints ) {
   
@@ -158,7 +160,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     {
     const timer = Date.now() * 0.0001;

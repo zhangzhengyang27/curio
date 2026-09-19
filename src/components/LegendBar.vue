@@ -14,13 +14,13 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useEarthStore } from '../stores/useEarthStore'
 
 const earthStore = useEarthStore()
 
-const legendMap = {
+const legendMap: Record<string, { low: string; high: string; lowColor: string; highColor: string }> = {
   gdp: { low: '0', high: '18万亿$', lowColor: '#fff', highColor: '#f00' },
   population: { low: '低密度', high: '高密度', lowColor: '#fff', highColor: '#f60' },
   carbon: { low: '低排放', high: '高排放', lowColor: '#fff', highColor: '#840' },

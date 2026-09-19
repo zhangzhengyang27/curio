@@ -4,13 +4,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -93,7 +94,7 @@ async function initMyGrapicsExample() {
           }
         `;
     
-        const canvas = mgContainer.value.querySelector('canvas');
+        const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas);
     
         // load fragment shader and createProgram
@@ -101,7 +102,7 @@ async function initMyGrapicsExample() {
         renderer.useProgram(program);
         renderer.uniforms.uTime = 0.0;
     
-        requestAnimationFrame(function update(t) {
+        requestAnimationFrame(function update(t: number) {
           renderer.uniforms.uTime = 0.001 * t;
           requestAnimationFrame(update);
         });

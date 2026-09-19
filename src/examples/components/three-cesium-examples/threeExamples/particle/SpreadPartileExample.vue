@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -47,7 +47,7 @@ function onReady(ctx) {
   // 设置UI
   gui = new GUI();
   const particleFolder = gui.addFolder('粒子系统');
-  particleFolder.add(params, 'maxParticles').name('最大粒子数').onChange(value => {
+  particleFolder.add(params, 'maxParticles').name('最大粒子数').onChange((value: any) => {
       scene.remove(emitter.points);
       emitter = new ParticleSystem(value);
       scene.add(emitter.points);
@@ -63,12 +63,12 @@ function onReady(ctx) {
   const particleVisualFolder = gui.addFolder('视觉属性');
   particleVisualFolder.add(params, 'minSize').name('最小粒子尺寸');
   particleVisualFolder.add(params, 'maxSize').name('最大粒子尺寸');
-  particleVisualFolder.addColor(params, 'color').name('粒子颜色').onChange(value => {
+  particleVisualFolder.addColor(params, 'color').name('粒子颜色').onChange((value: any) => {
       emitter.material.uniforms.color.value.set(value);
   });
   particleVisualFolder.add(params, 'burstProbability').name('突发概率');
   particleVisualFolder.add(params, 'burstMultiplier').name('突发倍数');
-  particleVisualFolder.add(params, 'blendingMode', ['Additive', 'Normal']).name('混合模式').onChange(value => {
+  particleVisualFolder.add(params, 'blendingMode', ['Additive', 'Normal']).name('混合模式').onChange((value: any) => {
       emitter.material.blending = value === 'Additive' ? THREE.AdditiveBlending : THREE.NormalBlending;
       emitter.material.needsUpdate = true;
   });
@@ -80,6 +80,13 @@ function onReady(ctx) {
   const clock = new THREE.Clock()
   
   class Particle {
+      position: any
+      velocity: any
+      life: any
+      maxLife: any
+      size: any
+      initialSize: any
+
       constructor() {
           this.position = new THREE.Vector3();
           const angle = Math.random() * Math.PI * 2;
@@ -94,7 +101,7 @@ function onReady(ctx) {
           this.maxLife = 1 + Math.random() * 0.5;
           this.size = this.initialSize = Math.random() * (params.maxSize - params.minSize) + params.minSize;
       }
-      update(delta) {
+      update(delta: any) {
           this.velocity.y -= params.gravity * delta * 0.5;
           this.position.addScaledVector(this.velocity, delta);
           this.life += delta;
@@ -104,6 +111,15 @@ function onReady(ctx) {
   }
   
   class ParticleSystem {
+      maxCount: any
+      particles: any
+      geometry: any
+      positions: any
+      sizes: any
+      opacities: any
+      material: any
+      points: any
+
       constructor(maxCount = params.maxParticles) {
           this.maxCount = maxCount;
           this.particles = [];
@@ -152,7 +168,7 @@ function onReady(ctx) {
               this.particles.push(new Particle());
           }
       }
-      update(delta) {
+      update(delta: any) {
           let alive = 0;
           for (let i = 0; i < this.particles.length; i++) {
               const p = this.particles[i];
@@ -166,7 +182,7 @@ function onReady(ctx) {
                   alive++;
               }
           }
-          this.particles = this.particles.filter(p => p.life < p.maxLife);
+          this.particles = this.particles.filter((p: any) => p.life < p.maxLife);
           this.geometry.setDrawRange(0, alive);
           this.geometry.attributes.position.needsUpdate = true;
           this.geometry.attributes.size.needsUpdate = true;

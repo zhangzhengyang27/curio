@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -39,7 +39,7 @@ async function onReady(ctx) {
   
   video.play()
   
-  const texture = await new Promise(r => video.onloadeddata = () => r(new THREE.VideoTexture(video))) // 创建视频纹理
+  const texture = await new Promise<THREE.VideoTexture>(r => video.onloadeddata = () => r(new THREE.VideoTexture(video))) // 创建视频纹理
   
   const group = new THREE.Group()
   const config = {
@@ -69,7 +69,7 @@ async function onReady(ctx) {
               uvs[index + 1] = (uvs[index + 1] + j) * uy
           }
   
-          const mesh = new THREE.Mesh(geometry, material)
+          const mesh: any = new THREE.Mesh(geometry, material)
   
           mesh.dx = 0.004 * (0.5 - Math.random())
           mesh.dy = 0.004 * (0.5 - Math.random())
@@ -88,7 +88,7 @@ async function onReady(ctx) {
   
   ctx.addUpdateCallback(() => {
     const elapsedTime = clock.getElapsedTime()
-        for (const mesh of group.children) {
+        for (const mesh of group.children as any[]) {
             mesh.rotation.x += Math.sin(elapsedTime * 0.1) * mesh.dx;
             mesh.rotation.y += Math.sin(elapsedTime * 0.2) * mesh.dy;
             mesh.position.x -= Math.sin(elapsedTime * 0.1) * mesh.dx;

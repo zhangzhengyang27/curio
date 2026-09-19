@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { instanceIndex, struct, If, uint, int, floor, float, length, clamp, vec2, cos, vec3, vertexIndex, Fn, uniform, instancedArray, min, max, positionLocal, transformNormalToView, select, globalId } from 'three/tsl';
@@ -27,6 +27,9 @@ import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/examples/jsm/loaders/DRACO
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
 
+let meshRay: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -35,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Water</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -105,7 +108,7 @@ async function onReady(__stage) {
   			}
   
   			
-  			function noise( x, y ) {
+  			function noise( x: any, y: any ) {
   
   				let multR = waterMaxHeight;
   				let mult = 0.025;
@@ -165,7 +168,7 @@ async function onReady(__stage) {
   				const prevHeightStorage = instancedArray( prevHeightArray ).setName( 'PrevHeight' );
   
   				// Get Indices of Neighbor Values of an Index in the Simulation Grid
-  				const getNeighborIndicesTSL = ( index ) => {
+  				const getNeighborIndicesTSL = ( index: any ) => {
   
   					const width = uint( WIDTH );
   
@@ -181,24 +184,24 @@ async function onReady(__stage) {
   					// access areas that are out of bounds. Accordingly, we emulate the Clamp to Edge Wrapping
   					// behavior of accessing a DataTexture with out of bounds uvs.
   
-  					const leftX = max( 0, x.sub( 1 ) );
-  					const rightX = min( x.add( 1 ), width.sub( 1 ) );
+  					const leftX = max( 0, (x.sub as any)( 1 ) );
+  					const rightX = min( (x.add as any)( 1 ), (width.sub as any)( 1 ) );
   
-  					const bottomY = max( 0, y.sub( 1 ) );
-  					const topY = min( y.add( 1 ), width.sub( 1 ) );
+  					const bottomY = max( 0, (y.sub as any)( 1 ) );
+  					const topY = min( (y.add as any)( 1 ), (width.sub as any)( 1 ) );
   
-  					const westIndex = y.mul( width ).add( leftX );
-  					const eastIndex = y.mul( width ).add( rightX );
+  				const westIndex = (y.mul as any)( (width as any) ).add( leftX );
+  					const eastIndex = (y.mul as any)( (width as any) ).add( rightX );
   
-  					const southIndex = bottomY.mul( width ).add( x );
-  					const northIndex = topY.mul( width ).add( x );
+  					const southIndex = (bottomY as any).mul( width ).add( x );
+  					const northIndex = (topY as any).mul( width ).add( x );
   
   					return { northIndex, southIndex, eastIndex, westIndex };
   
   				};
   
   				// Get simulation index neighbor values
-  				const getNeighborValuesTSL = ( index, store ) => {
+  				const getNeighborValuesTSL = ( index: any, store: any ) => {
   
   					const { northIndex, southIndex, eastIndex, westIndex } = getNeighborIndicesTSL( index );
   
@@ -212,7 +215,7 @@ async function onReady(__stage) {
   				};
   
   				// Create compute shader for height simulation with explicit read/write buffers
-  				const createComputeHeight = ( readBuffer, writeBuffer ) => Fn( () => {
+  				const createComputeHeight = ( readBuffer: any, writeBuffer: any ) => Fn( () => {
   
   					const { viscosity, mousePos, mouseSize, mouseDeep, mouseSpeed } = effectController;
   
@@ -263,14 +266,14 @@ async function onReady(__stage) {
   				} );
   
   				// Helper to get height from the current read buffer
-  				const getCurrentHeight = ( index ) => {
+  				const getCurrentHeight = ( index: any ) => {
   
-  					return select( readFromA, heightStorageA.element( index ), heightStorageB.element( index ) );
+  				return (select as any)( readFromA, heightStorageA.element( index ), heightStorageB.element( index ) );
   
   				};
   
   				// Helper to get normals from the current read buffer
-  				const getCurrentNormals = ( index ) => {
+  				const getCurrentNormals = ( index: any ) => {
   
   					const { northIndex, southIndex, eastIndex, westIndex } = getNeighborIndicesTSL( index );
   
@@ -348,7 +351,7 @@ async function onReady(__stage) {
   
   				// Duck instance data storage
   
-  				const duckInstanceDataStorage = instancedArray( duckInstanceDataArray, DuckStruct ).setName( 'DuckInstanceData' );
+  				const duckInstanceDataStorage = (instancedArray as any)( duckInstanceDataArray, DuckStruct ).setName( 'DuckInstanceData' );
   
   				computeDucks = Fn( () => {
   
@@ -442,7 +445,7 @@ async function onReady(__stage) {
    				scene.environmentIntensity = 1.25;
   
   				duckModel = model.scene.children[ 0 ];
-  				duckModel.material.positionNode = Fn( () => {
+  				(duckModel!.material as any).positionNode = Fn( () => {
   
   					const instancePosition = duckInstanceDataStorage.element( instanceIndex ).get( 'position' );
   
@@ -467,10 +470,10 @@ async function onReady(__stage) {
   
   				//
   
-  				container.style.touchAction = 'none';
-  				container.addEventListener( 'pointermove', onPointerMove );
-  				container.addEventListener( 'pointerdown', onPointerDown );
-  				container.addEventListener( 'pointerup', onPointerUp );
+  				container!.style.touchAction = 'none';
+  				container!.addEventListener( 'pointermove', onPointerMove );
+  				container!.addEventListener( 'pointerdown', onPointerDown );
+  				container!.addEventListener( 'pointerup', onPointerUp );
   
   				
   
@@ -490,7 +493,7 @@ async function onReady(__stage) {
   
   					waterMesh.material.wireframe = ! waterMesh.material.wireframe;
   					poolBorder.material.wireframe = ! poolBorder.material.wireframe;
-  					duckModel.material.wireframe = ! duckModel.material.wireframe;
+  					(duckModel!.material as any).wireframe = ! (duckModel!.material as any).wireframe;
   					waterMesh.material.needsUpdate = true;
   					poolBorder.material.needsUpdate = true;
   
@@ -501,7 +504,7 @@ async function onReady(__stage) {
   
   			
   
-  			function setMouseCoords( x, y ) {
+  			function setMouseCoords( x: any, y: any ) {
   
   				mouseCoords.set( ( x / renderer.domElement.clientWidth ) * 2 - 1, - ( y / renderer.domElement.clientHeight ) * 2 + 1 );
   
@@ -525,7 +528,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -586,7 +589,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( mouseDown && ( firstClick || ! controls.enabled ) ) {
     					raycaster.setFromCamera( mouseCoords, camera );

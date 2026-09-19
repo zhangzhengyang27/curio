@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -153,7 +153,7 @@ function onReady(ctx) {
   
   const mouse = new THREE.Vector2(); let isMouseDown = false;
   
-  function onMouseMove(event) { mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / window.innerHeight) * 2 + 1; particleMaterial.uniforms.uMouse.value = mouse; linesMaterial.uniforms.uMouse.value = mouse; }
+  function onMouseMove(event: any) { mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / window.innerHeight) * 2 + 1; particleMaterial.uniforms.uMouse.value = mouse; linesMaterial.uniforms.uMouse.value = mouse; }
   
   function onMouseDown() { isMouseDown = true; }
   
@@ -169,7 +169,7 @@ function onReady(ctx) {
   
   window.addEventListener('touchend', () => isMouseDown = false);
   
-  function animate(timestamp) {
+  function animate(timestamp: any) {
   
       requestAnimationFrame(animate); const time = timestamp * 0.001;
   

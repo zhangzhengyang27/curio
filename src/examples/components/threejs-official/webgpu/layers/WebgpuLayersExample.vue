@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Layers</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -114,7 +114,7 @@ function onReady(__stage) {
   			
   
   
-  			function getMaterial( count, color, sprite ) {
+  			function getMaterial( count: any, color: any, sprite: any ) {
   
   				// instance data
   
@@ -161,14 +161,14 @@ function onReady(__stage) {
   
   				// TSL
   
-  				const instancePosition = instancedBufferAttribute( positionAttribute );
-  				const instanceDirection = instancedBufferAttribute( directionAttribute );
-  				const instanceRotation = instancedBufferAttribute( rotationAttribute );
+  				const instancePosition: any = instancedBufferAttribute( positionAttribute );
+  				const instanceDirection: any = instancedBufferAttribute( directionAttribute );
+  				const instanceRotation: any = instancedBufferAttribute( rotationAttribute );
   
-  				const localTime = instancedBufferAttribute( timeAttribute ).add( time.mul( 0.02 ) );
-  				const modTime = mod( localTime, 1.0 );
+  				const localTime: any = ( instancedBufferAttribute( timeAttribute ) as any ).add( time.mul( 0.02 ) );
+  				const modTime: any = mod( localTime, 1.0 );
   
-  				const rotatedPosition = rotate( positionLocal, instanceRotation.mul( modTime.mul( 20 ) ) );
+  				const rotatedPosition: any = rotate( positionLocal, instanceRotation.mul( modTime.mul( 20 ) ) );
   				material.positionNode = rotatedPosition.add( instancePosition ).add( instanceDirection.mul( modTime.mul( 50 ) ) );
   
   				return material;

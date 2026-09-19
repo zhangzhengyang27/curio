@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,8 +27,9 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const app = gContainer.value.querySelector('#app')
+  const app = gContainer.value!.querySelector('#app')
   await loadScript("/graphics/assets/external/d3.v6.js");
+  const d3: any = (globalThis as any).d3 // d3 由上方 loadScript 注入为全局；用局部 any 别名屏蔽 UMD 全局类型，保持脚本加载通道不变
   await loadScript("/graphics/assets/external/spritejs.min.js");
   await loadScript("/graphics/assets/external/index.js");
   {
@@ -36,19 +37,19 @@ async function initGraphicsExample() {
             const rawData = await (await fetch('beijing_2014.csv')).text()
             const data = d3.csvParse(rawData)
             const dataset = data
-              .map(d => {
+              .map((d: any) => {
                 return {
                   temperature: Number(d['Temperature(Celsius)(avg)']),
                   tdp: Number(d['Dew Point(Celsius)(avg)']),
                   category: '平均气温与露点'
                 }
               })
-              .sort((a, b) => a.tdp - b.tdp)
+              .sort((a: any, b: any) => a.tdp - b.tdp)
     
     
-            let dataset2 = [...dataset]
+            let dataset2: any = [...dataset]
     
-            dataset2 = dataset2.reduce((a, b) => {
+            dataset2 = dataset2.reduce((a: any, b: any) => {
               let curr = a[a.length - 1]
               if (curr && curr.tdp === b.tdp) {
                 curr.temperature.push(b.temperature)
@@ -62,9 +63,9 @@ async function initGraphicsExample() {
             }, [])
             console.log('aa', dataset2)
     
-            dataset2 = dataset2.map(d => {
+            dataset2 = dataset2.map((d: any) => {
               d.category = '露点平均气温'
-              d.temperature = Math.round(d.temperature.reduce((a, b) => a + b) / d.temperature.length)
+              d.temperature = Math.round(d.temperature.reduce((a: any, b: any) => a + b) / d.temperature.length)
               return d
             })
     
@@ -88,16 +89,16 @@ async function initGraphicsExample() {
               showGuideLine: true
             }).source(d1)
             const line = new Line({ clientRect, layoutX: 'value' }).source(d2)
-            line.style('line', function (attrs, data, i) {
+            line.style('line', function (attrs: any, data: any, i: any) {
               return { smooth: true, lineWidth: 3, strokeColor: '#0a0' }
             })
-            line.style('point', function (attrs) {
+            line.style('point', function (attrs: any) {
               return { display: 'none' }
             })
     
             const toolTip = new Tooltip({
-              title: data => '温度与露点：',
-              formatter: data => {
+              title: (data: any) => '温度与露点：',
+              formatter: (data: any) => {
                 return `温度：${data.temperature}C  露点：${data.tdp}% `
               }
             })

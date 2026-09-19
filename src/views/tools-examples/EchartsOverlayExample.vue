@@ -22,14 +22,14 @@
       </p>
     </div>
     <VcOverlayEcharts
-      :options="ECHARTS_OPTION"
+      :options="(ECHARTS_OPTION as any)"
       custom-class="tv-echarts-full"
       @ready="onReady"
     />
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { VcOverlayEcharts } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'

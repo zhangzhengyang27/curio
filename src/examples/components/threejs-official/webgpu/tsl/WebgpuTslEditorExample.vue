@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec4 } from 'three/tsl';
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -70,9 +70,9 @@ async function onReady(__stage) {
   
   				// editor
   
-  				window.require.config( { paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs' } } );
+  				(window.require as any).config( { paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs' } } );
   
-  				require( [ 'vs/editor/editor.main' ], () => {
+  				(require as any)( [ 'vs/editor/editor.main' ], () => {
   
   					const options = {
   						shader: 'fragment',
@@ -81,8 +81,8 @@ async function onReady(__stage) {
   						preview: true
   					};
   
-  					let timeout = null;
-  					let rawShader = null;
+  					let timeout: any = null;
+  					let rawShader: any = null;
   
   					const editorDOM = document.createElement( 'div' );
   					editorDOM.style.cssText = 'position:absolute;top:0;right:0;width:40%;height:100%;';
@@ -115,7 +115,7 @@ async function onReady(__stage) {
   output = vec4( finalColor, opacity );
   `;
   
-  					const editor = window.monaco.editor.create( editorDOM, {
+  					const editor = (window as any).monaco.editor.create( editorDOM, {
   						value: tslCode,
   						language: 'javascript',
   						theme: 'vs-dark',
@@ -123,7 +123,7 @@ async function onReady(__stage) {
   						minimap: { enabled: false }
   					} );
   
-  					const result = window.monaco.editor.create( resultDOM, {
+  					const result = (window as any).monaco.editor.create( resultDOM, {
   						value: '',
   						language: 'wgsl',
   						theme: 'vs-dark',
@@ -140,7 +140,7 @@ async function onReady(__stage) {
   					};
   
   					const webGLRenderer = new THREE.WebGPURenderer( { forceWebGL: true } );
-  					webGLRenderer.debug.diagnostics.keywords = true;
+  					(webGLRenderer.debug as any).diagnostics.keywords = true;
   
   					const build = async () => {
   
@@ -149,7 +149,7 @@ async function onReady(__stage) {
   							const AsyncFunction = async function () {}.constructor;
   
   							const tslCode = `let output = null;\n${ editor.getValue() }\nreturn { output };`;
-  							const nodes = await ( new AsyncFunction( 'THREE', tslCode )( THREE ) );
+  							const nodes = await ( new (AsyncFunction as any)( 'THREE', tslCode )( THREE ) );
   
   							mesh.material.fragmentNode = nodes.output;
   							mesh.material.needsUpdate = true;
@@ -184,7 +184,7 @@ async function onReady(__stage) {
   							console.log( '%c  [ WGSL ] Fragment Shader    ', style );
   							console.log( rawShader.fragmentShader );/**/
   
-  						} catch ( e ) {
+  						} catch ( e: any ) {
   
   							result.setValue( 'Error: ' + e.message );
   
@@ -209,7 +209,7 @@ async function onReady(__stage) {
   					gui.add( options, 'output', [ 'WGSL', 'GLSL ES 3.0' ] ).onChange( build );
   					gui.add( options, 'shader', [ 'vertex', 'fragment' ] ).onChange( showCode );
   
-  					gui.add( options, 'outputColorSpace', [ THREE.LinearSRGBColorSpace, THREE.SRGBColorSpace ] ).onChange( ( value ) => {
+  					gui.add( options, 'outputColorSpace', [ THREE.LinearSRGBColorSpace, THREE.SRGBColorSpace ] ).onChange( ( value: any ) => {
   
   						renderer.outputColorSpace = value;
   
@@ -217,7 +217,7 @@ async function onReady(__stage) {
   
   					} );
   
-  					gui.add( options, 'preview' ).onChange( ( value ) => {
+  					gui.add( options, 'preview' ).onChange( ( value: any ) => {
   
   						rendererDOM.style.display = value ? '' : 'none';
   

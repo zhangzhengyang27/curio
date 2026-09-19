@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, normalView, diffuseColor, velocity, add, vec3, vec4, packNormalToRGB, unpackRGBToNormal, sample } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSGI</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			let renderPipeline;
+  			let renderPipeline: any;
   
   			
   
@@ -236,7 +236,7 @@ function onReady(__stage) {
   				gui.add( giPass.useScreenSpaceSampling, 'value' ).name( 'screen-space sampling' );
   				gui.add( giPass, 'useTemporalFiltering' ).name( 'temporal filtering' ).onChange( updatePostprocessing );
   
-  				function updatePostprocessing( value ) {
+  				function updatePostprocessing( value: any ) {
   
   					if ( value === 1 ) {
   
@@ -267,7 +267,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

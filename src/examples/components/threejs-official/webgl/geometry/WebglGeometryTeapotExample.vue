@@ -15,15 +15,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js';
+
+let effectController: any;
 
 const props = defineProps({
   example: {
@@ -33,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - the Utah Teapot<br />\n\t\t\tfrom <a href=\"https://www.udacity.com/course/interactive-3d-graphics--cs291\" target=\"_blank\" rel=\"noopener\">Udacity Interactive 3D Graphics</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,15 +49,15 @@ function onReady(__stage) {
   			let ambientLight, light;
   
   			let tess = - 1;	// force initialization
-  			let bBottom;
-  			let bLid;
-  			let bBody;
-  			let bFitLid;
-  			let bNonBlinn;
-  			let shading;
+  			let bBottom: any;
+  			let bLid: any;
+  			let bBody: any;
+  			let bFitLid: any;
+  			let bNonBlinn: any;
+  			let shading: any;
   
-  			let teapot, textureCube;
-  			const materials = {};
+  			let teapot: any, textureCube: any;
+  			const materials: Record<string, any> = {};
   
   			
   			render();

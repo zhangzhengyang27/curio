@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Toon Material with OutlineEffect"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,10 +43,10 @@ function onReady(__stage) {
   
   
   
-  			let container, stats;
+  			let container, stats: any;
   
-  			let effect;
-  			let particleLight;
+  			let effect: any;
+  			let particleLight: any;
   
   			const loader = new FontLoader();
   			loader.load( ASSET_HOST + 'fonts/gentilis_regular.typeface.json', function ( font ) {
@@ -55,7 +55,7 @@ function onReady(__stage) {
   
   			} );
   
-  			function init( font ) {
+  			function init( font: any ) {
   
   				
   
@@ -118,7 +118,7 @@ function onReady(__stage) {
   
   				}
   
-  				function addLabel( name, location ) {
+  				function addLabel( name: any, location: any ) {
   
   					const textGeo = new TextGeometry( name, {
   
@@ -177,7 +177,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     const timer = Date.now() * 0.00025;

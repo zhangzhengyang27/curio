@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern("/webgl/study-webgl/libs/gl-matrix.js");
   let vertexstring = `
           attribute vec4 a_position;
@@ -26,10 +26,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
   
-          var webgl;
-          var angle = 60;
-          var webglDiv
-  
+          var webgl: any;          var angle = 60;
+          var webglDiv: any;  
           function init() {
               initWebgl();
               initShader();
@@ -39,20 +37,20 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               
           }
   
-          function inittext(angle) {
-              if (!inittext._el) {
-                inittext._el = document.createElement('div');
-                inittext._el.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:14px;pointer-events:none;';
-                container.appendChild(inittext._el);
+          function inittext(angle: any) {
+              if (!(inittext as any)._el) {
+                (inittext as any)._el = document.createElement('div');
+                (inittext as any)._el.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:14px;pointer-events:none;';
+                container.appendChild((inittext as any)._el);
               }
-              inittext._el.innerHTML = "视角为:" + angle
+              (inittext as any)._el.innerHTML = "视角为:" + angle
           }
   
           function initEvent() {
               document.onkeydown = handleKeyDown;
           }
   
-          function handleKeyDown(event) {
+          function handleKeyDown(event: any) {
   
               if (String.fromCharCode(event.keyCode) == 'W') {
                   angle += 1;
@@ -68,15 +66,15 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
   
           }
   
           function initShader() {
   
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               webgl.shaderSource(vsshader, vertexstring);
               webgl.shaderSource(fsshader, fragmentstring);
@@ -98,7 +96,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.attachShader(program, fsshader)
               webgl.linkProgram(program);
               webgl.useProgram(program);
-              webgl.program = program
+              (webgl as any).program = program
   
           }
   
@@ -126,17 +124,17 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               ]
   
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 8 * 4, 0);
-              let aColor = webgl.getAttribLocation(webgl.program, "a_color");
+              let aColor = webgl.getAttribLocation((webgl as any).program, "a_color");
               webgl.enableVertexAttribArray(aColor);
               webgl.vertexAttribPointer(aColor, 4, webgl.FLOAT, false, 8 * 4, 4 * 4);
   
-              let uniformMatrix1 = webgl.getUniformLocation(webgl.program, "u_formMatrix");
+              let uniformMatrix1 = webgl.getUniformLocation((webgl as any).program, "u_formMatrix");
               webgl.uniformMatrix4fv(uniformMatrix1, false, ProjMatrix)
           }
   

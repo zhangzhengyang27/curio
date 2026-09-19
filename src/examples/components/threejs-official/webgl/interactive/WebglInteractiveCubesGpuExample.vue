@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - gpu picking"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,10 +48,10 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let pickingTexture, pickingScene;
-  			let highlightBox;
+  			let pickingTexture: any, pickingScene: any;
+  			let highlightBox: any;
   
-  			const pickingData = [];
+  			const pickingData: any[] = []
   
   			const pointer = new THREE.Vector2();
   			const offset = new THREE.Vector3( 10, 10, 10 );
@@ -118,7 +118,7 @@ function onReady(__stage) {
   
   				} );
   
-  				function applyId( geometry, id ) {
+  				function applyId( geometry: any, id: any ) {
   
   					const position = geometry.attributes.position;
   					const array = new Int16Array( position.count );
@@ -130,7 +130,7 @@ function onReady(__stage) {
   
   				}
   
-  				function applyVertexColors( geometry, color ) {
+  				function applyVertexColors( geometry: any, color: any ) {
   
   					const position = geometry.attributes.position;
   					const colors = [];
@@ -222,14 +222,14 @@ function onReady(__stage) {
   
   			//
   
-  			function onPointerMove( e ) {
+  			function onPointerMove( e: any ) {
   
   				pointer.x = e.clientX;
   				pointer.y = e.clientY;
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     {
     // render the picking scene off-screen

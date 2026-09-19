@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -55,7 +55,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -68,8 +68,8 @@ function onReady(__stage) {
   
   
   			let stats;
-  			let target;
-  			let postScene, postCamera, postMaterial;
+  			let target: any;
+  			let postScene: any, postCamera: any, postMaterial: any;
   
   			const params = {
   				format: THREE.DepthFormat,
@@ -107,6 +107,14 @@ function onReady(__stage) {
   				setupPost();
   
   				onWindowResize();
+
+				function onWindowResize() {
+					const w = __stage.container?.clientWidth || window.innerWidth
+					const h = __stage.container?.clientHeight || window.innerHeight
+					camera.aspect = w / h
+					camera.updateProjectionMatrix()
+					renderer.setSize(w, h)
+				}
   				
   
   				//
@@ -124,9 +132,9 @@ function onReady(__stage) {
   
   				if ( target ) target.dispose();
   
-  				const format = parseInt( params.format );
-  				const type = parseInt( params.type );
-  				const samples = parseInt( params.samples );
+  				const format = parseInt( params.format as any );
+  				const type = parseInt( params.type as any );
+  				const samples = parseInt( params.samples as any );
   
   				const dpr = renderer.getPixelRatio();
   				target = new THREE.WebGLRenderTarget( (__stage.container?.clientWidth || window.innerWidth) * dpr, (__stage.container?.clientHeight || window.innerHeight) * dpr );
@@ -200,7 +208,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // render scene into target
     				renderer.setRenderTarget( target );
     				// render post FX

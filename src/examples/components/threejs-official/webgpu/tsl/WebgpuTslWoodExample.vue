@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import * as TSL from 'three/tsl';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Procedural Woord Material</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -50,10 +50,10 @@ async function onReady(__stage) {
   
   
   
-  			let base, font, blockGeometry, gui;
+  			let base: any, font: any, blockGeometry: any, gui: any;
   
   			// Helper function to get grid position
-  			function getGridPosition( woodIndex, finishIndex ) {
+  			function getGridPosition( woodIndex: any, finishIndex: any ) {
   
   				return {
   					x: 0,
@@ -68,7 +68,7 @@ async function onReady(__stage) {
   
   				const material = new THREE.MeshBasicNodeMaterial();
   
-  				const gridXZ = TSL.Fn( ( [ gridSize = TSL.float( 1.0 ), dotWidth = TSL.float( 0.1 ), lineWidth = TSL.float( 0.02 ) ] ) => {
+  				const gridXZ = TSL.Fn( ( [ gridSize = TSL.float( 1.0 ), dotWidth = TSL.float( 0.1 ), lineWidth = TSL.float( 0.02 ) ]: any ) => {
   
   					const coord = TSL.positionWorld.xz.div( gridSize );
   					const grid = TSL.fract( coord );
@@ -90,19 +90,19 @@ async function onReady(__stage) {
   
   				} );
   
-  				const radialGradient = TSL.Fn( ( [ radius = TSL.float( 10.0 ), falloff = TSL.float( 1.0 ) ] ) => {
+  				const radialGradient = TSL.Fn( ( [ radius = TSL.float( 10.0 ), falloff = TSL.float( 1.0 ) ]: any ) => {
   
   					return TSL.smoothstep( radius, radius.sub( falloff ), TSL.length( TSL.positionWorld ) );
   
   				} );
   
   				// Create grid pattern
-  				const gridPattern = gridXZ( 1.0, 0.03, 0.005 );
+  				const gridPattern = (gridXZ as any)( 1.0, 0.03, 0.005 );
   				const baseColor = TSL.vec4( 1.0, 1.0, 1.0, 0.0 );
   				const gridColor = TSL.vec4( 0.5, 0.5, 0.5, 1.0 );
   
   				// Mix base color with grid lines
-  				material.colorNode = gridPattern.mix( baseColor, gridColor ).mul( radialGradient( 30.0, 20.0 ) );
+  				material.colorNode = gridPattern.mix( baseColor, gridColor ).mul( (radialGradient as any)( 30.0, 20.0 ) );
   				material.transparent = true;
   
   				const plane = new THREE.Mesh( new THREE.CircleGeometry( 40 ), material );
@@ -114,7 +114,7 @@ async function onReady(__stage) {
   			}
   
   			// Helper function to create and position labels
-  			function createLabel( text, font, material, position ) {
+  			function createLabel( text: any, font: any, material: any, position: any ) {
   
   				const txt_geo = new TextGeometry( text, {
   					font: font,
@@ -125,9 +125,9 @@ async function onReady(__stage) {
   				} );
   
   				txt_geo.computeBoundingBox();
-  				const offx = - 0.5 * ( txt_geo.boundingBox.max.x - txt_geo.boundingBox.min.x );
-  				const offy = - 0.5 * ( txt_geo.boundingBox.max.y - txt_geo.boundingBox.min.y );
-  				const offz = - 0.5 * ( txt_geo.boundingBox.max.z - txt_geo.boundingBox.min.z );
+  				const offx = - 0.5 * ( (txt_geo as any)!.boundingBox.max.x - (txt_geo as any)!.boundingBox.min.x );
+  				const offy = - 0.5 * ( (txt_geo as any)!.boundingBox.max.y - (txt_geo as any)!.boundingBox.min.y );
+  				const offz = - 0.5 * ( (txt_geo as any)!.boundingBox.max.z - (txt_geo as any)!.boundingBox.min.z );
   				txt_geo.translate( offx, offy, offz );
   
   				const label = new THREE.Group();
@@ -254,7 +254,7 @@ async function onReady(__stage) {
   
   
   
-  			function add_custom_wood( text_mat ) {
+  			function add_custom_wood( text_mat: any ) {
   
   				// Add "Custom" label (positioned at the end of the grid)
   				createLabel( 'custom', font, text_mat, getGridPosition( Math.round( WoodGenuses.length / 2 - 1 ), 5 ) );
@@ -299,8 +299,8 @@ async function onReady(__stage) {
   				gui.add( customMaterial, 'splotchIntensity', 0.0, 1.0, 0.01 ).name( 'splotchIntensity' );
   				gui.add( customMaterial, 'cellScale', 100, 2000, 1 ).name( 'cellScale' );
   				gui.add( customMaterial, 'cellSize', 0.01, 0.5, 0.001 ).name( 'cellSize' );
-  				gui.addColor( { darkGrainColor: '#0c0504' }, 'darkGrainColor' ).onChange( v => customMaterial.darkGrainColor.set( v ) );
-  				gui.addColor( { lightGrainColor: '#926c50' }, 'lightGrainColor' ).onChange( v => customMaterial.lightGrainColor.set( v ) );
+  				gui.addColor( { darkGrainColor: '#0c0504' }, 'darkGrainColor' ).onChange( (v: any) => customMaterial.darkGrainColor.set( v ) );
+  				gui.addColor( { lightGrainColor: '#926c50' }, 'lightGrainColor' ).onChange( (v: any) => customMaterial.lightGrainColor.set( v ) );
   				gui.add( customMaterial, 'clearcoat', 0.0, 1.0, 0.01 ).name( 'clearcoat' );
   				gui.add( customMaterial, 'clearcoatRoughness', 0.0, 1.0, 0.01 ).name( 'clearcoatRoughness' );
   

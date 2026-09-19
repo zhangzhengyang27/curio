@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Render Bundle</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -38,7 +38,7 @@ function onReady(__stage) {
   
   
   			let gui;
-  			let geometries, group, instancedMesh;
+  			let geometries: any, group: any, instancedMesh: any;
   
   			//
   
@@ -64,7 +64,7 @@ function onReady(__stage) {
   			
   			//
   
-  			function randomizeMatrix( matrix ) {
+  			function randomizeMatrix( matrix: any ) {
   
   				position.x = Math.random() * 80 - 40;
   				position.y = Math.random() * 80 - 40;
@@ -82,7 +82,7 @@ function onReady(__stage) {
   
   			}
   
-  			function randomizeRotationSpeed( rotation ) {
+  			function randomizeRotationSpeed( rotation: any ) {
   
   				rotation.x = Math.random() * .05;
   				rotation.y = Math.random() * .05;
@@ -113,7 +113,7 @@ function onReady(__stage) {
   
   			}
   
-  			function initMesh( count ) {
+  			function initMesh( count: any ) {
   
   				group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
   
@@ -163,7 +163,7 @@ function onReady(__stage) {
   				const searchParams = new URLSearchParams( window.location.search );
   				api.webgpu = searchParams.get( 'backend' ) !== 'webgl';
   				api.renderBundle = searchParams.get( 'renderBundle' ) !== 'false';
-  				api.count = parseFloat( searchParams.get( 'count' ) || 4000 );
+  				api.count = parseFloat( searchParams.get( 'count' ) || '4000' );
   
   				const count = api.count;
   
@@ -227,7 +227,7 @@ function onReady(__stage) {
   
   				}
   
-  				__stage.addUpdateCallback((_delta, _elapsed) => {
+  				__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( api.dynamic === false ) return;
     					// rotate the regular meshes

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import gsap from 'gsap'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,7 +29,7 @@ function onReady(ctx) {
 
   scene.add(new THREE.AmbientLight(0xffffff, 4), new THREE.GridHelper(40, 20))
   
-  let group = null
+  let group: any = null
   
   new GLTFLoader().load(props.example?.globals?.FILE_HOST + 'files/model/Soldier.glb',
   
@@ -58,7 +58,7 @@ function onReady(ctx) {
   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0) // 碰撞面
   
   // 点击事件
-  ctx.canvas.addEventListener('click', (event) => {
+  ctx.canvas.addEventListener('click', (event: any) => {
   
       const mouse = new THREE.Vector2((event.offsetX / event.target.clientWidth) * 2 - 1, -(event.offsetY / event.target.clientHeight) * 2 + 1)
   
@@ -76,9 +76,9 @@ function onReady(ctx) {
   
   })
   
-  let oldgsap = null
+  let oldgsap: any = null
   
-  function goAddress(group, targetPositon) {
+  function goAddress(group: any, targetPositon: any) {
   
       oldgsap?.kill() // 停止上一个动画
   

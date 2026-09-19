@@ -75,13 +75,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useEarthStore } from '../stores/useEarthStore'
 
-const props = defineProps({
-  onSelect: Function
-})
+interface SearchSuggestion {
+  name: string
+  lon: number
+  lat: number
+  flag: string
+}
+
+const props = defineProps<{
+  onSelect?: (item: SearchSuggestion) => void
+}>()
 
 const emit = defineEmits(['select'])
 
@@ -89,9 +96,9 @@ const earthStore = useEarthStore()
 const query = ref('')
 const showSuggestions = ref(false)
 const activeIndex = ref(0)
-const inputRef = ref(null)
+const inputRef = ref<HTMLInputElement | null>(null)
 
-const countryFlags = {
+const countryFlags: Record<string, string> = {
   '中国': '🇨🇳', '美国': '🇺🇸', '日本': '🇯🇵', '英国': '🇬🇧', '法国': '🇫🇷',
   '德国': '🇩🇪', '俄罗斯': '🇷🇺', '印度': '🇮🇳', '巴西': '🇧🇷', '加拿大': '🇨🇦',
   '澳大利亚': '🇦🇺', '韩国': '🇰🇷', '意大利': '🇮🇹', '西班牙': '🇪🇸', '墨西哥': '🇲🇽'
@@ -117,7 +124,7 @@ function onInput() {
   activeIndex.value = 0
 }
 
-function select(item) {
+function select(item: SearchSuggestion) {
   query.value = item.name
   showSuggestions.value = false
   emit('select', item)
@@ -134,8 +141,8 @@ function close() {
   showSuggestions.value = false
 }
 
-function onClickOutside(e) {
-  if (!e.target.closest('.search-box')) {
+function onClickOutside(e: MouseEvent) {
+  if (!(e.target as HTMLElement | null)?.closest('.search-box')) {
     showSuggestions.value = false
   }
 }

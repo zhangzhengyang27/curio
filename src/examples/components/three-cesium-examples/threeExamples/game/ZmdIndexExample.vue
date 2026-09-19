@@ -9,10 +9,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
+let _resizeObserver: any = null
+
+function onBeforeDispose() {
+  if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+}
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -27,7 +32,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -306,7 +311,7 @@ async function onReady(ctx) {
   const loader_svg = new SVGLoader();
   
   const logo = new THREE.Mesh(
-    new THREE.ShapeGeometry(loader_svg.parse(logoStr).paths[0].toShapes(true)).center(),
+    new THREE.ShapeGeometry((loader_svg.parse(logoStr).paths[0].toShapes as any)(true)).center(),
     new THREE.ShaderMaterial({
       uniforms: {
         c_0: {
@@ -345,14 +350,14 @@ async function onReady(ctx) {
   });
   const mixer = new THREE.AnimationMixer(model);
   const action = mixer.clipAction(model.animations[0]);
-  action.setLoop(THREE.LoopRepeat);
+  action.setLoop(THREE.LoopRepeat, Infinity);
   action.play();
   
   controls.enableDamping = true;
   
   const timer = new THREE.Timer();
   
-  const tick = (delta, elapsed) => {
+  const tick = (delta: number, elapsed: number) => {
     controls.update(delta);
   
     // 更新动画并限制模型不进行移动
@@ -363,7 +368,7 @@ async function onReady(ctx) {
     ground.position.z = (elapsed * -50) % 25;
   
     // 材质时间更新
-    pass_mix.material.uniforms.time.value = elapsed;
+    (pass_mix.material as THREE.ShaderMaterial).uniforms.time.value = elapsed;
   };
   
   const render = () => {
@@ -393,17 +398,17 @@ async function onReady(ctx) {
   
   const data = {
     get faultStrength() {
-      return pass_mix.material.uniforms.faultStrength.value;
+      return (pass_mix.material as THREE.ShaderMaterial).uniforms.faultStrength.value;
     },
     set faultStrength(value) {
-      pass_mix.material.uniforms.faultStrength.value = value;
+      (pass_mix.material as THREE.ShaderMaterial).uniforms.faultStrength.value = value;
     },
-  
+
     get useStripe() {
-      return pass_mix.material.uniforms.useStripe.value;
+      return (pass_mix.material as THREE.ShaderMaterial).uniforms.useStripe.value;
     },
     set useStripe(value) {
-      pass_mix.material.uniforms.useStripe.value = value;
+      (pass_mix.material as THREE.ShaderMaterial).uniforms.useStripe.value = value;
     },
   
     get c_0() {
@@ -433,13 +438,7 @@ async function onReady(ctx) {
   gui.addColor(data, "c_0").name("logo颜色");
   gui.addColor(data, "c_p").name("粒子颜色");
   gui.add(data, "p_s", 1, 20, 0.001).name("粒子大小");
-  
-  let _resizeObserver = null
-  
-  function onBeforeDispose() {
-    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
-  }
-  
+
   _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;

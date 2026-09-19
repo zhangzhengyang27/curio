@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - procedural 3D text<br/>\n\t\t\ttype to enter new text, drag to spin the text"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -51,7 +51,7 @@ function onReady(__stage) {
   
   			let cameraTarget;
   
-  			let group, textMesh1, textMesh2, textGeo, materials;
+  			let group: any, textMesh1: any, textMesh2: any, textGeo, materials: any;
   
   			let firstLetter = true;
   
@@ -59,7 +59,7 @@ function onReady(__stage) {
   
   				bevelEnabled = true,
   
-  				font = undefined,
+  				font: any = undefined,
   
   				fontName = 'optimer', // helvetiker, optimer, gentilis, droid sans, droid serif
   				fontWeight = 'bold'; // normal bold
@@ -92,11 +92,11 @@ function onReady(__stage) {
   
   			};
   
-  			const reverseFontMap = [];
+  			const reverseFontMap: any = [];
   			const reverseWeightMap = [];
   
-  			for ( const i in fontMap ) reverseFontMap[ fontMap[ i ] ] = i;
-  			for ( const i in weightMap ) reverseWeightMap[ weightMap[ i ] ] = i;
+  			for ( const i in fontMap ) reverseFontMap[ (fontMap as any)[ i ] ] = i;
+  			for ( const i in weightMap ) reverseWeightMap[ (weightMap as any)[ i ] ] = i;
   
   			let targetRotation = 0;
   			let targetRotationOnPointerDown = 0;
@@ -162,6 +162,7 @@ function onReady(__stage) {
   
   				// EVENTS
   
+  				const container = __stage.container;
   				container.style.touchAction = 'none';
   				container.addEventListener( 'pointerdown', onPointerDown );
   
@@ -230,7 +231,7 @@ function onReady(__stage) {
   
   			//
   
-  			function onDocumentKeyDown( event ) {
+  			function onDocumentKeyDown( event: any ) {
   
   				if ( firstLetter ) {
   
@@ -256,7 +257,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentKeyPress( event ) {
+  			function onDocumentKeyPress( event: any ) {
   
   				const keyCode = event.which;
   
@@ -308,7 +309,7 @@ function onReady(__stage) {
   
   				textGeo.computeBoundingBox();
   
-  				const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+  				const centerOffset = - 0.5 * ( (textGeo!.boundingBox as any).max.x - (textGeo!.boundingBox as any).min.x );
   
   				textMesh1 = new THREE.Mesh( textGeo, materials );
   
@@ -349,7 +350,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -361,7 +362,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -371,7 +372,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -382,7 +383,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     group.rotation.y += ( targetRotation - group.rotation.y ) * 0.05;
     				renderer.clear();
   })

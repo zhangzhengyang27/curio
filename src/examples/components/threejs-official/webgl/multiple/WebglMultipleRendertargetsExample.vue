@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -95,7 +95,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -104,8 +104,8 @@ function onReady(__stage) {
   
 
   
-  			let renderTarget;
-  			let postScene, postCamera;
+  			let renderTarget: any;
+  			let postScene: any, postCamera: any;
   
   			const parameters = {
   				samples: 4,
@@ -206,7 +206,7 @@ function onReady(__stage) {
   
   				renderTarget.samples = parameters.samples;
   
-  				scene.traverse( function ( child ) {
+  				scene.traverse( function ( child: any ) {
   
   					if ( child.material !== undefined ) {
   

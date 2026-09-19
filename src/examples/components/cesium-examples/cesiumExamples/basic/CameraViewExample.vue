@@ -6,18 +6,18 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
 const FILE_HOST = '/external-examples/3d-file-server/'
 
-let Cesium = null
-let viewer = null
-let camera = null
-let gui = null
-let currentModel = null
-let storage = null
+let Cesium: any = null
+let viewer: any = null
+let camera: any = null
+let gui: any = null
+let currentModel: any = null
+let storage: any = null
 
 const viewerOptions = {
   animation: false,
@@ -33,7 +33,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
   camera = viewer.camera
@@ -47,7 +47,7 @@ function onReady(ctx) {
   )
 
   try {
-    storage = JSON.parse(sessionStorage.getItem('TCE_savedView'))
+    storage = JSON.parse(sessionStorage.getItem('TCE_savedView') as string)
   } catch {
     storage = null
   }
@@ -94,7 +94,7 @@ function onReady(ctx) {
   gui.add(
     {
       '恢复保存视角': () => {
-        const s = JSON.parse(sessionStorage.getItem('TCE_savedView'))
+        const s = JSON.parse(sessionStorage.getItem('TCE_savedView') as string)
         if (s && s.view) loadView(s.view)
         else alert('没有保存的视角数据')
       },
@@ -113,7 +113,7 @@ function onReady(ctx) {
   )
 }
 
-function cartesian3ToDegrees(cartesian3) {
+function cartesian3ToDegrees(cartesian3: any) {
   const cartographic = Cesium.Cartographic.fromCartesian(cartesian3)
   return {
     longitude: Cesium.Math.toDegrees(cartographic.longitude),
@@ -139,7 +139,7 @@ function saveView() {
   }
 }
 
-function loadView(view) {
+function loadView(view: any) {
   if (!view) {
     alert('没有保存的视角数据')
     return
@@ -169,7 +169,7 @@ function loadView(view) {
   }
 }
 
-function loadModel(url) {
+function loadModel(url: string) {
   if (currentModel) {
     viewer.scene.primitives.remove(currentModel)
     currentModel = null
@@ -181,7 +181,7 @@ function loadModel(url) {
     modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
       Cesium.Cartesian3.fromDegrees(139.767052, 35.681167, 0)
     ),
-  }).then((model) => {
+  }).then((model: any) => {
     currentModel = model
     viewer.scene.primitives.add(model)
     viewer.camera.flyTo({

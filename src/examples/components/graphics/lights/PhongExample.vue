@@ -4,16 +4,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-let gui = null
+let gui: any = null
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Sphere, Box, Cylinder, Torus, Mesh, Orbit, Color} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
 import { GUI } from 'lil-gui'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -22,6 +22,7 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 async function initGraphicsExample() {
   {
     class Phong {
+          [key: string]: any
           constructor(ambientLight = [0.5, 0.5, 0.5]) {
             this.ambientLight = ambientLight;
             this.directionalLights = new Set();
@@ -29,7 +30,7 @@ async function initGraphicsExample() {
             this.spotLights = new Set();
           }
     
-          addLight(light) {
+          addLight(light: any) {
             const {position, direction, color, decay, angle} = light;
             if(!position && !direction) throw new TypeError('invalid light');
             light.color = color || [1, 1, 1];
@@ -44,7 +45,7 @@ async function initGraphicsExample() {
             }
           }
     
-          removeLight(light) {
+          removeLight(light: any) {
             if(this.directionalLights.has(light)) this.directionalLights.delete(light);
             else if(this.pointLights.has(light)) this.pointLights.delete(light);
             else if(this.spotLights.has(light)) this.spotLights.delete(light);
@@ -96,7 +97,8 @@ async function initGraphicsExample() {
         }
     
         class Material {
-          constructor(reflection, specularFactor = 0, shininess = 50) {
+          [key: string]: any
+          constructor(reflection: any, specularFactor = 0, shininess = 50) {
             this.reflection = reflection;
             this.specularFactor = specularFactor;
             this.shininess = shininess;
@@ -127,7 +129,7 @@ async function initGraphicsExample() {
           color: [1, 0.5, 1],
         });
     
-        const canvas = gContainer.value.querySelector('canvas');
+        const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
           canvas,
           width: 512,
@@ -342,23 +344,23 @@ async function initGraphicsExample() {
           reflection3: '#008000',
           reflection4: '#FF0000',
         };
-        gui.addColor(palette, 'light').onChange((val) => {
+        gui.addColor(palette, 'light').onChange((val: any) => {
           const color = new Color(val);
           program1.uniforms.ambientLight.value = color;
           program2.uniforms.ambientLight.value = color;
           program3.uniforms.ambientLight.value = color;
           program4.uniforms.ambientLight.value = color;
         });
-        gui.addColor(palette, 'reflection1').onChange((val) => {
+        gui.addColor(palette, 'reflection1').onChange((val: any) => {
           program1.uniforms.materialReflection.value = new Color(val);
         });
-        gui.addColor(palette, 'reflection2').onChange((val) => {
+        gui.addColor(palette, 'reflection2').onChange((val: any) => {
           program2.uniforms.materialReflection.value = new Color(val);
         });
-        gui.addColor(palette, 'reflection3').onChange((val) => {
+        gui.addColor(palette, 'reflection3').onChange((val: any) => {
           program3.uniforms.materialReflection.value = new Color(val);
         });
-        gui.addColor(palette, 'reflection4').onChange((val) => {
+        gui.addColor(palette, 'reflection4').onChange((val: any) => {
           program4.uniforms.materialReflection.value = new Color(val);
         });
   }

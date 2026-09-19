@@ -216,11 +216,12 @@
   <router-view />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useThemeStore } from './stores/useThemeStore.js'
-import { useExampleFilters } from './examples/composables/useExampleFilters.js'
+import type { LocationQueryRaw } from 'vue-router'
+import { useThemeStore } from './stores/useThemeStore'
+import { useExampleFilters } from './examples/composables/useExampleFilters'
 
 const themeStore = useThemeStore()
 const route = useRoute()
@@ -231,7 +232,7 @@ const { techList, ensureRegistryLoaded } = useExampleFilters()
 const preloadExamplesRegistry = ensureRegistryLoaded
 
 const showExamplesDropdown = ref(false)
-const examplesDropdownRef = ref(null)
+const examplesDropdownRef = ref<HTMLElement | null>(null)
 const exampleSearch = ref('')
 const exampleTechs = computed(() => techList.value.filter(t => t.key !== 'all'))
 const isExamplesRoute = computed(() => route.path === '/examples' || route.path.startsWith('/examples/'))
@@ -243,7 +244,8 @@ onMounted(() => {
 })
 
 watch(() => route.query.search, val => {
-  exampleSearch.value = val || ''
+  // ?search= 重复出现时是数组；join(',') 与原数组隐式 ToString 赋给 input 的结果一致
+  exampleSearch.value = Array.isArray(val) ? val.join(',') : (val ?? '')
 }, { immediate: true })
 
 function toggleExamplesDropdown() {
@@ -252,14 +254,14 @@ function toggleExamplesDropdown() {
   showExamplesDropdown.value = !showExamplesDropdown.value
 }
 
-function navigateToExamples(tech) {
-  const query = { tech }
+function navigateToExamples(tech: string) {
+  const query: LocationQueryRaw = { tech }
   if (exampleSearch.value.trim()) query.search = exampleSearch.value.trim()
   router.push({ path: '/examples', query })
   showExamplesDropdown.value = false
 }
 
-let searchTimer = null
+let searchTimer: ReturnType<typeof setTimeout> | null = null
 function updateSearchQuery() {
   if (searchTimer) clearTimeout(searchTimer)
   searchTimer = setTimeout(() => {
@@ -274,8 +276,8 @@ function updateSearchQuery() {
   }, 300)
 }
 
-function onClickOutside(e) {
-  if (examplesDropdownRef.value && !examplesDropdownRef.value.contains(e.target)) {
+function onClickOutside(e: MouseEvent) {
+  if (examplesDropdownRef.value && !examplesDropdownRef.value.contains(e.target as Node)) {
     showExamplesDropdown.value = false
   }
 }

@@ -5,14 +5,14 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import * as THREE from 'three'
 import { UVsDebug } from 'three/examples/jsm/utils/UVsDebug.js'
 
 const containerRef = ref(null)
 
-function test(container, name, geometry) {
+function test(container: any, name: any, geometry: any) {
   const d = document.createElement('div')
   d.innerHTML = '<h3>' + name + '</h3>'
   d.appendChild(UVsDebug(geometry))
@@ -22,7 +22,7 @@ function test(container, name, geometry) {
 onMounted(() => {
   if (!containerRef.value) return
 
-  const points = []
+  const points: any[] = []
   for (let i = 0; i < 10; i++) {
     points.push(new THREE.Vector2(Math.sin(i * 0.2) * 15 + 50, (i - 5) * 2))
   }

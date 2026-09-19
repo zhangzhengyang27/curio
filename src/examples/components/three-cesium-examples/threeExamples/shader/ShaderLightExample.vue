@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,13 +18,13 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
   const controls = stageCtx.controls
 
-  let fakeLights = []
+  let fakeLights: any[] = []
   const clock = new THREE.Clock()
   
   init()
@@ -36,11 +36,11 @@ function onReady(stageCtx) {
       createFakeLights()
   }
   
-  function createGlowTexture(color) {
+  function createGlowTexture(color: any) {
       const canvas = document.createElement('canvas')
       canvas.width = 256
       canvas.height = 256
-const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
+const ctx = canvas.getContext("2d")!;const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
       gradient.addColorStop(0, color)
       gradient.addColorStop(0.3, color.replace('1)', '0.6)'))
       gradient.addColorStop(0.6, color.replace('1)', '0.2)'))
@@ -54,7 +54,7 @@ const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(12
       return texture
   }
   
-  function createFakeLight(position, color, size) {
+  function createFakeLight(position: any, color: any, size: any) {
       const group = new THREE.Group()
   
       const glowTexture = createGlowTexture(color)

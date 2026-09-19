@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - GLTFLoader + <a href=\"https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_variants\" target=\"_blank\" rel=\"noopener\">KHR_materials_variants</a><br />\n\t\t\t<a href=\"https://github.com/pushmatrix/glTF-Sample-Models/tree/master/2.0/MaterialsVariantsShoe\" target=\"_blank\" rel=\"noopener\">Materials Variants Shoe</a> by\n\t\t\t<a href=\"https://github.com/Shopify\" target=\"_blank\" rel=\"noopener\">Shopify, Inc</a><br />\n\t\t\t<a href=\"https://hdrihaven.com/hdri/?h=quarry_01\" target=\"_blank\" rel=\"noopener\">Quarry</a> from <a href=\"https://hdrihaven.com/\" target=\"_blank\" rel=\"noopener\">HDRI Haven</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -86,12 +86,12 @@ async function onReady(__stage) {
   							// https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_variants
   							const parser = gltf.parser;
   							const variantsExtension = gltf.userData.gltfExtensions[ 'KHR_materials_variants' ];
-  							const variants = variantsExtension.variants.map( ( variant ) => variant.name );
+  							const variants = variantsExtension.variants.map( ( variant: any ) => variant.name );
   							const variantsCtrl = gui.add( state, 'variant', variants ).name( 'Variant' );
   
   							selectVariant( scene, parser, variantsExtension, state.variant );
   
-  							variantsCtrl.onChange( ( value ) => selectVariant( scene, parser, variantsExtension, value ) );
+  							variantsCtrl.onChange( ( value: any ) => selectVariant( scene, parser, variantsExtension, value ) );
   
   							render();
   
@@ -118,11 +118,11 @@ async function onReady(__stage) {
   			
   
   
-  			function selectVariant( scene, parser, extension, variantName ) {
+  			function selectVariant( scene: any, parser: any, extension: any, variantName: any ) {
   
-  				const variantIndex = extension.variants.findIndex( ( v ) => v.name.includes( variantName ) );
+  				const variantIndex = extension.variants.findIndex( ( v: any ) => v.name.includes( variantName ) );
   
-  				scene.traverse( async ( object ) => {
+  				scene.traverse( async ( object: any ) => {
   
   					if ( ! object.isMesh || ! object.userData.gltfExtensions ) return;
   
@@ -137,7 +137,7 @@ async function onReady(__stage) {
   					}
   
   					const mapping = meshVariantDef.mappings
-  						.find( ( mapping ) => mapping.variants.includes( variantIndex ) );
+  						.find( ( mapping: any ) => mapping.variants.includes( variantIndex ) );
   
   					if ( mapping ) {
   

@@ -2,11 +2,11 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/04-矩阵变换/jsm/Utils.js'
 
-function createTRSMatrix(tx, ty, angle, sx, sy) {
+function createTRSMatrix(tx: number, ty: number, angle: number, sx: number, sy: number) {
   const cos = Math.cos(angle)
   const sin = Math.sin(angle)
   // 列主序矩阵：M = T * R * S
@@ -18,8 +18,8 @@ function createTRSMatrix(tx, ty, angle, sx, sy) {
   ])
 }
 
-async function onReady({ canvas, addUpdateCallback }) {
-  const gl = canvas.getContext('webgl')
+async function onReady({ canvas, addUpdateCallback }: { canvas: HTMLCanvasElement; addUpdateCallback: (fn: () => void) => void }) {
+  const gl = canvas.getContext("webgl")!!!
 
   const vsSource = `
     attribute vec4 a_Position;
@@ -46,14 +46,14 @@ async function onReady({ canvas, addUpdateCallback }) {
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
 
-  const a_Position = gl.getAttribLocation(gl.program, 'a_Position')
+  const a_Position = gl.getAttribLocation((gl as any).program, 'a_Position')
   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
   gl.enableVertexAttribArray(a_Position)
 
-  const u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix')
+  const u_ModelMatrix = gl.getUniformLocation((gl as any).program, 'u_ModelMatrix')
 
-  addUpdateCallback((time) => {
-    const t = time * 0.001
+  addUpdateCallback(() => {
+    const t = performance.now() * 0.001
     const tx = Math.sin(t) * 0.5
     const ty = Math.cos(t) * 0.3
     const angle = t

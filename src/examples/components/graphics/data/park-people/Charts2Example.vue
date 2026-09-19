@@ -9,15 +9,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -32,11 +32,11 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const container = gContainer.value.querySelector('#container')
-  const square = gContainer.value.querySelector('#square')
-  const sections = gContainer.value.querySelector('#sections')
-  const garden = gContainer.value.querySelector('#garden')
-  const playground = gContainer.value.querySelector('#playground')
+  const container = gContainer.value!.querySelector('#container')
+  const square = gContainer.value!.querySelector('#square')
+  const sections = gContainer.value!.querySelector('#sections')
+  const garden = gContainer.value!.querySelector('#garden')
+  const playground = gContainer.value!.querySelector('#playground')
   await loadScript("/graphics/data/park-people/spritejs.js");
   await loadScript("/graphics/assets/external/index.js");
   {
@@ -45,7 +45,7 @@ async function initGraphicsExample() {
           const data = await (await fetch('data.json')).json();
           // group data
     
-          function count(d, dataset) {
+          function count(d: any, dataset: any) {
             let place;
             if(d.x < 300 && d.y < 300) {
               place = 'square';
@@ -75,7 +75,7 @@ async function initGraphicsExample() {
             return dataset;
           }
     
-          function groupData(data) {
+          function groupData(data: any) {
             const dataset = {};
     
             for(let i = 0; i < data.length; i++) {

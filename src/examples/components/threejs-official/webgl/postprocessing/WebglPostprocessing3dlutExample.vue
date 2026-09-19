@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -32,6 +32,8 @@ import { LUT3dlLoader } from 'three/examples/jsm/loaders/LUT3dlLoader.js';
 import { LUTImageLoader } from 'three/examples/jsm/loaders/LUTImageLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
+let gui: any = null
+
 const props = defineProps({
   example: {
     type: Object,
@@ -40,7 +42,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - 3D LUTs<br />\n\t\t\tBattle Damaged Sci-fi Helmet by\n\t\t\t<a href=\"https://sketchfab.com/theblueturtle_\" target=\"_blank\" rel=\"noopener\">theblueturtle_</a><br />\n\t\t\t<a href=\"https://hdrihaven.com/hdri/?h=royal_esplanade\" target=\"_blank\" rel=\"noopener\">Royal Esplanade</a> from <a href=\"https://hdrihaven.com/\" target=\"_blank\" rel=\"noopener\">HDRI Haven</a><br />\n\t\t\tLUTs from <a href=\"https://www.rocketstock.com/free-after-effects-templates/35-free-luts-for-color-grading-videos/\">RocketStock</a>, <a href=\"https://www.freepresets.com/product/free-luts-cinematic/\">FreePresets.com</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -68,8 +70,7 @@ function onReady(__stage) {
   				'NightLUT': null
   			};
   
-  			let gui;
-  
+    
   			let composer, lutPass;
   
   			
@@ -109,7 +110,7 @@ function onReady(__stage) {
   						new LUTCubeLoader()
   							.load( 'luts/' + name, function ( result ) {
   
-  								lutMap[ name ] = result;
+  								(lutMap as any)[ name ] = result;
   
   							} );
   
@@ -118,7 +119,7 @@ function onReady(__stage) {
   						new LUTImageLoader()
   							.load( `luts/${name}.png`, function ( result ) {
   
-  								lutMap[ name ] = result;
+  								(lutMap as any)[ name ] = result;
   
   							} );
   
@@ -127,7 +128,7 @@ function onReady(__stage) {
   						new LUT3dlLoader()
   							.load( 'luts/' + name, function ( result ) {
   
-  								lutMap[ name ] = result;
+  								(lutMap as any)[ name ] = result;
   
   							} );
   
@@ -157,7 +158,7 @@ function onReady(__stage) {
   				controls.update();
   
   				gui = new GUI();
-  				gui.width = 350;
+  				(gui as any).width = 350;
   				gui.add( params, 'enabled' );
   				gui.add( params, 'lut', Object.keys( lutMap ) );
   				gui.add( params, 'intensity' ).min( 0 ).max( 1 );
@@ -171,11 +172,11 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
-    lutPass.enabled = params.enabled && Boolean( lutMap[ params.lut ] );
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
+    lutPass.enabled = params.enabled && Boolean( (lutMap as any)[ params.lut ] );
     				lutPass.intensity = params.intensity;
-    				if ( lutMap[ params.lut ] ) {
-    					const lut = lutMap[ params.lut ];
+    				if ( (lutMap as any)[ params.lut ] ) {
+    					const lut = (lutMap as any)[ params.lut ];
     					lutPass.lut = lut.texture3D;
     				}
     				composer.render();

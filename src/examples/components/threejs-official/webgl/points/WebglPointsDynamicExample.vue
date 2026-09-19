@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -27,6 +27,7 @@ import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
 import { FocusShader } from 'three/examples/jsm/shaders/FocusShader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+let mesh: any;
 
 const props = defineProps({
   example: {
@@ -36,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl dynamic particles + postprocessing<br/>\n\t\t\tmodels by <a href=\"http://sketchup.google.com/3dwarehouse/details?mid=2c6fd128fca34052adc5f5b98d513da1\" target=\"_blank\" rel=\"noopener\">Reallusion</a>\n\t\t\t<a href=\"http://sketchup.google.com/3dwarehouse/details?mid=f526cc4abf7cb68d76cab47c765b7255\" target=\"_blank\" rel=\"noopener\">iClone</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -50,11 +51,11 @@ function onReady(__stage) {
   
   
   
-  			let parent;
+  			let parent: any;
   
-  			const meshes = [], clonemeshes = [];
+  			const meshes: any = [], clonemeshes: any = [];
   
-  			let composer, effectFocus;
+  			let composer: any, effectFocus;
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -148,11 +149,11 @@ function onReady(__stage) {
   
   			
   
-  			function combineBuffer( model, bufferName ) {
+  			function combineBuffer( model: any, bufferName: any ) {
   
   				let count = 0;
   
-  				model.traverse( function ( child ) {
+  				model.traverse( function ( child: any ) {
   
   					if ( child.isMesh ) {
   
@@ -168,7 +169,7 @@ function onReady(__stage) {
   
   				let offset = 0;
   
-  				model.traverse( function ( child ) {
+  				model.traverse( function ( child: any ) {
   
   					if ( child.isMesh ) {
   
@@ -185,13 +186,13 @@ function onReady(__stage) {
   
   			}
   
-  			function createMesh( positions, scene, scale, x, y, z, color ) {
+  			function createMesh( positions: any, scene: any, scale: any, x: any, y: any, z: any, color: any ) {
   
   				const geometry = new THREE.BufferGeometry();
   				geometry.setAttribute( 'position', positions.clone() );
   				geometry.setAttribute( 'initialPosition', positions.clone() );
   
-  				geometry.attributes.position.setUsage( THREE.DynamicDrawUsage );
+  				( geometry.attributes.position as THREE.BufferAttribute ).setUsage( THREE.DynamicDrawUsage );
   
   				const clones = [
   
@@ -231,7 +232,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     let delta = 10 * timer.getDelta();

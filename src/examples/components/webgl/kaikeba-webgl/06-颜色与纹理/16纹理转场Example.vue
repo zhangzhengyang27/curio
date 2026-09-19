@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import Track from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Track.js'
 import {imgPromise, initShaders} from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Utils.js'
@@ -26,7 +26,7 @@ const fragmentShader = `precision mediump float;
       gl_FragColor=mix(o,p,u_Ratio);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -34,7 +34,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
@@ -49,10 +49,10 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           0.4, -0.8, 1, 0,
       ]);
   
-      let n = 0
+      let n: number = 0
       let len = 5
       const obj = {ratio: 0}
-      let track = null
+      let track: any = null
   
       const rect = new Poly({
           gl,
@@ -98,7 +98,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           })
       }
   
-      function changeImg(...imgs) {
+      function changeImg(...imgs: any[]) {
           obj.ratio = 0
   
           rect.maps = {

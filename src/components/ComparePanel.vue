@@ -30,17 +30,18 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useEarthStore } from '../stores/useEarthStore'
+import type { EarthGroupWithMeshes } from '../three/layers/BaseLayer'
 
 const earthStore = useEarthStore()
-const chartRef = ref(null)
-let chartInstance = null
+const chartRef = ref<HTMLCanvasElement | null>(null)
+let chartInstance: import('chart.js').Chart | null = null
 
 const compareList = computed(() => earthStore.compareCountries)
 
-function remove(name) {
+function remove(name: string) {
   earthStore.toggleCompare(name)
 }
 
@@ -55,13 +56,13 @@ async function renderChart() {
   if (chartInstance) chartInstance.destroy()
 
   // 找到每个对比国家的mesh获取GDP
-  const labels = []
-  const gdpData = []
-  const colors = []
+  const labels: string[] = []
+  const gdpData: number[] = []
+  const colors: string[] = []
 
   compareList.value.forEach(name => {
     labels.push(name)
-    const mesh = earthStore.earthGroup?.meshArr?.find(m => m.name === name)
+    const mesh = (earthStore.earthGroup as EarthGroupWithMeshes | null)?.meshArr?.find(m => m.name === name)
     const gdp = mesh?.gdp ? mesh.gdp / 1000000000000 : 0
     gdpData.push(parseFloat(gdp.toFixed(2)))
     colors.push(getColor(name))
@@ -116,7 +117,7 @@ const barColors = [
   'rgba(255, 102, 178, 0.7)'
 ]
 
-function getColor(name) {
+function getColor(name: string) {
   const idx = compareList.value.indexOf(name)
   return barColors[idx % barColors.length]
 }

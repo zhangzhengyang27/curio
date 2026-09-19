@@ -15,10 +15,11 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+let group: any;
 
 const props = defineProps({
   example: {
@@ -28,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> raycaster - sprite<br>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -37,7 +38,7 @@ function onReady(__stage) {
   
   
   
-  		let selectedObject = null;
+  		let selectedObject: any = null;
   		const raycaster = new THREE.Raycaster();
   		const pointer = new THREE.Vector2();
   
@@ -105,7 +106,7 @@ function onReady(__stage) {
   
   		
   
-  		function onPointerMove( event ) {
+  		function onPointerMove( event: any ) {
   
   			if ( selectedObject ) {
   

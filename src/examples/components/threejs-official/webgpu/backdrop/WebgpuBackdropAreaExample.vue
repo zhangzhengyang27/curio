@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Backdrop Area</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,7 +40,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let mixer, timer;
+  			let mixer: any, timer;
   
   			
   
@@ -138,7 +138,7 @@ function onReady(__stage) {
   
   				// gui
   
-  				const materials = {
+  				const materials: any = {
   					'blurred': blurredBlur,
   					'depth': depthMaterial,
   					'checker': checkerMaterial,
@@ -151,7 +151,7 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Scene settings' );
   				gui.add( box.scale, 'x', 0.1, 2, 0.01 ).name( 'box scale x' );
   				gui.add( box.scale, 'y', 0.1, 2, 0.01 ).name( 'box scale y' );
-  				gui.add( options, 'material', Object.keys( materials ) ).onChange( name => {
+  				gui.add( options, 'material', Object.keys( materials ) ).onChange( (name: any) => {
   
   					box.material = materials[ name ];
   
@@ -162,7 +162,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

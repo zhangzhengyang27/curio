@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,11 +17,11 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let cloudsStage = null
+let Cesium: any = null
+let viewer: any = null
+let cloudsStage: any = null
 
-let state = null
+let state: any = null
 
 const cloudProfile = {
   maxDistance: 6000000.0,
@@ -64,11 +64,11 @@ const QUALITY_PRESETS = {
 }
 const CLOUD_QUALITY = QUALITY_PRESETS.Low
 
-function toNormalizedColor(rgb) {
+function toNormalizedColor(rgb: any) {
   return new Cesium.Cartesian3(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255)
 }
 
-function updateCloudRuntime(deltaSeconds) {
+function updateCloudRuntime(deltaSeconds: number) {
   state.time += deltaSeconds * cloudProfile.windSpeed * 0.2
   const rad = Cesium.Math.toRadians(cloudProfile.windAngle)
   state.windDir = new Cesium.Cartesian3(Math.cos(rad), Math.sin(rad), 0.0)
@@ -122,7 +122,7 @@ function createLoadingElement() {
   }
 }
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
         animation: false,
         baseLayerPicker: false,
@@ -140,7 +140,7 @@ function viewerOptions(Cesium) {
     }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -148,8 +148,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   state = {
@@ -199,13 +199,13 @@ function onReady(ctx) {
 
 function mountCloudPass() {
   const loader = document.getElementById("volumetricCloudLoading")
-  if (loader) loader.style.opacity = 1
+  if (loader) (loader as HTMLElement).style.opacity = "1"
 
   cloudsStage = createVolumetricCloudStage()
   viewer.scene.postProcessStages.add(cloudsStage)
 
   setTimeout(() => {
-    if (loader) loader.style.opacity = 0
+    if (loader) (loader as HTMLElement).style.opacity = "0"
   }, 600)
 }
   

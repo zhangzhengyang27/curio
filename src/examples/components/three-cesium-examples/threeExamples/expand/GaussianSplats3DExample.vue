@@ -5,7 +5,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d'
 
@@ -17,7 +17,7 @@ const props = defineProps({
 })
 
 const containerRef = ref(null)
-let viewer = null
+let viewer: any = null
 
 onMounted(() => {
   viewer = new GaussianSplats3D.Viewer({

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { gsap } from "gsap";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -18,13 +18,21 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class LoveParticlesWorld {
+    params: any
+    clock: any
+    pointLight: any
+    colorSchemes: any
+    heart: any
+    stars: any
+    glow: any
+
     constructor() {
       // 基本参数设置 - 增大粒子数量和默认尺寸
       this.params = {
@@ -63,11 +71,11 @@ function onReady(ctx) {
       scene.add(this.pointLight);
     }
     
-    createGradientTexture(colors) {
+    createGradientTexture(colors: any) {
       const canvas = document.createElement('canvas');
       canvas.width = 2;
       canvas.height = 256;
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext('2d')!;
       const gradient = context.createLinearGradient(0, 0, 0, 256);
       gradient.addColorStop(0, colors[0].getStyle());
       gradient.addColorStop(1, colors[1].getStyle());
@@ -361,7 +369,7 @@ function onReady(ctx) {
     
     // 简化的事件处理
     addEvents() {
-      window.addEventListener('mousemove', (e) => {
+      window.addEventListener('mousemove', (e: any) => {
         const x = e.clientX / window.innerWidth - 0.5;
         const y = e.clientY / window.innerHeight - 0.5;
         

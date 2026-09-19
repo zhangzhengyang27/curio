@@ -20,7 +20,7 @@
         class="action-btn header-copy"
         :disabled="!activeSection?.code"
         :title="copiedIndex === activeIndex ? '已复制' : '复制代码'"
-        @click="copySection(activeIndex)"
+        @click="$emit('copy', activeIndex)"
       >
         <svg
           v-if="copiedIndex !== activeIndex"
@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // CodeDrawer 的标题栏：纯展示组件。
 // 复制与关闭都以事件抛给父组件，本组件不碰剪贴板、不持有 activeIndex 状态。
 defineProps({

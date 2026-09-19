@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -48,10 +48,10 @@ function onReady(ctx) {
   
       renderer.setScissorTest( true )
   
-      renderer.setScissor( 0, 0, initialWidth, box.offsetHeight );
+      renderer.setScissor( 0, 0, initialWidth, document.body.offsetHeight );
       composer_original.render()
-  
-      renderer.setScissor( initialWidth, 0, ctx.container?.clientWidth - initialWidth, box.offsetHeight );
+
+      renderer.setScissor( initialWidth, 0, ctx.container?.clientWidth - initialWidth, document.body.offsetHeight );
       composer_bloom.render();
   
       renderer.setScissorTest( false )
@@ -68,7 +68,7 @@ function onReady(ctx) {
   }
   
   /* 分割滑块方法 */
-  function createSlider(box, initialWidth, callback) {
+  function createSlider(box: HTMLElement, initialWidth: number, callback: (v: number) => void) {
   
       const minLeftWidth = 50;
       const minRightWidth = 100;

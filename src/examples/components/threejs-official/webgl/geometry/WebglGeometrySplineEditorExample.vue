@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - geometry - catmull spline editor"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,9 +48,9 @@ function onReady(__stage) {
   
   			let container;
   
-  			const splineHelperObjects = [];
+  			const splineHelperObjects: any = [];
   			let splinePointsLength = 4;
-  			const positions = [];
+  			const positions: any = [];
   			const point = new THREE.Vector3();
   
   			const raycaster = new THREE.Raycaster();
@@ -59,11 +59,11 @@ function onReady(__stage) {
   			const onDownPosition = new THREE.Vector2();
   
   			const geometry = new THREE.BoxGeometry( 20, 20, 20 );
-  			let transformControl;
+  			let transformControl: any;
   
   			const ARC_SEGMENTS = 200;
   
-  			const splines = {};
+  			const splines: Record<string, any> = {};
   
   			const params = {
   				uniform: true,
@@ -125,7 +125,7 @@ function onReady(__stage) {
   				gui = new GUI();
   
   				gui.add( params, 'uniform' ).onChange( render );
-  				gui.add( params, 'tension', 0, 1 ).step( 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'tension', 0, 1 ).step( 0.01 ).onChange( function ( value: any ) {
   
   					splines.uniform.tension = value;
   					updateSplineOutline();
@@ -146,7 +146,7 @@ function onReady(__stage) {
   
   				transformControl = new TransformControls( camera, renderer.domElement );
   				transformControl.addEventListener( 'change', render );
-  				transformControl.addEventListener( 'dragging-changed', function ( event ) {
+  				transformControl.addEventListener( 'dragging-changed', function ( event: any ) {
   
   					controls.enabled = ! event.value;
   
@@ -185,7 +185,7 @@ function onReady(__stage) {
   				const geometry = new THREE.BufferGeometry();
   				geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array( ARC_SEGMENTS * 3 ), 3 ) );
   
-  				let curve = new THREE.CatmullRomCurve3( positions );
+  				let curve: any = new THREE.CatmullRomCurve3( positions );
   				curve.curveType = 'catmullrom';
   				curve.mesh = new THREE.Line( geometry.clone(), new THREE.LineBasicMaterial( {
   					color: 0xff0000,
@@ -228,7 +228,7 @@ function onReady(__stage) {
   
   			}
   
-  			function addSplineObject( position ) {
+  			function addSplineObject( position?: any ) {
   
   				const material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
   				const object = new THREE.Mesh( geometry, material );
@@ -326,7 +326,7 @@ function onReady(__stage) {
   
   			}
   
-  			function load( new_positions ) {
+  			function load( new_positions: any ) {
   
   				while ( new_positions.length > positions.length ) {
   
@@ -359,14 +359,14 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				onDownPosition.x = event.clientX;
   				onDownPosition.y = event.clientY;
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				onUpPosition.x = event.clientX;
   				onUpPosition.y = event.clientY;
@@ -380,7 +380,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;

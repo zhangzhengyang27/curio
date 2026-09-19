@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener noreferrer\">three.js</a> - Scalable Ambient Occlusion (SAO)<br/>\n\t\t\tshader by <a href=\"http://clara.io\">Ben Houston</a> / Post-processing pass by <a href=\"http://ludobaka.github.io\">Ludobaka</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,8 +48,8 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let composer, renderPass, saoPass;
-  			let group;
+  			let composer: any, renderPass, saoPass;
+  			let group: any;
   
   			
   
@@ -136,7 +136,7 @@ function onReady(__stage) {
   					'Default': SAOPass.OUTPUT.Default,
   					'SAO Only': SAOPass.OUTPUT.SAO,
   					'Normal': SAOPass.OUTPUT.Normal
-  				} ).onChange( function ( value ) {
+  				} ).onChange( function ( value: any ) {
   
   					saoPass.params.output = value;
   
@@ -159,7 +159,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     const timer = performance.now();

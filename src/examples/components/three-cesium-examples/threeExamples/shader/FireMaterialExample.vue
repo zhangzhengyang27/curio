@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -40,7 +40,7 @@ function onReady(ctx) {
           magnitude: { type: 'f', value: 2.5 },
           lacunarity: { type: 'f', value: 3.0 },
           gain: { type: 'f', value: 0.6 }
-        },
+        } as any,
         vertexShader: `
           varying vec3 vWorldPos;
           void main() {
@@ -190,7 +190,7 @@ function onReady(ctx) {
   }
   
   // 创建Fire类来替代React组件
-  class Fire extends THREE.Mesh {
+  class Fire extends THREE.Mesh<THREE.BoxGeometry, FireMaterial> {
     constructor(scale = 7) {
       const geometry = new THREE.BoxGeometry();
       const material = new FireMaterial();
@@ -209,14 +209,14 @@ function onReady(ctx) {
       this.material.uniforms.color.value = new THREE.Color(0xeeeeee);
     }
     
-    update(time) {
+    update(time: any) {
       // 更新材质
       this.updateMatrixWorld();
       this.material.uniforms.invModelMatrix.value.copy(this.matrixWorld).invert();
       this.material.uniforms.time.value = time;
     }
   
-    setTexture(texture) {
+    setTexture(texture: any) {
       texture.magFilter = texture.minFilter = THREE.LinearFilter;
       texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
       this.material.uniforms.fireTex.value = texture;

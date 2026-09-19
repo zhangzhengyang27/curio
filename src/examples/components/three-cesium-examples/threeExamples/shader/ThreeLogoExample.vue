@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -89,15 +89,15 @@ function onReady(ctx) {
   
   gui = new GUI()
   const color1Debug = { value: '#dbb8ff' }
-  gui.addColor(color1Debug, 'value').name('Color 1').onChange((v) => {
+  gui.addColor(color1Debug, 'value').name('Color 1').onChange((v: any) => {
       material.uniforms.color1.value.set(v)
   })
   const color2Debug = { value: '#98d0fb' }
-  gui.addColor(color2Debug, 'value').name('Color 2').onChange((v) => {
+  gui.addColor(color2Debug, 'value').name('Color 2').onChange((v: any) => {
       material.uniforms.color2.value.set(v)
   })
   const color3Debug = { value: '#fdebbf' }
-  gui.addColor(color3Debug, 'value').name('Color 3').onChange((v) => {
+  gui.addColor(color3Debug, 'value').name('Color 3').onChange((v: any) => {
       material.uniforms.color3.value.set(v)
   })
   

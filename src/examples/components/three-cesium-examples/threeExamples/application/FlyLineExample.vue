@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,13 +20,13 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  let clock;
+  let clock: any = null;
 
   function initRender() {
       clock = new THREE.Clock();
@@ -49,8 +49,8 @@ function onReady(ctx) {
       scene.add(hemisphereLight1);
   }
   
-  var linegroup = [];
-  function addflyline(minx,maxx,colorf,colort){
+  var linegroup: any[] = [];
+  function addflyline(minx: number, maxx: number, colorf: any, colort: any){
       var colorf = colorf||{
           r:0.0,
           g:0.0,
@@ -75,20 +75,20 @@ function onReady(ctx) {
       flyline.material.uniforms.colorf = {
           type:'v3',
           value:new THREE.Vector3(colorf.r,colorf.g,colorf.b)
-      };
+      } as any;
       flyline.material.uniforms.colort = {
           type:'v3',
           value:new THREE.Vector3(colort.r,colort.g,colort.b)            
-      };
+      } as any;
   
-      flyline.minx = minx;
-      flyline.maxx = maxx;
+      (flyline as any).minx = minx;
+      (flyline as any).maxx = maxx;
       linegroup.push(flyline);
       scene.add(flyline);
   }
   
   // 添加地球
-  var globeMesh;
+  var globeMesh: any;
   function addglobe() {
       var axesHelper = new THREE.AxesHelper( 400 );
       scene.add( axesHelper );
@@ -152,7 +152,7 @@ function onReady(ctx) {
       }`
   
       //配置着色器里面的attribute变量的值
-      var attributes = {};
+      var attributes: Record<string, any> = {};
       //配置着色器里面的uniform变量的值
       var uniforms = {
           time: {type: 'f', value: -70.0},
@@ -161,7 +161,7 @@ function onReady(ctx) {
   
       var meshMaterial = new THREE.ShaderMaterial({
           uniforms: uniforms,
-          defaultAttributeValues : attributes,
+          defaultAttributeValues : attributes as any,
           vertexShader: vertShader,
           fragmentShader: fragShader,
           transparent: true
@@ -171,7 +171,7 @@ function onReady(ctx) {
   }
   
   //初始化性能插件
-  var stats;
+  var stats: any;
   function initStats() {
       stats = new Stats();
       ctx.overlay?.appendChild(stats.dom)
@@ -227,13 +227,13 @@ function onReady(ctx) {
         stats.update();
   })
   
-  function randomNum(minNum,maxNum){ 
+  function randomNum(minNum: number, maxNum: number){ 
       switch(arguments.length){ 
           case 1: 
-              return parseInt(Math.random()*minNum+1,10); 
+              return parseInt((Math.random()*minNum+1) as any,10); 
           break; 
           case 2: 
-              return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+              return parseInt((Math.random()*(maxNum-minNum+1)+minNum) as any,10); 
           break; 
               default: 
                   return 0; 

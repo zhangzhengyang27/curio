@@ -14,13 +14,16 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader.js';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
+
+let group: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - materials - clearcoat"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,7 +49,7 @@ function onReady(__stage) {
   			let container, stats;
   
   
-  			let particleLight;
+  			let particleLight: any;
   
   
   			
@@ -213,7 +216,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const timer = Date.now() * 0.00025;
     				particleLight.position.x = Math.sin( timer * 7 ) * 3;

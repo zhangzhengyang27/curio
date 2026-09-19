@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Transmission</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -135,7 +135,7 @@ function onReady(__stage) {
   				gui.addColor( params, 'color' )
   					.onChange( function () {
   
-  						material.color.set( params.color );
+  						(material as any)!.color.set( params.color );
   
   					} );
   
@@ -226,8 +226,8 @@ function onReady(__stage) {
   				canvas.height = 2;
   
   				const context = canvas.getContext( '2d' );
-  				context.fillStyle = 'white';
-  				context.fillRect( 0, 1, 2, 1 );
+  				context!.fillStyle = 'white';
+  				context!.fillRect( 0, 1, 2, 1 );
   
   				return canvas;
   

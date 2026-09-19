@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,8 +17,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
 
@@ -36,7 +36,7 @@ const viewerOptions = {
 
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -44,8 +44,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const url = GLOBAL_CONFIG.getLayerUrl()
@@ -66,7 +66,7 @@ async function onReady(ctx) {
   viewer.flyTo(dataSource)
   
   // 点击变色
-  viewer.screenSpaceEventHandler.setInputAction((event) => {
+  viewer.screenSpaceEventHandler.setInputAction((event: any) => {
   
       const pickedObject = viewer.scene.pick(event.position)
   
@@ -79,7 +79,7 @@ async function onReady(ctx) {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
   
   // 创建 面
-  async function setGeoPolygon(viewer, source, params = {}) {
+  async function setGeoPolygon(viewer: any, source: any, params: any = {}) {
   
       const dataSource = await Cesium.GeoJsonDataSource.load(source, {
   
@@ -95,7 +95,7 @@ async function onReady(ctx) {
   
       })
   
-      dataSource.changeMaterial = (params) => dataSource.entities.values.forEach(entity => {
+      dataSource.changeMaterial = (params: any) => dataSource.entities.values.forEach((entity: any) => {
   
           entity.polygon.material = Cesium.Color.fromCssColorString(params.fillColor || 'blue').withAlpha(params.fillOpacity || 0.5)
   

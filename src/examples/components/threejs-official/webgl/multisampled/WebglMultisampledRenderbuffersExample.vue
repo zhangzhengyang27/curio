@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Multisampled Renderbuffers<br />\n\t\t\tLeft: WebGLRenderTarget, Right: WebGLRenderTarget (multisampled)."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -149,7 +149,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const halfWidth = container.offsetWidth / 2;
     				if ( params.animate ) {
     					group.rotation.y += 0.002;

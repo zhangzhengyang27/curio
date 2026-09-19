@@ -7,10 +7,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -112,16 +112,16 @@ function onReady(stageCtx) {
   // 生成纹理
   const c = document.createElement('canvas')
   c.width = c.height = 32
-const ctx = c.getContext("2d");const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16)
+const ctx = c.getContext("2d")!;const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16)
   g.addColorStop(0, 'rgba(200,235,255,1)')
   g.addColorStop(1, 'rgba(120,190,255,0)')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, 32, 32)
-  uniforms.map = { value: new THREE.CanvasTexture(c) }
+  ;(uniforms as any).map = { value: new THREE.CanvasTexture(c) }
   
   function buildGeometry() {
       const geo = new THREE.BufferGeometry()
-      const positions = [], sizes = [], phases = [], randomVels = []
+      const positions: any[] = [], sizes: any[] = [], phases: any[] = [], randomVels: any[] = []
       
       for (let i = 0; i < config.count; i++) {
           positions.push(0, 0, 0)
@@ -146,13 +146,13 @@ const ctx = c.getContext("2d");const g = ctx.createRadialGradient(16, 16, 0, 16,
   
   // GUI
   gui = new GUI()
-  gui.add(config, 'nozzleX', -5, 5).name('喷嘴X').onChange(v => uniforms.nozzlePos.value.x = v)
-  gui.add(config, 'nozzleY', 0, 10).name('喷嘴高度').onChange(v => uniforms.nozzlePos.value.y = v)
-  gui.add(config, 'velocityX', -5, 5).name('水平速度').onChange(v => uniforms.velocity.value.x = v)
-  gui.add(config, 'velocityY', 0, 5).name('上升速度').onChange(v => uniforms.velocity.value.y = v)
-  gui.add(config, 'spread', 0, 3).name('扩散').onChange(v => uniforms.spread.value = v)
-  gui.add(config, 'gravity', 0, 20).name('重力').onChange(v => uniforms.gravity.value = v)
-  gui.add(config, 'lifeTime', 0.5, 5).name('生命周期').onChange(v => uniforms.lifeTime.value = v)
+  gui.add(config, 'nozzleX', -5, 5).name('喷嘴X').onChange((v: any) => uniforms.nozzlePos.value.x = v)
+  gui.add(config, 'nozzleY', 0, 10).name('喷嘴高度').onChange((v: any) => uniforms.nozzlePos.value.y = v)
+  gui.add(config, 'velocityX', -5, 5).name('水平速度').onChange((v: any) => uniforms.velocity.value.x = v)
+  gui.add(config, 'velocityY', 0, 5).name('上升速度').onChange((v: any) => uniforms.velocity.value.y = v)
+  gui.add(config, 'spread', 0, 3).name('扩散').onChange((v: any) => uniforms.spread.value = v)
+  gui.add(config, 'gravity', 0, 20).name('重力').onChange((v: any) => uniforms.gravity.value = v)
+  gui.add(config, 'lifeTime', 0.5, 5).name('生命周期').onChange((v: any) => uniforms.lifeTime.value = v)
   gui.add(config, 'count', 500, 8000, 500).name('粒子数').onChange(() => {
       particles.geometry.dispose()
       particles.geometry = buildGeometry()

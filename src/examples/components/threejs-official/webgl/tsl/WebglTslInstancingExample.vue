@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { WebGLNodesHandler } from 'three/examples/jsm/tsl/WebGLNodesHandler.js';
@@ -28,6 +28,9 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 import { MeshPhongNodeMaterial } from 'three/webgpu';
 import { sin, time, vec3, positionWorld } from 'three/tsl';
 
+let material: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -36,7 +39,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - instancing - performance"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,7 +51,7 @@ function onReady(__stage) {
   		
   
   
-  		let container, stats, gui, guiStatsEl;
+  		let container, stats, gui, guiStatsEl: any;
   
   
   		// gui
@@ -73,9 +76,9 @@ function onReady(__stage) {
   
   		function clean() {
   
-  			const meshes = [];
+  			const meshes: any = [];
   
-  			scene.traverse( function ( object ) {
+  			scene.traverse( function ( object: any ) {
   
   				if ( object.isMesh ) meshes.push( object );
   
@@ -99,7 +102,7 @@ function onReady(__stage) {
   			const quaternion = new THREE.Quaternion();
   			const scale = new THREE.Vector3();
   
-  			return function ( matrix ) {
+  			return function ( matrix: any ) {
   
   				position.x = Math.random() * 40 - 20;
   				position.y = Math.random() * 40 - 20;
@@ -159,7 +162,7 @@ function onReady(__stage) {
   
   		}
   
-  		function makeInstanced( geometry ) {
+  		function makeInstanced( geometry: any ) {
   
   			const matrix = new THREE.Matrix4();
   			const mesh = new THREE.InstancedMesh( geometry, material, api.count );
@@ -186,7 +189,7 @@ function onReady(__stage) {
   
   		}
   
-  		function makeMerged( geometry ) {
+  		function makeMerged( geometry: any ) {
   
   			const geometries = [];
   			const matrix = new THREE.Matrix4();
@@ -217,7 +220,7 @@ function onReady(__stage) {
   
   		}
   
-  		function makeNaive( geometry ) {
+  		function makeNaive( geometry: any ) {
   
   			const matrix = new THREE.Matrix4();
   
@@ -316,13 +319,13 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.update();
   })
   
   		//
   
-  		function getGeometryByteLength( geometry ) {
+  		function getGeometryByteLength( geometry: any ) {
   
   			let total = 0;
   
@@ -339,7 +342,7 @@ function onReady(__stage) {
   		}
   
   		// Source: https://stackoverflow.com/a/18650828/1314762
-  		function formatBytes( bytes, decimals ) {
+  		function formatBytes( bytes: any, decimals: any ) {
   
   			if ( bytes === 0 ) return '0 bytes';
   

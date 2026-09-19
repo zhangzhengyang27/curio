@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mix, range, normalWorld, oscSine, time } from 'three/tsl';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Instancing</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -38,7 +38,7 @@ async function onReady(__stage) {
 
   
   
-  			let mesh;
+  			let mesh: any;
   			const amount = parseInt( window.location.search.slice( 1 ) ) || 10;
   			const count = Math.pow( amount, 3 );
   			const dummy = new THREE.Object3D();
@@ -96,7 +96,7 @@ async function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( mesh ) {
     					const time = Date.now() * 0.001;

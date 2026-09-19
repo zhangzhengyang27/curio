@@ -2,11 +2,11 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
 
-async function onReady({ canvas, addUpdateCallback }) {
+async function onReady({ canvas, addUpdateCallback }: { canvas: HTMLCanvasElement; addUpdateCallback: (fn: (time?: any) => void) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js')
 
   const vertexstring = `
@@ -24,11 +24,11 @@ async function onReady({ canvas, addUpdateCallback }) {
     }
   `
 
-  const webgl = canvas.getContext('webgl')
+  const webgl = canvas.getContext('webgl')!!
   webgl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight)
 
-  const vsshader = webgl.createShader(webgl.VERTEX_SHADER)
-  const fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)
+  const vsshader = webgl.createShader(webgl.VERTEX_SHADER)!
+  const fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!
   webgl.shaderSource(vsshader, vertexstring)
   webgl.shaderSource(fsshader, fragmentstring)
   webgl.compileShader(vsshader)
@@ -39,7 +39,7 @@ async function onReady({ canvas, addUpdateCallback }) {
   webgl.attachShader(program, fsshader)
   webgl.linkProgram(program)
   webgl.useProgram(program)
-  webgl.program = program
+  ;(webgl as any).program = program
 
   const arr = [
     0, 0, 0, 1,
@@ -50,16 +50,16 @@ async function onReady({ canvas, addUpdateCallback }) {
     0.5, 0.05, 0, 1,
   ]
   const pointPosition = new Float32Array(arr)
-  const aPsotion = webgl.getAttribLocation(webgl.program, 'a_position')
+  const aPsotion = webgl.getAttribLocation((webgl as any).program, 'a_position')
   const triangleBuffer = webgl.createBuffer()
   webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer)
   webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW)
   webgl.enableVertexAttribArray(aPsotion)
   webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 4 * 4, 0)
 
-  const uniformMatrix = webgl.getUniformLocation(webgl.program, 'u_formMatrix')
+  const uniformMatrix = webgl.getUniformLocation((webgl as any).program, 'u_formMatrix')
 
-  addUpdateCallback((time) => {
+  addUpdateCallback((time: any) => {
     const t = time * 0.001
     const model = glMatrix.mat4.create()
 

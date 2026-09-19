@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl environment mapping example<br/>\n\t\t\tEquirectangular Map by <a href=\"http://www.flickr.com/photos/jonragnarsson/2294472375/\" target=\"_blank\" rel=\"noopener\">J&oacute;n Ragnarsson</a>."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -117,7 +117,7 @@ function onReady(__stage) {
   				gui = new GUI( { width: 300 } );
   				gui.add( params, 'Cube' );
   				gui.add( params, 'Equirectangular' );
-  				gui.add( params, 'Refraction' ).onChange( function ( value ) {
+  				gui.add( params, 'Refraction' ).onChange( function ( value: any ) {
   
   					if ( value ) {
   
@@ -149,7 +149,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( params.backgroundRotationX ) {
     					scene.backgroundRotation.x += 0.001;
     				}

@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl2 - volume - cloud"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -62,12 +62,12 @@ function onReady(__stage) {
   				canvas.height = 32;
   
   				const context = canvas.getContext( '2d' );
-  				const gradient = context.createLinearGradient( 0, 0, 0, 32 );
+  				const gradient = context!.createLinearGradient( 0, 0, 0, 32 );
   				gradient.addColorStop( 0.0, '#014a84' );
   				gradient.addColorStop( 0.5, '#0561a0' );
   				gradient.addColorStop( 1.0, '#437ab6' );
-  				context.fillStyle = gradient;
-  				context.fillRect( 0, 0, 1, 32 );
+  				context!.fillStyle = gradient;
+  				context!.fillRect( 0, 0, 1, 32 );
   
   				const skyMap = new THREE.CanvasTexture( canvas );
   				skyMap.colorSpace = THREE.SRGBColorSpace;
@@ -300,7 +300,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     mesh.material.uniforms.cameraPos.value.copy( camera.position );
     				mesh.rotation.y = - performance.now() / 7500;
     				mesh.material.uniforms.frame.value ++;

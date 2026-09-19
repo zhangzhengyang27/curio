@@ -4,13 +4,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import {subtract, cross} from '@/examples/jsm-compat/graphics/common/lib/math/functions/Vec2Func.js'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -18,7 +18,7 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 async function initGraphicsExample() {
   {
-    function isCross(p1, p2, p3, p4) {
+    function isCross(p1: any, p2: any, p3: any, p4: any) {
           const v1 = subtract([], p4, p3);
           const v2 = subtract([], p1, p3);
           const v3 = subtract([], p2, p3);
@@ -29,7 +29,7 @@ async function initGraphicsExample() {
           return z1 * z2 <= 0;
         }
     
-        function isPathIntersection(points) {
+        function isPathIntersection(points: any) {
           const len = points.length;
     
           for(let i = 0; i < len - 1; i++) {
@@ -49,7 +49,7 @@ async function initGraphicsExample() {
           return false;
         }
     
-        function draw(context, points) {
+        function draw(context: any, points: any) {
           context.clearRect(0, 0, context.canvas.width, context.canvas.height);
           const d = `M${points.join('L')}`;
           const color = isPathIntersection(points) ? 'red' : 'blue';
@@ -58,16 +58,16 @@ async function initGraphicsExample() {
           context.stroke(path);
         }
     
-        const canvas = gContainer.value.querySelector('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!;
         ctx.lineWidth = 5;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
-        const points = [];
+        const points: any[] = [];
     
         canvas.addEventListener('click', (evt) => {
           const {x, y} = evt;
-          const {x: x0, y: y0} = evt.target.getBoundingClientRect();
+          const {x: x0, y: y0} = (evt.target as HTMLElement).getBoundingClientRect();
           points.push([x - x0, y - y0]);
           draw(ctx, points);
         });

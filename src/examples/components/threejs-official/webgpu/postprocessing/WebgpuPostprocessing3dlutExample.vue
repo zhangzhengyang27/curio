@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mix, mul, oneMinus, positionLocal, smoothstep, texture, time, rotateUV, Fn, uv, vec2, vec3, vec4, pass, texture3D, uniform, renderOutput } from 'three/tsl';
@@ -35,7 +35,8 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>3D LUTs</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -51,7 +52,7 @@ async function onReady(__stage) {
   				intensity: 1
   			};
   
-  			const lutMap = {
+  			const lutMap: Record<string, any> = {
   				'Bourbon 64.CUBE': null,
   				'Chemical 168.CUBE': null,
   				'Clayton 33.CUBE': null,
@@ -63,7 +64,7 @@ async function onReady(__stage) {
   				'NightLUT': null
   			};
   
-  			let renderPipeline, lutPass;
+  			let renderPipeline: any, lutPass: any;
   
   			init();
   
@@ -119,7 +120,7 @@ async function onReady(__stage) {
   					ASSET_HOST + 'models/gltf/coffeeMug.glb',
   					( gltf ) => {
   
-          				gltf.scene.getObjectByName( 'baked' ).material.map.anisotropy = 8;
+          				( gltf.scene.getObjectByName( 'baked' ) as any ).material.map.anisotropy = 8;
   						scene.add( gltf.scene );
   
   					}
@@ -244,7 +245,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     lutPass.intensityNode.value = params.intensity;
     				if ( lutMap[ params.lut ] ) {
     					const lut = lutMap[ params.lut ];

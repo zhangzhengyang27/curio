@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { BufferAttribute, BufferGeometry, Mesh, MeshBasicMaterial } from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene } = ctx
 
   const vertices = new Float32Array([0, 1, 0, -1, -1, 0, 1, -1, 0])

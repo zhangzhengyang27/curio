@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - exporter - ktx2"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,7 +46,7 @@ async function onReady(__stage) {
 
 
 
-			let exporter, mesh, renderTarget, dataTexture;
+			let exporter: any, mesh: any, renderTarget: any, dataTexture: any;
   
   			const params = {
   				target: 'pmrem',
@@ -193,7 +193,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function saveArrayBuffer( buffer, filename ) {
+  			function saveArrayBuffer( buffer: any, filename: any ) {
   
   				const blob = new Blob( [ buffer ], { type: 'image/ktx2' } );
   				const link = document.createElement( 'a' );

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,13 +46,21 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 🐘优雅永不过时 改编自 https://juejin.cn/post/7431590701496533030
   class DynamicWallMaterialProperty {
-      constructor(options) {
+    _definitionChanged: any
+    _color: any
+    _colorSubscription: any
+    color: any
+    duration: any
+    trailImage: any
+    _time: any
+    _viewer: any
+      constructor(options: any) {
           // 默认参数设置
           this._definitionChanged = new Cesium.Event() // 材质定义变更事件
           this._color = undefined // 颜色属性
@@ -64,10 +72,10 @@ function onReady(ctx) {
           this._viewer = options.viewer // Cesium 视图对象
       }
       // 返回材质类型
-      getType(time) {
+      getType(time: any) {
           return MaterialType // 返回材质类型名称
       }
-      getValue(time, result) {
+      getValue(time: any, result: any) {
           if (!Cesium.defined(result)) {
               result = {} // 如果结果未定义，则初始化为空对象
           }
@@ -88,7 +96,7 @@ function onReady(ctx) {
           return result
       }
       // 比较两个 DynamicWallMaterialProperty 对象是否相等
-      equals(other) {
+      equals(other: any) {
           return (
               this === other || // 判断是否为同一对象
               (other instanceof DynamicWallMaterialProperty && // 判断是否为 DynamicWallMaterialProperty 的实例
@@ -97,7 +105,7 @@ function onReady(ctx) {
       }
   }
   
-  function _getDirectionWallShader(options) {
+  function _getDirectionWallShader(options: any) {
       if (options && options.get) {
           // 定义了一个函数 czm_getMaterial，输入参数为 materialInput，返回值为 czm_material 类型的材质。
           var materail = `czm_material czm_getMaterial(czm_materialInput materialInput)
@@ -157,7 +165,7 @@ function onReady(ctx) {
       color: Cesium.createPropertyDescriptor('color'), // 创建颜色属性描述符
   })
   
-  var MaterialType = 'wallType' + parseInt(Math.random() * 1000)
+  var MaterialType = 'wallType' + parseInt((Math.random() * 1000) as any)
   // 将材质添加到缓存中
   Cesium.Material._materialCache.addMaterial(MaterialType, {
       fabric: {
@@ -174,7 +182,7 @@ function onReady(ctx) {
               direction: '+',
           }),
       },
-      translucent: function (material) {
+      translucent: function (material: any) {
           return true // 确定材质是否是半透明的
       },
   })

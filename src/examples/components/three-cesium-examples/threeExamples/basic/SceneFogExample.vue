@@ -2,13 +2,13 @@
   <ExampleScene
     camera="perspective"
     :camera-position="[0, 20, 60]"
-    :clear-color="color || 0xffffff"
+    :clear-color="0xffffff"
     antialias
     @ready="onReady"
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -59,7 +59,7 @@ function onReady(ctx) {
   
   })
   
-  function getFog(type, color) {
+  function getFog(type: any, color?: any) {
   
       if (type === 'linear') return new THREE.Fog(color || 0xffffff, 10, 800)
   
@@ -69,7 +69,7 @@ function onReady(ctx) {
   
   const folder = new GUI()
   
-  let fogFolder = null
+  let fogFolder: any = null
   
   const fogOption = { type: scene.fog instanceof THREE.FogExp2 ? 'exp2' : 'linear', enable: !!scene.fog }
   
@@ -93,7 +93,7 @@ function onReady(ctx) {
   
   fogOption.enable && setFogFolder(fogOption.type)
   
-  function setFogFolder(type) {
+  function setFogFolder(type: any) {
   
       if (fogFolder) {
   
@@ -107,7 +107,7 @@ function onReady(ctx) {
   
       fogFolder = folder.addFolder(type + '雾')
   
-      fogFolder.addColor(scene.fog, 'color').name('颜色').onChange((v) => renderer.setClearColor(v))
+      fogFolder.addColor(scene.fog, 'color').name('颜色').onChange((v: any) => renderer.setClearColor(v))
   
       if (type === 'linear') {
   

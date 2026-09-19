@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
@@ -37,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - light probe volume (Sponza)<br/>\n\t\t\tWASD to move, mouse to look"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -51,10 +51,10 @@ async function onReady(__stage) {
   			const MODEL_INDEX_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
   			const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
   
-  			let timer;
-  			let probes = null, probesHelper = null;
+  			let timer: any;
+  			let probes: any = null, probesHelper: any = null;
   			let modelSize = null;
-  			let dirLight = null, sky = null;
+  			let dirLight: any = null, sky: any = null;
   			
   			const sun = new THREE.Vector3();
   
@@ -66,9 +66,6 @@ async function onReady(__stage) {
   
   
   				timer = new THREE.Timer();
-  
-  				
-  
   				camera.rotation.set( 1.6505, - 1.5008, 1.6507 );
   
   				
@@ -117,7 +114,7 @@ async function onReady(__stage) {
   				const modelURL = await getSponzaModelURL();
   				const gltf = await loader.loadAsync( modelURL );
   				const model = gltf.scene;
-  				const embeddedLights = [];
+  				const embeddedLights: any[] = []
   
   				model.traverse( ( child ) => {
   
@@ -126,7 +123,7 @@ async function onReady(__stage) {
   						child.castShadow = true;
   						child.receiveShadow = true;
   
-  					} else if ( child.isLight ) {
+  					} else if ( (child as any).isLight ) {
   
   						embeddedLights.push( child );
   
@@ -148,7 +145,7 @@ async function onReady(__stage) {
   				const targetY = modelCenter.y + modelSize.y * 0.2;
   				const lightBaseDistance = Math.max( modelSize.x, modelSize.z );
   				const probeFar = Math.max( modelSize.x, modelSize.y, modelSize.z ) * 2.0;
-  				let rebakeTimer = null;
+  				let rebakeTimer: any = null
   				let isBaking = false;
   				let bakeQueued = false;
   
@@ -283,7 +280,7 @@ async function onReady(__stage) {
   				updateLightPosition();
   
   				gui = new GUI();
-  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value ) => {
+  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value: any ) => {
   
   					if ( probes ) probes.visible = value;
   
@@ -301,13 +298,13 @@ async function onReady(__stage) {
   					scheduleRebake();
   
   				} );
-  				gui.add( params, 'lightIntensity', 0, 100, 0.1 ).name( 'Light Intensity' ).onChange( ( value ) => {
+  				gui.add( params, 'lightIntensity', 0, 100, 0.1 ).name( 'Light Intensity' ).onChange( ( value: any ) => {
   
   					dirLight.intensity = value;
   					scheduleRebake();
   
   				} );
-  				gui.add( params, 'shadows' ).name( 'Shadows' ).onChange( ( value ) => {
+  				gui.add( params, 'shadows' ).name( 'Shadows' ).onChange( ( value: any ) => {
   
   					setShadowsEnabled( value );
   					scheduleRebake();
@@ -319,12 +316,12 @@ async function onReady(__stage) {
   				gui.add( params, 'countZ', 2, 16, 1 ).name( 'Probes Z' ).onChange( scheduleRebake );
   				gui.add( params, 'bounces', 0, 2, 1 ).name( 'Bounces' ).onChange( scheduleRebake );
   
-  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value ) => {
+  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value: any ) => {
   
   					if ( probesHelper ) probesHelper.visible = value;
   
   				} );
-  				gui.add( params, 'probeSize', 0.05, 2.0, 0.05 ).name( 'Probe Size' ).onChange( ( value ) => {
+  				gui.add( params, 'probeSize', 0.05, 2.0, 0.05 ).name( 'Probe Size' ).onChange( ( value: any ) => {
   
   					if ( probesHelper ) {
   
@@ -357,7 +354,7 @@ async function onReady(__stage) {
   
   				const response = await fetch( MODEL_INDEX_URL );
   				const models = await response.json();
-  				const sponzaInfo = models.find( ( model ) => model.name === 'Sponza' );
+  				const sponzaInfo = models.find( ( model: any ) => model.name === 'Sponza' );
   
   				if ( ! sponzaInfo ) {
   
@@ -379,7 +376,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function setShadowsEnabled( enabled ) {
+  			function setShadowsEnabled( enabled: any ) {
   
   				if ( ! renderer || ! dirLight ) return;
   
@@ -390,7 +387,7 @@ async function onReady(__stage) {
   
   			
   
-  			function animate( timestamp ) {
+  			function animate( timestamp: any ) {
   
   				timer.update( timestamp );
   				controls.update( timer.getDelta() );

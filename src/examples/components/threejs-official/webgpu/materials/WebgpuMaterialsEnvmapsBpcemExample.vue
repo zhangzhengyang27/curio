@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { bumpMap, float, getParallaxCorrectNormal, pmremTexture, reflectVector, texture, uniform, vec3 } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>BPCEM</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,9 +42,9 @@ async function onReady(__stage) {
 
   
   
-  			let cubeCamera;
+  			let cubeCamera: any;
   
-  			let groundPlane, wallMat;
+  			let groundPlane: any, wallMat;
   
   			
   
@@ -192,7 +192,7 @@ async function onReady(__stage) {
   				const params = {
   					'box projected': true
   				};
-  				gui.add( params, 'box projected' ).onChange( ( value ) => {
+  				gui.add( params, 'box projected' ).onChange( ( value: any ) => {
   
   					groundPlane.material = ( value ) ? boxProjectedMat : defaultMat;
   

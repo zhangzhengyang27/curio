@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -43,7 +43,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl postprocessing example<br/>\n\t\t\t<a href=\"https://casual-effects.com/data/\" target=\"_blank\" rel=\"noopener\">Lee Perry-Smith</a> head"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -59,9 +59,9 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let composerScene, composer1, composer2, composer3, composer4;
+  			let composerScene: any, composer1: any, composer2: any, composer3: any, composer4: any;
   
-  			let cameraOrtho, cameraPerspective, sceneModel, sceneBG, mesh, directionalLight;
+  			let cameraOrtho, cameraPerspective, sceneModel, sceneBG, mesh: any, directionalLight;
   
   			const width = (__stage.container?.clientWidth || window.innerWidth) || 2;
   			const height = (__stage.container?.clientHeight || window.innerHeight) || 2;
@@ -266,7 +266,7 @@ function onReady(__stage) {
   
   			
   
-  			function createMesh( geometry, scene, scale ) {
+  			function createMesh( geometry: any, scene: any, scale: any ) {
   
   				const diffuseMap = new THREE.TextureLoader().load( ASSET_HOST + 'models/gltf/LeePerrySmith/Map-COL.jpg' );
   				diffuseMap.colorSpace = THREE.SRGBColorSpace;
@@ -292,7 +292,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     const time = Date.now() * 0.0004;

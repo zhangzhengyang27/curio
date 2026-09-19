@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import * as TSL from 'three/tsl';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Shadertoy</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,6 +40,8 @@ async function onReady(__stage) {
   
   
   			class ShaderToyNode extends THREE.Node {
+	mainImage: any;
+
   
   				constructor() {
   
@@ -49,7 +51,7 @@ async function onReady(__stage) {
   
   				}
   
-  				transpile( glsl, iife = false ) {
+  				transpile( glsl: any, iife = false ) {
   
   					const decoder = new ShaderToyDecoder();
   
@@ -62,7 +64,7 @@ async function onReady(__stage) {
   
   				}
   
-  				parse( glsl ) {
+  				parse( glsl: any ) {
   
   					const jsCode = this.transpile( glsl, true );
   
@@ -72,7 +74,7 @@ async function onReady(__stage) {
   
   				}
   
-  				async parseAsync( glsl ) {
+  				async parseAsync( glsl: any ) {
   
   					const jsCode = this.transpile( glsl );
   
@@ -82,7 +84,7 @@ async function onReady(__stage) {
   
   				}
   
-  				setup( builder ) {
+  				setup( builder: any ) {
   
   					if ( this.mainImage === null ) {
   
@@ -133,7 +135,7 @@ async function onReady(__stage) {
   				const geometry = new THREE.PlaneGeometry( 2, 2 );
   
   				const material = new THREE.MeshBasicNodeMaterial();
-  				material.colorNode = TSL.oscSine( TSL.time.mul( .3 ) ).mix( shaderToy1Node, shaderToy2Node );
+  				material.colorNode = TSL.oscSine( TSL.time.mul( .3 ) ).mix( shaderToy1Node as any, shaderToy2Node as any );
   
   				const quad = new THREE.Mesh( geometry, material );
   				scene.add( quad );

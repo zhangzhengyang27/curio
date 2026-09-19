@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - voxel painter - webgl<br>\n\t\t\t<strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -36,13 +36,12 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let plane;
-  			let pointer, raycaster, isShiftDown = false;
+  			let plane: any;
+  			let pointer: any, raycaster: any, isShiftDown = false;
+  			let rollOverMesh: any, rollOverMaterial: any;
+  			let cubeGeo: any, cubeMaterial: any;
   
-  			let rollOverMesh, rollOverMaterial;
-  			let cubeGeo, cubeMaterial;
-  
-  			const objects = [];
+  			const objects: any[] = []
   
   			
   			render();
@@ -117,7 +116,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.set( ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1, - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1 );
   
@@ -138,7 +137,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				pointer.set( ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1, - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1 );
   
@@ -181,7 +180,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentKeyDown( event ) {
+  			function onDocumentKeyDown( event: any ) {
   
   				switch ( event.keyCode ) {
   
@@ -191,7 +190,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentKeyUp( event ) {
+  			function onDocumentKeyUp( event: any ) {
   
   				switch ( event.keyCode ) {
   

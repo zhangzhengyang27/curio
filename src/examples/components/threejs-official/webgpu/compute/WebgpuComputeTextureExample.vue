@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Texture</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -35,6 +35,8 @@ function onReady(__stage) {
 
   
   
+  			async function init() { } // init body flattened into onReady below
+
   			init().then( render );
   
   
@@ -62,7 +64,7 @@ function onReady(__stage) {
   
   				// create function
   
-  				const computeTexture = Fn( ( { storageTexture } ) => {
+  				const computeTexture = Fn( ( { storageTexture }: any ) => {
   
   					const posX = instanceIndex.mod( width );
   					const posY = instanceIndex.div( width );
@@ -89,7 +91,7 @@ function onReady(__stage) {
   
   				// compute
   
-  				const computeNode = computeTexture( { storageTexture } ).compute( width * height );
+  				const computeNode = (computeTexture as any)( { storageTexture } ).compute( width * height );
   
   				const material = new THREE.MeshBasicNodeMaterial( { color: 0x00ff00 } );
   				material.colorNode = texture( storageTexture );

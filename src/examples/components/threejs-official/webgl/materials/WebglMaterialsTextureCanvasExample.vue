@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - canvas as a texture\n\t\t\t<div>click and draw in the white box"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -35,7 +35,7 @@ function onReady(__stage) {
   
   
   
-  			let mesh, material;
+  			let mesh, material: any;
   			const drawStartPos = new THREE.Vector2();
   
   			
@@ -77,8 +77,8 @@ function onReady(__stage) {
   
   				// draw white background
   
-  				drawingContext.fillStyle = '#FFFFFF';
-  				drawingContext.fillRect( 0, 0, 128, 128 );
+  				drawingContext!.fillStyle = '#FFFFFF';
+  				drawingContext!.fillRect( 0, 0, 128, 128 );
   
   				// set canvas as material.map (this could be done to any map, bump, displacement etc.)
   
@@ -116,7 +116,7 @@ function onReady(__stage) {
   
   			}
   
-  			function draw( drawContext, x, y ) {
+  			function draw( drawContext: any, x: any, y: any ) {
   
   				drawContext.moveTo( drawStartPos.x, drawStartPos.y );
   				drawContext.strokeStyle = '#000000';
@@ -131,7 +131,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     mesh.rotation.x += 0.01;
     				mesh.rotation.y += 0.01;
   })

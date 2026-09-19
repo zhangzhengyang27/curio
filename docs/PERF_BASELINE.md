@@ -87,7 +87,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
    分组默认 `includeDependenciesRecursively: true`，把 three-globe 的依赖
    （`@tweenjs/tween`、`d3-scale` 等**首页自己也在用的库**）一并吞进该 chunk；
    首页的 Tween/d3-scale 被绑定到那份拷贝，被迫下载整个 three-globe。
-   修复：该组显式关闭递归捕获（`vite.config.js` 内有完整注释）。
+   修复：该组显式关闭递归捕获（`vite.config.ts` 内有完整注释）。
 2. **CSS2DRenderer 与 three-globe 被搅进同一 chunk**：
    首页 `useLabels` 只需要 jsm-compat 的两个 CSS2D 类，但 Rolldown 默认分块把它们
    与 three-globe 模块合并。修复：CSS2DRenderer 单文件独立成 `vendor-css2d` 组。
@@ -120,7 +120,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 「首屏从 539 涨到 2999 无任何闸门变红」的原因。当前约定：
 
 - 数字打印在 CI 日志里，**每次发布前人工对比一次**本文档基线；
-- 涉及 `vite.config.js` 分组的改动，必须用第 1 节口径实测首页传输并更新本文档；
+- 涉及 `vite.config.ts` 分组的改动，必须用第 1 节口径实测首页传输并更新本文档；
 - 若将来要加自动断言，建议只对「JS 传输量」设宽阈值（如 ≤ 650 KB），图片/数据另议。
 
 给库新增 `codeSplitting.groups` 条目前，务必确认：它是否真的出现在首页/常用页的

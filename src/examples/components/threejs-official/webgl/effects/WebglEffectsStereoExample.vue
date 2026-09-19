@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { StereoEffect } from 'three/examples/jsm/effects/StereoEffect.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - effects - stereo. skybox by <a href=\"http://www.zfight.com/\" target=\"_blank\" rel=\"noopener\">Jochum Skoglund</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -39,7 +39,7 @@ function onReady(__stage) {
   
   			let container, effect;
   
-  			const spheres = [];
+  			const spheres: any = [];
   
   			let mouseX = 0, mouseY = 0;
   
@@ -97,7 +97,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX ) * 0.01;
   				mouseY = ( event.clientY - windowHalfY ) * 0.01;
@@ -106,7 +106,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = 0.0001 * Date.now();
     				camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y += ( - mouseY - camera.position.y ) * .05;

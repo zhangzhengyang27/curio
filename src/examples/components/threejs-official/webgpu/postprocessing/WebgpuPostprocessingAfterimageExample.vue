@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { instancedBufferAttribute, uniform, mod, pass, texture, float, time, vec2, vec3, vec4, sin, cos } from 'three/tsl';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>After Image</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -39,8 +39,8 @@ function onReady(__stage) {
   
   
   
-  			let particles;
-  			let renderPipeline, afterImagePass, scenePass;
+  			let particles: any;
+  			let renderPipeline: any, afterImagePass: any, scenePass: any;
   
   			const params = {
   
@@ -98,18 +98,18 @@ function onReady(__stage) {
   
   				const material = new THREE.SpriteNodeMaterial( { blending: THREE.AdditiveBlending, depthWrite: false } );
   
-  				const localTime = instancedBufferAttribute( timeAttribute ).add( time.mul( 0.1 ) );
+  				const localTime = ( instancedBufferAttribute( timeAttribute ) as any ).add( time.mul( 0.1 ) );
   				const modTime = mod( localTime, 1.0 );
   				const accTime = modTime.mul( modTime );
   
   				const angle = accTime.mul( 40.0 );
   				const pulse = vec2( sin( angle ).mul( 20.0 ), cos( angle ).mul( 20.0 ) );
-  				const pos = instancedBufferAttribute( positionAttribute );
+  				const pos: any = instancedBufferAttribute( positionAttribute );
   
   				const animated = vec3( pos.x.mul( accTime ).add( pulse.x ), pos.y.mul( accTime ).add( pulse.y ), pos.z.mul( accTime ).mul( 1.75 ) );
   				const fAlpha = modTime.oneMinus().mul( 2.0 );
   
-  				material.colorNode = texture( sprite ).mul( vec4( instancedBufferAttribute( colorAttribute ), fAlpha ) );
+  				material.colorNode = texture( sprite ).mul( vec4( instancedBufferAttribute( colorAttribute ) as any, fAlpha ) );
   				material.positionNode = animated;
   				material.scaleNode = float( 2 );
   
@@ -156,7 +156,7 @@ function onReady(__stage) {
   			}
   
   
-  			function getRandomPointOnSphere( r, v ) {
+  			function getRandomPointOnSphere( r: any, v: any ) {
   
   				const angle = Math.random() * Math.PI * 2;
   				const u = Math.random() * 2 - 1;
@@ -173,7 +173,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				particles.rotation.z = time * 0.001;
   

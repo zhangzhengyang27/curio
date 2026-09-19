@@ -15,12 +15,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+let spotLight: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Spot Light</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -88,7 +91,7 @@ function onReady(__stage) {
   					texture.generateMipmaps = false;
   					texture.colorSpace = THREE.SRGBColorSpace;
   
-  					textures[ filename ] = texture;
+  					(textures as any)[ filename ] = texture;
   
   				}
   
@@ -99,7 +102,7 @@ function onReady(__stage) {
   
   				spotLight = new THREE.SpotLight( 0xffffff, 100 );
   				spotLight.name = 'spotLight';
-  				spotLight.map = textures[ 'disturb.jpg' ];
+  				spotLight.map = (textures as any)[ 'disturb.jpg' ];
   				spotLight.position.set( 2.5, 5, 2.5 );
   				spotLight.angle = Math.PI / 6;
   				spotLight.penumbra = 1;
@@ -161,7 +164,7 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Settings' );
   
   				const params = {
-  					map: textures[ 'disturb.jpg' ],
+  					map: (textures as any)[ 'disturb.jpg' ],
   					color: spotLight.color.getHex(),
   					intensity: spotLight.intensity,
   					distance: spotLight.distance,
@@ -173,62 +176,62 @@ function onReady(__stage) {
   					helpers: false
   				};
   
-  				gui.add( params, 'map', textures ).onChange( function ( val ) {
+  				gui.add( params, 'map', textures ).onChange( function ( val: any ) {
   
   					spotLight.map = val;
   
   				} );
   
-  				gui.addColor( params, 'color' ).onChange( function ( val ) {
+  				gui.addColor( params, 'color' ).onChange( function ( val: any ) {
   
   					spotLight.color.setHex( val );
   
   				} );
   
-  				gui.add( params, 'intensity', 0, 500 ).onChange( function ( val ) {
+  				gui.add( params, 'intensity', 0, 500 ).onChange( function ( val: any ) {
   
   					spotLight.intensity = val;
   
   				} );
   
   
-  				gui.add( params, 'distance', 0, 20 ).onChange( function ( val ) {
+  				gui.add( params, 'distance', 0, 20 ).onChange( function ( val: any ) {
   
   					spotLight.distance = val;
   
   				} );
   
-  				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
+  				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val: any ) {
   
   					spotLight.angle = val;
   
   				} );
   
-  				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
+  				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val: any ) {
   
   					spotLight.penumbra = val;
   
   				} );
   
-  				gui.add( params, 'decay', 1, 2 ).onChange( function ( val ) {
+  				gui.add( params, 'decay', 1, 2 ).onChange( function ( val: any ) {
   
   					spotLight.decay = val;
   
   				} );
   
-  				gui.add( params, 'focus', 0, 1 ).onChange( function ( val ) {
+  				gui.add( params, 'focus', 0, 1 ).onChange( function ( val: any ) {
   
   					spotLight.shadow.focus = val;
   
   				} );
   
-  				gui.add( params, 'shadowIntensity', 0, 1 ).onChange( function ( val ) {
+  				gui.add( params, 'shadowIntensity', 0, 1 ).onChange( function ( val: any ) {
   
   					spotLight.shadow.intensity = val;
   
   				} );
   
-  				gui.add( params, 'helpers' ).onChange( function ( val ) {
+  				gui.add( params, 'helpers' ).onChange( function ( val: any ) {
   
   					spotLight.lightHelper.visible = val;
   					spotLight.shadowCameraHelper.visible = val;
@@ -240,7 +243,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() / 3000;
     				spotLight.position.x = Math.cos( time ) * 2.5;
     				spotLight.position.z = Math.sin( time ) * 2.5;

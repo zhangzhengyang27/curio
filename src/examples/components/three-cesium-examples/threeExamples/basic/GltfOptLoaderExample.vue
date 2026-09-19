@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js"
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -54,7 +54,7 @@ function onReady(ctx) {
   
       scene.add(gltf.scene)
   
-      gltf.scene.traverse(obj => {
+      gltf.scene.traverse((obj: any) => {
   
           if (obj.isMesh) {
   

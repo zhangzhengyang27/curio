@@ -7,15 +7,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -31,7 +31,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -75,12 +75,12 @@ function onReady(ctx) {
   gui.add(uniforms1.opacity, 'value', 0, 1).name('opacity')
   
   const c1Debug = { value: '#000000' }
-  gui.addColor(c1Debug, 'value').name('c1').onChange((v) => {
+  gui.addColor(c1Debug, 'value').name('c1').onChange((v: any) => {
       uniforms1.c1.value.set(v)
   })
   
   const c2Debug = { value: '#000000' }
-  gui.addColor(c2Debug, 'value').name('c2').onChange((v) => {
+  gui.addColor(c2Debug, 'value').name('c2').onChange((v: any) => {
       uniforms1.c2.value.set(v)
   })
   

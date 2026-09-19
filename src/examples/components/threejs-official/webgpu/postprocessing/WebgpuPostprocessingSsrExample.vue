@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, normalView, metalness, roughness, screenUV, color, sample, packNormalToRGB, unpackRGBToNormal, vec2, colorSpaceToWorking } from 'three/tsl';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSR</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -57,7 +57,7 @@ function onReady(__stage) {
   			enabled: true
   		};
   
-  		let model, renderPipeline, ssrPass;
+  		let model: any, renderPipeline, ssrPass: any;
   
   
   		
@@ -77,7 +77,7 @@ function onReady(__stage) {
   
   				model = gltf.scene;
   
-  				model.traverse( function ( object ) {
+  				model.traverse( function ( object: any ) {
   
   					if ( object.material ) {
   
@@ -213,9 +213,9 @@ function onReady(__stage) {
   
   			} );
   			const modelFolder = gui.addFolder( 'Model' );
-  			modelFolder.add( params, 'roughness', 0, 1 ).onChange( ( value ) => {
+  			modelFolder.add( params, 'roughness', 0, 1 ).onChange( ( value: any ) => {
   
-  				model.traverse( function ( object ) {
+  				model.traverse( function ( object: any ) {
   
   					if ( object.material ) {
   
@@ -248,7 +248,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

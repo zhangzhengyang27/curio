@@ -15,10 +15,13 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+let container: any;
+
 
 const props = defineProps({
   example: {
@@ -28,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - multiple scenes comparison<br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			let sceneL, sceneR;
+  			let sceneL: any, sceneR: any;
   
   			let sliderPos = (__stage.container?.clientWidth || window.innerWidth) / 2;
   
@@ -95,7 +98,7 @@ function onReady(__stage) {
   
   				function onPointerDown() {
   
-  					if ( event.isPrimary === false ) return;
+  					if ( (event as any)!.isPrimary === false ) return;
   
   					controls.enabled = false;
   
@@ -113,24 +116,24 @@ function onReady(__stage) {
   
   				}
   
-  				function onPointerMove( e ) {
+  				function onPointerMove( e: any ) {
   
-  					if ( event.isPrimary === false ) return;
+  					if ( (event as any)!.isPrimary === false ) return;
   
   					sliderPos = Math.max( 0, Math.min( (__stage.container?.clientWidth || window.innerWidth), e.pageX ) );
   
-  					slider.style.left = sliderPos - ( slider.offsetWidth / 2 ) + 'px';
+  					(slider as any)!.style.left = sliderPos - ( (slider as any)!.offsetWidth / 2 ) + 'px';
   
   				}
   
-  				slider.style.touchAction = 'none'; // disable touch scroll
-  				slider.addEventListener( 'pointerdown', onPointerDown );
+  				(slider as any)!.style.touchAction = 'none'; // disable touch scroll
+  				slider!.addEventListener( 'pointerdown', onPointerDown );
   
   			}
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.setScissor( 0, 0, sliderPos, (__stage.container?.clientHeight || window.innerHeight) );
     				renderer.render( sceneL, camera );
     				renderer.setScissor( sliderPos, 0, (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );

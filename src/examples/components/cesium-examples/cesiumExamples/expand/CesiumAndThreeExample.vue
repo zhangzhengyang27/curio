@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import * as THREE from 'three'
 import { TDT_TOKEN } from '@/examples/components/cesium-examples/cesiumConstants.js'
@@ -18,10 +18,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let threeRenderer = null
-let rafId = null
+let Cesium: any = null
+let viewer: any = null
+let threeRenderer: any = null
+let rafId: any = null
 
 const minWGS84 = [115.23, 39.55]
 const maxWGS84 = [116.23, 41.55]
@@ -32,7 +32,7 @@ const viewerOptions = {
   infoBox: false
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -40,8 +40,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.imageryLayers.addImageryProvider(
@@ -62,7 +62,7 @@ function onReady(ctx) {
   initThree(viewer)
 }
 
-function initThree(viewerInstance) {
+function initThree(viewerInstance: any) {
   const cesiumBox = viewerInstance.container
   const threeBox = document.createElement('div')
   Object.assign(threeBox.style, {
@@ -91,7 +91,7 @@ function initThree(viewerInstance) {
   box2.position.x += 6
   group.add(box2)
 
-  group.cesium = { minWGS84, maxWGS84 }
+  ;(group as any).cesium = { minWGS84, maxWGS84 }
   scene.add(group)
   group.scale.set(15000, 15000, 15000)
 
@@ -112,9 +112,9 @@ function initThree(viewerInstance) {
 }
 
 /* 相机同步 */
-function syncCesiumThree(group, camera, viewerInstance) {
+function syncCesiumThree(group: any, camera: any, viewerInstance: any) {
   camera.fov = Cesium.Math.toDegrees(viewerInstance.camera.frustum.fovy)
-  const cartToVec = cart => new THREE.Vector3(cart.x, cart.y, cart.z)
+  const cartToVec = (cart: any) => new THREE.Vector3(cart.x, cart.y, cart.z)
   const { minWGS84: min, maxWGS84: max } = group.cesium
 
   const center = Cesium.Cartesian3.fromDegrees((min[0] + max[0]) / 2, (min[1] + max[1]) / 2)

@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Reverse Depth Buffer</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   const renderer = __stage.renderer
@@ -36,14 +36,15 @@ async function onReady(__stage) {
   
   
   			let reversedCamera;
-  			let normalRenderer, logarithmicRenderer, reverseRenderer;
-  			let normalRenderPipeline, logarithmicRenderPipeline, reverseRenderPipeline;
-  			const meshes = [];
+  			let normalRenderer: any, logarithmicRenderer: any, reverseRenderer: any;
+  			let normalRenderPipeline: any, logarithmicRenderPipeline: any, reverseRenderPipeline: any;
+  			const meshes: any = [];
   
   			init().then( animate );
   
   
   
+			async function init() {
   				
   				camera.position.z = 12;
   
@@ -168,11 +169,12 @@ async function onReady(__stage) {
   
   				
   				onWindowResize();
+			}
   
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const now = performance.now() / 1000;
     				for ( let i = 0; i < meshes.length; i ++ ) {
     					const angle = THREE.MathUtils.degToRad( 30 );
@@ -186,6 +188,26 @@ async function onReady(__stage) {
     }
   })
   
+			function animate() {
+
+				render();
+
+			}
+
+			function onWindowResize() {
+
+				const width = (__stage.container?.clientWidth || window.innerWidth);
+				const height = (__stage.container?.clientHeight || window.innerHeight);
+
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+
+				normalRenderer.setSize( 0.33 * width, height );
+				logarithmicRenderer.setSize( 0.33 * width, height );
+				reverseRenderer.setSize( 0.33 * width, height );
+
+			}
+
   			function render() {
   
   				normalRenderPipeline.render();

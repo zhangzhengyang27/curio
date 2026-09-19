@@ -54,11 +54,11 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onUnmounted } from 'vue'
 import { VcAnalysisFlood } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
-import { getArcgisTerrainSampler } from '../../map/terrainSampler.js'
+import { getArcgisTerrainSampler } from '../../map/terrainSampler'
 
 /** 武汉长江右岸城区范围（度） */
 const AREA = [
@@ -68,11 +68,11 @@ const AREA = [
   [114.26, 30.63],
 ]
 
-const floodRef = ref(null)
+const floodRef = ref<any>(null)
 const terrainStatus = ref('地形加载中…')
 const running = ref(false)
 const waterLevel = ref(0)
-let pollTimer = null
+let pollTimer: ReturnType<typeof setInterval> | null = null
 
 const statusText = computed(() =>
   running.value ? `当前水位 ${waterLevel.value} m（0 → 150 m）` : '点击「开始」模拟水位上涨',
@@ -80,7 +80,7 @@ const statusText = computed(() =>
 
 /** 仅本页挂地形渲染（淹没分析的前提）。getArcgisTerrainSampler 单例，
  *  失败自动清缓存可重试；挂载与否不影响其它页面的椭球渲染架构 */
-async function onViewerReady(viewer) {
+async function onViewerReady(viewer: any) {
   try {
     const provider = await getArcgisTerrainSampler()
     viewer.terrainProvider = provider

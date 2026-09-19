@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { atan, cos, float, max, min, mix, PI, TWO_PI, sin, vec2, vec3, color, Fn, hash, hue, If, instanceIndex, Loop, mx_fractal_noise_float, mx_fractal_noise_vec3, pass, pcurve, storage, deltaTime, time, uv, uniform, step } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>VFX Linked Particles</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -110,7 +110,7 @@ function onReady(__stage) {
   
   				// TSL function
   				// current color from index
-  				getInstanceColor = Fn( ( [ i ] ) => {
+  				getInstanceColor = Fn( ( [ i ]: any ) => {
   
   					return hue( color( 0x0000ff ), colorOffset.add( mx_fractal_noise_float( i.toFloat().mul( .1 ), 2, 2.0, 0.5, colorVariance ) ) );
   
@@ -150,7 +150,7 @@ function onReady(__stage) {
   						0.25
   					).mul( 10.0 ).add( 1.0 );
   
-  					return getInstanceColor( instanceIndex ).mul( pulse.mul( modLife ) );
+  					return (getInstanceColor as any)( (instanceIndex as any) ).mul( pulse.mul( modLife ) );
   
   				} )();
   
@@ -291,7 +291,7 @@ function onReady(__stage) {
   						linksPositions.element( secondLinkIndex.add( 3 ) ).y.addAssign( linksWidth );
   
   						// colors are the same for all vertices of both quads
-  						const linkColor = getInstanceColor( instanceIndex );
+  						const linkColor = (getInstanceColor as any)( (instanceIndex as any) );
   
   						// store the minimum lifetime of the closest particles in the w component of colors
   						const l1 = max( 0.0, min( closestLife1, life ) ).pow( 0.8 ); // pow is here to apply a slight curve to the opacity
@@ -299,10 +299,10 @@ function onReady(__stage) {
   
   						Loop( 4, ( { i } ) => {
   
-  							linksColors.element( firstLinkIndex.add( i ) ).xyz.assign( linkColor );
-  							linksColors.element( firstLinkIndex.add( i ) ).w.assign( l1 );
-  							linksColors.element( secondLinkIndex.add( i ) ).xyz.assign( linkColor );
-  							linksColors.element( secondLinkIndex.add( i ) ).w.assign( l2 );
+  							linksColors.element( firstLinkIndex.add( (i as any) ) ).xyz.assign( linkColor );
+  							linksColors.element( firstLinkIndex.add( (i as any) ) ).w.assign( l1 );
+  							linksColors.element( secondLinkIndex.add( (i as any) ) ).xyz.assign( linkColor );
+  							linksColors.element( secondLinkIndex.add( (i as any) ) ).w.assign( l2 );
   
   						} );
   
@@ -410,7 +410,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( e ) {
+  			function onPointerMove( e: any ) {
   
   				screenPointer.x = ( e.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				screenPointer.y = - ( e.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -424,7 +424,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// compute particles
     				renderer.compute( updateParticles );

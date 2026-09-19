@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,              // 是否创建动画小器件，左下角仪表    
     baseLayerPicker: false,        // 是否显示图层选择器，右上角图层选择按钮
@@ -31,7 +31,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -39,8 +39,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 1. 隐藏Cesium Logo版权信息，保持界面简洁
@@ -106,14 +106,14 @@ function onReady(ctx) {
   // 聚合图标缓存对象，用于存储已创建的聚合图标
   // 以聚合点数量为键，图标为值
   // 避免重复创建相同数量的聚合图标，提高性能
-  const cache = {};
+  const cache: any = {};
   
   // 5. 自定义聚合样式
   // 监听聚合事件，当点被聚合时会触发此事件
   // 这个事件在每次地图视角变化导致聚合状态改变时都会触发
   // clusteredEntities: 被聚合到一起的实体数组
   // cluster: 聚合后的对象，包含聚合点的位置、标签等信息
-  clustering.clusterEvent.addEventListener((clusteredEntities, cluster) => {
+  clustering.clusterEvent.addEventListener((clusteredEntities: any, cluster: any) => {
       // 隐藏默认的标签显示（Cesium默认会显示聚合数量的标签）
       // 我们将使用自定义的billboard来显示聚合点
       cluster.label.show = false;
@@ -156,7 +156,7 @@ function onReady(ctx) {
    * @param {Number} count - 聚合点数量
    * @returns {String} DataURL格式的图片字符串
    */
-  function createClusterCanvas(size, count) {
+  function createClusterCanvas(size: any, count: any) {
       // 创建画布元素
       const canvas = document.createElement('canvas');
   
@@ -164,7 +164,7 @@ function onReady(ctx) {
       canvas.width = canvas.height = size;
   
       // 获取2D绘图上下文
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d')!;
   
       // 开始绘制路径
       ctx.beginPath();

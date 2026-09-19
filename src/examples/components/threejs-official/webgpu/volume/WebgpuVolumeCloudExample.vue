@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Cloud</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -63,7 +63,7 @@ function onReady(__stage) {
   				canvas.width = 1;
   				canvas.height = 32;
   
-  				const context = canvas.getContext( '2d' );
+  				const context = canvas.getContext( '2d' )!;
   				const gradient = context.createLinearGradient( 0, 0, 0, 32 );
   				gradient.addColorStop( 0.0, '#014a84' );
   				gradient.addColorStop( 0.5, '#0561a0' );
@@ -121,7 +121,7 @@ function onReady(__stage) {
   					threshold = float( 0.25 ),
   					opacity = float( 0.25 ),
   					steps = float( 100 )
-  				} ) => {
+  				}: any ) => {
   
   					const finalColor = vec4( 0 ).toVar();
   
@@ -159,7 +159,7 @@ function onReady(__stage) {
   				const opacity = uniform( 0.25 );
   				const steps = uniform( 100 );
   
-  				const cloud3d = transparentRaymarchingTexture( {
+  				const cloud3d = ( transparentRaymarchingTexture as any )( {
   					texture: texture3D( texture, null, 0 ),
   					range,
   					threshold,
@@ -192,7 +192,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     mesh.rotation.y = - performance.now() / 7500;
   })
   

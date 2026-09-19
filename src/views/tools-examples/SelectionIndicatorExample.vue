@@ -29,7 +29,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { VcSelectionIndicator } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -44,7 +44,7 @@ const ENTITIES = [
 const pickCount = ref(0)
 const statusText = ref('等待拾取…')
 
-function onViewerReady(viewer, Cesium) {
+function onViewerReady(viewer: any, Cesium: any) {
   ENTITIES.forEach(({ lon, lat, name }) => {
     viewer.entities.add({
       position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
@@ -67,7 +67,7 @@ function onViewerReady(viewer, Cesium) {
   })
 }
 
-function onPickEvt(picked) {
+function onPickEvt(picked: any) {
   pickCount.value++
   const name = picked?.id?.name || picked?.name || '未知目标'
   statusText.value = `第 ${pickCount.value} 次拾取：${name}`

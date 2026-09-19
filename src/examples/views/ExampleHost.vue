@@ -10,9 +10,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
-import { disposeAllGUI } from '../utils/guiTracker.js'
+import { disposeAllGUI } from '../utils/guiTracker'
 
 defineProps({
   comp: { type: [Object, Function], required: true },
@@ -24,20 +24,20 @@ const root = ref(null)
 // 示例切换 / 导航离开时，在子组件卸载前强制释放其 WebGL 上下文，
 // 防止在示例中心来回切换时累积过多 GPU 上下文（浏览器约 16 个上限，超出会报错）。
 // onBeforeUnmount 早于子组件卸载，此刻 canvas 仍在 DOM 中，可安全遍历。
-function releaseCanvas(canvas) {
+function releaseCanvas(canvas: HTMLCanvasElement) {
   try {
     const gl =
       canvas.getContext('webgl2') ||
       canvas.getContext('webgl') ||
       canvas.getContext('experimental-webgl')
-    const lose = gl && gl.getExtension('WEBGL_lose_context')
+    const lose = gl && (gl as WebGLRenderingContext).getExtension('WEBGL_lose_context')
     if (lose) lose.loseContext()
   } catch {
     /* 上下文已失效时忽略 */
   }
 }
 
-function disposeCanvasContexts(el) {
+function disposeCanvasContexts(el: Element | null | undefined) {
   if (!el || typeof el.querySelectorAll !== 'function') return
   el.querySelectorAll('canvas').forEach(releaseCanvas)
 }
@@ -45,7 +45,7 @@ function disposeCanvasContexts(el) {
 // 示例里大量用 `new GUI()` 创建面板，但多数不保存引用、也不在卸载时销毁。
 // lil-gui / dat.gui 默认把面板挂到 document.body，返回列表页时残留在页面上。
 // 这里在宿主卸载时兜底移除由这些 GUI 库创建的容器（含宿主子树内与 body 上的）。
-function disposeGUI(el) {
+function disposeGUI(el: Element | null | undefined) {
   try {
     const selectors = ['.lil-gui', '.dg.ac', '.dg.main']
     if (el && typeof el.querySelectorAll === 'function') {

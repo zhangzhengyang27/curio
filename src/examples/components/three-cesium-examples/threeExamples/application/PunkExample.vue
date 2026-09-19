@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { BoxGeometry, MeshLambertMaterial, Mesh, CanvasTexture, MeshBasicMaterial, Clock, CylinderGeometry, MathUtils, RepeatWrapping } from 'three';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -56,12 +56,12 @@ function onReady(stageCtx) {
                 }
             }
         }
-        let cnvTexture;
+        let cnvTexture: any = null;
         function create_ring_letter() {
             let cnv = document.createElement('canvas');
             cnv.width = 1024;
             cnv.height = 128;
-const ctx = cnv.getContext("2d");
+const ctx = cnv.getContext("2d")!;
             ctx.fillStyle = 'magenta';
             ctx.fillRect(0, 0, cnv.width, cnv.height);
             ctx.clearRect(0, 10, cnv.width, cnv.height - 20);

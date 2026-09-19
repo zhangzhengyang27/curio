@@ -15,14 +15,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast, BVHHelper } from 'three-mesh-bvh';
-import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> raycaster - <a href=\"https://github.com/gkjohnson/three-mesh-bvh\" target=\"_blank\" rel=\"noopener\">three-mesh-bvh</a><br/>\n\t\t\tSee <a href=\"https://github.com/gkjohnson/three-mesh-bvh\" target=\"_blank\" rel=\"noopener\">main project repository</a> for more information and examples on high performance spatial queries."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -52,8 +52,8 @@ function onReady(__stage) {
   
   			let stats;
   
-  			let mesh, helper, bvh;
-  			let sphereInstance, lineSegments;
+  			let mesh: any, helper: any, bvh: any;
+  			let sphereInstance: any, lineSegments: any;
   
   			// reusable variables
   			const _raycaster = new THREE.Raycaster();
@@ -151,7 +151,7 @@ function onReady(__stage) {
   				const rayFolder = gui.addFolder( 'Raycasting' );
   				rayFolder.add( params, 'count', 1, MAX_RAYS, 1 );
   				rayFolder.add( params, 'firstHitOnly' );
-  				rayFolder.add( params, 'useBVH' ).onChange( v => {
+  				rayFolder.add( params, 'useBVH' ).onChange( (v: any) => {
   
   					mesh.geometry.boundsTree = v ? bvh : null;
   
@@ -159,7 +159,7 @@ function onReady(__stage) {
   
   				const helperFolder = gui.addFolder( 'BVH Helper' );
   				helperFolder.add( params, 'displayHelper' );
-  				helperFolder.add( params, 'helperDepth', 1, 20, 1 ).onChange( v => {
+  				helperFolder.add( params, 'helperDepth', 1, 20, 1 ).onChange( (v: any) => {
   
   					helper.depth = v;
   					helper.update();
@@ -168,7 +168,15 @@ function onReady(__stage) {
   
   				
   				onWindowResize();
-  
+
+				function onWindowResize() {
+					const w = __stage.container?.clientWidth || window.innerWidth
+					const h = __stage.container?.clientHeight || window.innerHeight
+					camera.aspect = w / h
+					camera.updateProjectionMatrix()
+					renderer.setSize(w, h)
+				}
+
   				initRays();
   
   			
@@ -256,7 +264,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( helper ) {
     					helper.visible = params.displayHelper;

@@ -15,12 +15,18 @@
   </CSS3DExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CSS3DExampleScene from '@/examples/components/CSS3DExampleScene.vue'
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let x: any;
+let y: any;
+let width: any;
+let height: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> css3d - sandbox"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -53,7 +59,7 @@ function onReady(__stage) {
   					const element = document.createElement( 'div' );
   					element.style.width = '100px';
   					element.style.height = '100px';
-  					element.style.opacity = ( i < 5 ) ? 0.5 : 1;
+  					(element.style.opacity as any) = ( i < 5 ) ? 0.5 : 1;
   					element.style.background = new THREE.Color( Math.random() * 0xffffff ).getStyle();
   
   					const object = new CSS3DObject( element );
@@ -86,7 +92,7 @@ function onReady(__stage) {
   				renderer2 = new CSS3DRenderer();
   				renderer2.setSize( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
   				renderer2.domElement.style.position = 'absolute';
-  				renderer2.domElement.style.top = 0;
+  				(renderer2.domElement.style.top as any) = 0;
   				document.body.appendChild( renderer2.domElement );
   
   				
@@ -99,7 +105,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer2.render( scene2, camera );
   })
   
@@ -111,12 +117,12 @@ function onReady(__stage) {
   				const settings = {
   					'setViewOffset'() {
   
-  						folder1.children[ 1 ].enable().setValue( (__stage.container?.clientWidth || window.innerWidth) );
-  						folder1.children[ 2 ].enable().setValue( (__stage.container?.clientHeight || window.innerHeight) );
-  						folder1.children[ 3 ].enable().setValue( 0 );
-  						folder1.children[ 4 ].enable().setValue( 0 );
-  						folder1.children[ 5 ].enable().setValue( (__stage.container?.clientWidth || window.innerWidth) );
-  						folder1.children[ 6 ].enable().setValue( (__stage.container?.clientHeight || window.innerHeight) );
+  						(folder1.children[ 1 ] as any).enable().setValue( (__stage.container?.clientWidth || window.innerWidth) );
+  						(folder1.children[ 2 ] as any).enable().setValue( (__stage.container?.clientHeight || window.innerHeight) );
+  						(folder1.children[ 3 ] as any).enable().setValue( 0 );
+  						(folder1.children[ 4 ] as any).enable().setValue( 0 );
+  						(folder1.children[ 5 ] as any).enable().setValue( (__stage.container?.clientWidth || window.innerWidth) );
+  						(folder1.children[ 6 ] as any).enable().setValue( (__stage.container?.clientHeight || window.innerHeight) );
   
   					},
   					'fullWidth': 0,
@@ -127,12 +133,12 @@ function onReady(__stage) {
   					'height': 0,
   					'clearViewOffset'() {
   
-  						folder1.children[ 1 ].setValue( 0 ).disable();
-  						folder1.children[ 2 ].setValue( 0 ).disable();
-  						folder1.children[ 3 ].setValue( 0 ).disable();
-  						folder1.children[ 4 ].setValue( 0 ).disable();
-  						folder1.children[ 5 ].setValue( 0 ).disable();
-  						folder1.children[ 6 ].setValue( 0 ).disable();
+  						(folder1.children[ 1 ] as any).setValue( 0 ).disable();
+  						(folder1.children[ 2 ] as any).setValue( 0 ).disable();
+  						(folder1.children[ 3 ] as any).setValue( 0 ).disable();
+  						(folder1.children[ 4 ] as any).setValue( 0 ).disable();
+  						(folder1.children[ 5 ] as any).setValue( 0 ).disable();
+  						(folder1.children[ 6 ] as any).setValue( 0 ).disable();
   						camera.clearViewOffset();
   
   					}
@@ -149,7 +155,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateCameraViewOffset( { fullWidth, fullHeight, x, y, width, height } ) {
+  			function updateCameraViewOffset( { fullWidth, fullHeight, x, y, width, height }: any ) {
   
   				if ( ! camera.view ) {
   

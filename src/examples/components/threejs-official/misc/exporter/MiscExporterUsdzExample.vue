@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - USDZ exporter<br />\n\t\t\tCarbon Frame Bike by\n\t\t\t<a href=\"https://sketchfab.com/prefrontalcortex\" target=\"_blank\" rel=\"noopener\">prefrontal cortex</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,7 +51,7 @@ async function onReady(__stage) {
   
   
   
-  			let mixer, timer;
+  			let mixer: any, timer;
   
   			const params = {
   				exportUSDZ: exportUSDZ
@@ -148,7 +148,7 @@ async function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -19,6 +19,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { EdgeSplitModifier } from 'three/examples/jsm/modifiers/EdgeSplitModifier.js';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let geometry: any;
 
 const props = defineProps({
   example: {
@@ -27,15 +28,16 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
 
   
-  			let modifier, mesh, baseGeometry;
-  			let map;
+  			let modifier: any, mesh: any, baseGeometry: any;
+  			let map: any;
   
   			const params = {
   				smoothShading: true,
@@ -83,7 +85,7 @@ function onReady(__stage) {
   						const modelGeometry = cerberus.geometry;
   
   						modifier = new EdgeSplitModifier();
-  						baseGeometry = BufferGeometryUtils.mergeVertices( modelGeometry );
+  						baseGeometry = BufferGeometryUtils.mergeVertices( modelGeometry! );
   
   						mesh = new THREE.Mesh( getGeometry(), new THREE.MeshStandardMaterial() );
   						mesh.material.flatShading = ! params.smoothShading;

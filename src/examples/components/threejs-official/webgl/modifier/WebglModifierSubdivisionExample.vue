@@ -15,15 +15,16 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { LoopSubdivision } from 'three-subdivide';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let texture: any;
 
 const props = defineProps({
   example: {
@@ -35,7 +36,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - modifier - <a href=\"https://github.com/stevinz/three-subdivide\" target=\"_blank\" rel=\"noopener\">subdivision</a><br/>\n\t\t\tSee external <a href=\"https://github.com/stevinz/three-subdivide\" target=\"_blank\" rel=\"noopener\">three-subdivide</a> for more information on subdivision surfaces."
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,8 +44,8 @@ function onReady(__stage) {
 
   
   
-  			let meshNormal, meshSmooth;
-  			let wireNormal, wireSmooth;
+  			let meshNormal: any, meshSmooth: any;
+  			let wireNormal: any, wireSmooth: any;
   			let wireMaterial;
   
   			const params = {
@@ -230,7 +231,7 @@ function onReady(__stage) {
   
   			function updateMeshes() {
   
-  				const normalGeometry = getGeometry();
+  				const normalGeometry = getGeometry() as any;
   
   				const smoothGeometry = LoopSubdivision.modify( normalGeometry, params.iterations, params );
   
@@ -248,7 +249,7 @@ function onReady(__stage) {
   
   			}
   
-  			function disposeMaterial( material ) {
+  			function disposeMaterial( material: any ) {
   
   				const materials = Array.isArray( material ) ? material : [ material ];
   
@@ -265,7 +266,7 @@ function onReady(__stage) {
   				disposeMaterial( meshNormal.material );
   				disposeMaterial( meshSmooth.material );
   
-  				const materialParams = {
+  				const materialParams: any = {
   					color: ( params.textured ) ? 0xffffff : 0x808080,
   					flatShading: params.flatShading,
   					map: ( params.textured ) ? texture : null,

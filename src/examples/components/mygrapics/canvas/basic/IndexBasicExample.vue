@@ -4,18 +4,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('canvas');
-        const context = canvas.getContext('2d');
-        const rectSize = [100, 100];
+    const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
+        const rectSize: [number, number] = [100, 100];
     
         let angle = 0;
         function draw() {

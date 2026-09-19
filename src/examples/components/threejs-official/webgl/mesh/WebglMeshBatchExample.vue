@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - mesh - batch"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,8 +46,8 @@ function onReady(__stage) {
   
   		let stats, gui, guiStatsEl;
   
-  		let geometries, mesh;
-  		const ids = [];
+  		let geometries: any, mesh: any;
+  		const ids: any = [];
   		const matrix = new THREE.Matrix4();
   
   		//
@@ -83,7 +83,7 @@ function onReady(__stage) {
   
   		//
   
-  		function randomizeMatrix( matrix ) {
+  		function randomizeMatrix( matrix: any ) {
   
   			position.x = Math.random() * 40 - 20;
   			position.y = Math.random() * 40 - 20;
@@ -101,7 +101,7 @@ function onReady(__stage) {
   
   		}
   
-  		function randomizeRotationSpeed( rotation ) {
+  		function randomizeRotationSpeed( rotation: any ) {
   
   			rotation.x = Math.random() * 0.01;
   			rotation.y = Math.random() * 0.01;
@@ -110,7 +110,7 @@ function onReady(__stage) {
   
   		}
   
-  		function randomizeColor( color ) {
+  		function randomizeColor( color: any ) {
   
   			return color.setHSL( Math.random() * 0.5, 0.6, 0.5 );
   
@@ -162,7 +162,7 @@ function onReady(__stage) {
   
   			if ( mesh ) {
   
-  				mesh.traverse( node => {
+  				mesh.traverse( (node: any) => {
   
   					if ( node instanceof THREE.Mesh ) {
   
@@ -313,7 +313,7 @@ function onReady(__stage) {
   			gui.add( api, 'dynamic', 0, MAX_GEOMETRY_COUNT ).step( 1 );
   			gui.add( api, 'method', Method ).onChange( initMesh );
   
-  			gui.add( api, 'transparent' ).onChange( v => mesh.traverse( node => {
+  			gui.add( api, 'transparent' ).onChange( v => mesh.traverse( (node: any) => {
   
   				if ( node instanceof THREE.Mesh ) {
   
@@ -342,11 +342,11 @@ function onReady(__stage) {
   
   		//
   
-  		function sortFunction( list ) {
+  		function sortFunction( this: any, list: any ) {
   
   			// initialize options
   			this._options = this._options || {
-  				get: el => el.z,
+  				get: (el: any) => el.z,
   				aux: new Array( this.maxInstanceCount )
   			};
   
@@ -380,7 +380,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const loopNum = Math.min( api.count, api.dynamic );
     			if ( api.method === Method.BATCHED ) {

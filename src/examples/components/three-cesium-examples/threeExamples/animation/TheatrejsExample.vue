@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import theatrecore from '@theatre/core'
 import theatrestudio from '@theatre/studio'
@@ -21,14 +21,14 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const core = theatrecore.default || theatrecore
-  const studio = theatrestudio.default || theatrestudio
+  const core = (theatrecore as any).default || theatrecore
+  const studio = (theatrestudio as any).default || theatrestudio
   const { getProject, types } = core
   
   renderer.shadowMap.enabled = true
@@ -141,13 +141,13 @@ function onReady(ctx) {
   })
   
   // 监听值变化并同步到 Three.js 物体
-  cubeObj.onValuesChange((values) => {
+  cubeObj.onValuesChange((values: any) => {
       const { position, rotation, scale, color } = values
       cube.position.set(position.x, position.y, position.z)
       cube.rotation.set(rotation.x, rotation.y, rotation.z)
       cube.scale.setScalar(scale)
-      cube.material.color.setRGB(color.r, color.g, color.b)
-      cube.material.opacity = color.a
+      cube.material!.color!.setRGB(color.r, color.g, color.b)
+      cube.material!.opacity = color.a
   })
   
   // ---- 球体动画对象 ----
@@ -161,11 +161,11 @@ function onReady(ctx) {
       color: types.rgba({ r: 0.914, g: 0.118, b: 0.388, a: 1 })
   })
   
-  sphereObj.onValuesChange((values) => {
+  sphereObj.onValuesChange((values: any) => {
       const { position, scale, color } = values
       sphere.position.set(position.x, position.y, position.z)
       sphere.scale.setScalar(scale)
-      sphere.material.color.setRGB(color.r, color.g, color.b)
+      sphere.material!.color!.setRGB(color.r, color.g, color.b)
   })
   
   // ---- 圆环动画对象 ----
@@ -183,12 +183,12 @@ function onReady(ctx) {
       color: types.rgba({ r: 0.298, g: 0.686, b: 0.314, a: 1 })
   })
   
-  torusObj.onValuesChange((values) => {
+  torusObj.onValuesChange((values: any) => {
       const { position, rotation, scale, color } = values
       torus.position.set(position.x, position.y, position.z)
       torus.rotation.set(rotation.x, rotation.y, 0)
       torus.scale.setScalar(scale)
-      torus.material.color.setRGB(color.r, color.g, color.b)
+      torus.material!.color!.setRGB(color.r, color.g, color.b)
   })
   
   /* ===================== 灯光也可以用 Theatre.js 控制 ===================== */
@@ -202,7 +202,7 @@ function onReady(ctx) {
       intensity: types.number(1, { range: [0, 3] })
   })
   
-  lightObj.onValuesChange((values) => {
+  lightObj.onValuesChange((values: any) => {
       directionalLight.position.set(values.position.x, values.position.y, values.position.z)
       directionalLight.intensity = values.intensity
   })
@@ -216,7 +216,7 @@ function onReady(ctx) {
       display: 'flex', gap: '10px', zIndex: '9999'
   })
   
-  const createBtn = (text, onClick) => {
+  const createBtn = (text: any, onClick: any) => {
       const btn = document.createElement('button')
       btn.textContent = text
       Object.assign(btn.style, {

@@ -14,15 +14,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useSVGExampleStage } from '../composables/useSVGExampleStage.js'
+import { useSVGExampleStage } from '../composables/useSVGExampleStage'
 
 const props = defineProps({
   camera: {
     type: String,
     default: 'perspective',
-    validator: (v) => ['perspective', 'orthographic'].includes(v),
+    validator: (v: any) => ['perspective', 'orthographic'].includes(v),
   },
   cameraOptions: {
     type: Object,
@@ -71,9 +71,9 @@ const emit = defineEmits(['ready', 'resize', 'before-dispose'])
 const containerRef = ref(null)
 const overlayRef = ref(null)
 
-function onReady(ctx) { emit('ready', ctx) }
-function onResize(size) { emit('resize', size) }
-function onBeforeDispose(ctx) { emit('before-dispose', ctx) }
+function onReady(ctx: any) { emit('ready', ctx) }
+function onResize(size: any) { emit('resize', size) }
+function onBeforeDispose(ctx: any) { emit('before-dispose', ctx) }
 
 const stage = useSVGExampleStage(containerRef, overlayRef, {
   camera: props.camera,

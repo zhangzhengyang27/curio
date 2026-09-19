@@ -6,15 +6,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -29,13 +29,14 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const stage = gContainer.value.querySelector('#stage')
+  const stage = gContainer.value!.querySelector('#stage')
   await loadScript("/graphics/assets/external/spritejs.min.js");
   await loadScript("/graphics/assets/external/d3.js");
   await loadScript("/graphics/assets/external/d3.v6.js");
+  const d3: any = (globalThis as any).d3 // d3 由上方 loadScript 注入为全局；用局部 any 别名屏蔽 UMD 全局类型，保持脚本加载通道不变
   {
     const {Scene} = spritejs;
-        const container = gContainer.value.querySelector('#stage');
+        const container = gContainer.value!.querySelector('#stage');
         const scene = new Scene({
           container,
           width: 1200,
@@ -49,14 +50,14 @@ async function initGraphicsExample() {
         });
     
         const simulation = d3.forceSimulation()
-          .force('link', d3.forceLink().id(d => d.id))
+          .force('link', d3.forceLink().id((d: any) => d.id))
           .force('charge', d3.forceManyBody())
           .force('center', d3.forceCenter(400, 300));
     
-        d3.json('/graphics/assets/external/f74a79ccf53d8147.json').then(graph => {
+        d3.json('/graphics/assets/external/f74a79ccf53d8147.json').then((graph: any) => {
           function ticked() {
             d3.select(layer).selectAll('path')
-              .attr('d', (d) => {
+              .attr('d', (d: any) => {
                 const [sx, sy] = [d.source.x, d.source.y];
                 const [tx, ty] = [d.target.x, d.target.y];
                 return `M${sx} ${sy} L ${tx} ${ty}`;
@@ -64,7 +65,7 @@ async function initGraphicsExample() {
               .attr('strokeColor', 'white')
               .attr('lineWidth', 1);
             d3.select(layer).selectAll('sprite')
-              .attr('pos', (d) => {
+              .attr('pos', (d: any) => {
                 return [d.x, d.y];
               });
             layer.render();
@@ -83,7 +84,7 @@ async function initGraphicsExample() {
             .data(graph.nodes)
             .enter()
             .append('sprite')
-            .attr('pos', (d) => {
+            .attr('pos', (d: any) => {
               return [d.x, d.y];
             })
             .attr('size', [10, 10])
@@ -96,12 +97,12 @@ async function initGraphicsExample() {
             .data(graph.links)
             .enter()
             .append('path')
-            .attr('d', (d) => {
+            .attr('d', (d: any) => {
               const [sx, sy] = [d.source.x, d.source.y];
               const [tx, ty] = [d.target.x, d.target.y];
               return `M${sx} ${sy} L ${tx} ${ty}`;
             })
-            .attr('name', (d, index) => {
+            .attr('name', (d: any, index: any) => {
               return `path${index}`;
             })
             .attr('strokeColor', 'white');
@@ -115,12 +116,12 @@ async function initGraphicsExample() {
               .on('end', dragended));
     
           function dragsubject() {
-            const [x, y] = layer.toLocalPos(event.x, event.y);
+            const [x, y] = layer.toLocalPos((event as any).x, (event as any).y);
             return simulation.find(x, y);
           }
         });
     
-        function dragstarted(event) {
+        function dragstarted(event: any) {
           if(!event.active) simulation.alphaTarget(0.3).restart();
     
           const [x, y] = [event.subject.x, event.subject.y];
@@ -134,7 +135,7 @@ async function initGraphicsExample() {
           event.subject.y0 = y0;
         }
     
-        function dragged(event) {
+        function dragged(event: any) {
           const [x, y] = layer.toLocalPos(event.x, event.y),
             {x0, y0, fx0, fy0} = event.subject;
           const [dx, dy] = [x - x0, y - y0];
@@ -143,7 +144,7 @@ async function initGraphicsExample() {
           event.subject.fy = fy0 + dy;
         }
     
-        function dragended(event) {
+        function dragended(event: any) {
           if(!event.active) simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import * as TWEEN from "@tweenjs/tween.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -31,8 +31,8 @@ function onReady(ctx) {
   
   scene.add(new THREE.AxesHelper(1000))
   
-  let particles = null
-  let particleSystem = null;
+  let particles: any = null
+  let particleSystem: any = null;
   
   createParticleAnimation1()
   createParticleAnimation2()

@@ -8,6 +8,8 @@ declare module "three" {
     isGroup?: boolean
     isPoints?: boolean
     isLine?: boolean
+    isLineLoop?: boolean
+    isSprite?: boolean
   }
 
   interface Material {

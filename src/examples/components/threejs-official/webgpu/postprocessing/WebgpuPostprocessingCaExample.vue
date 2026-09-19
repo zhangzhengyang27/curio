@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, renderOutput, uniform } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>CA</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -53,7 +53,7 @@ function onReady(__stage) {
   				cameraDistance: 40
   			};
   
-  			let timer, mainGroup;
+  			let timer, mainGroup: any;
   			let renderPipeline;
   
   			
@@ -118,7 +118,7 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
   
-  				gui.add( params, 'enabled' ).onChange( ( value ) => {
+  				gui.add( params, 'enabled' ).onChange( ( value: any ) => {
   
   					renderPipeline.outputNode = value ? caPass : outputPass;
   					renderPipeline.needsUpdate = true;
@@ -134,7 +134,7 @@ function onReady(__stage) {
   
   				const animationFolder = gui.addFolder( 'Animation' );
   				animationFolder.add( params, 'animated' );
-  				animationFolder.add( params, 'autoRotate' ).onChange( ( value ) => {
+  				animationFolder.add( params, 'autoRotate' ).onChange( ( value: any ) => {
   
   					controls.autoRotate = value;
   
@@ -146,7 +146,7 @@ function onReady(__stage) {
   			function createShapes() {
   
   				const shapes = [];
-  				const materials = [];
+  				const materials: any = [];
   
   				// Define colors for different materials
   				const colors = [
@@ -284,16 +284,16 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const time = timer.getElapsed();
     				if ( params.animated ) {
     					// Animate individual shapes
-    					mainGroup.children.forEach( ( child, index ) => {
+    					mainGroup.children.forEach( ( child: any, index: any ) => {
     						if ( child.children.length > 0 ) {
     							// Central group
     							child.rotation.y = time * 0.5;
-    							child.children.forEach( ( subChild, subIndex ) => {
+    							child.children.forEach( ( subChild: any, subIndex: any ) => {
     								if ( subChild.geometry ) {
     									subChild.rotation.x = time * ( 1 + subIndex * 0.1 );
     									subChild.rotation.z = time * ( 1 - subIndex * 0.1 );

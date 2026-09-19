@@ -8,12 +8,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import gsap from "gsap";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -29,7 +29,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -38,7 +38,7 @@ function onReady(ctx) {
   const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
-    resolution: null,
+    resolution: null as any,
     pixelRatio: Math.min(window.devicePixelRatio, 2),
   };
   sizes.resolution = new THREE.Vector2(
@@ -69,12 +69,12 @@ function onReady(ctx) {
    * @param {颜色}color
    */
   const createFireWork = async (
-    count,
-    position,
-    size,
-    texture,
+    count: any,
+    position: any,
+    size: any,
+    texture: any,
     radius = 1,
-    color
+    color: any
   ) => {
     if (!texture && texture instanceof THREE.Texture) return;
     // 反转纹理

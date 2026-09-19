@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -79,7 +79,7 @@ function onReady(ctx) {
           type: "pv2",
           value: 0.03,
         },
-      },
+      } as any,
       vertexShader: vertexs,
       fragmentShader: fragments,
       blending: THREE.AdditiveBlending,

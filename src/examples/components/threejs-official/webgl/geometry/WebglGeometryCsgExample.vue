@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> bvh csg - <a href=\"https://github.com/gkjohnson/three-bvh-csg\" target=\"_blank\" rel=\"noopener\">three-bvh-csg</a><br/>\n\t\t\tSee <a href=\"https://github.com/gkjohnson/three-bvh-csg\" target=\"_blank\" rel=\"noopener\">main project repository</a> for more information and examples on constructive solid geometry."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,9 +45,9 @@ function onReady(__stage) {
   
   			let stats;
   
-  			let baseBrush, brush;
+  			let baseBrush: any, brush: any;
   			let core;
-  			let result, evaluator, wireframe;
+  			let result: any, evaluator: any, wireframe;
   
   			const params = {
   
@@ -166,8 +166,18 @@ function onReady(__stage) {
   				gui.add( params, 'operation', { SUBTRACTION, INTERSECTION, ADDITION } );
   				gui.add( params, 'wireframe' );
   				gui.add( params, 'useGroups' );
-  
-  				
+
+
+
+  				function onWindowResize() {
+
+  					camera.aspect = (__stage.container?.clientWidth || window.innerWidth) / (__stage.container?.clientHeight || window.innerHeight);
+  					camera.updateProjectionMatrix();
+
+  					renderer.setSize( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
+
+  				}
+
   				onWindowResize();
   
   			
@@ -186,7 +196,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // update the transforms
     				const t = window.performance.now() + 9000;
     				baseBrush.rotation.x = t * 0.0001;

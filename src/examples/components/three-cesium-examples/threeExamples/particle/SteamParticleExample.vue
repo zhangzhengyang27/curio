@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -106,7 +106,7 @@ function onReady(ctx) {
   
   function buildGeometry() {
       const geo = new THREE.BufferGeometry()
-      const positions = [], sizes = [], phases = [], velocities = []
+      const positions: any[] = [], sizes: any[] = [], phases: any[] = [], velocities: any[] = []
       for (let i = 0; i < config.particleCount; i++) {
           positions.push(
               (Math.random() - 0.5) * config.width,
@@ -133,15 +133,15 @@ function onReady(ctx) {
   
   // GUI
   gui = new GUI()
-  gui.add(config, 'height', 5, 30).name('上升高度').onChange(v => uniforms.height.value = v)
-  gui.add(config, 'turbulence', 0, 1).name('湍流强度').onChange(v => uniforms.turbulence.value = v)
-  gui.add(config, 'density', 0.1, 1).name('浓度').onChange(v => uniforms.density.value = v)
+  gui.add(config, 'height', 5, 30).name('上升高度').onChange((v: any) => uniforms.height.value = v)
+  gui.add(config, 'turbulence', 0, 1).name('湍流强度').onChange((v: any) => uniforms.turbulence.value = v)
+  gui.add(config, 'density', 0.1, 1).name('浓度').onChange((v: any) => uniforms.density.value = v)
   gui.add(config, 'width', 1, 20).name('喷口宽度').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
   gui.add(config, 'depth', 0.5, 10).name('喷口深度').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
   gui.add(config, 'riseSpeed', 0.1, 1).name('上升速度').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
   gui.add(config, 'particleCount', 500, 8000, 500).name('粒子数量').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
   gui.add(config, 'particleSize', 0.3, 3).name('粒子大小').onChange(() => { steam.geometry.dispose(); steam.geometry = buildGeometry() })
-  gui.addColor({ color: '#ffffff' }, 'color').name('蒸汽颜色').onChange(v => uniforms.baseColor.value.set(v))
+  gui.addColor({ color: '#ffffff' }, 'color').name('蒸汽颜色').onChange((v: any) => uniforms.baseColor.value.set(v))
   
   // 动画
   const clock = new THREE.Clock()

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - exporter - gltf - normals<br/><br/>\n\t\t\t<button id=\"export_objects\">Export</button><br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -127,7 +127,7 @@ function onReady(__stage) {
   
   				mesh2.material.normalMap = normalMapDirectX;
   				//mesh2.material.normalMap.flipY = false; // default true
-  				mesh2.material.normalScale.y *= - 1; // exporter ignores negative normalScale.y
+  				mesh2.material.normalScale!.y *= - 1; // exporter ignores negative normalScale.y
   
   				mesh2.name = 'Mesh2';
   				scene.add( mesh2 );
@@ -149,7 +149,7 @@ function onReady(__stage) {
   
   			//
   
-  			function exportGLTF( input ) {
+  			function exportGLTF( input: any ) {
   
   				const gltfExporter = new GLTFExporter();
   
@@ -189,7 +189,7 @@ function onReady(__stage) {
   			link.style.display = 'none';
   			document.body.appendChild( link ); // Firefox workaround, see #6594
   
-  			function save( blob, filename ) {
+  			function save( blob: any, filename: any ) {
   
   				link.href = URL.createObjectURL( blob );
   				link.download = filename;
@@ -199,14 +199,14 @@ function onReady(__stage) {
   
   			}
   
-  			function saveString( text, filename ) {
+  			function saveString( text: any, filename: any ) {
   
   				save( new Blob( [ text ], { type: 'text/plain' } ), filename );
   
   			}
   
   
-  			function saveArrayBuffer( buffer, filename ) {
+  			function saveArrayBuffer( buffer: any, filename: any ) {
   
   				save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
   

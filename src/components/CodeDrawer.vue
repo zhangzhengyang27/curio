@@ -70,20 +70,31 @@
     </div>
   </Transition>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
 import CodeDrawerHeader from './CodeDrawerHeader.vue'
 // 高亮配色是全局样式（选择器已用 .code-modal 限定），独立成文件，不留在组件里
 import '../styles/code-highlight.css'
 // 语法高亮逻辑已抽到 useCodeHighlight（纯逻辑，无 UI 依赖）
-import { useCodeHighlight } from '../composables/useCodeHighlight.js'
+import { useCodeHighlight } from '../composables/useCodeHighlight'
 
-const props = defineProps({
-  open: { type: Boolean, default: false },
-  title: { type: String, default: '示例源码' },
-  // 多节代码：每项 { filename, code }；第 1 节通常是主示例，后续为其引用的 ExampleScene 等
-  sections: { type: Array, default: () => [] },
-  loading: { type: Boolean, default: false },
+/** 多节代码条目：filename 用于 tab 标题与语言推断 */
+export interface CodeSection {
+  filename: string
+  code: string
+}
+
+const props = withDefaults(defineProps<{
+  open?: boolean
+  title?: string
+  // 第 1 节通常是主示例，后续为其引用的 ExampleScene 等
+  sections?: CodeSection[]
+  loading?: boolean
+}>(), {
+  open: false,
+  title: '示例源码',
+  sections: () => [],
+  loading: false,
 })
 
 const emit = defineEmits(['close'])
@@ -92,12 +103,12 @@ const { highlightCode, tabLabel } = useCodeHighlight()
 
 const activeIndex = ref(0)
 const copiedIndex = ref(-1)
-let copyTimer = null
+let copyTimer: ReturnType<typeof setTimeout> | null = null
 
 // 当前激活的那一节（tab 选中项）
 const activeSection = computed(() => props.sections?.[activeIndex.value] || null)
 
-async function copySection(i) {
+async function copySection(i: number) {
   const code = props.sections?.[i]?.code
   if (!code) return
   try {
@@ -136,7 +147,7 @@ watch(
 )
 
 // 居中弹窗交互：打开时锁定背景滚动 + 监听 ESC 关闭
-function handleKeydown(e) {
+function handleKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') emit('close')
 }
 watch(

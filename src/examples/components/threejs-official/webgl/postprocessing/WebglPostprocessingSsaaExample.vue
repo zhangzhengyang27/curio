@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Unbiased Manual Supersampling Anti-Aliasing (SSAA) pass by <a href=\"https://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a><br/><br/>\n\t\t\tThis example shows how to unbias the rounding errors accumulated using high number of SSAA samples on a 8-bit per channel buffer.<br/><br/>\n\t\t\tTurn off the \"unbiased\" feature to see the banding that results from accumulated rounding errors."
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,7 +45,7 @@ function onReady(__stage) {
   			let composer;
   			let cameraP, ssaaRenderPassP;
   			let cameraO, ssaaRenderPassO;
-  			let gui, stats;
+  			let gui: any, stats;
   
   			const params = {
   				sampleLevel: 4,
@@ -189,7 +189,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     				if ( params.autoRotate ) {
     					for ( let i = 0; i < scene.children.length; i ++ ) {
@@ -212,7 +212,7 @@ function onReady(__stage) {
     				ssaaRenderPassP.unbiased = ssaaRenderPassO.unbiased = params.unbiased;
     				ssaaRenderPassP.enabled = ( params.camera === 'perspective' );
     				ssaaRenderPassO.enabled = ( params.camera === 'orthographic' );
-    				cameraP.view.offsetX = params.viewOffsetX;
+    				cameraP!.view!.offsetX = params.viewOffsetX;
     				composer.render();
     				stats.end();
   })

@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {initShaders, ScaleLinear} from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Poly.js'
@@ -17,7 +17,7 @@ const fragmentShader = `void main(){
           gl_FragColor=vec4(1,1,0,1);
       }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -29,7 +29,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
   
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       initShaders(gl, vsSource, fsSource);
   

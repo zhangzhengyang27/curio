@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -24,6 +24,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { LDrawLoader } from 'three/examples/jsm/loaders/LDrawLoader.js';
 import { LDrawUtils } from 'three/examples/jsm/utils/LDrawUtils.js';
 import { LDrawConditionalLineMaterial } from 'three/examples/jsm/materials/LDrawConditionalLineMaterial.js';
+let model: any;
 
 const props = defineProps({
   example: {
@@ -33,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - LDrawLoader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,9 +48,9 @@ function onReady(__stage) {
   
   
   
-  			let container, progressBarDiv;
+  			let container, progressBarDiv: any;
   
-  			let gui, guiData;
+  			let gui: any, guiData: any;
   
   
   
@@ -135,7 +136,7 @@ function onReady(__stage) {
   
   			function updateObjectsVisibility() {
   
-  				model.traverse( c => {
+  				model.traverse( (c: any) => {
   
   					if ( c.isLineSegments ) {
   
@@ -160,7 +161,7 @@ function onReady(__stage) {
   
   			}
   
-  			function reloadObject( resetCamera ) {
+  			function reloadObject( resetCamera: any ) {
   
   				if ( model ) {
   
@@ -192,10 +193,10 @@ function onReady(__stage) {
   						// demonstrate how to use convert to flat colors to better mimic the lego instructions look
   						if ( guiData.flatColors ) {
   
-  							function convertMaterial( material ) {
+  							function convertMaterial( material: any ) {
   
   								const newMaterial = new THREE.MeshBasicMaterial();
-  								newMaterial.color.copy( material.color );
+  								newMaterial.color!.copy( material.color );
   								newMaterial.polygonOffset = material.polygonOffset;
   								newMaterial.polygonOffsetUnits = material.polygonOffsetUnits;
   								newMaterial.polygonOffsetFactor = material.polygonOffsetFactor;
@@ -208,7 +209,7 @@ function onReady(__stage) {
   
   							}
   
-  							model.traverse( c => {
+  							model.traverse( (c: any) => {
   
   								if ( c.isMesh ) {
   
@@ -315,7 +316,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     }
   })
@@ -326,7 +327,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onProgress( xhr ) {
+  			function onProgress( xhr: any ) {
   
   				if ( xhr.lengthComputable ) {
   
@@ -338,7 +339,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onError( error ) {
+  			function onError( error: any ) {
   
   				const message = 'Error loading model';
   				progressBarDiv.innerText = message;
@@ -359,7 +360,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateProgressBar( fraction ) {
+  			function updateProgressBar( fraction: any ) {
   
   				progressBarDiv.innerText = 'Loading... ' + Math.round( fraction * 100 ) + '%';
   

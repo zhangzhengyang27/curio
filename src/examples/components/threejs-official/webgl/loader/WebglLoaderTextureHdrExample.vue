@@ -12,10 +12,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl HDR (RGBE) texture loader example<br/>\n\t\t\tImage courtesy of <a href=\"http://www.pauldebevec.com/Research/HDR/\" target=\"_blank\" rel=\"noopener\">Paul Debevec</a>."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -72,7 +72,7 @@ function onReady(__stage) {
   
   						const material = new THREE.MeshBasicMaterial( { map: texture } );
   
-  						const quad = new THREE.PlaneGeometry( 1.5 * textureData.width / textureData.height, 1.5 );
+  						const quad = new THREE.PlaneGeometry( 1.5 * textureData.width! / textureData.height!, 1.5 );
   
   						const mesh = new THREE.Mesh( quad, material );
   

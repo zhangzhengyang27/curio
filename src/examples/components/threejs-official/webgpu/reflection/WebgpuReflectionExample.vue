@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { abs, blendOverlay, color, float, Fn, instancedBufferAttribute, max, normalWorldGeometry, pass, positionGeometry, positionLocal, pow2, reflector, screenUV, sin, sub, texture, time, uniform, uv, vec2, vec3 } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Reflection + Recursive Tree Cubes</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -102,14 +102,14 @@ async function onReady(__stage) {
   
   				const reflection = reflector( { resolutionScale: 0.2 } );
   				reflection.target.rotateX( - Math.PI / 2 );
-  				reflection.uvNode = reflection.uvNode.add( floorNormalOffset );
+  				reflection.uvNode = (reflection as any)!.uvNode.add( floorNormalOffset );
   				scene.add( reflection.target );
   
   				const floorMaterial = new THREE.MeshPhongNodeMaterial();
   				floorMaterial.colorNode = texture( floorColor, floorUV );
-  				floorMaterial.emissiveNode = reflection.mul( 0.25 );
+  				(floorMaterial as any).emissiveNode = reflection.mul( 0.25 );
   				floorMaterial.normalMap = floorNormal;
-  				floorMaterial.normalScale.set( 0.2, - 0.2 );
+  				(floorMaterial as any)!.normalScale.set( 0.2, - 0.2 );
   
   				const floor = new THREE.Mesh( new THREE.BoxGeometry( 50, .001, 50 ), floorMaterial );
   				floor.receiveShadow = true;
@@ -176,7 +176,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     				renderPipeline.render();
   })
@@ -192,10 +192,10 @@ async function onReady(__stage) {
   				const maxSteps = 5;
   				const lengthMult = 0.8;
   
-  				const positions = [];
-  				const normals = [];
-  				const colors = [];
-  				const data = []; // will save seed, size and time
+  				const positions: any = [];
+  				const normals: any = [];
+  				const colors: any = [];
+  				const data: any[] = []; // will save seed, size and time
   
   				let instanceCount = 0;
   
@@ -204,7 +204,7 @@ async function onReady(__stage) {
   				const normal = new THREE.Vector3();
   				const color = new THREE.Color();
   
-  				function createTreePart( angle, x, y, z, length, count ) {
+  				function createTreePart( angle: any, x: any, y: any, z: any, length: any, count: any ) {
   
   					if ( Math.random() > ( maxSteps / count ) * 0.25 ) return;
   
@@ -306,9 +306,9 @@ async function onReady(__stage) {
   
   				material.positionNode = Fn( () => {
   
-  					const instanceSize = instanceData.x;
-  					const instanceTime = instanceData.y;
-  					const instanceSeed = instanceData.z;
+  					const instanceSize = (instanceData as any).x;
+  					const instanceTime = (instanceData as any).y;
+  					const instanceSeed = (instanceData as any).z;
   
   					// effectors (these are responsible for the blob-like scale effects)
   
@@ -320,13 +320,13 @@ async function onReady(__stage) {
   
   					// accumulate different vertex animations
   
-  					let animated = positionLocal.add( instancePosition ).toVar();
+  					let animated: any = positionLocal.add( (instancePosition as any) ).toVar();
   					const direction = positionGeometry.normalize().toConst();
   
   					animated = animated.add( direction.mul( effect.add( instanceSize ) ) );
   					animated = animated.sub( direction.mul( effect ) );
-  					animated = animated.add( instanceNormal.mul( effect.mul( 1 ) ) );
-  					animated = animated.add( instanceNormal.mul( abs( sin( time.add( instanceSeed.mul( 2 ) ) ).mul( 1.5 ) ) ) );
+  					animated = animated.add( (instanceNormal as any).mul( effect.mul( 1 ) ) );
+  					animated = animated.add( (instanceNormal as any).mul( abs( sin( time.add( instanceSeed.mul( 2 ) ) ).mul( 1.5 ) ) ) );
   
   					return animated;
   
@@ -342,13 +342,13 @@ async function onReady(__stage) {
   
   				material.colorNode = Fn( () => {
   
-  					return squareEdge.sub( instanceColor );
+  					return squareEdge.sub( (instanceColor as any) );
   
   				} )();
   
   				material.emissiveNode = Fn( () => {
   
-  					const instanceTime = instanceData.y;
+  					const instanceTime = (instanceData as any).y;
   
   					const dif1 = abs( instanceTime.sub( uniformEffector1 ) ).toConst();
   					const effect1 = dif1.lessThanEqual( 0.15 ).select( sub( 0.15, dif1 ).mul( sub( 1.7, instanceTime ).mul( 10 ) ), float( 0 ) );
@@ -356,7 +356,7 @@ async function onReady(__stage) {
   					const dif2 = abs( instanceTime.sub( uniformEffector2 ) ).toConst();
   					const effect2 = dif2.lessThanEqual( 0.15 ).select( sub( 0.15, dif2 ).mul( sub( 1.7, instanceTime ).mul( 10 ) ), effect1 );
   
-  					return pow2( vec3( effect1, 0, effect2 ) ).mul( instanceColor );
+  					return pow2( vec3( effect1, 0, effect2 ) ).mul( (instanceColor as any) );
   
   				} )();
   

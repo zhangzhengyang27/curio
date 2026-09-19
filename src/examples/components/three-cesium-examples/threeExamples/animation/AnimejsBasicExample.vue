@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { animate } from 'animejs'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -103,7 +103,7 @@ function onReady(ctx) {
   plane.rotation.x = Math.PI / 2
   scene.add(plane)
   
-  animate(plane.material.color, {
+  animate(plane.material.color!, {
       r: [1, 0, 1],
       g: [0.5, 0, 0.5],
       b: [0.5, 1, 0.5],

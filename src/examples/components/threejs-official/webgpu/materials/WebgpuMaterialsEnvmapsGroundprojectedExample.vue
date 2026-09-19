@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Ground Projected Env Maps</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -95,15 +95,15 @@ async function onReady(__stage) {
   					carModel.scale.multiplyScalar( 4 );
   					carModel.rotation.y = Math.PI;
   
-  					carModel.getObjectByName( 'body' ).material = bodyMaterial;
+  					(carModel as any)!.getObjectByName( 'body' ).material = bodyMaterial;
   
-  					carModel.getObjectByName( 'rim_fl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_fr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rr' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial;
-  					carModel.getObjectByName( 'trim' ).material = detailsMaterial;
+  					(carModel as any)!.getObjectByName( 'rim_fl' ).material = detailsMaterial;
+  					(carModel as any)!.getObjectByName( 'rim_fr' ).material = detailsMaterial;
+  					(carModel as any)!.getObjectByName( 'rim_rr' ).material = detailsMaterial;
+  					(carModel as any)!.getObjectByName( 'rim_rl' ).material = detailsMaterial;
+  					(carModel as any)!.getObjectByName( 'trim' ).material = detailsMaterial;
   
-  					carModel.getObjectByName( 'glass' ).material = glassMaterial;
+  					(carModel as any)!.getObjectByName( 'glass' ).material = glassMaterial;
   
   					// shadow
   					const mesh = new THREE.Mesh(
@@ -158,7 +158,7 @@ async function onReady(__stage) {
   				
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
-  				gui.add( params, 'enabled' ).name( 'Grounded' ).onChange( function ( value ) {
+  				gui.add( params, 'enabled' ).name( 'Grounded' ).onChange( function ( value: any ) {
   
   					if ( value ) {
   

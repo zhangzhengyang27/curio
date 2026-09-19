@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>City Generator</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,8 +46,8 @@ function onReady(__stage) {
   
   
   			let timer;
-  			let cityGroup, materials, city, renderPipeline;
-  			let sky, sun, sunLight, pmremGenerator, envScene;
+  			let cityGroup: any, materials: any, city: any, renderPipeline;
+  			let sky: any, sun: any, sunLight: any, pmremGenerator: any, envScene: any;
   
   			const parameters = {
   				seed: 94,
@@ -199,7 +199,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				controls.update( timer.getDelta() );
     				renderPipeline.render();

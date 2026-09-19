@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -30,7 +30,7 @@ function onReady(stageCtx) {
   scene.add(new THREE.AxesHelper(100))
   
   const canvas = document.createElement('canvas');
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d")!;
   
   const devicePixelRatio = window.devicePixelRatio * 4;
   const logicalWidth = 124;

@@ -120,7 +120,7 @@ src/examples/registry/
 ## 4. three.js 兼容层
 
 ```
-vite.config.js  → threeCompatResolver：three / three/webgpu / three/tsl
+vite.config.ts  → threeCompatResolver：three / three/webgpu / three/tsl
                   ↳ src/examples/three-build-compat/*（上游 r186dev 预发布 build）
 支持本地 addons → src/examples/jsm-compat/（three/examples/jsm 的本地副本）
 ```
@@ -130,7 +130,7 @@ vite.config.js  → threeCompatResolver：three / three/webgpu / three/tsl
 
 ## 5. 构建与分包
 
-`vite.config.js` 用 **`codeSplitting.groups`** 按体积大的三方库分包
+`vite.config.ts` 用 **`codeSplitting.groups`** 按体积大的三方库分包
 （`vendor-three` / `vendor-cesium` / `vendor-echarts` / `vendor-d3` / `vendor-postprocessing` …），
 并启用 gzip + brotli 压缩。三条维护约定：
 

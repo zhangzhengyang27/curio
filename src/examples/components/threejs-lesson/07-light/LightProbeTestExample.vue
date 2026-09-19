@@ -6,18 +6,18 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { LightProbeGenerator } from 'three/examples/jsm/lights/LightProbeGenerator.js'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene } = ctx
 
   const lightProbe = new THREE.LightProbe()
   scene.add(lightProbe)
 
-  const genCubeUrls = function (prefix, postfix) {
+  const genCubeUrls = function (prefix: string, postfix: string) {
     return [
       prefix + 'px' + postfix,
       prefix + 'nx' + postfix,

@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, screenUV, uniform, uv, vec2, vec3, color, Fn, vec4, Loop, float, mix, luminance, smoothstep, rtt, time, viewportSize, instanceIndex, positionLocal } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Anamorphic Lensflares</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -118,7 +118,7 @@ function onReady(__stage) {
   				bloomPass.setResolutionScale( 0.25 );
   
   				// Custom high pass for anamorphic bloom
-  				bloomPass.highPassFn = Fn( ( { input, threshold, smoothWidth } ) => {
+  				bloomPass.highPassFn = Fn( ( { input, threshold, smoothWidth }: any ) => {
   
   					// Extract bright areas to a texture (computed once, sampled many times)
   					const v = luminance( input.rgb );
@@ -174,7 +174,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

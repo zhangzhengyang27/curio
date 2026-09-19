@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, lights } from 'three/tsl';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Custom Lighting Model</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,7 +40,7 @@ function onReady(__stage) {
   
   			class CustomLightingModel extends THREE.LightingModel {
   
-  				direct( { lightColor, reflectedLight }/*, builder */ ) {
+  			direct( { lightColor, reflectedLight }: any /*, builder */ ) {
   
   					reflectedLight.directDiffuse.addAssign( lightColor );
   
@@ -64,7 +64,7 @@ function onReady(__stage) {
   
   				const sphereGeometry = new THREE.SphereGeometry( 0.02, 16, 8 );
   
-  				const addLight = ( hexColor ) => {
+  				const addLight = ( hexColor: any ) => {
   
   					const material = new THREE.NodeMaterial();
   					material.colorNode = color( hexColor );
@@ -106,7 +106,7 @@ function onReady(__stage) {
   				// custom lighting model
   
   				const lightingModel = new CustomLightingModel();
-  				const lightingModelContext = allLightsNode.context( { lightingModel } );
+  				const lightingModelContext = (allLightsNode as any).context( { lightingModel } );
   
   				materialPoints.lightsNode = lightingModelContext;
   
@@ -135,7 +135,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     				const scale = .5;
     				light1.position.x = Math.sin( time * 0.7 ) * scale;

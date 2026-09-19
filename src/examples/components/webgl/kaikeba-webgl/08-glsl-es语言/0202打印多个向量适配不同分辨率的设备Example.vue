@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/08-GlSl ES语言/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/08-GlSl ES语言/jsm/Poly.js'
@@ -39,7 +39,7 @@ const fragmentShader = `precision mediump float;
       }
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       console.log(window.devicePixelRatio);
   
@@ -52,7 +52,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const fsSource = fragmentShader;
   
       //三维画笔
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       //初始化着色器
       initShaders(gl, vsSource, fsSource);
@@ -96,7 +96,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           logPixel(px, py)
         }
       }
-      function logPixel(x, y) {
+      function logPixel(x: number, y: number) {
         const pixel = new Uint8Array(4)
         gl.readPixels(
           x, y,

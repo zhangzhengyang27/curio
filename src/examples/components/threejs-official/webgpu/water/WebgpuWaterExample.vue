@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, emissive, renderOutput } from 'three/tsl';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Water</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -203,26 +203,26 @@ async function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Water' );
   				const waterNode = water.material.colorNode;
   
-  				gui.addColor( params, 'color' ).onChange( function ( value ) {
+  				gui.addColor( params, 'color' ).onChange( function ( value: any ) {
   
-  					waterNode.color.value.set( value );
-  
-  				} );
-  				gui.add( params, 'scale', 1, 10 ).onChange( function ( value ) {
-  
-  					waterNode.scale.value = value;
+  					(waterNode! as any).color.value.set( value );
   
   				} );
-  				gui.add( params, 'flowX', - 1, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'scale', 1, 10 ).onChange( function ( value: any ) {
   
-  					waterNode.flowDirection.value.x = value;
-  					waterNode.flowDirection.value.normalize();
+  					(waterNode! as any).scale.value = value;
   
   				} );
-  				gui.add( params, 'flowY', - 1, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'flowX', - 1, 1, 0.01 ).onChange( function ( value: any ) {
   
-  					waterNode.flowDirection.value.y = value;
-  					waterNode.flowDirection.value.normalize();
+  					(waterNode! as any).flowDirection.value.x = value;
+  					(waterNode! as any).flowDirection.value.normalize();
+  
+  				} );
+  				gui.add( params, 'flowY', - 1, 1, 0.01 ).onChange( function ( value: any ) {
+  
+  					(waterNode! as any).flowDirection.value.y = value;
+  					(waterNode! as any).flowDirection.value.normalize();
   
   				} );
   
@@ -242,7 +242,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

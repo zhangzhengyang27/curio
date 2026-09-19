@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, If, Return, instancedArray, instanceIndex, uniform, select, attribute, Loop, float, transformNormalToView, cross, triNoise3D, time } from 'three/tsl';
@@ -22,6 +22,9 @@ import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { UltraHDRLoader } from 'three/examples/jsm/loaders/UltraHDRLoader.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+
+let springListBuffer: any;
+
 
 const props = defineProps({
   example: {
@@ -31,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Compute Cloth</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,18 +50,18 @@ async function onReady(__stage) {
   			const clothNumSegmentsY = 30;
   			const sphereRadius = 0.15;
   
-  			let vertexPositionBuffer, vertexForceBuffer, vertexParamsBuffer;
-  			let springVertexIdBuffer, springRestLengthBuffer, springForceBuffer;
+  			let vertexPositionBuffer: any, vertexForceBuffer: any, vertexParamsBuffer: any;
+  			let springVertexIdBuffer: any, springRestLengthBuffer: any, springForceBuffer: any;
   
-  			let computeSpringForces, computeVertexForces;
-  			let dampeningUniform, spherePositionUniform, stiffnessUniform, sphereUniform, windUniform;
-  			let vertexWireframeObject, springWireframeObject;
-  			let clothMesh, clothMaterial, sphere;
+  			let computeSpringForces: any, computeVertexForces: any;
+  			let dampeningUniform: any, spherePositionUniform: any, stiffnessUniform: any, sphereUniform: any, windUniform: any;
+  			let vertexWireframeObject: any, springWireframeObject: any;
+  			let clothMesh: any, clothMaterial: any, sphere: any;
   			let timeSinceLastStep = 0;
   			let timestamp = 0;
-  			const verletVertices = [];
-  			const verletSprings = [];
-  			const verletVertexColumns = [];
+  			const verletVertices: any = [];
+  			const verletSprings: any = [];
+  			const verletVertexColumns: any = [];
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -124,7 +127,7 @@ async function onReady(__stage) {
   				gui.add( params, 'wind', 0, 5, 0.1 );
   
   				const materialFolder = gui.addFolder( 'material' );
-  				materialFolder.addColor( API, 'color' ).onChange( function ( color ) {
+  				materialFolder.addColor( API, 'color' ).onChange( function ( color: any ) {
   
   					clothMaterial.color.setHex( color );
   
@@ -132,7 +135,7 @@ async function onReady(__stage) {
   				materialFolder.add( clothMaterial, 'roughness', 0.0, 1, 0.01 );
   				materialFolder.add( clothMaterial, 'sheen', 0.0, 1, 0.01 );
   				materialFolder.add( clothMaterial, 'sheenRoughness', 0.0, 1, 0.01 );
-  				materialFolder.addColor( API, 'sheenColor' ).onChange( function ( color ) {
+  				materialFolder.addColor( API, 'sheenColor' ).onChange( function ( color: any ) {
   
   					clothMaterial.sheenColor.setHex( color );
   
@@ -146,7 +149,7 @@ async function onReady(__stage) {
   
   				// this function sets up the geometry of the verlet system, a grid of vertices connected by springs
   
-  				const addVerletVertex = ( x, y, z, isFixed ) => {
+  				const addVerletVertex = ( x: any, y: any, z: any, isFixed: any ) => {
   
   					const id = verletVertices.length;
   					const vertex = {
@@ -160,7 +163,7 @@ async function onReady(__stage) {
   
   				};
   
-  				const addVerletSpring = ( vertex0, vertex1 ) => {
+  				const addVerletSpring = ( vertex0: any, vertex1: any ) => {
   
   					const id = verletSprings.length;
   					const spring = {
@@ -394,7 +397,7 @@ async function onReady(__stage) {
   				springWireframeMaterial.positionNode = Fn( () => {
   
   					const vertexIds = springVertexIdBuffer.element( instanceIndex );
-  					const vertexId = select( attribute( 'vertexIndex' ).equal( 0 ), vertexIds.x, vertexIds.y );
+  					const vertexId = select( (attribute as any)( 'vertexIndex' ).equal( 0 ), vertexIds.x, vertexIds.y );
   					return vertexPositionBuffer.element( vertexId );
   
   				} )();
@@ -432,7 +435,7 @@ async function onReady(__stage) {
   				const verletVertexIdArray = new Uint32Array( vertexCount * 4 );
   				const indices = [];
   
-  				const getIndex = ( x, y ) => {
+  				const getIndex = ( x: any, y: any ) => {
   
   					return y * clothNumSegmentsX + x;
   
@@ -479,10 +482,10 @@ async function onReady(__stage) {
   
   					// gather the position of the 4 verlet vertices and calculate the center position and normal from that
   					const vertexIds = attribute( 'vertexIds' );
-  					const v0 = vertexPositionBuffer.element( vertexIds.x ).toVar();
-  					const v1 = vertexPositionBuffer.element( vertexIds.y ).toVar();
-  					const v2 = vertexPositionBuffer.element( vertexIds.z ).toVar();
-  					const v3 = vertexPositionBuffer.element( vertexIds.w ).toVar();
+  					const v0 = vertexPositionBuffer.element( (vertexIds as any).x ).toVar();
+  					const v1 = vertexPositionBuffer.element( (vertexIds as any).y ).toVar();
+  					const v2 = vertexPositionBuffer.element( (vertexIds as any).z ).toVar();
+  					const v3 = vertexPositionBuffer.element( (vertexIds as any).w ).toVar();
   
   					const top = v0.add( v1 );
   					const right = v1.add( v3 );
@@ -495,7 +498,7 @@ async function onReady(__stage) {
   					const normal = cross( tangent, bitangent );
   
   					// send the normalView from the vertex shader to the fragment shader
-  					material.normalNode = transformNormalToView( normal ).toVarying();
+  					(material as any).normalNode = transformNormalToView( normal ).toVarying();
   
   					return v0.add( v1 ).add( v2 ).add( v3 ).mul( 0.25 );
   
@@ -529,7 +532,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     timer.update();
     				sphere.visible = params.sphere;
     				sphereUniform.value = params.sphere ? 1 : 0;

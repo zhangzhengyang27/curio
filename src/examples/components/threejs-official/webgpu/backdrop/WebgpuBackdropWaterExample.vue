@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, vec2, pass, linearDepth, normalWorld, triplanarTexture, texture, objectPosition, screenUV, viewportLinearDepth, viewportDepthTexture, viewportSharedTexture, mx_worley_noise_float, positionWorld, time } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Backdrop Water</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -41,8 +41,8 @@ function onReady(__stage) {
   
 
   
-  			let mixer, objects, timer;
-  			let model, floor, floorPosition;
+  			let mixer: any, objects, timer;
+  			let model: any, floor, floorPosition;
   			let renderPipeline;
   
   
@@ -175,7 +175,7 @@ function onReady(__stage) {
   				let transition = waterPosY.add( .1 ).saturate().oneMinus();
   				transition = waterPosY.lessThan( 0 ).select( transition, normalWorld.y.mix( transition, 0 ) ).toVar();
   
-  				const colorNode = transition.mix( material.colorNode, material.colorNode.add( waterLayer0 ) );
+  				const colorNode = transition.mix( material.colorNode as any, (material.colorNode as any).add( waterLayer0 ) );
   
   				//material.colorNode = colorNode;
   				floor.material.colorNode = colorNode;
@@ -211,7 +211,7 @@ function onReady(__stage) {
   				const scenePassColor = scenePass.getTextureNode();
   				const scenePassDepth = scenePass.getLinearDepthNode().remapClamp( .3, .5 );
   
-  				const waterMask = objectPosition( camera ).y.greaterThan( screenUV.y.sub( .5 ).mul( camera.near ) ).toInspector( 'Post-Processing / Water Mask' );
+  				const waterMask = objectPosition( camera ).y.greaterThan( screenUV.y.sub( .5 ).mul( camera.near ) as any ).toInspector( 'Post-Processing / Water Mask' );
   
   				const scenePassColorBlurred = gaussianBlur( scenePassColor );
   				scenePassColorBlurred.directionNode = waterMask.select( scenePassDepth, scenePass.getLinearDepthNode().mul( 5 ) ).toInspector( 'Post-Processing / Blur Strength [ Depth ]', ( node ) => node.toFloat() );
@@ -230,7 +230,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				floor.position.y = floorPosition.y - 5;

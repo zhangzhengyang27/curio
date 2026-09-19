@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -67,7 +67,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -79,14 +79,14 @@ function onReady(__stage) {
   
   			let stats;
   
-  			let cameraRTT, sceneRTT, sceneScreen, zmesh1, zmesh2;
+  			let cameraRTT: any, sceneRTT: any, sceneScreen: any, zmesh1: any, zmesh2: any;
   
   			let mouseX = 0, mouseY = 0;
   
   			const windowHalfX = (__stage.container?.clientWidth || window.innerWidth) / 2;
   			const windowHalfY = (__stage.container?.clientHeight || window.innerHeight) / 2;
   
-  			let rtTexture, material, quad;
+  			let rtTexture: any, material: any, quad;
   
   			let delta = 0.01;
   
@@ -196,7 +196,7 @@ function onReady(__stage) {
   			
   
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX );
   				mouseY = ( event.clientY - windowHalfY );
@@ -205,7 +205,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.0015;
     				camera.position.x += ( mouseX - camera.position.x ) * .05;

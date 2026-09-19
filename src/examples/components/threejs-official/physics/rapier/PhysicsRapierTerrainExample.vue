@@ -15,12 +15,15 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RapierPhysics } from 'three/examples/jsm/physics/RapierPhysics.js';
+
+let physics: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "Rapier.js physics terrain heightfield demo"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,16 +54,16 @@ async function onReady(__stage) {
   			const terrainMinHeight = - 2;
   
   			// Graphics variables
-  			let container, stats;
+  			let container, stats: any;
   
-  			let terrainMesh;
+  			let terrainMesh: any;
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
   			// Physics variables
   
-  			const dynamicObjects = [];
-  			let heightData = null;
+  			const dynamicObjects: any = [];
+  			let heightData: any = null;
   
   			let time = 0;
   			const objectTimePeriod = 3;
@@ -168,7 +171,7 @@ async function onReady(__stage) {
   			
   			}
   
-  			function generateHeight( width, depth, minHeight, maxHeight ) {
+  			function generateHeight( width: any, depth: any, minHeight: any, maxHeight: any ) {
   
   				const size = width * depth;
   				const data = new Float32Array( size );
@@ -262,7 +265,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const deltaTime = timer.getDelta();

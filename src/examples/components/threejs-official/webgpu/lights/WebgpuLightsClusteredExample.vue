@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Clustered Lighting</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -53,10 +53,10 @@ function onReady(__stage) {
   			const BIG_RADIUS = 6;
   			const BASE_POWER = 45;
   
-  			let spheresMesh, lighting;
-  			let renderPipeline, scenePass, clusterInfluence, debugZSliceNode;
+  			let spheresMesh, lighting: any;
+  			let renderPipeline: any, scenePass: any, clusterInfluence: any, debugZSliceNode: any;
   
-  			const balls = [];
+  			const balls: any = [];
   			const dummy = new THREE.Object3D();
   
   			const params = {
@@ -125,7 +125,7 @@ function onReady(__stage) {
   				const colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array( maxCount * 3 ), 3 );
   
   				const material = new THREE.MeshBasicNodeMaterial();
-  				material.colorNode = instancedBufferAttribute( colorAttribute );
+  				(material.colorNode as any) = instancedBufferAttribute( colorAttribute );
   
   				spheresMesh = new THREE.InstancedMesh( new THREE.SphereGeometry( RADIUS, 32, 16 ), material, maxCount );
   				spheresMesh.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
@@ -195,7 +195,7 @@ function onReady(__stage) {
   				// gui
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
-  				gui.add( params, 'intensity', 0, 3 ).name( 'light intensity' ).onChange( ( value ) => {
+  				gui.add( params, 'intensity', 0, 3 ).name( 'light intensity' ).onChange( ( value: any ) => {
   
   					for ( const ball of balls ) ball.light.power = BASE_POWER * value;
   
@@ -236,7 +236,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( params.animate === true ) {
     					const time = performance.now() / 1000;
     					for ( let i = 0; i < balls.length; i ++ ) {

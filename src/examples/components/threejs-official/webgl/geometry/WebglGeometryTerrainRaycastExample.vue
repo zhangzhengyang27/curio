@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl terrain raycasting demo"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,12 +44,12 @@ function onReady(__stage) {
   			let container, stats;
   
   
-  			let mesh, texture;
+  			let mesh: any, texture;
   
   			const worldWidth = 256, worldDepth = 256,
   				worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2;
   
-  			let helper;
+  			let helper: any;
   
   			const raycaster = new THREE.Raycaster();
   			const pointer = new THREE.Vector2();
@@ -122,7 +122,7 @@ function onReady(__stage) {
   
   			
   
-  			function generateHeight( width, height ) {
+  			function generateHeight( width: any, height: any ) {
   
   				const size = width * height, data = new Uint8Array( size ),
   					perlin = new ImprovedNoise(), z = Math.random() * 100;
@@ -146,7 +146,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateTexture( data, width, height ) {
+  			function generateTexture( data: any, width: any, height: any ) {
   
   				// bake lighting into texture
   
@@ -162,10 +162,10 @@ function onReady(__stage) {
   				canvas.height = height;
   
   				context = canvas.getContext( '2d' );
-  				context.fillStyle = '#000';
-  				context.fillRect( 0, 0, width, height );
+  				context!.fillStyle = '#000';
+  				context!.fillRect( 0, 0, width, height );
   
-  				image = context.getImageData( 0, 0, canvas.width, canvas.height );
+  				image = context!.getImageData( 0, 0, canvas.width, canvas.height );
   				imageData = image.data;
   
   				for ( let i = 0, j = 0, l = imageData.length; i < l; i += 4, j ++ ) {
@@ -183,7 +183,7 @@ function onReady(__stage) {
   
   				}
   
-  				context.putImageData( image, 0, 0 );
+  				context!.putImageData( image, 0, 0 );
   
   				// Scaled 4x
   
@@ -192,10 +192,10 @@ function onReady(__stage) {
   				canvasScaled.height = height * 4;
   
   				context = canvasScaled.getContext( '2d' );
-  				context.scale( 4, 4 );
-  				context.drawImage( canvas, 0, 0 );
+  				context!.scale( 4, 4 );
+  				context!.drawImage( canvas, 0, 0 );
   
-  				image = context.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
+  				image = context!.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
   				imageData = image.data;
   
   				for ( let i = 0, l = imageData.length; i < l; i += 4 ) {
@@ -208,7 +208,7 @@ function onReady(__stage) {
   
   				}
   
-  				context.putImageData( image, 0, 0 );
+  				context!.putImageData( image, 0, 0 );
   
   				return canvasScaled;
   
@@ -216,7 +216,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     }
     				stats.update();
@@ -228,7 +228,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
   				pointer.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
@@ -241,7 +241,7 @@ function onReady(__stage) {
   				if ( intersects.length > 0 ) {
   
   					helper.position.set( 0, 0, 0 );
-  					helper.lookAt( intersects[ 0 ].face.normal );
+  					helper.lookAt( intersects[ 0 ].face!.normal );
   
   					helper.position.copy( intersects[ 0 ].point );
   

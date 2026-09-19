@@ -17,7 +17,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -28,6 +28,9 @@ import { LDrawUtils } from 'three/examples/jsm/utils/LDrawUtils.js';
 import { LDrawConditionalLineMaterial } from 'three/examples/jsm/materials/LDrawConditionalLineMaterial.js';
 import { WebGLPathTracer, BlurredEnvMapGenerator, GradientEquirectTexture } from 'three-gpu-pathtracer';
 
+let gui: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -36,7 +39,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> pathtracer - <a href=\"https://github.com/gkjohnson/three-gpu-pathtracer\" target=\"_blank\" rel=\"noopener\">three-gpu-pathtracer</a><br/>\n\t\t\tSee <a href=\"https://github.com/gkjohnson/three-gpu-pathtracer\" target=\"_blank\" rel=\"noopener\">main project repository</a> for more information and examples on high fidelity path tracing."
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -50,9 +53,9 @@ async function onReady(__stage) {
   
   
   
-  			let progressBarDiv, samplesEl;
+  			let progressBarDiv: any, samplesEl: any;
   
-  			let pathTracer, floor, gradientMap;
+  			let pathTracer: any, floor: any, gradientMap: any;
   
   			const params = {
   				enable: true,
@@ -111,7 +114,19 @@ async function onReady(__stage) {
   
   				
   				onWindowResize();
-  
+
+  		function onWindowResize() {
+  			const w = __stage.container?.clientWidth || window.innerWidth
+  			const h = __stage.container?.clientHeight || window.innerHeight
+  			camera.aspect = w / h;
+  			camera.updateProjectionMatrix();
+
+  			renderer.setSize( w, h );
+
+  			pathTracer.updateCamera();
+
+  		}
+
   				progressBarDiv = document.createElement( 'div' );
   				progressBarDiv.innerText = 'Loading...';
   				progressBarDiv.style.fontSize = '3em';
@@ -134,8 +149,8 @@ async function onReady(__stage) {
   
   				progressBarDiv.innerText = 'Loading...';
   
-  				let model = null;
-  				let environment = null;
+  				let model: any = null;
+  				let environment: any = null;
   
   				updateProgressBar( 0 );
   				showProgressBar();
@@ -155,42 +170,42 @@ async function onReady(__stage) {
   							model = legoGroup;
   
   							legoGroup.traverse( c => {
-  
+
   								// hide the line segments
-  								if ( c.isLineSegments ) {
-  
+  								if ( (c as any).isLineSegments ) {
+
   									c.visible = false;
-  
+
   								}
-  
+
   								// adjust the materials to use transmission, be a bit shinier
   								if ( c.material ) {
-  
-  									c.material.roughness *= 0.25;
-  
-  									if ( c.material.opacity < 1.0 ) {
-  
+
+  									(c.material as any).roughness *= 0.25;
+
+  									if ( (c.material as any).opacity < 1.0 ) {
+
   										const oldMaterial = c.material;
   										const newMaterial = new THREE.MeshPhysicalMaterial();
-  
+
   										newMaterial.opacity = 1.0;
   										newMaterial.transmission = 1.0;
   										newMaterial.thickness = 1.0;
   										newMaterial.ior = 1.4;
-  										newMaterial.roughness = oldMaterial.roughness;
+  										(newMaterial as any).roughness = (oldMaterial as any).roughness;
   										newMaterial.metalness = 0.0;
-  
-  										const hsl = {};
-  										oldMaterial.color.getHSL( hsl );
+
+  										const hsl: any = {};
+  										(oldMaterial as any).color.getHSL( hsl );
   										hsl.l = Math.max( hsl.l, 0.35 );
-  										newMaterial.color.setHSL( hsl.h, hsl.s, hsl.l );
-  
+  										(newMaterial as any).color.setHSL( hsl.h, hsl.s, hsl.l );
+
   										c.material = newMaterial;
-  
+
   									}
-  
+
   								}
-  
+
   							} );
   
   						} )
@@ -268,30 +283,30 @@ async function onReady(__stage) {
   				gui.add( params, 'enable' );
   				gui.add( params, 'pause' );
   				gui.add( params, 'toneMapping' );
-  				gui.add( params, 'transparentBackground' ).onChange( v => {
+  				gui.add( params, 'transparentBackground' ).onChange( (v: any) => {
   
   					scene.background = v ? null : gradientMap;
   					pathTracer.updateEnvironment();
   
   				} );
-  				gui.add( params, 'resolutionScale', 0.1, 1.0, 0.1 ).onChange( v => {
+  				gui.add( params, 'resolutionScale', 0.1, 1.0, 0.1 ).onChange( (v: any) => {
   
   					pathTracer.renderScale = v;
   					pathTracer.reset();
   
   				} );
-  				gui.add( params, 'tiles', 1, 6, 1 ).onChange( v => {
+  				gui.add( params, 'tiles', 1, 6, 1 ).onChange( (v: any) => {
   
   					pathTracer.tiles.set( v, v );
   
   				} );
-  				gui.add( params, 'roughness', 0, 1 ).name( 'floor roughness' ).onChange( v => {
+  				gui.add( params, 'roughness', 0, 1 ).name( 'floor roughness' ).onChange( (v: any) => {
   
   					floor.material.roughness = v;
   					pathTracer.updateMaterials();
   
   				} );
-  				gui.add( params, 'metalness', 0, 1 ).name( 'floor metalness' ).onChange( v => {
+  				gui.add( params, 'metalness', 0, 1 ).name( 'floor metalness' ).onChange( (v: any) => {
   
   					floor.material.metalness = v;
   					pathTracer.updateMaterials();
@@ -312,7 +327,7 @@ async function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.toneMapping = params.toneMapping ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
     				const samples = Math.floor( pathTracer.samples );
     				samplesEl.innerText = `samples: ${ samples }`;
@@ -322,7 +337,7 @@ async function onReady(__stage) {
     				samplesEl.innerText = `samples: ${ Math.floor( pathTracer.samples ) }`;
   })
   
-  			function onProgress( xhr ) {
+  			function onProgress( xhr: any ) {
   
   				if ( xhr.lengthComputable ) {
   
@@ -334,7 +349,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function onError( error ) {
+  			function onError( error: any ) {
   
   				const message = 'Error loading model';
   				progressBarDiv.innerText = message;
@@ -355,13 +370,13 @@ async function onReady(__stage) {
   
   			}
   
-  			function updateProgressBar( fraction ) {
+  			function updateProgressBar( fraction: any ) {
   
   				progressBarDiv.innerText = 'Loading... ' + Math.round( fraction * 100 ) + '%';
   
   			}
   
-  			function generateRadialFloorTexture( dim ) {
+  			function generateRadialFloorTexture( dim: any ) {
   
   				const data = new Uint8Array( dim * dim * 4 );
   

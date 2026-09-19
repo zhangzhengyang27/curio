@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, add, attributeArray, color, instanceIndex, screenUV, storage, transformNormal, transformNormalToView, uint, uniform, vec4, vertexIndex } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Skinning Individual Instancing</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,18 +42,18 @@ function onReady(__stage) {
   
 
   
-  			let mixer, timer, animatedObject, proportionBones, referenceMesh, footBones, groundFoot, dummy;
-  			let instanceMatrices, instanceMatricesNode, bellyWeightsNode;
-  			let computeSkinning;
+  			let mixer: any, timer, animatedObject: any, proportionBones: any, referenceMesh: any, footBones: any, groundFoot: any, dummy: any;
+  			let instanceMatrices: any, instanceMatricesNode: any, bellyWeightsNode: any;
+  			let computeSkinning: any;
   
   			const skeletonStates = new Map();
-  			const timeOffsets = [];
-  			const variations = [];
+  			const timeOffsets: any = [];
+  			const variations: any = [];
   			const leftFoot = new THREE.Vector3();
   			const rightFoot = new THREE.Vector3();
   
   			
-  			function createSourceVertexAttribute( geometry ) {
+  			function createSourceVertexAttribute( geometry: any ) {
   
   				const position = geometry.getAttribute( 'position' );
   				const normal = geometry.getAttribute( 'normal' );
@@ -89,7 +89,7 @@ function onReady(__stage) {
   
   			}
   
-  			function getSkeletonState( skeleton, instanceCount ) {
+  			function getSkeletonState( skeleton: any, instanceCount: any ) {
   
   				let state = skeletonStates.get( skeleton );
   
@@ -113,7 +113,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createComputedMesh( source, instanceCount ) {
+  			function createComputedMesh( source: any, instanceCount: any ) {
   
   				const geometry = source.geometry.clone();
   				const material = source.material.clone();
@@ -148,13 +148,13 @@ function onReady(__stage) {
   						skinWeight.z.mul( boneMatZ ),
   						skinWeight.w.mul( boneMatW )
   					);
-  					const skinPosition = bindMatrixInverse.mul( add(
+  					const skinPosition = ( bindMatrixInverse.mul( add(
   						boneMatX.mul( skinWeight.x ).mul( skinVertex ),
   						boneMatY.mul( skinWeight.y ).mul( skinVertex ),
   						boneMatZ.mul( skinWeight.z ).mul( skinVertex ),
   						boneMatW.mul( skinWeight.w ).mul( skinVertex )
-  					) ).xyz;
-  					const skinNormal = bindMatrixInverse.mul( skinMatrix ).mul( bindMatrix ).transformDirection( sourceVertices.element( sourceOffset.add( uint( 1 ) ) ).xyz ).xyz;
+  					) ) as any ).xyz;
+  					const skinNormal = ( bindMatrixInverse.mul( skinMatrix ).mul( bindMatrix ) as any ).transformDirection( sourceVertices.element( sourceOffset.add( uint( 1 ) ) ).xyz ).xyz;
   					const instanceMatrix = instanceMatricesNode.element( meshInstance );
   
   					vertices.element( targetOffset ).assign( vec4( instanceMatrix.mul( skinPosition ).xyz, 1 ) );
@@ -229,14 +229,14 @@ function onReady(__stage) {
   					const object = gltf.scene;
   					const instanceCount = 30;
   					const duration = gltf.animations[ 0 ].duration;
-  					const skinnedMeshes = [];
+  					const skinnedMeshes: any = [];
   
   					dummy = new THREE.Object3D();
   					animatedObject = object;
   					mixer = new THREE.AnimationMixer( object );
   					mixer.clipAction( gltf.animations[ 0 ] ).play();
   
-  					object.traverse( ( child ) => {
+  					object.traverse( ( child: any ) => {
   
   						if ( child.isSkinnedMesh === true ) skinnedMeshes.push( child );
   
@@ -244,7 +244,7 @@ function onReady(__stage) {
   
   					referenceMesh = skinnedMeshes[ 0 ];
   					const skeleton = referenceMesh.skeleton;
-  					const getBone = ( name ) => skeleton.bones.find( ( bone ) => bone.name.endsWith( name ) );
+  					const getBone = ( name: any ) => skeleton.bones.find( ( bone: any ) => bone.name.endsWith( name ) );
   					const proportionTargets = [
   						getBone( 'Head' ), getBone( 'Spine' ), getBone( 'Spine2' ),
   						getBone( 'LeftArm' ), getBone( 'RightArm' ),
@@ -335,7 +335,7 @@ function onReady(__stage) {
   
   			
   
-  			function applyProportions( variation ) {
+  			function applyProportions( variation: any ) {
   
   				const { head, belly, chest, arms, legs, baseScales } = proportionBones;
   				const bones = [ head, belly, chest, ... arms, ... legs ];
@@ -364,7 +364,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateInstanceMatrix( index, variation ) {
+  			function updateInstanceMatrix( index: any, variation: any ) {
   
   				const foot = getFootCoordinate();
   
@@ -375,7 +375,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( mixer ) {
     					const elapsed = timer.getElapsed();

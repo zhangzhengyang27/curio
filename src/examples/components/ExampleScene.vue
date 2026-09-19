@@ -18,16 +18,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useExampleStage } from '../../composables/useExampleStage.js'
+import { useExampleStage } from '../../composables/useExampleStage'
 
 const props = defineProps({
   /** 相机类型 */
   camera: {
     type: String,
     default: 'perspective',
-    validator: (v) => ['perspective', 'orthographic'].includes(v),
+    validator: (v: any) => ['perspective', 'orthographic'].includes(v),
   },
   /** 相机专属参数 */
   cameraOptions: {
@@ -118,7 +118,7 @@ const props = defineProps({
   cssRenderer: {
     type: String,
     default: '',
-    validator: (v) => ['', 'css2d', 'css3d', 'both'].includes(v),
+    validator: (v: any) => ['', 'css2d', 'css3d', 'both'].includes(v),
   },
   /** 渲染器额外构造参数，如 { outputBufferType: THREE.HalfFloatType } */
   rendererOptions: {
@@ -133,39 +133,39 @@ const containerRef = ref(null)
 const canvasRef = ref(null)
 const overlayRef = ref(null)
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   emit('ready', ctx)
 }
 
-function onResize(size) {
+function onResize(size: any) {
   emit('resize', size)
 }
 
-function onBeforeDispose(ctx) {
+function onBeforeDispose(ctx: any) {
   emit('before-dispose', ctx)
 }
 
 const stage = useExampleStage(canvasRef, containerRef, overlayRef, {
-  camera: props.camera,
+  camera: props.camera as any,
   cameraOptions: props.cameraOptions,
-  cameraPosition: props.cameraPosition,
-  cameraLookAt: props.cameraLookAt,
+  cameraPosition: props.cameraPosition as any,
+  cameraLookAt: props.cameraLookAt as any,
   clearColor: props.clearColor,
   clearAlpha: props.clearAlpha,
   alpha: props.alpha,
   antialias: props.antialias,
   preserveDrawingBuffer: props.preserveDrawingBuffer,
   enableControls: props.enableControls,
-  controlOptions: props.controlOptions,
-  shadowMap: props.shadowMap,
-  defaultLights: props.defaultLights,
+  controlOptions: props.controlOptions as any,
+  shadowMap: props.shadowMap as any,
+  defaultLights: props.defaultLights as any,
   fitContainer: props.fitContainer,
   autoStart: props.autoStart,
   maxPixelRatio: props.maxPixelRatio,
   grid: props.grid,
   customRender: props.customRender,
   cssRenderer: props.cssRenderer,
-  rendererOptions: props.rendererOptions,
+  rendererOptions: props.rendererOptions as any,
   onReady,
   onResize,
   onBeforeDispose,

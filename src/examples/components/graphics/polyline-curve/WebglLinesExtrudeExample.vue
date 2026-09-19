@@ -4,13 +4,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Program, Geometry, Transform, Mesh, Vec2} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -41,7 +41,7 @@ async function initGraphicsExample() {
           }
         `;
     
-        const canvas = gContainer.value.querySelector('canvas');
+        const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
           canvas,
           width: 512,
@@ -65,7 +65,7 @@ async function initGraphicsExample() {
           new Vec2(300, 100),
         ];
     
-        function extrudePolyline(gl, points, {thickness = 10} = {}) {
+        function extrudePolyline(gl: any, points: any[], {thickness = 10} = {}) {
           const halfThick = 0.5 * thickness;
           const innerSide = [];
           const outerSide = [];

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const controls = ctx.controls
   controls.enableDamping = true
@@ -58,7 +58,7 @@ function onReady(ctx) {
   const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 1, 128, 128), shadeMaterial)
   scene.add(plane)
 
-  ctx.addUpdateCallback((delta, elapsed) => {
+  ctx.addUpdateCallback((delta: number, elapsed: number) => {
     shadeMaterial.uniforms.uTime.value = elapsed
   })
 }

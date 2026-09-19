@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
@@ -23,11 +23,11 @@ const props = defineProps({
 
 const emit = defineEmits(['ready', 'resize'])
 
-const containerRef = ref(null)
-const canvasRef = ref(null)
+const containerRef = ref<HTMLElement | null>(null)
+const canvasRef = ref<HTMLCanvasElement | null>(null)
 
-let resizeObserver = null
-let rafId = null
+let resizeObserver: ResizeObserver | null = null
+let rafId: number | null = null
 
 function resizeCanvas() {
   const canvas = canvasRef.value
@@ -45,7 +45,7 @@ function resizeCanvas() {
   emitResize(rect, dpr)
 }
 
-function emitResize(rect, dpr) {
+function emitResize(rect: DOMRect, dpr: number) {
   const canvas = canvasRef.value
   if (!canvas) return
   emit('resize', {
@@ -57,10 +57,10 @@ function emitResize(rect, dpr) {
   })
 }
 
-function addUpdateCallback(callback) {
+function addUpdateCallback(callback: (time: number) => void) {
   if (rafId) cancelAnimationFrame(rafId)
 
-  function loop(time) {
+  function loop(time: number) {
     callback(time)
     rafId = requestAnimationFrame(loop)
   }
@@ -85,7 +85,7 @@ onMounted(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     emitResize(rect, dpr)
   })
-  resizeObserver.observe(containerRef.value)
+  resizeObserver.observe(containerRef.value!)
 
   emit('ready', {
     canvas: canvasRef.value,

@@ -46,9 +46,9 @@
   </router-link>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getSources } from '../registry/index.js'
+import { getSources } from '../registry/index.ts'
 
 const props = defineProps({
   ex: { type: Object, required: true },

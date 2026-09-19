@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,13 +46,18 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 1. 雷达材质效果实现
   class RadarPrimitiveMaterialProperty {
-    constructor(options = {}) {
+    _definitionChanged: any
+    opts: any
+    _color: any
+    _time: any
+    _duration: any
+    constructor(options: any = {}) {
       this._definitionChanged = new Cesium.Event();
       this.opts = {
         color: Cesium.Color.RED,
@@ -82,7 +87,7 @@ function onReady(ctx) {
       return Cesium.Material.radarPrimitiveType;
     }
   
-    getValue(time, result) {
+    getValue(time: any, result: any) {
       if (!Cesium.defined(result)) {
         result = {};
       }
@@ -99,7 +104,7 @@ function onReady(ctx) {
       return result;
     }
     
-    equals(other) {
+    equals(other: any) {
       return (
         this === other ||
         (other instanceof RadarPrimitiveMaterialProperty &&
@@ -180,7 +185,7 @@ function onReady(ctx) {
   }
   
   // 3. 创建雷达锥体
-  function createRadarCone(options = {}) {
+  function createRadarCone(options: any = {}) {
     const defaultOptions = {
       position: [120.38, 36.08, 0], // 经度、纬度、高度
       heading: 0,                   // 方向角

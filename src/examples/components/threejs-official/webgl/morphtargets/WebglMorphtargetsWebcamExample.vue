@@ -13,16 +13,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+// @ts-expect-error CDN URL 模块无类型声明(运行时由浏览器 ESM 解析)
 import { FaceLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.35';
 
 const props = defineProps({
@@ -33,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - morph targets - webcam<br/>\n\t\t\tmodel by <a href=\"https://www.bannaflak.com/face-cap\" target=\"_blank\" rel=\"noopener\">Face Cap</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -137,7 +138,7 @@ async function onReady(__stage) {
   
   			// Face
   
-  			let face, eyeL, eyeR;
+  			let face: any, eyeL: any, eyeR: any;
   			const eyeRotationLimit = THREE.MathUtils.degToRad( 30 );
   
   			// MediaPipe's facial transformation matrix is copied here verbatim. Until
@@ -168,13 +169,13 @@ async function onReady(__stage) {
   				.load( ASSET_HOST + 'models/gltf/facecap.glb', ( gltf ) => {
   
   					// Reparent the head/eyes/teeth and drop the model's own scale rig.
-  					const group = gltf.scene.getObjectByName( 'grp_transform' );
+  					const group = gltf.scene.getObjectByName( 'grp_transform' )!;
   					registration.add( group );
   
-  					const head = group.getObjectByName( 'mesh_2' );
+  					const head = group.getObjectByName( 'mesh_2' ) as any;
   					head.material = new THREE.MeshNormalMaterial();
   
-  					const teeth = group.getObjectByName( 'mesh_3' );
+  					const teeth = group.getObjectByName( 'mesh_3' ) as any;
   					teeth.material = new THREE.MeshNormalMaterial();
   
   					face = head;
@@ -188,7 +189,7 @@ async function onReady(__stage) {
   
   					const influences = head.morphTargetInfluences;
   
-  					for ( const [ key, value ] of Object.entries( head.morphTargetDictionary ) ) {
+  					for ( const [ key, value ] of Object.entries( head.morphTargetDictionary as { [ key: string ]: number } ) ) {
   
   						gui.add( influences, value, 0, 1, 0.01 )
   							.name( key.replace( 'blendShape1.', '' ) )
@@ -264,7 +265,7 @@ async function onReady(__stage) {
   
   			} );
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( video.readyState >= HTMLMediaElement.HAVE_METADATA ) {
     					const results = faceLandmarker.detectForVideo( video, Date.now() );
     					if ( results.facialTransformationMatrixes.length > 0 ) {
@@ -284,7 +285,7 @@ async function onReady(__stage) {
     						for ( const blendshape of faceBlendshapes ) {
     							const categoryName = blendshape.categoryName;
     							const score = blendshape.score;
-    							const index = face.morphTargetDictionary[ blendshapesMap[ categoryName ] ];
+    							const index = face.morphTargetDictionary[ ( blendshapesMap as any )[ categoryName ] ];
     							if ( index !== undefined ) {
     								face.morphTargetInfluences[ index ] = score;
     							}
@@ -338,6 +339,9 @@ async function onReady(__stage) {
   				} else {
   
   					height = width / camera.aspect;
+
+  					// 原版末行 renderer.setSize( width, height ),转换期丢失
+  					renderer.setSize( width, height );
   
   				}
   

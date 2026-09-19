@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - texture manual mipmapping example<br/>\n\t\t\tpainting by <a href=\"http://en.wikipedia.org/wiki/Basket_of_Fruit_%28Caravaggio%29\">Caravaggio</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -65,19 +65,19 @@ function onReady(__stage) {
   
   				// GROUND
   
-  				function mipmap( size, color ) {
+  				function mipmap( size: any, color: any ) {
   
   					const imageCanvas = document.createElement( 'canvas' );
   					const context = imageCanvas.getContext( '2d' );
   
   					imageCanvas.width = imageCanvas.height = size;
   
-  					context.fillStyle = '#444';
-  					context.fillRect( 0, 0, size, size );
+  					context!.fillStyle = '#444';
+  					context!.fillRect( 0, 0, size, size );
   
-  					context.fillStyle = color;
-  					context.fillRect( 0, 0, size / 2, size / 2 );
-  					context.fillRect( size / 2, size / 2, size / 2, size / 2 );
+  					context!.fillStyle = color;
+  					context!.fillRect( 0, 0, size / 2, size / 2 );
+  					context!.fillRect( size / 2, size / 2, size / 2, size / 2 );
   					return imageCanvas;
   
   				}
@@ -134,7 +134,7 @@ function onReady(__stage) {
   					addPainting( scene1, mesh1 );
   					addPainting( scene2, mesh2 );
   
-  					function addPainting( zscene, zmesh ) {
+  					function addPainting( zscene: any, zmesh: any ) {
   
   						zmesh.scale.x = image.width / 100;
   						zmesh.scale.y = image.height / 100;
@@ -188,7 +188,7 @@ function onReady(__stage) {
   
   
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX );
   				mouseY = ( event.clientY - windowHalfY );
@@ -196,7 +196,7 @@ function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y += ( - ( mouseY - 200 ) - camera.position.y ) * .05;
     				renderer.clear();

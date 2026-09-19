@@ -52,7 +52,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, shallowRef } from 'vue'
 import { VcOverlayDynamic } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -65,14 +65,14 @@ function cycleSpeed() {
 }
 const running = ref(true)
 
-const clock = shallowRef(null)
-const currentTime = shallowRef(null)
+const clock = shallowRef<any>(null)
+const currentTime = shallowRef<any>(null)
 // VcOverlayDynamic 要求每个条目自带 sampledPositions 数组(组件内部逐条
 // addPosition 建 SampledPositionProperty);传 Entity 式 position 会在其
 // transform 阶段 sampledPositions.forEach 崩溃,打断渲染循环(球面全黑,实测)
-const OVERLAYS = shallowRef([])
+const OVERLAYS = shallowRef<any[]>([])
 
-function onViewerReady(viewer, Cesium) {
+function onViewerReady(viewer: any, Cesium: any) {
   const start = Cesium.JulianDate.fromDate(new Date())
   const stop = Cesium.JulianDate.addMinutes(start, 10, new Cesium.JulianDate())
   clock.value = { start, stop }

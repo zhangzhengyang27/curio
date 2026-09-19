@@ -15,10 +15,10 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
@@ -44,12 +44,13 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - xr layers"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let room: any;
 
   
   
@@ -65,15 +66,15 @@ function onReady(__stage) {
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
-  			const funfairs = [];
+  			const funfairs: any = [];
   			const train = new THREE.Object3D();
   			const rcdelta = timer.getDelta() * 0.8; // slow down simulation
   			const PI2 = Math.PI * 2;
-  			let rccamera = null;
-  			let rcscene = null;
+  			let rccamera: any = null;
+  			let rcscene: any = null;
   
   			const tempMatrix = new THREE.Matrix4();
-  			let raycaster = null;
+  			let raycaster: any = null;
   
   			const curve = ( function () {
   
@@ -82,7 +83,7 @@ function onReady(__stage) {
   
   				return {
   
-  					getPointAt: function ( t ) {
+  					getPointAt: function ( t: any ) {
   
   						t = t * PI2;
   
@@ -94,7 +95,7 @@ function onReady(__stage) {
   
   					},
   
-  					getTangentAt: function ( t ) {
+  					getTangentAt: function ( t: any ) {
   
   						const delta = 0.0001;
   						const t1 = Math.max( 0, t - delta );
@@ -109,20 +110,20 @@ function onReady(__stage) {
   
   			} )();
   
-  			let horseCamera = null;
-  			let horseScene = null;
-  			let horseMixer = null;
+  			let horseCamera: any = null;
+  			let horseScene: any = null;
+  			let horseMixer: any = null;
   			let horseTheta = 0;
   			let horseMesh = null;
   			const horseRadius = 600;
   
-  			let guiScene = null;
-  			let guiCamera = null;
-  			let guiGroup = null;
+  			let guiScene: any = null;
+  			let guiCamera: any = null;
+  			let guiGroup: any = null;
   
-  			let rollercoasterLayer = null;
-  			let horseLayer = null;
-  			let guiLayer = null;
+  			let rollercoasterLayer: any = null;
+  			let horseLayer: any = null;
+  			let guiLayer: any = null;
   
   			const parameters = {
   				radius: 0.6,
@@ -135,7 +136,7 @@ function onReady(__stage) {
   			};
   
   			
-  			function getIntersections( controller ) {
+  			function getIntersections( controller: any ) {
   
   				tempMatrix.identity().extractRotation( controller.matrixWorld );
   
@@ -203,19 +204,19 @@ function onReady(__stage) {
   
   				// controllers
   
-  				function onSqueezeStart( ) {
+  				function onSqueezeStart( this: any ) {
   
   					this.userData.isSelecting = true;
   
   				}
   
-  				function onSqueezeEnd() {
+  				function onSqueezeEnd( this: any ) {
   
   					this.userData.isSelecting = false;
   
   				}
   
-  				function onSelectStart( event ) {
+  				function onSelectStart( this: any, event: any ) {
   
   					const controller = event.target;
   
@@ -252,7 +253,7 @@ function onReady(__stage) {
   
   				}
   
-  				function onSelectEnd( ) {
+  				function onSelectEnd( this: any ) {
   
   					horseLayer.visible = true;
   					scene.attach( rollercoasterLayer );
@@ -266,12 +267,12 @@ function onReady(__stage) {
   				controller1.addEventListener( 'selectend', onSelectEnd );
   				controller1.addEventListener( 'squeezestart', onSqueezeStart );
   				controller1.addEventListener( 'squeezeend', onSqueezeEnd );
-  				controller1.addEventListener( 'connected', function ( event ) {
+  				controller1.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					this.add( buildController( event.data ) );
   
   				} );
-  				controller1.addEventListener( 'disconnected', function () {
+  				controller1.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -283,12 +284,12 @@ function onReady(__stage) {
   				controller2.addEventListener( 'selectend', onSelectEnd );
   				controller2.addEventListener( 'squeezestart', onSqueezeStart );
   				controller2.addEventListener( 'squeezeend', onSqueezeEnd );
-  				controller2.addEventListener( 'connected', function ( event ) {
+  				controller2.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					this.add( buildController( event.data ) );
   
   				} );
-  				controller2.addEventListener( 'disconnected', function () {
+  				controller2.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -332,7 +333,7 @@ function onReady(__stage) {
   
   				// environment
   
-  				let rcgeometry = new THREE.PlaneGeometry( 500, 500, 15, 15 );
+  				let rcgeometry: any = new THREE.PlaneGeometry( 500, 500, 15, 15 );
   				rcgeometry.rotateX( - Math.PI / 2 );
   
   				const positions = rcgeometry.attributes.position.array;
@@ -354,11 +355,11 @@ function onReady(__stage) {
   
   				rcgeometry.computeVertexNormals();
   
-  				let rcmaterial = new THREE.MeshLambertMaterial( {
+  				let rcmaterial: any = new THREE.MeshLambertMaterial( {
   					color: 0x407000
   				} );
   
-  				let rcmesh = new THREE.Mesh( rcgeometry, rcmaterial );
+  				let rcmesh: any = new THREE.Mesh( rcgeometry, rcmaterial );
   				rcscene.add( rcmesh );
   
   				rcgeometry = new TreesGeometry( rcmesh );
@@ -566,7 +567,7 @@ function onReady(__stage) {
   
   			}
   
-  			function buildController( data ) {
+  			function buildController( data: any ) {
   
   				let geometry, material;
   
@@ -594,7 +595,7 @@ function onReady(__stage) {
   
   			
   
-  			function handleController( controller ) {
+  			function handleController( controller: any ) {
   
   				if ( controller.userData.isSelecting ) {
   
@@ -628,7 +629,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				renderer.xr.renderLayers( );
     				handleController( controller1 );

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -12,18 +12,18 @@
   const containerRef = shallowRef(null)
 
   // 动画相关
-  let mixer = null
+  let mixer: any = null
   const clock = new THREE.Clock()
-  let gui = null
-  let loadedModel = null
+  let gui: any = null
+  let loadedModel: any = null
 
   // 动画动作
-  let walkAction = null
-  let runAction = null
-  let posAction = null
-  let greetAction = null
-  let idleAction = null
-  let currentAction = null
+  let walkAction: any = null
+  let runAction: any = null
+  let posAction: any = null
+  let greetAction: any = null
+  let idleAction: any = null
+  let currentAction: any = null
 
   // 使用封装的场景
   const {
@@ -59,15 +59,15 @@
         // 设置折射贴图
         envMap.mapping = THREE.EquirectangularRefractionMapping
         // 设置背景色
-        scene.value.background = new THREE.Color(0xcccccc)
+        scene.value!.background = new THREE.Color(0xcccccc)
         // 设置环境贴图
-        scene.value.environment = envMap
+        scene.value!.environment = envMap
         console.log("HDR 环境贴图加载完成")
       },
       undefined,
       (error) => {
         console.error("HDR 加载失败:", error)
-        scene.value.background = new THREE.Color(0xcccccc)
+        scene.value!.background = new THREE.Color(0xcccccc)
       }
     )
   }
@@ -97,7 +97,7 @@
         )
 
         // 添加模型到场景
-        scene.value.add(gltf.scene)
+        scene.value!.add(gltf.scene)
 
         // 创建动画混合器
         mixer = new THREE.AnimationMixer(gltf.scene)
@@ -140,7 +140,7 @@
   /**
    * 获取动画名称
    */
-  const getAnimationName = (action) => {
+  const getAnimationName = (action: any) => {
     if (action === idleAction) return "空闲 (Idle)"
     if (action === walkAction) return "行走 (Walk)"
     if (action === runAction) return "跑步 (Run)"
@@ -154,7 +154,7 @@
    * @param {THREE.AnimationAction} targetAction - 目标动画
    * @param {number} duration - 过渡时间（秒）
    */
-  const switchToAction = (targetAction, duration = 0.5) => {
+  const switchToAction = (targetAction: any, duration = 0.5) => {
     if (!targetAction || targetAction === currentAction) return
 
     // 启用目标动画
@@ -183,8 +183,9 @@
 
     scene.value.traverse((object) => {
       if (object.type === "GridHelper") {
-        object.material.opacity = 0.3
-        object.material.transparent = true
+        const gridMat = object.material as THREE.LineBasicMaterial
+        gridMat.opacity = 0.3
+        gridMat.transparent = true
       }
     })
   }
@@ -205,7 +206,7 @@
     sceneFolder
       .addColor(sceneParams, "backgroundColor")
       .name("背景颜色")
-      .onChange((value) => {
+      .onChange((value: any) => {
         if (scene.value) {
           scene.value.background = new THREE.Color(value)
         }
@@ -223,7 +224,7 @@
       },
       // 播放所有动画（调试用）
       play: () => {
-        mixer._actions.forEach((action) => {
+        mixer._actions.forEach((action: any) => {
           action.play()
         })
         animationState.isPlaying = "是"
@@ -288,7 +289,7 @@
       mixerFolder
         .add(mixer, "timeScale", 0, 3, 0.1)
         .name("播放速度")
-        .onChange((value) => {
+        .onChange((value: any) => {
           console.log("播放速度:", value)
           animationState.timeScale = value.toFixed(1)
         })
@@ -356,13 +357,13 @@
 
     // 清理加载的模型
     if (loadedModel && scene.value) {
-      loadedModel.traverse((child) => {
+      loadedModel.traverse((child: any) => {
         if (child.geometry) {
           child.geometry.dispose()
         }
         if (child.material) {
           if (Array.isArray(child.material)) {
-            child.material.forEach((material) => material.dispose())
+            child.material.forEach((material: any) => material.dispose())
           } else {
             child.material.dispose()
           }

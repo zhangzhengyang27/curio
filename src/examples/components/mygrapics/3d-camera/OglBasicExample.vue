@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {
         Renderer,
         Camera,
@@ -19,12 +19,12 @@ import {
         Mesh
     } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/index.mjs'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('canvas');
+    const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
             canvas,
             width: 512,

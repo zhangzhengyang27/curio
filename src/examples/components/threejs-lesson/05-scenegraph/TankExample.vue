@@ -10,10 +10,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import {
   BoxGeometry,
   CylinderGeometry,
@@ -31,7 +31,7 @@ import {
 import { GUI } from 'lil-gui'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene, renderer, setCamera, addUpdateCallback, overlay } = ctx
 
   renderer.shadowMap.enabled = true
@@ -163,7 +163,7 @@ function onReady(ctx) {
   ])
 
   const curCamera = { name: 'camera' }
-  gui.add(curCamera, 'name', [...cameras.keys()]).onChange((key) => {
+  gui.add(curCamera, 'name', [...cameras.keys()]).onChange((key: string) => {
     const cam = cameras.get(key)
     if (cam) {
       setCamera(cam)
@@ -172,7 +172,7 @@ function onReady(ctx) {
 
   overlay.appendChild(gui.domElement)
 
-  addUpdateCallback((delta, elapsed) => {
+  addUpdateCallback((delta: number, elapsed: number) => {
     const time = elapsed
 
     const tankTime = time * 0.1

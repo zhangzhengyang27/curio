@@ -13,7 +13,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -33,18 +33,18 @@ const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-fi
 const HOST = props.example?.globals?.HOST || '/external-examples/three-cesium-examples/'
 
 const gui = new GUI()
-let statsRef = null
-let pointMeshRef = null
-let cityModelRef = null
-let postprocessingRef = null
-let cameraRef = null
-let rendererRef = null
-let controlsRef = null
-let sceneRef = null
-let paramsRef = null
-let verticesRef = null
-let offsetRef = null
-let sizeRef = null
+let statsRef: any = null
+let pointMeshRef: any = null
+let cityModelRef: any = null
+let postprocessingRef: any = null
+let cameraRef: any = null
+let rendererRef: any = null
+let controlsRef: any = null
+let sceneRef: any = null
+let paramsRef: any = null
+let verticesRef: any = null
+let offsetRef: any = null
+let sizeRef: any = null
 
 const vsGBuffer = /* glsl */ `
   out vec3 vNormal;
@@ -159,8 +159,8 @@ const vsFinal = /* glsl */ `
   }
 `
 
-function initPostprocessing(renderTargetWidth, renderTargetHeight, scene) {
-  const postprocessing = {}
+function initPostprocessing(renderTargetWidth: any, renderTargetHeight: any, scene: any) {
+  const postprocessing: any = {}
   postprocessing.scene = new THREE.Scene()
   postprocessing.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
   postprocessing.scene.add(postprocessing.camera)
@@ -216,7 +216,7 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight, scene) {
   return postprocessing
 }
 
-function updatePoints(vertices, offset, size, pointMesh) {
+function updatePoints(vertices: any, offset: any, size: any, pointMesh: any) {
   for (let i = 1; i < vertices.length; i += 3) {
     vertices[i] -= 0.5
     vertices[i - 1] -= offset[i - 1]
@@ -234,7 +234,7 @@ function updatePoints(vertices, offset, size, pointMesh) {
   pointMesh.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3))
 }
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -282,8 +282,8 @@ function onReady(stageCtx) {
     }
   })
 
-  const vertices = []
-  const offset = []
+  const vertices: any[] = []
+  const offset: any[] = []
   const particleCount = 1000
   for (let i = 0; i < particleCount; i++) {
     const x = 1000 * (Math.random() - 0.5)
@@ -338,7 +338,7 @@ function onReady(stageCtx) {
     console.log(`模型加载进度: ${percentComplete}%`)
   })
 
-  stageCtx.addUpdateCallback((delta, elapsed) => {
+  stageCtx.addUpdateCallback((delta: number, elapsed: number) => {
     postprocessing.finalMaterial.uniforms.time.value = elapsed
     postprocessing.finalMaterial.uniforms.uCameraPosition.value.copy(camera.position)
 
@@ -365,7 +365,7 @@ function onReady(stageCtx) {
   })
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (!cameraRef || !rendererRef || !postprocessingRef) return
   cameraRef.aspect = width / height || 1
   cameraRef.updateProjectionMatrix()

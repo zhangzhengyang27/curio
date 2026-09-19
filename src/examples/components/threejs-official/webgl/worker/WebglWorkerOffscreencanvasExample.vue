@@ -49,21 +49,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import OffscreenWorker from './offscreen.worker.js?worker'
-import { init } from './offscreen-scene.js'
+import OffscreenWorker from './offscreen.worker.ts?worker'
+import { init } from './offscreen-scene.ts'
 
 const containerRef = ref(null)
-const canvas1Ref = ref(null)
-const canvas2Ref = ref(null)
-const buttonRef = ref(null)
-const resultRef = ref(null)
+const canvas1Ref = ref<any>(null)
+const canvas2Ref = ref<any>(null)
+const buttonRef = ref<any>(null)
+const resultRef = ref<any>(null)
 
 const offscreenSupported = ref(true)
 
-let worker = null
-let interval = null
+let worker: any = null
+let interval: any = null
 
 function toggleJank() {
   if (interval === null) {
@@ -78,7 +78,7 @@ function toggleJank() {
 }
 
 function jank() {
-  let number = 0
+  let number: number = 0
   for (let i = 0; i < 10000000; i++) {
     number += Math.random()
   }

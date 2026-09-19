@@ -16,13 +16,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec3, uniform, texture, depth, float } from 'three/tsl';
 import { gaussianBlur } from 'three/examples/jsm/tsl/display/GaussianBlurNode.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let renderTarget: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Contact Shadows</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,7 +47,7 @@ function onReady(__stage) {
   			let plane, fillPlane, cameraHelper;
   			let depthMaterial, shadowPlaneMaterial, fillPlaneMaterial;
   
-  			const meshes = [];
+  			const meshes: any = [];
   
   			const PLANE_WIDTH = 2.5;
   			const PLANE_HEIGHT = 2.5;
@@ -209,8 +212,8 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
-    meshes.forEach( m => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
+    meshes.forEach( (m: any) => {
     					m.rotation.x += 0.01;
     					m.rotation.y += 0.02;
     				} );
@@ -226,6 +229,7 @@ function onReady(__stage) {
     				if ( initialClearAlpha !== undefined ) renderer.setClearAlpha( 0 );
     				renderer.setRenderTarget( renderTarget );
     				renderer.clear();
+    				renderer.render( scene, shadowCamera );
     				scene.overrideMaterial = prevOverride;
     				renderer.setRenderTarget( null );
     				renderer.autoClear = initialAutoClear;

@@ -4,15 +4,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -29,7 +30,7 @@ async function loadScript(src) {
 async function initGraphicsExample() {
   await loadScript("/graphics/common/lib/gl-renderer.js");
   {
-    const canvas = gContainer.value.querySelector('canvas');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas);
     
         const vertex = `
@@ -88,7 +89,7 @@ async function initGraphicsExample() {
     
         const COUNT = 3000;
     
-        function createShapes(count) {
+        function createShapes(count: any) {
           const positions = new Float32Array(count * 6 * 3); // 最多6边形
           const cells = new Int16Array(count * 4 * 3); // 索引数等于3倍顶点数-2
           positions.fill(0);
@@ -121,7 +122,7 @@ async function initGraphicsExample() {
           cells,
         }]);
     
-        function render(t) {
+        function render(t: any) {
           renderer.uniforms.uTime = t / 1e6;
           renderer.render();
           requestAnimationFrame(render);

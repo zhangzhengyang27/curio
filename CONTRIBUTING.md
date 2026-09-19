@@ -42,7 +42,7 @@ npm run test:e2e          # 冒烟用例通过（dev server，反馈快）
 E2E_TARGET=preview npm run test:e2e   # 冒烟用例跑生产产物（合并前必跑）
 ```
 
-改动涉及 `vite.config.js` 的分包、构建期 env 注入、或任何产物形态时，
+改动涉及 `vite.config.ts` 的分包、构建期 env 注入、或任何产物形态时，
 **必须**跑 `E2E_TARGET=preview` 那一遍 —— dev 模式不经过生产打包，测不出这类问题。
 
 CI（`.github/workflows/ci.yml`）会执行同样的门禁，本地先跑一遍能省一轮往返。
@@ -120,5 +120,5 @@ npm run verify:registry   # 必须通过
 ## 6. 评审要求
 
 - 评审者重点看：是否有回归风险、是否新增未登记的凭据/路径、是否补充了对应校验。
-- 涉及示例解析约定、注册表结构、`vite.config.js` 解析逻辑的改动，必须说明影响面。
+- 涉及示例解析约定、注册表结构、`vite.config.ts` 解析逻辑的改动，必须说明影响面。
 - 改动页面结构时，同步更新 `tests/smoke.spec.js` 中的选择器（若选择了对应元素）。

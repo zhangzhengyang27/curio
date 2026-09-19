@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,8 +17,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
 
@@ -36,7 +36,7 @@ const viewerOptions = {
 
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -44,8 +44,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 这里 https://github.com/z2586300277/3d-file-server 是我存放离线地图瓦片资源的仓库 
@@ -56,7 +56,18 @@ function onReady(ctx) {
   
   /* 百度 影像服务 */
   class BaiduImageryProvider {
-      constructor(options) {
+    _errorEvent: any
+    _tileWidth: any
+    _tileHeight: any
+    _maximumLevel: any
+    _minimumLevel: any
+    _tilingScheme: any
+    _rectangle: any
+    _resource: any
+    _tileDiscardPolicy: any
+    _credit: any
+    _readyPromise: any
+      constructor(options: any) {
           this._errorEvent = new Cesium.Event();
           this._tileWidth = 256;
           this._tileHeight = 256;
@@ -84,7 +95,7 @@ function onReady(ctx) {
       get readyPromise() { return this._readyPromise; }
       get credit() { return this._credit; }
   
-      requestImage(x, y, level) {
+      requestImage(x: any, y: any, level: any) {
           let url = this.url
               .replace("{x}", x - this._tilingScheme.getNumberOfXTilesAtLevel(level) / 2)
               .replace("{y}", this._tilingScheme.getNumberOfYTilesAtLevel(level) / 2 - y - 1)

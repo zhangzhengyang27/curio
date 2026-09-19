@@ -11,7 +11,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
@@ -27,10 +27,10 @@ const props = defineProps({
 
 const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-file-server/'
 
-let guiRef = null
-let transformControls = null
+let guiRef: any = null
+let transformControls: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -43,7 +43,7 @@ function onReady(ctx) {
   guiRef = new GUI()
 
   transformControls = new TransformControls(camera, renderer.domElement)
-  transformControls.addEventListener('dragging-changed', (event) => {
+  transformControls.addEventListener('dragging-changed', (event: any) => {
     controls.enabled = !event.value
   })
   scene.add(transformControls.getHelper())

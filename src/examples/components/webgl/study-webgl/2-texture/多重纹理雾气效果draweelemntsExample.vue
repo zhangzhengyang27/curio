@@ -2,10 +2,10 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   let vertexstring = `
           attribute vec4 a_position;
@@ -31,14 +31,11 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
           `;
           var projMat4 = glMatrix.mat4.create();
-          var webgl;
-          var uniformTexture = 0;
+          var webgl: any;          var uniformTexture = 0;
           var uniformTexture1 = 0;
           var uniformAnim = 0;
           var count = 0;
-          var texture0;
-          var texture1;
-  
+          var texture0: WebGLTexture;          var texture1: WebGLTexture;  
           function webglStart() {
               init();
               tick();
@@ -58,15 +55,15 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           function initWebgl() {
               let webglDiv = canvas;
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               glMatrix.mat4.ortho(projMat4, 0, webglDiv.clientWidth, webglDiv.clientHeight, 0, -1.0, 1.0)
           }
   
           function initShader() {
   
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               webgl.shaderSource(vsshader, vertexstring);
               webgl.shaderSource(fsshader, fragmentstring);
@@ -90,7 +87,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.linkProgram(program);
               webgl.useProgram(program);
   
-              webgl.program = program
+              (webgl as any).program = program
           }
   
           function initBuffer() {
@@ -105,17 +102,17 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
                   2, 0, 3
               ];
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 6 * 4, 0);
   
-              let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
+              let uniformProj = webgl.getUniformLocation((webgl as any).program, "proj");
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
   
-              let attribOutUV = webgl.getAttribLocation(webgl.program, "outUV");
+              let attribOutUV = webgl.getAttribLocation((webgl as any).program, "outUV");
               webgl.enableVertexAttribArray(attribOutUV);
               webgl.vertexAttribPointer(attribOutUV, 2, webgl.FLOAT, false, 6 * 4, 4 * 4);
   
@@ -125,8 +122,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.bufferData(webgl.ELEMENT_ARRAY_BUFFER, indexarr, webgl.STATIC_DRAW);
   
   
-              uniformTexture = webgl.getUniformLocation(webgl.program, "texture");
-              uniformTexture1 = webgl.getUniformLocation(webgl.program, "texture1");
+              uniformTexture = webgl.getUniformLocation((webgl as any).program, "texture");
+              uniformTexture1 = webgl.getUniformLocation((webgl as any).program, "texture1");
   
               texture1 = initTexture("/webgl/study-webgl/2-texture/images/fog.png");
               texture0 = initTexture("/webgl/study-webgl/2-texture/images/山水图像纹理映射.png");
@@ -134,7 +131,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           }
   
-          function handleLoadedTexture(texture) {
+          function handleLoadedTexture(texture: any, _num?: any) {
               webgl.bindTexture(webgl.TEXTURE_2D, texture);
               webgl.pixelStorei(webgl.UNPACK_FLIP_Y_WEBGL, 666);
   
@@ -148,8 +145,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           }
   
-          function initTexture(imageFile, num) {
-              let textureHandle = webgl.createTexture();
+          function initTexture(imageFile: any, num?: any) {
+              let textureHandle = webgl.createTexture()!;
               textureHandle.image = new Image();
               textureHandle.image.src = imageFile;
               textureHandle.image.onload = function () {
@@ -165,7 +162,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
   
               //纹理变动
-              uniformAnim = webgl.getUniformLocation(webgl.program, "anim");
+              uniformAnim = webgl.getUniformLocation((webgl as any).program, "anim");
               count = count + 0.01;
               webgl.uniform1f(uniformAnim, count);
               webgl.activeTexture(webgl.TEXTURE0);

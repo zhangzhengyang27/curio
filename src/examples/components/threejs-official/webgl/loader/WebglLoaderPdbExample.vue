@@ -16,16 +16,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { PDBLoader } from 'three/examples/jsm/loaders/PDBLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let root: any;
 
 const props = defineProps({
   example: {
@@ -35,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js webgl</a> - molecules"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +48,7 @@ function onReady(__stage) {
   
   
   
-  			let labelRenderer;
+  			let labelRenderer: any;
   
   
   
@@ -138,7 +139,7 @@ function onReady(__stage) {
   
   			//
   
-  			function loadMolecule( model ) {
+  			function loadMolecule( model: any ) {
   
   				const url = ASSET_HOST + 'models/pdb/' + model;
   
@@ -159,7 +160,7 @@ function onReady(__stage) {
   					const sphereGeometry = new THREE.IcosahedronGeometry( 1, 3 );
   
   					geometryAtoms.computeBoundingBox();
-  					geometryAtoms.boundingBox.getCenter( offset ).negate();
+  					geometryAtoms.boundingBox!.getCenter( offset ).negate();
   
   					geometryAtoms.translate( offset.x, offset.y, offset.z );
   					geometryBonds.translate( offset.x, offset.y, offset.z );
@@ -236,7 +237,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.0004;
     				root.rotation.x = time;
     				root.rotation.y = time * 0.7;

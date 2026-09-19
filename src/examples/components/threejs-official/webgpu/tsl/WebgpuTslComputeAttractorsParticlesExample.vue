@@ -17,7 +17,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { float, If, PI, color, cos, instanceIndex, Loop, mix, mod, sin, instancedArray, Fn, uint, uniform, uniformArray, hash, vec3, vec4 } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Attractors Particles</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,7 +45,7 @@ function onReady(__stage) {
   
   
   
-  			let updateCompute;
+  			let updateCompute: any;
   
   			init();
   
@@ -95,7 +95,7 @@ function onReady(__stage) {
   					new THREE.Vector3( 1, 0, - 0.5 ).normalize()
   				] );
   				const attractorsLength = uniform( attractorsPositions.array.length, 'uint' );
-  				const attractors = [];
+  				const attractors: any = [];
   				const helpersRingGeometry = new THREE.RingGeometry( 1, 1.02, 32, 1, 0, Math.PI * 1.5 );
   				const helpersArrowGeometry = new THREE.ConeGeometry( 0.1, 0.4, 12, 1, false );
   				const helpersMaterial = new THREE.MeshBasicMaterial( { side: THREE.DoubleSide } );
@@ -104,45 +104,45 @@ function onReady(__stage) {
   
   					const attractor = {};
   
-  					attractor.position = attractorsPositions.array[ i ];
-  					attractor.orientation = attractorsRotationAxes.array[ i ];
-  					attractor.reference = new THREE.Object3D();
-  					attractor.reference.position.copy( attractor.position );
-  					attractor.reference.quaternion.setFromUnitVectors( new THREE.Vector3( 0, 1, 0 ), attractor.orientation );
-  					scene.add( attractor.reference );
+  					(attractor as any).position = attractorsPositions.array[ i ];
+  					(attractor as any).orientation = attractorsRotationAxes.array[ i ];
+  					(attractor as any).reference = new THREE.Object3D();
+  					(attractor as any).reference.position.copy( (attractor as any).position );
+  					(attractor as any).reference.quaternion.setFromUnitVectors( new THREE.Vector3( 0, 1, 0 ), (attractor as any).orientation );
+  					scene.add( (attractor as any).reference );
   
-  					attractor.helper = new THREE.Group();
-  					attractor.helper.scale.setScalar( 0.325 );
-  					attractor.reference.add( attractor.helper );
+  					(attractor as any).helper = new THREE.Group();
+  					(attractor as any).helper.scale.setScalar( 0.325 );
+  					(attractor as any).reference.add( (attractor as any).helper );
   
-  					attractor.ring = new THREE.Mesh( helpersRingGeometry, helpersMaterial );
-  					attractor.ring.rotation.x = - Math.PI * 0.5;
-  					attractor.helper.add( attractor.ring );
+  					(attractor as any).ring = new THREE.Mesh( helpersRingGeometry, helpersMaterial );
+  					(attractor as any).ring.rotation.x = - Math.PI * 0.5;
+  					(attractor as any).helper.add( (attractor as any).ring );
   
-  					attractor.arrow = new THREE.Mesh( helpersArrowGeometry, helpersMaterial );
-  					attractor.arrow.position.x = 1;
-  					attractor.arrow.position.z = 0.2;
-  					attractor.arrow.rotation.x = Math.PI * 0.5;
-  					attractor.helper.add( attractor.arrow );
+  					(attractor as any).arrow = new THREE.Mesh( helpersArrowGeometry, helpersMaterial );
+  					(attractor as any).arrow.position.x = 1;
+  					(attractor as any).arrow.position.z = 0.2;
+  					(attractor as any).arrow.rotation.x = Math.PI * 0.5;
+  					(attractor as any).helper.add( (attractor as any).arrow );
   
-  					attractor.controls = new TransformControls( camera, renderer.domElement );
-  					attractor.controls.mode = 'rotate';
-  					attractor.controls.size = 0.5;
-  					attractor.controls.attach( attractor.reference );
-  					attractor.controls.visible = true;
-  					attractor.controls.enabled = attractor.controls.visible;
-  					scene.add( attractor.controls.getHelper() );
+  					(attractor as any).controls = new TransformControls( camera, renderer.domElement );
+  					(attractor as any).controls.mode = 'rotate';
+  					(attractor as any).controls.size = 0.5;
+  					(attractor as any).controls.attach( (attractor as any).reference );
+  					(attractor as any).controls.visible = true;
+  					(attractor as any).controls.enabled = (attractor as any).controls.visible;
+  					scene.add( (attractor as any).controls.getHelper() );
   
-  					attractor.controls.addEventListener( 'dragging-changed', ( event ) => {
+  					(attractor as any).controls.addEventListener( 'dragging-changed', ( event: any ) => {
   
   						controls.enabled = ! event.value;
   
   					} );
   
-  					attractor.controls.addEventListener( 'change', () => {
+  					(attractor as any).controls.addEventListener( 'change', () => {
   
-  						attractor.position.copy( attractor.reference.position );
-  						attractor.orientation.copy( new THREE.Vector3( 0, 1, 0 ).applyQuaternion( attractor.reference.quaternion ) );
+  						(attractor as any).position.copy( (attractor as any).reference.position );
+  						(attractor as any).orientation.copy( new THREE.Vector3( 0, 1, 0 ).applyQuaternion( (attractor as any).reference.quaternion ) );
   
   					} );
   
@@ -170,7 +170,7 @@ function onReady(__stage) {
   				const positionBuffer = instancedArray( count, 'vec3' );
   				const velocityBuffer = instancedArray( count, 'vec3' );
   
-  				const sphericalToVec3 = Fn( ( [ phi, theta ] ) => {
+  			const sphericalToVec3 = Fn( ( [ phi, theta ]: any ) => {
   
   					const sinPhiRadius = sin( phi );
   
@@ -198,7 +198,7 @@ function onReady(__stage) {
   
   					const phi = hash( instanceIndex.add( uint( Math.random() * 0xffffff ) ) ).mul( PI ).mul( 2 );
   					const theta = hash( instanceIndex.add( uint( Math.random() * 0xffffff ) ) ).mul( PI );
-  					const baseVelocity = sphericalToVec3( phi, theta ).mul( 0.05 );
+  				const baseVelocity = (sphericalToVec3 as any)( phi, theta ).mul( 0.05 );
   					velocity.assign( baseVelocity );
   
   				} );
@@ -229,11 +229,11 @@ function onReady(__stage) {
   
   					const force = vec3( 0 ).toVar();
   
-  					Loop( attractorsLength, ( { i } ) => {
+  				(Loop as any)( attractorsLength, ( { i }: any ) => {
   
   						const attractorPosition = attractorsPositions.element( i );
   						const attractorRotationAxis = attractorsRotationAxes.element( i );
-  						const toAttractor = attractorPosition.sub( position );
+  						const toAttractor = (attractorPosition as any).sub( position );
   						const distance = toAttractor.length();
   						const direction = toAttractor.normalize();
   
@@ -243,7 +243,7 @@ function onReady(__stage) {
   						force.addAssign( gravityForce );
   
   						// spinning
-  						const spinningForce = attractorRotationAxis.mul( gravityStrength ).mul( spinningStrength );
+  						const spinningForce = (attractorRotationAxis as any).mul( gravityStrength ).mul( spinningStrength );
   						const spinningVelocity = spinningForce.cross( toAttractor );
   						force.addAssign( spinningVelocity );
   
@@ -299,16 +299,16 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.add( { attractorMassExponent: attractorMass.value.toString().length - 1 }, 'attractorMassExponent', 1, 10, 1 ).onChange( value => attractorMass.value = Number( `1e${value}` ) );
-  				gui.add( { particleGlobalMassExponent: particleGlobalMass.value.toString().length - 1 }, 'particleGlobalMassExponent', 1, 10, 1 ).onChange( value => particleGlobalMass.value = Number( `1e${value}` ) );
+  				gui.add( { attractorMassExponent: attractorMass.value.toString().length - 1 }, 'attractorMassExponent', 1, 10, 1 ).onChange( (value: any) => attractorMass.value = Number( `1e${value}` ) );
+  				gui.add( { particleGlobalMassExponent: particleGlobalMass.value.toString().length - 1 }, 'particleGlobalMassExponent', 1, 10, 1 ).onChange( (value: any) => particleGlobalMass.value = Number( `1e${value}` ) );
   				gui.add( maxSpeed, 'value', 0, 10, 0.01 ).name( 'maxSpeed' );
   				gui.add( velocityDamping, 'value', 0, 0.1, 0.001 ).name( 'velocityDamping' );
   				gui.add( spinningStrength, 'value', 0, 10, 0.01 ).name( 'spinningStrength' );
   				gui.add( scale, 'value', 0, 0.1, 0.001 ).name( 'scale' );
   				gui.add( boundHalfExtent, 'value', 0, 20, 0.01 ).name( 'boundHalfExtent' );
-  				gui.addColor( { color: colorA.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).name( 'colorA' ).onChange( value => colorA.value.set( value ) );
-  				gui.addColor( { color: colorB.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).name( 'colorB' ).onChange( value => colorB.value.set( value ) );
-  				gui.add( { controlsMode: attractors[ 0 ].controls.mode }, 'controlsMode', [ 'translate', 'rotate', 'none' ] ).onChange( value => {
+  				gui.addColor( { color: colorA.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).name( 'colorA' ).onChange( (value: any) => colorA.value.set( value ) );
+  				gui.addColor( { color: colorB.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).name( 'colorB' ).onChange( (value: any) => colorB.value.set( value ) );
+  				gui.add( { controlsMode: attractors[ 0 ].controls.mode }, 'controlsMode', [ 'translate', 'rotate', 'none' ] ).onChange( (value: any) => {
   
   					for ( const attractor of attractors ) {
   
@@ -329,7 +329,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( { helperVisible: attractors[ 0 ].helper.visible }, 'helperVisible' ).onChange( value => {
+  				gui.add( { helperVisible: attractors[ 0 ].helper.visible }, 'helperVisible' ).onChange( (value: any) => {
   
   					for ( const attractor of attractors ) {
   
@@ -345,7 +345,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     renderer.compute( updateCompute );
   })
   

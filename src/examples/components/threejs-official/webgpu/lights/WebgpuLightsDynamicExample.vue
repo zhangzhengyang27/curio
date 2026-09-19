@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,10 +31,10 @@ const props = defineProps({
   }
 })
 
-let autoAddInterval = null
+let autoAddInterval: any = null
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Dynamic Lights</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   			let timer, stats;
 
-  			const pointLights = [];
+  			const pointLights: any = [];
 
   			const params = {
   				dynamic: true,
@@ -202,7 +202,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'autoAdd' ).name( 'auto-add lights' ).onChange( ( value ) => {
+  				gui.add( params, 'autoAdd' ).name( 'auto-add lights' ).onChange( ( value: any ) => {
   
   					if ( value ) {
   
@@ -293,7 +293,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const time = timer.getElapsed();
     				// Animate lights

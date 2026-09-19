@@ -6,18 +6,18 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
-let Cesium = null
-let viewer = null
-let gui = null
-let globalHandler = null
-let lineEntities = []
-let tempLineEntity = null
-let drawLinePositions = []
-let distanceLabelEntity = null
+let Cesium: any = null
+let viewer: any = null
+let gui: any = null
+let globalHandler: any = null
+let lineEntities: any[] = []
+let tempLineEntity: any = null
+let drawLinePositions: any[] = []
+let distanceLabelEntity: any = null
 
 const CONFIG = {
   point: {
@@ -60,7 +60,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -124,7 +124,7 @@ function clearLineEntities() {
 function initLineDrawing() {
   globalHandler = new Cesium.ScreenSpaceEventHandler(viewer.canvas)
 
-  globalHandler.setInputAction(function (movement) {
+  globalHandler.setInputAction(function (movement: any) {
     const cartesian = viewer.scene.pickPosition(movement.position)
     if (cartesian) {
       drawLinePositions.push(cartesian)
@@ -183,7 +183,7 @@ function initLineDrawing() {
     }
   }, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
 
-  globalHandler.setInputAction(function (movement) {
+  globalHandler.setInputAction(function (movement: any) {
     const cartesian = viewer.scene.pickPosition(movement.endPosition)
     if (cartesian && drawLinePositions.length > 0) {
       if (tempLineEntity) {
@@ -209,7 +209,7 @@ function initLineDrawing() {
   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
 }
 
-function calculateAndDisplayDistance(point1, point2, index) {
+function calculateAndDisplayDistance(point1: any, point2: any, index: any) {
   const distance = Cesium.Cartesian3.distance(point1, point2)
   const midPoint = Cesium.Cartesian3.midpoint(point1, point2, new Cesium.Cartesian3())
   const distanceEntity = viewer.entities.add({
@@ -222,7 +222,7 @@ function calculateAndDisplayDistance(point1, point2, index) {
   lineEntities.push(distanceEntity)
 }
 
-function updateRealTimeDistance(point1, point2) {
+function updateRealTimeDistance(point1: any, point2: any) {
   const distance = Cesium.Cartesian3.distance(point1, point2)
   const midPoint = Cesium.Cartesian3.midpoint(point1, point2, new Cesium.Cartesian3())
   if (distanceLabelEntity) {
@@ -245,9 +245,9 @@ function updateRealTimeDistance(point1, point2) {
   }
 }
 
-function customLabel(text, bgColor, fontColor) {
+function customLabel(text: any, bgColor: any, fontColor: any) {
   const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d')!
   const textWidth = ctx.measureText(text).width
   canvas.width = textWidth + 20
   canvas.height = 20

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import gsap from 'gsap'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -51,7 +51,7 @@ function onReady(ctx) {
   }}, 'fn').name('播放');
   
   /* 视角动画 */
-  function createGsapAnimation(position, position_, gsapQuery = null) {
+  function createGsapAnimation(position: any, position_: any, gsapQuery: any = null) {
   
       //设置动画 x轴运动 持续时间
       return gsap.to(

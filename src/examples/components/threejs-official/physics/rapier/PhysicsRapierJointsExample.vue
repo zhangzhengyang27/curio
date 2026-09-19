@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> joints"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,7 +41,7 @@ async function onReady(__stage) {
   
   
   			let stats;
-  			let physics, pivot, physicsHelper;
+  			let physics: any, pivot: any, physicsHelper: any;
   
   			
   
@@ -125,7 +125,7 @@ async function onReady(__stage) {
   
   			//link - the mesh that the new link will be attached to
   			//x    - used to position the new link
-  			function addLink( link, x ) {
+  			function addLink( link: any, x: any ) {
   
   				const geometry = new THREE.CapsuleGeometry( 0.25, 1.8 );
   				const material = new THREE.MeshStandardMaterial( { color: 0xCCCC00 } );
@@ -163,7 +163,7 @@ async function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( physicsHelper ) physicsHelper.update();
     				stats.update();
   })

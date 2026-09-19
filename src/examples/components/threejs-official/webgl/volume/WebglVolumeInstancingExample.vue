@@ -14,11 +14,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { VOXLoader, buildData3DTexture } from 'three/examples/jsm/loaders/VOXLoader.js';
+
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -28,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl2 - volume - instancing"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -205,9 +208,9 @@ function onReady(__stage) {
   				const loader = new VOXLoader();
   				loader.load( ASSET_HOST + 'models/vox/menger.vox', function ( chunks ) {
   
-  					for ( let i = 0; i < chunks.length; i ++ ) {
+  					for ( let i = 0; i < (chunks as any).length; i ++ ) {
   
-  						const chunk = chunks[ i ];
+  						const chunk = (chunks as any)[ i ];
   
   						const geometry = new THREE.BoxGeometry( 1, 1, 1 );
   						const material = new THREE.RawShaderMaterial( {
@@ -255,7 +258,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				controls.update( delta );

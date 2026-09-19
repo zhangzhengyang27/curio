@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, abs, fract, fwidth, length, max, saturate, smoothstep, vec3, vec4, positionWorld, float } from 'three/tsl';
@@ -25,6 +25,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { TSLGraphLoader } from 'three/examples/jsm/inspector/extensions/tsl-graph/TSLGraphLoader.js';
 
+let prefab: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -33,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>TSL Graph</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -72,7 +75,7 @@ async function onReady(__stage) {
   
   				// TSL Graph Editor
   
-  				renderer.inspector.onExtension( 'TSL Graph', async ( tslGraph ) => {
+  				renderer.inspector.onExtension( 'TSL Graph', async ( tslGraph: any ) => {
   
   					renderer.inspector.setActiveTab( tslGraph );
   
@@ -156,7 +159,7 @@ async function onReady(__stage) {
   			
   
   
-  			async function createShaderBall( material, position = new THREE.Vector3() ) {
+  			async function createShaderBall( material: any, position = new THREE.Vector3() ) {
   
   				const model = prefab.clone();
   				model.position.copy( position );
@@ -186,7 +189,7 @@ async function onReady(__stage) {
   
   				gui.add( API, 'showCalibrationMesh' )
   					.name( 'Calibration Mesh' )
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						setVisibility( 'Calibration_Mesh', value );
   
@@ -194,7 +197,7 @@ async function onReady(__stage) {
   
   				gui.add( API, 'showPreviewMesh' )
   					.name( 'Preview Mesh' )
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						setVisibility( 'Preview_Mesh', value );
   
@@ -227,9 +230,9 @@ async function onReady(__stage) {
   
   			//
   
-  			function setVisibility( name, visible ) {
+  			function setVisibility( name: any, visible: any ) {
   
-  				scene.traverse( function ( node ) {
+  				scene.traverse( function ( node: any ) {
   
   					if ( node.isMesh ) {
   
@@ -245,28 +248,28 @@ async function onReady(__stage) {
   
   				const material = new THREE.MeshBasicNodeMaterial();
   
-  				const grid = Fn( ( [ coord, lineWidth = float( 0.01 ), dotSize = float( 0.03 ) ] ) => {
+  				const grid = Fn( ( [ coord, lineWidth = float( 0.01 ), dotSize = float( 0.03 ) ]: any ) => {
   
   					// https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
   
   					const g = fract( coord );
   					const fw = fwidth( coord );
   					const gx = abs( g.x.sub( 0.5 ) );
-  					const gy = abs( g.y.sub( 0.5 ) );
+  					const gy = abs( ((g as any).y as any).sub( 0.5 ) );
   
   					const lineX = saturate( lineWidth.sub( gx ).div( fw.x ).add( 0.5 ) );
-  					const lineY = saturate( lineWidth.sub( gy ).div( fw.y ).add( 0.5 ) );
+  					const lineY = saturate( lineWidth.sub( gy ).div( (fw as any).y ).add( 0.5 ) );
   					const lines = max( lineX, lineY );
   
   					const squareDist = max( gx, gy );
-  					const aa = max( fw.x, fw.y );
+  					const aa = max( fw.x, (fw as any).y );
   					const dots = smoothstep( dotSize.add( aa ), dotSize.sub( aa ), squareDist );
   
   					return max( dots, lines );
   
   				} );
   
-  				const fade = Fn( ( [ radius = float( 10.0 ), falloff = float( 1.0 ) ] ) => {
+  				const fade = Fn( ( [ radius = float( 10.0 ), falloff = float( 1.0 ) ]: any ) => {
   
   					return smoothstep( radius, radius.sub( falloff ), length( positionWorld ) );
   
@@ -275,7 +278,7 @@ async function onReady(__stage) {
   				const gridColor = vec4( vec3( 0.2 ), 1.0 );
   				const baseColor = vec4( vec3( 0.4 ), 0.0 );
   
-  				material.colorNode = grid( positionWorld.xz, 0.007, 0.03 ).mix( baseColor, gridColor ).mul( fade( 30.0, 20.0 ) );
+  				material.colorNode = (grid as any)( (positionWorld as any).xz, 0.007, 0.03 ).mix( baseColor, gridColor ).mul( (fade as any)( 30.0, 20.0 ) );
   				material.transparent = true;
   
   				return material;

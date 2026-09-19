@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -54,7 +54,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -69,7 +69,7 @@ function onReady(__stage) {
   			let stats;
   
   
-  			let particles, count = 0;
+  			let particles: any, count = 0;
   
   			let mouseX = 0, mouseY = 0;
   
@@ -151,7 +151,7 @@ function onReady(__stage) {
   
   			//
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -162,7 +162,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y += ( - mouseY - camera.position.y ) * .05;

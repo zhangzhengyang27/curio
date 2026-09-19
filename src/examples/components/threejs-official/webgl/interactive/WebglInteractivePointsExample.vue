@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -65,7 +65,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -83,10 +83,10 @@ function onReady(__stage) {
   
   			const PARTICLE_SIZE = 20;
   			
-  			let particles;
+  			let particles: any;
   			
-  			let raycaster, intersects;
-  			let pointer, INTERSECTED;
+  			let raycaster: any, intersects: any;
+  			let pointer: any, INTERSECTED: any;
   
   			
   
@@ -100,7 +100,7 @@ function onReady(__stage) {
   
   				//
   
-  				let boxGeometry = new THREE.BoxGeometry( 200, 200, 200, 16, 16, 16 );
+  				let boxGeometry: any = new THREE.BoxGeometry( 200, 200, 200, 16, 16, 16 );
   
   				// if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
   
@@ -113,7 +113,7 @@ function onReady(__stage) {
   
   				const positionAttribute = boxGeometry.getAttribute( 'position' );
   
-  				const colors = [];
+  				const colors: any[] = []
   				const sizes = [];
   
   				const color = new THREE.Color();
@@ -174,7 +174,7 @@ function onReady(__stage) {
   			
   
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -183,7 +183,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     particles.rotation.x += 0.0005;
     				particles.rotation.y += 0.001;

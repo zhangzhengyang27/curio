@@ -2,17 +2,17 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
-          var webgl = null;
+          var webgl: any = null;
           // 定义 顶点数组
           var projMat4 = glMatrix.mat4.create();
           var uniformTexture = 0;
-          var textureHandle;
+          var textureHandle: any;
   
           // 定义 顶点着色器 shader
           let vertexstring = `
@@ -47,7 +47,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function initWebgl() {
               let webglDiv = canvas;
               // 通过容器获取上下文
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               // 设置投影矩阵
@@ -57,9 +57,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           // 初始化着色器，shader 供 gpu 使用的
           function initShader() {
               // 创建顶点着色器对象
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
               // 创建片元着色器对象
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               // 引入顶点、片元着色器源代码
               webgl.shaderSource(vsshader, vertexstring);
@@ -93,22 +93,22 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.useProgram(program);
   
               // 将程序对象保存到 webgl 容器中
-              webgl.program = program
+              (webgl as any).program = program
           }
   
           // 初始化缓冲区
           function initBuffer() {
               let pointPosition = new Float32Array([100.0, 100.0, 0.0, 1.0, 100.0, 200.0, 0.0, 1.0, 200.0, 200.0, 0.0, 1.0]);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 16, 0);
-              let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
+              let uniformProj = webgl.getUniformLocation((webgl as any).program, "proj");
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
   
-              uniformTexture = webgl.getUniformLocation(webgl.program, "texture");
+              uniformTexture = webgl.getUniformLocation((webgl as any).program, "texture");
   
   
               webgl.enable(webgl.BLEND);
@@ -118,9 +118,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           }
   
-          function initTexture(imageFile) {
+          function initTexture(imageFile: any) {
               // 创建纹理对象
-              textureHandle = webgl.createTexture();
+              textureHandle = webgl.createTexture()!;
               textureHandle.image = new Image();
               textureHandle.image.src = imageFile;
               textureHandle.image.onload = function () {
@@ -130,7 +130,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           // 绘制纹理
-          function handleLoadedTexture(texture) {
+          function handleLoadedTexture(texture: any) {
               // 生成纹理
               webgl.bindTexture(webgl.TEXTURE_2D, texture);
               // 设置纹理参数

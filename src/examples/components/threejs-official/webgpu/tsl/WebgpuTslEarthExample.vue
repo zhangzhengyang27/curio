@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { step, normalWorldGeometry, output, texture, vec3, vec4, normalize, positionWorld, bumpMap, cameraPosition, color, uniform, mix, uv, max } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Earth</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,7 +42,7 @@ function onReady(__stage) {
   
   
   
-  			let globe, timer;
+  			let globe: any, timer: any;
   
   			init();
   
@@ -169,7 +169,7 @@ function onReady(__stage) {
   
   				gui
   					.addColor( { color: atmosphereDayColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' )
-  					.onChange( ( value ) => {
+  					.onChange( ( value: any ) => {
   
   						atmosphereDayColor.value.set( value );
   
@@ -178,7 +178,7 @@ function onReady(__stage) {
   
   				gui
   					.addColor( { color: atmosphereTwilightColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' )
-  					.onChange( ( value ) => {
+  					.onChange( ( value: any ) => {
   
   						atmosphereTwilightColor.value.set( value );
   
@@ -192,7 +192,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				globe.rotation.y += delta * 0.025;

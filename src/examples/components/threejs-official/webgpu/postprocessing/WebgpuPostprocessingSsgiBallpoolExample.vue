@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, normalView, diffuseColor, velocity, add, vec4, packNormalToRGB, unpackRGBToNormal, sample } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSGI Ball Pool</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -49,21 +49,21 @@ function onReady(__stage) {
   			const CAM_FOV = 45;
   			const EASE_SPEED = 8;
   
-  			let renderPipeline;
-  			let raycaster, pointer;
-  			let mouseLight;
+  			let renderPipeline: any;
+  			let raycaster: any, pointer: any;
+  			let mouseLight: any;
   
-  			let world;
+  			let world: any;
   			let ballCount = 0;
-  			let bodies = [];
-  			let ballsMesh = null;
-  			let wallMeshes = [];
+  			let bodies: any = [];
+  			let ballsMesh: any = null;
+  			let wallMeshes: any = [];
   			const boxSize = { w: 8, h: BOX_HEIGHT, d: BOX_DEPTH };
   
   			const mouseRayOrigin = new THREE.Vector3();
   			const mouseRayDir = new THREE.Vector3();
   			let mouseMoving = false;
-  			let mouseStopTimer = 0;
+  			let mouseStopTimer: any = 0;
   			let pointerDown = false;
   			const activePointers = new Set();
   			const mouseLightTarget = new THREE.Vector3( 0, BOX_HEIGHT / 2, BOX_DEPTH / 2 );
@@ -265,7 +265,7 @@ function onReady(__stage) {
   
   						const geo = new THREE.BoxGeometry( w.size[ 0 ], w.size[ 1 ], w.size[ 2 ] );
   						const mesh = new THREE.Mesh( geo, w.mat );
-  						mesh.position.set( ...w.pos );
+  						mesh.position.set( ...( w.pos as [ number, number, number ] ) );
   						mesh.receiveShadow = true;
   						scene.add( mesh );
   						wallMeshes.push( mesh );
@@ -323,7 +323,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				activePointers.add( event.pointerId );
   
@@ -339,7 +339,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				activePointers.delete( event.pointerId );
   
@@ -355,7 +355,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -388,8 +388,7 @@ function onReady(__stage) {
   
   					const body = bodies[ Math.floor( Math.random() * bodies.length ) ];
   
-  					body.position.set( [
-  						( Math.random() - 0.5 ) * 2 * hw,
+  					body.position.set( [ ( Math.random() - 0.5 ) * 2 * hw,
   						boxSize.h - BALL_RADIUS - Math.random() * 1,
   						( Math.random() - 0.5 ) * 2 * hd
   					] );
@@ -418,7 +417,7 @@ function onReady(__stage) {
   			const timer = new THREE.Timer();
   			const _dummy = new THREE.Object3D();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const dt = Math.min( timer.getDelta(), 1 / 30 );
     				const easeFactor = 1 - Math.exp( - EASE_SPEED * dt );

@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, screenUV, mrt, output, pass, vec4 } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>MRT Mask</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -41,8 +41,8 @@ function onReady(__stage) {
 
   
   			let renderPipeline;
-  			let spheres, rotate = true;
-  			let mixer, timer;
+  			let spheres: any, rotate = true;
+  			let mixer: any, timer;
   
   			
   
@@ -70,7 +70,7 @@ function onReady(__stage) {
   					const object = gltf.scene;
   					mixer = new THREE.AnimationMixer( object );
   
-  					const material = object.children[ 0 ].children[ 0 ].material;
+  					const material = (object.children[ 0 ].children[ 0 ] as any).material;
   
   					// add glow effect
   					material.mrtNode = mrt( { mask: output.add( 1 ) } );
@@ -89,7 +89,7 @@ function onReady(__stage) {
   				spheres = new THREE.Group();
   				scene.add( spheres );
   
-  				function addSphere( color, mrtNode = null ) {
+  				function addSphere( color: any, mrtNode: any = null ) {
   
   					const distance = 1;
   					const id = spheres.children.length;
@@ -153,7 +153,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

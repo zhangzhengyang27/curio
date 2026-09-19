@@ -1,15 +1,15 @@
 <template>
   <ExampleScene
     camera="perspective"
-    :clear-color="gl.clearColor"
+    :clear-color="'#332148'"
     @ready="onReady"
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,12 +29,6 @@ function onReady(ctx) {
 
   gui = new GUI();
   // 初始化场景、相机和渲染器
-  const gl = {
-      clearColor: '#332148',
-      shadows: false,
-      alpha: false,
-      outputColorSpace: THREE.SRGBColorSpace,
-  };
   
   controls.target.set(0, 0, 0);
   controls.update();
@@ -214,22 +208,22 @@ function onReady(ctx) {
   let debugFolder = gui.addFolder('Debug');
   
   // 添加颜色控制器
-  debugFolder.addColor(params, 'color').name('color').onChange((value) => {
-      wireframeMaterialRef.color.set(value);
+  debugFolder.addColor(params, 'color').name('color').onChange((value: any) => {
+      wireframeMaterialRef.color!.set(value);
   });
   
   // 添加粒子大小控制器
-  debugFolder.add(params, 'pointSize', 0.1, 10, 0.1).name('粒子大小').onChange((value) => {
+  debugFolder.add(params, 'pointSize', 0.1, 10, 0.1).name('粒子大小').onChange((value: any) => {
       pointsShader.uniforms.size.value = value;
   });
   
   // 添加海浪高度控制器
-  debugFolder.add(pointsShader.uniforms.uWaveHeight, 'value', 0.01, 0.5, 0.01).name('海浪高度').onChange((value) => {
+  debugFolder.add(pointsShader.uniforms.uWaveHeight, 'value', 0.01, 0.5, 0.01).name('海浪高度').onChange((value: any) => {
       pointsShader.uniforms.uWaveHeight.value = value;
   });
   
   // 添加海浪变化速度控制器
-  debugFolder.add(pointsShader.uniforms.uWaveSpeed, 'value', 0.01, 1, 0.01).name('海浪变化速度').onChange((value) => {
+  debugFolder.add(pointsShader.uniforms.uWaveSpeed, 'value', 0.01, 1, 0.01).name('海浪变化速度').onChange((value: any) => {
       pointsShader.uniforms.uWaveSpeed.value = value;
   });
   

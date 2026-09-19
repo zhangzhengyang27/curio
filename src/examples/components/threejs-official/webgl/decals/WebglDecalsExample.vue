@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -34,12 +34,14 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - decal splatter<br/>\n\t\t\tclick to shoot"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let line: any;
+  let mesh: any;
 
   
   
@@ -50,7 +52,7 @@ function onReady(__stage) {
   
   			let stats;
   
-  			let raycaster;
+  			let raycaster: any;
   
   
   			const intersection = {
@@ -59,7 +61,7 @@ function onReady(__stage) {
   				normal: new THREE.Vector3()
   			};
   			const mouse = new THREE.Vector2();
-  			const intersects = [];
+  			const intersects: any = [];
   
   			const textureLoader = new THREE.TextureLoader();
   			const decalDiffuse = textureLoader.load( ASSET_HOST + 'textures/decal/decal-diffuse.png' );
@@ -80,8 +82,8 @@ function onReady(__stage) {
   				wireframe: false
   			} );
   
-  			const decals = [];
-  			let mouseHelper;
+  			const decals: any = [];
+  			let mouseHelper: any;
   			const position = new THREE.Vector3();
   			const orientation = new THREE.Euler();
   			const size = new THREE.Vector3( 10, 10, 10 );
@@ -169,7 +171,7 @@ function onReady(__stage) {
   
   				window.addEventListener( 'pointermove', onPointerMove );
   
-  				function onPointerMove( event ) {
+  				function onPointerMove( event: any ) {
   
   					if ( event.isPrimary ) {
   
@@ -179,7 +181,7 @@ function onReady(__stage) {
   
   				}
   
-  				function checkIntersection( x, y ) {
+  				function checkIntersection( x: any, y: any ) {
   
   					if ( mesh === undefined ) return;
   
@@ -271,7 +273,7 @@ function onReady(__stage) {
   				size.set( scale, scale, scale );
   
   				const material = decalMaterial.clone();
-  				material.color.setHex( Math.random() * 0xffffff );
+  				material.color!.setHex( Math.random() * 0xffffff );
   
   				const m = new THREE.Mesh( new DecalGeometry( mesh, position, orientation, size ), material );
   				m.renderOrder = decals.length; // give decals a fixed render order
@@ -284,7 +286,7 @@ function onReady(__stage) {
   
   			function removeDecals() {
   
-  				decals.forEach( function ( d ) {
+  				decals.forEach( function ( d: any ) {
   
   					mesh.remove( d );
   
@@ -296,7 +298,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.update();
   })
   

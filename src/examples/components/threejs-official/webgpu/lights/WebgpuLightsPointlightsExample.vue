@@ -14,12 +14,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { abs, attribute, distance, float, max, modelWorldMatrixInverse, positionLocal, sin, time, uniform } from 'three/tsl';
+
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -29,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Point Lights</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,7 +47,7 @@ function onReady(__stage) {
   
   
   
-  			let light1, light2;
+  			let light1: any, light2: any;
   
   			
   
@@ -101,7 +104,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const time = timer.getElapsed() * 0.5;
     				light1.position.x = Math.sin( time ) * 20;
@@ -121,26 +124,26 @@ function onReady(__stage) {
   				const seedAttribute = attribute( 'seed' );
   				const displaceNormalAttribute = attribute( 'displaceNormal' );
   
-  				const localTime = attribute( 'time' ).add( time );
+  				const localTime = (attribute as any)( 'time' ).add( time );
   
-  				const effector1 = uniform( light1.position ).toVar();
-  				const effector2 = uniform( light2.position ).toVar();
+  				const effector1 = (uniform as any)( light1.position ).toVar();
+  				const effector2 = (uniform as any)( light2.position ).toVar();
   
-  				const distance1 = distance( positionLocal, modelWorldMatrixInverse.mul( effector1 ) );
-  				const distance2 = distance( positionLocal, modelWorldMatrixInverse.mul( effector2 ) );
+  				const distance1 = distance( positionLocal, (modelWorldMatrixInverse.mul as any)( effector1 ) );
+  				const distance2 = distance( positionLocal, (modelWorldMatrixInverse.mul as any)( effector2 ) );
   
   				const invDistance1 = max( 0.0, float( 20.0 ).sub( distance1 ) ).div( 2.0 );
   				const invDistance2 = max( 0.0, float( 20.0 ).sub( distance2 ) ).div( 2.0 );
   
   				const s = abs( sin( localTime.mul( 2 ).add( seedAttribute ) ).mul( 0.5 ) ).add( invDistance1 ).add( invDistance2 );
   
-  				material.positionNode = positionLocal.add( displaceNormalAttribute.mul( s ) );
+  				material.positionNode = positionLocal.add( (displaceNormalAttribute as any).mul( s ) );
   
   				return material;
   
   			}
   
-  			function createGeometry( geometry ) {
+  			function createGeometry( geometry: any ) {
   
   				const positionAttribute = geometry.getAttribute( 'position' );
   

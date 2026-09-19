@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - Example of an IBL (Image based lighting) pipeline based around<br> equirectangular EXR lightprobe data. Created by <a href=\"https://github.com/richardmonette\" target=\"_blank\" rel=\"noopener\">Richard Monette</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -56,9 +56,9 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let torusMesh, planeMesh;
-  			let pngCubeRenderTarget, exrCubeRenderTarget;
-  			let pngBackground, exrBackground;
+  			let torusMesh: any, planeMesh: any;
+  			let pngCubeRenderTarget: any, exrCubeRenderTarget: any;
+  			let pngBackground: any, exrBackground: any;
   
   			
   
@@ -75,7 +75,7 @@ function onReady(__stage) {
   
   				//
   
-  				let geometry = new THREE.TorusKnotGeometry( 18, 8, 150, 20 );
+  				let geometry: any = new THREE.TorusKnotGeometry( 18, 8, 150, 20 );
   				let material = new THREE.MeshStandardMaterial( {
   					metalness: params.metalness,
   					roughness: params.roughness,
@@ -86,7 +86,7 @@ function onReady(__stage) {
   				scene.add( torusMesh );
   
   				geometry = new THREE.PlaneGeometry( 200, 200 );
-  				material = new THREE.MeshBasicMaterial();
+  				(material as any) = new THREE.MeshBasicMaterial();
   
   				planeMesh = new THREE.Mesh( geometry, material );
   				planeMesh.position.y = - 50;
@@ -144,7 +144,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     torusMesh.material.roughness = params.roughness;

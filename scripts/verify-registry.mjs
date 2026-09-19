@@ -30,7 +30,7 @@ const REG_DIR = join(ROOT, 'src/examples/registry')
 const REQUIRED_FIELDS = ['source', 'category', 'id', 'title', 'runner']
 const VALID_RUNNERS = new Set(['vue', 'iframe'])
 
-const idx = await import(pathToFileURL(join(REG_DIR, 'index.js')).href)
+const idx = await import(pathToFileURL(join(REG_DIR, 'index.ts')).href)
 const all = await idx.getAllExamplesAsync()
 const sources = idx.getSources()
 

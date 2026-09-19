@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { float, int, pass, uniform } from 'three/tsl';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Radial Blur</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -148,7 +148,7 @@ function onReady(__stage) {
   				gui.add( decayUniform, 'value', 0, 1 ).name( 'decay' );
   				gui.add( countUniform, 'value', 16, 64, 1 ).name( 'sample count' );
   				gui.add( exposureUniform, 'value', 1, 10 ).name( 'exposure' );
-  				gui.add( params, 'enabled' ).onChange( ( value ) => {
+  				gui.add( params, 'enabled' ).onChange( ( value: any ) => {
   			
   					if ( value === true ) {
   
@@ -172,7 +172,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( params.animated === true ) {

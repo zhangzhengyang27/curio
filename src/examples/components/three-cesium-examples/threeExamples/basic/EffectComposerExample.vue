@@ -9,10 +9,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -30,7 +30,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -63,7 +63,7 @@ function onReady(ctx) {
   
   gui = new GUI()
   gui.add(renderer, 'outputColorSpace', [THREE.SRGBColorSpace, THREE.LinearSRGBColorSpace])
-  gui.add(renderer, 'toneMapping', Object.keys(ToneMappingList)).onChange(value => renderer.toneMapping = ToneMappingList[value])
+  gui.add(renderer, 'toneMapping', Object.keys(ToneMappingList)).onChange((value: any) => renderer.toneMapping = (ToneMappingList as any)[value])
   gui.add(renderer, 'toneMappingExposure', 0, 10)
   gui.add(data, 'renderType', ['effect', 'normal', 'both'])
   gui.add(outputPass, 'enabled').name('OutputPass_enabled')

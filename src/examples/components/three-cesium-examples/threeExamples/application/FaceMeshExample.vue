@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -39,8 +39,8 @@ function onReady(stageCtx) {
       const tileSize = 256;
       c.width = tileSize * dim.x;
       c.height = tileSize * dim.y;
-      const u = (val) => tileSize * 0.01 * val;
-      const ctx = c.getContext("2d");
+      const u = (val: number) => tileSize * 0.01 * val;
+      const ctx = c.getContext("2d")!;
   
       ctx.fillStyle = "rgba(255, 255, 255, 1)";
       ctx.fillRect(0, 0, c.width, c.height);
@@ -56,7 +56,7 @@ function onReady(stageCtx) {
       tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
       return tex;
   
-      function generateSilly(x, y) {
+      function generateSilly(x: number, y: number) {
           ctx.save();
           ctx.translate((x + 0.5) * tileSize, (y + 0.5) * tileSize);
           // eyes
@@ -93,7 +93,7 @@ function onReady(stageCtx) {
           ctx.stroke();
       }
   
-      function drawEyes(x, y, radius) {
+      function drawEyes(x: number, y: number, radius: number) {
           let eyeSymmX = Math.sign(Math.random() - 0.5);
           let eyeSymmY = Math.sign(Math.random() - 0.5);
           //left
@@ -149,7 +149,7 @@ function onReady(stageCtx) {
                   color: 0xffffff * Math.random(),
                   blending: THREE.AdditiveBlending,
                   map: atlas,
-                  onBeforeCompile: shader => {
+                  onBeforeCompile: (shader: any) => {
                       shader.uniforms.atlasSize = { value: atlasSize };
                       shader.uniforms.tile = { value: new THREE.Vector2(x, y) }
                       shader.fragmentShader = `
@@ -190,7 +190,7 @@ function onReady(stageCtx) {
                       #endif`
                       )
                   }
-              })
+              } as any)
           );
           mesh.position.set(
               (-(atlasSize.x - 1) * 0.5 + x) * 2,

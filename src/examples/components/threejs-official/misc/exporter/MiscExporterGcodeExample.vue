@@ -15,15 +15,19 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
+// @ts-expect-error Polyslice 从 CDN 以 URL 方式引入，无类型声明
 import Polyslice from 'https://cdn.jsdelivr.net/npm/@jgphilpott/polyslice@26.4.0/dist/index.browser.esm.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let mesh: any;
+
 
 const props = defineProps({
   example: {
@@ -33,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - exporter - <a href=\"https://github.com/jgphilpott/polyslice\" target=\"_blank\" rel=\"noopener\">GCode</a>\n\t\t\t<br>Slice 3D models to G-code for 3D printing\n\t\t\t<br><a href=\"https://www.youtube.com/watch?v=V2h3SiafXRc\" target=\"_blank\" rel=\"noopener\">Watch the Demo Video</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,7 +48,7 @@ function onReady(__stage) {
   
   
   			// Make THREE available globally for Polyslice
-  			window.THREE = THREE;
+  				(window as any).THREE = THREE;
   
   
   
@@ -121,8 +125,8 @@ function onReady(__stage) {
   				
   
   
-  				controls.target.set( 0, 0, 0 );
-  				controls.update();
+  				( controls as any ).target.set( 0, 0, 0 );
+  				( controls as any ).update();
   
   			
   
@@ -183,7 +187,7 @@ function onReady(__stage) {
   			}
   
   			// Ensure the mesh sits on the XY plane with min Z = 0
-  			function placeOnXYPlane( object ) {
+  			function placeOnXYPlane( object: any ) {
   
   				// Update world matrix so bounding box reflects transforms
   				object.updateMatrixWorld( true );
@@ -272,7 +276,7 @@ function onReady(__stage) {
   			link.style.display = 'none';
   			document.body.appendChild( link );
   
-  			function save( blob, filename ) {
+  			function save( blob: any, filename: any ) {
   
   				link.href = URL.createObjectURL( blob );
   				link.download = filename;
@@ -280,7 +284,7 @@ function onReady(__stage) {
   
   			}
   
-  			function saveString( text, filename ) {
+  			function saveString( text: any, filename: any ) {
   
   				save( new Blob( [ text ], { type: 'text/plain' } ), filename );
   

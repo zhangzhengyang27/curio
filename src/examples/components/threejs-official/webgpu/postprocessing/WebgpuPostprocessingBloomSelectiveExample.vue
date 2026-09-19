@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, float, uniform } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Selective Bloom</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -123,7 +123,7 @@ function onReady(__stage) {
   
   				if ( intersects.length > 0 ) {
   
-  					const material = intersects[ 0 ].object.material;
+  					const material: any = intersects[ 0 ].object.material;
   
   					const bloomIntensity = material.mrtNode.get( 'bloomIntensity' );
   					bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
@@ -150,7 +150,7 @@ function onReady(__stage) {
   
   			// animate
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

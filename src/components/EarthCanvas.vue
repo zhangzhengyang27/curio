@@ -11,38 +11,44 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
-import { useScene } from '../composables/useScene.js'
-import { useRenderLoop } from '../composables/useRenderLoop.js'
-import { useOrbitControls } from '../composables/useOrbitControls.js'
-import { useRaycaster } from '../composables/useRaycaster.js'
-import { useLabels } from '../composables/useLabels.js'
-import { createHtmlMarkers, updateHtmlMarkersVisibility } from '../three/objects/HtmlMarkers.js'
-import { disposeObject3D } from '../three/gc.js'
-import { useCameraFlight } from '../composables/useCameraFlight.js'
-import { createEarth } from '../three/objects/EarthSphere.js'
-import { createAtmosphereGlow } from '../three/objects/AtmosphereGlow.js'
-import { createGraticules } from '../three/objects/Graticules.js'
-import { createTileEngine, updateTileEnginePOV, disposeTileEngine } from '../three/objects/TileEngine.js'
-import { createCloudLayer } from '../three/objects/CloudLayer.js'
-import { createStormParticles, updateStormParticles } from '../three/objects/ParticleField.js'
-import { lon2xyz } from '../three/geo/coord.js'
+import { useScene } from '../composables/useScene'
+import { useRenderLoop } from '../composables/useRenderLoop'
+import { useOrbitControls } from '../composables/useOrbitControls'
+import { useRaycaster } from '../composables/useRaycaster'
+import { useLabels } from '../composables/useLabels'
+import { createHtmlMarkers, updateHtmlMarkersVisibility } from '../three/objects/HtmlMarkers'
+import { disposeObject3D } from '../three/gc'
+import { useCameraFlight } from '../composables/useCameraFlight'
+import { createEarth } from '../three/objects/EarthSphere'
+import { createAtmosphereGlow } from '../three/objects/AtmosphereGlow'
+import { createGraticules } from '../three/objects/Graticules'
+import { createTileEngine, updateTileEnginePOV, disposeTileEngine } from '../three/objects/TileEngine'
+import { createCloudLayer } from '../three/objects/CloudLayer'
+import { createStormParticles, updateStormParticles } from '../three/objects/ParticleField'
+import { lon2xyz } from '../three/geo/coord'
 import * as TWEEN from '@tweenjs/tween.js'
-import { buildEarthFromData, buildSearchIndex, loadWorldData } from '../three/data/DataLoader.js'
-import { VisualizationLayer } from '../three/layers/VisualizationLayer.js'
-import { useEarthStore } from '../stores/useEarthStore.js'
-import { useInteractionStore } from '../stores/useInteractionStore.js'
-import { useLayerStore } from '../stores/useLayerStore.js'
-import { useTimelineStore } from '../stores/useTimelineStore.js'
+import { buildEarthFromData, buildSearchIndex, loadWorldData } from '../three/data/DataLoader'
+import { VisualizationLayer } from '../three/layers/VisualizationLayer'
+import type { CountryGdpMesh, EarthGroupWithMeshes } from '../three/layers/BaseLayer'
+import type { TexturedEarthGroup } from '../three/objects/EarthSphere'
+import type { GdpColorEntry } from '../three/data/DataLoader'
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import type { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+import type SlippyMapGlobe from 'three-slippy-map-globe'
+import { useEarthStore } from '../stores/useEarthStore'
+import { useInteractionStore } from '../stores/useInteractionStore'
+import { useLayerStore } from '../stores/useLayerStore'
+import { useTimelineStore } from '../stores/useTimelineStore'
 
 const R = 100
-const canvasRef = ref(null)
-const labelContainer = ref(null)
+const canvasRef = ref<HTMLCanvasElement | null>(null)
+const labelContainer = ref<HTMLElement | null>(null)
 
 const earthStore = useEarthStore()
 const interactionStore = useInteractionStore()
@@ -53,30 +59,57 @@ const raycasterCtx = useRaycaster()
 const renderLoop = useRenderLoop()
 const { intersect, clearSelection, selectMesh } = raycasterCtx
 
-let scene, camera, renderer, controls, disposeOrbit, disposeScene, stopLoop, disposeLabels
-let labelManager, flyToFn, cancelFlight, earth, overlayGroup
-let canvasEl = null
-let visualizationLayer
-let htmlMarkersGroup = null
-let atmosphere, cloudLayer, stormPoints, sphereMesh // sphereMesh保存地球球体引用
-let composer, bloomPass // post-processing
-let originalGdpColors = {} // 保存GDP原始颜色用于恢复
-let pillarGroup = null // GDP柱状动画组
-let pillarMeshes = [] // [{mesh, name}]
+let scene: THREE.Scene
+let camera: THREE.Camera
+let renderer: THREE.WebGLRenderer
+let controls: OrbitControls
+let disposeOrbit: () => void
+let disposeScene: () => void
+let stopLoop: () => void
+let disposeLabels: () => void
+let labelManager: ReturnType<typeof useLabels> & { mainLabel?: CSS2DObject }
+let flyToFn: (lon: number, lat: number, duration?: number) => void
+let cancelFlight: () => void
+let earth: TexturedEarthGroup
+let overlayGroup: THREE.Group | null
+let canvasEl: HTMLCanvasElement | null = null
+let visualizationLayer: VisualizationLayer
+let htmlMarkersGroup: THREE.Group | null = null
+let atmosphere: THREE.Mesh
+let cloudLayer: THREE.Mesh
+let stormPoints: THREE.Points | THREE.Group | null
+let sphereMesh: THREE.Mesh // sphereMesh保存地球球体引用
+let composer: EffectComposer
+let bloomPass: UnrealBloomPass // post-processing
+let originalGdpColors: Record<string, { color: THREE.Color; gdp?: number }> = {} // 保存GDP原始颜色用于恢复
+let pillarGroup: THREE.Group | null = null // GDP柱状动画组
+interface PillarEntry {
+  bar: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhongMaterial & { color: THREE.Color; emissive: THREE.Color }>
+  dot: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial & { color: THREE.Color }>
+  name: string
+  height: number
+  targetHeight: number
+  growth: number
+  base: THREE.Vector3
+  dir: THREE.Vector3
+  tweening?: boolean
+}
+let pillarMeshes: PillarEntry[] = [] // [{mesh, name}]
 let isAnimatingIn = false // 入场动画期间暂停自转
-let tweenGroup = null // 图层共享 Tween 组
-let graticulesMesh = null // 经纬网格
-let tileEngine = null // 瓦片引擎
+let tweenGroup: TWEEN.Group | null = null // 图层共享 Tween 组
+let graticulesMesh: THREE.LineSegments | null = null // 经纬网格
+let tileEngine: SlippyMapGlobe | null = null // 瓦片引擎
 let tileEngineBaseSphereVisible = true // 瓦片激活前记录地球本体可见性
 let isRealisticEarth = false // 是否使用真实地球贴图
-let proceduralTexture = null // 程序生成的地球纹理备份
-let countryMeshStates = [] // 国家 Mesh 的原始材质状态备份
-let realisticHighlightMesh = null // 真实地球模式下高亮的国家 Mesh
+let proceduralTexture: THREE.Texture | null = null // 程序生成的地球纹理备份
+let countryMeshStates: Array<{ mesh: CountryGdpMesh; opacity: number; transparent: boolean }> = [] // 国家 Mesh 的原始材质状态备份
+let realisticHighlightMesh: CountryGdpMesh | null = null // 真实地球模式下高亮的国家 Mesh
 
 onMounted(async () => {
   try {
+    if (!canvasRef.value) return
     canvasEl = canvasRef.value
-    const sceneCtx = useScene(canvasRef.value)
+    const sceneCtx = useScene(canvasEl)
     scene = sceneCtx.scene; camera = sceneCtx.camera; renderer = sceneCtx.renderer; disposeScene = sceneCtx.dispose
     const addResizeCallback = sceneCtx.addResizeCallback
 
@@ -93,7 +126,7 @@ onMounted(async () => {
     tweenGroup = new TWEEN.Group()
 
     labelManager = useLabels()
-    labelContainer.value.appendChild(labelManager.labelRenderer.domElement)
+    labelContainer.value!.appendChild(labelManager.labelRenderer.domElement)
     const { label } = labelManager.createLabelEl('GDP')
     scene.add(label); labelManager.mainLabel = label; disposeLabels = labelManager.dispose
 
@@ -116,8 +149,8 @@ onMounted(async () => {
     composer.addPass(bloomPass)
 
     // 保存球体引用(buildEarthFromData会clear整个earthGroup)
-    sphereMesh = earth.children[0]
-    proceduralTexture = sphereMesh.material.map
+    sphereMesh = earth.children[0] as THREE.Mesh
+    proceduralTexture = (sphereMesh.material as THREE.MeshPhongMaterial).map ?? null
 
     const { world, gdpColorMap } = await loadWorldData()
     buildEarthFromData(earth, R, world, gdpColorMap)
@@ -169,13 +202,13 @@ onMounted(async () => {
     // 初始化可视化图层控制器
     visualizationLayer = new VisualizationLayer({
       scene,
-      earthGroup: earth,
+      earthGroup: earth as unknown as EarthGroupWithMeshes,
       R,
       parent: overlayGroup,
       flyToFn,
-      originalGdpColors,
+      originalGdpColors: originalGdpColors as Record<string, GdpColorEntry>,
       earthStore,
-      tweenGroup
+      tweenGroup: tweenGroup!
     })
 
     // 应用初始化空窗期间排队的可视化切换请求
@@ -192,7 +225,7 @@ onMounted(async () => {
       // 默认不自动显示GDP柱状图，保持页面干净
     } catch (_e) { /* timeline data optional */ }
 
-    const borderKids = [], meshKids = []
+    const borderKids: THREE.Object3D[] = [], meshKids: THREE.Object3D[] = []
     earth.traverse(child => {
       if (child.isLineLoop) borderKids.push(child)
       if (child.isMesh && child !== sphereMesh) meshKids.push(child)
@@ -209,7 +242,7 @@ onMounted(async () => {
     const renderFn = () => {
       if (earthStore.isRotating && !isAnimatingIn) earth.rotateY(earthStore.rotationSpeed)
       // 同步 overlayGroup 旋转，使柱状图/圆柱散点与地球表面保持一致
-      overlayGroup.rotation.copy(earth.rotation)
+      overlayGroup!.rotation.copy(earth.rotation)
       controls.update()
       const nowSec = performance.now() / 1000
       const nowMs = performance.now()
@@ -223,7 +256,7 @@ onMounted(async () => {
       pillarMeshes.forEach(pm => {
         if (!pm.tweening && Math.abs(pm.targetHeight - pm.height) > 0.05) {
           pm.tweening = true
-          new TWEEN.Tween(pm, tweenGroup)
+          new TWEEN.Tween(pm, tweenGroup!)
             .to({ height: pm.targetHeight }, 600)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .onUpdate(obj => {
@@ -236,7 +269,7 @@ onMounted(async () => {
         }
       })
       visualizationLayer?.update(nowSec)
-      tweenGroup.update(nowMs) // 图层共享 Tween 组，TWEEN 使用毫秒时间
+      tweenGroup!.update(nowMs) // 图层共享 Tween 组，TWEEN 使用毫秒时间
       updateTileEnginePOV(tileEngine, camera)
       // Bloom 关闭时直接渲染，跳过 EffectComposer 的 pass 管线开销
       if (bloomPass && bloomPass.enabled) {
@@ -258,24 +291,27 @@ onMounted(async () => {
   }
 })
 
-function onCanvasClick(event) {
+function onCanvasClick(event: MouseEvent) {
   if (!camera) return
-  const hit = intersect(event, earthStore.earthGroup?.meshArr || [], camera)
+  const hit = intersect(event, (earthStore.earthGroup as EarthGroupWithMeshes | null)?.meshArr || [], camera)
   if (hit) {
-    const mesh = hit.object; selectMesh(mesh); earthStore.selectCountry(mesh.name)
-    if (mesh.gdp) labelManager.showLabel(labelManager.mainLabel, hit.point, mesh.name + ' GDP：' + (mesh.gdp / 1000000000000).toFixed(3) + '万亿美元')
-    else labelManager.showLabel(labelManager.mainLabel, hit.point, mesh.name)
+    const mesh = hit.object as CountryGdpMesh; selectMesh(mesh); earthStore.selectCountry(mesh.name)
+    if (mesh.gdp) labelManager.showLabel(labelManager.mainLabel!, hit.point, mesh.name + ' GDP：' + (mesh.gdp / 1000000000000).toFixed(3) + '万亿美元')
+    else labelManager.showLabel(labelManager.mainLabel!, hit.point, mesh.name)
     interactionStore.openInfoPanel({ name: mesh.name, gdp: mesh.gdp ? (mesh.gdp / 1000000000000).toFixed(3) + ' 万亿美元' : '数据缺失', lon: mesh.userData?.lon, lat: mesh.userData?.lat })
   } else {
-    clearSelection(); earthStore.selectCountry(null); labelManager.hideLabel(labelManager.mainLabel); interactionStore.closeInfoPanel()
+    clearSelection(); earthStore.selectCountry(null); labelManager.hideLabel(labelManager.mainLabel!); interactionStore.closeInfoPanel()
   }
 }
 
-function onContextMenu(event) {
+function onContextMenu(event: MouseEvent) {
   event.preventDefault()
   if (!camera) return
-  const hit = intersect(event, earthStore.earthGroup?.meshArr || [], camera)
-  if (hit) interactionStore.openContextMenu(event.clientX, event.clientY, { name: hit.object.name, gdp: hit.object.gdp, mesh: hit.object, lon: hit.object.userData?.lon, lat: hit.object.userData?.lat })
+  const hit = intersect(event, (earthStore.earthGroup as EarthGroupWithMeshes | null)?.meshArr || [], camera)
+  if (hit) {
+    const obj = hit.object as CountryGdpMesh
+    interactionStore.openContextMenu(event.clientX, event.clientY, { name: obj.name, gdp: obj.gdp, mesh: obj, lon: obj.userData?.lon, lat: obj.userData?.lat })
+  }
   else interactionStore.closeContextMenu()
 }
 
@@ -283,9 +319,9 @@ function onContextMenu(event) {
 const VIZ_MODES_WITH_DATA = new Set(['population', 'carbon', 'trade', 'flights', 'earthquake', 'nightlights', 'china', 'heatmap'])
 
 // 画布初始化完成前收到的切换请求会排队，就绪后自动应用
-let pendingVizMode = null
+let pendingVizMode: string | null = null
 
-async function switchVisualization(mode) {
+async function switchVisualization(mode: string) {
   if (mode === earthStore.currentVisualization && !pendingVizMode) return
   // 画布未就绪时先排队（旧实现直接静默 no-op，用户启动期点击会被无声丢弃）
   if (!visualizationLayer) {
@@ -303,15 +339,15 @@ async function switchVisualization(mode) {
   }
 }
 
-function setGlobeTexture(url) {
+function setGlobeTexture(url: string) {
   earth?.setTexture?.(url)
 }
 
-function setGlobeBumpMap(url) {
+function setGlobeBumpMap(url: string) {
   earth?.setBumpMap?.(url)
 }
 
-function addHtmlMarkers(markersData) {
+function addHtmlMarkers(markersData: Array<Record<string, any>>) {
   if (!scene) return
   clearHtmlMarkers()
   htmlMarkersGroup = createHtmlMarkers(markersData, R, { className: 'earth-canvas-marker' })
@@ -328,7 +364,7 @@ function clearHtmlMarkers() {
 }
 
 // === 经纬网格 ===
-function showGraticules(options = {}) {
+function showGraticules(options: Record<string, any> = {}) {
   if (!scene) return
   if (graticulesMesh) {
     graticulesMesh.visible = true
@@ -344,7 +380,7 @@ function hideGraticules() {
 }
 
 // === 瓦片引擎 ===
-function setTileEngineUrl(urlFn, maxLevel) {
+function setTileEngineUrl(urlFn: (x: number, y: number, level: number) => string, maxLevel: number) {
   if (!scene || typeof urlFn !== 'function') return
   clearTileEngine()
   tileEngineBaseSphereVisible = sphereMesh ? sphereMesh.visible : true
@@ -386,13 +422,14 @@ function toggleRealisticEarth() {
     // 切换回笔画地球：清除高亮并恢复程序纹理
     clearRealisticHighlight()
     if (proceduralTexture) {
-      const oldMap = sphereMesh.material.map
-      sphereMesh.material.map = proceduralTexture
-      sphereMesh.material.needsUpdate = true
+      const sphereMat = sphereMesh.material as THREE.MeshPhongMaterial
+      const oldMap = sphereMat.map
+      sphereMat.map = proceduralTexture
+      sphereMat.needsUpdate = true
       if (oldMap && oldMap !== proceduralTexture) oldMap.dispose()
     }
-    sphereMesh.material.bumpMap = null
-    sphereMesh.material.needsUpdate = true
+    ;(sphereMesh.material as THREE.MeshPhongMaterial).bumpMap = null
+    ;(sphereMesh.material as THREE.MeshPhongMaterial).needsUpdate = true
     // 恢复国家 Mesh 透明度
     countryMeshStates.forEach(state => {
       const m = state.mesh
@@ -407,13 +444,13 @@ function toggleRealisticEarth() {
   return isRealisticEarth
 }
 
-function setRealisticEarth(enabled) {
+function setRealisticEarth(enabled: boolean) {
   if (!!enabled === isRealisticEarth) return isRealisticEarth
   return toggleRealisticEarth()
 }
 
 // === 真实地球模式下高亮选中的国家 Mesh ===
-function highlightRealisticCountry(name) {
+function highlightRealisticCountry(name: string) {
   if (!isRealisticEarth || !earth?.meshArr?.length) return
   const mesh = earth.meshArr.find(m => m.name === name)
   if (!mesh || mesh === realisticHighlightMesh) return
@@ -450,10 +487,10 @@ function clearRealisticHighlight() {
   realisticHighlightMesh = null
 }
 
-defineExpose({ flyTo: (lon, lat, duration) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization, toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
+defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization, toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
 
 // === Timeline year watch — GDP柱状动画 ===
-const stopWatch = watch(() => timelineStore.currentYear, (year) => {
+const stopWatch = watch(() => timelineStore.currentYear, (year: number) => {
   if (!earth?.meshArr || !timelineStore.yearlyData) return
   // 切到GDP模式
   if (earthStore.currentVisualization !== 'gdp') {
@@ -469,7 +506,7 @@ const stopWatchSelected = watch(() => earthStore.selectedCountry, (name) => {
   else clearRealisticHighlight()
 })
 
-function updatePillars(year) {
+function updatePillars(year: number) {
   const data = timelineStore.getPillarData(year)
   if (!data?.pillars?.length) return
 
@@ -479,7 +516,7 @@ function updatePillars(year) {
 
   if (!pillarGroup) {
     pillarGroup = new THREE.Group()
-    overlayGroup.add(pillarGroup)
+    overlayGroup!.add(pillarGroup)
   }
 
   // 更新/创建柱体
@@ -500,14 +537,14 @@ function updatePillars(year) {
       const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir)
       bar.setRotationFromQuaternion(quat)
       bar.position.copy(base).addScaledVector(dir, h / 2)
-      pillarGroup.add(bar)
+      pillarGroup!.add(bar)
 
       const dotGeo = new THREE.SphereGeometry(1, 8, 4)
       const dotMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, depthWrite: false })
       const dot = new THREE.Mesh(dotGeo, dotMat)
-      pillarGroup.add(dot)
+      pillarGroup!.add(dot)
 
-      entry = { bar, dot, name: p.name, height: h, targetHeight: h, growth: 0, base, dir }
+      entry = { bar: bar as PillarEntry['bar'], dot: dot as PillarEntry['dot'], name: p.name, height: h, targetHeight: h, growth: 0, base, dir }
       pillarMeshes.push(entry)
     }
     entry.targetHeight = Math.max(p.height, 1)
@@ -593,7 +630,7 @@ onUnmounted(() => {
 })
 
 // === 自定义数据导入 ===
-async function loadCustomScatter(points) {
+async function loadCustomScatter(points: Array<Record<string, any>>) {
   await visualizationLayer?.switchVisualization('import', points)
 }
 function toggleCloud() {
@@ -606,8 +643,9 @@ let nightMode = false
 function toggleNightMode() {
   nightMode = !nightMode
   if (!sphereMesh) return nightMode
-  sphereMesh.material.emissiveIntensity = nightMode ? 0 : 0.1
-  sphereMesh.material.emissive.set(nightMode ? 0x112244 : 0x000022)
+  const mat = sphereMesh.material as THREE.MeshPhongMaterial & { emissive: THREE.Color }
+  mat.emissiveIntensity = nightMode ? 0 : 0.1
+  mat.emissive.set(nightMode ? 0x112244 : 0x000022)
   return nightMode
 }
 

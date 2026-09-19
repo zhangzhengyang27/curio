@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - SVGLoader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,7 +40,7 @@ function onReady(__stage) {
   
   
   
-  			let gui, guiData;
+  			let gui: any, guiData: any;
   
   			
   			//
@@ -149,7 +149,7 @@ function onReady(__stage) {
   
   			}
   
-  			function loadSVG( url ) {
+  			function loadSVG( url: any ) {
   
   				//
   
@@ -216,7 +216,7 @@ function onReady(__stage) {
   
   								for ( const subPath of path.subPaths ) {
   
-  									const geometry = SVGLoader.pointsToStroke( subPath.getPoints(), path.userData.style );
+  									const geometry = SVGLoader.pointsToStroke( subPath.getPoints(), ( path.userData.style as any ) );
   
   									if ( geometry ) {
   
@@ -251,9 +251,9 @@ function onReady(__stage) {
   
   			}
   
-  			function disposeScene( scene ) {
+  			function disposeScene( scene: any ) {
   
-  				scene.traverse( function ( object ) {
+  				scene.traverse( function ( object: any ) {
   
   					if ( object.isMesh || object.isLine ) {
   

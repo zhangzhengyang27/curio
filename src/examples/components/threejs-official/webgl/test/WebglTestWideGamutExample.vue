@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { DisplayP3ColorSpace, DisplayP3ColorSpaceImpl, LinearDisplayP3ColorSpace, LinearDisplayP3ColorSpaceImpl } from 'three/examples/jsm/math/ColorSpaces.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - wide gamut test<br />"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -41,8 +41,8 @@ async function onReady(__stage) {
   
   
   
-  			let container, loader;
-  			let sceneL, sceneR, textureL, textureR;
+  			let container, loader: any;
+  			let sceneL: any, sceneR: any, textureL: any, textureR: any;
   
   			let sliderPos = (__stage.container?.clientWidth || window.innerWidth) / 2;
   
@@ -116,7 +116,7 @@ async function onReady(__stage) {
   
   				function onPointerDown() {
   
-  					if ( event.isPrimary === false ) return;
+  					if ( (event! as any).isPrimary === false ) return;
   
   					window.addEventListener( 'pointermove', onPointerMove );
   					window.addEventListener( 'pointerup', onPointerUp );
@@ -130,9 +130,9 @@ async function onReady(__stage) {
   
   				}
   
-  				function onPointerMove( e ) {
+  				function onPointerMove( e: any ) {
   
-  					if ( event.isPrimary === false ) return;
+  					if ( (event! as any).isPrimary === false ) return;
   
   					updateSlider( e.pageX );
   
@@ -140,22 +140,22 @@ async function onReady(__stage) {
   
   				updateSlider( sliderPos );
   
-  				slider.style.touchAction = 'none'; // disable touch scroll
-  				slider.addEventListener( 'pointerdown', onPointerDown );
+  				(slider! as any).style.touchAction = 'none'; // disable touch scroll
+  				slider!.addEventListener( 'pointerdown', onPointerDown );
   
   			}
   
-  			function updateSlider( offset ) {
+  			function updateSlider( offset: any ) {
   
   				sliderPos = Math.max( 10, Math.min( (__stage.container?.clientWidth || window.innerWidth) - 10, offset ) );
   
-  				slider.style.left = sliderPos - ( slider.offsetWidth / 2 ) + 'px';
+  				(slider! as any).style.left = sliderPos - ( (slider! as any).offsetWidth / 2 ) + 'px';
   
   			}
   
   			
   
-  			function onGamutChange( { matches } ) {
+  			function onGamutChange( { matches }: any ) {
   
   				renderer.outputColorSpace = isP3Context && matches ? DisplayP3ColorSpace : THREE.SRGBColorSpace;
   
@@ -164,7 +164,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.setScissor( 0, 0, sliderPos, (__stage.container?.clientHeight || window.innerHeight) );
     				renderer.render( sceneL, camera );
     				renderer.setScissor( sliderPos, 0, (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );

@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/08-GlSl ES语言/jsm/Utils.js'
 const vertexShader = `void main(){
@@ -63,7 +63,7 @@ const fragmentShader = `precision mediump float;
       }
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
   
       
@@ -75,7 +75,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const fsSource = fragmentShader;
   
       //三维画笔
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       //初始化着色器
       //功能：解析着色器文本，整合到程序对象里，关联webgl上下文对象，实现两种语言的相互通信

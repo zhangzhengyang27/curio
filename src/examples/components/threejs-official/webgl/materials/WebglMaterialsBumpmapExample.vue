@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - bump mapping without tangents<br/>\n\t\t\t<a href=\"https://casual-effects.com/data/\" target=\"_blank\" rel=\"noopener\">Lee Perry-Smith</a> head"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,7 +48,7 @@ function onReady(__stage) {
   			let container, loader;
   
   
-  			let mesh;
+  			let mesh: any;
   
   			let spotLight;
   
@@ -119,7 +119,7 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'enableBumpMap' ).name( 'enable bump map' ).onChange( ( value ) => {
+  				gui.add( params, 'enableBumpMap' ).name( 'enable bump map' ).onChange( ( value: any ) => {
   
   					mesh.material.bumpMap = ( value === true ) ? mapHeight : null;
   					mesh.material.needsUpdate = true;
@@ -139,7 +139,7 @@ function onReady(__stage) {
   			
   
   
-  			function createScene( geometry, scale, material ) {
+  			function createScene( geometry: any, scale: any, material: any ) {
   
   				mesh = new THREE.Mesh( geometry, material );
   

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - animation - keyframes<br/>\n\t\t\tModel: <a href=\"https://artstation.com/artwork/1AGwX\" target=\"_blank\" rel=\"noopener\">Littlest Tokyo</a> by\n\t\t\t<a href=\"https://artstation.com/glenatron\" target=\"_blank\" rel=\"noopener\">Glen Fox</a>, CC Attribution."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -45,7 +45,7 @@ function onReady(__stage) {
   
   
   
-  			let mixer;
+  			let mixer: any;
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -76,7 +76,7 @@ function onReady(__stage) {
   			uniforms[ 'sunPosition' ].value.set( - 0.8, 0.19, 0.56 ); // elevation: 11, azimuth: -55
   
   			const pmremGenerator = new THREE.PMREMGenerator( renderer );
-  			const environment = pmremGenerator.fromScene( sky ).texture;
+  			const environment = pmremGenerator.fromScene( sky as any ).texture;
   			scene.environment = environment;
   
   
@@ -110,7 +110,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				mixer.update( delta );

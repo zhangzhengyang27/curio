@@ -4,16 +4,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const block = mgContainer.value.querySelector('.block');
+    const block = mgContainer.value!.querySelector('.block') as HTMLElement;
       let rotation = 0;
       requestAnimationFrame(function update() {
         block.style.transform = `rotate(${rotation++}deg)`;

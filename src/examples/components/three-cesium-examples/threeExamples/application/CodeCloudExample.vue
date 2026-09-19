@@ -9,12 +9,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -30,14 +30,14 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  var shader_material, cloud, range = 50
-  var clock, stats
+  var shader_material, cloud: any, range = 50
+  var clock, stats: any
 
   init();
   
@@ -75,7 +75,7 @@ function onReady(ctx) {
       let width = 128, height = 128
   
       for (var i = 0; i < 1000; i++) {
-          var pos = new THREE.Vector3(
+          var pos: any = new THREE.Vector3(
               Math.random() * range - range / 2,
               Math.random() * range - range / 2,
               Math.random() * range - range / 2)
@@ -85,7 +85,7 @@ function onReady(ctx) {
   
           let geometry = new THREE.PlaneGeometry(4, 4);
           let s = Math.floor(Math.random() * 1000) + 1
-          geometry.attributes.uv.array = geometry.attributes.uv.array.map(e => e += s)
+          ;(geometry.attributes.uv as any).array = geometry.attributes.uv.array.map(e => e += s)
   
           var plane = new THREE.Mesh(geometry, shader_material);
   
@@ -95,7 +95,7 @@ function onReady(ctx) {
       }
       _intervalId = setInterval(() => {
           if (cloud) {
-              cloud.children.map(plane => {
+              cloud.children.map((plane: any) => {
                   plane.material.uniforms.random.value = Math.random()
               })
           }
@@ -225,7 +225,7 @@ function onReady(ctx) {
   
   function snowanimate() {
       if (cloud) {
-          cloud.children.map(plane => {
+          cloud.children.map((plane: any) => {
               plane.rotation.y = camera.rotation.y
               let pos = plane.userData.pos
               // plane.position.x += pos.vX

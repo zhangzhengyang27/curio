@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,16 +38,17 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
+  const { Color, Material, Property, defined } = Cesium
 
   const FILE_HOST = props.example?.globals?.FILE_HOST || "/external-examples/3d-file-server/"
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer._cesiumWidget._creditContainer.style.display = "none"
@@ -73,10 +74,16 @@ function onReady(ctx) {
   
   /* 飞线材质类 */
   class PolylineTrailLinkMaterialProperty {
+    _definitionChanged: any
+    _color: any
+    color: any
+    duration: any
+    _time: any
+    image: any
   
-      constructor(image, color = Color.WHITE, duration = 1000) {
+      constructor(image: any, color = Color.WHITE, duration = 1000) {
   
-          this._definitionChanged = new Event()
+          this._definitionChanged = new (Event as any)()
   
           this._color = undefined
   
@@ -127,9 +134,9 @@ function onReady(ctx) {
   
       get definitionChanged() { return this._definitionChanged }
   
-      getType(_) { return 'PolylineTrailLink' }
+      getType(_: any) { return 'PolylineTrailLink' }
   
-      getValue(time, result) {
+      getValue(time: any, result: any) {
   
           if (!defined(result)) result = {}
   
@@ -143,7 +150,7 @@ function onReady(ctx) {
   
       }
   
-      equals(other) { return this === other || Property.equals(this._color, other._color) }
+      equals(other: any) { return this === other || Property.equals(this._color, other._color) }
   
   }
   
@@ -158,7 +165,7 @@ function onReady(ctx) {
   ].forEach(([p1, p2]) => createPlaneCurve(p1, p2))
   
   // 组合
-  function createPlaneCurve(p1, p2) {
+  function createPlaneCurve(p1: any, p2: any) {
   
       const { curvePoints } = getGenerateCurve(p1, p2, { maxHeight: 100000 })
   
@@ -193,7 +200,7 @@ function onReady(ctx) {
   }
   
   /* 生成曲线 */
-  function getGenerateCurve(start, end, params = {}) {
+  function getGenerateCurve(start: any, end: any, params: any = {}) {
   
       const [startLongitude, startLatitude] = start
   
@@ -205,7 +212,7 @@ function onReady(ctx) {
   
       const geodesic = new Cesium.EllipsoidGeodesic(startCartographic, endCartographic)
   
-      const curvePoints = []
+      const curvePoints: any[] = []
   
       for (let t = 0; t <= 1; t += (params.step || 0.01)) {
   
@@ -225,7 +232,7 @@ function onReady(ctx) {
   
       curvePoints.push(endPointCartesian)
   
-      function getCurvePointAtTime(t) {
+      function getCurvePointAtTime(t: any) {
   
           const pointCartographic = geodesic.interpolateUsingFraction(t)
   
@@ -240,7 +247,7 @@ function onReady(ctx) {
   }
   
   /* 飞行动画 */
-  function setEntityAnimate(viewer, entity, curvePoints, params = {}) {
+  function setEntityAnimate(viewer: any, entity: any, curvePoints: any, params: any = {}) {
   
       const start = Cesium.JulianDate.fromDate(new Date())   // 设置起始时间
   
@@ -248,7 +255,7 @@ function onReady(ctx) {
   
       let stop = Cesium.JulianDate.addSeconds(start, curvePoints.length / speedFactor, new Cesium.JulianDate())
   
-      function setProperty(t1, t2) {
+      function setProperty(t1: any, t2: any) {
   
           const property = new Cesium.SampledPositionProperty()
   
@@ -265,7 +272,7 @@ function onReady(ctx) {
       setProperty(start, stop)
   
       // 监听飞机的位置属性，当飞机到达终点时重新设置位置属性
-      viewer.clock.onTick.addEventListener(function (clock) {
+      viewer.clock.onTick.addEventListener(function (clock: any) {
   
           if (Cesium.JulianDate.compare(clock.currentTime, stop) >= 0) {
   

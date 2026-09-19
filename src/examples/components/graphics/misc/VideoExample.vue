@@ -17,15 +17,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -42,7 +42,7 @@ async function initGraphicsExample() {
   await loadScript("/graphics/assets/external/ffmpeg.js");
   {
     const { Scene, Label, Group } = spritejs;
-          const container = gContainer.value.querySelector('#container');
+          const container = gContainer.value!.querySelector('#container');
           const scene = new Scene({
             container,
             width: 300,
@@ -94,7 +94,7 @@ async function initGraphicsExample() {
   }
   {
     const canvas2videoInstance = new Canvas2Video({
-            canvas: gContainer.value.querySelector('canvas'),
+            canvas: gContainer.value!.querySelector('canvas') as HTMLCanvasElement,
             outVideoType: "webm",
           });
           canvas2videoInstance.startRecord();
@@ -104,12 +104,12 @@ async function initGraphicsExample() {
           }, 3000);
           canvas2videoInstance
             .getStreamURL()
-            .then((url) => {
+            .then((url: any) => {
               console.log("url", url);
-              gContainer.value.querySelector('#videoContainer').style.display = "block";
-              gContainer.value.querySelector("video").src = url;
+              (gContainer.value!.querySelector('#videoContainer') as HTMLElement).style.display = "block";
+              (gContainer.value!.querySelector("video") as HTMLVideoElement).src = url;
             })
-            .catch((err) => console.error(err));
+            .catch((err: any) => console.error(err));
   }
 }
 

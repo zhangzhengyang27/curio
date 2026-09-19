@@ -6,12 +6,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
-let Cesium = null
-let viewer = null
-let tickListener = null
+let Cesium: any = null
+let viewer: any = null
+let tickListener: any = null
 
 const viewerOptions = {
   animation: false,
@@ -27,7 +27,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 

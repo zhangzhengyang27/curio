@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -35,12 +35,12 @@ function onReady(ctx) {
   const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) })
   
   // 渲染时间略有不同的时间显示物理模拟的状态
-  world.PhysicsRender = (deltaTime) => {
-  
+  ;(world as any).PhysicsRender = (deltaTime: any) => {
+
       world.step(1 / 60, deltaTime, 3)
-  
-      world.bodies.forEach(body => body.render?.())
-  
+
+      world.bodies.forEach((body: any) => body.render?.())
+
   }
   
   // 创建一个立方体
@@ -70,10 +70,10 @@ function onReady(ctx) {
   scene.add(planeMesh)
   
   ctx.addUpdateCallback(() => {
-    world.PhysicsRender()
+    (world as any).PhysicsRender()
   })
-  
-  function createPhysicsBody(PhysicsWorld, model, mass) {
+
+  function createPhysicsBody(PhysicsWorld: any, model: any, mass: any) {
   
       const box = new THREE.Box3().setFromObject(model);
   
@@ -89,15 +89,15 @@ function onReady(ctx) {
   
           shape: new CANNON.Box(new CANNON.Vec3((max.x - min.x) / 2, (max.y - min.y) / 2, (max.z - min.z) / 2)),
   
-          position: center,
-  
+          position: center as any,
+
       })
-  
+
       body.position.copy(model.position)
-  
+
       PhysicsWorld.addBody(body)
-  
-      body.render = () => model.position.copy(body.position)
+
+      ;(body as any).render = () => model.position.copy(body.position)
   
   }
 }

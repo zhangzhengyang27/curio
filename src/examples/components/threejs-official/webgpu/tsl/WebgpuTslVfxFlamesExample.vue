@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { TWO_PI, oneMinus, spherizeUV, sin, step, texture, time, Fn, uv, vec2, vec3, vec4, mix, billboarding } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>VFX Flames</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -60,12 +60,12 @@ function onReady(__stage) {
   				// gradient canvas
   
   				const gradient = {};
-  				gradient.element = document.createElement( 'canvas' );
-  				gradient.element.width = 128;
-  				gradient.element.height = 1;
-  				gradient.context = gradient.element.getContext( '2d' );
+  				(gradient as any).element = document.createElement( 'canvas' );
+  				(gradient as any).element.width = 128;
+  				(gradient as any).element.height = 1;
+  				(gradient as any).context = (gradient as any).element.getContext( '2d' );
   
-  				gradient.colors = [
+  				(gradient as any).colors = [
   					'#090033',
   					'#5f1f93',
   					'#e02e96',
@@ -73,29 +73,29 @@ function onReady(__stage) {
   					'#fff0db',
   				];
   
-  				gradient.texture = new THREE.CanvasTexture( gradient.element );
-  				gradient.texture.colorSpace = THREE.SRGBColorSpace;
+  				(gradient as any).texture = new THREE.CanvasTexture( (gradient as any).element );
+  				(gradient as any).texture.colorSpace = THREE.SRGBColorSpace;
   
-  				gradient.update = () => {
+  				(gradient as any).update = () => {
   
-  					const fillGradient = gradient.context.createLinearGradient( 0, 0, gradient.element.width, 0 );
+  					const fillGradient = (gradient as any).context.createLinearGradient( 0, 0, (gradient as any).element.width, 0 );
   
-  					for ( let i = 0; i < gradient.colors.length; i ++ ) {
+  					for ( let i = 0; i < (gradient as any).colors.length; i ++ ) {
   
-  						const progress = i / ( gradient.colors.length - 1 );
-  						const color = gradient.colors[ i ];
+  						const progress = i / ( (gradient as any).colors.length - 1 );
+  						const color = (gradient as any).colors[ i ];
   						fillGradient.addColorStop( progress, color );
   
   					}
   
-  					gradient.context.fillStyle = fillGradient;
-  					gradient.context.fillRect( 0, 0, gradient.element.width, gradient.element.height );
+  					(gradient as any).context.fillStyle = fillGradient;
+  					(gradient as any).context.fillRect( 0, 0, (gradient as any).element.width, (gradient as any).element.height );
   
-  					gradient.texture.needsUpdate = true;
+  					(gradient as any).texture.needsUpdate = true;
   
   				};
   
-  				gradient.update();
+  				(gradient as any).update();
   
   				// flame 1 material
   
@@ -124,7 +124,7 @@ function onReady(__stage) {
   					shape.assign( shape.sub( cellularNoise ) );
   
   					// gradient color
-  					const gradientColor = texture( gradient.texture, vec2( shape.remap( 0, 1, 0, 1 ), 0 ) );
+  					const gradientColor = texture( (gradient as any).texture, vec2( shape.remap( 0, 1, 0, 1 ), 0 ) );
   
   					// output
   					const color = mix( gradientColor, vec3( 1 ), shape.step( 0.8 ) );

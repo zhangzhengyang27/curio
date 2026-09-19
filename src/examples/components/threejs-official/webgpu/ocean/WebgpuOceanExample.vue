@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Occlusion</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   			let container;
   			let renderPipeline;
-  			let water, sun, sky, mesh, bloomPass;
+  			let water: any, sun: any, sky: any, mesh, bloomPass;
   
   			
   
@@ -134,7 +134,7 @@ function onReady(__stage) {
   				const pmremGenerator = new THREE.PMREMGenerator( renderer );
   				const sceneEnv = new THREE.Scene();
   
-  				let renderTarget;
+  				let renderTarget: any;
   
   				function updateSun() {
   
@@ -182,7 +182,7 @@ function onReady(__stage) {
   				const folderSky = gui.addFolder( 'Sky' );
   				folderSky.add( parameters, 'elevation', 0, 90, 0.1 ).onChange( updateSun );
   				folderSky.add( parameters, 'azimuth', - 180, 180, 0.1 ).onChange( updateSun );
-  				folderSky.add( parameters, 'exposure', 0, 1, 0.0001 ).onChange( function ( value ) {
+  				folderSky.add( parameters, 'exposure', 0, 1, 0.0001 ).onChange( function ( value: any ) {
   
   					renderer.toneMappingExposure = value;
   
@@ -210,7 +210,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() * 0.001;
     				mesh.position.y = Math.sin( time ) * 20 + 5;
     				mesh.rotation.x = time * 0.5;

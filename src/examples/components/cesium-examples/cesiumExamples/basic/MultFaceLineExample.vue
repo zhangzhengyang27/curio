@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,11 +46,11 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
-  setFaceCollection(viewer, (faceCollection, lineCollection) => {
+  setFaceCollection(viewer, (faceCollection: any, lineCollection: any) => {
   
       for (var i = 0; i < 10000; i++) {
   
@@ -69,13 +69,13 @@ function onReady(ctx) {
   })
   
   // 创建大量面和线段
-  function setFaceCollection(viewer, callback) {
+  function setFaceCollection(viewer: any, callback: any) {
   
       const lineCollection = {
   
-          instances: [],
+          instances: [] as any[],
   
-          add({ positions, color = '#fff', id = '', width = 1.0, opacity = 1 }) {
+          add({ positions, color = '#fff', id = '', width = 1.0, opacity = 1 }: any) {
   
               if (!positions) return
   
@@ -107,9 +107,9 @@ function onReady(ctx) {
   
       const faceCollection = {
   
-          instances: [],
+          instances: [] as any[],
   
-          add({ positions, color = '#fff', id = '', opacity = 1 }) {
+          add({ positions, color = '#fff', id = '', opacity = 1 }: any) {
   
               if (!positions) return
   

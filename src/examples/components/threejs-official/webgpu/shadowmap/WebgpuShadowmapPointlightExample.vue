@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,14 +29,14 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>PointLight ShadowMap</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
 
   
-  			let pointLight, pointLight2;
+  			let pointLight: any, pointLight2: any;
   
   			init();
   
@@ -50,7 +50,7 @@ function onReady(__stage) {
   
   				// lights
   
-  				function createLight( color ) {
+  				function createLight( color: any ) {
   
   					const intensity = 200;
   
@@ -61,7 +61,7 @@ function onReady(__stage) {
   					light.shadow.radius = 10;
   
   					let geometry = new THREE.SphereGeometry( 0.3, 12, 6 );
-  					let material = new THREE.MeshBasicMaterial( { color: color } );
+  					let material: any = new THREE.MeshBasicMaterial( { color: color } );
   					material.color.multiplyScalar( intensity );
   					let sphere = new THREE.Mesh( geometry, material );
   					light.add( sphere );
@@ -138,7 +138,7 @@ function onReady(__stage) {
   				canvas.width = 2;
   				canvas.height = 2;
   
-  				const context = canvas.getContext( '2d' );
+  				const context = canvas.getContext( '2d' )!;
   				context.fillStyle = 'white';
   				context.fillRect( 0, 1, 2, 1 );
   
@@ -146,7 +146,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     let time = performance.now() * 0.001;
     				pointLight.position.x = Math.sin( time * 0.6 ) * 9;
     				pointLight.position.y = Math.sin( time * 0.7 ) * 9 + 6;

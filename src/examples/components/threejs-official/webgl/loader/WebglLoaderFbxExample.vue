@@ -15,16 +15,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let mixer: any;
 
 const props = defineProps({
   example: {
@@ -34,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - FBXLoader<br />\n\t\t\tCharacter and animation from <a href=\"https://www.mixamo.com/\" target=\"_blank\" rel=\"noopener\">Mixamo</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,7 +49,7 @@ function onReady(__stage) {
   
   			const manager = new THREE.LoadingManager();
   
-  			let stats, object, loader, guiMorphsFolder;
+  			let stats, object: any, loader: any, guiMorphsFolder: any;
   
   
   			const timer = new THREE.Timer();
@@ -138,7 +139,7 @@ function onReady(__stage) {
   				__stage.overlay?.appendChild(stats.dom)
   
   				gui = new GUI();
-  				gui.add( params, 'asset', assets ).onChange( function ( value ) {
+  				gui.add( params, 'asset', assets ).onChange( function ( value: any ) {
   
   					loadAsset( value );
   
@@ -149,13 +150,13 @@ function onReady(__stage) {
   			
   
   
-  			function loadAsset( asset ) {
+  			function loadAsset( asset: any ) {
   
-  				loader.load( ASSET_HOST + 'models/fbx/' + asset + '.fbx', function ( group ) {
+  				loader.load( ASSET_HOST + 'models/fbx/' + asset + '.fbx', function ( group: any ) {
   
   					if ( object ) {
   
-  						object.traverse( function ( child ) {
+  						object.traverse( function ( child: any ) {
   
   							if ( child.isSkinnedMesh ) {
   
@@ -166,7 +167,7 @@ function onReady(__stage) {
   							if ( child.material ) {
   
   								const materials = Array.isArray( child.material ) ? child.material : [ child.material ];
-  								materials.forEach( material => {
+  								materials.forEach( (material: any) => {
   
   									if ( material.map ) material.map.dispose();
   									material.dispose();
@@ -203,10 +204,10 @@ function onReady(__stage) {
   
   					}
   
-  					guiMorphsFolder.children.forEach( ( child ) => child.destroy() );
+  					guiMorphsFolder.children.forEach( ( child: any ) => child.destroy() );
   					guiMorphsFolder.hide();
   
-  					object.traverse( function ( child ) {
+  					object.traverse( function ( child: any ) {
   
   						if ( child.isMesh ) {
   
@@ -239,7 +240,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

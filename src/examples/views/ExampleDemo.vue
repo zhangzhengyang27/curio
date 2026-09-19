@@ -79,14 +79,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getExampleById } from '../registry/index.js'
-import { ensureRegistryLoaded } from '../composables/useExampleFilters.js'
+import { getExampleById } from '../registry/index.ts'
+import { ensureRegistryLoaded } from '../composables/useExampleFilters'
 import IframeRunner from '../runners/IframeRunner.vue'
 import ExampleHost from './ExampleHost.vue'
-import { loadExampleComponent, loadExampleSource } from '../components/index.js'
+import { loadExampleComponent, loadExampleSource } from '../components/index'
 import CodeDrawer from '../../components/CodeDrawer.vue'
 
 const route = useRoute()
@@ -103,7 +103,7 @@ function goBackToList() {
   }
 }
 
-function normalizePathMatch(value) {
+function normalizePathMatch(value: unknown) {
   if (Array.isArray(value)) return value.join('/')
   if (typeof value === 'string') {
     // Vue Router 5 可能将多段通配符序列化为逗号分隔的字符串
@@ -133,9 +133,9 @@ ensureRegistryLoaded().then(() => { registryReady.value = true })
 
 const example = computed(() => {
   if (!registryReady.value) return null
-  const { source, category, id } = parsed.value
-  if (!source || !category || !id) return null
-  return getExampleById(source, category, id)
+  const parsed2 = parsed.value as { source: string; category: string; id: string }
+  if (!parsed2.source || !parsed2.category || !parsed2.id) return null
+  return getExampleById(parsed2.source, parsed2.category, parsed2.id)
 })
 
 const exampleKey = computed(() => {
@@ -144,25 +144,25 @@ const exampleKey = computed(() => {
 })
 
 const vueComponent = computed(() => {
-  const { source, category, id } = parsed.value
-  if (!source || !category || !id || example.value?.runner !== 'vue') return null
-  return loadExampleComponent(source, category, id)
+  const p2 = parsed.value as { source: string; category: string; id: string }
+  if (!p2.source || !p2.category || !p2.id || example.value?.runner !== 'vue') return null
+  return loadExampleComponent(p2.source, p2.category, p2.id)
 })
 
 // 「查看代码」抽屉状态
 const showCode = ref(false)
 const codeLoading = ref(false)
 // 多节代码：第 1 节为主示例，后续为它引用的 ExampleScene 共享壳
-const codeSections = ref([])
+const codeSections = ref<Array<{ filename: string; code: string }>>([])
 
 async function openCode() {
   if (!example.value || example.value.runner !== 'vue') return
-  const { source, category, id } = parsed.value
+  const p3 = parsed.value as { source: string; category: string; id: string }
   showCode.value = true
   codeLoading.value = true
   codeSections.value = []
-  const result = await loadExampleSource(source, category, id)
-  const sections = []
+  const result = await loadExampleSource(p3.source, p3.category, p3.id)
+  const sections: Array<{ filename: string; code: string }> = []
   if (result) {
     // 用真实命中的 glob key 作为文件名（去掉 ./ 前缀），可能与约定名不一致
     sections.push({ filename: result.path.replace(/^\.\//, ''), code: result.code })

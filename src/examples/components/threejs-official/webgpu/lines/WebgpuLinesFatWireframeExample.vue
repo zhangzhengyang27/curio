@@ -17,7 +17,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color } from 'three/tsl';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Fat Lines</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,13 +46,14 @@ function onReady(__stage) {
   
   
   
-  			let wireframe, camera2, backgroundNode;
-  			let wireframe1;
-  			let matLine, matLineBasic, matLineDashed;
+  			let wireframe: any, camera2: any, backgroundNode;
+  			let wireframe1: any;
+  			let matLine: any, matLineBasic: any, matLineDashed: any;
   			let gui;
   
   			// viewport
-  			let insetWidth;
+  			let insetWidth: any;
+  			let insetHeight: any;
   
   
   			
@@ -81,7 +82,7 @@ function onReady(__stage) {
   
   				// Wireframe ( WireframeGeometry2, Line2NodeMaterial )
   
-  				let geo = new THREE.IcosahedronGeometry( 20, 1 );
+  				let geo: any = new THREE.IcosahedronGeometry( 20, 1 );
   
   				const geometry = new WireframeGeometry2( geo );
   
@@ -114,7 +115,19 @@ function onReady(__stage) {
   
   				
   				onWindowResize();
-  
+
+				function onWindowResize() {
+					const w = __stage.container?.clientWidth || window.innerWidth
+					const h = __stage.container?.clientHeight || window.innerHeight
+					camera.aspect = w / h
+					camera.updateProjectionMatrix()
+					renderer.setSize( w, h )
+					insetWidth = h / 4 // square
+					insetHeight = h / 4
+					camera2.aspect = insetWidth / insetHeight
+					camera2.updateProjectionMatrix()
+				}
+
   				initGui();
   
   			
@@ -122,7 +135,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // main scene
     				renderer.setViewport( 0, 0, (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) );
     				renderer.autoClear = true;
@@ -158,7 +171,7 @@ function onReady(__stage) {
   				};
   
   
-  				gui.add( param, 'line type', { 'LineGeometry': 0, 'gl.LINE': 1 } ).onChange( function ( val ) {
+  				gui.add( param, 'line type', { 'LineGeometry': 0, 'gl.LINE': 1 } ).onChange( function ( val: any ) {
   
   					switch ( val ) {
   
@@ -180,27 +193,27 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( param, 'width (px)', 1, 10 ).onChange( function ( val ) {
+  				gui.add( param, 'width (px)', 1, 10 ).onChange( function ( val: any ) {
   
   					matLine.linewidth = val;
   
   				} );
   
-  				gui.add( param, 'dashed' ).onChange( function ( val ) {
+  				gui.add( param, 'dashed' ).onChange( function ( val: any ) {
   
   					matLine.dashed = val;
   					wireframe1.material = val ? matLineDashed : matLineBasic;
   
   				} );
   
-  				gui.add( param, 'dash scale', 0.5, 1, 0.1 ).onChange( function ( val ) {
+  				gui.add( param, 'dash scale', 0.5, 1, 0.1 ).onChange( function ( val: any ) {
   
   					matLine.scale = val;
   					matLineDashed.scale = val;
   
   				} );
   
-  				gui.add( param, 'dash / gap', { '2 : 1': 0, '1 : 1': 1, '1 : 2': 2 } ).onChange( function ( val ) {
+  				gui.add( param, 'dash / gap', { '2 : 1': 0, '1 : 1': 1, '1 : 2': 2 } ).onChange( function ( val: any ) {
   
   					switch ( val ) {
   

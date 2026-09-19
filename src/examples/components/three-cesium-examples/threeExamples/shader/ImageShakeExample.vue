@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,25 +19,24 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  var shaderUniforms, shaderAttributes;
+  var shaderUniforms: any, shaderAttributes;
   
-  var particles = [];
+  var particles: any[] = [];
   var particleSystem;
   
   var imageWidth = 640;
   var imageHeight = 400;
-  var imageData = null;
-  
+  var imageData: any = null;
   var animationTime = 0;
   var animationDelta = 0.005;
   
-  let trackballControls;
+  let trackballControls: any;
 
   init();
   // tick();
@@ -76,7 +75,7 @@ function onReady(ctx) {
   function createPixelData() {
       var image = document.createElement("img");
       var canvas = document.createElement("canvas");
-      var context = canvas.getContext("2d");
+      var context = canvas.getContext("2d")!;
       
       image.crossOrigin = "Anonymous";
       image.onload = function() {
@@ -85,7 +84,7 @@ function onReady(ctx) {
           imageWidth = image.width;
           imageHeight = image.height;
         
-        context.fillStyle = context.createPattern(image, 'no-repeat');
+        context.fillStyle = context.createPattern(image, 'no-repeat')!;
         context.fillRect(0, 0, imageWidth, imageHeight);
         
         imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;

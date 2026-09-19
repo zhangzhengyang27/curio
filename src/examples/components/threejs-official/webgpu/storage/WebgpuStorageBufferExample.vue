@@ -12,7 +12,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t<br />This example demonstrates fetching an external element from a StorageBuffer.\n\t\t\t<br />The left canvas uses the WebGPU Backend, while the right uses the WebGL Backend.\n\t\t\t<div id=\"timestamps\" style=\"\n\t\t\t\tposition: absolute;\n\t\t\t\ttop: 60px;\n\t\t\t\tleft: 0;\n\t\t\t\tpadding: 10px;\n\t\t\t\tbackground: rgba( 0, 0, 0, 0.5 );\n\t\t\t\tcolor: #fff;\n\t\t\t\tfont-family: monospace;\n\t\t\t\tfont-size: 12px;\n\t\t\t\tline-height: 1.5;\n\t\t\t\tpointer-events: none;\n\t\t\t\ttext-align: left;\n\t\t\t\">"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -63,7 +63,7 @@ function onReady(__stage) {
   
   				const type = [ 'float', 'vec2', 'vec3', 'vec4' ];
   
-  				const arrayBufferNodes = [];
+  				const arrayBufferNodes: any = [];
   
   				for ( let i = 0; i < type.length; i ++ ) {
   
@@ -72,7 +72,7 @@ function onReady(__stage) {
   
   					const arrayBuffer = new THREE.StorageInstancedBufferAttribute( new Float32Array( array ), typeSize );
   
-  					arrayBufferNodes.push( storage( arrayBuffer, type[ i ], size ).setPBO( true ) );
+  					arrayBufferNodes.push( ( storage as any )( arrayBuffer, type[ i ], size ).setPBO( true ) );
   
   				}
   

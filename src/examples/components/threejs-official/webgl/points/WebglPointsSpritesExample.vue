@@ -13,10 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl particle sprites example<br/>\n\t\t\tsnowflakes by <a href=\"http://en.wikipedia.org/wiki/File:Sketch_of_snow_crystal_by_Ren%C3%A9_Descartes.jpg\">Ren&eacute;  Descartes</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,13 +42,13 @@ function onReady(__stage) {
   
   
   
-  			let stats, parameters;
+  			let stats, parameters: any;
   			let mouseX = 0, mouseY = 0;
   
   			let windowHalfX = (__stage.container?.clientWidth || window.innerWidth) / 2;
   			let windowHalfY = (__stage.container?.clientHeight || window.innerHeight) / 2;
   
-  			const materials = [];
+  			const materials: any = [];
   
   			
   
@@ -64,7 +64,7 @@ function onReady(__stage) {
   
   				const textureLoader = new THREE.TextureLoader();
   
-  				const assignSRGB = ( texture ) => {
+  				const assignSRGB = ( texture: any ) => {
   
   					texture.colorSpace = THREE.SRGBColorSpace;
   
@@ -133,7 +133,7 @@ function onReady(__stage) {
   					texture: true
   				};
   
-  				gui.add( params, 'texture' ).onChange( function ( value ) {
+  				gui.add( params, 'texture' ).onChange( function ( value: any ) {
   
   					for ( let i = 0; i < materials.length; i ++ ) {
   
@@ -158,7 +158,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -169,7 +169,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.00005;
     				camera.position.x += ( mouseX - camera.position.x ) * 0.05;

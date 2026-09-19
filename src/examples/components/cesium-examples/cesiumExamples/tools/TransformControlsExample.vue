@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { CoordinateMode, Gizmo, GizmoMode } from 'cesium-transform-controls'
 import { GUI } from 'lil-gui'
@@ -21,8 +21,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
   baseLayerPicker: false,       // 不显示图层选择器
@@ -35,7 +35,7 @@ const viewerOptions = {
   infoBox: false,               // 不显示信息框
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -43,8 +43,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // ==================== 模型加载配置 ====================
@@ -113,14 +113,14 @@ async function onReady(ctx) {
   }
   
   // 设置 Gizmo 初始模式
-  gizmo.setMode(settings.transformMode)
+  gizmo.setMode(settings.transformMode as any)
   gizmo.coordinateMode = CoordinateMode.local
   
   // 创建 GUI 控制面板
-  gui = new GUI({ name: '变换控制器' })
+  gui = new GUI({ name: '变换控制器' } as any)
   
   /** 坐标模式控制器引用（用于在 scale 模式时禁用） */
-  let translateModeController = null
+  let translateModeController: any = null
   /** 保存的坐标模式（用于从 scale 模式切换回来时恢复） */
   let savedCoordinateMode = 'local'
   
@@ -133,7 +133,7 @@ async function onReady(ctx) {
    */
   gui.add(settings, 'transformMode', ['translate', 'rotate', 'scale'])
     .name('变换模式')
-    .onChange((value) => {
+    .onChange((value: any) => {
       switch (value) {
         case 'translate':
           gizmo.setMode(GizmoMode.translate)
@@ -171,7 +171,7 @@ async function onReady(ctx) {
    */
   translateModeController = gui.add(settings, 'translateMode', ['local', 'surface'])
     .name('坐标模式')
-    .onChange((value) => {
+    .onChange((value: any) => {
       switch (value) {
         case 'local':
           gizmo.coordinateMode = CoordinateMode.local
@@ -185,7 +185,7 @@ async function onReady(ctx) {
   // ==================== 启用/禁用控制 ====================
   gui.add(settings, 'enabled')
     .name('启用控制器')
-    .onChange((value) => {
+    .onChange((value: any) => {
       gizmo.setEnabled(value)
     })
   
@@ -256,7 +256,7 @@ async function onReady(ctx) {
    * @param {Object} mounted - 挂载的对象
    * @returns {string} 对象类型名称
    */
-  function getMountedObjectType(mounted) {
+  function getMountedObjectType(mounted: any) {
     if (!mounted) return '-'
   
     // Entity 类型
@@ -292,7 +292,7 @@ async function onReady(ctx) {
    * @param {Object} mounted - 挂载的对象
    * @returns {string} 对象名称
    */
-  function getMountedObjectName(mounted) {
+  function getMountedObjectName(mounted: any) {
     if (!mounted) return '-'
   
     // Entity 名称
@@ -366,7 +366,7 @@ async function onReady(ctx) {
    * 
    * @param {Object} model - 挂载的模型对象
    */
-  function updateCoordinatesFromMatrix(model) {
+  function updateCoordinatesFromMatrix(model: any) {
     // 从模型矩阵提取位置
     const position = Cesium.Matrix4.getTranslation(model.modelMatrix, new Cesium.Cartesian3())
     const cartographic = Cesium.Cartographic.fromCartesian(position)

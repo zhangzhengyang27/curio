@@ -6,12 +6,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene } = ctx
 
   const textureLoader = new THREE.TextureLoader()

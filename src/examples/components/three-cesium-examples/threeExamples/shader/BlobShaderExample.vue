@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import gsap from 'gsap'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -38,8 +38,8 @@ function onReady(ctx) {
   // reference https://codepen.io/vcomics/pen/ZwNgvX
   
   var _width, _height;
-  var _primitive;
-  var mat;
+  var _primitive: any;
+  var mat: any;
   var shapeGroup = new THREE.Group();
   var start = Date.now();
   
@@ -68,7 +68,7 @@ function onReady(ctx) {
     console.log('- resize -');
   }
   
-  var primitiveElement = function() {
+  var primitiveElement: any = function(this: any) {
     this.mesh = new THREE.Object3D();
     mat = new THREE.ShaderMaterial( {
       side:THREE.DoubleSide,
@@ -125,7 +125,7 @@ function onReady(ctx) {
           type: "i",
           value: true
         }
-      },
+      } as any,
       vertexShader: `
       vec3 mod289(vec3 x)
       {
@@ -391,7 +391,7 @@ function onReady(ctx) {
       redhell: true
     },
     perlinRandom: function() {
-      gsap.to(this.perlin, 2, {
+      (gsap.to as any)(this.perlin, 2, {
         //decay: Math.random() * 1.0,
         waves: Math.random() * 20.0,
         complex: Math.random() * 1.0,
@@ -400,7 +400,7 @@ function onReady(ctx) {
     },
     random: function() {
       //this.perlin.redhell = Math.random() >= 0.5; // 10 1 0.1 1.2
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         eqcolor: 11.0,
         rcolor: Math.random() * 1.5,
         gcolor: Math.random() * 0.5,
@@ -409,7 +409,7 @@ function onReady(ctx) {
     },
     normal: function() {
       this.perlin.redhell = true; // 10 1 0.1 1.2
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         //speed: 0.12,
         eqcolor: 10.0,
         rcolor: 1.5,
@@ -419,7 +419,7 @@ function onReady(ctx) {
     },
     darker: function() {
       this.perlin.redhell = false; // 10 1 0.1 1.2
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         //speed: 0.5,
         eqcolor: 9.0,
         rcolor: 0.4,
@@ -431,7 +431,7 @@ function onReady(ctx) {
       this.perlin.redhell = false; // 10 1 0.1 1.2
       //this.perlin.speed = 0.83;
       
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         size: 0.7,
         waves: 0.6,
         complex: 1.0,
@@ -446,7 +446,7 @@ function onReady(ctx) {
       this.perlin.redhell = true; // 10 1 0.1 1.2
       //this.perlin.speed = 0.1;
       
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         size: 1.0,
         waves :20.0,
         complex: 0.1,
@@ -461,7 +461,7 @@ function onReady(ctx) {
       this.perlin.redhell = true; // 10 1 0.1 1.2
       //this.perlin.speed = 0.25;
       
-      gsap.to(this.perlin, 1, {
+      (gsap.to as any)(this.perlin, 1, {
         size: 1.0,
         waves: 3.0,
         complex: 0.65,

@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -41,7 +41,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -49,8 +49,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // https://guangfus:663/3dtiles/whiteModel/tileset.json
@@ -73,7 +73,7 @@ async function onReady(ctx) {
   }
   
   gui = new GUI()
-  gui.addColor({ sweepColor: '#2ba7ff' }, 'sweepColor').onChange(v => {
+  gui.addColor({ sweepColor: '#2ba7ff' }, 'sweepColor').onChange((v: any) => {
       const hex = v.replace('#', '')
       const r = parseInt(hex.substring(0, 2), 16)
       const g = parseInt(hex.substring(2, 4), 16)
@@ -81,14 +81,14 @@ async function onReady(ctx) {
       uniforms.u_sweep_color.value = Cesium.Color.fromBytes(r, g, b, 255)
   })
   
-  gui.addColor({ mixColor1: '#09090e' }, 'mixColor1').onChange(v => {
+  gui.addColor({ mixColor1: '#09090e' }, 'mixColor1').onChange((v: any) => {
       const hex = v.replace('#', '')
       const r = parseInt(hex.substring(0, 2), 16)
       const g = parseInt(hex.substring(2, 4), 16)
       const b = parseInt(hex.substring(4, 6), 16)
       uniforms.u_mix_color1.value = Cesium.Color.fromBytes(r, g, b, 255)
   })
-  gui.addColor({ mixColor2: '#0080ff' }, 'mixColor2').onChange(v => {
+  gui.addColor({ mixColor2: '#0080ff' }, 'mixColor2').onChange((v: any) => {
       const hex = v.replace('#', '')
       const r = parseInt(hex.substring(0, 2), 16)
       const g = parseInt(hex.substring(2, 4), 16)
@@ -96,11 +96,11 @@ async function onReady(ctx) {
       uniforms.u_mix_color2.value = Cesium.Color.fromBytes(r, g, b, 255)
   })
   
-  gui.add({ sweepWidth: 0.2 }, 'sweepWidth', 0.05, 1.0).onChange(v => {
+  gui.add({ sweepWidth: 0.2 }, 'sweepWidth', 0.05, 1.0).onChange((v: any) => {
       uniforms.u_sweep_width.value = v
   })
-  gui.add({ modelHeight: 100 }, 'modelHeight', 10, 1000).name('模型高度').onChange(v =>  uniforms.u_model_height.value = v)
-  gui.add({ heightOffset: 0.0 }, 'heightOffset', -50, 50).name('高度偏移').onChange(v => uniforms.u_height_offset.value = v)
+  gui.add({ modelHeight: 100 }, 'modelHeight', 10, 1000).name('模型高度').onChange((v: any) =>  uniforms.u_model_height.value = v)
+  gui.add({ heightOffset: 0.0 }, 'heightOffset', -50, 50).name('高度偏移').onChange((v: any) => uniforms.u_height_offset.value = v)
   
   const shader = new Cesium.CustomShader({
       vertexShaderText: `void vertexMain(VertexInput vsInput, inout czm_modelVertexOutput vsOutput) {
@@ -134,7 +134,7 @@ async function onReady(ctx) {
       varyings: { v_uv: Cesium.VaryingType.VEC2 }
   })
   
-  viewer.scene.preRender.addEventListener(function(scene, time) {
+  viewer.scene.preRender.addEventListener(function(scene: any, time: any) {
       shader.setUniform("u_time", performance.now() * 0.0001);
   });
   

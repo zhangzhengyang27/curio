@@ -13,10 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - <span id=\"description\">Normal, Velocity, and Depth Materials</span><br/>\n\t\t\tninja head from <a href=\"https://gpuopen.com/archive/gamescgi/amd-gpu-meshmapper/\" target=\"_blank\" rel=\"noopener\">AMD GPU MeshMapper</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -61,10 +61,10 @@ function onReady(__stage) {
   				'double': THREE.DoubleSide
   			};
   
-  			let cameraOrtho, cameraPerspective;
-  			let controlsOrtho, controlsPerspective;
+  			let cameraOrtho: any, cameraPerspective: any;
+  			let controlsOrtho: any, controlsPerspective: any;
   
-  			let mesh, materialStandard, materialDepthBasic, materialDepthRGBA, materialDepthRGB, materialDepthRG, materialNormal, materialVelocity;
+  			let mesh: any, materialStandard: any, materialDepthBasic: any, materialDepthRGBA: any, materialDepthRGB: any, materialDepthRG: any, materialNormal: any, materialVelocity: any;
   
   			const SCALE = 2.436143; // from original model
   			const BIAS = - 0.428408; // from original model
@@ -219,7 +219,7 @@ function onReady(__stage) {
   				loader.load( ASSET_HOST + 'models/obj/ninja/ninjaHead_Low.obj', function ( group ) {
   
   					const geometry = group.children[ 0 ].geometry;
-  					geometry.center();
+  					geometry!.center();
   
   					mesh = new THREE.Mesh( geometry, materialNormal );
   					mesh.scale.multiplyScalar( 25 );
@@ -252,7 +252,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     if ( mesh ) {
@@ -266,7 +266,7 @@ function onReady(__stage) {
     						case 'normal': material = materialNormal; break;
     						case 'velocity': material = materialVelocity; break;
     					}
-    					if ( sides[ params.side ] !== material.side ) {
+    					if ( (sides as any)[ params.side ] !== material.side ) {
     						switch ( params.side ) {
     							case 'front': material.side = THREE.FrontSide; break;
     							case 'back': material.side = THREE.BackSide; break;
@@ -292,7 +292,7 @@ function onReady(__stage) {
     				if ( mesh && mesh.userData.matrixWorldPrevious ) {
     					materialVelocity.uniforms.modelMatrixPrev.value.copy( mesh.userData.matrixWorldPrevious );
     				}
-    				scene.traverse( function ( object ) {
+    				scene.traverse( function ( object: any ) {
     					if ( object.isMesh ) {
     						object.userData.matrixWorldPrevious.copy( object.matrixWorld );
     					}
@@ -319,7 +319,7 @@ function onReady(__stage) {
   
   					}
   
-  					if ( sides[ params.side ] !== material.side ) {
+  					if ( (sides as any)[ params.side ] !== material.side ) {
   
   						switch ( params.side ) {
   
@@ -364,7 +364,7 @@ function onReady(__stage) {
   
   
   
-  				scene.traverse( function ( object ) {
+  				scene.traverse( function ( object: any ) {
   
   					if ( object.isMesh ) {
   

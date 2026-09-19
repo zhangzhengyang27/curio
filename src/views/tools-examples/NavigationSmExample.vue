@@ -27,7 +27,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { VcNavigationSm } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'

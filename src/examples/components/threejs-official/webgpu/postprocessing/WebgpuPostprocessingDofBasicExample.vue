@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mix, pass, renderOutput, smoothstep, uniform, vec3 } from 'three/tsl';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>DoF Basic</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,7 +48,7 @@ async function onReady(__stage) {
   
   
   
-  			let timer, model, mixer, raycaster, renderPipeline;
+  			let timer, model: any, mixer, raycaster: any, renderPipeline;
   
   			const pointerCoords = new THREE.Vector2();
   			const focusPoint = new THREE.Vector3( 1, 1.75, - 0.4 );
@@ -152,7 +152,7 @@ async function onReady(__stage) {
   			
   
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				pointerCoords.set(
   					( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1,
@@ -178,7 +178,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     				timer.update();
     				mixer.update( timer.getDelta() );

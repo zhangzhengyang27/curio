@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -33,11 +33,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webaudio - sandbox<br/>\n\t\t\tmusic by <a href=\"http://www.newgrounds.com/audio/listen/358232\" target=\"_blank\" rel=\"noopener\">larrylarrybb</a>,\n\t\t\t<a href=\"http://www.newgrounds.com/audio/listen/376737\" target=\"_blank\" rel=\"noopener\">skullbeatz</a> and\n\t\t\t<a href=\"http://opengameart.org/content/project-utopia-seamless-loop\" target=\"_blank\" rel=\"noopener\">congusbongus</a><br/><br/>\n\t\t\tnavigate with WASD / arrows / mouse"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   
 
   
@@ -47,9 +48,9 @@ function onReady(__stage) {
   
   			let light;
   
-  			let material1, material2, material3;
+  			let material1: any, material2: any, material3: any;
   
-  			let analyser1, analyser2, analyser3;
+  			let analyser1: any, analyser2: any, analyser3: any;
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -149,7 +150,7 @@ function onReady(__stage) {
   
   				//
   
-  				const SoundControls = function () {
+  				const SoundControls: any = function ( this: any ) {
   
   					this.master = listener.getMasterVolume();
   					this.firstSphere = sound1.getVolume();
@@ -159,7 +160,7 @@ function onReady(__stage) {
   
   				};
   
-  				const GeneratorControls = function () {
+  				const GeneratorControls: any = function ( this: any ) {
   
   					this.frequency = oscillator.frequency.value;
   					this.wavetype = oscillator.type;
@@ -234,7 +235,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				controls.update( delta );

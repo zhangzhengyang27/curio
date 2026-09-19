@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -30,30 +30,30 @@ const props = defineProps({
   }
 })
 
-const cesiumSceneRef = ref(null)
-const threeBoxRef = ref(null)
+const cesiumSceneRef = ref<any>(null)
+const threeBoxRef = ref<any>(null)
 
-let Cesium = null
-let viewer = null
-let entity = null
-let clickHandler = null
+let Cesium: any = null
+let viewer: any = null
+let entity: any = null
+let clickHandler: any = null
 
-let scene = null
-let camera = null
-let renderer = null
-let controls = null
-let animationId = null
-let modelScene = null
+let scene: any = null
+let camera: any = null
+let renderer: any = null
+let controls: any = null
+let animationId: any = null
+let modelScene: any = null
 
-let gui = null
+let gui: any = null
 
 const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-file-server/'
 const GLOBAL_CONFIG = {
-  getFileUrl: (url) => FILE_HOST + url,
-  ElMessage: (msg) => console.log('[ElMessage]', msg)
+  getFileUrl: (url: string) => FILE_HOST + url,
+  ElMessage: (msg: any) => console.log('[ElMessage]', msg)
 }
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -104,7 +104,7 @@ function onWindowResize() {
   renderer.setSize(threeBoxRef.value.clientWidth, threeBoxRef.value.clientHeight)
 }
 
-function onCesiumReady(ctx) {
+function onCesiumReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -121,7 +121,7 @@ function onCesiumReady(ctx) {
   viewer.zoomTo(entity, new Cesium.HeadingPitchRange(0, -Math.PI / 4, 200))
 
   clickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
-  clickHandler.setInputAction(async (movement) => {
+  clickHandler.setInputAction(async (movement: any) => {
     const pickedObject = viewer.scene.pick(movement.position)
     if (Cesium.defined(pickedObject) && pickedObject.id === entity) {
       if (pickedObject.id.name === '房子') {
@@ -150,12 +150,12 @@ function onCesiumReady(ctx) {
   gui.domElement.style.zIndex = '1000'
   cesiumSceneRef.value?.$el?.parentElement?.appendChild(gui.domElement)
 
-  gui.add(options, 'cesium').name('Cesium').onChange((value) => {
+  gui.add(options, 'cesium').name('Cesium').onChange((value: any) => {
     if (cesiumSceneRef.value) {
       cesiumSceneRef.value.$el.style.display = value ? 'block' : 'none'
     }
   })
-  gui.add(options, 'three').name('Three.js').onChange((value) => {
+  gui.add(options, 'three').name('Three.js').onChange((value: any) => {
     if (threeBoxRef.value) {
       threeBoxRef.value.style.display = value ? 'block' : 'none'
     }
@@ -222,11 +222,11 @@ function onBeforeDispose() {
 
   if (modelScene) {
     try {
-      modelScene.traverse((child) => {
+      modelScene.traverse((child: any) => {
         if (child.geometry) child.geometry.dispose()
         if (child.material) {
           if (Array.isArray(child.material)) {
-            child.material.forEach((m) => m.dispose())
+            child.material.forEach((m: any) => m.dispose())
           } else {
             child.material.dispose()
           }

@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     timeline: false,
@@ -43,7 +43,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -51,17 +51,17 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.scene.globe.depthTestAgainstTerrain = true
   
-  const tileset = await Cesium.Cesium3DTileset.fromUrl(TILESET_URL)
+  const tileset = await Cesium.Cesium3DTileset.fromUrl((globalThis as any).TILESET_URL)
   viewer.scene.primitives.add(tileset)
   await viewer.flyTo(tileset)
   
-  function addPoint(position, color) {
+  function addPoint(position: any, color: any) {
       return viewer.entities.add({
           position,
           point: {
@@ -94,7 +94,7 @@ async function onReady(ctx) {
       debug: true,
   }
   
-  const viewshed = new ViewShedAnalyser(viewer, viewshedOptions)
+  const viewshed = new (globalThis as any).ViewShedAnalyser(viewer, viewshedOptions)
   
   viewshed.update()
   
@@ -109,7 +109,7 @@ async function onReady(ctx) {
       yRotation: 0,
       vAngle: viewshedOptions.fov / viewshedOptions.aspectRatio,
   }
-  const rotation = {
+  const rotation: any = {
       x: 0,
       y: 0,
   }
@@ -118,36 +118,36 @@ async function onReady(ctx) {
       viewshed.aspectRatio = controls.fov / controls.vAngle
   }
   
-  function rotateByDelta(axis, value, rotate) {
+  function rotateByDelta(axis: any, value: any, rotate: any) {
       const delta = value - rotation[axis]
       rotate(delta)
       rotation[axis] = value
   }
   
-  gui.add(controls, 'near', 0.5, 2, 0.1).name('近截面').onChange((value) => {
+  gui.add(controls, 'near', 0.5, 2, 0.1).name('近截面').onChange((value: any) => {
       viewshed.near = value
   })
   
-  gui.add(controls, 'far', far - 100, far + 100, 1).name('远截面').onChange((value) => {
+  gui.add(controls, 'far', far - 100, far + 100, 1).name('远截面').onChange((value: any) => {
       viewshed.far = value
   })
   
-  gui.add(controls, 'fov', 60, 120, 1).name('水平夹角').onChange((value) => {
+  gui.add(controls, 'fov', 60, 120, 1).name('水平夹角').onChange((value: any) => {
       viewshed.fov = value
       updateAspectRatio()
   })
   
   gui.add(controls, 'vAngle', 30, 90, 1).name('垂直夹角').onChange(updateAspectRatio)
   
-  gui.add(controls, 'xRotation', -45, 45, 1).name('水平方向旋转').onChange((value) => {
-      rotateByDelta('x', value, (delta) => viewshed.rotateLeft(delta))
+  gui.add(controls, 'xRotation', -45, 45, 1).name('水平方向旋转').onChange((value: any) => {
+      rotateByDelta('x', value, (delta: any) => viewshed.rotateLeft(delta))
   })
   
-  gui.add(controls, 'yRotation', -45, 45, 1).name('垂直方向旋转').onChange((value) => {
-      rotateByDelta('y', value, (delta) => viewshed.rotateUp(delta))
+  gui.add(controls, 'yRotation', -45, 45, 1).name('垂直方向旋转').onChange((value: any) => {
+      rotateByDelta('y', value, (delta: any) => viewshed.rotateUp(delta))
   })
   
-  gui.add(controls, 'debug').name('调试').onChange((value) => {
+  gui.add(controls, 'debug').name('调试').onChange((value: any) => {
       viewshed.debug = value
   })
 }

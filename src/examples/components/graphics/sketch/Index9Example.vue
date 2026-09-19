@@ -2,13 +2,13 @@
   <div class="graphics-root" ref="gContainer"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import {pen, put, right, forward, render} from '@/examples/jsm-compat/graphics/sketch/lib/doodle.js'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -37,13 +37,13 @@ async function initGraphicsExample() {
           panel.style.width = `${width}px`;
           panel.style.height = `${height}px`;
           panel.style.position = 'relative';
-          gContainer.value.appendChild(panel);
+          gContainer.value!.appendChild(panel);
     
-          render((commands) => {
+          render((commands: any) => {
             panel.innerHTML = '';
             const d = document.createDocumentFragment();
     
-            function project({x, y}) { // -1 ~ 1
+            function project({x, y}: any) { // -1 ~ 1
               return {
                 x: 0.5 * (x + 1) * panel.clientWidth,
                 y: 0.5 * (1 - y) * panel.clientHeight,
@@ -55,7 +55,7 @@ async function initGraphicsExample() {
               x0 = 0,
               y0 = 0;
     
-            function line(x1, y1, x2, y2) {
+            function line(x1: any, y1: any, x2: any, y2: any) {
               const div = document.createElement('div');
               div.style.position = 'absolute';
               div.style.left = `${x1}px`;
@@ -74,7 +74,7 @@ async function initGraphicsExample() {
               d.appendChild(div);
             }
     
-            commands.forEach(({command, args}, idx) => {
+            commands.forEach(({command, args}: any, idx: any) => {
               if(command === 'pen') {
                 lineWidth = args.lineWidth;
                 color = args.color;

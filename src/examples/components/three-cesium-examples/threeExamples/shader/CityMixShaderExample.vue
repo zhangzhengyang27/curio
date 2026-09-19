@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GUI } from 'lil-gui'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -35,7 +35,7 @@ function onReady(ctx) {
   
   scene.add(dirLight, new THREE.AmbientLight(0xffffff, 2))
   
-  let model = null
+  let model: any = null
   
   // 加载模型
   new FBXLoader().load(props.example?.globals?.HOST + '/files/model/city.FBX', (object3d) => {
@@ -48,7 +48,7 @@ function onReady(ctx) {
   
       model = object3d
   
-      modelBlendShader(object3d, box)
+      modelBlendShader(object3d)
   
   })
   
@@ -60,10 +60,10 @@ function onReady(ctx) {
   })
   
   /* 新光线行进着色器实现 */
-  function modelBlendShader(model) {
-      let materials = []
+  function modelBlendShader(model: any) {
+      let materials: any[] = []
       
-      model.traverse(c => c.isMesh && materials.push(c.material))
+      model.traverse((c: any) => c.isMesh && materials.push(c.material))
       
       materials = [... new Set(materials)]
       
@@ -141,7 +141,7 @@ function onReady(ctx) {
       }
   
       materials.forEach(material => {
-          material.onBeforeCompile = (shader) => {
+          material.onBeforeCompile = (shader: any) => {
               Object.keys(uniforms).forEach((key) => shader.uniforms[key] = uniforms[key])
   
               shader.vertexShader = shader.vertexShader.replace(`void main() {`, glslProps.vertexHeader)
@@ -158,48 +158,48 @@ function onReady(ctx) {
       setupGUI(params, uniforms);
   
       // 更新着色器参数
-      model.render = (time) => {
+      model.render = (time: any) => {
           uniforms.iTime.value = time || 0;
       }
   }
   
   // 设置GUI控制面板
-  let gui = null;
-  function setupGUI(params, uniforms) {
+  let gui: any = null;
+  function setupGUI(params: any, uniforms: any) {
       // 如果已有GUI则销毁
       if (gui) gui.destroy();
       
       // 创建新的GUI
       gui = new GUI();
-      gui.width = 300;
+      ;(gui as any).width = 300;
       
       // 添加效果控制
       const effectsFolder = gui.addFolder('着色器效果');
       
-      effectsFolder.add(params, 'intensity', 0.1, 3.0).onChange(value => {
+      effectsFolder.add(params, 'intensity', 0.1, 3.0).onChange((value: any) => {
           uniforms.intensity.value = value;
       });
       
-      effectsFolder.add(params, 'colorScale', 0.5, 3.0).onChange(value => {
+      effectsFolder.add(params, 'colorScale', 0.5, 3.0).onChange((value: any) => {
           uniforms.colorScale.value = value;
       });
       
-      effectsFolder.add(params, 'animationSpeed', 0.1, 2.0).onChange(value => {
+      effectsFolder.add(params, 'animationSpeed', 0.1, 2.0).onChange((value: any) => {
           uniforms.animSpeed.value = value;
       });
       
-      effectsFolder.addColor(params, 'baseColor').onChange(value => {
+      effectsFolder.addColor(params, 'baseColor').onChange((value: any) => {
           uniforms.baseColor.value.set(value);
       });
       
       // 纹理混合控制
       const textureFolder = gui.addFolder('纹理控制');
       
-      textureFolder.add(params, 'useTexture').onChange(value => {
+      textureFolder.add(params, 'useTexture').onChange((value: any) => {
           uniforms.useTexture.value = value;
       });
       
-      textureFolder.add(params, 'textureMix', 0, 1).onChange(value => {
+      textureFolder.add(params, 'textureMix', 0, 1).onChange((value: any) => {
           uniforms.textureMix.value = value;
       });
       

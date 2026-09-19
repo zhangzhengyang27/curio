@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const tileset = await Cesium.Cesium3DTileset.fromUrl(`https://g2657.github.io/gz-city/tileset.json`)
@@ -58,7 +58,7 @@ async function onReady(ctx) {
   
   class SweepShader extends Cesium.CustomShader {
   
-      constructor(opt = {}) {
+      constructor(opt: any = {}) {
           const { sweepColor = new Cesium.Color.fromCssColorString('green'),
               mixColor1 = new Cesium.Color.fromCssColorString('red'),
               mixColor2 = new Cesium.Color.fromCssColorString('white')
@@ -123,7 +123,7 @@ async function onReady(ctx) {
           this.mixColor1 = mixColor1
           this.mixColor2 = mixColor2
   
-          const task = (t) => {
+          const task = (t: number) => {
               this.setUniform("u_time", t * .0001)
               requestAnimationFrame(task)
           }

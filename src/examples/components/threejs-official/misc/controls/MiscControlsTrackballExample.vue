@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - trackball controls<br />\n\t\t\tMOVE mouse &amp; press LEFT/A: rotate, MIDDLE/S: zoom, RIGHT/D: pan"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,7 +45,7 @@ function onReady(__stage) {
   
   
   
-  			let perspectiveCamera, orthographicCamera, stats;
+  			let perspectiveCamera: any, orthographicCamera: any, stats;
   
   			const params = {
   				orthographicCamera: false
@@ -113,7 +113,7 @@ function onReady(__stage) {
   				//
   
   				gui = new GUI();
-  				gui.add( params, 'orthographicCamera' ).name( 'use orthographic' ).onChange( function ( value ) {
+  				gui.add( params, 'orthographicCamera' ).name( 'use orthographic' ).onChange( function ( value: any ) {
   
   					controls.dispose();
   
@@ -130,7 +130,7 @@ function onReady(__stage) {
   			
   
   
-  			function createControls( camera ) {
+  			function createControls( camera: any ) {
   
   				
   
@@ -144,7 +144,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     let camera = ( params.orthographicCamera ) ? orthographicCamera : perspectiveCamera;
     }

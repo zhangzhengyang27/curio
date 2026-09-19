@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three';
 import { color } from 'three/tsl';
@@ -30,11 +30,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - multiple elements"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let canvas: any;
 
   
   
@@ -42,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			const scenes = [];
+  			const scenes: any = [];
   
   			
   
@@ -133,7 +134,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const width = canvas.clientWidth;
     				const height = canvas.clientHeight;
@@ -147,7 +148,7 @@ function onReady(__stage) {
     				renderer.clear();
     				//renderer.setClearColor( 0xe0e0e0 );
     				renderer.setScissorTest( true );
-    				scenes.forEach( function ( scene ) {
+    				scenes.forEach( function ( scene: any ) {
     					// so something moves
     					scene.children[ 0 ].rotation.y = Date.now() * 0.001;
     					// get the element that is a place holder for where we want to

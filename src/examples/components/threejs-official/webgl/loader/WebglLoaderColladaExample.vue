@@ -15,11 +15,12 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
+let elf: any;
 
 const props = defineProps({
   example: {
@@ -29,18 +30,19 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> collada loader<br/>\n\t\t\tElf Girl by <a href=\"https://sketchfab.com/yellow09\" target=\"_blank\" rel=\"noopener\">halloween</a>, <a href=\"https://creativecommons.org/licenses/by/4.0/\" target=\"_blank\" rel=\"noopener\">CC Attribution</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
   
   
   
   
   
-  			let container, stats, timer;
+  			let container, stats, timer: any;
   
   
   			
@@ -70,7 +72,7 @@ function onReady(__stage) {
   				const loader = new ColladaLoader( loadingManager );
   				loader.load( ASSET_HOST + 'models/collada/elf/elf.dae', function ( collada ) {
   
-  					elf = collada.scene;
+  					elf = collada!.scene;
   
   				} );
   
@@ -102,7 +104,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

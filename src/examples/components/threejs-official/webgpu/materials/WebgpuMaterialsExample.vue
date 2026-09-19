@@ -15,13 +15,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, wgslFn, positionLocal, positionWorld, normalLocal, normalWorld, normalView, color, texture, uv, float, vec2, vec3, vec4, oscSine, triplanarTexture, screenUV, Loop, cameraProjectionMatrix } from 'three/tsl';
 import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let material: any;
+
 
 const props = defineProps({
   example: {
@@ -33,7 +36,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Materials</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,7 +44,7 @@ function onReady(__stage) {
 
   
   
-  			const objects = [], materials = [];
+  			const objects: any = [], materials = [];
   
   			
   
@@ -150,12 +153,12 @@ function onReady(__stage) {
   
   				const desaturateShaderNode = Fn( ( input ) => {
   
-  					return vec3( 0.299, 0.587, 0.114 ).dot( input.color.xyz );
+  					return vec3( 0.299, 0.587, 0.114 ).dot( (input as any).color.xyz );
   
   				} );
   
   				material = new THREE.MeshBasicNodeMaterial();
-  				material.colorNode = desaturateShaderNode( { color: texture( uvTexture ) } );
+  				material.colorNode = (desaturateShaderNode as any)( { color: texture( uvTexture ) } );
   				materials.push( material );
   
   				// Custom ShaderNode(no inputs) > Approach 2
@@ -190,7 +193,7 @@ function onReady(__stage) {
   						return desaturate( color );
   
   					}
-  				`, [ desaturateWGSLFn ] );
+  				`, [ (desaturateWGSLFn as any) ] );
   
   				material = new THREE.MeshBasicNodeMaterial();
   				material.colorNode = someWGSLFn( { color: texture( uvTexture ) } );
@@ -276,7 +279,7 @@ function onReady(__stage) {
   			
   
   
-  			function addMesh( geometry, material ) {
+  			function addMesh( geometry: any, material: any ) {
   
   				const mesh = new THREE.Mesh( geometry, material );
   
@@ -297,7 +300,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = 0.0001 * Date.now();
     				camera.position.x = Math.cos( timer ) * 1000;
     				camera.position.z = Math.sin( timer ) * 1000;

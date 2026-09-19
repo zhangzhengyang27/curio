@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Random UV and Disolve"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -53,7 +53,7 @@ function onReady(__stage) {
   
   
   
-  			let dirLight, ground, gui, material, materialIn, uniforms, uniformsIn;
+  			let dirLight, ground: any, gui, material: any, materialIn: any, uniforms: any, uniformsIn: any;
   
   			
   			render();
@@ -158,7 +158,7 @@ function onReady(__stage) {
   							materialIn.alphaMap = disolveMap;
   							materialIn.transparent = true;
   
-  							material.onBeforeCompile = function ( shader ) {
+  							material.onBeforeCompile = function ( shader: any ) {
   
   								shader.uniforms[ 'disolve' ] = { value: 0 };
   								shader.uniforms[ 'threshold' ] = { value: 0.2 };
@@ -180,7 +180,7 @@ function onReady(__stage) {
   
   							};
   
-  							materialIn.onBeforeCompile = function ( shader ) {
+  							materialIn.onBeforeCompile = function ( shader: any ) {
   
   								shader.uniforms[ 'disolve' ] = { value: 0 };
   								shader.uniforms[ 'threshold' ] = { value: 0.2 };

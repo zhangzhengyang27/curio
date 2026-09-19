@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - multiple views - webgl"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   			let mouseX = 0;
   
-  			let windowWidth, windowHeight;
+  			let windowWidth: any, windowHeight: any;
   
   			const views = [
   				{
@@ -55,7 +55,7 @@ function onReady(__stage) {
   					eye: [ 0, 300, 1800 ],
   					up: [ 0, 1, 0 ],
   					fov: 30,
-  					updateCamera: function ( camera, scene, mouseX ) {
+  					updateCamera: function ( camera: any, scene: any, mouseX: any ) {
   
   					  camera.position.x += mouseX * 0.05;
   					  camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), - 2000 );
@@ -72,7 +72,7 @@ function onReady(__stage) {
   					eye: [ 0, 1800, 0 ],
   					up: [ 0, 0, 1 ],
   					fov: 45,
-  					updateCamera: function ( camera, scene, mouseX ) {
+  					updateCamera: function ( camera: any, scene: any, mouseX: any ) {
   
   					  camera.position.x -= mouseX * 0.05;
   					  camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), - 2000 );
@@ -89,7 +89,7 @@ function onReady(__stage) {
   					eye: [ 1400, 800, 1400 ],
   					up: [ 0, 1, 0 ],
   					fov: 60,
-  					updateCamera: function ( camera, scene, mouseX ) {
+  					updateCamera: function ( camera: any, scene: any, mouseX: any ) {
   
   					  camera.position.y -= mouseX * 0.05;
   					  camera.position.y = Math.max( Math.min( camera.position.y, 1600 ), - 1600 );
@@ -110,7 +110,7 @@ function onReady(__stage) {
   
   					camera.position.fromArray( view.eye );
   					camera.up.fromArray( view.up );
-  					view.camera = camera;
+  					(view as any).camera = camera;
   
   				}
   
@@ -127,12 +127,12 @@ function onReady(__stage) {
   				canvas.height = 128;
   
   				const context = canvas.getContext( '2d' );
-  				const gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+  				const gradient = context!.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
   				gradient.addColorStop( 0.1, 'rgba(0,0,0,0.15)' );
   				gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
   
-  				context.fillStyle = gradient;
-  				context.fillRect( 0, 0, canvas.width, canvas.height );
+  				context!.fillStyle = gradient;
+  				context!.fillRect( 0, 0, canvas.width, canvas.height );
   
   				const shadowTexture = new THREE.CanvasTexture( canvas );
   
@@ -227,7 +227,7 @@ function onReady(__stage) {
   			
   
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowWidth / 2 );
   
@@ -246,7 +246,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     {
     if ( windowWidth != (__stage.container?.clientWidth || window.innerWidth) || windowHeight != (__stage.container?.clientHeight || window.innerHeight) ) {
@@ -256,7 +256,7 @@ function onReady(__stage) {
     }
     				for ( let ii = 0; ii < views.length; ++ ii ) {
     					const view = views[ ii ];
-    					let camera = view.camera;
+    					let camera = (view as any).camera;
     					view.updateCamera( camera, scene, mouseX );
     					const left = Math.floor( windowWidth * view.left );
     					const bottom = Math.floor( windowHeight * view.bottom );
@@ -280,7 +280,7 @@ function onReady(__stage) {
   				for ( let ii = 0; ii < views.length; ++ ii ) {
   
   					const view = views[ ii ];
-  					let camera = view.camera;
+  					let camera = (view as any).camera;
   
   					view.updateCamera( camera, scene, mouseX );
   

@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders, parseColorStops } from '@/examples/jsm-compat/webgl/kaikeba-webgl/08-GlSl ES语言/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/08-GlSl ES语言/jsm/Poly.js'
@@ -35,7 +35,7 @@ const fragmentShader = `precision mediump float;
       gl_FragColor = vec4(f, f, f, 1);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       canvas.width = window.innerWidth;
@@ -46,7 +46,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const fsSource = fragmentShader;
   
       //三维画笔
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       //初始化着色器
       initShaders(gl, vsSource, fsSource);
@@ -87,20 +87,20 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       rect.draw()
   
       //上一次请求动画帧的时间戳
-      let lastTime = 0
+      let lastTime: number = 0
       //动画的时间间隔
       const timeLen = 100
-      ;(function ani(stamp) {
+      ;(function ani(stamp?: number) {
         //lastTime=99
         //stamp=lastTime+16=115
         //115%100=15<99%100
-        if (stamp % timeLen < lastTime % timeLen) {
-          rect.uniforms.u_Stamp.value = stamp;
+        if ((stamp ?? 0) % timeLen < lastTime % timeLen) {
+          rect.uniforms.u_Stamp.value = stamp ?? 0;
           rect.updateUniform();
           gl.clear(gl.COLOR_BUFFER_BIT);
           rect.draw()
         }
-        lastTime = stamp
+        lastTime = stamp ?? 0
         requestAnimationFrame(ani)
       })()
 }

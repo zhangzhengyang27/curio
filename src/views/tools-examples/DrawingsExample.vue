@@ -49,7 +49,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcDrawings } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -62,12 +62,12 @@ const ACTIONS = [
   { name: 'rectangle', label: '矩形' },
   { name: 'circle', label: '圆' },
   { name: 'regular', label: '正多边形' },
-]
+] as const
 const LABEL_BY_NAME = Object.fromEntries(ACTIONS.map((a) => [a.name, a.label]))
 // ⚠ 稳定引用,理由同 MeasurementsExample
 const DRAWING_NAMES = ACTIONS.map((a) => a.name)
 
-const drawingRef = ref(null)
+const drawingRef = ref<any>(null)
 const activeName = ref('')
 const finishedCount = ref(0)
 const lastFinished = ref('')
@@ -78,7 +78,7 @@ const statusText = computed(() => {
   return `已完成 ${finishedCount.value} 次标绘`
 })
 
-function toggle(name) {
+function toggle(name: string) {
   drawingRef.value?.toggleAction(name)
 }
 
@@ -89,11 +89,11 @@ function clearAll() {
   activeName.value = ''
 }
 
-function onActiveEvt(evt) {
+function onActiveEvt(evt: any) {
   activeName.value = evt.isActive ? evt.type : ''
 }
 
-function onDrawEvt(evt) {
+function onDrawEvt(evt: any) {
   if (evt.type === 'new' && evt.finished) {
     finishedCount.value++
     lastFinished.value = `「${LABEL_BY_NAME[evt.name] || evt.name}」标绘完成（${evt.index + 1}）`

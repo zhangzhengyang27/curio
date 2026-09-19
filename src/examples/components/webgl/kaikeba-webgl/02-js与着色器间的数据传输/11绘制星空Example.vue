@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {initShaders} from '@/examples/jsm-compat/webgl/kaikeba-webgl/02-js与着色器间的数据传输/jsm/Utils.js'
 const vertexShader = `attribute vec4 a_Position;
@@ -25,7 +25,7 @@ const fragmentShader = `precision mediump float;
         }
       }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
   
       
@@ -35,7 +35,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
   
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
       // 开启片元的颜色合成功能
       gl.enable(gl.BLEND);
       // 设置片元的合成方式
@@ -44,13 +44,11 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       //初始化着色器
       initShaders(gl, vsSource, fsSource);
   
-      const a_Position = gl.getAttribLocation(gl.program, "a_Position");
-      const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize");
-      const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
+      const a_Position = gl.getAttribLocation((gl as any).program, "a_Position");
+      const a_PointSize = gl.getAttribLocation((gl as any).program, "a_PointSize");
+      const u_FragColor = gl.getUniformLocation((gl as any).program, "u_FragColor");
   
-      const stars = [];
-  
-  
+      const stars: any[] = [];
       //声明颜色 rgba
       gl.clearColor(0, 0, 0, 0);
       //刷底色

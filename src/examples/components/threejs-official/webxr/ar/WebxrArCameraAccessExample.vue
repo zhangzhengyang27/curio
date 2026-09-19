@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> ar - camera access<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,7 +40,7 @@ function onReady(__stage) {
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
-  			let cube;
+  			let cube: any;
   
   			
   
@@ -108,7 +108,7 @@ function onReady(__stage) {
   
   				if ( ! viewerPose ) return;
   
-  				const view = viewerPose.views.find( view => view.camera );
+  				const view = viewerPose.views.find( (view: any) => view.camera );
   			
   				const cameraTexture = renderer.xr.getCameraTexture( view.camera );
   
@@ -119,7 +119,7 @@ function onReady(__stage) {
   			
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     {
@@ -135,7 +135,7 @@ function onReady(__stage) {
     				if ( ! frame || ! referenceSpace ) return;
     				const viewerPose = frame.getViewerPose( referenceSpace );
     				if ( ! viewerPose ) return;
-    				const view = viewerPose.views.find( view => view.camera );
+    				const view = viewerPose.views.find( (view: any) => view.camera );
     				const cameraTexture = renderer.xr.getCameraTexture( view.camera );
     				if ( cube.material.map === cameraTexture ) return;
     				cube.material.map = cameraTexture;

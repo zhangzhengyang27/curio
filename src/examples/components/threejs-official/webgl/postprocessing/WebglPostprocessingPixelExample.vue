@@ -13,8 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
+
+let gui: any = null
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
@@ -32,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Pixelation pass with optional single pixel outlines by\n\t\t<a href=\"https://github.com/KodyJKing\" target=\"_blank\" rel=\"noopener\">Kody King</a><br /><br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,7 +46,7 @@ function onReady(__stage) {
   
   
   		let composer, crystalMesh, timer;
-  		let gui, params;
+  		let params;
   
   		
   
@@ -87,8 +89,8 @@ function onReady(__stage) {
   					renderPixelatedPass.setPixelSize( params.pixelSize );
   
   				} );
-  			gui.add( renderPixelatedPass, 'normalEdgeStrength' ).min( 0 ).max( 2 ).step( .05 );
-  			gui.add( renderPixelatedPass, 'depthEdgeStrength' ).min( 0 ).max( 1 ).step( .05 );
+  			(gui.add as any)( renderPixelatedPass, 'normalEdgeStrength' ).min( 0 ).max( 2 ).step( .05 );
+  			(gui.add as any)( renderPixelatedPass, 'depthEdgeStrength' ).min( 0 ).max( 1 ).step( .05 );
   			gui.add( params, 'pixelAlignedPanning' );
   
   			// textures
@@ -103,7 +105,7 @@ function onReady(__stage) {
   
   			const boxMaterial = new THREE.MeshPhongMaterial( { map: texChecker2 } );
   
-  			function addBox( boxSideLength, x, z, rotation ) {
+  			function addBox( boxSideLength: any, x: any, z: any, rotation: any ) {
   
   				const mesh = new THREE.Mesh( new THREE.BoxGeometry( boxSideLength, boxSideLength, boxSideLength ), boxMaterial );
   				mesh.castShadow = true;
@@ -166,7 +168,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     			const t = timer.getElapsed();
     			crystalMesh.material.emissiveIntensity = Math.sin( t * 3 ) * .5 + .5;
@@ -190,7 +192,7 @@ function onReady(__stage) {
   
   		// Helper functions
   
-  		function pixelTexture( texture ) {
+  		function pixelTexture( texture: any ) {
   
   			texture.minFilter = THREE.NearestFilter;
   			texture.magFilter = THREE.NearestFilter;
@@ -202,13 +204,13 @@ function onReady(__stage) {
   
   		}
   
-  		function easeInOutCubic( x ) {
+  		function easeInOutCubic( x: any ) {
   
   			return x ** 2 * 3 - x ** 3 * 2;
   
   		}
   
-  		function linearStep( x, edge0, edge1 ) {
+  		function linearStep( x: any, edge0: any, edge1: any ) {
   
   			const w = edge1 - edge0;
   			const m = 1 / w;
@@ -217,7 +219,7 @@ function onReady(__stage) {
   
   		}
   
-  		function stopGoEased( x, downtime, period ) {
+  		function stopGoEased( x: any, downtime: any, period: any ) {
   
   			const cycle = ( x / period ) | 0;
   			const tween = x - cycle * period;
@@ -226,7 +228,7 @@ function onReady(__stage) {
   
   		}
   
-  		function pixelAlignFrustum( camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight ) {
+  		function pixelAlignFrustum( camera: any, aspectRatio: any, pixelsPerScreenWidth: any, pixelsPerScreenHeight: any ) {
   
   			// 0. Get Pixel Grid Units
   			const worldScreenWidth = ( ( camera.right - camera.left ) / camera.zoom );

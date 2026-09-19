@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - MD2 Loader<br />\n\t\t\tuse arrows to control characters, mouse for camera"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -50,7 +50,7 @@ function onReady(__stage) {
   			let container, stats;
   
   
-  			const characters = [];
+  			const characters: any = [];
   			let nCharacters = 0;
   
   			let cameraControls;
@@ -115,10 +115,10 @@ function onReady(__stage) {
   
   				const ground = new THREE.Mesh( gg, gm );
   				ground.rotation.x = - Math.PI / 2;
-  				ground.material.map.repeat.set( 64, 64 );
-  				ground.material.map.wrapS = THREE.RepeatWrapping;
-  				ground.material.map.wrapT = THREE.RepeatWrapping;
-  				ground.material.map.colorSpace = THREE.SRGBColorSpace;
+  				ground.material.map!.repeat.set( 64, 64 );
+  				ground.material.map!.wrapS = THREE.RepeatWrapping;
+  				ground.material.map!.wrapT = THREE.RepeatWrapping;
+  				ground.material.map!.colorSpace = THREE.SRGBColorSpace;
   				// note that because the ground does not cast a shadow, .castShadow is left false
   				ground.receiveShadow = true;
   
@@ -240,7 +240,7 @@ function onReady(__stage) {
   
   			
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				switch ( event.code ) {
   
@@ -265,7 +265,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onKeyUp( event ) {
+  			function onKeyUp( event: any ) {
   
   				switch ( event.code ) {
   
@@ -292,7 +292,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

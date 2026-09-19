@@ -123,48 +123,57 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import type { ComputedRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer } from '../map/createViewer.js'
-import { Choropleth } from '../map/analysis/choropleth.js'
-import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData.js'
+import { loadCesium } from '../map/cesiumLoader'
+import { createMapViewer } from '../map/createViewer'
+import { Choropleth } from '../map/analysis/choropleth'
+import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData'
 
-const THEMES = {
+interface WorkbenchTheme {
+  title: string
+  word: string
+  unit: string
+  fmt: (v: number) => string
+  fmtCard: (v: number) => string
+}
+
+const THEMES: Record<string, WorkbenchTheme> = {
   gdp: {
     title: '全球经济 · GDP',
     word: 'GDP 总量',
     unit: '万亿美元',
-    fmt: (v) => `${(v / 1e12).toFixed(2)}`,
+    fmt: (v: number) => `${(v / 1e12).toFixed(2)}`,
     fmtCard: formatUSD,
   },
   carbon: {
     title: '全球碳排放',
     word: '碳排放总量',
     unit: 'MtCO₂',
-    fmt: (v) => Math.round(v).toLocaleString(),
-    fmtCard: (v) => `${Math.round(v).toLocaleString()} MtCO₂`,
+    fmt: (v: number) => Math.round(v).toLocaleString(),
+    fmtCard: (v: number) => `${Math.round(v).toLocaleString()} MtCO₂`,
   },
   population: {
     title: '人口规模',
     word: '人口总量',
     unit: '亿人',
-    fmt: (v) => (v / 1e8).toFixed(2),
+    fmt: (v: number) => (v / 1e8).toFixed(2),
     fmtCard: formatPopulation,
   },
   density: {
     title: '人口密度',
     word: '人口密度',
     unit: '人/km²',
-    fmt: (v) => Math.round(v).toLocaleString(),
-    fmtCard: (v) => `${Math.round(v).toLocaleString()} 人/km²`,
+    fmt: (v: number) => Math.round(v).toLocaleString(),
+    fmtCard: (v: number) => `${Math.round(v).toLocaleString()} 人/km²`,
   },
 }
 const THEME_KEYS = Object.keys(THEMES)
 
-const containerRef = ref(null)
-const chartRef = ref(null)
+const containerRef = ref<HTMLElement | null>(null)
+const chartRef = ref<HTMLDivElement | null>(null)
 const ready = ref(false)
 const loadError = ref('')
 const theme = ref('gdp')
@@ -174,33 +183,33 @@ const router = useRouter()
 
 // URL 状态(X2):?theme= 与 analysis 的 ?country=&year= 同一套命名规范;
 // 本页仅此一个 URL 机制(C11:一个页面的 URL 状态只能归一个机制管)
-const THEME_QUERY_KEYS = Object.keys(THEMES)
+const THEME_QUERY_KEYS: string[] = Object.keys(THEMES)
 const queryTheme = typeof route.query.theme === 'string' ? route.query.theme : ''
 if (THEME_QUERY_KEYS.includes(queryTheme)) theme.value = queryTheme
 
-watch(theme, (t) => {
+watch(theme, (t: string) => {
   router.replace({ query: t === 'gdp' ? {} : { theme: t } }).catch(() => {})
 })
 
 // dataError = 数据层错误(数据文件拉取失败);loadError = Cesium 初始化错误。
 // 曾只解构数据不接 error,数据失败时页面静默全灰(审查 P2 死代码分支)
 const { countries, gdpByYear, load, error: dataError } = useCountryData()
-let viewer = null
-let choropleth = null
-let chartInstance = null
+let viewer: any = null
+let choropleth: Choropleth | null = null
+let chartInstance: import('echarts').ECharts | null = null
 
 // GDP 用 2020 年(时间序列末年);其余主题数据文件均为静态年
-const THEME_YEAR = { gdp: '2020' }
-const THEME_YEAR_LABEL = { gdp: '2020 年，', carbon: '2020 年，', population: '', density: '' }
-const THEME_YEAR_TEXT = { gdp: '2020', carbon: '2020', population: '静态演示数据', density: '静态演示数据' }
+const THEME_YEAR: Record<string, string> = { gdp: '2020' }
+const THEME_YEAR_LABEL: Record<string, string> = { gdp: '2020 年，', carbon: '2020 年，', population: '', density: '' }
+const THEME_YEAR_TEXT: Record<string, string> = { gdp: '2020', carbon: '2020', population: '静态演示数据', density: '静态演示数据' }
 
 // 各主题的「国名 → 数值」映射
 // ⚠ gdp 必须按 countries(多边形 ∩ GDP 交集,166 国)过滤:timeline 原始数据
 //   含「世界/高收入国家」等 96 个无多边形聚合项,不过滤会把全球总量当国家
 //   排进 Top10/摘要/导出报告(2026-09-15 审查 P0)。carbon 已按 countries 构建。
-const metricMaps = {
+const metricMaps: Record<string, ComputedRef<Record<string, number>>> = {
   gdp: computed(() => {
-    const map = {}
+    const map: Record<string, number> = {}
     const yearData = gdpByYear.value[THEME_YEAR.gdp] || {}
     for (const c of countries.value) {
       if (yearData[c.name] != null) map[c.name] = yearData[c.name]
@@ -208,14 +217,14 @@ const metricMaps = {
     return map
   }),
   carbon: computed(() => {
-    const map = {}
+    const map: Record<string, number> = {}
     for (const c of countries.value) {
       if (c.emission != null) map[c.name] = c.emission
     }
     return map
   }),
   population: computed(() => {
-    const map = {}
+    const map: Record<string, number> = {}
     for (const c of countries.value) {
       if (c.population != null) map[c.name] = c.population
     }
@@ -223,7 +232,7 @@ const metricMaps = {
   }),
   // 密度直接取数据文件的 density 字段(与 analysis 指标卡同口径),不重算
   density: computed(() => {
-    const map = {}
+    const map: Record<string, number> = {}
     for (const c of countries.value) {
       if (c.density != null) map[c.name] = c.density
     }
@@ -240,11 +249,11 @@ const top10 = computed(() => {
     .map(([name, value]) => ({ name, value }))
 })
 
-function formatValue(v) {
+function formatValue(v: number) {
   return THEMES[theme.value].fmtCard(v)
 }
 
-function setTheme(t) {
+function setTheme(t: string) {
   if (theme.value === t) return
   theme.value = t
   drillCountry.value = null // 趋势图仅 GDP 有时间序列,切主题关闭下钻
@@ -258,11 +267,11 @@ function refresh() {
 }
 
 // ---- 选国下钻(W3):点排行 → flyTo + 该国多年趋势小图(GDP 有时间序列) ----
-const drillCountry = ref(null)
-const drillRef = ref(null)
-let drillChart = null
+const drillCountry = ref<string | null>(null)
+const drillRef = ref<HTMLDivElement | null>(null)
+let drillChart: import('echarts').ECharts | null = null
 
-function focusCountry(name) {
+function focusCountry(name: string) {
   choropleth?.flyTo(name)
   drillCountry.value = theme.value === 'gdp' ? name : null
   nextTick(renderDrill)
@@ -275,7 +284,7 @@ async function renderDrill() {
     drillChart = echarts.init(drillRef.value)
   }
   const years = Object.keys(gdpByYear.value).sort()
-  const series = years.map((y) => gdpByYear.value[y]?.[drillCountry.value] ?? null)
+  const series = years.map((y) => gdpByYear.value[y]?.[drillCountry.value!] ?? null)
   drillChart.setOption({
     grid: { left: 6, right: 10, top: 8, bottom: 4, containLabel: true },
     tooltip: { trigger: 'axis' },
@@ -302,7 +311,7 @@ function renderChart() {
       data: top.map((t) => t.value).reverse(),
       itemStyle: { color: '#2271b2', borderRadius: [0, 4, 4, 0] },
       barWidth: '60%',
-      label: { show: true, position: 'right', fontSize: 10, formatter: (p) => formatValue(p.value) },
+      label: { show: true, position: 'right', fontSize: 10, formatter: (p: any) => formatValue(p.value) },
     }],
   })
 }
@@ -333,7 +342,7 @@ function reportFingerprint() {
   const total = entries.reduce((s, [, v]) => s + v, 0)
   const raw = `${theme.value}|${THEME_YEAR.gdp}|${entries.length}|${top1}|${Math.round(total)}`
   let h = 5381
-  for (const ch of raw) h = ((h * 33) ^ ch.codePointAt(0)) >>> 0
+  for (const ch of raw) h = ((h * 33) ^ (ch.codePointAt(0) ?? 0)) >>> 0
   return `TV-${theme.value.toUpperCase()}-${entries.length}N-${h.toString(36).toUpperCase()}`
 }
 
@@ -387,7 +396,7 @@ ${fingerprintSection}
   }
 }
 
-let resizeHandler = null
+let resizeHandler: (() => void) | null = null
 onMounted(async () => {
   try {
     await load()
@@ -415,7 +424,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', resizeHandler)
+  if (resizeHandler) window.removeEventListener('resize', resizeHandler)
   chartInstance?.dispose()
   chartInstance = null
   drillChart?.dispose()

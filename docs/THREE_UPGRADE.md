@@ -16,7 +16,7 @@
    - `three.webgpu.nodes.js`
    - `three.tsl.js`
 
-2. 在 `vite.config.js` 中注册 `threeCompatResolver` 插件，将以下模块解析到上述本地文件：
+2. 在 `vite.config.ts` 中注册 `threeCompatResolver` 插件，将以下模块解析到上述本地文件：
    - `three` → `src/examples/three-build-compat/three.module.js`
    - `three/webgpu` → `src/examples/three-build-compat/three.webgpu.js`
    - `three/tsl` → `src/examples/three-build-compat/three.tsl.js`
@@ -66,7 +66,7 @@ node scripts/verify-three-compat.mjs --update
    npm install --legacy-peer-deps
    ```
 
-3. **移除 Vite 兼容插件**。编辑 `vite.config.js`：
+3. **移除 Vite 兼容插件**。编辑 `vite.config.ts`：
    - 删除 `threeCompatResolver()` 插件；
    - 删除 `optimizeDeps.exclude` 中的 `three`、`three/webgpu`、`three/tsl`；
    - 如果还需要手动指定 `three/examples/jsm` 路径，保留对应 alias，否则一并删除。

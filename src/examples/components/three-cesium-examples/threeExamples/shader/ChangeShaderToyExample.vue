@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -38,20 +38,20 @@ async function onReady(ctx) {
   // GUI 对象
   gui = new GUI()
   
-  const fileList = new Array(6).fill().map((_, i) => props.example?.globals?.FILE_HOST + `files/glsl/${i}.frag`)
+  const fileList = new Array(6).fill(undefined).map((_, i) => props.example?.globals?.FILE_HOST + `files/glsl/${i}.frag`)
   
-  gui.add({ url: fileList[0] }, 'url', fileList).onChange((url) => changeShader(url))
+  gui.add({ url: fileList[0] }, 'url', fileList).onChange((url: any) => changeShader(url))
   
   changeShader(fileList[5])
   
-  let shader = null
+  let shader: any = null
   
   // 渲染 
   ctx.addUpdateCallback(() => {
     shader && (shader.uniforms.u_time.value += 0.02)
   })
   
-  async function changeShader(url) {
+  async function changeShader(url: any) {
   
       const str = await fetch(url).then(res => res.text())
   
@@ -76,8 +76,8 @@ async function onReady(ctx) {
                       type: 'v2',
                       value: new THREE.Vector2(0, 0)
                   }
-  
-              }
+
+              } as any
   
           ]),
   
@@ -107,7 +107,7 @@ async function onReady(ctx) {
   
       mesh.material.dispose()
   
-      mesh.material = material
+      ;(mesh as any).material = material
   
   }
 }

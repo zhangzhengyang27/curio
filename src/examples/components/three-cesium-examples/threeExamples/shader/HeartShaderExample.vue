@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -37,13 +37,15 @@ function onReady(ctx) {
   
   composer.addPass(bloomPass);
   
-  class HeartCurve extends THREE.Curve {
+  class HeartCurve extends THREE.Curve<THREE.Vector3> {
+      scale: any
+
       constructor(scale = 1) {
           super();
           this.scale = scale;
       }
   
-      getPoint(a, optionalTarget = new THREE.Vector3()) {
+      getPoint(a: any, optionalTarget = new THREE.Vector3()) {
           const t = a * Math.PI * 2;
           const tx = 16 * Math.pow(Math.sin(t), 3);
           const ty = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
@@ -88,7 +90,7 @@ function onReady(ctx) {
       }
   } `;
   
-  const getMaterial = (uniforms) => {
+  const getMaterial = (uniforms: any) => {
       return new THREE.ShaderMaterial({
           uniforms,
           vertexShader,
@@ -103,18 +105,14 @@ function onReady(ctx) {
       uDirection: { value: 1 },
       uSpeed: { value: 1 },
       uFade: { value: new THREE.Vector2(0, 0.5) },
-      uDirection: { value: 1 },
-      uSpeed: { value: 1 }
   })
-  
+
   const material2 = getMaterial({
       uColor: { value: new THREE.Color('#00BFFF') },
       uTime: { value: 0.5 },
       uDirection: { value: 1 },
       uSpeed: { value: 1 },
       uFade: { value: new THREE.Vector2(0, 0.5) },
-      uDirection: { value: 1 },
-      uSpeed: { value: 1 }
   })
   
   const mesh = new THREE.Mesh(geometry, material1)

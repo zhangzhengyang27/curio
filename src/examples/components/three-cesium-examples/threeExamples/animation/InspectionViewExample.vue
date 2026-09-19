@@ -10,10 +10,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -29,10 +29,10 @@ const props = defineProps({
   }
 })
 
-let isRoaming = false
-let camera2
-let pointerlockControls
-let rendererDomElement
+let isRoaming: boolean = false
+let camera2: any
+let pointerlockControls: any
+let rendererDomElement: any
 const eye1 = new THREE.Object3D()
 const itemData = { px: 0, py: 0, pz: 0, rx: 0, ry: 0, rz: 0 }
 
@@ -56,7 +56,7 @@ function onMouseUp() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -168,7 +168,7 @@ function onReady(ctx) {
   })
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (camera2) {
     camera2.aspect = width / height || 1
     camera2.updateProjectionMatrix()

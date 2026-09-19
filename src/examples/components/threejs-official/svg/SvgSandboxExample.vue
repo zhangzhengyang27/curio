@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SVGExampleScene from '@/examples/components/SVGExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -34,9 +34,9 @@ function onReady(__stage) {
   
   			THREE.ColorManagement.enabled = false;
   
-  			let stats;
+  			let stats: any;
   
-  			let group;
+  			let group: any;
   
   			init();
   
@@ -63,7 +63,7 @@ function onReady(__stage) {
   
   				const boxGeometry = new THREE.BoxGeometry( 100, 100, 100 );
   
-  				let mesh = new THREE.Mesh( boxGeometry, new THREE.MeshBasicMaterial( { color: 0x0000ff, opacity: 0.5, transparent: true } ) );
+  				let mesh: any = new THREE.Mesh( boxGeometry, new THREE.MeshBasicMaterial( { color: 0x0000ff, opacity: 0.5, transparent: true } ) );
   				mesh.position.x = 500;
   				mesh.rotation.x = Math.random();
   				mesh.rotation.y = Math.random();
@@ -181,7 +181,7 @@ function onReady(__stage) {
   
   				for ( let i = 0; i < 50; i ++ ) {
   
-  					const object = new SVGObject( node.cloneNode() );
+  					const object = new SVGObject( node.cloneNode() as SVGElement );
   					object.position.x = Math.random() * 1000 - 500;
   					object.position.y = Math.random() * 1000 - 500;
   					object.position.z = Math.random() * 1000 - 500;
@@ -196,7 +196,7 @@ function onReady(__stage) {
   
   					const node = document.createElementNS( 'http://www.w3.org/2000/svg', 'g' );
   					const parser = new DOMParser();
-  					const doc = parser.parseFromString( svg, 'image/svg+xml' );
+  					const doc = parser.parseFromString( svg as string, 'image/svg+xml' );
   
   					node.appendChild( doc.documentElement );
   
@@ -236,7 +236,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     render();
     				stats.update();
   })

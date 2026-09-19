@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { UltraHDRLoader } from 'three/examples/jsm/loaders/UltraHDRLoader.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>glTF Loader</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,12 +40,21 @@ async function onReady(__stage) {
   
 
   
-  			let currentModel, mixer;
+  			let currentModel: any, mixer: any;
   			let currentLoadId = 0;
   
   			const timer = new THREE.Timer();
   
   			init().then( render );
+
+			// init 函数体已在 HTML→Vue 转换时内联进 onReady，此处恢复引用避免 ReferenceError
+			function init() {
+				return Promise.resolve();
+			}
+
+			function render() {
+				controls.update();
+			}
   
   
   
@@ -74,7 +83,7 @@ async function onReady(__stage) {
   							.then( models => {
   
   								const gui = renderer.inspector.createParameters( 'Model' );
-  								const modelNames = models.map( m => m.name );
+  								const modelNames = models.map( (m: any) => m.name );
   								const params = { model: 'DamagedHelmet' };
   
   								if ( ! modelNames.includes( params.model ) && modelNames.length > 0 ) {
@@ -83,16 +92,16 @@ async function onReady(__stage) {
   
   								}
   
-  								gui.add( params, 'model', modelNames ).onChange( name => {
+  								gui.add( params, 'model', modelNames ).onChange( (name: any) => {
   
-  									const modelInfo = models.find( m => m.name === name );
+  									const modelInfo = models.find( (m: any) => m.name === name );
   									loadModel( modelInfo );
   
   								} );
   
   								gui.add( scene, 'backgroundBlurriness', 0, 1 );
   
-  								const initialModel = models.find( m => m.name === params.model );
+  								const initialModel = models.find( (m: any) => m.name === params.model );
   								if ( initialModel ) loadModel( initialModel );
   
   							} );
@@ -117,7 +126,7 @@ async function onReady(__stage) {
   			
   
   
-  			function loadModel( modelInfo ) {
+  			function loadModel( modelInfo: any ) {
   
   				const variants = modelInfo.variants;
   				const variant = variants[ 'glTF-Binary' ] || variants[ 'glTF' ];
@@ -125,14 +134,14 @@ async function onReady(__stage) {
   
   				if ( currentModel ) {
   
-  					currentModel.traverse( ( model ) => {
+  					currentModel.traverse( ( model: any ) => {
   
   						if ( model.isMesh ) {
   
   							model.geometry.dispose();
   							model.material.dispose();
   
-  							for ( const value of Object.values( model.material ) ) {
+  							for ( const value of Object.values<any>( model.material ) ) {
   
   								if ( value && value.isTexture ) {
   
@@ -195,7 +204,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function fitCameraToSelection( camera, controls, selection, fitOffset = 1.3 ) {
+  			function fitCameraToSelection( camera: any, controls: any, selection: any, fitOffset = 1.3 ) {
   
   				const box = new THREE.Box3();
   				box.setFromObject( selection );
@@ -229,7 +238,7 @@ async function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( mixer ) mixer.update( timer.getDelta() );
   })

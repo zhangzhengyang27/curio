@@ -15,14 +15,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer, RenderPass } from 'postprocessing';
-import { GodraysPass } from 'goodrays';
+import { GodraysPass } from 'three-good-godrays';
 
 const props = defineProps({
   example: {
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl god-rays example - <a href=\"https://github.com/Ameobea/three-good-godrays\" target=\"_blank\" rel=\"noopener\">three-good-godrays extension</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,8 +46,8 @@ async function onReady(__stage) {
   
   
   
-  			let composer;
-  			let stats;
+  			let composer: any;
+  			let stats: any;
   
   			init();
   
@@ -66,12 +66,12 @@ async function onReady(__stage) {
   				scene.add( gltf.scene );
   
   				const pillars = gltf.scene.getObjectByName( 'concrete' );
-  				pillars.material = new THREE.MeshStandardMaterial( {
+  				pillars!.material = new THREE.MeshStandardMaterial( {
   					color: 0x333333,
   				} );
   
   				const base = gltf.scene.getObjectByName( 'base' );
-  				base.material = new THREE.MeshStandardMaterial( {
+  				base!.material = new THREE.MeshStandardMaterial( {
   					color: 0x333333,
   					side: THREE.DoubleSide,
   				} );
@@ -100,7 +100,7 @@ async function onReady(__stage) {
   
   				// shadow setup
   
-  				scene.traverse( obj => {
+  				scene.traverse( (obj: any) => {
   
   					if ( obj.isMesh === true ) {
   
@@ -205,7 +205,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     				composer.render();
     				//renderer.render( scene, camera );

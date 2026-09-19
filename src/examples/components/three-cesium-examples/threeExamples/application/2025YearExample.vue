@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -78,8 +78,8 @@ function onReady(stageCtx) {
             let c = document.createElement("canvas");
             c.width = 2048;
             c.height = 512;
-            const ctx = c.getContext("2d");
-            let u = val => val * c.height * 0.01;
+            const ctx = c.getContext("2d")!;
+            let u = (val: any) => val * c.height * 0.01;
             
             ctx.fillStyle = `rgba(0, 255, 0, 0.5)`;
             ctx.strokeStyle = `rgba(255, 0, 0, 1)`;
@@ -167,7 +167,7 @@ function onReady(stageCtx) {
   class BackShards extends THREE.LineSegments{
     constructor(){
       let g = new THREE.InstancedBufferGeometry().copy(
-        new THREE.EdgesGeometry(new THREE.TetrahedronGeometry())
+        new THREE.EdgesGeometry(new THREE.TetrahedronGeometry()) as any
       );
       g.instanceCount = 100;
       let v = new THREE.Vector3();
@@ -201,7 +201,7 @@ function onReady(stageCtx) {
       
       let m = new THREE.LineBasicMaterial({
         color: 0x004499,
-        onBeforeCompile: shader => {
+        onBeforeCompile: (shader: any) => {
           shader.uniforms.time = gu.time;
           shader.vertexShader = `
             uniform float time;
@@ -224,7 +224,7 @@ function onReady(stageCtx) {
           );
           //console.log(shader.vertexShader);
         }
-      });
+      } as any);
       
       super(g, m);
     }
@@ -240,7 +240,7 @@ function onReady(stageCtx) {
     constructor(){
       super();
       
-      let g = new THREE.InstancedBufferGeometry().copy(new THREE.TetrahedronGeometry());
+      let g = new THREE.InstancedBufferGeometry().copy(new THREE.TetrahedronGeometry() as any);
       g.instanceCount = 10000;
       let v = new THREE.Vector3();
       g.setAttribute("center", new THREE.Float32BufferAttribute(
@@ -300,13 +300,13 @@ function onReady(stageCtx) {
         roughness: 0.25,
         metalness: 0.9,
         envMapIntensity: 0.1,
-        onBeforeCompile: shader => {
+        onBeforeCompile: (shader: any) => {
           shader.uniforms.time = gu.time;
           shader.uniforms.texDate = {value: (() => {
             let c = document.createElement("canvas");
             c.width = c.height = 1024;
-            let u = val => val * c.height * 0.01;
-            const ctx = c.getContext("2d");
+            let u = (val: any) => val * c.height * 0.01;
+            const ctx = c.getContext("2d")!;
             
             let fSize = 45;
             ctx.font = `${u(fSize)}px Limelight`;
@@ -453,7 +453,7 @@ function onReady(stageCtx) {
           );
           //console.log(shader.fragmentShader);
         }
-      });
+      } as any);
       
       this.geometry = g;
       this.material = m;

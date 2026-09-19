@@ -10,7 +10,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   CanvasTexture,
   TextureLoader,
@@ -62,20 +62,20 @@ const fs = /* glsl */ `
 `
 
 let halfSize = new Vector2()
-let params = null
-let materialRef = null
-let meshRef = null
-let cameraRef = null
-let statsRef = null
-let guiRef = null
-let canvasRef = null
-let mouseMoveHandler = null
+let params: any = null
+let materialRef: any = null
+let meshRef: any = null
+let cameraRef: any = null
+let statsRef: any = null
+let guiRef: any = null
+let canvasRef: any = null
+let mouseMoveHandler: any = null
 
 function createRandom(min = 0, max = 1) {
   return Math.random() * (max - min) + min
 }
 
-async function onReady(stageCtx) {
+async function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -100,7 +100,7 @@ async function onReady(stageCtx) {
   const backgroundCanvas = document.createElement('canvas')
   backgroundCanvas.width = domWidth
   backgroundCanvas.height = domHeight
-  const ctx2d = backgroundCanvas.getContext('2d')
+  const ctx2d = backgroundCanvas.getContext('2d')!
   const gradient = ctx2d.createLinearGradient(0, 0, 0, backgroundCanvas.height)
   gradient.addColorStop(0, '#1e4877')
   gradient.addColorStop(0.5, '#4584b4')
@@ -168,7 +168,7 @@ async function onReady(stageCtx) {
   const mouse = new Vector2()
   const startTime = Date.now()
 
-  mouseMoveHandler = ({ clientX, clientY }) => {
+  mouseMoveHandler = ({ clientX, clientY }: any) => {
     const rect = container.getBoundingClientRect()
     mouse.set(
       (clientX - rect.left - rect.width / 2) * 0.25,
@@ -193,20 +193,20 @@ async function onReady(stageCtx) {
 
   const fogFolder = gui.addFolder('Fog')
   fogFolder.show(params.enableFog)
-  fogFolder.addColor(params, 'fogColor').onChange((e) => {
+  fogFolder.addColor(params, 'fogColor').onChange((e: any) => {
     material.uniforms.fogColor.value.set(e)
     material.needsUpdate = true
   }).name('Fog Color')
-  fogFolder.add(params, 'fogNear', -1000, 1000).onChange((e) => {
+  fogFolder.add(params, 'fogNear', -1000, 1000).onChange((e: any) => {
     material.uniforms.fogNear.value = e
     material.needsUpdate = true
   }).name('Fog Near')
-  fogFolder.add(params, 'fogFar', 0, 5000).onChange((e) => {
+  fogFolder.add(params, 'fogFar', 0, 5000).onChange((e: any) => {
     material.uniforms.fogFar.value = e
     material.needsUpdate = true
   }).name('Fog Far')
 
-  enableFogOption.onChange((e) => {
+  enableFogOption.onChange((e: any) => {
     material.uniforms.enableFog.value = e ? 1 : 0
     material.needsUpdate = true
     fogFolder.show(e)
@@ -228,7 +228,7 @@ function onBeforeDispose() {
   }
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   halfSize.set(width / 2, height / 2)
   if (cameraRef) {
     cameraRef.aspect = width / height || 1

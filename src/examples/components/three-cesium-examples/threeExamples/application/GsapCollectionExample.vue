@@ -1,13 +1,13 @@
 <template>
   <ExampleScene
     camera="perspective"
-    :clear-color="scene.fog.color"
+    :clear-color="0x1E2630"
     antialias
     @ready="onReady"
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import gsap from 'gsap'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -74,12 +74,14 @@ function onReady(ctx) {
   
       boxes.forEach(box => {
   
-          gsap.to(box.scale, t, {
+          gsap.to(box.scale, {
+              duration: t,
               x: 1 + Math.random() * 3,
               y: 1 + Math.random() * 20 + (Math.random() < 0.1 ? 15 : 0),
               z: 1 + Math.random() * 3
           })
-          gsap.to(box.position, t, {
+          gsap.to(box.position, {
+              duration: t,
               x: -200 + Math.random() * 400,
               z: -200 + Math.random() * 400
           })
@@ -87,7 +89,8 @@ function onReady(ctx) {
       })
   
       // 视角
-      gsap.to(camera, t, {
+      gsap.to(camera, {
+          duration: t,
           animAngle: camera.animAngle + (2 * Math.random() - 1) * Math.PI,
           onUpdate: function () {
               camera.position.x = Math.cos(camera.animAngle) * 440;
@@ -99,19 +102,23 @@ function onReady(ctx) {
       const intens =  Math.random() 
       
       // 灯光强度
-      gsap.to(light, t * 1.5, {
+      gsap.to(light, {
+          duration: t * 1.5,
           intensity: intens * 3,
       })
   
-      gsap.to(light2, t * 1.5, {
+      gsap.to(light2, {
+          duration: t * 1.5,
           intensity: intens * 3
       })
   
-      gsap.to(alight, t * 1.5, {
+      gsap.to(alight, {
+          duration: t * 1.5,
           intensity: intens
       })
   
-      gsap.to(window, 2.5, {
+      gsap.to(window, {
+          duration: 2.5,
           onComplete: loop
       })
   }

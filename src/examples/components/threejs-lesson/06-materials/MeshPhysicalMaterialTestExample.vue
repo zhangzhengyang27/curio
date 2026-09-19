@@ -8,12 +8,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Color, EquirectangularReflectionMapping, Mesh, MeshPhysicalMaterial, SphereGeometry, TextureLoader } from 'three'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene } = ctx
 
   new RGBELoader()

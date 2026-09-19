@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {initShaders} from '@/examples/jsm-compat/webgl/kaikeba-webgl/05-复合变换/jsm/Utils.js'
 import {Matrix4} from 'three'
@@ -17,14 +17,14 @@ const fragmentShader = `void main(){
       gl_FragColor=vec4(1.0,1.0,0.0,1.0);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
   
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
@@ -39,11 +39,11 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vertexBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-      const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+      const a_Position = gl.getAttribLocation((gl as any).program, 'a_Position');
       gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(a_Position);
   
-      const u_Matrix = gl.getUniformLocation(gl.program, 'u_Matrix')
+      const u_Matrix = gl.getUniformLocation((gl as any).program, 'u_Matrix')
   
       const mr = new Matrix4();
       mr.makeRotationZ(Math.PI / 4)

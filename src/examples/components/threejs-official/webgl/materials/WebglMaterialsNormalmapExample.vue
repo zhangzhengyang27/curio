@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -39,7 +39,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl normalmap demo.<br/>\n\t\t\t<a href=\"https://casual-effects.com/data/\" target=\"_blank\" rel=\"noopener\">Lee Perry-Smith</a> head."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -159,13 +159,13 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'enableNormalMap' ).name( 'enable normal map' ).onChange( ( value ) => {
+  				gui.add( params, 'enableNormalMap' ).name( 'enable normal map' ).onChange( ( value: any ) => {
   
   					material.normalMap = ( value === true ) ? normalMap : null;
   					material.needsUpdate = true;
   
   				} );
-  				gui.add( params, 'normalScale', 0, 2 ).name( 'normal scale' ).onChange( ( value )=> material.normalScale.setScalar( value ) );
+  				gui.add( params, 'normalScale', 0, 2 ).name( 'normal scale' ).onChange( ( value: any )=> (material as any).normalScale.setScalar( value ) );
   				gui.open();
   
   				// CONTROLS
@@ -185,7 +185,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     composer.render();
   })
   

@@ -4,19 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {loadImage, getImageData, traverse, getPixel} from '@/examples/jsm-compat/mygrapics/pixels/lib/util.js'
 import {transformColor, brightness, saturate} from '@/examples/jsm-compat/mygrapics/pixels/lib/color-matrix.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('#paper');
-        const context = canvas.getContext('2d');
+    const canvas = mgContainer.value!.querySelector('#paper') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
     
         (async function () {
           const img = await loadImage('assets/girl1.jpg');
@@ -25,7 +25,7 @@ async function initMyGrapicsExample() {
           const imageData = getImageData(img);
           const texture = getImageData(sunlight);
     
-          traverse(imageData, ({r, g, b, a, index}) => {
+          traverse(imageData, ({r, g, b, a, index}: any) => {
             const texColor = getPixel(texture, index);
             return transformColor([r, g, b, a], brightness(1 + 0.7 * texColor[3]), saturate(2 - texColor[3]));
           });

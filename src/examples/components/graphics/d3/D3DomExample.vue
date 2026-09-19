@@ -2,15 +2,15 @@
   <div class="graphics-root" ref="gContainer"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -30,18 +30,18 @@ async function initGraphicsExample() {
     const dataset = [125, 121, 127, 193, 309];
         const colors = ['#fe645b', '#feb050', '#c2af87', '#81b848', '#55abf8'];
     
-        const chart = d3.select('body')
+        const chart = (window as any).d3.select('body')
           .selectAll('div')
           .data(dataset)
           .enter()
           .append('div')
           .style('left', '450px')
-          .style('top', (d, i) => {
+          .style('top', (d: any, i: number) => {
             return `${200 + i * 45}px`;
           })
-          .style('width', d => `${d}px`)
+          .style('width', (d: any) => `${d}px`)
           .style('height', '40px')
-          .style('background', (d, i) => colors[i]);
+          .style('background', (d: any, i: number) => colors[i]);
   }
 }
 

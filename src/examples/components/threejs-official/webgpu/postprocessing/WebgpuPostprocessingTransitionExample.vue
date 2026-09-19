@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Scene Transitions</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -43,9 +43,9 @@ function onReady(__stage) {
   
   
   
-  			let renderPipeline, transitionController, transitionPass;
+  			let renderPipeline: any, transitionController, transitionPass;
   
-  			const textures = [];
+  			const textures: any = [];
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
@@ -61,7 +61,7 @@ function onReady(__stage) {
   				threshold: uniform( 0.1 ),
   			};
   
-  			function generateInstancedMesh( geometry, material, count ) {
+  			function generateInstancedMesh( geometry: any, material: any, count: any ) {
   
   				const mesh = new THREE.InstancedMesh( geometry, material, count );
   
@@ -103,7 +103,7 @@ function onReady(__stage) {
   
   			}
   
-  			function FXScene( geometry, rotationSpeed, backgroundColor ) {
+  			function FXScene( this: any, geometry: any, rotationSpeed: any, backgroundColor: any ) {
   
   
   				camera.position.z = 20;
@@ -128,7 +128,7 @@ function onReady(__stage) {
   				this.camera = camera;
   				this.mesh = mesh;
   
-  				this.update = function ( delta ) {
+  				this.update = function ( delta: any ) {
   
   					if ( effectController.animateScene ) {
   
@@ -149,8 +149,8 @@ function onReady(__stage) {
   
   			}
   
-  			const fxSceneA = new FXScene( new THREE.BoxGeometry( 2, 2, 2 ), new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
-  			const fxSceneB = new FXScene( new THREE.IcosahedronGeometry( 1, 1 ), new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
+  			const fxSceneA = new (FXScene as any)( new THREE.BoxGeometry( 2, 2, 2 ), new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
+  			const fxSceneB = new (FXScene as any)( new THREE.IcosahedronGeometry( 1, 1 ), new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
   
   			
   
@@ -227,7 +227,7 @@ function onReady(__stage) {
   				.yoyo( true )
   				.start();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( effectController.animateTransition ) TWEEN.update();
     				if ( textures[ effectController.texture ] ) {

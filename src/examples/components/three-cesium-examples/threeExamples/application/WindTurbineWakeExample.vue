@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { Water } from 'three/examples/jsm/objects/Water.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -39,7 +39,7 @@ function onReady(stageCtx) {
   stats.dom.style.right = '20px'
   stats.dom.style.left = 'auto'
   stats.dom.style.zIndex = '30'
-  ctx.overlay?.appendChild(stats.dom)
+  stageCtx.overlay?.appendChild(stats.dom)
   controls.enableDamping = true
   controls.dampingFactor = 0.05
   controls.target.set(0, 100, 0)
@@ -98,10 +98,10 @@ function onReady(stageCtx) {
   windTurbine.rotation.y = Math.PI
   scene.add(windTurbine)
   
-  let rotorGroup = null
-  let rotorPivot = null
-  let nacelleModel = null
-  let rotorPivotYOffset = 0
+  let rotorGroup: any = null
+  let rotorPivot: any = null
+  let nacelleModel: any = null
+  let rotorPivotYOffset: number = 0
   let rotorWakeScale = 1.0
   
   const rotorSweepReference = 30
@@ -234,14 +234,14 @@ function onReady(stageCtx) {
   const lifetimes = new Float32Array(particleCount)
   
   const getBaseWakeLength = () => baseWakeLength * rotorWakeScale
-  const getWakeRadius = t => {
+  const getWakeRadius = (t: number) => {
       const tc = THREE.MathUtils.clamp(t, 0, 1)
       return (baseWakeRadiusMin + baseWakeRadiusRange * Math.pow(1 - tc, 1.35)) * rotorWakeScale
   }
-  const getWakeLengthScale = speedFactor => 0.82 + 0.46 * speedFactor
-  const getWakeRangeScale = speedFactor => 0.9 + 0.24 * speedFactor
+  const getWakeLengthScale = (speedFactor: number) => 0.82 + 0.46 * speedFactor
+  const getWakeRangeScale = (speedFactor: number) => 0.9 + 0.24 * speedFactor
   
-  const setColorByXZ = (index, x, z, currentWakeLength = getBaseWakeLength()) => {
+  const setColorByXZ = (index: number, x: number, z: number, currentWakeLength = getBaseWakeLength()) => {
       const grid = 0.6
       const qx = Math.round(x / grid)
       const qz = Math.round(z / grid)
@@ -290,7 +290,7 @@ function onReady(stageCtx) {
       const canvas = document.createElement('canvas')
       canvas.width = 128
       canvas.height = 128
-const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
+const ctx = canvas.getContext("2d")!;const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
       gradient.addColorStop(0, 'rgba(255, 255, 255, 0.38)')
       gradient.addColorStop(0.45, 'rgba(255, 255, 255, 0.22)')
       gradient.addColorStop(0.75, 'rgba(255, 255, 255, 0.10)')
@@ -374,15 +374,15 @@ const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(12
   
   document.head.appendChild(uiStyle)
   
-  const slider = overlay.querySelector('#speedSlider')
-  const speedSpan = overlay.querySelector('#speedValue')
-  const intensitySpan = overlay.querySelector('#intensityLabel')
-  const rangeSpan = overlay.querySelector('#rangeLabel')
-  const pivotOffsetInput = overlay.querySelector('#pivotOffsetInput')
+  const slider = overlay.querySelector('#speedSlider') as HTMLInputElement
+  const speedSpan = overlay.querySelector('#speedValue') as HTMLElement
+  const intensitySpan = overlay.querySelector('#intensityLabel') as HTMLElement
+  const rangeSpan = overlay.querySelector('#rangeLabel') as HTMLElement
+  const pivotOffsetInput = overlay.querySelector('#pivotOffsetInput') as HTMLInputElement
   
   rotationSpeedFactor = parseFloat(slider.value)
   
-  slider.addEventListener('input', e => {
+  slider.addEventListener('input', (e: any) => {
       rotationSpeedFactor = parseFloat(e.target.value)
       speedSpan.textContent = rotationSpeedFactor.toFixed(2)
       if (rotationSpeedFactor < 0.8) {
@@ -400,14 +400,14 @@ const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(12
       }
   })
   
-  pivotOffsetInput.addEventListener('input', e => {
+  pivotOffsetInput.addEventListener('input', (e: any) => {
       const value = parseFloat(e.target.value)
       if (!Number.isFinite(value)) return
       rotorPivotYOffset = value
       updateRotorPivotFromNacelle()
   })
   
-  const resetParticle = index => {
+  const resetParticle = (index: number) => {
       const posArray = particleGeometry.attributes.position.array
       const effectiveWakeLength = getBaseWakeLength() * getWakeLengthScale(rotationSpeedFactor)
       const effectiveRangeScale = getWakeRangeScale(rotationSpeedFactor)
@@ -455,7 +455,7 @@ const ctx = canvas.getContext("2d");const gradient = ctx.createRadialGradient(12
   
       const effectiveWakeLength = getBaseWakeLength() * getWakeLengthScale(rotationSpeedFactor)
       const effectiveRangeScale = getWakeRangeScale(rotationSpeedFactor)
-      Distance = camera.position.distanceTo(controls.target)
+      const cameraDistance = camera.position.distanceTo(controls.target)
       const distanceScale = THREE.MathUtils.clamp(cameraDistance / 240, 0.9, 2.6)
       particleMaterial.size = (0.65 + rotationSpeedFactor * 0.22) * distanceScale
       particleMaterial.opacity = (0.34 + rotationSpeedFactor * 0.10) * particleBrightnessBoost

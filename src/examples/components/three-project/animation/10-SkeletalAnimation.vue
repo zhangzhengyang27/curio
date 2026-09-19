@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -9,12 +9,12 @@
 
   const containerRef = shallowRef(null)
   const clock = new THREE.Clock()
-  let gui = null
-  let mixer = null
-  let skeletonHelper = null
+  let gui: any = null
+  let mixer: any = null
+  let skeletonHelper: any = null
   let _loadedModel = null
-  let animationActions = []
-  let currentAction = null
+  let animationActions: any[] = []
+  let currentAction: any = null
 
   const params = {
     currentAnim: 0,
@@ -32,7 +32,7 @@
       showGridHelper: true
     })
 
-  const toggleSkeleton = (visible) => {
+  const toggleSkeleton = (visible: any) => {
     if (skeletonHelper) skeletonHelper.visible = visible
   }
 
@@ -49,7 +49,7 @@
         // 遍历检查骨骼
         let hasSkeleton = false
         model.traverse((child) => {
-          if (child.isSkinnedMesh) {
+          if ((child as THREE.SkinnedMesh).isSkinnedMesh) {
             hasSkeleton = true
             console.log("发现 SkinnedMesh:", child.name)
           }
@@ -57,7 +57,7 @@
 
         // 创建骨骼辅助器
         if (hasSkeleton) {
-          skeletonHelper = new SkeletonHelper(model)
+          skeletonHelper = new THREE.SkeletonHelper(model)
           skeletonHelper.visible = params.showSkeleton
           scene.value.add(skeletonHelper)
           console.log("骨骼可视化已启用")
@@ -84,13 +84,13 @@
     )
   }
 
-  const initGUI = (animations = [], hasSkeleton) => {
+  const initGUI = (animations: any[] = [], hasSkeleton: any) => {
     gui = new GUI()
     gui.title("骨骼动画控制")
 
     if (animations.length > 0) {
       const animFolder = gui.addFolder("🎬 动画切换")
-      const eventObj = {}
+      const eventObj: any = {}
       animations.forEach((clip, index) => {
         const name = clip.name || `动画 ${index}`
         eventObj[`play${index}`] = () => {
@@ -107,7 +107,7 @@
       animFolder.open()
 
       const speedFolder = gui.addFolder("⚙️ 播放设置")
-      speedFolder.add(params, "timeScale", 0.1, 3, 0.1).name("播放速度").onChange((v) => {
+      speedFolder.add(params, "timeScale", 0.1, 3, 0.1).name("播放速度").onChange((v: any) => {
         if (mixer) mixer.timeScale = v
       })
       speedFolder.open()
@@ -150,7 +150,7 @@
     gui?.destroy()
     gui = null
     skeletonHelper = null
-    loadedModel = null
+    _loadedModel = null
     animationActions = []
     currentAction = null
     baseDispose()

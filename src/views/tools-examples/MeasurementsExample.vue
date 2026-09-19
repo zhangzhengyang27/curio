@@ -48,7 +48,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcMeasurements } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -65,14 +65,14 @@ const ACTIONS = [
   { name: 'rectangle', label: '矩形' },
   { name: 'regular', label: '正多边形' },
   { name: 'circle', label: '圆' },
-]
+] as const
 const LABEL_BY_NAME = Object.fromEntries(ACTIONS.map((a) => [a.name, a.label]))
 // ⚠ 必须是稳定引用:模板里内联 .map() 会在每次渲染时生成新数组,使
 // vue-cesium 内部 drawingActionInstances computed 失效重建(全新 cmpRef),
 // selectedDrawingActionInstance 残留旧对象,地图点击全被静默吞掉(实测)
 const MEASUREMENT_NAMES = ACTIONS.map((a) => a.name)
 
-const measureRef = ref(null)
+const measureRef = ref<any>(null)
 const activeName = ref('')
 const finishedCount = ref(0)
 const lastFinished = ref('')
@@ -83,7 +83,7 @@ const statusText = computed(() => {
   return `已完成 ${finishedCount.value} 次量测`
 })
 
-function toggle(name) {
+function toggle(name: string) {
   measureRef.value?.toggleAction(name)
 }
 
@@ -94,11 +94,11 @@ function clearAll() {
   activeName.value = ''
 }
 
-function onActiveEvt(evt) {
+function onActiveEvt(evt: any) {
   activeName.value = evt.isActive ? evt.type : ''
 }
 
-function onDrawEvt(evt) {
+function onDrawEvt(evt: any) {
   if (evt.type === 'new' && evt.finished) {
     finishedCount.value++
     lastFinished.value = `「${LABEL_BY_NAME[evt.name] || evt.name}」量测完成（${evt.index + 1}）`

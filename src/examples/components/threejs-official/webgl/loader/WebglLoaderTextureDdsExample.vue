@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - compressed textures<br/>\n\t\t\tleaf texture by <a href=\"http://opengameart.org/node/10505\">lauris71</a>, explosion texture by <a href=\"http://opengameart.org/node/7728\">bart</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -35,7 +35,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			const meshes = [];
+  			const meshes: any = [];
   
   			
   
@@ -143,7 +143,7 @@ function onReady(__stage) {
   				const material12 = new THREE.MeshBasicMaterial( { map: map10 } );
   				const material13 = new THREE.MeshBasicMaterial( { map: map11, transparent: true } );
   
-  				let mesh = new THREE.Mesh( new THREE.TorusGeometry(), material1 );
+  				let mesh: any = new THREE.Mesh( new THREE.TorusGeometry(), material1 );
   				mesh.position.x = - 10;
   				mesh.position.y = - 2;
   				scene.add( mesh );
@@ -231,7 +231,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     				for ( let i = 0; i < meshes.length; i ++ ) {
     					const mesh = meshes[ i ];

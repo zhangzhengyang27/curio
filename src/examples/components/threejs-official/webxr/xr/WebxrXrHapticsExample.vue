@@ -15,12 +15,16 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+
+let listener: any;
+let group: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - haptics"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,7 +49,7 @@ function onReady(__stage) {
   
   
   			let controller1, controller2;
-  			let controllerGrip1, controllerGrip2;
+  			let controllerGrip1: any, controllerGrip2: any;
   
   			const box = new THREE.Box3();
   
@@ -154,7 +158,7 @@ function onReady(__stage) {
   			
   
   
-  			function controllerConnected( event ) {
+  			function controllerConnected( this: any, event: any ) {
   
   				const oscillator = listener.context.createOscillator();
   				oscillator.type = 'sine';
@@ -173,7 +177,7 @@ function onReady(__stage) {
   
   			}
   
-  			function controllerDisconnected() {
+  			function controllerDisconnected( this: any ) {
   
   				const audio = this.userData.audio;
   				audio.source.stop();
@@ -214,7 +218,7 @@ function onReady(__stage) {
   			// minor pentatonic scale, so whichever notes is stricken would be more pleasant
   			const musicScale = [ 0, 3, 5, 7, 10 ];
   
-  			function handleController( controller ) {
+  			function handleController( controller: any ) {
   
   				controller.userData.colliding = false;
   
@@ -236,7 +240,7 @@ function onReady(__stage) {
   					const child = group.children[ i ];
   					box.setFromObject( child );
   
-  					if ( box.intersectsSphere( sphere ) ) {
+  					if ( box.intersectsSphere( (sphere as any) ) ) {
   
   						child.material.emissive.b = 1;
   						const intensity = child.userData.index / group.children.length;
@@ -269,7 +273,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     for ( let i = 0; i < group.children.length; i ++ ) {
     					group.children[ i ].collided = false;

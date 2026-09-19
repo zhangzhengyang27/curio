@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -77,7 +77,8 @@ function onReady(stageCtx) {
   }
   
   class Sun extends THREE.Mesh {
-      constructor (gu) {
+      gu: any
+      constructor (gu: any) {
           super();
           this.gu = gu;
           this.geometry = new THREE.PlaneGeometry(1, 1, 1000, 1);
@@ -141,7 +142,12 @@ function onReady(stageCtx) {
   }
   
   class SimpleFir extends THREE.Mesh {
-      constructor (gu) {
+      gu: any
+      amount: number
+      instCount: number
+      data: Float32Array
+      curveData: THREE.DataTexture
+      constructor (gu: any) {
           super();
           this.gu = gu;
           this.amount = 300;
@@ -156,7 +162,7 @@ function onReady(stageCtx) {
           );
   
           let ig = new THREE.InstancedBufferGeometry().copy(
-              new THREE.PlaneGeometry(1, 1, this.amount, 1).translate(0.5, 0, 0)
+              new THREE.PlaneGeometry(1, 1, this.amount, 1).translate(0.5, 0, 0) as any
           );
           ig.instanceCount = this.instCount;
           ig.setAttribute(
@@ -164,7 +170,7 @@ function onReady(stageCtx) {
               new THREE.InstancedBufferAttribute(
                   new Float32Array(
                       new Array(this.instCount)
-                          .fill()
+                          .fill(undefined)
                           .map((p) => {
                               return [
                                   (Math.random() * 0.95 + 0.05) *
@@ -307,7 +313,8 @@ function onReady(stageCtx) {
   }
   
   class Road extends THREE.Mesh {
-      constructor (gu) {
+      gu: any
+      constructor (gu: any) {
           super();
           this.gu = gu;
           this.geometry = new THREE.PlaneGeometry(1, 50, 1, 200).rotateX(
@@ -355,11 +362,12 @@ function onReady(stageCtx) {
   }
   
   class Snow extends THREE.Points {
-      constructor (gu) {
+      gu: any
+      constructor (gu: any) {
           super();
           this.gu = gu;
           this.geometry = new THREE.BufferGeometry().setFromPoints(
-              new Array(50000).fill().map(p => {
+              new Array(50000).fill(undefined).map((p: any) => {
                   let v = new THREE.Vector3().random().subScalar(0.5).multiply(new THREE.Vector3(0.5, 1, 1)).multiplyScalar(50);
                   v.y += 25;
                   return v;
@@ -368,7 +376,7 @@ function onReady(stageCtx) {
           this.material = new THREE.PointsMaterial({
               size: 0.2,
               color: new THREE.Color(0.75, 1, 1),
-              onBeforeCompile: shader => {
+              onBeforeCompile: (shader: any) => {
                   shader.uniforms.time = this.gu.time;
                   shader.uniforms.texYear = this.gu.texYear;
                   shader.vertexShader = `
@@ -406,7 +414,7 @@ function onReady(stageCtx) {
               `
                   );
               }
-          });
+          } as any);
       }
   }
   
@@ -435,13 +443,13 @@ function onReady(stageCtx) {
       texYear: {
           value: (() => {
   
-              function createTexture(text) {
+              function createTexture(text: string) {
                   let c = document.createElement("canvas");
                   c.width = 1024;
                   c.height = 1024;
-                  let unit = (val) => val * c.height * 0.01;
+                  let unit = (val: any) => val * c.height * 0.01;
   
-                  const ctx = c.getContext("2d");
+                  const ctx = c.getContext("2d")!;
                   ctx.filter = `blur(${unit(0.5)}px)`;
                   ctx.font = `${unit(80)}px TulpenOne`;
                   ctx.textAlign = "center";

@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
@@ -30,11 +30,13 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - interactive cubes"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let raycaster: any;
+  let room: any;
 
   
   
@@ -46,13 +48,13 @@ function onReady(__stage) {
   			const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
   			const controllerModelFactory = new XRControllerModelFactory();
   
-  			let container;
+  			let container: any;
   
   
   
   
-  			let controller, controllerGrip;
-  			let INTERSECTED;
+  			let controller: any, controllerGrip: any;
+  			let INTERSECTED: any;
   
   			
   
@@ -122,7 +124,7 @@ function onReady(__stage) {
   
   			function createRenderer( forceWebGL = false ) {
   
-  				const parameters = { ...rendererParameters };
+  				const parameters: any = { ...rendererParameters };
   
   				if ( forceWebGL === true ) parameters.forceWebGL = true;
   
@@ -134,7 +136,7 @@ function onReady(__stage) {
   
   			}
   
-  			function setRenderer( newRenderer, oldRenderer = null ) {
+  			function setRenderer( newRenderer: any, oldRenderer: any = null ) {
   
   				if ( controller !== undefined ) scene.remove( controller );
   				if ( controllerGrip !== undefined ) scene.remove( controllerGrip );
@@ -160,7 +162,7 @@ function onReady(__stage) {
   				controller = renderer.xr.getController( 0 );
   				controller.addEventListener( 'selectstart', onSelectStart );
   				controller.addEventListener( 'selectend', onSelectEnd );
-  				controller.addEventListener( 'connected', function ( event ) {
+  				controller.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					const targetRayMode = event.data.targetRayMode;
   
@@ -171,7 +173,7 @@ function onReady(__stage) {
   					}
   
   				} );
-  				controller.addEventListener( 'disconnected', function () {
+  				controller.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -184,19 +186,19 @@ function onReady(__stage) {
   
   			}
   
-  			function onSelectStart() {
+  			function onSelectStart( this: any ) {
   
   				this.userData.isSelecting = true;
   
   			}
   
-  			function onSelectEnd() {
+  			function onSelectEnd( this: any ) {
   
   				this.userData.isSelecting = false;
   
   			}
   
-  			function buildController( data ) {
+  			function buildController( data: any ) {
   
   				let geometry, material;
   
@@ -226,7 +228,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta() * 60;
     				if ( controller.userData.isSelecting === true ) {

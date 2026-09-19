@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, uniform, time, oscSine } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Outline</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,9 +40,9 @@ function onReady(__stage) {
   
 
   
-  			let renderPipeline, outlinePass;
+  			let renderPipeline, outlinePass: any;
   
-  			let selectedObjects = [];
+  			let selectedObjects: any = [];
   
   			const raycaster = new THREE.Raycaster();
   			const mouse = new THREE.Vector2();
@@ -136,7 +136,7 @@ function onReady(__stage) {
   				for ( let i = 0; i < 20; i ++ ) {
   
   					const material = new THREE.MeshLambertMaterial();
-  					material.color.setHSL( Math.random(), 1.0, 0.3 );
+  					material.color!.setHSL( Math.random(), 1.0, 0.3 );
   
   					const mesh = new THREE.Mesh( geometry, material );
   					mesh.position.x = Math.random() * 4 - 2;
@@ -203,12 +203,12 @@ function onReady(__stage) {
   				gui.add( edgeGlow, 'value', 0.0, 1 ).name( 'edgeGlow' );
   				gui.add( edgeThickness, 'value', 1, 4 ).name( 'edgeThickness' );
   				gui.add( pulsePeriod, 'value', 0.0, 5 ).name( 'pulsePeriod' );
-  				gui.addColor( { color: visibleEdgeColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).onChange( ( value ) => {
+  				gui.addColor( { color: visibleEdgeColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).onChange( ( value: any ) => {
   
   					visibleEdgeColor.value.set( value );
   
   				} ).name( 'visibleEdgeColor' );
-  				gui.addColor( { color: hiddenEdgeColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).onChange( ( value ) => {
+  				gui.addColor( { color: hiddenEdgeColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).onChange( ( value: any ) => {
   
   					hiddenEdgeColor.value.set( value );
   
@@ -221,7 +221,7 @@ function onReady(__stage) {
   				renderer.domElement.style.touchAction = 'none';
   				renderer.domElement.addEventListener( 'pointermove', onPointerMove );
   
-  				function onPointerMove( event ) {
+  				function onPointerMove( event: any ) {
   
   					if ( event.isPrimary === false ) return;
   
@@ -232,7 +232,7 @@ function onReady(__stage) {
   
   				}
   
-  				function addSelectedObject( object ) {
+  				function addSelectedObject( object: any ) {
   
   					selectedObjects = [];
   					selectedObjects.push( object );
@@ -264,7 +264,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

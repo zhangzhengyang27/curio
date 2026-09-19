@@ -9,12 +9,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { AdditiveBlending, Mesh, MeshBasicMaterial } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene, renderer, addUpdateCallback } = ctx
 
   renderer.localClippingEnabled = true
@@ -41,7 +41,7 @@ function onReady(ctx) {
   const col = 4
   const rowSize = 2.85
   const colSize = 9
-  function init(mesh) {
+  function init(mesh: any) {
     const material = mesh.material
     const { map } = material
     if (!map) {
@@ -68,8 +68,8 @@ function onReady(ctx) {
     scene.add(highlightMesh)
   }
 
-  let time = 0
-  addUpdateCallback((delta, _elapsed) => {
+  let time: number = 0
+  addUpdateCallback((delta: number, _elapsed: number) => {
     time += delta * 1000
     highlightMat.opacity = (Math.sin(time * 0.005) * 0.5 + 0.5) * 0.4 + 0.1
   })

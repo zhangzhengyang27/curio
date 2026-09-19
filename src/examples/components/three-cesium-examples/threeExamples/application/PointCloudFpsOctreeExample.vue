@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
@@ -21,13 +21,13 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
   const controls = stageCtx.controls
 
-  box.style.position = 'relative'
+  stageCtx.container.style.position = 'relative'
   
   const style = document.createElement('style')
   style.textContent = `
@@ -68,10 +68,10 @@ function onReady(stageCtx) {
   
   stageCtx.container.append(info, status, instruction, warning)
   
-  const pointCountSpan = info.querySelector('#pointCount')
-  const nearestDistSpan = status.querySelector('#nearestDist')
+  const pointCountSpan = info.querySelector('#pointCount') as HTMLElement
+  const nearestDistSpan = status.querySelector('#nearestDist') as HTMLElement
   const warningDiv = warning
-  const collisionToggleSpan = instruction.querySelector('#collisionToggle')
+  const collisionToggleSpan = instruction.querySelector('#collisionToggle') as HTMLElement
   
   scene.background = new THREE.Color(0x111122)
   
@@ -100,12 +100,12 @@ function onReady(stageCtx) {
   const stars = new THREE.Points(starsGeo, starsMat)
   scene.add(stars)
   
-  let pointCloud = null
-  let collisionDetector = null
+  let pointCloud: any = null
+  let collisionDetector: any = null
   const clock = new THREE.Clock()
   const raycaster = new THREE.Raycaster()
   const mouse = new THREE.Vector2()
-  const anchorSprites = []
+  const anchorSprites: any[] = []
   
   const moveState = { forward: false, backward: false, left: false, right: false, shift: false }
   const speed = 0.5
@@ -117,14 +117,14 @@ function onReady(stageCtx) {
   let wallEntranceHalfWidth = Math.PI / 10
   let wallEntranceZMin = -1.0
   let wallEntranceZMax = 1.0
-  let wallRing = null
-  let wallDoor = null
+  let wallRing: any = null
+  let wallDoor: any = null
   
-  function createAnchorSprite(colorHex) {
+  function createAnchorSprite(colorHex: any) {
       const canvas = document.createElement('canvas')
       canvas.width = 64
       canvas.height = 64
-const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
+const ctx = canvas.getContext("2d")!;ctx.fillStyle = 'rgba(0,0,0,0)'
       ctx.fillRect(0, 0, 64, 64)
       ctx.beginPath()
       ctx.arc(32, 32, 14, 0, Math.PI * 2)
@@ -172,7 +172,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
   pointLockControls.addEventListener('lock', () => {
   })
   
-  renderer.domElement.addEventListener('click', event => {
+  renderer.domElement.addEventListener('click', (event: any) => {
       if (pointLockControls.isLocked) return
       const rect = renderer.domElement.getBoundingClientRect()
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
@@ -221,7 +221,13 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
   }, false)
   
   class OctreeCollisionField {
-      constructor(positions, maxDepth = 10, minNodeSize = 0.03) {
+      positions: any
+      maxDepth: number
+      minNodeSize: number
+      bounds: any
+      root: any
+      lastNearestPoint: any
+      constructor(positions: any, maxDepth = 10, minNodeSize = 0.03) {
           this.positions = positions
           this.maxDepth = maxDepth
           this.minNodeSize = minNodeSize
@@ -237,14 +243,14 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
           this.lastNearestPoint = null
       }
   
-      buildNode(box, indices, depth) {
+      buildNode(box: any, indices: any, depth: number) {
           const min = box.min, max = box.max
           const size = max.x - min.x
-          const node = { box, indices, children: null }
+          const node = { box, indices, children: null as any }
   
           if (depth < this.maxDepth && size > this.minNodeSize && indices.length > 50) {
               const center = new THREE.Vector3().copy(min).add(max).multiplyScalar(0.5)
-              const childIndices = Array.from({ length: 8 }, () => [])
+              const childIndices: any[] = Array.from({ length: 8 }, () => [])
   
               for (let idx of indices) {
                   const i = idx * 3
@@ -259,7 +265,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
                   childIndices[childIndex].push(idx)
               }
   
-              node.children = []
+              node.children = [] as any
               for (let i = 0; i < 8; i++) {
                   if (childIndices[i].length === 0) continue
                   const childBox = new THREE.Box3()
@@ -272,16 +278,16 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
                   childBox.set(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x1, y1, z1))
   
                   const childNode = this.buildNode(childBox, childIndices[i], depth + 1)
-                  node.children.push(childNode)
+                  node.children!.push(childNode)
               }
-              if (node.children.length === 0) node.children = null
+              if (node.children!.length === 0) node.children = null
           }
           return node
       }
   
-      getApproxNearestDistance(point, maxDistance = Infinity) {
+      getApproxNearestDistance(point: any, maxDistance = Infinity) {
           let bestDistSq = maxDistance * maxDistance
-          let bestPoint = null
+          let bestPoint: any = null
   
           if (this.lastNearestPoint) {
               const dx = this.lastNearestPoint.x - point.x
@@ -294,7 +300,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
               }
           }
   
-          this.queryNode(this.root, point, bestDistSq, (distSq, px, py, pz) => {
+          this.queryNode(this.root, point, bestDistSq, (distSq: any, px: any, py: any, pz: any) => {
               if (distSq < bestDistSq) {
                   bestDistSq = distSq
                   bestPoint = new THREE.Vector3(px, py, pz)
@@ -305,16 +311,16 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
           return Math.sqrt(bestDistSq)
       }
   
-      queryNode(node, point, bestDistSq, callback) {
+      queryNode(node: any, point: any, bestDistSq: any, callback: any) {
           const boxDistSq = this.distanceSqToBox(point, node.box)
           if (boxDistSq >= bestDistSq) return
   
           if (node.children) {
-              const childrenWithDist = node.children.map(child => ({
+              const childrenWithDist = node.children.map((child: any) => ({
                   child,
                   distSq: this.distanceSqToBox(point, child.box)
               }))
-              childrenWithDist.sort((a, b) => a.distSq - b.distSq)
+              childrenWithDist.sort((a: any, b: any) => a.distSq - b.distSq)
   
               for (let { child, distSq } of childrenWithDist) {
                   if (distSq >= bestDistSq) break
@@ -338,7 +344,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
           }
       }
   
-      distanceSqToBox(point, box) {
+      distanceSqToBox(point: any, box: any) {
           const p = point
           const min = box.min, max = box.max
           let dx = 0, dy = 0, dz = 0
@@ -352,14 +358,14 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
       }
   }
   
-  const normalizeAngle = angle => {
+  const normalizeAngle = (angle: number) => {
       let a = angle
       while (a > Math.PI) a -= Math.PI * 2
       while (a < -Math.PI) a += Math.PI * 2
       return a
   }
   
-  const isInWallEntrance = pos => {
+  const isInWallEntrance = (pos: any) => {
       const angle = Math.atan2(pos.y, pos.x)
       const delta = normalizeAngle(angle - wallEntranceAngle)
       const inAngle = Math.abs(delta) <= wallEntranceHalfWidth
@@ -367,7 +373,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
       return inAngle && inZ
   }
   
-  const isCrossingWall = (fromPos, toPos) => {
+  const isCrossingWall = (fromPos: any, toPos: any) => {
       const r0 = Math.hypot(fromPos.x, fromPos.y)
       const r1 = Math.hypot(toPos.x, toPos.y)
       const outside0 = r0 > wallRadius
@@ -380,7 +386,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
       if (wallDoor) scene.remove(wallDoor)
   
       const zMid = (wallEntranceZMin + wallEntranceZMax) * 0.5
-      const ringPoints = []
+      const ringPoints: any[] = []
       const segments = 128
       for (let i = 0; i <= segments; i++) {
           const t = (i / segments) * Math.PI * 2
@@ -427,12 +433,12 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
       const m0 = 0.02
       const p0 = 0.4
   
-      const smoothstep = (a, b, x) => {
+      const smoothstep = (a: number, b: number, x: number) => {
           const t = Math.max(0, Math.min(1, (x - a) / (b - a)))
           return t * t * (3 - 2 * t)
       }
   
-      const nacaAirfoilPoint = (x01, chord, tRatio, upper) => {
+      const nacaAirfoilPoint = (x01: number, chord: number, tRatio: number, upper: any) => {
           const yt = 5 * tRatio * chord * (
               0.2969 * Math.sqrt(x01) -
               0.1260 * x01 -
@@ -441,8 +447,8 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
               0.1015 * x01 * x01 * x01 * x01
           )
   
-          let yc = 0
-          let dyc = 0
+          let yc: number = 0
+          let dyc: number = 0
           if (x01 < p0) {
               yc = m0 / (p0 * p0) * (2 * p0 * x01 - x01 * x01) * chord
               dyc = 2 * m0 / (p0 * p0) * (p0 - x01)
@@ -523,7 +529,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
       return { points, positions }
   }
   
-  function centerGeometryPositions(geometry) {
+  function centerGeometryPositions(geometry: any) {
       geometry.computeBoundingBox()
       const bbox = geometry.boundingBox
       const center = new THREE.Vector3()
@@ -552,7 +558,7 @@ const ctx = canvas.getContext("2d");ctx.fillStyle = 'rgba(0,0,0,0)'
   
       collisionDetector = new OctreeCollisionField(positions, 10, 0.03)
   
-      const bbox = new THREE.Box3().setFromBufferAttribute(points.geometry.attributes.position)
+      const bbox = new THREE.Box3().setFromBufferAttribute(points.geometry.attributes.position as THREE.BufferAttribute)
       const maxXY = Math.max(
           Math.abs(bbox.min.x), Math.abs(bbox.max.x),
           Math.abs(bbox.min.y), Math.abs(bbox.max.y)

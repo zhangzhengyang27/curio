@@ -46,7 +46,7 @@
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcAnalyses } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -54,12 +54,12 @@ import ToolsExampleShell from './ToolsExampleShell.vue'
 const ACTIONS = [
   { name: 'sightline', label: '通视分析' },
   { name: 'viewshed', label: '可视域分析' },
-]
+] as const
 const LABEL_BY_NAME = Object.fromEntries(ACTIONS.map((a) => [a.name, a.label]))
 // ⚠ 稳定引用,理由同 MeasurementsExample
 const ANALYSIS_NAMES = ACTIONS.map((a) => a.name)
 
-const analysisRef = ref(null)
+const analysisRef = ref<any>(null)
 const activeName = ref('')
 const finished = ref('')
 
@@ -69,7 +69,7 @@ const statusText = computed(() => {
   return '选择分析类型后在地图上取点'
 })
 
-function toggle(name) {
+function toggle(name: string) {
   analysisRef.value?.toggleAction(name)
 }
 
@@ -79,11 +79,11 @@ function clearAll() {
   activeName.value = ''
 }
 
-function onActiveEvt(evt) {
+function onActiveEvt(evt: any) {
   activeName.value = evt.isActive ? evt.type : ''
 }
 
-function onDrawEvt(evt) {
+function onDrawEvt(evt: any) {
   if (evt.type === 'new' && evt.finished) {
     finished.value = `「${LABEL_BY_NAME[evt.name] || evt.name}」分析完成`
   } else if (evt.type === 'removeAll') {

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -141,7 +141,7 @@ function onReady(ctx) {
   	transparent: true,
   	side: THREE.DoubleSide,
   	uniforms: {
-  		uTrailMap: new THREE.Uniform(),
+  		uTrailMap: new THREE.Uniform(null),
   		uCracksMap: new THREE.Uniform(crackMap),
   		uPerlin: new THREE.Uniform(perlinMap),
   		uParallaxDistance: new THREE.Uniform(1),

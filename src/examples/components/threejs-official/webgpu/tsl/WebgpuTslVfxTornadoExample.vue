@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { luminance, cos, min, time, atan, uniform, pass, PI, TWO_PI, color, positionLocal, sin, texture, Fn, uv, vec2, vec3, vec4 } from 'three/tsl';
@@ -34,7 +34,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>VFX Tornado</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   
   
-  			let renderPipeline;
+  			let renderPipeline: any;
   
   			init();
   
@@ -66,7 +66,7 @@ function onReady(__stage) {
   
   				// TSL functions
   
-  				const toRadialUv = Fn( ( [ uv, multiplier, rotation, offset ] ) => {
+  				const toRadialUv = Fn( ( [ uv, multiplier, rotation, offset ]: any ) => {
   
   					const centeredUv = uv.sub( 0.5 ).toVar();
   					const distanceToCenter = centeredUv.length();
@@ -80,7 +80,7 @@ function onReady(__stage) {
   
   				} );
   
-  				const toSkewedUv = Fn( ( [ uv, skew ] ) => {
+  				const toSkewedUv = Fn( ( [ uv, skew ]: any ) => {
   
   					return vec2(
   						uv.x.add( uv.y.mul( skew.x ) ),
@@ -89,7 +89,7 @@ function onReady(__stage) {
   
   				} );
   
-  				const twistedCylinder = Fn( ( [ position, parabolStrength, parabolOffset, parabolAmplitude, time ] ) => {
+  				const twistedCylinder = Fn( ( [ position, parabolStrength, parabolOffset, parabolAmplitude, time ]: any ) => {
   
   					const angle = atan( position.z, position.x ).toVar();
   					const elevation = position.y;
@@ -101,9 +101,9 @@ function onReady(__stage) {
   					radius.addAssign( sin( elevation.sub( time ).mul( 20 ).add( angle.mul( 2 ) ) ).mul( 0.05 ) );
   
   					const twistedPosition = vec3(
-  						cos( angle ).mul( radius ),
+  						(cos as any)( angle ).mul( radius ),
   						elevation,
-  						sin( angle ).mul( radius )
+  						(sin as any)( angle ).mul( radius )
   					);
   
   					return twistedPosition;
@@ -127,13 +127,13 @@ function onReady(__stage) {
   					const scaledTime = time.mul( timeScale );
   
   					// noise 1
-  					const noise1Uv = toRadialUv(
-  						uv(),
+  					const noise1Uv = (toRadialUv as any)(
+  						(uv as any)(),
   						vec2( 0.5, 0.5 ),
   						scaledTime,
   						scaledTime
   					);
-  					noise1Uv.assign( toSkewedUv(
+  					noise1Uv.assign( (toSkewedUv as any)(
   						noise1Uv,
   						vec2( - 1, 0 )
   					) );
@@ -141,13 +141,13 @@ function onReady(__stage) {
   					const noise1 = texture( perlinTexture, noise1Uv, 1 ).r.remap( 0.45, 0.7 );
   
   					// noise 2
-  					const noise2Uv = toRadialUv(
-  						uv(),
+  					const noise2Uv = (toRadialUv as any)(
+  						(uv as any)(),
   						vec2( 2, 8 ),
   						scaledTime.mul( 2 ),
   						scaledTime.mul( 8 )
   					);
-  					noise2Uv.assign( toSkewedUv(
+  					noise2Uv.assign( (toSkewedUv as any)(
   						noise2Uv,
   						vec2( - 0.25, 0 )
   					) );
@@ -185,7 +185,7 @@ function onReady(__stage) {
   
   				const emissiveMaterial = new THREE.MeshBasicNodeMaterial( { transparent: true, side: THREE.DoubleSide, wireframe: false } );
   
-  				emissiveMaterial.positionNode = twistedCylinder( positionLocal, parabolStrength, parabolOffset, parabolAmplitude.sub( 0.05 ), time.mul( timeScale ) );
+  				emissiveMaterial.positionNode = (twistedCylinder as any)( positionLocal, parabolStrength, parabolOffset, parabolAmplitude.sub( 0.05 ), time.mul( timeScale ) );
   
   				emissiveMaterial.outputNode = Fn( () => {
   
@@ -193,7 +193,7 @@ function onReady(__stage) {
   
   					// noise 1
   					const noise1Uv = uv().add( vec2( scaledTime, scaledTime.negate() ) ).toVar();
-  					noise1Uv.assign( toSkewedUv(
+  					noise1Uv.assign( (toSkewedUv as any)(
   						noise1Uv,
   						vec2( - 1, 0 )
   					) );
@@ -202,7 +202,7 @@ function onReady(__stage) {
   
   					// noise 2
   					const noise2Uv = uv().add( vec2( scaledTime.mul( 0.5 ), scaledTime.negate() ) ).toVar();
-  					noise2Uv.assign( toSkewedUv(
+  					noise2Uv.assign( (toSkewedUv as any)(
   						noise2Uv,
   						vec2( - 1, 0 )
   					) );
@@ -236,7 +236,7 @@ function onReady(__stage) {
   
   				const darkMaterial = new THREE.MeshBasicNodeMaterial( { transparent: true, side: THREE.DoubleSide, wireframe: false } );
   
-  				darkMaterial.positionNode = twistedCylinder( positionLocal, parabolStrength, parabolOffset, parabolAmplitude, time.mul( timeScale ) );
+  				darkMaterial.positionNode = (twistedCylinder as any)( positionLocal, parabolStrength, parabolOffset, parabolAmplitude, time.mul( timeScale ) );
   
   				darkMaterial.outputNode = Fn( () => {
   
@@ -244,7 +244,7 @@ function onReady(__stage) {
   
   					// noise 1
   					const noise1Uv = uv().add( vec2( scaledTime, scaledTime.negate() ) ).toVar();
-  					noise1Uv.assign( toSkewedUv(
+  					noise1Uv.assign( (toSkewedUv as any)(
   						noise1Uv,
   						vec2( - 1, 0 )
   					) );
@@ -253,7 +253,7 @@ function onReady(__stage) {
   
   					// noise 2
   					const noise2Uv = uv().add( vec2( scaledTime.mul( 0.5 ), scaledTime.negate() ) ).toVar();
-  					noise2Uv.assign( toSkewedUv(
+  					noise2Uv.assign( (toSkewedUv as any)(
   						noise2Uv,
   						vec2( - 1, 0 )
   					) );
@@ -315,7 +315,7 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.addColor( { color: emissiveColor.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).onChange( value => emissiveColor.value.set( value ) ).name( 'emissiveColor' );
+  				gui.addColor( { color: emissiveColor.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).onChange( (value: any) => emissiveColor.value.set( value ) ).name( 'emissiveColor' );
   				gui.add( timeScale, 'value', - 1, 1, 0.01 ).name( 'timeScale' );
   				gui.add( parabolStrength, 'value', 0, 2, 0.01 ).name( 'parabolStrength' );
   				gui.add( parabolOffset, 'value', 0, 1, 0.01 ).name( 'parabolOffset' );
@@ -329,7 +329,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

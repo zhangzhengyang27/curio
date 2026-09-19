@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - VRML loader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   
   
-  			let stats, loader;
+  			let stats, loader: any;
   
   			const params = {
   				asset: 'house'
@@ -71,7 +71,7 @@ function onReady(__stage) {
   				'multilineString'
   			];
   
-  			let vrmlScene;
+  			let vrmlScene: any;
   
   			
   
@@ -118,11 +118,11 @@ function onReady(__stage) {
   				//
   
   				gui = new GUI();
-  				gui.add( params, 'asset', assets ).onChange( function ( value ) {
+  				gui.add( params, 'asset', assets ).onChange( function ( value: any ) {
   
   					if ( vrmlScene ) {
   
-  						vrmlScene.traverse( function ( object ) {
+  						vrmlScene.traverse( function ( object: any ) {
   
   							if ( object.material ) object.material.dispose();
   							if ( object.material && object.material.map ) object.material.map.dispose();
@@ -141,9 +141,9 @@ function onReady(__stage) {
   			
   
   
-  			function loadAsset( asset ) {
+  			function loadAsset( asset: any ) {
   
-  				loader.load( ASSET_HOST + 'models/vrml/' + asset + '.wrl', function ( object ) {
+  				loader.load( ASSET_HOST + 'models/vrml/' + asset + '.wrl', function ( object: any ) {
   
   					vrmlScene = object;
   					scene.add( object );
@@ -155,7 +155,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.update();
   })
   

@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Utils.js'
 import { Matrix4, Vector3, Quaternion } from 'three'
@@ -22,14 +22,14 @@ const fragmentShader = `precision mediump float;
       gl_FragColor=texture2D(u_Sampler,v_Pin);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
   
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
@@ -103,7 +103,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       gl.bindBuffer(gl.ARRAY_BUFFER, sourceBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, source, gl.STATIC_DRAW);
   
-      const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+      const a_Position = gl.getAttribLocation((gl as any).program, 'a_Position');
       gl.vertexAttribPointer(
         a_Position,
         posSize,
@@ -114,7 +114,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       );
       gl.enableVertexAttribArray(a_Position);
   
-      const a_Pin = gl.getAttribLocation(gl.program, 'a_Pin');
+      const a_Pin = gl.getAttribLocation((gl as any).program, 'a_Pin');
       gl.vertexAttribPointer(
         a_Pin,
         pinSize,
@@ -130,7 +130,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const modelMatrix = new Matrix4()
       const mx = new Matrix4().makeRotationX(0.02)
       const my = new Matrix4().makeRotationY(0.02)
-      const u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix')
+      const u_ModelMatrix = gl.getUniformLocation((gl as any).program, 'u_ModelMatrix')
       gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements)
   
       /* 图像预处理 */
@@ -161,7 +161,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           gl.LINEAR
         );
   
-        const u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler')
+        const u_Sampler = gl.getUniformLocation((gl as any).program, 'u_Sampler')
         gl.uniform1i(u_Sampler, 0)
   
         render()

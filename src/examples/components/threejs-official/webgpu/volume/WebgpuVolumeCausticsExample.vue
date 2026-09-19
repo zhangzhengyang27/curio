@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform, refract, div, frameId, lightViewPosition, float, positionView, positionViewDirection, screenUV, pass, texture3D, time, screenCoordinate, normalView, texture, Fn, vec2, vec3 } from 'three/tsl';
@@ -27,6 +27,9 @@ import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { bayer16 } from 'three/examples/jsm/tsl/math/Bayer.js';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
 
+let gltf: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -35,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Caustics</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -121,7 +124,7 @@ async function onReady(__stage) {
   						texture( causticMap, textureUV.add( vec2( chromaticAberrationOffset, chromaticAberrationOffset ) ) ).b
   					);
   
-  					return causticProjection.mul( viewZ.mul( 60 ) ).add( viewZ ).mul( causticColor );
+  					return causticProjection.mul( viewZ.mul( 60 ) ).add( viewZ ).mul( causticColor as any );
   
   				} )().toVar();
   
@@ -168,7 +171,7 @@ async function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Volumetric Caustics' );
   				gui.add( causticOcclusion, 'value', 0, 20 ).name( 'caustic occlusion' );
   				const duckColorDebug = { color: duck.material.color.getHex() };
-  				gui.addColor( duckColorDebug, 'color' ).name( 'material color' ).onChange( ( val ) => {
+  				gui.addColor( duckColorDebug, 'color' ).name( 'material color' ).onChange( ( val: any ) => {
   					duck.material.color.set( val );
   				} );
   
@@ -240,13 +243,13 @@ async function onReady(__stage) {
   				const volumetricMaterial = new THREE.VolumeNodeMaterial();
   				volumetricMaterial.steps = 20;
   				volumetricMaterial.offsetNode = bayer16( screenCoordinate.add( frameId ) ); // Add dithering to reduce banding
-  				volumetricMaterial.scatteringNode = Fn( ( { positionRay } ) => {
+  				volumetricMaterial.scatteringNode = Fn( ( { positionRay }: any ) => {
   
   					// Return the amount of fog based on the noise texture
   
   					const timeScaled = vec3( time.mul( .01 ), 0, time.mul( .03 ) );
   
-  					const sampleGrain = ( scale, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
+  					const sampleGrain = ( scale: any, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
   
   					let density = sampleGrain( 1 );
   					density = density.mul( sampleGrain( .5, 1 ) );
@@ -305,7 +308,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     for ( const mesh of gltf.children ) {
     					mesh.rotation.y -= .01;
     				}

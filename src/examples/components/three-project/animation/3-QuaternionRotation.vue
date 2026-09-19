@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -10,11 +10,11 @@
   const containerRef = shallowRef(null)
 
   // 动画相关
-  let mixer = null
+  let mixer: any = null
   const clock = new THREE.Clock()
-  let gui = null
-  let cube = null
-  let action = null
+  let gui: any = null
+  let cube: any = null
+  let action: any = null
 
   // 使用封装的场景
   const {
@@ -50,16 +50,16 @@
         // 设置折射贴图
         envMap.mapping = THREE.EquirectangularRefractionMapping
         // 设置背景色
-        scene.value.background = new THREE.Color(0xcccccc)
+        scene.value!.background = new THREE.Color(0xcccccc)
         // 设置环境贴图
-        scene.value.environment = envMap
+        scene.value!.environment = envMap
         console.log("HDR 环境贴图加载完成")
       },
       undefined,
       (error) => {
         console.error("HDR 加载失败:", error)
         // 如果 HDR 加载失败，设置一个默认背景色
-        scene.value.background = new THREE.Color(0xcccccc)
+        scene.value!.background = new THREE.Color(0xcccccc)
       }
     )
   }
@@ -165,8 +165,9 @@
     // 找到网格辅助器并设置透明度
     scene.value.traverse((object) => {
       if (object.type === "GridHelper") {
-        object.material.opacity = 0.3
-        object.material.transparent = true
+        const gridMat = object.material as THREE.LineBasicMaterial
+        gridMat.opacity = 0.3
+        gridMat.transparent = true
       }
     })
   }
@@ -187,7 +188,7 @@
     sceneFolder
       .addColor(sceneParams, "backgroundColor")
       .name("背景颜色")
-      .onChange((value) => {
+      .onChange((value: any) => {
         if (scene.value) {
           scene.value.background = new THREE.Color(value)
         }
@@ -208,7 +209,7 @@
       animationFolder
         .add(animationParams, "timeScale", 0, 3, 0.1)
         .name("播放速度")
-        .onChange((value) => {
+        .onChange((value: any) => {
           if (mixer) {
             mixer.timeScale = value
           }
@@ -218,7 +219,7 @@
       animationFolder
         .add(animationParams, "paused")
         .name("暂停")
-        .onChange((value) => {
+        .onChange((value: any) => {
           if (action) {
             action.paused = value
           }
@@ -228,7 +229,7 @@
       animationFolder
         .add(animationParams, "loop")
         .name("循环播放")
-        .onChange((value) => {
+        .onChange((value: any) => {
           if (action) {
             if (value) {
               action.setLoop(THREE.LoopRepeat)
@@ -253,7 +254,7 @@
       cubeFolder
         .addColor(cubeParams, "color")
         .name("颜色")
-        .onChange((value) => {
+        .onChange((value: any) => {
           if (cube) {
             cube.material.color.set(value)
           }

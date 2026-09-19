@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Morph Targets</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -39,7 +39,7 @@ function onReady(__stage) {
   
   
   
-  			let container, mesh;
+  			let container, mesh: any;
   
   			
   
@@ -96,7 +96,7 @@ function onReady(__stage) {
   				const spherePositions = [];
   
   				// for the second morph target, we'll twist the cubes vertices
-  				const twistPositions = [];
+  				const twistPositions: any = [];
   				const direction = new THREE.Vector3( 1, 0, 0 );
   				const vertex = new THREE.Vector3();
   
@@ -141,12 +141,12 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Morph Targets' );
   
-  				gui.add( params, 'Spherify', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'Spherify', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					mesh.morphTargetInfluences[ 0 ] = value;
   
   				} );
-  				gui.add( params, 'Twist', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'Twist', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					mesh.morphTargetInfluences[ 1 ] = value;
   

@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Building Generator</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,8 +43,8 @@ function onReady(__stage) {
   
   
   
-  			let generator, building, material;
-  			let sky, sunLight, pmremGenerator, envScene;
+  			let generator, building: any, material: any;
+  			let sky: any, sunLight: any, pmremGenerator: any, envScene: any;
   
   			// reused by updateSun(): the current sun direction and the key-light
   			// colours it blends between as the sun nears the horizon or climbs high

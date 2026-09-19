@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -34,7 +34,7 @@ function onReady(__stage) {
   
   
   
-  			function planesFromMesh( vertices, indices ) {
+  			function planesFromMesh( vertices: any, indices: any ) {
   
   				// creates a clipping volume from a convex triangular mesh
   				// specified by the arrays 'vertices' and 'indices'
@@ -57,7 +57,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createPlanes( n ) {
+  			function createPlanes( n: any ) {
   
   				// creates an array of n uninitialized plane objects
   
@@ -70,7 +70,7 @@ function onReady(__stage) {
   
   			}
   
-  			function assignTransformedPlanes( planesOut, planesIn, matrix ) {
+  			function assignTransformedPlanes( planesOut: any, planesIn: any, matrix: any ) {
   
   				// sets an array of existing planes to transformed 'planesIn'
   
@@ -79,7 +79,7 @@ function onReady(__stage) {
   
   			}
   
-  			function cylindricalPlanes( n, innerRadius ) {
+  			function cylindricalPlanes( n: any, innerRadius: any ) {
   
   				const result = createPlanes( n );
   
@@ -108,7 +108,7 @@ function onReady(__stage) {
   					yAxis = new THREE.Vector3(),
   					trans = new THREE.Vector3();
   
-  				return function planeToMatrix( plane ) {
+  				return function planeToMatrix( plane: any ) {
   
   					const zAxis = plane.normal,
   						matrix = new THREE.Matrix4();
@@ -251,7 +251,7 @@ function onReady(__stage) {
   
   						// clip to the others to show the volume (wildly
   						// intersecting transparent planes look bad)
-  						clippingPlanes: clipMaterial.clippingPlanes.
+  					clippingPlanes: clipMaterial.clippingPlanes!.
   							filter( function ( _, j ) {
   
   								return j !== i;
@@ -380,7 +380,7 @@ function onReady(__stage) {
   
   			
   
-  			function setObjectWorldMatrix( object, matrix ) {
+  			function setObjectWorldMatrix( object: any, matrix: any ) {
   
   				// set the orientation of an object based on a world matrix
   
@@ -394,7 +394,7 @@ function onReady(__stage) {
   			const transform = new THREE.Matrix4(),
   				tmpMatrix = new THREE.Matrix4();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const currentTime = Date.now(),
     					time = ( currentTime - startTime ) / 1000;
     				object.position.y = 1;

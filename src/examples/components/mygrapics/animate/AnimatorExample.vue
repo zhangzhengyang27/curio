@@ -9,22 +9,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {Animator} from '@/examples/jsm-compat/mygrapics/common/lib/animator/index.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const blocks = mgContainer.value.querySelectorAll('.block');
+    const blocks = mgContainer.value!.querySelectorAll('.block');
         const animator = new Animator({duration: 1000, iterations: 1.5});
         (async function () {
           let i = 0;
           while(true) { // eslint-disable-next-line no-await-in-loop
-            await animator.animate(blocks[i++ % 4], ({target, timing}) => {
+            await animator.animate(blocks[i++ % 4], ({ target, timing }: { target: any; timing: any }) => {
               target.style.transform = `rotate(${timing.p * 360}deg)`;
             });
           }

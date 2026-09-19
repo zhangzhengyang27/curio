@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -20,10 +20,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -41,7 +41,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -49,11 +49,11 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
-  let primitives = [];
+  let primitives: any[] = [];
   
   viewer.scene.camera.setView({
       destination: {
@@ -72,10 +72,10 @@ function onReady(ctx) {
   //加载数据
   function loadLinesData() {
       let url = FILE_HOST + "files/json/jiaotong.json";
-      Cesium.Resource.fetchJson(url).then((data) => {
-          var busLines = [];
-          data.map(function (busLine, idx) {
-              var prevPt;
+      Cesium.Resource.fetchJson(url).then((data: any) => {
+          var busLines: any[] = [];
+          data.map(function (busLine: any, idx: any) {
+              var prevPt: any;
               var points = [];
               for (var i = 0; i < busLine.length; i += 2) {
                   var pt = [busLine[i], busLine[i + 1]];
@@ -153,7 +153,7 @@ function onReady(ctx) {
   ];
   
   //添加到场景 Primitive 方式
-  function addLineDatasPrimitive(busLines) {
+  function addLineDatasPrimitive(busLines: any) {
       let scene = viewer.scene;
   
       // 创建GUI控制面板
@@ -190,10 +190,10 @@ function onReady(ctx) {
   
           // 获取当前颜色主题
           const currentTheme = colorThemes.find(t => t.name === effectControls.colorTheme);
-          const colors = currentTheme.colors;
+          const colors = currentTheme!.colors;
   
           // 为每条线创建材质
-          busLines.forEach((line, index) => {
+          busLines.forEach((line: any, index: any) => {
               // 从主题中循环选择颜色
               const colorIndex = index % colors.length;
               const lineColor = colors[colorIndex].clone();

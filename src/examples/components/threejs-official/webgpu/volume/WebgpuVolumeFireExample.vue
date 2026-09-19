@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import {
@@ -38,6 +38,11 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
 
+let uKeyLightPos: any;
+let denoiseStrength: any;
+let params: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -46,7 +51,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Fire Simulation</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -87,24 +92,24 @@ function onReady(__stage) {
   			const TEXEL_Y = 1 / GRID_SIZE_Y;
   			const TEXEL_Z = 1 / GRID_SIZE_Z;
   
-  			let volumetricMesh, teapot, keyLight, pointLight;
-  			let renderPipeline;
+  			let volumetricMesh, teapot: any, keyLight, pointLight;
+  			let renderPipeline: any;
   
   
   
   
-  			let teapotVerticesBuffer, vertexCount;
+  			let teapotVerticesBuffer: any, vertexCount: any;
   			const prevTeapotPos = new THREE.Vector3();
   
   			// sim textures
-  			let velTexA, velTexB; // velocity field (xyz)
+  			let velTexA: any, velTexB: any; // velocity field (xyz)
   			let dyeTexA, dyeTexB; // x = density (smoke), y = temperature (fire)
-  			let divTex; // divergence
-  			let pressTexA, pressTexB; // pressure (Jacobi ping-pong)
-  			let dyeTexNode, dyeTexWriteNode, curlNoiseTex, curlNoiseTexNode;
+  			let divTex: any; // divergence
+  			let pressTexA: any, pressTexB: any; // pressure (Jacobi ping-pong)
+  			let dyeTexNode: any, dyeTexWriteNode: any, curlNoiseTex: any, curlNoiseTexNode: any;
   
   			// compute passes
-  			let advectVelocityPass, divergencePass, jacobiPassAB, jacobiPassBA, projectPass, advectDyePass, emitTeapotPass, computeCurlNoisePass;
+  			let advectVelocityPass: any, divergencePass: any, jacobiPassAB: any, jacobiPassBA: any, projectPass: any, advectDyePass: any, emitTeapotPass: any, computeCurlNoisePass;
   
   			// sim uniforms
   			const uDt = uniform( 0.016 );
@@ -164,7 +169,7 @@ function onReady(__stage) {
   			// Storage 3D textures (the "voxels")
   			// ---------------------------------------------------------------
   
-  			function createStorage3D( name ) {
+  			function createStorage3D( name: any ) {
   
   				const texture = new THREE.Storage3DTexture( GRID_SIZE_X, GRID_SIZE_Y, GRID_SIZE_Z );
   				texture.name = name;
@@ -185,7 +190,7 @@ function onReady(__stage) {
   			// ---------------------------------------------------------------
   
   			// instanceIndex (1D) -> voxel coordinate (3D)
-  			const getVoxelCoord = ( id ) => {
+  			const getVoxelCoord = ( id: any ) => {
   
   				const x = id.mod( GRID_SIZE_X );
   				const y = id.div( GRID_SIZE_X ).mod( GRID_SIZE_Y );
@@ -196,7 +201,7 @@ function onReady(__stage) {
   			};
   
   			// voxel coordinate -> normalized uvw at the cell center
-  			const coordToUVW = ( coord ) => vec3( coord ).add( 0.5 ).div( vec3( GRID_SIZE_X, GRID_SIZE_Y, GRID_SIZE_Z ) );
+  			const coordToUVW = ( coord: any ) => vec3( coord ).add( 0.5 ).div( vec3( GRID_SIZE_X, GRID_SIZE_Y, GRID_SIZE_Z ) );
   
   			// ---------------------------------------------------------------
   			// Fluid simulation - compute kernels
@@ -328,7 +333,7 @@ function onReady(__stage) {
   
   				// 3) Jacobi pressure solve (ping-pong A <-> B)
   
-  				const jacobi = ( pressRead, pressWrite, name ) => Fn( () => {
+  				const jacobi = ( pressRead: any, pressWrite: any, name: any ) => Fn( () => {
   
   					const coord = getVoxelCoord( instanceIndex );
   					const uvw = coordToUVW( coord );
@@ -511,9 +516,9 @@ function onReady(__stage) {
   				// Teapot geometry & storage buffer for compute stage
   				const teapotGeometry = new TeapotGeometry( 0.8, 28 );
   				teapotGeometry.computeBoundingBox();
-  				const teapotMinY = teapotGeometry.boundingBox.min.y;
+  				const teapotMinY = teapotGeometry.boundingBox!.min.y;
   				vertexCount = teapotGeometry.attributes.position.count;
-  				teapotVerticesBuffer = storage( teapotGeometry.attributes.position, 'vec3', vertexCount ).toReadOnly();
+  				teapotVerticesBuffer = storage( teapotGeometry.attributes.position as any, 'vec3', vertexCount ).toReadOnly();
   
   				createComputePasses();
   
@@ -532,7 +537,7 @@ function onReady(__stage) {
   				volumetricMaterial.offsetNode = fract( interleavedGradientNoise( screenCoordinate ).add( float( frameId ).mul( 0.618033988749895 ) ) );
   
   				// blackbody-style fire ramp: start color -> mid color -> end color
-  				const fireRamp = Fn( ( [ t ] ) => {
+  				const fireRamp = Fn( ( [ t ]: any ) => {
   
   					const color = vec3( 0 ).toVar();
   					color.assign( mix( vec3( 0.0, 0.0, 0.0 ), uFireEndColor, smoothstep( 0.05, 0.35, t ) ) );
@@ -543,7 +548,7 @@ function onReady(__stage) {
   
   				} );
   
-  				const henyeyGreenstein = Fn( ( [ cosTheta, g ] ) => {
+  				const henyeyGreenstein = Fn( ( [ cosTheta, g ]: any ) => {
   
   					const g2 = g.mul( g );
   					const denom = float( 1.0 ).add( g2 ).sub( float( 2.0 ).mul( g ).mul( cosTheta ) );
@@ -553,7 +558,7 @@ function onReady(__stage) {
   
   				} );
   
-  				const getVolumeSample = ( { positionRay } ) => {
+  				const getVolumeSample = ( { positionRay }: any ) => {
   
   					// volume box is shifted up -> map ray position to uvw [0..1]
   					const uvw = positionRay.sub( vec3( 0, VOLUME_WORLD_SIZE_Y / 2, 0 ) ).div( uVolumeWorldSize ).add( 0.5 ).toVar();
@@ -580,7 +585,7 @@ function onReady(__stage) {
   
   				};
   
-  				volumetricMaterial.scatteringNode = Fn( ( { positionRay } ) => {
+  				volumetricMaterial.scatteringNode = Fn( ( { positionRay }: any ) => {
   
   					const { density } = getVolumeSample( { positionRay } );
   
@@ -624,7 +629,7 @@ function onReady(__stage) {
   					// Henyey-Greenstein Phase Function for directional scattering
   					const viewDir = cameraPosition.sub( positionRay ).normalize();
   					const cosTheta = viewDir.dot( lightDir ).clamp( - 1.0, 1.0 );
-  					const phase = henyeyGreenstein( cosTheta, uAsymmetry );
+  					const phase = ( henyeyGreenstein as any )( cosTheta, uAsymmetry );
   
   					// Apply shadowing and phase function only to the smoke scattering
   					// Multiply phase function by 4 * PI (approx 12.56637) to maintain standard lighting scale
@@ -634,14 +639,14 @@ function onReady(__stage) {
   
   				} );
   
-  				volumetricMaterial.scatteringEmissiveNode = Fn( ( { positionRay } ) => {
+  				( volumetricMaterial as any ).scatteringEmissiveNode = Fn( ( { positionRay }: any ) => {
   
   					const { density, temperature } = getVolumeSample( { positionRay } );
   
   					// fire "emission" (boosted scattering tinted by temperature)
   					// Control the spread of the fire core (inverted: higher spread = lower power)
   					const firePower = float( 6.0 ).sub( uFireGlowSpread );
-  					const fire = fireRamp( temperature.clamp( 0, 1 ) ).mul( temperature.pow( firePower ) ).mul( uFireIntensity );
+  					const fire = ( fireRamp as any )( temperature.clamp( 0, 1 ) ).mul( temperature.pow( firePower ) ).mul( uFireIntensity );
   
   					// Apply hue rotation to the fire color
   					const fireColor = hue( fire, uFireHue );
@@ -659,7 +664,7 @@ function onReady(__stage) {
   					const startPos = positionWorld;
   					const lightDir = positionWorld.sub( cameraPosition ).normalize();
   
-  					const steps = uniform( 'int' ).onRenderUpdate( ( { material, object } ) => material.steps || ( object && object.material && object.material.steps ) || volumetricMaterial.steps );
+  					const steps = uniform( 'int' ).onRenderUpdate( ( { material, object }: any ) => material.steps || ( object && object.material && object.material.steps ) || volumetricMaterial.steps );
   					const maxDistance = float( VOLUME_WORLD_SIZE_DIAGONAL ); // Diagonal of volume box
   					const stepSize = maxDistance.div( steps ).toVar();
   					const rayDir = lightDir.toVar();
@@ -667,7 +672,7 @@ function onReady(__stage) {
   					const distTravelled = float( 0.0 ).toVar();
   					const transmittance = float( 1.0 ).toVar();
   
-  					Loop( steps, () => {
+  					( Loop as any )( steps, () => {
   
   						const positionRay = startPos.add( rayDir.mul( distTravelled ) );
   
@@ -741,7 +746,7 @@ function onReady(__stage) {
   				uTeapotMatrix.value.copy( teapot.matrixWorld );
   				uTeapotPosition.value.copy( teapot.position );
   
-  				const isVolume = Fn( ( { material } ) => {
+  				const isVolume = Fn( ( { material }: any ) => {
   
   					const isVolumeMaterial = material && material.isVolumeNodeMaterial;
   
@@ -787,7 +792,7 @@ function onReady(__stage) {
   
   					// 4. Color temperature oscillation: shift color tone slightly over time (uniform for volume)
   					const colorT = uEmitTemperature.div( 8.34 ).mul( 0.5 ).add( 0.20 ).add( uColorNoise ).clamp( 0.0, 1.0 );
-  					const fireColor = fireRamp( colorT );
+  					const fireColor = ( fireRamp as any )( colorT );
   					const coloredFire = hue( saturation( fireColor, uSaturation ), uFireHue );
   
   					// 5. Projected fire light color on surfaces
@@ -826,7 +831,7 @@ function onReady(__stage) {
   
   					// Map the radial temperature and noise to the fire colors (Start, Mid, End)
   					const colorTProj = radialTemp.mul( finalIntensity ).clamp( 0.0, 1.0 );
-  					const fireColorProj = fireRamp( colorTProj );
+  					const fireColorProj = ( fireRamp as any )( colorTProj );
   					const coloredFireProj = hue( saturation( fireColorProj, uSaturation ), uFireHue );
   
   					// Select either uniform fire color (volume) or projected fire color (surface)
@@ -857,7 +862,7 @@ function onReady(__stage) {
   				} )();
   
   				pointLight = new THREE.PointLight( 0xffffff, 1, 100, 2 );
-  				pointLight.colorNode = pointLightColor;
+  				( pointLight as any ).colorNode = pointLightColor;
   				pointLight.position.set( 0, 0, 0 );
   				pointLight.castShadow = false;
   				teapot.add( pointLight );
@@ -967,7 +972,7 @@ function onReady(__stage) {
   					const lavaT = noiseVal.pow( 2.5 ).clamp( 0.0, 1.0 );
   
   					// Use fireRamp to map the lava temperature to the blackbody-like fire colors
-  					const fireColor = fireRamp( lavaT.add( .1 ) );
+  					const fireColor = ( fireRamp as any )( lavaT.add( .1 ) );
   					const coloredFire = hue( saturation( fireColor, uSaturation ), uFireHue );
   
   					const tempScale = uEmitTemperature.div( 8.34 ).max( 0.0 );
@@ -1009,7 +1014,7 @@ function onReady(__stage) {
   
   				gui.add( params, 'simulate' ).name( 'Simulate Fluid' );
   				gui.add( params, 'simSpeed', 0.0, 2.0, 0.01 ).name( 'Simulation Speed' );
-  				gui.add( params, 'resolution', .1, 1 ).name( 'Render Resolution' ).onChange( ( resolution ) => {
+  				gui.add( params, 'resolution', .1, 1 ).name( 'Render Resolution' ).onChange( ( resolution: any ) => {
   
   					volumetricPass.setResolutionScale( resolution );
   
@@ -1024,27 +1029,27 @@ function onReady(__stage) {
   				// Bloom Folder
   				const bloomFolder = gui.addFolder( 'Bloom' );
   				bloomFolder.add( params, 'bloom' ).name( 'Bloom Enabled' ).onChange( updatePostProcessing );
-  				bloomFolder.add( params, 'bloomStrength', 0.0, 3.0, 0.01 ).name( 'Bloom Strength' ).onChange( ( value ) => {
+  				bloomFolder.add( params, 'bloomStrength', 0.0, 3.0, 0.01 ).name( 'Bloom Strength' ).onChange( ( value: any ) => {
   
   					if ( bloomPass ) bloomPass.strength.value = value;
   
   				} );
-  				bloomFolder.add( params, 'bloomRadius', 0.0, 1.0, 0.01 ).name( 'Bloom Radius' ).onChange( ( value ) => {
+  				bloomFolder.add( params, 'bloomRadius', 0.0, 1.0, 0.01 ).name( 'Bloom Radius' ).onChange( ( value: any ) => {
   
   					if ( bloomPass ) bloomPass.radius.value = value;
   
   				} );
-  				bloomFolder.add( params, 'bloomThreshold', 0.0, 1.0, 0.01 ).name( 'Bloom Threshold' ).onChange( ( value ) => {
+  				bloomFolder.add( params, 'bloomThreshold', 0.0, 1.0, 0.01 ).name( 'Bloom Threshold' ).onChange( ( value: any ) => {
   
   					if ( bloomPass ) bloomPass.threshold.value = value;
   
   				} );
   
-  				let bloomPass = null;
+  				let bloomPass: any = null;
   
   				function updatePostProcessing() {
   
-  					let volumetric = volumetricPass;
+  					let volumetric: any = volumetricPass;
   
   					if ( params.denoise ) {
   
@@ -1149,12 +1154,12 @@ function onReady(__stage) {
   				};
   
   				const toneMappingFolder = gui.addFolder( 'Tone Mapping & Exposure' );
-  				toneMappingFolder.add( params, 'toneMapping', Object.keys( toneMappingOptions ) ).name( 'Tone Mapping' ).onChange( ( value ) => {
+  				toneMappingFolder.add( params, 'toneMapping', Object.keys( toneMappingOptions ) ).name( 'Tone Mapping' ).onChange( ( value: any ) => {
   
-  					renderer.toneMapping = toneMappingOptions[ value ];
+  					renderer.toneMapping = ( toneMappingOptions as any )[ value ];
   
   				} );
-  				toneMappingFolder.add( params, 'exposure', 0.1, 2.0, 0.05 ).name( 'Exposure' ).onChange( ( value ) => {
+  				toneMappingFolder.add( params, 'exposure', 0.1, 2.0, 0.05 ).name( 'Exposure' ).onChange( ( value: any ) => {
   
   					renderer.toneMappingExposure = value;
   
@@ -1175,7 +1180,7 @@ function onReady(__stage) {
   			let lastTime = performance.now();
   			let simAccumulator = 0;
   
-  			function updateTemporalUniforms( time ) {
+  			function updateTemporalUniforms( time: any ) {
   
   				uTime.value = time % 1000;
   
@@ -1199,7 +1204,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const currentTime = performance.now();
     				const delta = Math.min( ( currentTime - lastTime ) * 0.001, 1 / 30 );
     				lastTime = currentTime;

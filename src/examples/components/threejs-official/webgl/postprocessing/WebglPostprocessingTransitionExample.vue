@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl scene transitions<br/>\n\t\t\tby <a href=\"https://twitter.com/fernandojsg\">fernandojsg</a> - <a href=\"https://github.com/kile/three.js-demos\">github</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -48,9 +48,9 @@ function onReady(__stage) {
   
   
   			let stats;
-  			let composer, renderTransitionPass;
+  			let composer: any, renderTransitionPass: any;
   
-  			const textures = [];
+  			const textures: any = [];
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
@@ -64,8 +64,8 @@ function onReady(__stage) {
   				threshold: 0.1,
   			};
   
-  			const fxSceneA = new FXScene( new THREE.BoxGeometry( 2, 2, 2 ), new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
-  			const fxSceneB = new FXScene( new THREE.IcosahedronGeometry( 1, 1 ), new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
+  			const fxSceneA = new (FXScene as any)( new THREE.BoxGeometry( 2, 2, 2 ), new THREE.Vector3( 0, - 0.4, 0 ), 0xffffff );
+  			const fxSceneB = new (FXScene as any)( new THREE.IcosahedronGeometry( 1, 1 ), new THREE.Vector3( 0, 0.2, 0.1 ), 0x000000 );
   
   			
   
@@ -119,7 +119,7 @@ function onReady(__stage) {
   				.yoyo( true )
   				.start();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// Transition animation
     				if ( params.transitionAnimate ) TWEEN.update();
@@ -158,19 +158,19 @@ function onReady(__stage) {
   
   				gui.add( params, 'sceneAnimate' ).name( 'Animate scene' );
   				gui.add( params, 'transitionAnimate' ).name( 'Animate transition' );
-  				gui.add( params, 'transition', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'transition', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					renderTransitionPass.setTransition( value );
   
   				} ).listen();
   
-  				gui.add( params, 'useTexture' ).onChange( function ( value ) {
+  				gui.add( params, 'useTexture' ).onChange( function ( value: any ) {
   
   					renderTransitionPass.useTexture( value );
   
   				} );
   
-  				gui.add( params, 'texture', { Perlin: 0, Squares: 1, Cells: 2, Distort: 3, Gradient: 4, Radial: 5 } ).onChange( function ( value ) {
+  				gui.add( params, 'texture', { Perlin: 0, Squares: 1, Cells: 2, Distort: 3, Gradient: 4, Radial: 5 } ).onChange( function ( value: any ) {
   
   					renderTransitionPass.setTexture( textures[ value ] );
   
@@ -178,7 +178,7 @@ function onReady(__stage) {
   
   				gui.add( params, 'cycle' );
   
-  				gui.add( params, 'threshold', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'threshold', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					renderTransitionPass.setTextureThreshold( value );
   
@@ -207,7 +207,7 @@ function onReady(__stage) {
   
   			}
   
-  			function FXScene( geometry, rotationSpeed, backgroundColor ) {
+  			function FXScene( this: any, geometry: any, rotationSpeed: any, backgroundColor: any ) {
   
   
   				camera.position.z = 20;
@@ -232,7 +232,7 @@ function onReady(__stage) {
   				this.camera = camera;
   				this.mesh = mesh;
   
-  				this.update = function ( delta ) {
+  				this.update = function ( delta: any ) {
   
   					if ( params.sceneAnimate ) {
   
@@ -253,7 +253,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateInstancedMesh( geometry, material, count ) {
+  			function generateInstancedMesh( geometry: any, material: any, count: any ) {
   
   				const mesh = new THREE.InstancedMesh( geometry, material, count );
   

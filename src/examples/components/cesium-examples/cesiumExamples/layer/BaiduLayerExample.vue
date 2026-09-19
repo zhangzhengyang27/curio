@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -58,7 +58,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -66,8 +66,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.scene.sun.show = false
@@ -82,8 +82,19 @@ function onReady(ctx) {
   
   /* 百度 影像服务 */
   class BaiduImageryProvider {
+    _errorEvent: any
+    _tileWidth: any
+    _tileHeight: any
+    _maximumLevel: any
+    _minimumLevel: any
+    _tilingScheme: any
+    _rectangle: any
+    _resource: any
+    _tileDiscardPolicy: any
+    _credit: any
+    _readyPromise: any
   
-      constructor(options) {
+      constructor(options: any) {
   
           // 创建错误事件对象
           this._errorEvent = new Cesium.Event()
@@ -226,7 +237,7 @@ function onReady(ctx) {
       }
   
       // 请求影像数据
-      requestImage(x, y, level, request) {
+      requestImage(x: any, y: any, level: any, request: any) {
   
           let xTileCount = this._tilingScheme.getNumberOfXTilesAtLevel(level)
   

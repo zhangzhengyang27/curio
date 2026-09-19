@@ -14,10 +14,10 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -27,6 +27,13 @@ import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 import { XRHandModelFactory } from 'three/examples/jsm/webxr/XRHandModelFactory.js';
 
+let snellenTexture: any;
+let quadLayerPlain: any;
+let quadLayerMips: any;
+let guiLayer: any;
+let guiMesh: any;
+let video: any;
+
 const props = defineProps({
   example: {
     type: Object,
@@ -35,7 +42,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> media and projection layers<br/>\n\n\t\t\t<p> This example demonstrates the use of <a href=\"https://www.w3.org/TR/webxrlayers-1/\">WebXR Layers</a> to render high quality text and video.\n\t\t\t\t  For static content such as text, using layers increases the usable resolution of the content by avoiding the extra resampling pass that occurs during normal VR rendering.\n\t\t\t\t  For dynamic content such as video, using layers also improves performance by only copying data when new frames are available.\t </p>\n\t\t\t<br />\n\t\t\t<p><i>See the comments in the code for more information.</i></p>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -65,7 +72,7 @@ function onReady(__stage) {
   
   
   
-  			let errorMesh;
+  			let errorMesh: any;
   
   			// Set via GUI.
   			const parameters = {
@@ -97,7 +104,13 @@ function onReady(__stage) {
   
   				// This is the size of mesh and the visible part of the quad layer.
   				widthMeters: .268, // 320px image * (142mm/160px scale factor)
-  				heightMeters: .382 // 450px image * (142mm/160px scale factor)
+  				heightMeters: .382, // 450px image * (142mm/160px scale factor)
+
+  				cropX: 0,
+  				cropY: 0,
+
+  				quadWidth: 0,
+  				quadHeight: 0
   			};
   
   			snellenConfig.cropX = snellenConfig.widthPx / snellenConfig.textureSizePx;
@@ -260,7 +273,7 @@ function onReady(__stage) {
   				const errorCanvas = document.createElement( 'canvas' );
   				errorCanvas.width = 400;
   				errorCanvas.height = 40;
-  				const errorContext = errorCanvas.getContext( '2d' );
+  				const errorContext = errorCanvas.getContext( '2d' )!;
   				errorContext.fillStyle = '#FF0000';
   				errorContext.fillRect( 0, 0, errorCanvas.width, errorCanvas.height );
   				errorContext.fillStyle = '#000000';
@@ -295,7 +308,7 @@ function onReady(__stage) {
   			}
   			//
   
-  			function animate( t, frame ) {
+  			function animate( t: any, frame: any ) {
   
   				const xr = renderer.xr;
   				const session = xr.getSession();
@@ -321,11 +334,11 @@ function onReady(__stage) {
   				) {
   
   					session.hasMediaLayer = true;
-  					session.requestReferenceSpace( 'local-floor' ).then( ( refSpace ) => {
+  					session.requestReferenceSpace( 'local-floor' ).then( ( refSpace: any ) => {
   
   						// Create Quad layers for Snellen chart.
   						const glBinding = xr.getBinding();
-  						const quadLayerConfig = {
+  					const quadLayerConfig: any = {
   							width: snellenConfig.quadWidth,
   							height: snellenConfig.quadHeight,
   							viewPixelWidth: snellenConfig.textureSizePx,

@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform } from 'three/tsl';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Occlusion</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -38,8 +38,14 @@ function onReady(__stage) {
   
   
   			class OcclusionNode extends THREE.Node {
+	updateType: any;
+	uniformNode: any;
+	testObject: any;
+	normalColor: any;
+	occludedColor: any;
+
   
-  				constructor( testObject, normalColor, occludedColor ) {
+  				constructor( testObject: any, normalColor: any, occludedColor: any ) {
   
   					super( 'vec3' );
   
@@ -53,7 +59,7 @@ function onReady(__stage) {
   
   				}
   
-  				async update( frame ) {
+  			update( frame: any ): any {
   
   					const isOccluded = frame.renderer.isOccluded( this.testObject );
   
@@ -97,7 +103,7 @@ function onReady(__stage) {
   
   				const instanceUniform = new OcclusionNode( sphere, new THREE.Color( 0x0000ff ), new THREE.Color( 0x00ff00 ) );
   
-  				plane.material.colorNode = instanceUniform;
+  				(plane.material.colorNode as any) = instanceUniform;
   
   				sphere.position.z = - 1;
   				sphere.occlusionTest = true;

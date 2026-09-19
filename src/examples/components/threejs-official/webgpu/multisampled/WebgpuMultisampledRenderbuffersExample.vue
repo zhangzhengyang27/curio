@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { texture } from 'three/tsl';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Multisampled Renderbuffers</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -54,7 +54,7 @@ function onReady(__stage) {
   			const count = 50;
   			const fullRadius = 20; // Radius of the sphere
   			const halfRadius = 10; // Radius of the sphere
-  			const positions = new Array( count ).fill().map( ( _, i ) => {
+  			const positions = new Array( count ).fill( undefined ).map( ( _, i ) => {
   
   				const radius = ( i % 2 === 0 ) ? fullRadius : halfRadius;
   
@@ -137,7 +137,7 @@ function onReady(__stage) {
   			
   
   
-  			function onWindowMouseMove( e ) {
+  			function onWindowMouseMove( e: any ) {
   
   				mouse.x = e.offsetX / (__stage.container?.clientWidth || window.innerWidth);
   				mouse.y = e.offsetY / (__stage.container?.clientHeight || window.innerHeight);
@@ -146,7 +146,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( params.animated ) {
     					box.rotation.x += 0.001;
     					box.rotation.y += 0.002;

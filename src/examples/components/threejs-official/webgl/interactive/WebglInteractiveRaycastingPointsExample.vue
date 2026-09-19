@@ -15,10 +15,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+
+let raycaster: any;
+let pointclouds: any;
+
 
 const props = defineProps({
   example: {
@@ -28,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - interactive - raycasting - points"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,11 +47,11 @@ function onReady(__stage) {
   
   			let intersection = null;
   			let spheresIndex = 0;
-  			let timer;
+  			let timer: any;
   			let toggle = 0;
   
   			const pointer = new THREE.Vector2();
-  			const spheres = [];
+  			const spheres: any[] = []
   
   			const threshold = 0.1;
   			const pointSize = 0.05;
@@ -56,7 +60,7 @@ function onReady(__stage) {
   			const rotateY = new THREE.Matrix4().makeRotationY( 0.005 );
   
   			
-  			function generatePointCloudGeometry( color, width, length ) {
+  			function generatePointCloudGeometry( color: any, width: any, length: any ) {
   
   				const geometry = new THREE.BufferGeometry();
   				const numPoints = width * length;
@@ -99,7 +103,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generatePointcloud( color, width, length ) {
+  			function generatePointcloud( color: any, width: any, length: any ) {
   
   				const geometry = generatePointCloudGeometry( color, width, length );
   				const material = new THREE.PointsMaterial( { size: pointSize, vertexColors: true } );
@@ -108,7 +112,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateIndexedPointcloud( color, width, length ) {
+  			function generateIndexedPointcloud( color: any, width: any, length: any ) {
   
   				const geometry = generatePointCloudGeometry( color, width, length );
   				const numPoints = width * length;
@@ -135,7 +139,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateIndexedWithOffsetPointcloud( color, width, length ) {
+  			function generateIndexedWithOffsetPointcloud( color: any, width: any, length: any ) {
   
   				const geometry = generatePointCloudGeometry( color, width, length );
   				const numPoints = width * length;
@@ -233,7 +237,7 @@ function onReady(__stage) {
   			
   
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -242,7 +246,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     camera.applyMatrix4( rotateY );

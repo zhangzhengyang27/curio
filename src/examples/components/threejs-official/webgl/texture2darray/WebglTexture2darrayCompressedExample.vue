@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -51,7 +51,7 @@ const fsSource = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -62,7 +62,7 @@ function onReady(__stage) {
   
   
   
-  			let mesh, stats, timer;
+  			let mesh: any, stats, timer;
   
   			const planeWidth = 50;
   			const planeHeight = 25;
@@ -123,7 +123,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( mesh ) {
     					const delta = timer.getDelta() * 10;

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { create3DHeatmap } from '../../cesiumHeatmap.js'
 
@@ -17,11 +17,11 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let heatmap = null
+let Cesium: any = null
+let viewer: any = null
+let heatmap: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -36,7 +36,7 @@ function viewerOptions(Cesium) {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 

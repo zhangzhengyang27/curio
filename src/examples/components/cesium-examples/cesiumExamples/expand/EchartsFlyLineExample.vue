@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer._cesiumWidget._creditContainer.style.display = "none"
@@ -56,22 +56,29 @@ function onReady(ctx) {
   viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(116.4551, 40.2539, 10000000) })
   
   class RegisterCoordinateSystem {
+    _GLMap: any
+    _mapOffset: any
+    _bmap: any
+    dimensions: any
+    _api: any
+    static _api: any
       static dimensions = ['lng', 'lat']
-      constructor(glMap) {
+      constructor(glMap: any, api: any) {
           this._GLMap = glMap
+          this._api = api
           this._mapOffset = [0, 0]
           this.dimensions = ['lng', 'lat']
       }
-      setMapOffset(mapOffset) {
+      setMapOffset(mapOffset: any) {
           this._mapOffset = mapOffset
       }
       getBMap() {
           return this._GLMap
       }
-      fixLat(lat) {
+      fixLat(lat: any) {
           return lat >= 90 ? 89.99999999999999 : lat <= -90 ? -89.99999999999999 : lat
       }
-      dataToPoint(coords) {
+      dataToPoint(coords: any) {
           let lonlat = [99999, 99999]
           coords[1] = this.fixLat(coords[1])
           let position = Cesium.Cartesian3.fromDegrees(coords[0], coords[1])
@@ -83,37 +90,37 @@ function onReady(ctx) {
           }
           return [coordinates.x - this._mapOffset[0], coordinates.y - this._mapOffset[1]]
       }
-      pointToData(pt) {
+      pointToData(pt: any) {
           var mapOffset = this._mapOffset
           pt = this._bmap.project([pt[0] + mapOffset[0], pt[1] + mapOffset[1]])
           return [pt.lng, pt.lat]
       }
       getViewRect() {
           let api = this._api
-          return new echarts.graphic.BoundingRect(0, 0, api.getWidth(), api.getHeight())
+          return new ((globalThis as any).echarts).graphic.BoundingRect(0, 0, api.getWidth(), api.getHeight())
       }
       getRoamTransform() {
-          return echarts.matrix.create()
+          return ((globalThis as any).echarts).matrix.create()
       }
-      static create(echartModel, api) {
+      static create(echartModel: any, api: any) {
           this._api = api
-          let registerCoordinateSystem
-          echartModel.eachComponent('GLMap', function (seriesModel) {
+          let registerCoordinateSystem: any
+          echartModel.eachComponent('GLMap', function (seriesModel: any) {
               let painter = api.getZr().painter
               if (painter) {
-                  let glMap = echarts.glMap
+                  let glMap = ((globalThis as any).echarts).glMap
                   registerCoordinateSystem = new RegisterCoordinateSystem(glMap, api)
                   registerCoordinateSystem.setMapOffset(seriesModel.__mapOffset || [0, 0])
                   seriesModel.coordinateSystem = registerCoordinateSystem
               }
           })
-          echartModel.eachSeries(function (series) {
+          echartModel.eachSeries(function (series: any) {
               'GLMap' === series.get('coordinateSystem') && (series.coordinateSystem = registerCoordinateSystem)
           })
       }
   }
   
-  const mockClickChart = (event, chart) => {
+  const mockClickChart = (event: any, chart: any) => {
       const evmousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
       const evmouseup = new MouseEvent('mouseup', { bubbles: true, cancelable: true });
       const evmouseclick = new MouseEvent('click', { bubbles: true, cancelable: true });
@@ -133,8 +140,13 @@ function onReady(ctx) {
   }
   
   class EchartsLayer {
+    _map: any
+    _overlay: any
+    _isRegistered: any
+    _echartsContainer: any
+    _chart: any
   
-      constructor(map, options) {
+      constructor(map: any, options: any) {
           this._map = map;
           this._overlay = this._createChartOverlay();
           if (options) this._registerMap();
@@ -142,27 +154,27 @@ function onReady(ctx) {
       }
       _registerMap() {
           if (!this._isRegistered) {
-              echarts.registerCoordinateSystem('GLMap', RegisterCoordinateSystem);
-              echarts.registerAction({ type: 'GLMapRoam', event: 'GLMapRoam', update: 'updateLayout' }, function (t, e) { });
-              echarts.extendComponentModel({
+              ((globalThis as any).echarts).registerCoordinateSystem('GLMap', RegisterCoordinateSystem);
+              ((globalThis as any).echarts).registerAction({ type: 'GLMapRoam', event: 'GLMapRoam', update: 'updateLayout' }, function (t: any, e: any) { });
+              ((globalThis as any).echarts).extendComponentModel({
                   type: 'GLMap',
                   getBMap() {
                       return this.__GLMap;
                   },
                   defaultOption: { roam: false },
               });
-              echarts.extendComponentView({
+              ((globalThis as any).echarts).extendComponentView({
                   type: 'GLMap',
-                  init(t, e) {
+                  init(t: any, e: any) {
                       this.api = e;
-                      echarts.glMap.postRender.addEventListener(this.moveHandler, this);
+                      ((globalThis as any).echarts).glMap.postRender.addEventListener(this.moveHandler, this);
                   },
-                  moveHandler(t, e) {
+                  moveHandler(t: any, e: any) {
                       this.api.dispatchAction({ type: 'GLMapRoam' });
                   },
-                  render(t, e, i) { },
-                  dispose(t) {
-                      echarts.glMap.postRender.removeEventListener(this.moveHandler, this);
+                  render(t: any, e: any, i: any) { },
+                  dispose(t: any) {
+                      ((globalThis as any).echarts).glMap.postRender.removeEventListener(this.moveHandler, this);
                   },
               });
               this._isRegistered = true;
@@ -182,10 +194,10 @@ function onReady(ctx) {
           ele.setAttribute('class', 'echartMap');
           this._map.container.appendChild(ele);
           this._echartsContainer = ele;
-          echarts.glMap = scene;
-          this._chart = echarts.init(ele);
+          ((globalThis as any).echarts).glMap = scene;
+          this._chart = ((globalThis as any).echarts).init(ele);
           const handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-          handler.setInputAction(click => mockClickChart(event, this._chart), Cesium.ScreenSpaceEventType.LEFT_CLICK);
+          handler.setInputAction((click: any) => mockClickChart(event, this._chart), Cesium.ScreenSpaceEventType.LEFT_CLICK);
           return this._chart;
       }
       dispose() {
@@ -198,7 +210,7 @@ function onReady(ctx) {
               this._overlay = null;
           }
       }
-      updateOverlay(t) {
+      updateOverlay(t: any) {
           if (this._overlay) {
               this._overlay.setOption(t);
           }
@@ -263,7 +275,7 @@ function onReady(ctx) {
   
   })
   
-  echartsLayer._chart.on('click', params => console.log(params))
+  echartsLayer._chart.on('click', (params: any) => console.log(params))
   
   window.addEventListener('resize', () => echartsLayer.resize())
 }

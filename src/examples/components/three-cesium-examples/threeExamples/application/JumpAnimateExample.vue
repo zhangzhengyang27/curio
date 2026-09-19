@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -130,16 +130,16 @@ function onReady(ctx) {
   
   // GUI 控制
   gui = new GUI()
-  gui.add(params, 'baseInfluenceRadius', 1, 50).name('影响半径').onChange(v => uniforms.baseInfluenceRadius.value = v)
-  gui.add(params, 'heightToRadiusRatio', 0, 10).name('高度放大系数').onChange(v => uniforms.heightToRadiusRatio.value = v)
-  gui.add(params, 'falloffPower', 0.1, 10).name('衰减指数').onChange(v => uniforms.falloffPower.value = v)
-  gui.add(params, 'baseHeight', -5, 5).name('基础高度').onChange(v => uniforms.baseHeight.value = v)
-  gui.add(params, 'maxHeight', 1, 30).name('最大高度').onChange(v => uniforms.maxHeight.value = v)
+  gui.add(params, 'baseInfluenceRadius', 1, 50).name('影响半径').onChange((v: any) => uniforms.baseInfluenceRadius.value = v)
+  gui.add(params, 'heightToRadiusRatio', 0, 10).name('高度放大系数').onChange((v: any) => uniforms.heightToRadiusRatio.value = v)
+  gui.add(params, 'falloffPower', 0.1, 10).name('衰减指数').onChange((v: any) => uniforms.falloffPower.value = v)
+  gui.add(params, 'baseHeight', -5, 5).name('基础高度').onChange((v: any) => uniforms.baseHeight.value = v)
+  gui.add(params, 'maxHeight', 1, 30).name('最大高度').onChange((v: any) => uniforms.maxHeight.value = v)
   gui.add(params, 'autoUpdate').name('自动更新')
   gui.add(params, 'interval', 0.3, 5).name('更新间隔(秒)')
-  gui.add(params, 'wireframe').name('线框模式').onChange(v => material.wireframe = v)
-  gui.addColor(params, 'color1').name('低点颜色').onChange(v => uniforms.color1.value.set(v))
-  gui.addColor(params, 'color2').name('高点颜色').onChange(v => uniforms.color2.value.set(v))
+  gui.add(params, 'wireframe').name('线框模式').onChange((v: any) => material.wireframe = v)
+  gui.addColor(params, 'color1').name('低点颜色').onChange((v: any) => uniforms.color1.value.set(v))
+  gui.addColor(params, 'color2').name('高点颜色').onChange((v: any) => uniforms.color2.value.set(v))
   
   // 随机生成目标点
   function randomizeTargets() {
@@ -153,7 +153,7 @@ function onReady(ctx) {
   }
   
   // 定时更新目标
-  let timer = 0
+  let timer: number = 0
   const clock = new THREE.Clock()
   
   ctx.addUpdateCallback(() => {

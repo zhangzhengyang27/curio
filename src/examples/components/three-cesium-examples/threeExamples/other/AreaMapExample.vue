@@ -10,7 +10,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
@@ -27,19 +27,19 @@ const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-fi
 
 const PAEAMS = { DEPTH: 15, coordsMaxCounts: 500 }
 
-let rootGroup = null
-let clickHandler = null
-let texture = null
-let rootGeoJson = null
-let labels = []
-let containerRef = null
+let rootGroup: any = null
+let clickHandler: any = null
+let texture: any = null
+let rootGeoJson: any = null
+let labels: any[] = []
+let containerRef: any = null
 
-async function fetchJson(url) {
+async function fetchJson(url: any) {
   const res = await fetch(url)
   return res.json()
 }
 
-function coordToVector(coord, type = 2, slace = 10000) {
+function coordToVector(coord: any, type = 2, slace = 10000) {
   const [lng, lat] = coord
   const x = (lng * 20037508.34) / 180
   let y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180)
@@ -49,12 +49,12 @@ function coordToVector(coord, type = 2, slace = 10000) {
     : new THREE.Vector3(x / slace, y / slace, 0)
 }
 
-function createShapeWithCoord(coordinates, materials) {
+function createShapeWithCoord(coordinates: any, materials: any) {
   while (coordinates.length > PAEAMS.coordsMaxCounts) {
-    coordinates = coordinates.filter((_, i) => i % 2 === 0)
+    coordinates = coordinates.filter((_: any, i: any) => i % 2 === 0)
   }
 
-  const path = new THREE.Path(coordinates.map((k) => coordToVector(k)))
+  const path = new THREE.Path(coordinates.map((k: any) => coordToVector(k)))
   const parameters = {
     bevelThickness: 0,
     bevelSize: 0,
@@ -82,8 +82,8 @@ function createShapeWithCoord(coordinates, materials) {
   return mesh
 }
 
-function createGeo(geoJson, scene) {
-  const group = new THREE.Group()
+function createGeo(geoJson: any, scene: any) {
+  const group: any = new THREE.Group()
   group.info = geoJson
 
   const materials = [
@@ -91,19 +91,19 @@ function createGeo(geoJson, scene) {
     new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff * Math.random() })
   ]
 
-  geoJson.features.forEach((info) => {
+  geoJson.features.forEach((info: any) => {
     if (info?.properties.center) info.properties.centerCoord3 = coordToVector(info.properties.center, 3)
     if (info?.properties?.centroid) info.properties.centroidCoord3 = coordToVector(info.properties.centroid, 3)
 
-    const areaGroup = new THREE.Group()
+    const areaGroup: any = new THREE.Group()
     areaGroup.info = info
     areaGroup.name = info.properties?.name
     group.add(areaGroup)
 
     if (info.geometry.type === 'MultiPolygon') {
-      info.geometry.coordinates.forEach((j) => j.forEach((z) => areaGroup.add(createShapeWithCoord(z, materials))))
+      info.geometry.coordinates.forEach((j: any) => j.forEach((z: any) => areaGroup.add(createShapeWithCoord(z, materials))))
     } else if (info.geometry.type === 'Polygon') {
-      info.geometry.coordinates.forEach((j) => areaGroup.add(createShapeWithCoord(j, materials)))
+      info.geometry.coordinates.forEach((j: any) => areaGroup.add(createShapeWithCoord(j, materials)))
     }
 
     const div = document.createElement('div')
@@ -130,12 +130,12 @@ function createGeo(geoJson, scene) {
   return group
 }
 
-function getLavelObj(obj) {
+function getLavelObj(obj: any) {
   if (obj.info) return obj
   if (obj.parent) return getLavelObj(obj.parent)
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const container = ctx.container
@@ -164,7 +164,7 @@ function onReady(ctx) {
   const raycaster = new THREE.Raycaster()
   const mouse = new THREE.Vector2()
 
-  clickHandler = async (e) => {
+  clickHandler = async (e: any) => {
     if (!rootGroup) return
     const rect = container.getBoundingClientRect()
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1

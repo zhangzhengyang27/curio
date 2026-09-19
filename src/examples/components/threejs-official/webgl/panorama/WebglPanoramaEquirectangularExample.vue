@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js webgl</a> - equirectangular panorama demo. photo by <a href=\"http://www.flickr.com/photos/jonragnarsson/2294472375/\" target=\"_blank\" rel=\"noopener\">Jón Ragnarsson</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -76,7 +76,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -93,7 +93,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -102,7 +102,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -113,7 +113,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentMouseWheel( event ) {
+  			function onDocumentMouseWheel( event: any ) {
   
   				const fov = camera.fov + event.deltaY * 0.05;
   
@@ -123,7 +123,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( isUserInteracting === false ) {
     					lon += 0.1;
     				}

@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Temporal Anti-Aliasing (TAA) pass by <a href=\"https://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a><br/><br/>\n\t\t\tWhen there is no motion in the scene, the TAA render pass accumulates jittered camera samples<br/>\n\t\t\tacross frames to create a high quality anti-aliased result.<br/><br/>\n\t\t\tTexture interpolation, mipmapping and anisotropic sampling is disabled to emphasize<br/> the effect SSAA levels have one the resulting render quality."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,8 +44,8 @@ function onReady(__stage) {
   
   
   
-  			let composer, taaRenderPass, renderPass;
-  			let gui, stats;
+  			let composer, taaRenderPass: any, renderPass: any;
+  			let gui: any, stats;
   			let index = 0;
   
   			const param = { TAAEnabled: '1', TAASampleLevel: 0 };
@@ -154,7 +154,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     index ++;
     				if ( Math.round( index / 200 ) % 2 === 0 ) {
     					for ( let i = 0; i < scene.children.length; i ++ ) {

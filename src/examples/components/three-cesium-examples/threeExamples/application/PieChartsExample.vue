@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -74,7 +74,7 @@ function onReady(ctx) {
     const color2 = 0xffa500; // 颜色
   
     // 创建图块
-    function createPieBlock(outR, innerR, h, startAngle, angleLength, color, rateText) {
+    function createPieBlock(outR: number, innerR: number, h: number, startAngle: number, angleLength: number, color: number, rateText: string) {
       // 形状
       const shape = new THREE.Shape();
       shape.absarc(0, 0, outR, (Math.PI / 180) * startAngle, (Math.PI / 180) * (startAngle + angleLength));
@@ -121,7 +121,7 @@ function onReady(ctx) {
   
       // 包围盒
       textGeometry.computeBoundingBox();
-      const { max, min } = textGeometry.boundingBox;
+      const { max, min } = textGeometry.boundingBox!;
       // 包围盒中心
       const textCenter = new THREE.Vector3((max.x - min.x) / 2, (max.y - min.y) / 2, (max.z - min.z) / 2);
       textCenter.applyMatrix4(text.matrix.clone());

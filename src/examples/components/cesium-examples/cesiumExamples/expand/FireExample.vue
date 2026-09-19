@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,//是否创建动画小器件，左下角仪表    
     baseLayerPicker: false,//是否显示图层选择器，右上角图层选择按钮
@@ -41,7 +41,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -49,8 +49,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.scene.debugShowFramesPerSecond = true;
@@ -58,7 +58,17 @@ function onReady(ctx) {
   
   //火焰特效
   class FireEffect {
-      constructor(viewer, obj) {
+    viewer: any
+    viewModel: any
+    emitterModelMatrix: any
+    translation: any
+    rotation: any
+    hpr: any
+    trs: any
+    scene: any
+    particleSystem: any
+    entity: any
+      constructor(viewer: any, obj: any) {
           this.viewer = viewer
           this.viewModel = {
               emissionRate: 5,
@@ -137,7 +147,7 @@ function onReady(ctx) {
       //场景渲染事件
       preUpdateEvent() {
           let _this = this;
-          this.viewer.scene.preUpdate.addEventListener(function (scene, time) {
+          this.viewer.scene.preUpdate.addEventListener(function (scene: any, time: any) {
               //发射器地理位置
               _this.particleSystem.modelMatrix = _this.computeModelMatrix(_this.entity, time);
               //发射器局部位置
@@ -151,7 +161,7 @@ function onReady(ctx) {
           });
       }
   
-      computeModelMatrix(entity, time) {
+      computeModelMatrix(entity: any, time: any) {
           return entity.computeModelMatrix(time, new Cesium.Matrix4());
       }
   

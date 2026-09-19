@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -76,7 +76,7 @@ const planeFragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -117,7 +117,7 @@ function onReady(__stage) {
   
   			let depthStep = 0.4;
   
-  			let mesh, stats;
+  			let mesh: any, stats;
   
   			const planeWidth = 50;
   			const planeHeight = 50;
@@ -152,7 +152,7 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'intensity', 0, 1 ).step( 0.01 ).onChange( value => postProcessMaterial.uniforms.uIntensity.value = value );
+  				gui.add( params, 'intensity', 0, 1 ).step( 0.01 ).onChange( (value: any) => postProcessMaterial.uniforms.uIntensity.value = value );
   				gui.open();
   
   				// width 256, height 256, depth 109, 8-bit, zip archived raw data
@@ -161,7 +161,7 @@ function onReady(__stage) {
   					.setResponseType( 'arraybuffer' )
   					.load( ASSET_HOST + 'textures/3d/head256x256x109.zip', function ( data ) {
   
-  						const zip = unzipSync( new Uint8Array( data ) );
+  						const zip = unzipSync( new Uint8Array( (data as any) ) );
   						const array = new Uint8Array( zip[ 'head256x256x109' ].buffer );
   
   						const texture = new THREE.DataArrayTexture( array, DIMENSIONS.width, DIMENSIONS.height, DIMENSIONS.depth );
@@ -193,7 +193,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     let value = mesh.material.uniforms[ 'depth' ].value;
     				value += depthStep;
     				if ( value > 109.0 || value < 0.0 ) {

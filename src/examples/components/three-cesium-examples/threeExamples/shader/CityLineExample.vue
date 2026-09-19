@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,14 +20,22 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class City {
-  
+      fbxLoader: any
+      group: any
+      clock: any
+      surroundLineMaterial: any
+      time: any
+      startTime: any
+      startLength: any
+      isStart: any
+
       constructor() {
           this.fbxLoader = new FBXLoader();
           this.group = new THREE.Group();
@@ -38,14 +46,14 @@ function onReady(ctx) {
           this.startLength = { value: 2 }
           this.isStart = false;
   
-          this.fbxLoader.load(props.example?.globals?.FILE_HOST + 'models/fbx/shanghai.FBX', (group) => {
+          this.fbxLoader.load(props.example?.globals?.FILE_HOST + 'models/fbx/shanghai.FBX', (group: any) => {
   
               this.group.add(group);
-              group.traverse((child) => {
+              group.traverse((child: any) => {
                   // 设置城市建筑（mesh物体），材质基本颜色
                   if (child.name == 'CITY_UNTRIANGULATED') {
                       const materials = Array.isArray(child.material) ? child.material : [child.material]
-                      materials.forEach((material) => {
+                      materials.forEach((material: any) => {
                           material.transparent = true;
                           material.color.setStyle("#9370DB");
                       })
@@ -54,7 +62,7 @@ function onReady(ctx) {
                   // 设置城市地面（mesh物体），材质基本颜色
                   if (child.name == 'LANDMASS') {
                       const materials = Array.isArray(child.material) ? child.material : [child.material]
-                      materials.forEach((material) => {
+                      materials.forEach((material: any) => {
                           material.transparent = true;
                           material.color.setStyle("#040912");
                       })
@@ -74,8 +82,8 @@ function onReady(ctx) {
   
       // 创建包围线条效果
       surroundLine() {
-          let cityBuildings // 城市建筑群
-          this.group.traverse(child => {
+          let cityBuildings: any // 城市建筑群
+          this.group.traverse((child: any) => {
               if (child.name !== 'CITY_UNTRIANGULATED') return
               cityBuildings = child
           })
@@ -129,7 +137,7 @@ function onReady(ctx) {
   scene.add(directionalLight);
   
   // 实例化
-  const city = new City({});
+  const city = new City();
   scene.add(city.group);
   
   // 渲染

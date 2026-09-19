@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - morph targets - horse<br/>\n\t\t\tmodel by <a href=\"https://mirada.com/\" target=\"_blank\" rel=\"noopener\">mirada</a> from <a href=\"http://www.ro.me\" target=\"_blank\" rel=\"noopener\">rome</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,7 +42,7 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let mesh, mixer;
+  			let mesh, mixer: any;
   
   			const radius = 600;
   			let theta = 0;
@@ -103,7 +103,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     theta += 0.1;
     				camera.position.x = radius * Math.sin( THREE.MathUtils.degToRad( theta ) );

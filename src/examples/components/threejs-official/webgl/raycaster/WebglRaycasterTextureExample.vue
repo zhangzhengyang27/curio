@@ -13,13 +13,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let container: any;
 
 const props = defineProps({
   example: {
@@ -29,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> raycaster - texture"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -57,7 +58,7 @@ function onReady(__stage) {
   			};
   
   
-  			function CanvasTexture( parentTexture ) {
+  			function CanvasTexture( this: any, parentTexture: any ) {
   
   				this._canvas = document.createElement( 'canvas' );
   				this._canvas.width = this._canvas.height = 1024;
@@ -109,7 +110,7 @@ function onReady(__stage) {
   
   				_parentTexture: [],
   
-  				addParent: function ( parentTexture ) {
+  				addParent: function ( parentTexture: any ) {
   
   					if ( this._parentTexture.indexOf( parentTexture ) === - 1 ) {
   
@@ -120,7 +121,7 @@ function onReady(__stage) {
   
   				},
   
-  				setCrossPosition: function ( x, y ) {
+  				setCrossPosition: function ( x: any, y: any ) {
   
   					this._xCross = x * this._canvas.width;
   					this._yCross = y * this._canvas.height;
@@ -170,8 +171,8 @@ function onReady(__stage) {
   			const width = (__stage.container?.clientWidth || window.innerWidth);
   			const height = (__stage.container?.clientHeight || window.innerHeight);
   
-  			let canvas;
-  			let planeTexture, cubeTexture, circleTexture;
+  			let canvas: any;
+  			let planeTexture, cubeTexture, circleTexture: any;
   
   
   
@@ -200,7 +201,7 @@ function onReady(__stage) {
   				// A cube, in the middle.
   				cubeTexture = new THREE.Texture( undefined, THREE.UVMapping, THREE.RepeatWrapping, THREE.RepeatWrapping );
   				cubeTexture.colorSpace = THREE.SRGBColorSpace;
-  				canvas = new CanvasTexture( cubeTexture );
+  				canvas = new ( CanvasTexture as any )( cubeTexture );
   				const cubeMaterial = new THREE.MeshBasicMaterial( { map: cubeTexture } );
   				const cubeGeometry = new THREE.BoxGeometry( 20, 20, 20 );
   				let uvs = cubeGeometry.attributes.uv.array;
@@ -285,7 +286,7 @@ function onReady(__stage) {
   
   			
   
-  			function onMouseMove( evt ) {
+  			function onMouseMove( evt: any ) {
   
   				evt.preventDefault();
   
@@ -297,21 +298,22 @@ function onReady(__stage) {
   				if ( intersects.length > 0 && intersects[ 0 ].uv ) {
   
   					const uv = intersects[ 0 ].uv;
-  					intersects[ 0 ].object.material.map.transformUv( uv );
+  					const hit0: any = intersects[ 0 ];
+					hit0.object.material.map.transformUv( uv );
   					canvas.setCrossPosition( uv.x, uv.y );
   
   				}
   
   			}
   
-  			function getMousePosition( dom, x, y ) {
+  			function getMousePosition( dom: any, x: any, y: any ) {
   
   				const rect = dom.getBoundingClientRect();
   				return [ ( x - rect.left ) / rect.width, ( y - rect.top ) / rect.height ];
   
   			}
   
-  			function getIntersects( point, objects ) {
+  			function getIntersects( point: any, objects: any ) {
   
   				mouse.set( ( point.x * 2 ) - 1, - ( point.y * 2 ) + 1 );
   
@@ -321,7 +323,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // update texture parameters
     				circleTexture.offset.x = params.offsetX;
     				circleTexture.offset.y = params.offsetY;
@@ -331,14 +333,14 @@ function onReady(__stage) {
     				//
   })
   
-  			function setwrapS( value ) {
+  			function setwrapS( value: any ) {
   
   				circleTexture.wrapS = value;
   				circleTexture.needsUpdate = true;
   
   			}
   
-  			function setwrapT( value ) {
+  			function setwrapT( value: any ) {
   
   				circleTexture.wrapT = value;
   				circleTexture.needsUpdate = true;

@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
 const { runInit } = useGraphicsCleanup()
 
-function onReady({ canvas }) {
+function onReady({ canvas }: { canvas: HTMLCanvasElement }) {
   runInit(() => init(canvas))
 }
 
-function init(canvas) {
-  const gl = canvas.getContext('webgl')
+function init(canvas: HTMLCanvasElement) {
+  const gl = canvas.getContext('webgl')!
   if (!gl) return
 
   const vertexShaderSource = `
@@ -52,8 +52,8 @@ function init(canvas) {
     }
   `
 
-  function createShader(type, source) {
-    const shader = gl.createShader(type)
+  function createShader(type: number, source: string) {
+    const shader = gl.createShader(type)!
     gl.shaderSource(shader, source)
     gl.compileShader(shader)
     return shader

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
   animation: false,              // 不显示动画控件
   baseLayerPicker: false,        // 不显示图层选择器
@@ -33,7 +33,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -41,8 +41,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 隐藏Cesium默认的Logo信息
@@ -56,25 +56,25 @@ function onReady(ctx) {
    * 全局事件处理器引用，用于管理交互事件
    * @type {Cesium.ScreenSpaceEventHandler}
    */
-  let globalHandler = null;
+  let globalHandler: any = null;
   
   /**
    * 存储线段绘制过程中的点坐标
    * @type {Array<Cesium.Cartesian3>}
    */
-  let drawLinePositions = [];
+  let drawLinePositions: any[] = [];
   
   /**
    * 临时线条实体，用于实时显示绘制过程中的线段
    * @type {Cesium.Entity}
    */
-  let tempLineEntity = null;
+  let tempLineEntity: any = null;
   
   /**
    * 距离标签实体，用于显示线段的角度信息
    * @type {Cesium.Entity}
    */
-  let distanceLabelEntity = null;
+  let distanceLabelEntity: any = null;
   
   // ==================== 交互功能 ====================
   /**
@@ -94,7 +94,7 @@ function onReady(ctx) {
     // 创建屏幕空间事件处理器
     globalHandler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
     // 注册鼠标左键点击事件 - 用于确定线段的端点
-    globalHandler.setInputAction(function (movement) {
+    globalHandler.setInputAction(function (movement: any) {
       // 获取点击位置的笛卡尔坐标
       const cartesian = viewer.scene.pickPosition(movement.position);
   
@@ -144,7 +144,7 @@ function onReady(ctx) {
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   
     // 注册鼠标移动事件，用于实时绘制临时线条和角度信息
-    globalHandler.setInputAction(function (movement) {
+    globalHandler.setInputAction(function (movement: any) {
       // 获取鼠标位置的笛卡尔坐标
       const cartesian = viewer.scene.pickPosition(movement.endPosition);
   
@@ -185,7 +185,7 @@ function onReady(ctx) {
    * @param {Cesium.Cartesian3} point1 - 起始点
    * @param {Cesium.Cartesian3} point2 - 终止点（当前鼠标位置）
    */
-  function updateRealTimeAngle(point1, point2) {
+  function updateRealTimeAngle(point1: any, point2: any) {
     // 以第一个点为原点建立局部坐标系（东方向为x轴,北方向为y轴,垂直于地面为z轴）
     // 得到一个局部坐标到世界坐标转换的变换矩阵
     const localToWorld = Cesium.Transforms.eastNorthUpToFixedFrame(point1);

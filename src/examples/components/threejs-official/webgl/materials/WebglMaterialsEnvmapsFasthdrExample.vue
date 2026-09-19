@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - Example of <a href=\"https://cloud.needle.tools/hdris\" target=\"_blank\">FastHDR</a>, loading 10x faster and using 95% less GPU memory than EXR.<br/>Photography by <a href=\"https://cloud.needle.tools/hdris?img=Ballroom\" target=\"_blank\" rel=\"noopener\">Sergej Majboroda</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -114,7 +114,7 @@ function onReady(__stage) {
   				const loader = new KTX2Loader()
   					.detectSupport( renderer );
   
-  				function loadTexture( url ) {
+  				function loadTexture( url: any ) {
   
   					loader.load( url, ( texture ) => {
   
@@ -173,7 +173,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     renderer.toneMappingExposure = params.exposure;

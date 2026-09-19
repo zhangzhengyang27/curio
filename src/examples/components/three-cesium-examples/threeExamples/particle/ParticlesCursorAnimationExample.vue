@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -133,7 +133,7 @@ function onReady(ctx) {
   const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
-    resolution: null,
+    resolution: null as any,
     pixelRatio: Math.min(window.devicePixelRatio, 2),
   };
   sizes.resolution = new THREE.Vector2(
@@ -148,7 +148,7 @@ function onReady(ctx) {
   /**
    * Diplacement
    */
-  const dispanecment = {};
+  const dispanecment: any = {};
   dispanecment.canvas = document.createElement("canvas");
   //2D Canvas
   dispanecment.canvas = document.createElement("canvas");
@@ -258,7 +258,7 @@ function onReady(ctx) {
   // Base camera
   
   scene.add(camera);
-  scene.add(new THREE.AxesHelper(0, 0, 5));
+  scene.add(new THREE.AxesHelper(0));
   
   /**
    * Renderer
@@ -278,7 +278,7 @@ function onReady(ctx) {
     const intersections =
       dispanecment.raycaster.intersectObject(interacitivePlane);
     if (intersections.length > 0) {
-      const uv = intersections[0].uv;
+      const uv = intersections[0].uv!;
   
       dispanecment.canvasCursor.x = dispanecment.canvas.width * uv.x;
       // 1-uv.y 反转,让鼠标y轴移动方向与绘制方向一致

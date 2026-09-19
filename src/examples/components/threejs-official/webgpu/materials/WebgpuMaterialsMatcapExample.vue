@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Matcap Material</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			let mesh;
+  			let mesh: any;
   
   			const API = {
   				color: 0xffffff, // sRGB
@@ -142,7 +142,7 @@ function onReady(__stage) {
   			// drag and drop anywhere in document
   			//
   
-  			function updateMatcap( texture ) {
+  			function updateMatcap( texture: any ) {
   
   				if ( mesh.material.matcap ) {
   
@@ -158,9 +158,9 @@ function onReady(__stage) {
   
   			}
   
-  			function handleJPG( event ) { // PNG, WebP, AVIF, too
+  			function handleJPG( event: any ) { // PNG, WebP, AVIF, too
   
-  				function imgCallback( event ) {
+  				function imgCallback( event: any ) {
   
   					const texture = new THREE.Texture( event.target );
   
@@ -178,7 +178,7 @@ function onReady(__stage) {
   
   			}
   
-  			function handleEXR( event ) {
+  			function handleEXR( event: any ) {
   
   				const loader = new EXRLoader();
   				const texture = loader.createDataTexture( event.target.result );
@@ -187,7 +187,7 @@ function onReady(__stage) {
   
   			}
   
-  			function loadFile( file ) {
+  			function loadFile( file: any ) {
   
   				const filename = file.name;
   				const extension = filename.split( '.' ).pop().toLowerCase();
@@ -225,7 +225,7 @@ function onReady(__stage) {
   				document.addEventListener( 'dragover', function ( event ) {
   
   					event.preventDefault();
-  					event.dataTransfer.dropEffect = 'copy';
+  					(event as any)!.dataTransfer.dropEffect = 'copy';
   
   				} );
   
@@ -233,7 +233,7 @@ function onReady(__stage) {
   
   					event.preventDefault();
   
-  					loadFile( event.dataTransfer.files[ 0 ] );
+  					loadFile( (event as any)!.dataTransfer.files[ 0 ] );
   
   				} );
   

@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl video demo<br/>\n\t\t\tplaying <a href=\"http://durian.blender.org/\" target=\"_blank\" rel=\"noopener\">sintel</a> trailer"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -56,8 +56,8 @@ function onReady(__stage) {
   
   			let cube_count;
   
-  			const meshes = [],
-  				materials = [],
+  			const meshes: any[] = [],
+  				materials: any[] = [],
   
   				xgrid = 20,
   				ygrid = 10;
@@ -121,10 +121,10 @@ function onReady(__stage) {
   
   						material = materials[ cube_count ];
   
-  						material.hue = i / xgrid;
-  						material.saturation = 1 - j / ygrid;
+  						(material as any).hue = i / xgrid;
+  						(material as any).saturation = 1 - j / ygrid;
   
-  						material.color.setHSL( material.hue, material.saturation, 0.5 );
+  						(material as any).color.setHSL( (material as any).hue, (material as any).saturation, 0.5 );
   
   						mesh = new THREE.Mesh( geometry, material );
   
@@ -136,8 +136,8 @@ function onReady(__stage) {
   
   						scene.add( mesh );
   
-  						mesh.dx = 0.001 * ( 0.5 - Math.random() );
-  						mesh.dy = 0.001 * ( 0.5 - Math.random() );
+  						(mesh as any).dx = 0.001 * ( 0.5 - Math.random() );
+  						(mesh as any).dy = 0.001 * ( 0.5 - Math.random() );
   
   						meshes[ cube_count ] = mesh;
   
@@ -172,7 +172,7 @@ function onReady(__stage) {
   
   			
   
-  			function change_uvs( geometry, unitx, unity, offsetx, offsety ) {
+  			function change_uvs( geometry: any, unitx: any, unity: any, offsetx: any, offsety: any ) {
   
   				const uvs = geometry.attributes.uv.array;
   
@@ -186,7 +186,7 @@ function onReady(__stage) {
   			}
   
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX );
   				mouseY = ( event.clientY - windowHalfY ) * 0.3;
@@ -197,7 +197,7 @@ function onReady(__stage) {
   
   			let h, counter = 1;
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.00005;
     				camera.position.x += ( mouseX - camera.position.x ) * 0.05;
     				camera.position.y += ( - mouseY - camera.position.y ) * 0.05;

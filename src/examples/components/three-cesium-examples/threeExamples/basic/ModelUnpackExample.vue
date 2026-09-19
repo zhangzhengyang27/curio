@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -26,7 +26,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -48,7 +48,7 @@ function onReady(ctx) {
   
   scene.add(new THREE.AxesHelper(1000))
   
-  let group
+  let group: any = null
   
   // 加载模型 gltf/ glb  draco解码器
   const loader = new GLTFLoader()
@@ -71,7 +71,7 @@ function onReady(ctx) {
   
           group.center = center
   
-          group.traverse((child) => {
+          group.traverse((child: any) => {
   
               if (child.isMesh) {
   
@@ -90,11 +90,11 @@ function onReady(ctx) {
   )
   
   // 拆解
-  const mergeHandle = (model) => {
+  const mergeHandle = (model: any) => {
   
       const distance = () => Math.random() > 0.5 ? 1.5 : -1.5
   
-      model.traverse((child) => {
+      model.traverse((child: any) => {
   
           if (child.startPoisition) {
   
@@ -126,7 +126,7 @@ function onReady(ctx) {
   
       '还原动画': () => {
   
-          group.traverse((child) => {
+          group.traverse((child: any) => {
   
               if (child.startPoisition) {
   

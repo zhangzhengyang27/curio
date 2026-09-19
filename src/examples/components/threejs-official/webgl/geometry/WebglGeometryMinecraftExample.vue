@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - <a href=\"http://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\">minecraft</a> demo. featuring <a href=\"http://painterlypack.net/\" target=\"_blank\" rel=\"noopener\">painterly pack</a><br />(left click: forward, right click: backward)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -186,7 +186,7 @@ function onReady(__stage) {
   
   			
   
-  			function generateHeight( width, height ) {
+  			function generateHeight( width: any, height: any ) {
   
   				const data = [], perlin = new ImprovedNoise(),
   					size = width * height, z = Math.random() * 100;
@@ -213,7 +213,7 @@ function onReady(__stage) {
   
   			}
   
-  			function getY( x, z ) {
+  			function getY( x: any, z: any ) {
   
   				return ( data[ x + z * worldWidth ] * 0.15 ) | 0;
   
@@ -221,7 +221,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     controls.update( timer.getDelta() );

@@ -6,20 +6,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {Animator} from '@/examples/jsm-compat/mygrapics/common/lib/animator/index.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const block = mgContainer.value.querySelector('.block');
-        const animator = new Animator({duration: 3000, easing: p => p ** 2});
+    const block = mgContainer.value!.querySelector('.block') as HTMLElement;
+        const animator = new Animator({duration: 3000, easing: (p: any) => p ** 2});
         document.addEventListener('click', () => {
-          animator.animate({el: block, start: 100, end: 400}, ({target: {el, start, end}, timing: {p}}) => {
+          animator.animate({el: block, start: 100, end: 400}, ({target: {el, start, end}, timing: {p}}: any) => {
             const left = start * (1 - p) + end * p;
             el.style.left = `${left}px`;
           });

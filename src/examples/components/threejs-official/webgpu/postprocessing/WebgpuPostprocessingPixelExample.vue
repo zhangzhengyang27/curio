@@ -12,13 +12,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { uniform } from 'three/tsl';
 import { pixelationPass } from 'three/examples/jsm/tsl/display/PixelationPassNode.js';
+
+let effectController: any;
+
 
 const props = defineProps({
   example: {
@@ -28,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t<div class=\"title-wrapper\">\n\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Pixelation</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -70,7 +73,7 @@ function onReady(__stage) {
   
   			const boxMaterial = new THREE.MeshPhongMaterial( { map: texChecker2 } );
   
-  			function addBox( boxSideLength, x, z, rotation ) {
+  			function addBox( boxSideLength: any, x: any, z: any, rotation: any ) {
   
   				const mesh = new THREE.Mesh( new THREE.BoxGeometry( boxSideLength, boxSideLength, boxSideLength ), boxMaterial );
   				mesh.castShadow = true;
@@ -164,7 +167,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     			const t = timer.getElapsed();
     			crystalMesh.material.emissiveIntensity = Math.sin( t * 3 ) * .5 + .5;
@@ -189,7 +192,7 @@ function onReady(__stage) {
   
   		// Helper functions
   
-  		function pixelTexture( texture ) {
+  		function pixelTexture( texture: any ) {
   
   			texture.minFilter = THREE.NearestFilter;
   			texture.magFilter = THREE.NearestFilter;
@@ -201,13 +204,13 @@ function onReady(__stage) {
   
   		}
   
-  		function easeInOutCubic( x ) {
+  		function easeInOutCubic( x: any ) {
   
   			return x ** 2 * 3 - x ** 3 * 2;
   
   		}
   
-  		function linearStep( x, edge0, edge1 ) {
+  		function linearStep( x: any, edge0: any, edge1: any ) {
   
   			const w = edge1 - edge0;
   			const m = 1 / w;
@@ -216,7 +219,7 @@ function onReady(__stage) {
   
   		}
   
-  		function stopGoEased( x, downtime, period ) {
+  		function stopGoEased( x: any, downtime: any, period: any ) {
   
   			const cycle = ( x / period ) | 0;
   			const tween = x - cycle * period;
@@ -225,7 +228,7 @@ function onReady(__stage) {
   
   		}
   
-  		function pixelAlignFrustum( camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight ) {
+  		function pixelAlignFrustum( camera: any, aspectRatio: any, pixelsPerScreenWidth: any, pixelsPerScreenHeight: any ) {
   
   			// 0. Get Pixel Grid Units
   			const worldScreenWidth = ( ( camera.right - camera.left ) / camera.zoom );

@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - GCode loader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,9 +45,9 @@ function onReady(__stage) {
   
   
   
-  			let loader;
+  			let loader: any;
   
-  			let model;
+  			let model: any;
   
   			const params = {
   				asset: 'benchy'
@@ -94,11 +94,11 @@ function onReady(__stage) {
   				gui = new GUI();
   
   			
-  				gui.add( params, 'asset', assets ).onChange( function ( value ) {
+  				gui.add( params, 'asset', assets ).onChange( function ( value: any ) {
   
   					if ( model ) {
   
-  						model.traverse( function ( object ) {
+  						model.traverse( function ( object: any ) {
   
   							if ( object.material ) object.material.dispose();
   							if ( object.geometry ) object.geometry.dispose();
@@ -119,9 +119,9 @@ function onReady(__stage) {
   			
   
   
-  			function loadAsset( asset ) {
+  			function loadAsset( asset: any ) {
   
-  				loader.load( ASSET_HOST + 'models/gcode/' + asset + '.gcode', function ( object ) {
+  				loader.load( ASSET_HOST + 'models/gcode/' + asset + '.gcode', function ( object: any ) {
   
   					model = object;
   					model.position.copy( positions[ assets.indexOf( asset ) ] );

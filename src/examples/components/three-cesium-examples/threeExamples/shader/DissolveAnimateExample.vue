@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import Stats from "three/examples/jsm/libs/stats.module.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,14 +19,14 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  var dissolveMaterials = []
-  var clock, stats
+  var dissolveMaterials: any[] = [];
+  var clock, stats: any
   
   init();
   

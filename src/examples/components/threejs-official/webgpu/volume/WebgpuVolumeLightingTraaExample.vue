@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec2, vec3, Fn, texture3D, screenUV, uniform, screenCoordinate, pass, depthPass, mrt, output, velocity, fract, interleavedGradientNoise } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Lighting using TRAA</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   			// Halton sequence for temporal offset - matches TRAA's 32-sample Halton jitter
   			// This creates optimal low-discrepancy distribution that accumulates well with TRAA
-  			function halton( index, base ) {
+  			function halton( index: any, base: any ) {
   
   				let result = 0;
   				let f = 1;
@@ -70,9 +70,9 @@ function onReady(__stage) {
   			);
   
   			let volumetricMesh, teapot, pointLight, spotLight;
-  			let renderPipeline;
+  			let renderPipeline: any;
   			let temporalOffset, temporalRotation, shaderTime;
-  			let params;
+  			let params: any;
   
   			
   			function createTexture3D() {
@@ -161,11 +161,11 @@ function onReady(__stage) {
   
   				const temporalJitter2D = vec2( temporalOffset, temporalRotation );
   				volumetricMaterial.offsetNode = fract( interleavedGradientNoise( screenCoordinate.add( temporalJitter2D.mul( 100 ) ) ).add( temporalOffset ) );
-  				volumetricMaterial.scatteringNode = Fn( ( { positionRay } ) => {
+  				volumetricMaterial.scatteringNode = Fn( ( { positionRay }: any ) => {
   
   					const timeScaled = vec3( shaderTime, 0, shaderTime.mul( .3 ) );
   
-  					const sampleGrain = ( scale, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
+  					const sampleGrain = ( scale: any, timeScale = 1 ) => texture3D( noiseTexture3D, positionRay.add( timeScaled.mul( timeScale ) ).mul( scale ).mod( 1 ), 0 ).r.add( .5 );
   
   					let density = sampleGrain( .1 );
   					density = density.mul( sampleGrain( .05, 1 ) );
@@ -290,7 +290,7 @@ function onReady(__stage) {
   			let animationTime = 0;
   			let lastTime = performance.now();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const currentTime = performance.now();
     				const delta = ( currentTime - lastTime ) * 0.001;
     				lastTime = currentTime;

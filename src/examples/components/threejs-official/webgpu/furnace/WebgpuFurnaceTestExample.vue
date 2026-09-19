@@ -15,12 +15,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+// gui 需在 onUnmounted 清理中访问,提升到模块作用域(对应原示例顶层 let)
+let gui: any;
 
 const props = defineProps({
   example: {
@@ -30,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>White Furnace Energy Conservation Test</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,7 +45,7 @@ function onReady(__stage) {
   
   
   
-  			let gui;
+  			let radianceMap: any;
   
   			const COLOR = 0xcccccc;
   
@@ -135,9 +138,9 @@ function onReady(__stage) {
   					'tint': false
   				};
   
-  				gui.add( param, 'tint' ).name( 'Tint for Visibility' ).onChange( function ( val ) {
+  				gui.add( param, 'tint' ).name( 'Tint for Visibility' ).onChange( function ( val: any ) {
   
-  					scene.traverse( function ( child ) {
+  					scene.traverse( function ( child: any ) {
   
   						const tint = val ? 0xccccff : 0xffffff;
   
@@ -151,6 +154,9 @@ function onReady(__stage) {
   
   			}
   
+  			// 原版 init():创建 renderer/scene/camera 并 await renderer.init();转换后由 WebGPUExampleScene 统一提供,initGui 已单独调用,无需重复初始化
+  			async function init() {
+  			}
   			Promise.resolve()
   				.then( init )
   				.then( createEnvironment )

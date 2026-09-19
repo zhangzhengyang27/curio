@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -23,13 +23,13 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const initializeScene = ({ root, antialias = true } = {}) => {
+  const initializeScene = ({ root, antialias = true }: any = {}) => {
       // Create scene
   
       // Create camera
@@ -67,14 +67,14 @@ function onReady(ctx) {
       };
   };
   
-  const init = (root) => {
+  const init = (root: any) => {
       const { scene, renderer, camera, gui, stats, controls } = initializeScene({
           root,
       });
   
       const gltfLoader = new GLTFLoader();
       gltfLoader.load(props.example?.globals?.FILE_HOST + 'examples/coffeeMug/coffeeMug.glb', (gltf) => {
-          gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
+          (((gltf.scene.getObjectByName('baked') as THREE.Mesh).material as THREE.MeshStandardMaterial).map as THREE.Texture).anisotropy = 8;
           controls.target.y += 3;
           scene.add(gltf.scene);
       });

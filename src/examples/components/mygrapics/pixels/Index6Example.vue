@@ -4,19 +4,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {loadImage, getImageData, traverse, getPixelXY} from '@/examples/jsm-compat/mygrapics/pixels/lib/util.js'
 import {transformColor, brightness, saturate} from '@/examples/jsm-compat/mygrapics/pixels/lib/color-matrix.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('#paper');
-        const context = canvas.getContext('2d');
+    const canvas = mgContainer.value!.querySelector('#paper') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
     
         (async function () {
           const img = await loadImage('assets/girl1.jpg');
@@ -25,7 +25,7 @@ async function initMyGrapicsExample() {
           const imageData = getImageData(img);
           const texture = getImageData(textureImage);
     
-          traverse(imageData, ({r, g, b, a, x, y}) => {
+          traverse(imageData, ({r, g, b, a, x, y}: any) => {
             const texColor = getPixelXY(texture, x, y);
             const e = 0.212 * texColor[0] + 0.714 * texColor[1] + 0.074 * texColor[2];
     

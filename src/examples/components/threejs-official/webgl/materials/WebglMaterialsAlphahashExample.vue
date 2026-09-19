@@ -9,10 +9,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,9 +43,9 @@ function onReady(__stage) {
   
   
   
-  			let stats, mesh, material;
+  			let stats, mesh, material: any;
   
-  			let composer, renderPass, taaRenderPass, outputPass;
+  			let composer: any, renderPass, taaRenderPass: any, outputPass;
   
   			let needsUpdate = false;
   
@@ -188,7 +188,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( needsUpdate ) {
     					taaRenderPass.accumulate = false;

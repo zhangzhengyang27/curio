@@ -139,7 +139,7 @@ const registry = {
   examples,
 }
 
-const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', 'threejsLesson.js')
+const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', 'threejsLesson.ts')
 
 // 保留人工/流水线产出的字段（title/description/tags/thumbnail/runner），
 // 否则重跑会把封面、精修文案与 runner:'vue' 全部重置（实测丢 29 张封面 + 全部精修文案）。

@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform, refract, div, positionViewDirection, positionLocal, normalView, texture, Fn, vec2, vec3, vec4 } from 'three/tsl';
@@ -23,6 +23,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+let gltf: any;
 
 const props = defineProps({
   example: {
@@ -32,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Caustics</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -122,7 +123,7 @@ async function onReady(__stage) {
   						texture( causticMap, textureUV.add( vec2( chromaticAberrationOffset, chromaticAberrationOffset ) ) ).b
   					);
   
-  					return causticProjection.mul( viewZ.mul( 25 ) ).add( viewZ ).mul( causticColor );
+  					return causticProjection.mul( viewZ.mul( 25 ) ).add( viewZ ).mul( causticColor as any );
   
   				} )();
   
@@ -182,13 +183,13 @@ async function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( causticOcclusion, 'value', 0, 20 ).name( 'caustic occlusion' );
   				const duckColorDebug = { color: duck.material.color.getHex() };
-  				gui.addColor( duckColorDebug, 'color' ).name( 'material color' ).onChange( ( val ) => {
+  				gui.addColor( duckColorDebug, 'color' ).name( 'material color' ).onChange( ( val: any ) => {
   					duck.material.color.set( val );
   				} );
   				gui.add( { model: 'duck' }, 'model', [
   					'duck',
   					'glass'
-  				] ).onChange( model => {
+  				] ).onChange( (model: any) => {
   
   					duck.visible = glass.visible = false;
   
@@ -218,7 +219,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     for ( const mesh of gltf.children ) {
     					mesh.rotation.y -= .01;
     				}

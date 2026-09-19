@@ -12,7 +12,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
@@ -40,18 +40,18 @@ const bloomParams = {
   bloomRadius: 0.5
 }
 
-let statsRef = null
-let cameraRef = null
-let rendererRef = null
-let controlsRef = null
-let postprocessingRef = null
-let effectComposerRef = null
-let lightGroupRef = null
-let lightTextureRef = null
+let statsRef: any = null
+let cameraRef: any = null
+let rendererRef: any = null
+let controlsRef: any = null
+let postprocessingRef: any = null
+let effectComposerRef: any = null
+let lightGroupRef: any = null
+let lightTextureRef: any = null
 let numLightsRef = 1000
-let dataRef = null
-let widthRef = null
-let heightRef = null
+let dataRef: any = null
+let widthRef: any = null
+let heightRef: any = null
 
 const vsGBuffer = /* glsl */ `
   out vec3 vNormal;
@@ -133,8 +133,8 @@ const fsLight = /* glsl */ `
   }
 `
 
-function initPostprocessing(renderTargetWidth, renderTargetHeight, numLights) {
-  const postprocessing = {}
+function initPostprocessing(renderTargetWidth: any, renderTargetHeight: any, numLights: any) {
+  const postprocessing: any = {}
   postprocessing.scene = new THREE.Scene()
   postprocessing.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
   postprocessing.scene.add(postprocessing.camera)
@@ -183,7 +183,7 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight, numLights) {
   return postprocessing
 }
 
-function addLight(lightGroup, numLights, data, width) {
+function addLight(lightGroup: any, numLights: any, data: any, width: any) {
   for (let i = 0; i < numLights; i++) {
     const randomColor = Math.floor(Math.random() * 16777215)
     const light = new THREE.PointLight(randomColor, 50)
@@ -205,9 +205,9 @@ function addLight(lightGroup, numLights, data, width) {
   }
 }
 
-function updateLights(lightGroup, data, width) {
+function updateLights(lightGroup: any, data: any, width: any) {
   const time = Date.now() * 0.001
-  lightGroup.children.forEach((light, i) => {
+  lightGroup.children.forEach((light: any, i: any) => {
     if (light instanceof THREE.PointLight) {
       const { initialPosition, movement } = light.userData
       light.position.x = initialPosition.x + Math.sin(time * movement.xFrequency) * movement.xSpeed * 50
@@ -227,13 +227,13 @@ function updateLights(lightGroup, data, width) {
   })
 }
 
-function updateBloom(bloomPass) {
+function updateBloom(bloomPass: any) {
   bloomPass.strength = bloomParams.bloomStrength
   bloomPass.radius = bloomParams.bloomRadius
   bloomPass.threshold = bloomParams.bloomThreshold
 }
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -333,7 +333,7 @@ function onReady(stageCtx) {
   })
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (!cameraRef || !rendererRef || !postprocessingRef || !effectComposerRef) return
   cameraRef.aspect = width / height || 1
   cameraRef.updateProjectionMatrix()

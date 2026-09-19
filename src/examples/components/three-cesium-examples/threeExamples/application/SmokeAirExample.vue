@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,24 +19,23 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  var delta;
-  var time;
+  var delta: any = 0;
+  var time: any = 0;
   
-  var vs = [];
-  var fs = [];
-  var mesh = [];
-  var tex = [];
-  var mat = [];
-  
+  var vs: any = [];
+  var fs: any = [];
+  var mesh: any = [];
+  var tex: any = [];
+  var mat: any = [];
   var texture_loader = new THREE.TextureLoader();
   
-  const DOM = document.querySelector("#box");
+  const DOM = document.querySelector("#box") as HTMLElement;
   const width = DOM.clientWidth;
   const height = DOM.clientHeight;
   
@@ -135,12 +134,10 @@ function onReady(ctx) {
   
   `;
   
-  var particles = [];
-  
+  var particles: any[] = [];
   // ____________________ GRASS ____________________
   
-  var particles_grass_a = [];
-  
+  var particles_grass_a: any[] = [];
   particles_grass_a.push({
       offset: [10, 2, 0],
       scale: [4, 4],
@@ -170,10 +167,8 @@ function onReady(ctx) {
   var wind_y = 0;
   var wind_z = 0;
   
-  var particles_smoke_a = [];
-  
-  var particles_emmiter = [];
-  
+  var particles_smoke_a: any[] = [];
+  var particles_emmiter: any[] = [];
   particles_emmiter.push({
       position: { x: -2, y: 0, z: -4 },
       radius_1: 0.02,
@@ -311,7 +306,7 @@ function onReady(ctx) {
   
   // ____________________ PARTICLES EMMITER EMMIT ____________________
   
-  function particles_emmiter_emmit(item) {
+  function particles_emmiter_emmit(item: any) {
       var radius_1 = item.radius_1 * Math.sqrt(Math.random());
       var theta = 2 * Math.PI * Math.random();
       var x_1 = item.position.x + radius_1 * Math.cos(theta);

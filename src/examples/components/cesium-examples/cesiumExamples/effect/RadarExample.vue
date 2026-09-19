@@ -6,12 +6,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
-let Cesium = null
-let viewer = null
-let radar = null
+let Cesium: any = null
+let viewer: any = null
+let radar: any = null
 
 const viewerOptions = {
   animation: false,
@@ -28,7 +28,18 @@ const viewerOptions = {
 }
 
 class RadarSolidScan {
-  constructor(options) {
+  viewer: any
+  Cesium: any
+  id: any
+  position: any
+  longitude: any
+  latitude: any
+  shortwaveRange: any
+  positionArr: any
+  heading: any
+  tickListener: any
+  entity: any
+  constructor(options: any) {
     this.viewer = options.viewer
     this.Cesium = options.Cesium
     this.id = options.id || 'radar'
@@ -76,7 +87,7 @@ class RadarSolidScan {
     })
   }
 
-  calcPoints(x1, y1, radius, heading) {
+  calcPoints(x1: any, y1: any, radius: any, heading: any) {
     const Cesium = this.Cesium
     const m = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(x1, y1))
     const rad = Cesium.Math.toRadians(heading)
@@ -90,9 +101,9 @@ class RadarSolidScan {
     return this.computeCirclularFlight(x1, y1, x2, y2, 0, 90)
   }
 
-  computeCirclularFlight(x1, y1, x2, y2, fx, angle) {
+  computeCirclularFlight(x1: any, y1: any, x2: any, y2: any, fx: any, angle: any) {
     const Cesium = this.Cesium
-    const positionArr = []
+    const positionArr: any[] = []
     positionArr.push(x1, y1, 0)
     const radius = Cesium.Cartesian3.distance(
       Cesium.Cartesian3.fromDegrees(x1, y1),
@@ -131,7 +142,7 @@ class RadarSolidScan {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 

@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -27,21 +27,18 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  let material, particles, lineMaterial, lines, mouse, composer, pixelPass, glitchPass, dotScreenPass, gui;
+  let material: any, particles: any, lineMaterial: any, lines: any, mouse: any, composer: any, pixelPass: any, glitchPass: any, dotScreenPass: any, gui: any;
 
   const params = {
     particleCount: 1000,
     lineDistance: 1000,
     repulsionStrength: 5,
-    bloomStrength: 1.5,
-    bloomThreshold: 0,
-    bloomRadius: 0,
     pixelSize: 1.0,
     bloomStrength: 1,
     bloomRadius: 0.4,
@@ -137,19 +134,19 @@ function onReady(ctx) {
     gui.add(params, 'bloomRadius', 0, 1).name('Bloom Radius').onChange(updateBloom);
     gui.add(params, 'bloomThreshold', 0, 1).name('Bloom Threshold').onChange(updateBloom);
     
-    gui.add(params, 'pixelSize', 1.0, 30.0).name('Pixel Size').onChange((value) => {
+    gui.add(params, 'pixelSize', 1.0, 30.0).name('Pixel Size').onChange((value: any) => {
       pixelPass.uniforms.pixelSize.value = value;
     });
-    gui.add(params, 'activateDotScreen').name('Activate Dot Screen').onChange((value) => {
+    gui.add(params, 'activateDotScreen').name('Activate Dot Screen').onChange((value: any) => {
       dotScreenPass.enabled = value; 
     });
   
-    gui.add(params, 'dotScale', 0.1, 1.5).name('Dot Scale').onChange((value) => {
+    gui.add(params, 'dotScale', 0.1, 1.5).name('Dot Scale').onChange((value: any) => {
       if (dotScreenPass) {
         dotScreenPass.uniforms['scale'].value = value;
       }
     });
-    gui.add(params, 'activateGlitch').name('Activate Glitch').onChange((value) => {
+    gui.add(params, 'activateGlitch').name('Activate Glitch').onChange((value: any) => {
       glitchPass.enabled = value;
     });
   }
@@ -171,14 +168,14 @@ function onReady(ctx) {
     pixelPass.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
   }
   
-  function onMouseMove(event) {
+  function onMouseMove(event: MouseEvent) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
   
   ctx.addUpdateCallback(() => {
     const positions = particles.geometry.attributes.position.array;
-      const linePositions = [];
+      const linePositions: any[] = [];
       for (let i = 0; i < positions.length; i += 3) {
         const dx = positions[i] - mouse.x * 500;
         const dy = positions[i + 1] - mouse.y * 500;

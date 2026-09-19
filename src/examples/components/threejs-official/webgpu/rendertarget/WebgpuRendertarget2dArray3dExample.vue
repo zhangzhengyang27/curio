@@ -17,7 +17,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec2, uniform, screenUV, color, texture, diffuseColor, attribute, vec3, vec4 } from 'three/tsl';
@@ -32,10 +32,10 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>RenderTarget Array/3D</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -43,11 +43,18 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let views = [];
+  			let views: any = [];
   
   			class View {
+	left: any;
+	top: any;
+	width: any;
+	height: any;
+	camera: any;
+	scene: any;
+
   
-  				constructor( left, top, width, height ) {
+  				constructor( left: any, top: any, width: any, height: any ) {
   
   					this.left = left;
   					this.top = top;
@@ -82,7 +89,7 @@ function onReady(__stage) {
   				}
   
   				// Method to handle viewport resize
-  				updateSize( left, top, width, height ) {
+  				updateSize( left: any, top: any, width: any, height: any ) {
   
   					this.left = left;
   					this.top = top;
@@ -114,7 +121,7 @@ function onReady(__stage) {
   				];
   
   				// Add OrbitControls after views and renderer are created
-  				views.forEach( view => {
+  				views.forEach( (view: any) => {
   
   					view.controls = new OrbitControls( view.camera, renderer.domElement );
   					view.controls.minDistance = 1;
@@ -137,7 +144,7 @@ function onReady(__stage) {
   					.setResponseType( 'arraybuffer' )
   					.load( ASSET_HOST + 'textures/3d/head256x256x109.zip', function ( data ) {
   
-  						const zip = unzipSync( new Uint8Array( data ) );
+  						const zip = unzipSync( new Uint8Array( (data as any) ) );
   						const array = new Uint8Array( zip[ 'head256x256x109' ].buffer );
   
   						const map3D = new THREE.Data3DTexture( array, size.width, size.height, size.depth );
@@ -154,7 +161,7 @@ function onReady(__stage) {
   						// 3D
   						const helper3D = new TextureHelper( map3D, 10, 10, depth );
   						helper3D.material.outputNode = vec4(
-  							vec3( diffuseColor.r.mul( attribute( 'uvw' ).z.mul( diffuseColor.r ) ) ),
+  							vec3( diffuseColor.r.mul( (attribute as any)( 'uvw' ).z.mul( diffuseColor.r ) ) ),
   							diffuseColor.r.mul( diffuseColor.a )
   						);
   						views[ 1 ].scene.add( helper3D );
@@ -187,7 +194,7 @@ function onReady(__stage) {
   
   						const helperArray = new TextureHelper( mapArray, 10, 10, depth );
   						helperArray.material.outputNode = vec4(
-  							vec3( diffuseColor.r.mul( attribute( 'uvw' ).z.div( size.depth ).mul( diffuseColor.r ) ) ),
+  							vec3( diffuseColor.r.mul( (attribute as any)( 'uvw' ).z.div( size.depth ).mul( diffuseColor.r ) ) ),
   							diffuseColor.r.mul( diffuseColor.a )
   						);
   						views[ 0 ].scene.add( helperArray );
@@ -276,8 +283,8 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
-    views.forEach( view => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
+    views.forEach( (view: any) => {
     					view.controls.update();
     					const left = Math.floor( view.left * (__stage.container?.clientWidth || window.innerWidth) );
     					const bottom = Math.floor( ( 1 - view.top - view.height ) * (__stage.container?.clientHeight || window.innerHeight) );

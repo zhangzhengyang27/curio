@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Progressive Lightmaps</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,8 +48,8 @@ function onReady(__stage) {
   
   			// ShadowMap + LightMap Res and Number of Directional Lights
   			const shadowMapRes = 1024, lightMapRes = 1024, lightCount = 4;
-  			let control, control2, object = new THREE.Mesh(), lightOrigin = null, progressiveSurfacemap;
-  			const dirLights = [], lightmapObjects = [];
+  			let control, control2, object = new THREE.Mesh(), lightOrigin = null, progressiveSurfacemap: any;
+  			const dirLights: any = [], lightmapObjects: any = [];
   			const params = { 'Enable': true, 'Blur Edges': true, 'Blend Window': 200,
   							 'Light Radius': 50, 'Ambient Weight': 0.5, 'Debug Lightmap': false };
   			
@@ -175,7 +175,7 @@ function onReady(__stage) {
   				const loader = new GLTFLoader( manager );
   				loader.load( ASSET_HOST + 'models/gltf/ShadowmappableMesh.glb', function ( obj ) {
   
-  					object = obj.scene.children[ 0 ];
+  					object = obj.scene.children[ 0 ] as any;
   
   				} );
   
@@ -202,13 +202,13 @@ function onReady(__stage) {
   				gui.add( params, 'Blend Window', 1, 500, 1 );
   				gui.add( params, 'Light Radius', 0, 200, 10 );
   				gui.add( params, 'Ambient Weight', 0, 1, 0.1 );
-  				gui.add( params, 'Debug Lightmap' ).onChange( ( value ) => progressiveSurfacemap.showDebugLightmap( value ) );
+  				gui.add( params, 'Debug Lightmap' ).onChange( ( value: any ) => progressiveSurfacemap.showDebugLightmap( value ) );
   
   			}
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // Update the inertia on the orbit controls
     				// Accumulate Surface Maps
     				if ( params[ 'Enable' ] ) {

@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { reflector, uv, texture, color } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Mirror</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -107,8 +107,8 @@ function onReady(__stage) {
   				const groundUVOffset = texture( decalNormal ).xy.mul( 2 ).sub( 1 ).mul( groundNormalScale );
   				const verticalUVOffset = texture( floorNormal, uv().mul( 5 ) ).xy.mul( 2 ).sub( 1 ).mul( verticalNormalScale );
   
-  				groundReflector.uvNode = groundReflector.uvNode.add( groundUVOffset );
-  				verticalReflector.uvNode = verticalReflector.uvNode.add( verticalUVOffset );
+  				groundReflector.uvNode = groundReflector.uvNode!.add( groundUVOffset );
+  				verticalReflector.uvNode = verticalReflector.uvNode!.add( verticalUVOffset );
   
   				const groundNode = texture( decalDiffuse ).a.mix( color( 0xffffff ), groundReflector );
   				const verticalNode = color( 0x0000ff ).mul( .1 ).add( verticalReflector );
@@ -200,7 +200,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = Date.now() * 0.01;
     				sphereGroup.rotation.y -= 0.002;
     				smallSphere.position.set(

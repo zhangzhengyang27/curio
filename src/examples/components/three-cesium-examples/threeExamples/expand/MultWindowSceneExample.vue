@@ -9,11 +9,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -26,7 +26,7 @@ function onReady(ctx) {
   const height = container.clientHeight
 
   // 在容器范围内生成若干彩色半透明立方体
-  const cubes = []
+  const cubes: any[] = []
   const count = 5
   for (let i = 0; i < count; i++) {
     const color = new THREE.Color().setHSL(i * 0.15, 1.0, 0.5)
@@ -41,7 +41,7 @@ function onReady(ctx) {
     cubes.push(cube)
   }
 
-  ctx.addUpdateCallback((delta, elapsed) => {
+  ctx.addUpdateCallback((delta: number, elapsed: number) => {
     cubes.forEach((cube, i) => {
       cube.rotation.x = elapsed * 0.5 + i
       cube.rotation.y = elapsed * 0.3 + i

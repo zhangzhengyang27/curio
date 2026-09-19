@@ -3,7 +3,7 @@
  * three.js 本地兼容层守卫。
  *
  * 背景：项目把 three.js 官方示例仓库（three.js-dev，r186dev 预发布）的 build 文件
- * 手工拷贝到 src/examples/three-build-compat/，并在 vite.config.js 中通过
+ * 手工拷贝到 src/examples/three-build-compat/，并在 vite.config.ts 中通过
  * threeCompatResolver 把 `three` / `three/webgpu` / `three/tsl` 重定向过去，
  * 目的是用上 npm 稳定版尚未发布的 WebGPU/TSL API（如 MeshBasicNodeMaterial）。
  *
@@ -13,7 +13,7 @@
  *
  * 本脚本做两件事：
  *   1. 校验兼容层文件与 compat-manifest.json 中记录的哈希一致（防止静默漂移）
- *   2. 校验 vite.config.js 仍然注册了 threeCompatResolver（防止兼容层变成死文件）
+ *   2. 校验 vite.config.ts 仍然注册了 threeCompatResolver（防止兼容层变成死文件）
  *
  * 用法：
  *   node scripts/verify-three-compat.mjs            # 校验（CI 使用）
@@ -29,7 +29,7 @@ import { fileURLToPath } from 'node:url'
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..')
 const COMPAT_DIR = join(ROOT, 'src/examples/three-build-compat')
 const MANIFEST = join(COMPAT_DIR, 'compat-manifest.json')
-const VITE_CONFIG = join(ROOT, 'vite.config.js')
+const VITE_CONFIG = join(ROOT, 'vite.config.ts')
 
 const EXPECTED_FILES = [
   'three.core.js',
@@ -115,9 +115,9 @@ for (const name of EXPECTED_FILES) {
   }
 }
 
-// ---- 校验项 4：vite.config.js 仍注册了解析器 ----
+// ---- 校验项 4：vite.config.ts 仍注册了解析器 ----
 if (!readFileSync(VITE_CONFIG, 'utf8').includes('three-compat-resolver')) {
-  errors.push('vite.config.js 中未找到 three-compat-resolver 插件，兼容层已成为死文件')
+  errors.push('vite.config.ts 中未找到 three-compat-resolver 插件，兼容层已成为死文件')
 }
 
 console.log(`[verify-three-compat] 兼容层上游版本：${actual.revision}（npm 稳定版为 package.json 中的 three 依赖）`)

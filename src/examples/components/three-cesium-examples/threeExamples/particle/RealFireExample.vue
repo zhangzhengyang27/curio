@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -208,7 +208,7 @@ function onReady(ctx) {
       fireMaterial.uniforms.time.value = elapsedTime;
       // 使火焰光源强度随时间微微变化，模拟火焰闪烁
       const fireLight = fireGroup.children[1];
-      fireLight.intensity = 1 + Math.sin(elapsedTime * 5) * 0.2;
+      ;(fireLight as any).intensity = 1 + Math.sin(elapsedTime * 5) * 0.2;
   })
   
   // 启动动画

@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
 Color,
 CylinderGeometry,
@@ -32,7 +32,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -87,7 +87,7 @@ function onReady(ctx) {
     }
   
     /**点光源*/
-    #createLight(mesh) {
+    #createLight(mesh: any) {
       const pointLight = new PointLight(0xffffff, 1, 100)
       pointLight.power = 1000
       mesh.add(pointLight)

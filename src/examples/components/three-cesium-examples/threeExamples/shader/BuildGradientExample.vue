@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -158,7 +158,8 @@ function onReady(ctx) {
   colorFolder.addColor(shaderMaterial.uniforms.uSweepColor, 'value').name('扫描颜色')
   
   const effectsFolder = gui.addFolder('效果设置')
-  effectsFolder.add(shaderMaterial.uniforms.uTime, 'value', 0.001, 0.05).name('动画速度').onChange(value => {
+  let animate: any // 遗留自 vanilla 版的 animate 循环，本移植版主循环已由上方 addUpdateCallback 承担
+  effectsFolder.add(shaderMaterial.uniforms.uTime, 'value', 0.001, 0.05).name('动画速度').onChange((value: any) => {
       animate = function() {
           requestAnimationFrame(animate)
           shaderMaterial.uniforms.uTime.value += value;

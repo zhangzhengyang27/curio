@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - SpotLights<br/>\n\t\t\tby <a href=\"http://master-domain.com\" target=\"_blank\" rel=\"noopener\">Master James</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -99,7 +99,7 @@ function onReady(__stage) {
   			
   
   
-  			function createSpotlight( color ) {
+  			function createSpotlight( color: any ) {
   
   				const newObj = new THREE.SpotLight( color, 10 );
   
@@ -115,7 +115,7 @@ function onReady(__stage) {
   
   			
   
-  			function tween( light ) {
+  			function tween( light: any ) {
   
   				new TWEEN.Tween( light ).to( {
   					angle: ( Math.random() * 0.7 ) + 0.1,
@@ -142,7 +142,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     TWEEN.update();
     				if ( lightHelper1 ) lightHelper1.update();
     				if ( lightHelper2 ) lightHelper2.update();

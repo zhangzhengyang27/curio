@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(116.46, 39.92, 8000000) }) // 设置相机位置
@@ -79,7 +79,7 @@ async function onReady(ctx) {
   }
   
   // 创建canvas文字方法
-  function createCanvasText(params) {
+  function createCanvasText(params: any) {
   
       const defaultParams = { dpr: 1, maxWidth: 100, fontSize: 20, color: 'white', fontFamily: 'serif', align: 'center', border: false, ...params } // 默认参数
   
@@ -95,7 +95,7 @@ async function onReady(ctx) {
       canvas.height = fontSize * devicePixelRatio
   
       // 获取 2d 上下文
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d')!
   
       ctx.imageSmoothingQuality = 'high'
   
@@ -124,7 +124,7 @@ async function onReady(ctx) {
       }
   
       // 创建文字
-      const createText = ({ text, color, fontSize, fontFamily }) => {
+      const createText = ({ text, color, fontSize, fontFamily }: any) => {
   
           // 参数设定
           ctx.fillStyle = color || defaultParams.color
@@ -132,9 +132,9 @@ async function onReady(ctx) {
           ctx.font = fontSize || defaultParams.fontSize + 'px ' + fontFamily || defaultParams.fontFamily
   
           // 文本长度计算
-          let textMaxNum = 0
+          let textMaxNum: number = 0
   
-          let totalWidth = 0
+          let totalWidth: number = 0
   
           for (let i = 0; i < text.length; i++) {
   
@@ -157,7 +157,7 @@ async function onReady(ctx) {
   
           const textFillHeight = (canvas.height / devicePixelRatio - actualHeight) / 2 + metrics.actualBoundingBoxAscent
   
-          let textLeftOffset = 0
+          let textLeftOffset: number = 0
   
           if (align === 'center') textLeftOffset = (canvas.width / devicePixelRatio - metrics.width) / 2
   
@@ -165,7 +165,7 @@ async function onReady(ctx) {
   
       }
   
-      return (parameters) => {
+      return (parameters: any) => {
   
           ctx.clearRect(0, 0, canvas.width, canvas.height)  // 清空  canvas 文字 
   

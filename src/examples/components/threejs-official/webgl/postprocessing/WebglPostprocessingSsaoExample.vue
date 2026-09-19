@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - screen space ambient occlusion<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,8 +48,8 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let composer;
-  			let group;
+  			let composer: any;
+  			let group: any;
   
   			
   
@@ -121,7 +121,7 @@ function onReady(__stage) {
   					'SSAO Only + Blur': SSAOPass.OUTPUT.Blur,
   					'Depth': SSAOPass.OUTPUT.Depth,
   					'Normal': SSAOPass.OUTPUT.Normal
-  				} ).onChange( function ( value ) {
+  				} ).onChange( function ( value: any ) {
   
   					ssaoPass.output = value;
   
@@ -138,7 +138,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     const timer = performance.now();

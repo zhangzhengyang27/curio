@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mx_fractal_noise_vec3, positionWorld, Fn, color } from 'three/tsl';
@@ -23,6 +23,10 @@ import { TileShadowNode } from 'three/examples/jsm/tsl/shadows/TileShadowNode.js
 import { TileShadowNodeHelper } from 'three/examples/jsm/tsl/shadows/TileShadowNodeHelper.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let dirLight: any;
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Shadow Map Array</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,8 +50,8 @@ function onReady(__stage) {
   
   
   
-  			let torusKnot, dirGroup;
-  			let tsmHelper;
+  			let torusKnot: any, dirGroup;
+  			let tsmHelper: any;
   
   			
   
@@ -384,7 +388,7 @@ function onReady(__stage) {
   
   			}
   
-  			async function animate( time ) {
+  			async function animate( time: any ) {
   
   				timer.update();
   

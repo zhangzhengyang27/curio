@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -26,16 +26,16 @@
   }
 
   // 场景对象引用
-  let torusKnot = null
-  let sphere = null
-  let box = null
-  let planeMesh = null
-  let ambientLight = null
-  let directionalLight = null
-  let directionalLightHelper = null
+  let torusKnot: any = null
+  let sphere: any = null
+  let box: any = null
+  let planeMesh: any = null
+  let ambientLight: any = null
+  let directionalLight: any = null
+  let directionalLightHelper: any = null
   let cameraHelper = null
-  let csm = null
-  let gui = null
+  let csm: any = null
+  let gui: any = null
 
   // 使用封装的场景
   const { scene, camera, renderer, controls: _controls, startAnimation } = useThreeScene(containerRef, {
@@ -64,14 +64,14 @@
         // 设置球形贴图
         envMap.mapping = THREE.EquirectangularReflectionMapping
         // 设置环境背景
-        scene.value.background = envMap
+        scene.value!.background = envMap
         console.log("HDR 环境贴图加载完成")
       },
       undefined,
       (error) => {
         console.error("HDR 加载失败:", error)
         // 如果 HDR 加载失败，设置一个默认背景色
-        scene.value.background = new THREE.Color(0x1a1a2e)
+        scene.value!.background = new THREE.Color(0x1a1a2e)
       }
     )
   }
@@ -220,7 +220,7 @@
       csmFolder
         .add(csm, "fade")
         .name("启用淡入淡出")
-        .onChange((value) => {
+        .onChange((value: any) => {
           csm.fade = value
           csm.updateFrustums()
         })
@@ -231,7 +231,7 @@
       paramsFolder
         .add(params, "far", 100, 5000)
         .name("最大距离")
-        .onChange((value) => {
+        .onChange((value: any) => {
           csm.maxFar = value
           csm.updateFrustums()
         })
@@ -317,7 +317,7 @@
       if (mesh) {
         mesh.geometry?.dispose()
         if (Array.isArray(mesh.material)) {
-          mesh.material.forEach((mat) => mat.dispose())
+          mesh.material.forEach((mat: any) => mat.dispose())
         } else {
           mesh.material?.dispose()
         }

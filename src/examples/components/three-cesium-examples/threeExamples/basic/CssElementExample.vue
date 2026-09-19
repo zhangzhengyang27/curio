@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
@@ -24,10 +24,10 @@ const props = defineProps({
 
 const HOST = props.example?.globals?.HOST || '/external-examples/three-cesium-examples/'
 
-let css2dObjects = []
-let css3dObjects = []
+let css2dObjects: any[] = []
+let css3dObjects: any[] = []
 
-function createDom(text) {
+function createDom(text: string) {
   const div = document.createElement('div')
   div.style.display = 'flex'
   div.style.flexDirection = 'column'
@@ -49,7 +49,7 @@ function createDom(text) {
   return div
 }
 
-function setCss2dDOM(dom, position, scene) {
+function setCss2dDOM(dom: HTMLElement, position: { x: number, y: number, z: number }, scene: THREE.Scene) {
   dom.style.pointerEvents = 'auto'
   const mesh = new CSS2DObject(dom)
   mesh.position.set(position.x, position.y, position.z)
@@ -58,7 +58,7 @@ function setCss2dDOM(dom, position, scene) {
   return mesh
 }
 
-function setCss3dDOM(dom, position, scene) {
+function setCss3dDOM(dom: HTMLElement, position: { x: number, y: number, z: number }, scene: THREE.Scene) {
   const mesh = new CSS3DObject(dom)
   mesh.position.set(position.x, position.y, position.z)
   mesh.scale.multiplyScalar(0.02)
@@ -67,7 +67,7 @@ function setCss3dDOM(dom, position, scene) {
   return mesh
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
 
   scene.add(new THREE.AxesHelper(500))

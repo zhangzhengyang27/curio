@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -27,7 +27,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -58,17 +58,14 @@ function onReady(ctx) {
   // 创建控制器
   //controls.autoRotate = true;
   
-  // 渲染
-  requestAnimationFrame();
-  
   // 创建几何体
   const width = 200; // 宽度
   const height = 100; // 高度
-  const positionArr = []; // 顶点
-  const normalArr = []; // 法线
-  const uvArr = []; // uv
+  const positionArr: any[] = []; // 顶点
+  const normalArr: any[] = []; // 法线
+  const uvArr: any[] = []; // uv
   const geometry = new THREE.PlaneGeometry(width, height, 1 * width, 1 * height);
-  Array.from(geometry.index.array).forEach((vertexIndex) => {
+  Array.from(geometry.index!.array).forEach((vertexIndex) => {
       let tArr = geometry.attributes.position.array;
       let i = vertexIndex * 3;
       positionArr.push(tArr[i], tArr[i + 1], tArr[i + 2]); // 顶点
@@ -86,13 +83,13 @@ function onReady(ctx) {
   bufferGeometry.setAttribute("originPosition", new THREE.BufferAttribute(new Float32Array(positionArr), 3));
   bufferGeometry.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(normalArr), 3));
   bufferGeometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvArr), 2));
-  bufferGeometry.faceAnimateArr = [];
+  (bufferGeometry as any).faceAnimateArr = [];
   for (let i = 0; i < bufferGeometry.attributes.position.count; i++) {
       // 三角面
       if (i % 3 == 0) {
           const y = bufferGeometry.attributes.position.array[i * 3 + 1];
           const y_sign = Math.sign(y);
-          let obj = {
+          let obj: any = {
               circle: 1500, // 周期
               startTime: null, // 起始时间
               progress: 0, // 进度
@@ -103,7 +100,7 @@ function onReady(ctx) {
           let control1 = { x: Math.random() * 50, y: y_sign * (Math.random() * 80), z: 0 }; // 控制点1
           let control2 = { x: Math.random() * 50, y: -y_sign * 20, z: 0 }; // 控制点2
           obj.bezier = { start, control1, control2, end };
-          bufferGeometry.faceAnimateArr.push(obj);
+          (bufferGeometry as any).faceAnimateArr.push(obj);
       }
   }
   
@@ -118,7 +115,7 @@ function onReady(ctx) {
   scene.add(plane);
   
   // 贝塞尔曲线
-  function bezier(P0, P1, P2, P3, t) {
+  function bezier(P0: any, P1: any, P2: any, P3: any, t: any) {
       const x = P0.x * (1 - t) * (1 - t) * (1 - t) + 3 * P1.x * t * (1 - t) * (1 - t) + 3 * P2.x * t * t * (1 - t) + P3.x * t * t * t;
       const y = P0.y * (1 - t) * (1 - t) * (1 - t) + 3 * P1.y * t * (1 - t) * (1 - t) + 3 * P2.y * t * t * (1 - t) + P3.y * t * t * t;
       const z = P0.z * (1 - t) * (1 - t) * (1 - t) + 3 * P1.z * t * (1 - t) * (1 - t) + 3 * P2.z * t * t * (1 - t) + P3.z * t * t * t;
@@ -135,7 +132,7 @@ function onReady(ctx) {
         let startX = -width / 2;
         let currX = startX + width * progress;
         // 遍历三角面
-        bufferGeometry.faceAnimateArr.forEach((face, index) => {
+        (bufferGeometry as any).faceAnimateArr.forEach((face: any, index: any) => {
             const tArr = bufferGeometry.attributes.originPosition.array; // 类数组对象
             const face_firstVertex = { x: tArr[index * 3 * 3], y: tArr[index * 3 * 3 + 1], z: tArr[index * 3 * 3 + 2] };
             if (!face.startTime && face_firstVertex.x < currX) {
@@ -147,7 +144,7 @@ function onReady(ctx) {
                 for (let i = 0; i < 3; i++) {
                     const currVertexIndex = index * 3 + i;
                     const originPos = { x: tArr[currVertexIndex * 3], y: tArr[currVertexIndex * 3 + 1], z: tArr[currVertexIndex * 3 + 2] }; // 原始位置
-                    const { start, control1, control2, end } = bufferGeometry.faceAnimateArr[index].bezier;
+                    const { start, control1, control2, end } = (bufferGeometry as any).faceAnimateArr[index].bezier;
                     const bezierPos = bezier(start, control1, control2, end, face.progress); // 计算贝塞尔点位置
                     const newPos = { x: originPos.x + bezierPos.x, y: originPos.y + bezierPos.y, z: originPos.z + bezierPos.z };
                     bufferGeometry.attributes.position.setXYZ(currVertexIndex, newPos.x, newPos.y, newPos.z); // 更新位置
@@ -162,7 +159,7 @@ function onReady(ctx) {
   _intervalId = setInterval(() => {
       startTime = Date.now();
       progress = 0;
-      bufferGeometry.faceAnimateArr.forEach((face) => {
+      (bufferGeometry as any).faceAnimateArr.forEach((face: any) => {
           face.startTime = null;
           face.progress = 0;
       });

@@ -4,12 +4,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -17,10 +17,10 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 async function initGraphicsExample() {
   {
-    const canvas = gContainer.value.querySelector('canvas');
-        const ctx = canvas.getContext('2d');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!;
     
-        function regularShape(x, y, r, edges = 3) {
+        function regularShape(x: any, y: any, r: any, edges = 3) {
           const points = [];
           const delta = 2 * Math.PI / edges;
           for(let i = 0; i < edges; i++) {
@@ -30,11 +30,11 @@ async function initGraphicsExample() {
           return points;
         }
     
-        function createPath(points) {
+        function createPath(points: any) {
           const p = new Path2D();
-          p.moveTo(...points[0]);
+          p.moveTo(...(points[0] as [number, number]));
           for(let i = 1; i < points.length; i++) {
-            p.lineTo(...points[i]);
+            p.lineTo(...(points[i] as [number, number]));
           }
           p.closePath();
           return p;

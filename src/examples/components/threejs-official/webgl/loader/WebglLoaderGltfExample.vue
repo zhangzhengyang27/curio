@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - GLTFLoader<br />\n\t\t\t<a href=\"https://hdrihaven.com/hdri/?h=royal_esplanade\" target=\"_blank\" rel=\"noopener\">Royal Esplanade</a> from <a href=\"https://hdrihaven.com/\" target=\"_blank\" rel=\"noopener\">HDRI Haven</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,7 +43,7 @@ async function onReady(__stage) {
   
 
   
-  			let currentModel, mixer;
+  			let currentModel: any, mixer: any;
   			let currentLoadId = 0;
   
   			const timer = new THREE.Timer();
@@ -74,7 +74,7 @@ async function onReady(__stage) {
   							.then( models => {
   
   								gui = new GUI();
-  								const modelNames = models.map( m => m.name );
+  								const modelNames = models.map( (m: any) => m.name );
   								const params = { model: 'DamagedHelmet' };
   
   								if ( ! modelNames.includes( params.model ) && modelNames.length > 0 ) {
@@ -83,16 +83,16 @@ async function onReady(__stage) {
   
   								}
   
-  								gui.add( params, 'model', modelNames ).onChange( name => {
+  								gui.add( params, 'model', modelNames ).onChange( (name: any) => {
   
-  									const modelInfo = models.find( m => m.name === name );
+  									const modelInfo = models.find( (m: any) => m.name === name );
   									loadModel( modelInfo );
   
   								} );
   
   								gui.add( scene, 'backgroundBlurriness', 0, 1 );
   
-  								const initialModel = models.find( m => m.name === params.model );
+  								const initialModel = models.find( (m: any) => m.name === params.model );
   								if ( initialModel ) loadModel( initialModel );
   
   							} );
@@ -117,7 +117,7 @@ async function onReady(__stage) {
   			
   
   
-  			function loadModel( modelInfo ) {
+  			function loadModel( modelInfo: any ) {
   
   				const variants = modelInfo.variants;
   				const variant = variants[ 'glTF-Binary' ] || variants[ 'glTF' ];
@@ -174,7 +174,7 @@ async function onReady(__stage) {
   
   			}
   
-  			function fitCameraToSelection( camera, controls, selection, fitOffset = 1.3 ) {
+  			function fitCameraToSelection( camera: any, controls: any, selection: any, fitOffset = 1.3 ) {
   
   				const box = new THREE.Box3();
   				box.setFromObject( selection );
@@ -208,7 +208,7 @@ async function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( mixer ) mixer.update( timer.getDelta() );
   })

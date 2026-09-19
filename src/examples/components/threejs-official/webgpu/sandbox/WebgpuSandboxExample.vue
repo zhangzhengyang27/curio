@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { time, vec2, uv, texture, mix, checker, normalLocal, positionLocal, color, oscSine, attribute } from 'three/tsl';
@@ -28,8 +28,10 @@ const props = defineProps({
   }
 })
 
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>WebGPU sandbox</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -126,7 +128,7 @@ async function onReady(__stage) {
   
   				const materialCompressed = new THREE.MeshBasicNodeMaterial();
   				materialCompressed.colorNode = texture( ktxTexture );
-  				materialCompressed.emissiveNode = oscSine().mix( color( 0x663300 ), color( 0x0000FF ) );
+  				( materialCompressed as any ).emissiveNode = oscSine().mix( color( 0x663300 ), color( 0x0000FF ) );
   				materialCompressed.alphaTestNode = oscSine();
   				materialCompressed.transparent = true;
   
@@ -168,7 +170,7 @@ async function onReady(__stage) {
   				geometryLine.setAttribute( 'color', geometryLine.getAttribute( 'position' ) );
   
   				const materialLine = new THREE.LineBasicNodeMaterial();
-  				materialLine.colorNode = attribute( 'color' );
+  				materialLine.colorNode = attribute( 'color' ) as any;
   
   				const line = new THREE.Line( geometryLine, materialLine );
   				line.position.set( 2, 1, 0 );
@@ -181,7 +183,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( box ) {
     					box.rotation.x += 0.01;
     					box.rotation.y += 0.02;
@@ -222,7 +224,7 @@ async function onReady(__stage) {
   			/*
   			 * Correct UVs to be compatible with `flipY=false` textures.
   			 */
-  			function flipY( geometry ) {
+  			function flipY( geometry: any ) {
   
   				const uv = geometry.attributes.uv;
   

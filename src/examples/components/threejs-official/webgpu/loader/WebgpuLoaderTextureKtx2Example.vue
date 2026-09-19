@@ -16,10 +16,13 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
+
+let canvas: any;
+
 
 const props = defineProps({
   example: {
@@ -29,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - KTX2 texture loader"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   const camera = __stage.camera
@@ -42,7 +45,7 @@ async function onReady(__stage) {
   
   
   
-  			const scenes = [];
+  			const scenes: any = [];
   
   			const sections = [
   				{
@@ -117,7 +120,7 @@ async function onReady(__stage) {
   					sectionDescription.textContent = section.description;
   					sectionElement.appendChild( sectionDescription );
   
-  					for ( const { path, supported } of section.textures ) {
+  					for ( const { path, supported } of section.textures as any ) {
   
   
   
@@ -181,7 +184,7 @@ async function onReady(__stage) {
   
   			// Rewrite UVs for `flipY=false` textures.
   
-  			function flipY( geometry ) {
+  			function flipY( geometry: any ) {
   
   				const uv = geometry.attributes.uv;
   
@@ -195,7 +198,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const width = canvas.clientWidth;
     				const height = canvas.clientHeight;
@@ -208,7 +211,7 @@ async function onReady(__stage) {
     				renderer.clear();
     				renderer.setClearColor( 0xe0e0e0 );
     				renderer.setScissorTest( true );
-    				scenes.forEach( function ( scene ) {
+    				scenes.forEach( function ( scene: any ) {
     					// get the element that is a place holder for where we want to
     					// draw the scene
     					const element = scene.userData.element;

@@ -18,7 +18,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, texture, vec3, pass, color, uint, screenUV, instancedArray, positionWorld, positionLocal, time, vec2, hash, instanceIndex, If } from 'three/tsl';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Snow</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -139,7 +139,7 @@ function onReady(__stage) {
   
   				const computeUpdate = Fn( () => {
   
-  					const getCoord = ( pos ) => pos.add( 50 ).div( 100 );
+  					const getCoord = ( pos: any ) => pos.add( 50 ).div( 100 );
   
   					const position = positionBuffer.element( instanceIndex );
   					const scale = scaleBuffer.element( instanceIndex );
@@ -178,7 +178,7 @@ function onReady(__stage) {
   
   				const geometry = new THREE.SphereGeometry( surfaceOffset, 5, 5 );
   
-  				function particle( staticParticles ) {
+  				function particle( staticParticles: any ) {
   
   					const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
   					const layer = staticParticles ? 1 : 2;
@@ -200,7 +200,7 @@ function onReady(__stage) {
   
   				}
   
-  				const dynamicParticles = particle();
+  				const dynamicParticles = (particle as any)();
   				const staticParticles = particle( true );
   
   				scene.add( dynamicParticles );
@@ -307,9 +307,9 @@ function onReady(__stage) {
   				// compose
   
   				let totalPass = scenePass.toInspector( 'Scene' );
-  				totalPass = totalPass.add( scenePassColorBlurred.mul( .1 ) );
-  				totalPass = totalPass.mul( vignette );
-  				totalPass = totalPass.add( teapotTreePass.mul( 10 ).add( teapotTreePassBlurred ).toInspector( 'Teapot Blur' ) );
+  				(totalPass as any) = totalPass.add( scenePassColorBlurred.mul( .1 ) );
+  				(totalPass as any) = totalPass.mul( vignette );
+  				(totalPass as any) = totalPass.add( teapotTreePass.mul( 10 ).add( teapotTreePassBlurred ).toInspector( 'Teapot Blur' ) );
   
   				renderPipeline = new THREE.RenderPipeline( renderer );
   				renderPipeline.outputNode = totalPass;
@@ -327,7 +327,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // position
     				scene.name = 'Collider Position';
     				scene.overrideMaterial = collisionPosMaterial;

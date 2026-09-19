@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -25,6 +25,9 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MarchingCubes } from 'three/examples/jsm/objects/MarchingCubes.js';
 import { ToonShader1, ToonShader2, ToonShaderHatching, ToonShaderDotted } from 'three/examples/jsm/shaders/ToonShader.js';
+
+let effectController: any;
+
 
 const props = defineProps({
   example: {
@@ -34,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\tmarching cubes<br/>\n\t\tbased on greggman's <a href=\"https://webglsamples.org/blob/blob.html\">blob</a>, original code by Henrik Rydgård"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,11 +51,11 @@ function onReady(__stage) {
   		let container, stats;
   
   
-  		let materials, current_material;
+  		let materials: any, current_material: any;
   
-  		let light, pointLight, ambientLight;
+  		let light: any, pointLight, ambientLight: any;
   
-  		let effect, resolution;
+  		let effect: any, resolution: any;
   
   
   
@@ -168,7 +171,7 @@ function onReady(__stage) {
   			texture.wrapT = THREE.RepeatWrapping;
   			texture.colorSpace = THREE.SRGBColorSpace;
   
-  			const materials = {
+  			const materials: any = {
   				'shiny': new THREE.MeshStandardMaterial( { color: 0x9c0000, envMap: reflectionCube, roughness: 0.1, metalness: 1.0 } ),
   				'chrome': new THREE.MeshLambertMaterial( { color: 0xffffff, envMap: reflectionCube } ),
   				'liquid': new THREE.MeshLambertMaterial( { color: 0xffffff, envMap: refractionCube, refractionRatio: 0.85 } ),
@@ -188,7 +191,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createShaderMaterial( shader, light, ambientLight ) {
+  		function createShaderMaterial( shader: any, light: any, ambientLight: any ) {
   
   			const u = THREE.UniformsUtils.clone( shader.uniforms );
   
@@ -210,7 +213,7 @@ function onReady(__stage) {
   
   		function setupGui() {
   
-  			const createHandler = function ( id ) {
+  			const createHandler = function ( id: any ) {
   
   				return function () {
   
@@ -273,7 +276,7 @@ function onReady(__stage) {
   
   		// this controls content of marching cubes voxel field
   
-  		function updateCubes( object, time, numblobs, floor, wallx, wallz ) {
+  		function updateCubes( object: any, time: any, numblobs: any, floor: any, wallx: any, wallz: any ) {
   
   			object.reset();
   
@@ -319,7 +322,7 @@ function onReady(__stage) {
   
   		//
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

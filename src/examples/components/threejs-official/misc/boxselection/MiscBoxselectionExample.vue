@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - box selection"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -111,7 +111,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.update();
   })
   
@@ -122,7 +122,7 @@ function onReady(__stage) {
   
   				for ( const item of selectionBox.collection ) {
   
-  					item.material.emissive.set( 0x000000 );
+  					(item as any).material.emissive.set( 0x000000 );
   
   				}
   
@@ -139,7 +139,7 @@ function onReady(__stage) {
   
   					for ( let i = 0; i < selectionBox.collection.length; i ++ ) {
   
-  						selectionBox.collection[ i ].material.emissive.set( 0x000000 );
+  						(selectionBox.collection[ i ] as any).material.emissive.set( 0x000000 );
   
   					}
   
@@ -152,7 +152,7 @@ function onReady(__stage) {
   
   					for ( let i = 0; i < allSelected.length; i ++ ) {
   
-  						allSelected[ i ].material.emissive.set( 0xffffff );
+  						(allSelected[ i ] as any).material.emissive.set( 0xffffff );
   
   					}
   
@@ -171,7 +171,7 @@ function onReady(__stage) {
   
   				for ( let i = 0; i < allSelected.length; i ++ ) {
   
-  					allSelected[ i ].material.emissive.set( 0xffffff );
+  					(allSelected[ i ] as any).material.emissive.set( 0xffffff );
   
   				}
   

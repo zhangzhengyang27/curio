@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -43,7 +43,7 @@ function onReady(ctx) {
   
           if (child.isMesh) {
   
-              child.material.envMap = textureCube
+              (child.material as THREE.MeshStandardMaterial).envMap = textureCube
   
               const { geometry } = child
               const edges = new THREE.EdgesGeometry(geometry)
@@ -53,7 +53,7 @@ function onReady(ctx) {
                   linewidth: 2.5,
                   envMap: textureCube,
                   resolution: new THREE.Vector2(ctx.container?.clientWidth, ctx.container?.clientHeight)
-              })
+              } as any)
   
               const lines = new LineSegments2(lineGeometry, material)
               lines.computeLineDistances()

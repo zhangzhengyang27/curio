@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Skeletal Additive Animation Blending\n\t\t\t(model from <a href=\"https://www.mixamo.com/\" target=\"_blank\" rel=\"noopener\">mixamo.com</a>)<br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,24 +43,24 @@ function onReady(__stage) {
   
   
   			let stats;
-  			let model, skeleton, mixer, timer;
+  			let model, skeleton, mixer: any, timer;
   
-  			const crossFadeControls = [];
+  			const crossFadeControls: any = [];
   
   			let currentBaseAction = 'idle';
-  			const allActions = [];
-  			const baseActions = {
+  			const allActions: any = [];
+  			const baseActions: Record<string, any> = {
   				idle: { weight: 1 },
   				walk: { weight: 0 },
   				run: { weight: 0 }
   			};
-  			const additiveActions = {
+  			const additiveActions: Record<string, any> = {
   				sneak_pose: { weight: 0 },
   				sad_pose: { weight: 0 },
   				agree: { weight: 0 },
   				headShake: { weight: 0 }
   			};
-  			let panelSettings, numAnimations;
+  			let panelSettings: any, numAnimations: any;
   
   			
   
@@ -101,7 +101,7 @@ function onReady(__stage) {
   					model = gltf.scene;
   					scene.add( model );
   
-  					model.traverse( function ( object ) {
+  					model.traverse( function ( object: any ) {
   
   						if ( object.isMesh ) object.castShadow = true;
   
@@ -233,7 +233,7 @@ function onReady(__stage) {
   				folder2.open();
   				folder3.open();
   
-  				crossFadeControls.forEach( function ( control ) {
+  				crossFadeControls.forEach( function ( control: any ) {
   
   					control.setInactive = function () {
   
@@ -259,7 +259,7 @@ function onReady(__stage) {
   
   			}
   
-  			function activateAction( action ) {
+  			function activateAction( action: any ) {
   
   				const clip = action.getClip();
   				const settings = baseActions[ clip.name ] || additiveActions[ clip.name ];
@@ -268,13 +268,13 @@ function onReady(__stage) {
   
   			}
   
-  			function modifyTimeScale( speed ) {
+  			function modifyTimeScale( speed: any ) {
   
   				mixer.timeScale = speed;
   
   			}
   
-  			function prepareCrossFade( startAction, endAction, duration ) {
+  			function prepareCrossFade( startAction: any, endAction: any, duration: any ) {
   
   				// If the current action is 'idle', execute the crossfade immediately;
   				// else wait until the current action has finished its current loop
@@ -302,7 +302,7 @@ function onReady(__stage) {
   
   				}
   
-  				crossFadeControls.forEach( function ( control ) {
+  				crossFadeControls.forEach( function ( control: any ) {
   
   					const name = control.property;
   
@@ -320,11 +320,11 @@ function onReady(__stage) {
   
   			}
   
-  			function synchronizeCrossFade( startAction, endAction, duration ) {
+  			function synchronizeCrossFade( startAction: any, endAction: any, duration: any ) {
   
   				mixer.addEventListener( 'loop', onLoopFinished );
   
-  				function onLoopFinished( event ) {
+  				function onLoopFinished( event: any ) {
   
   					if ( event.action === startAction ) {
   
@@ -338,7 +338,7 @@ function onReady(__stage) {
   
   			}
   
-  			function executeCrossFade( startAction, endAction, duration ) {
+  			function executeCrossFade( startAction: any, endAction: any, duration: any ) {
   
   				// Not only the start action, but also the end action must get a weight of 1 before fading
   				// (concerning the start action this is already guaranteed in this place)
@@ -375,7 +375,7 @@ function onReady(__stage) {
   			// This function is needed, since animationAction.crossFadeTo() disables its start action and sets
   			// the start action's timeScale to ((start animation's duration) / (end animation's duration))
   
-  			function setWeight( action, weight ) {
+  			function setWeight( action: any, weight: any ) {
   
   				action.enabled = true;
   				action.setEffectiveTimeScale( 1 );
@@ -385,7 +385,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// Render loop
     				for ( let i = 0; i !== numAnimations; ++ i ) {

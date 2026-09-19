@@ -12,38 +12,38 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let sceneRef = null
-let cameraRef = null
-let rendererRef = null
-let controlsRef = null
-let transformControls = null
-let plane = null
-let markersGroup = null
-let dashLine = null
-let line = null
-let distanceDom = null
-let mousedownHandler = null
-let mousemoveHandler = null
+let sceneRef: any = null
+let cameraRef: any = null
+let rendererRef: any = null
+let controlsRef: any = null
+let transformControls: any = null
+let plane: any = null
+let markersGroup: any = null
+let dashLine: any = null
+let line: any = null
+let distanceDom: any = null
+let mousedownHandler: any = null
+let mousemoveHandler: any = null
 
-const markers = []
-const points = []
-const distanceArray = []
-let distance = 0
-let totalDistance = 0
-let mesh = null
-let index = 0
+const markers: any[] = []
+const points: any[] = []
+const distanceArray: any[] = []
+let distance: number = 0
+let totalDistance: number = 0
+let mesh: any = null
+let index: number = 0
 let canDrawLine = true
-let nextPoint = null
+let nextPoint: any = null
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
-function worldToScreenPosition(pos, camera, width, height) {
+function worldToScreenPosition(pos: any, camera: any, width: number, height: number) {
   const worldVector = new THREE.Vector3(pos.x, pos.y, pos.z)
   const standardVector = worldVector.project(camera)
   const widthHalf = width / 2
@@ -55,7 +55,7 @@ function worldToScreenPosition(pos, camera, width, height) {
   }
 }
 
-function updatePoints(pts, idx, point) {
+function updatePoints(pts: any, idx: number, point: any) {
   if (idx === 0) {
     pts[idx] = point
   } else if (idx === pts.length / 2) {
@@ -67,8 +67,8 @@ function updatePoints(pts, idx, point) {
   }
 }
 
-function updateDistanceArray(pts, array) {
-  let dist = 0
+function updateDistanceArray(pts: any, array: any) {
+  let dist: number = 0
   for (let i = 0; i < array.length; i++) {
     array[i] = pts[2 * i].distanceTo(pts[2 * i + 1])
     dist += array[i]
@@ -76,7 +76,7 @@ function updateDistanceArray(pts, array) {
   return dist
 }
 
-function updateLinePoints(targetLine, point, arrayIndex) {
+function updateLinePoints(targetLine: any, point: any, arrayIndex: number) {
   const positions = targetLine.geometry.attributes.position.array
   positions[arrayIndex] = point.x
   positions[arrayIndex + 1] = point.y
@@ -84,7 +84,7 @@ function updateLinePoints(targetLine, point, arrayIndex) {
   targetLine.geometry.attributes.position.needsUpdate = true
 }
 
-function createLine(scene, pts) {
+function createLine(scene: any, pts: any) {
   if (line) scene.remove(line)
   const geometry = new THREE.BufferGeometry().setFromPoints([...pts])
   line = new THREE.LineSegments(
@@ -140,7 +140,7 @@ function onDragend() {
   if (transformControls) transformControls.detach()
 }
 
-function onMousedown(event) {
+function onMousedown(event: any) {
   if (!cameraRef) return
   raycaster.setFromCamera(mouse, cameraRef)
 
@@ -169,7 +169,7 @@ function onMousedown(event) {
       new THREE.SphereGeometry(0.1, 30, 30),
       new THREE.MeshBasicMaterial({ color: 0xff5fff })
     )
-    marker._idx = index
+    ;(marker as any)._idx = index
     marker.position.copy(newPoint)
     markersGroup.add(marker)
     markers.push(marker)
@@ -226,7 +226,7 @@ function onMousedown(event) {
   }
 }
 
-function onMousemove(event) {
+function onMousemove(event: any) {
   event.preventDefault()
   if (!rendererRef) return
   const rect = rendererRef.domElement.getBoundingClientRect()
@@ -248,7 +248,7 @@ function onMousemove(event) {
   updateLinePoints(dashLine, nextPoint, 3)
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -276,7 +276,7 @@ function onReady(ctx) {
   controls.update()
 
   transformControls = new TransformControls(camera, renderer.domElement)
-  transformControls.addEventListener('dragging-changed', (event) => {
+  transformControls.addEventListener('dragging-changed', (event: any) => {
     controls.enabled = !event.value
   })
   transformControls.addEventListener('mouseUp', onDragend)
@@ -289,7 +289,7 @@ function onReady(ctx) {
   canvas.addEventListener('mousemove', mousemoveHandler)
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (!cameraRef || !rendererRef) return
   cameraRef.aspect = width / height || 1
   cameraRef.updateProjectionMatrix()

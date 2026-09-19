@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -42,7 +42,7 @@ function onReady(ctx) {
       }
   }
   
-  ctx.container?.addEventListener('mousemove', (event) => uniforms.Mouse.value = new THREE.Vector2(
+  ctx.container?.addEventListener('mousemove', (event: any) => uniforms.Mouse.value = new THREE.Vector2(
       (event.offsetX / event.target.clientWidth) * 2 - 1,
       -(event.offsetY / event.target.clientHeight) * 2 + 1
   ))
@@ -173,7 +173,8 @@ function onReady(ctx) {
             gl_FragColor=color;
             
           }`,
-      uniforms
+      // uniforms 简写与上方 uniforms: uniforms 重复(JS 允许同名键后者覆盖,值相同;
+      // TS1117 禁止 —— 删去简写,行为不变
   });
   
   material.side = THREE.DoubleSide

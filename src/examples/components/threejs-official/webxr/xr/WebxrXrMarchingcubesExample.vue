@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - marching cubes"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,9 +45,9 @@ function onReady(__stage) {
   
   			let controller1, controller2;
   
-  			let blob;
+  			let blob: any;
   
-  			let points = [];
+  			let points: any = [];
   
   			
   			initBlob();
@@ -83,13 +83,13 @@ function onReady(__stage) {
   
   				// controllers
   
-  				function onSelectStart() {
+  			function onSelectStart( this: any ) {
   
   					this.userData.isSelecting = true;
   
   				}
   
-  				function onSelectEnd() {
+  			function onSelectEnd( this: any ) {
   
   					this.userData.isSelecting = false;
   
@@ -169,7 +169,7 @@ function onReady(__stage) {
   
   			//
   
-  			function transformPoint( vector ) {
+  			function transformPoint( vector: any ) {
   
   				vector.x = ( vector.x + 1.0 ) / 2.0;
   				vector.y = ( vector.y / 2.0 );
@@ -177,7 +177,7 @@ function onReady(__stage) {
   
   			}
   
-  			function handleController( controller ) {
+  			function handleController( controller: any ) {
   
   				const pivot = controller.getObjectByName( 'pivot' );
   
@@ -222,7 +222,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     handleController( controller1 );
     				handleController( controller2 );
     {

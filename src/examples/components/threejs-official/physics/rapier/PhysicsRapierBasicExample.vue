@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,10 +32,10 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> basic"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +47,7 @@ async function onReady(__stage) {
   
   
   			let stats;
-  			let physics, physicsHelper;
+  			let physics: any, physicsHelper: any;
   
   			
   
@@ -172,7 +172,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     for ( const object of scene.children ) {
     					if ( object.isMesh ) {
     						if ( object.position.y < - 10 ) {

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -54,11 +54,11 @@ function onReady(ctx) {
   
     const { features } = res
   
-    features.forEach((i) => {
-  
-      if (i.geometry.type === 'MultiPolygon') i.geometry.coordinates.forEach((j) => j.forEach((z) => createShapeWithCoord(group, z)))
-  
-      else if (i.geometry.type === 'Polygon') i.geometry.coordinates.forEach((j) => createShapeWithCoord(group, j))
+    features.forEach((i: any) => {
+
+      if (i.geometry.type === 'MultiPolygon') i.geometry.coordinates.forEach((j: any) => j.forEach((z: any) => createShapeWithCoord(group, z)))
+
+      else if (i.geometry.type === 'Polygon') i.geometry.coordinates.forEach((j: any) => createShapeWithCoord(group, j))
   
       else if (i.geometry.type === 'LineString') i.geometry.coordinates.length > 1 && createShapeWithCoord(group, i.geometry.coordinates)
   
@@ -70,11 +70,11 @@ function onReady(ctx) {
   
   })
   
-  function createShapeWithCoord(group, coordinates) {
-    
+  function createShapeWithCoord(group: any, coordinates: any) {
+
     if (coordinates.length < 1000) return // 设置点数限制 如果点太少则不绘制
-  
-    const curvePoints = coordinates.map((k) => coordToVector3(k))
+
+    const curvePoints = coordinates.map((k: any) => coordToVector3(k))
   
     const curve = new THREE.CatmullRomCurve3(curvePoints)
   
@@ -90,7 +90,7 @@ function onReady(ctx) {
   
   }
   
-  function coordToVector3(coord, slace = 10000) {
+  function coordToVector3(coord: any, slace = 10000) {
   
     const [lng, lat] = coord
   
@@ -102,7 +102,7 @@ function onReady(ctx) {
   
   }
   
-  function translationOriginForMesh(mesh) {
+  function translationOriginForMesh(mesh: any) {
       
     const boundingBox = new THREE.Box3().setFromObject(mesh)
   
@@ -113,13 +113,13 @@ function onReady(ctx) {
   }
   
   // 设置组中心点
-  function translationOriginForGroup(group) {
+  function translationOriginForGroup(group: any) {
   
     const boundingBox = new THREE.Box3().setFromObject(group)
   
     boundingBox.getCenter(group.position)
   
-    group.traverse((c) => {
+    group.traverse((c: any) => {
   
         c.isMesh && c.position.sub(group.position)
   

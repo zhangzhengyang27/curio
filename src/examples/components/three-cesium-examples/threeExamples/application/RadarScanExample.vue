@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -60,7 +60,7 @@ function onReady(ctx) {
   scene.add(gridHelper);
   
   // 颜色转换工具函数
-  const hexToRgb = hex => {
+  const hexToRgb = (hex: string) => {
     hex = hex.replace('#', '');
     return {
       r: parseInt(hex.substring(0, 2), 16) / 255,
@@ -70,7 +70,7 @@ function onReady(ctx) {
   }
   
   // 添加圆形雷达范围标记 - 简化后的函数
-  function createRadarMarkers(radius, count) {
+  function createRadarMarkers(radius: number, count: number) {
     const { ringColor, lineColor, opacity, angleCount } = CONFIG.markers;
     const markers = new THREE.Group();
     

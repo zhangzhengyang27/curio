@@ -4,17 +4,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('canvas');
-        const gl = canvas.getContext('webgl');
+    const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
+        const gl = canvas.getContext('webgl')!;
         
         const vertex = `
           attribute vec2 position;
@@ -37,11 +37,11 @@ async function initMyGrapicsExample() {
           }    
         `;
     
-        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
         gl.shaderSource(vertexShader, vertex);
         gl.compileShader(vertexShader);
     
-        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
         gl.shaderSource(fragmentShader, fragment);
         gl.compileShader(fragmentShader);
     

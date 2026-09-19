@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { time, mx_noise_vec3, instanceIndex, textureStore, float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Texture 3D</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -68,12 +68,12 @@ function onReady(__stage) {
   				canvas.height = 32;
   
   				const context = canvas.getContext( '2d' );
-  				const gradient = context.createLinearGradient( 0, 0, 0, 32 );
+  				const gradient = context!.createLinearGradient( 0, 0, 0, 32 );
   				gradient.addColorStop( 0.0, '#014a84' );
   				gradient.addColorStop( 0.5, '#0561a0' );
   				gradient.addColorStop( 1.0, '#437ab6' );
-  				context.fillStyle = gradient;
-  				context.fillRect( 0, 0, 1, 32 );
+  				context!.fillStyle = gradient;
+  				context!.fillRect( 0, 0, 1, 32 );
   
   				const skyMap = new THREE.CanvasTexture( canvas );
   				skyMap.colorSpace = THREE.SRGBColorSpace;
@@ -88,7 +88,7 @@ function onReady(__stage) {
   
   				const size = 200;
   
-  				const computeCloud = Fn( ( { storageTexture } ) => {
+  				const computeCloud = Fn( ( { storageTexture }: any ) => {
   
   					const scale = float( 0.05 );
   					const id = instanceIndex;
@@ -116,7 +116,7 @@ function onReady(__stage) {
   				storageTexture.generateMipmaps = false;
   				storageTexture.name = 'cloud';
   			
-  				computeNode = computeCloud( { storageTexture } ).compute( size * size * size ).setName( 'computeCloud' );
+  				computeNode = (computeCloud as any)( { storageTexture } ).compute( size * size * size ).setName( 'computeCloud' );
   
   				// Shader
   
@@ -126,7 +126,7 @@ function onReady(__stage) {
   					threshold = float( 0.08 ),
   					opacity = float( 0.18 ),
   					steps = float( 100 )
-  				} ) => {
+  				}: any ) => {
   
   					const finalColor = vec4( 0 ).toVar();
   
@@ -164,7 +164,7 @@ function onReady(__stage) {
   				const opacity = uniform( 0.08 );
   				const steps = uniform( 100 );
   
-  				const cloud3d = transparentRaymarchingTexture( {
+  				const cloud3d = (transparentRaymarchingTexture as any)( {
   					texture: texture3D( storageTexture, null, 0 ),
   					range,
   					threshold,
@@ -202,7 +202,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderer.compute( computeNode );
   })
   

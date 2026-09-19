@@ -4,12 +4,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -17,8 +17,8 @@ const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 async function initGraphicsExample() {
   {
-    const canvas = gContainer.value.querySelector('canvas');
-        const ctx = canvas.getContext('2d');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!;
     
         const WIDTH = canvas.width;
         const HEIGHT = canvas.height;
@@ -27,7 +27,7 @@ async function initGraphicsExample() {
           return `hsl(${Math.random() * 360}, 100%, 50%)`;
         }
     
-        function drawCircle(context, radius) {
+        function drawCircle(context: any, radius: any) {
           const x = Math.random() * WIDTH;
           const y = Math.random() * HEIGHT;
           const fillColor = randomColor();
@@ -37,7 +37,7 @@ async function initGraphicsExample() {
           context.fill();
         }
     
-        function draw(context, count = 500, radius = 10) {
+        function draw(context: any, count = 500, radius = 10) {
           for(let i = 0; i < count; i++) {
             drawCircle(context, radius);
           }

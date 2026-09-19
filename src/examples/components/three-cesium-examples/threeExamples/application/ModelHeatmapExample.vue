@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -46,9 +46,9 @@ function onReady(ctx) {
   
   )
   
-  let model = null
+  let model: any = null
   
-  function callModel(e) {
+  function callModel(e: any) {
       model = e
       const box3 = new THREE.Box3().setFromObject(model)
       const { min, max } = box3
@@ -74,9 +74,9 @@ function onReady(ctx) {
       ], 2)
       geometry.computeVertexNormals()
   
-      let list = []
+      let list: any[] = []
   
-      model.traverse(i => {
+      model.traverse((i: any) => {
           if (i.isMesh) {
               i.material.transparent = true
               i.material.opacity = 0.5
@@ -121,11 +121,11 @@ function onReady(ctx) {
       gui.add(uniforms1.opacity, 'value', 0, 1).name('opacity')
       gui.add(uniforms1.edgeFalloff, 'value', 0.1, 5).name('边缘衰减')
       const c1Debug = { value: '#008000' }
-      gui.addColor(c1Debug, 'value').name('冷色').onChange((v) => {
+      gui.addColor(c1Debug, 'value').name('冷色').onChange((v: any) => {
           uniforms1.c1.value.set(v)
       })
       const c2Debug = { value: '#ff0000' }
-      gui.addColor(c2Debug, 'value').name('热色').onChange((v) => {
+      gui.addColor(c2Debug, 'value').name('热色').onChange((v: any) => {
           uniforms1.c2.value.set(v)
       })
   

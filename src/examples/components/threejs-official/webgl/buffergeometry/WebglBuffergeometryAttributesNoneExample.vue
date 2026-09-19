@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -72,7 +72,7 @@ const fragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -81,7 +81,7 @@ function onReady(__stage) {
   
   
   
-  			let mesh;
+  			let mesh: any;
   
   			
   
@@ -128,7 +128,7 @@ function onReady(__stage) {
   				
   
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				mesh.rotation.x = time / 1000.0 * 0.25;
   				mesh.rotation.y = time / 1000.0 * 0.50;

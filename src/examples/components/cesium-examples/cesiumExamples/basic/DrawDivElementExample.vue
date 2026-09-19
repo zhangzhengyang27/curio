@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false, // 启用动画器件
     baseLayerPicker: false, // 是否显示图层选择器，右上角图层选择按钮
@@ -31,7 +31,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -39,8 +39,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 隐藏Cesium Logo
@@ -69,6 +69,8 @@ function onReady(ctx) {
       textAlign: 'center',
       maxWidth: '100px' // 最小宽度
   })
+  // 转换遗留:原 HTML 全局变量,此处声明保持行为(未定义即抛错)
+  let box: any
   // 将弹窗元素添加到CSS容器中
   box.appendChild(trackInfoElement)
   // 监听场景更新事件

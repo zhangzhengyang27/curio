@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -7,8 +7,8 @@
 
   const containerRef = shallowRef(null)
   const clock = new THREE.Clock()
-  let gui = null
-  let morphMesh = null
+  let gui: any = null
+  let morphMesh: any = null
 
   const params = {
     influence1: 0,
@@ -68,8 +68,7 @@
     const material = new THREE.MeshStandardMaterial({
       color: 0x00d2ff,
       metalness: 0.3,
-      roughness: 0.4,
-      morphTargets: true
+      roughness: 0.4
     })
 
     morphMesh = new THREE.Mesh(geometry, material)

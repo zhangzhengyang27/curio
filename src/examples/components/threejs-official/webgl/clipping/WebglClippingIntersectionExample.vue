@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -110,12 +110,12 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'alphaToCoverage' ).onChange( function ( value ) {
+  				gui.add( params, 'alphaToCoverage' ).onChange( function ( value: any ) {
   
   					group.children.forEach( c => {
   
-  						c.material.alphaToCoverage = Boolean( value );
-  						c.material.needsUpdate = true;
+  						(c.material as any).alphaToCoverage = Boolean( value );
+  						(c.material as any).needsUpdate = true;
   
   					} );
   
@@ -123,13 +123,13 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'clipIntersection' ).name( 'clip intersection' ).onChange( function ( value ) {
+  				gui.add( params, 'clipIntersection' ).name( 'clip intersection' ).onChange( function ( value: any ) {
   
   					const children = group.children;
   
   					for ( let i = 0; i < children.length; i ++ ) {
   
-  						children[ i ].material.clipIntersection = value;
+  						(children[ i ]!.material as any).clipIntersection = value;
   
   					}
   
@@ -137,7 +137,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'planeConstant', - 1, 1 ).step( 0.01 ).name( 'plane constant' ).onChange( function ( value ) {
+  				gui.add( params, 'planeConstant', - 1, 1 ).step( 0.01 ).name( 'plane constant' ).onChange( function ( value: any ) {
   
   					for ( let j = 0; j < clipPlanes.length; j ++ ) {
   
@@ -149,7 +149,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'showHelpers' ).name( 'show helpers' ).onChange( function ( value ) {
+  				gui.add( params, 'showHelpers' ).name( 'show helpers' ).onChange( function ( value: any ) {
   
   					helpers.visible = value;
   

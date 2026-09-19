@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -32,13 +32,13 @@ async function initGraphicsExample() {
     
         const width = 1024;
         const height = 512;
-        function projection([longitude, latitude]) {
+        function projection([longitude, latitude]: any) {
           const x = width * (180 + longitude) / 360;
           const y = height * (1.0 - (90 + latitude) / 180); // Canvas坐标系y轴朝下
           return [x, y];
         }
     
-        function drawPoints(ctx, points) {
+        function drawPoints(ctx: any, points: any) {
           ctx.beginPath();
           ctx.moveTo(...points[0]);
           for(let i = 1; i < points.length; i++) {
@@ -47,19 +47,19 @@ async function initGraphicsExample() {
           ctx.fill();
         }
         
-        const canvas = gContainer.value.querySelector('canvas');
+        const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'black';
+        ctx!.fillStyle = 'black';
     
         (async function () {
           const worldData = await (await fetch('/graphics/covid-vis/assets/data/world-topojson.json')).json();
           const countries = topojson.feature(worldData, worldData.objects.countries);
-          countries.features.forEach(({geometry}) => {
+          countries.features.forEach(({geometry}: any) => {
             if(geometry.type === 'MultiPolygon') {
               const coordinates = geometry.coordinates;
               if(coordinates) {
-                coordinates.forEach((contours) => {
-                  contours.forEach((path) => {
+                coordinates.forEach((contours: any) => {
+                  contours.forEach((path: any) => {
                     const points = path.map(projection);
                     drawPoints(ctx, points);
                   });
@@ -67,7 +67,7 @@ async function initGraphicsExample() {
               }
             } else if(geometry.type === 'Polygon') {
               const contours = geometry.coordinates;
-              contours.forEach((path) => {
+              contours.forEach((path: any) => {
                 const points = path.map(projection);
                 drawPoints(ctx, points);
               });

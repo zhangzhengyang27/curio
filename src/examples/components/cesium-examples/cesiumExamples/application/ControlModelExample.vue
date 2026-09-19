@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui';
 
@@ -20,10 +20,23 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
+let view: any = null
+let firstModel: any = null
+let position: any = null
+let headingPitchRoll: any = null
+let fixedFrameTransform: any = null
+let firstDown: any = null
+let deltaRadians: any = null
+let speed: any = null
+let preUpdate: any = null
+let Vector: any = null
+let xyz: any = null
+let firstRoamXYZ: any = null
+let godRoamXYZ: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,             // 是否创建动画小器件，左下角仪表    
     baseLayerPicker: false,       // 是否显示图层选择器，右上角图层选择按钮
@@ -34,7 +47,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -42,8 +55,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // ==================== GUI控制 ====================
@@ -123,7 +136,7 @@ function onReady(ctx) {
    * @param {Number} [parameter.speed=1] -漫游速度
    * @return {Cesium.Primitive} -返回飞行对象实体
    */
-  function startFirstRoam(parameter) {
+  function startFirstRoam(parameter: any) {
       // 防止重复添加模型
       if (!firstModel) {
           // 设置模型初始位置，将经纬度坐标转换为笛卡尔坐标
@@ -142,7 +155,7 @@ function onReady(ctx) {
           // 异步加载GLTF模型文件，并应用上面计算的变换矩阵
           Cesium.Model.fromGltfAsync({
               url: HOST + 'files/model/Cesium_Air.glb',
-          }).then(model => {
+          }).then((model: any) => {
               // 将加载完成的模型添加到场景中
               firstModel = viewer.scene.primitives.add(model);
   
@@ -163,7 +176,7 @@ function onReady(ctx) {
       }
   
       // 注册键盘事件监听器
-      document.addEventListener("keydown", firstDown = function (e) {
+      document.addEventListener("keydown", firstDown = function (e: any) {
           switch (e.key.toLowerCase()) {
               // 姿态控制
               case "w":    // 抬头 - 增加俯仰角
@@ -243,7 +256,7 @@ function onReady(ctx) {
    * 漫游视角切换方法
    * @param {String} value -视角模式 ('first'|'god'|'none')
    */
-  function changeRoamView(value) {
+  function changeRoamView(value: any) {
       view = value;
       switch (value) {
           case "first":

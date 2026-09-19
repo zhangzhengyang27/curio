@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mrt, output, pass, velocity } from 'three/tsl';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>TAAU</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -53,7 +53,7 @@ function onReady(__stage) {
   				sharpness: 0.2,
   			};
   
-  			let renderPipeline, mixer, timer;
+  			let renderPipeline: any, mixer: any, timer;
   
   			
   
@@ -144,15 +144,15 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( params, 'upscaleMethod', [ 'Bilinear', 'TAAU' ] ).onChange( updatePipeline );
-  				gui.add( params, 'resolutionScale', 0.25, 1.0, 0.25 ).onChange( ( value ) => {
+  				gui.add( params, 'resolutionScale', 0.25, 1.0, 0.25 ).onChange( ( value: any ) => {
   
   					scenePass.setResolutionScale( value );
   
   				} );
   				gui.add( params, 'sharpening' ).onChange( updatePipeline );
-  				gui.add( params, 'sharpness', 0, 2, 0.05 ).onChange( ( value ) => {
+  				gui.add( params, 'sharpness', 0, 2, 0.05 ).onChange( ( value: any ) => {
   
-  					sharpenNode.sharpness.value = value;
+  					(sharpenNode.sharpness as any).value = value;
   
   				} );
   
@@ -168,7 +168,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) {

@@ -15,11 +15,14 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let materials: any;
+
 
 const props = defineProps({
   example: {
@@ -29,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Material Array</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -37,7 +40,7 @@ function onReady(__stage) {
   
 
   
-  			let planeMesh, boxMesh, boxMeshWireframe, planeMeshWireframe;
+  			let planeMesh, boxMesh: any, boxMeshWireframe: any, planeMeshWireframe;
   
   
   			const api = {
@@ -135,7 +138,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     boxMesh.rotation.y += 0.005;
     				boxMesh.rotation.x += 0.005;
     				boxMeshWireframe.rotation.y += 0.005;

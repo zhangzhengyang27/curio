@@ -7,10 +7,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -53,7 +53,7 @@ const fsSource = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -62,7 +62,7 @@ function onReady(__stage) {
 
   
   			let geometry, mesh, material;
-  			let mouse, center;
+  			let mouse: any, center;
   
   			
   
@@ -158,14 +158,14 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouse.x = ( event.clientX - (__stage.container?.clientWidth || window.innerWidth) / 2 ) * 8;
   				mouse.y = ( event.clientY - (__stage.container?.clientHeight || window.innerHeight) / 2 ) * 8;
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     camera.position.x += ( mouse.x - camera.position.x ) * 0.05;
     				camera.position.y += ( - mouse.y - camera.position.y ) * 0.05;
   })

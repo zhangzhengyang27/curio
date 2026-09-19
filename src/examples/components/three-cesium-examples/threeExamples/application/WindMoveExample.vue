@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -29,6 +29,8 @@ function onReady(ctx) {
   const aspect = innerWidth / innerHeight;
   
   class Base {
+      clock: any
+      loader: any
       constructor() {
           this.init();
           this.main();
@@ -65,8 +67,8 @@ function onReady(ctx) {
   				`;
   
           let _renderer = renderer, _scene = scene, _camera = camera, _controls = controls;
-          let _geometry;
-          let _shaders = [];
+          let _geometry: any = null;
+          let _shaders: any[] = [];
   
           init()
           function init() {
@@ -80,7 +82,6 @@ function onReady(ctx) {
   })
   
           function resize() {
-              _
               _camera.aspect = window.innerWidth / window.innerHeight;
               _camera.updateProjectionMatrix();
           }
@@ -135,13 +136,13 @@ function onReady(ctx) {
                   geometry.attributes.uv.setXY(i * 2 + 1, i / (points.length - 1), 1);
   
                   if (i < points.length - 1) {
-                      geometry.index.setX(i * 6 + 0, i * 2);
-                      geometry.index.setX(i * 6 + 1, i * 2 + 1);
-                      geometry.index.setX(i * 6 + 2, i * 2 + 2);
+                      geometry.index!.setX(i * 6 + 0, i * 2);
+                      geometry.index!.setX(i * 6 + 1, i * 2 + 1);
+                      geometry.index!.setX(i * 6 + 2, i * 2 + 2);
   
-                      geometry.index.setX(i * 6 + 0 + 3, i * 2 + 1);
-                      geometry.index.setX(i * 6 + 1 + 3, i * 2 + 3);
-                      geometry.index.setX(i * 6 + 2 + 3, i * 2 + 2);
+                      geometry.index!.setX(i * 6 + 0 + 3, i * 2 + 1);
+                      geometry.index!.setX(i * 6 + 1 + 3, i * 2 + 3);
+                      geometry.index!.setX(i * 6 + 2 + 3, i * 2 + 2);
                   }
               });
   
@@ -161,10 +162,10 @@ function onReady(ctx) {
                   transparent: true,
                   depthTest: false,
               });
-              shader.speed = Math.random() * 0.4 + 0.6;
+              (shader as any).speed = Math.random() * 0.4 + 0.6;
               _shaders.push(shader);
   
-              let mesh = new THREE.Mesh(_geometry, shader);
+              let mesh: any = new THREE.Mesh(_geometry, shader);
               mesh.rotation.y = Math.random() * 10;
               mesh.scale.setScalar(0.5 + Math.random());
               mesh.scale.y = Math.random() * 0.4 + 0.9;
@@ -174,7 +175,7 @@ function onReady(ctx) {
           }
   
           let lastTime = 0;
-          function loop(e) {
+          function loop(e: any) {
               requestAnimationFrame(loop);
               // _scene.rotation.y += 0.02;
   
@@ -182,7 +183,7 @@ function onReady(ctx) {
               _shaders.forEach(shader => {
                   shader.uniforms.uTime.value += delta * 0.001 * shader.speed;
               });
-              _scene.traverse(child => {
+              _scene.traverse((child: any) => {
                   if (child.isTornado) {
                       child.rotation.y += delta * 0.001
                       child.position.z -= delta * 0.01

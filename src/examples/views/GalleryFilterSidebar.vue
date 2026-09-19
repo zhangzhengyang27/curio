@@ -21,13 +21,14 @@
   </aside>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from 'vue'
 // 示例中心左侧筛选栏（技术标签 + 子分类列表）。
 // 纯展示组件：状态由父组件的 useGalleryFilters 持有，选中只发事件。
 defineProps({
   currentTechLabel: { type: String, default: '' },
   techExamplesCount: { type: Number, default: 0 },
-  categories: { type: Array, default: () => [] },
+  categories: { type: Array as PropType<Array<{ key: string; label: string; count?: number }>>, default: () => [] },
   current: { type: String, default: 'all' },
 })
 

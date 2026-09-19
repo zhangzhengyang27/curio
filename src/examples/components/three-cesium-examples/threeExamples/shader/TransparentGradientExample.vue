@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -65,14 +65,14 @@ function onReady(ctx) {
   
   gui = new GUI()
   const colorDebug = { value: '#ffffff' }
-  gui.addColor(colorDebug, 'value').name('color').onChange((v) => {
+  gui.addColor(colorDebug, 'value').name('color').onChange((v: any) => {
       material.uniforms.color.value.set(v)
   })
   gui.add(material.uniforms.intensity, 'value').min(0).max(10).name('intensity')
   gui.add(material.uniforms.uvScale, 'value').min(0).max(1).name('uvScale')
   
   // 通过点绘制成一个五角星
-  function createStarShape(radiusOuter, radiusInner, points) {
+  function createStarShape(radiusOuter: any, radiusInner: any, points: any) {
       const shape = new THREE.Shape();
       const angleStep = (Math.PI * 2) / points;
   
@@ -109,7 +109,7 @@ function onReady(ctx) {
   scene.add(star)
   
   // 随机绘制成 4，5，6，7，8 边形
-  function createPolygonShape(radius, points) {
+  function createPolygonShape(radius: any, points: any) {
   
       const shape = new THREE.Shape();
   

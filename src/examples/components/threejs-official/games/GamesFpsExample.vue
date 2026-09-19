@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,10 +35,11 @@ const props = defineProps({
 })
 
 const infoHtml = "Octree threejs demo - basic collisions with static triangle mesh<br />\n\t\t\tMOUSE to look around and to throw balls<br/>\n\t\t\tWASD to move and SPACE to jump"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   
 
   
@@ -103,7 +104,7 @@ function onReady(__stage) {
   			const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
   			const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
   
-  			const spheres = [];
+  			const spheres: any = [];
   			let sphereIdx = 0;
   
   			for ( let i = 0; i < NUM_SPHERES; i ++ ) {
@@ -132,7 +133,7 @@ function onReady(__stage) {
   			let playerOnFloor = false;
   			let mouseTime = 0;
   
-  			const keyStates = {};
+  			const keyStates: Record<string, any> = {};
   
   			const vector1 = new THREE.Vector3();
   			const vector2 = new THREE.Vector3();
@@ -226,7 +227,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updatePlayer( deltaTime ) {
+  			function updatePlayer( deltaTime: any ) {
   
   				let damping = Math.exp( - 4 * deltaTime ) - 1;
   
@@ -250,7 +251,7 @@ function onReady(__stage) {
   
   			}
   
-  			function playerSphereCollision( sphere ) {
+  			function playerSphereCollision( sphere: any ) {
   
   				const center = vector1.addVectors( playerCollider.start, playerCollider.end ).multiplyScalar( 0.5 );
   
@@ -319,9 +320,9 @@ function onReady(__stage) {
   
   			}
   
-  			function updateSpheres( deltaTime ) {
+  			function updateSpheres( deltaTime: any ) {
   
-  				spheres.forEach( sphere => {
+  				spheres.forEach( (sphere: any) => {
   
   					sphere.collider.center.addScaledVector( sphere.velocity, deltaTime );
   
@@ -376,7 +377,7 @@ function onReady(__stage) {
   
   			}
   
-  			function controls( deltaTime ) {
+  			function controls( deltaTime: any ) {
   
   				// gives a bit of air control
   				const speedDelta = deltaTime * ( playerOnFloor ? 25 : 8 );
@@ -425,7 +426,7 @@ function onReady(__stage) {
   
   				worldOctree.fromGraphNode( gltf.scene );
   
-  				gltf.scene.traverse( child => {
+  				gltf.scene.traverse( ( child: any ) => {
   
   					if ( child.isMesh ) {
   
@@ -448,7 +449,7 @@ function onReady(__stage) {
   
   				gui = new GUI( { width: 200 } );
   				gui.add( { debug: false }, 'debug' )
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						helper.visible = value;
   
@@ -471,7 +472,7 @@ function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const deltaTime = Math.min( 0.05, timer.getDelta() ) / STEPS_PER_FRAME;
     				// we look for collisions in substeps to mitigate the risk of

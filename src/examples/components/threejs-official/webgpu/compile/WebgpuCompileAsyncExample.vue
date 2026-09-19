@@ -15,13 +15,14 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uv, float, vec3, hash, mx_noise_vec3, mx_worley_noise_vec3, mx_cell_noise_float, mx_fractal_noise_vec3 } from 'three/tsl';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let gui: any = null;
 
 const props = defineProps({
   example: {
@@ -31,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Async Node Compilation</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,7 +47,6 @@ async function onReady(__stage) {
   			const ADD_DELAY = 1000;
   
   			let sphere;
-  			let gui;
   
   			// Frame timing
   			let lastFrameTime = 0;
@@ -57,7 +57,7 @@ async function onReady(__stage) {
   			let currentMode = '';
   			let framesAfterComplete = 0;
   			let testDone = false;
-  			let meshGroup = null;
+  			let meshGroup: any = null;
   
   			const statsDiv = document.createElement( 'div' );
   			statsDiv.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
@@ -119,7 +119,7 @@ async function onReady(__stage) {
   
   					MESH_COUNT = 64;
   					GRID_SIZE = 8;
-  					statsDiv.querySelector( 'span' ).textContent = '64';
+  					statsDiv.querySelector( 'span' )!.textContent = '64';
   					meshCountEl.textContent = '0 / 64';
   
   				}
@@ -140,7 +140,7 @@ async function onReady(__stage) {
   			
   
   
-  			function createUniqueMaterial( index ) {
+  			function createUniqueMaterial( index: any ) {
   
   				const material = new THREE.MeshBasicNodeMaterial();
   
@@ -178,13 +178,13 @@ async function onReady(__stage) {
   				const tintB = hash( float( index * 3 + 2 ) );
   				const tint = vec3( tintR, tintG, tintB ).mul( 0.3 ).add( 0.7 );
   
-  				material.colorNode = colorNode.mul( tint );
+  				material.colorNode = colorNode!.mul( tint );
   
   				return material;
   
   			}
   
-  			async function addMeshes( mode ) {
+  			async function addMeshes( mode: any ) {
   
   				const geometry = new THREE.PlaneGeometry( 0.9, 0.9 );
   				const startX = - ( GRID_SIZE - 1 ) / 2;
@@ -246,7 +246,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const now = performance.now();
     				// Initialize tracking on first frame after meshes added
     				if ( shouldStartTracking ) {

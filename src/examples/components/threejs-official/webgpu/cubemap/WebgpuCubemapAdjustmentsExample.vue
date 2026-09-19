@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform, mix, pmremTexture, reference, positionLocal, hue, saturation, positionWorld, normalWorld, positionWorldDirection, reflectVector } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>EnvMap Adjustments</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -87,7 +87,7 @@ async function onReady(__stage) {
   				const rotateY1Matrix = new THREE.Matrix4();
   				const rotateY2Matrix = new THREE.Matrix4();
   
-  				const getEnvironmentNode = ( reflectNode, positionNode ) => {
+  				const getEnvironmentNode = ( reflectNode: any, positionNode: any ) => {
   
   					const custom1UV = reflectNode.xyz.mul( uniform( rotateY1Matrix ) );
   					const custom2UV = reflectNode.xyz.mul( uniform( rotateY2Matrix ) );
@@ -143,17 +143,17 @@ async function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( adjustments, 'mix', - 1, 2, 0.01 );
-  				gui.add( { blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01 ).onChange( value => {
+  				gui.add( { blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01 ).onChange( (value: any) => {
   
   					blurNode.value = value;
   
   				} );
-  				gui.add( { offsetHDR1: 0 }, 'offsetHDR1', 0, Math.PI * 2, 0.01 ).onChange( value => {
+  				gui.add( { offsetHDR1: 0 }, 'offsetHDR1', 0, Math.PI * 2, 0.01 ).onChange( (value: any) => {
   
   					rotateY1Matrix.makeRotationY( value );
   
   				} );
-  				gui.add( { offsetHDR2: 0 }, 'offsetHDR2', 0, Math.PI * 2, 0.01 ).onChange( value => {
+  				gui.add( { offsetHDR2: 0 }, 'offsetHDR2', 0, Math.PI * 2, 0.01 ).onChange( (value: any) => {
   
   					rotateY2Matrix.makeRotationY( value );
   

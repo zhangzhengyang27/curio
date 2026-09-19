@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
@@ -22,25 +22,25 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   
-  let model, skeleton, mixer, clock;
-  
-  const crossFadeControls = [];
-  
-  let idleAction, walkAction, runAction;
-  let actions, settings;
-  
+  let model: any, skeleton: any, mixer: any, clock: any;
+
+  const crossFadeControls: any[] = [];
+
+  let idleAction: any, walkAction: any, runAction: any;
+  let actions: any, settings: any;
+
   let singleStepMode = false;
   let sizeOfNextStep = 0;
-  let idleWeight, walkWeight, runWeight;
+  let idleWeight: any, walkWeight: any, runWeight: any;
   const cameraTarget = new THREE.Vector3();
-  let stats;
+  let stats: any;
 
   init();
   
@@ -89,7 +89,7 @@ function onReady(ctx) {
         model = gltf.scene;
         scene.add(model);
   
-        model.traverse(function (object) {
+        model.traverse(function (object: any) {
           if (object.isMesh) object.castShadow = true;
         });
         console.log(model, "模型");
@@ -237,20 +237,20 @@ function onReady(ctx) {
     folder6.open();
   }
   
-  function showModel(visibility) {
+  function showModel(visibility: any) {
     model.visible = visibility;
   }
   
-  function showSkeleton(visibility) {
+  function showSkeleton(visibility: any) {
     skeleton.visible = visibility;
   }
   
-  function modifyTimeScale(speed) {
+  function modifyTimeScale(speed: any) {
     mixer.timeScale = speed;
   }
   
   function deactivateAllActions() {
-    actions.forEach(function (action) {
+    actions.forEach(function (action: any) {
       action.stop();
     });
   }
@@ -260,7 +260,7 @@ function onReady(ctx) {
     setWeight(walkAction, settings["modify walk weight"]);
     setWeight(runAction, settings["modify run weight"]);
   
-    actions.forEach(function (action) {
+    actions.forEach(function (action: any) {
       action.play();
     });
   }
@@ -279,13 +279,13 @@ function onReady(ctx) {
   }
   
   function pauseAllActions() {
-    actions.forEach(function (action) {
+    actions.forEach(function (action: any) {
       action.paused = true;
     });
   }
   
   function unPauseAllActions() {
-    actions.forEach(function (action) {
+    actions.forEach(function (action: any) {
       action.paused = false;
     });
   }
@@ -297,7 +297,7 @@ function onReady(ctx) {
     sizeOfNextStep = settings["modify step size"];
   }
   
-  function prepareCrossFade(startAction, endAction, defaultDuration) {
+  function prepareCrossFade(startAction: any, endAction: any, defaultDuration: any) {
     // 根据用户选择切换默认/自定义过渡持续时间
     const duration = setCrossFadeDuration(defaultDuration);
   
@@ -314,7 +314,7 @@ function onReady(ctx) {
     }
   }
   
-  function setCrossFadeDuration(defaultDuration) {
+  function setCrossFadeDuration(defaultDuration: any) {
     // 根据用户选择切换默认/自定义过渡持续时间
     if (settings["use default duration"]) {
       return defaultDuration;
@@ -323,10 +323,10 @@ function onReady(ctx) {
     }
   }
   
-  function synchronizeCrossFade(startAction, endAction, duration) {
+  function synchronizeCrossFade(startAction: any, endAction: any, duration: any) {
     mixer.addEventListener("loop", onLoopFinished);
-  
-    function onLoopFinished(event) {
+
+    function onLoopFinished(event: any) {
       if (event.action === startAction) {
         mixer.removeEventListener("loop", onLoopFinished);
   
@@ -335,7 +335,7 @@ function onReady(ctx) {
     }
   }
   
-  function executeCrossFade(startAction, endAction, duration) {
+  function executeCrossFade(startAction: any, endAction: any, duration: any) {
     // 在开始过渡之前，确保结束动作的权重为1
     setWeight(endAction, 1);
     endAction.time = 0;
@@ -346,7 +346,7 @@ function onReady(ctx) {
   
   // 此函数是必需的，因为animationAction.crossFadeTo()会禁用其起始动作
   // 并将起始动作的时间缩放设置为((起始动画持续时间)/(结束动画持续时间))
-  function setWeight(action, weight) {
+  function setWeight(action: any, weight: any) {
     action.enabled = true;
     action.setEffectiveTimeScale(1);
     action.setEffectiveWeight(weight);

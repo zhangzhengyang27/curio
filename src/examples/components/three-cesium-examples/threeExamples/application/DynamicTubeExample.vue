@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -67,7 +67,7 @@ function onReady(ctx) {
   // 提取半径数组
   const radiusArray = controlPoints.map(cp => cp.radius)
   
-  function createMultiRadiusTube(curve, tubularSegments, radiusArr, radialSegments, closed, controlPoints) {
+  function createMultiRadiusTube(curve: any, tubularSegments: number, radiusArr: any, radialSegments: number, closed: boolean, controlPoints: any) {
       const frames = curve.computeFrenetFrames(tubularSegments, closed);
       const vertices = [];
       const normals = [];
@@ -95,7 +95,7 @@ function onReady(ctx) {
       }
   
       // 根据曲线 t 值获取对应的半径（基于控制点的 t 值进行插值）
-      function getRadiusAt(t) {
+      function getRadiusAt(t: number) {
           // 找到 t 所在的控制点区间
           for (let i = 0; i < controlPointTs.length - 1; i++) {
               const t0 = controlPointTs[i];

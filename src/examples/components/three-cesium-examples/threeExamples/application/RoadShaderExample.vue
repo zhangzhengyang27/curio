@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -24,14 +24,15 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class Base {
-      initThree(el) {
+      container: any
+      initThree(el: any) {
           this.container = el;
           
           
@@ -56,13 +57,19 @@ function onReady(ctx) {
   }
   
   class Road extends Base {
+      speed: any
+      materials: any
+      composer: any
+      normalObj: any
+      threeAnim: any
+      planeMat: any
       constructor() {
           super();
           this.speed = 0.005;
       }
       animate() {
           if (this.materials) {
-              this.materials.forEach((m) => {
+              this.materials.forEach((m: any) => {
                   m.uniforms.uTime.value += this.speed;
                   if (m.uniforms.uTime.value > 1) {
                       m.uniforms.uTime.value = 0;
@@ -89,16 +96,16 @@ function onReady(ctx) {
           };
           const renderScene = new RenderPass(scene, camera);
           const bloomPass = new BloomPass(5, 20, 100);
-          bloomPass.threshold = params.threshold;
-          bloomPass.strength = params.strength;
-          bloomPass.radius = params.radius;
+          (bloomPass as any).threshold = params.threshold;
+          (bloomPass as any).strength = params.strength;
+          (bloomPass as any).radius = params.radius;
           const composer = new EffectComposer(renderer);
           composer.addPass(renderScene);
           composer.addPass(bloomPass);
           composer.addPass(new OutputPass());
           this.composer = composer;
       }
-      createChart(that) {
+      createChart(that: any) {
           this.initBloom();
           const commonUniforms = {
               uFade: { value: new THREE.Vector2(0, 0.6) },

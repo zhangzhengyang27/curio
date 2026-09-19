@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - TTFLoader using opentype by gero3\n\t\t\t<br/>type to enter new text, drag to spin the text"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   
   			let cameraTarget;
-  			let group, textMesh1, textMesh2, textGeo, material;
+  			let group: any, textMesh1: any, textMesh2: any, textGeo, material: any;
   			let firstLetter = true;
   
   			let text = 'three.js';
@@ -54,7 +54,7 @@ function onReady(__stage) {
   				bevelThickness = 2,
   				bevelSize = 1.5;
   
-  			let font = null;
+  			let font: any = null;
   			const mirror = true;
   
   			let targetRotation = 0;
@@ -123,6 +123,7 @@ function onReady(__stage) {
   
   				// EVENTS
   
+  				const container = __stage.container;
   				container.style.touchAction = 'none';
   				container.addEventListener( 'pointerdown', onPointerDown );
   
@@ -136,7 +137,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentKeyDown( event ) {
+  			function onDocumentKeyDown( event: any ) {
   
   				if ( firstLetter ) {
   
@@ -162,7 +163,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onDocumentKeyPress( event ) {
+  			function onDocumentKeyPress( event: any ) {
   
   				const keyCode = event.which;
   
@@ -202,7 +203,7 @@ function onReady(__stage) {
   				textGeo.computeBoundingBox();
   				textGeo.computeVertexNormals();
   
-  				const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+  				const centerOffset = - 0.5 * ( textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x );
   
   				textMesh1 = new THREE.Mesh( textGeo, material );
   
@@ -243,7 +244,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -255,7 +256,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -265,7 +266,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerUp( event ) {
+  			function onPointerUp( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -276,7 +277,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     group.rotation.y += ( targetRotation - group.rotation.y ) * 0.05;
   })
   

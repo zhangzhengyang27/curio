@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { bumpMap, color, cos, float, mix, mx_fractal_noise_float, mx_noise_float, mx_worley_noise_float, positionLocal, screenUV, sin, smoothstep, uv, vec3 } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Loft Geometry</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			let group;
+  			let group: any;
   
   			
   
@@ -142,7 +142,7 @@ function onReady(__stage) {
   				pedestalMaterial.roughnessNode = veining.mul( 0.14 ).add( 0.07 );
   				pedestalMaterial.envMapIntensity = 1.5;
   
-  				function addPedestal( x, z, radius, height ) {
+  				function addPedestal( x: any, z: any, radius: any, height: any ) {
   
   					const pedestal = new THREE.Mesh( createPedestalGeometry( radius, height ), pedestalMaterial );
   					pedestal.position.set( x, - 5, z );
@@ -369,7 +369,7 @@ function onReady(__stage) {
   
   				// shadows
   
-  				group.traverse( ( child ) => {
+  				group.traverse( ( child: any ) => {
   
   					if ( child.isMesh ) child.castShadow = child.receiveShadow = true;
   
@@ -386,9 +386,9 @@ function onReady(__stage) {
   				skeleton.visible = false;
   				group.add( skeleton );
   
-  				const lofts = [];
+  				const lofts: any = [];
   
-  				group.traverse( ( child ) => {
+  				group.traverse( ( child: any ) => {
   
   					if ( child.isMesh && child.geometry.type === 'LoftGeometry' ) lofts.push( child );
   
@@ -403,9 +403,9 @@ function onReady(__stage) {
   					const { sections, closed } = mesh.geometry.parameters;
   					const step = Math.max( 1, Math.round( sections.length / 20 ) );
   
-  					const positions = [];
+  					const positions: any = [];
   
-  					function addRing( ring ) {
+  					function addRing( ring: any ) {
   
   						const segments = closed ? ring.length : ring.length - 1;
   
@@ -434,7 +434,7 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.add( { sections: false }, 'sections' ).onChange( ( value ) => {
+  				gui.add( { sections: false }, 'sections' ).onChange( ( value: any ) => {
   
   					skeleton.visible = value;
   					liquid.visible = ! value;
@@ -443,9 +443,9 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( { wireframe: false }, 'wireframe' ).onChange( ( value ) => {
+  				gui.add( { wireframe: false }, 'wireframe' ).onChange( ( value: any ) => {
   
-  					group.traverse( ( child ) => {
+  					group.traverse( ( child: any ) => {
   
   						if ( child.isMesh ) {
   
@@ -468,7 +468,7 @@ function onReady(__stage) {
   			// revolves a smoothed 2d profile ( x = radius, y = height ) into
   			// circular sections, like a lathe
   
-  			function createRevolvedSections( profile, divisions, segments ) {
+  			function createRevolvedSections( profile: any, divisions: any, segments: any ) {
   
   				const points = new THREE.SplineCurve( profile ).getPoints( divisions );
   
@@ -495,7 +495,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createPedestalGeometry( radius, height ) {
+  			function createPedestalGeometry( radius: any, height: any ) {
   
   				// a stepped plinth, a tapered shaft and a cornice; revolved without
   				// smoothing, one ring per profile point. doubled points split the
@@ -954,7 +954,7 @@ function onReady(__stage) {
   
   			}
   
-  			function createRopeGeometry( length ) {
+  			function createRopeGeometry( length: any ) {
   
   				// a cord sagging between two stanchions, with both ends buried in
   				// their poles
@@ -1037,7 +1037,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     group.rotation.y += 0.001;
   })
   

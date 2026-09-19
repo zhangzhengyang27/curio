@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { densityFogFactor, mix, pass, reference, uniform, vec2 } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Fog - Scattering</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -74,7 +74,7 @@ function onReady(__stage) {
   				// a few seeded variants of a tall scots pine: a clean bole rising into a
   				// high, open crown of fine bare branches
   
-  				const variants = [];
+  				const variants: any = [];
   
   				const generator = new TreeGenerator( material );
   
@@ -132,7 +132,7 @@ function onReady(__stage) {
   
   				}
   
-  				variants.forEach( ( geometry, v ) => {
+  				variants.forEach( ( geometry: any, v: any ) => {
   
   					const list = placements[ v ];
   					const mesh = new THREE.InstancedMesh( geometry, material, list.length );
@@ -205,7 +205,7 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( scene.fog, 'density', 0.025, 0.16 ).step( 0.0005 ).name( 'fog density' );
   				gui.add( scattering, 'value', 0, 5 ).name( 'scattering factor' );
-  				gui.add( params, 'scatteringEnabled' ).name( 'enable scattering' ).onChange( ( value ) => {
+  				gui.add( params, 'scatteringEnabled' ).name( 'enable scattering' ).onChange( ( value: any ) => {
   			
   					if ( value === true ) {
   
@@ -235,7 +235,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				controls.update( timer.getDelta() );
     				renderPipeline.render();

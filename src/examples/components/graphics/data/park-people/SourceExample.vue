@@ -20,21 +20,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
 
 
 async function initGraphicsExample() {
-  const main = gContainer.value.querySelector('#main')
+  const main = gContainer.value!.querySelector('#main')
   {
-    const canvas = gContainer.value.querySelector('canvas');
+    const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const {width, height} = canvas;
         // const data = [];
         // function randomData(count = 500) {
@@ -80,9 +80,9 @@ async function initGraphicsExample() {
         // randomData();
         // console.log(JSON.stringify(data));
     
-        function draw(data, filter = null) {
+        function draw(data: any, filter: any = null) {
           if(filter) data = data.filter(filter);
-          const context = canvas.getContext('2d');
+          const context = canvas.getContext('2d')!;
           for(let i = 0; i < data.length; i++) {
             const {x, y, gender} = data[i];
             context.fillStyle = gender === 'f' ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 255, 0.5)';
@@ -95,7 +95,7 @@ async function initGraphicsExample() {
         fetch('data.json').then((res) => {
           return res.json();
         }).then((data) => {
-          draw(data, ({time}) => time === 12);
+          draw(data, ({time}: any) => time === 12);
         });
   }
 }

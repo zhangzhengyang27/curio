@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { fog, rangeFogFactor, color, lights, texture, normalMap } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Selective Lights</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -71,7 +71,7 @@ function onReady(__stage) {
   
   				// lights
   
-  				const addLight = ( hexColor, power = 1700, distance = 100 ) => {
+  				const addLight = ( hexColor: any, power = 1700, distance = 100 ) => {
   
   					const material = new THREE.MeshStandardNodeMaterial();
   					material.colorNode = color( hexColor );
@@ -155,7 +155,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() / 1000;
     				const lightTime = time * 0.5;
     				light1.position.x = Math.sin( lightTime * 0.7 ) * 3;

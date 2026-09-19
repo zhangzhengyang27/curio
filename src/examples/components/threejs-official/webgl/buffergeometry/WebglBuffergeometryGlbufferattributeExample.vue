@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -26,10 +26,10 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - buffergeometry - custom VBOs"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -113,8 +113,8 @@ function onReady(__stage) {
   				gl.bindBuffer( gl.ARRAY_BUFFER, rgb );
   				gl.bufferData( gl.ARRAY_BUFFER, new Uint8Array( colors ), gl.STATIC_DRAW );
   
-  				const posAttr1 = new THREE.GLBufferAttribute( pos, gl.FLOAT, 3, 4, particles );
-  				const posAttr2 = new THREE.GLBufferAttribute( pos2, gl.FLOAT, 3, 4, particles );
+				const posAttr1: any = new THREE.GLBufferAttribute( pos, gl.FLOAT, 3, 4, particles );
+				const posAttr2: any = new THREE.GLBufferAttribute( pos2, gl.FLOAT, 3, 4, particles );
   				geometry.setAttribute( 'position', posAttr1 );
   
   				_intervalId = setInterval( function () {
@@ -125,7 +125,7 @@ function onReady(__stage) {
   
   				}, 2000 );
   
-  				geometry.setAttribute( 'color', new THREE.GLBufferAttribute( rgb, gl.UNSIGNED_BYTE, 3, 1, particles, true ) );
+  				geometry.setAttribute( 'color', new THREE.GLBufferAttribute( rgb, gl.UNSIGNED_BYTE, 3, 1, particles, true ) as any );
   
   				//
   
@@ -153,7 +153,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     drawCount = ( Math.max( 5000, drawCount ) + Math.floor( 500 * Math.random() ) ) % particles;
     				points.geometry.setDrawRange( 0, drawCount );
     				const time = Date.now() * 0.001;

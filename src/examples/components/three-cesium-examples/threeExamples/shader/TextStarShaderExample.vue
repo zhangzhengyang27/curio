@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { TessellateModifier } from 'three/examples/jsm/modifiers/TessellateModifier.js';
@@ -22,13 +22,13 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const data = await new Promise((r) => {
+  const data = await new Promise<any>((r) => {
       fetch('https://api.github.com/repos/z2586300277/three-cesium-examples').then(res => res.json()).then(d => r(d))
       setTimeout(() => r({
           stargazers_count: 230,
@@ -36,8 +36,8 @@ async function onReady(ctx) {
       }), 1000)
   })
   
-  let mesh, uniforms;
-  let trackballControls;
+  let mesh, uniforms: any;
+  let trackballControls: any;
 
   const loader = new FontLoader()
   loader.load(props.example?.globals?.FILE_HOST + 'files/json/font.json', font => init(font))
@@ -50,7 +50,7 @@ async function onReady(ctx) {
   Thanks for your star
   `
   
-  function init(font) {
+  function init(font: any) {
   
       
   

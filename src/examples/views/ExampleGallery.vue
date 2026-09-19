@@ -66,10 +66,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // 筛选状态机（URL ↔ 状态同步、过滤、分页）已抽到 useGalleryFilters，
 // 本组件只负责渲染。改动过滤逻辑请改 composable，别在这里加分支。
-import { useGalleryFilters } from '../composables/useGalleryFilters.js'
+import { useGalleryFilters } from '../composables/useGalleryFilters'
 import ExampleCard from './ExampleCard.vue'
 import GalleryFilterSidebar from './GalleryFilterSidebar.vue'
 import GalleryPagination from './GalleryPagination.vue'
@@ -91,7 +91,7 @@ const {
 } = useGalleryFilters()
 
 // 分页器是纯展示组件，只派发页码；这里显式写回 state（不在模板里直接改 ref）
-function goToPage(page) {
+function goToPage(page: number) {
   currentPage.value = page
 }
 </script>

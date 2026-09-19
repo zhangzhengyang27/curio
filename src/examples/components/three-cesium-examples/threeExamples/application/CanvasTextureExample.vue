@@ -9,12 +9,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import * as echarts from 'echarts'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -30,7 +30,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer

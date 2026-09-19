@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -141,7 +141,7 @@ function onReady(ctx) {
   // 创建颜色控制器
   const colorController = gui
     .addColor(typeState, "color")
-    .onChange((value) => {
+    .onChange((value: any) => {
       console.log(`颜色值改变为: ${value}`);
   
       material.uniforms.backgroundColor.value = new THREE.Color(value);
@@ -151,7 +151,7 @@ function onReady(ctx) {
   // 创建速度控制器，设置最小值、最大值和步长
   const speedController = gui
     .add(typeState, "speed", 0.1, 1, 0.1)
-    .onChange((value) => {
+    .onChange((value: any) => {
       console.log(`速度值改变为: ${value}`);
       material.uniforms.speed.value = value;
     })
@@ -160,7 +160,7 @@ function onReady(ctx) {
   // 创建亮度控制器，设置最小值、最大值和步长
   const brightnessController = gui
     .add(typeState, "brightness", 0.1, 2, 0.1)
-    .onChange((value) => {
+    .onChange((value: any) => {
       console.log(`亮度值改变为: ${value}`);
       material.uniforms.brightness.value = value;
     })
@@ -170,13 +170,13 @@ function onReady(ctx) {
   const flowSpeedFolder = gui.addFolder("流动速度");
   flowSpeedFolder
     .add(typeState.flowSpeed, "x", 0.01, 0.6, 0.02)
-    .onChange((value) => {
+    .onChange((value: any) => {
       console.log(`流动速度X值改变为: ${value}`);
       material.uniforms.flowSpeed.value.x = value;
     });
   flowSpeedFolder
     .add(typeState.flowSpeed, "y", 0.01, 0.6, 0.02)
-    .onChange((value) => {
+    .onChange((value: any) => {
       console.log(`流动速度Y值改变为: ${value}`);
       material.uniforms.flowSpeed.value.y = value;
     });

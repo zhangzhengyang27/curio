@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - earth [fly controls]<br/>\n\t\t<b>WASD</b> move, <b>R|F</b> up | down, <b>Q|E</b> roll, <b>up|down</b> pitch, <b>left|right</b> yaw"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -55,10 +55,10 @@ function onReady(__stage) {
   			let SCREEN_WIDTH = (__stage.container?.clientWidth || window.innerWidth);
   
   			let stats;
-  			let geometry, meshPlanet, meshClouds, meshMoon;
+  			let geometry, meshPlanet: any, meshClouds: any, meshMoon: any;
   			let dirLight;
   
-  			let renderPipeline;
+  			let renderPipeline: any;
   
   			const textureLoader = new THREE.TextureLoader();
   
@@ -94,7 +94,7 @@ function onReady(__stage) {
   					normalScale: new THREE.Vector2( 0.85, - 0.85 )
   
   				} );
-  				materialNormalMap.map.colorSpace = THREE.SRGBColorSpace;
+  			materialNormalMap!.map!.colorSpace = THREE.SRGBColorSpace;
   
   				// planet
   
@@ -113,7 +113,7 @@ function onReady(__stage) {
   					transparent: true
   
   				} );
-  				materialClouds.map.colorSpace = THREE.SRGBColorSpace;
+  			materialClouds!.map!.colorSpace = THREE.SRGBColorSpace;
   
   				meshClouds = new THREE.Mesh( geometry, materialClouds );
   				meshClouds.scale.set( cloudsScale, cloudsScale, cloudsScale );
@@ -127,7 +127,7 @@ function onReady(__stage) {
   					map: textureLoader.load( ASSET_HOST + 'textures/planets/moon_1024.jpg' )
   
   				} );
-  				materialMoon.map.colorSpace = THREE.SRGBColorSpace;
+  			materialMoon!.map!.colorSpace = THREE.SRGBColorSpace;
   
   				meshMoon = new THREE.Mesh( geometry, materialMoon );
   				meshMoon.position.set( radius * 5, 0, 0 );
@@ -224,7 +224,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     // rotate the planet and clouds

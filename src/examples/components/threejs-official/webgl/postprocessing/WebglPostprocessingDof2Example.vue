@@ -14,15 +14,18 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { BokehShader, BokehDepthShader } from 'three/examples/jsm/shaders/BokehShader2.js';
+
+let effectController: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl realistic depth-of-field bokeh example<br/>\n\t\t\tshader ported from <a href=\"http://blenderartists.org/forum/showthread.php?237488-GLSL-depth-of-field-with-bokeh-v2-4-(update)\">Martins Upitis</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,7 +48,7 @@ function onReady(__stage) {
   
   
   			let container, stats;
-  			let materialDepth;
+  			let materialDepth: any;
   
   			let windowHalfX = (__stage.container?.clientWidth || window.innerWidth) / 2;
   			let windowHalfY = (__stage.container?.clientHeight || window.innerHeight) / 2;
@@ -63,7 +66,7 @@ function onReady(__stage) {
   			const mouse = new THREE.Vector2();
   			const raycaster = new THREE.Raycaster();
   			const target = new THREE.Vector3( 0, 20, - 50 );
-  			const planes = [];
+  			const planes: any = [];
   			const leaves = 100;
   
   			
@@ -124,13 +127,13 @@ function onReady(__stage) {
   
   					const plane = new THREE.Mesh( planePiece, planeMat );
   					plane.rotation.set( rand(), rand(), rand() );
-  					plane.rotation.dx = rand() * 0.1;
-  					plane.rotation.dy = rand() * 0.1;
-  					plane.rotation.dz = rand() * 0.1;
+  					(plane.rotation as any).dx = rand() * 0.1;
+  					(plane.rotation as any).dy = rand() * 0.1;
+  					(plane.rotation as any).dz = rand() * 0.1;
   
   					plane.position.set( rand() * 150, 0 + rand() * 300, rand() * 150 );
-  					plane.position.dx = ( rand() - 0.5 );
-  					plane.position.dz = ( rand() - 0.5 );
+  					(plane.position as any).dx = ( rand() - 0.5 );
+  					(plane.position as any).dz = ( rand() - 0.5 );
   					scene.add( plane );
   					planes.push( plane );
   
@@ -210,8 +213,8 @@ function onReady(__stage) {
   				stats = new Stats();
   				__stage.overlay?.appendChild(stats.dom)
   
-  				container.style.touchAction = 'none';
-  				container.addEventListener( 'pointermove', onPointerMove );
+  				container!.style.touchAction = 'none';
+  				container!.addEventListener( 'pointermove', onPointerMove );
   
   				effectController = {
   
@@ -245,17 +248,17 @@ function onReady(__stage) {
   
   					for ( const e in effectController ) {
   
-  						if ( e in postprocessing.bokeh_uniforms ) {
+  						if ( e in (postprocessing as any).bokeh_uniforms ) {
   
-  							postprocessing.bokeh_uniforms[ e ].value = effectController[ e ];
+  							(postprocessing as any).bokeh_uniforms[ e ].value = effectController[ e ];
   
   						}
   
   					}
   
   					postprocessing.enabled = effectController.enabled;
-  					postprocessing.bokeh_uniforms[ 'znear' ].value = camera.near;
-  					postprocessing.bokeh_uniforms[ 'zfar' ].value = camera.far;
+  					(postprocessing as any).bokeh_uniforms[ 'znear' ].value = camera.near;
+  					(postprocessing as any).bokeh_uniforms[ 'zfar' ].value = camera.far;
   					camera.setFocalLength( effectController.focalLength );
   
   				};
@@ -301,41 +304,39 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
   				mouse.x = ( event.clientX - windowHalfX ) / windowHalfX;
   				mouse.y = - ( event.clientY - windowHalfY ) / windowHalfY;
   
-  				postprocessing.bokeh_uniforms[ 'focusCoords' ].value.set( event.clientX / (__stage.container?.clientWidth || window.innerWidth), 1 - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) );
+  				(postprocessing as any).bokeh_uniforms[ 'focusCoords' ].value.set( event.clientX / (__stage.container?.clientWidth || window.innerWidth), 1 - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) );
   
   			}
   
   			function initPostprocessing() {
   
-  				postprocessing.
   
-  				postprocessing.
-  				postprocessing.camera.position.z = 2;
+  				(postprocessing as any).camera.position.z = 2;
   
-  				postprocessing.scene.add( postprocessing.camera );
+  				(postprocessing as any).scene.add( (postprocessing as any).camera );
   
-  				postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight), { type: THREE.HalfFloatType } );
-  				postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight), { type: THREE.HalfFloatType } );
+  				(postprocessing as any).rtTextureDepth = new THREE.WebGLRenderTarget( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight), { type: THREE.HalfFloatType } );
+  				(postprocessing as any).rtTextureColor = new THREE.WebGLRenderTarget( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight), { type: THREE.HalfFloatType } );
   
   				const bokeh_shader = BokehShader;
   
-  				postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
+  				(postprocessing as any).bokeh_uniforms = THREE.UniformsUtils.clone( (bokeh_shader.uniforms as any) );
   
-  				postprocessing.bokeh_uniforms[ 'tColor' ].value = postprocessing.rtTextureColor.texture;
-  				postprocessing.bokeh_uniforms[ 'tDepth' ].value = postprocessing.rtTextureDepth.texture;
-  				postprocessing.bokeh_uniforms[ 'textureWidth' ].value = (__stage.container?.clientWidth || window.innerWidth);
-  				postprocessing.bokeh_uniforms[ 'textureHeight' ].value = (__stage.container?.clientHeight || window.innerHeight);
+  				(postprocessing as any).bokeh_uniforms[ 'tColor' ].value = (postprocessing as any).rtTextureColor.texture;
+  				(postprocessing as any).bokeh_uniforms[ 'tDepth' ].value = (postprocessing as any).rtTextureDepth.texture;
+  				(postprocessing as any).bokeh_uniforms[ 'textureWidth' ].value = (__stage.container?.clientWidth || window.innerWidth);
+  				(postprocessing as any).bokeh_uniforms[ 'textureHeight' ].value = (__stage.container?.clientHeight || window.innerHeight);
   
-  				postprocessing.materialBokeh = new THREE.ShaderMaterial( {
+  				(postprocessing as any).materialBokeh = new THREE.ShaderMaterial( {
   
-  					uniforms: postprocessing.bokeh_uniforms,
+  					uniforms: (postprocessing as any).bokeh_uniforms,
   					vertexShader: bokeh_shader.vertexShader,
   					fragmentShader: bokeh_shader.fragmentShader,
   					defines: {
@@ -345,20 +346,20 @@ function onReady(__stage) {
   
   				} );
   
-  				postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) ), postprocessing.materialBokeh );
-  				postprocessing.scene.add( postprocessing.quad );
+  				(postprocessing as any).quad = new THREE.Mesh( new THREE.PlaneGeometry( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) ), (postprocessing as any).materialBokeh );
+  				(postprocessing as any).scene.add( (postprocessing as any).quad );
   
   			}
   
   			function shaderUpdate() {
   
-  				postprocessing.materialBokeh.defines.RINGS = shaderSettings.rings;
-  				postprocessing.materialBokeh.defines.SAMPLES = shaderSettings.samples;
-  				postprocessing.materialBokeh.needsUpdate = true;
+  				(postprocessing as any).materialBokeh.defines.RINGS = shaderSettings.rings;
+  				(postprocessing as any).materialBokeh.defines.SAMPLES = shaderSettings.samples;
+  				(postprocessing as any).materialBokeh.needsUpdate = true;
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.00015;
     				camera.position.x = Math.cos( time ) * 400;
@@ -372,7 +373,7 @@ function onReady(__stage) {
     					distance += ( targetDistance - distance ) * 0.03;
     					const sdistance = smoothstep( camera.near, camera.far, distance );
     					const ldistance = linearize( 1 - sdistance );
-    					postprocessing.bokeh_uniforms[ 'focalDepth' ].value = ldistance;
+    					(postprocessing as any).bokeh_uniforms[ 'focalDepth' ].value = ldistance;
     					effectController[ 'focalDepth' ] = ldistance;
     				}
     				for ( let i = 0; i < leaves; i ++ ) {
@@ -388,11 +389,11 @@ function onReady(__stage) {
     				if ( postprocessing.enabled ) {
     					renderer.clear();
     					// render scene into texture
-    					renderer.setRenderTarget( postprocessing.rtTextureColor );
+    					renderer.setRenderTarget( (postprocessing as any).rtTextureColor );
     					renderer.clear();
     					// render depth into texture
     					scene.overrideMaterial = materialDepth;
-    					renderer.setRenderTarget( postprocessing.rtTextureDepth );
+    					renderer.setRenderTarget( (postprocessing as any).rtTextureDepth );
     					renderer.clear();
     					scene.overrideMaterial = null;
     					// render bokeh composite
@@ -406,7 +407,7 @@ function onReady(__stage) {
     				stats.update();
   })
   
-  			function linearize( depth ) {
+  			function linearize( depth: any ) {
   
   				const zfar = camera.far;
   				const znear = camera.near;
@@ -414,14 +415,14 @@ function onReady(__stage) {
   
   			}
   
-  			function smoothstep( near, far, depth ) {
+  			function smoothstep( near: any, far: any, depth: any ) {
   
   				const x = saturate( ( depth - near ) / ( far - near ) );
   				return x * x * ( 3 - 2 * x );
   
   			}
   
-  			function saturate( x ) {
+  			function saturate( x: any ) {
   
   				return Math.max( 0, Math.min( 1, x ) );
   
@@ -453,7 +454,7 @@ function onReady(__stage) {
   
   					const ldistance = linearize( 1 - sdistance );
   
-  					postprocessing.bokeh_uniforms[ 'focalDepth' ].value = ldistance;
+  					(postprocessing as any).bokeh_uniforms[ 'focalDepth' ].value = ldistance;
   
   					effectController[ 'focalDepth' ] = ldistance;
   
@@ -480,14 +481,14 @@ function onReady(__stage) {
   
   					// render scene into texture
   
-  					renderer.setRenderTarget( postprocessing.rtTextureColor );
+  					renderer.setRenderTarget( (postprocessing as any).rtTextureColor );
   					renderer.clear();
   
   
   					// render depth into texture
   
   					scene.overrideMaterial = materialDepth;
-  					renderer.setRenderTarget( postprocessing.rtTextureDepth );
+  					renderer.setRenderTarget( (postprocessing as any).rtTextureDepth );
   					renderer.clear();
   
   					scene.overrideMaterial = null;
@@ -495,7 +496,7 @@ function onReady(__stage) {
   					// render bokeh composite
   
   					renderer.setRenderTarget( null );
-  					renderer.render( postprocessing.scene, postprocessing.camera );
+  					renderer.render( (postprocessing as any).scene, (postprocessing as any).camera );
   
   
   				} else {

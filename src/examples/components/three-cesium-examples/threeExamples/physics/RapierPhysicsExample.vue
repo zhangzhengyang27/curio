@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { RapierPhysics } from 'three/examples/jsm/physics/RapierPhysics.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const controls = ctx.controls
@@ -42,11 +42,11 @@ async function onReady(ctx) {
 
   const keys = { w: false, a: false, s: false, d: false }
 
-  window.addEventListener('keydown', (e) => {
-    if (keys.hasOwnProperty(e.key.toLowerCase())) keys[e.key.toLowerCase()] = true
+  window.addEventListener('keydown', (e: any) => {
+    if (keys.hasOwnProperty(e.key.toLowerCase())) (keys as any)[e.key.toLowerCase()] = true
   })
-  window.addEventListener('keyup', (e) => {
-    if (keys.hasOwnProperty(e.key.toLowerCase())) keys[e.key.toLowerCase()] = false
+  window.addEventListener('keyup', (e: any) => {
+    if (keys.hasOwnProperty(e.key.toLowerCase())) (keys as any)[e.key.toLowerCase()] = false
   })
 
   // 履带板尺寸
@@ -55,7 +55,7 @@ async function onReady(ctx) {
   const trackDepth = 0.6
   const spacing = 0.65
 
-  const trackSegments = []
+  const trackSegments: any[] = []
   const wallColliders = new Set()
 
   function addFloor() {
@@ -72,7 +72,7 @@ async function onReady(ctx) {
     const wallHeight = 50
     const wallThickness = 4
 
-    const walls = [
+    const walls: any[] = [
       { pos: [0, wallHeight / 2, wallSize / 2], size: [wallSize, wallHeight, wallThickness] },
       { pos: [0, wallHeight / 2, -wallSize / 2], size: [wallSize, wallHeight, wallThickness] },
       { pos: [wallSize / 2, wallHeight / 2, 0], size: [wallThickness, wallHeight, wallSize] },
@@ -80,10 +80,10 @@ async function onReady(ctx) {
     ]
 
     walls.forEach((w) => {
-      const geometry = new THREE.BoxGeometry(...w.size)
+      const geometry = new THREE.BoxGeometry(...(w.size as [number, number, number]))
       const material = new THREE.MeshStandardMaterial({ color: 0x444444, transparent: true, opacity: 0.3 })
       const mesh = new THREE.Mesh(geometry, material)
-      mesh.position.set(...w.pos)
+      mesh.position.set(...(w.pos as [number, number, number]))
       scene.add(mesh)
       physics.addMesh(mesh, 0, 0.1)
 
@@ -93,7 +93,7 @@ async function onReady(ctx) {
     })
   }
 
-  function createTankTrack(count) {
+  function createTankTrack(count: any) {
     for (let i = 0; i < count; i++) {
       const geometry = new THREE.BoxGeometry(trackWidth, trackHeight, trackDepth)
       const material = new THREE.MeshStandardMaterial({
@@ -136,8 +136,8 @@ async function onReady(ctx) {
     if (!trackSegments.length) return
 
     const force = 1200
-    let moveX = 0
-    let moveZ = 0
+    let moveX: number = 0
+    let moveZ: number = 0
 
     if (keys.w) moveZ -= 1
     if (keys.s) moveZ += 1
@@ -152,7 +152,7 @@ async function onReady(ctx) {
       const head = trackSegments[0]
       head.body.applyImpulse({ x: moveX * force * 0.1, y: 0, z: moveZ * force * 0.1 }, true)
 
-      let isHittingWall = false
+      let isHittingWall: boolean = false
       if (head.mesh.userData.physics && head.mesh.userData.physics.collider) {
         const headCollider = head.mesh.userData.physics.collider
         world.contactPairsWith(headCollider, (otherCollider) => {

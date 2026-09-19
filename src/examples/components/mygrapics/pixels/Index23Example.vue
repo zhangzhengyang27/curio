@@ -4,18 +4,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {loadImage, getImageData, gaussianBlur} from '@/examples/jsm-compat/mygrapics/pixels/lib/util.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    const canvas = mgContainer.value.querySelector('#paper');
-        const context = canvas.getContext('2d');
+    const canvas = mgContainer.value!.querySelector('#paper') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
     
         (async function () {
           const img = await loadImage('assets/girl1.jpg');

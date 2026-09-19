@@ -14,11 +14,15 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, color } from 'three/tsl';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let waveArray: any;
+let analyserTexture: any;
+
 
 const props = defineProps({
   example: {
@@ -28,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Audio Processing</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -36,10 +40,10 @@ async function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let computeNode;
-  			let waveBuffer, sampleRate;
+  			let computeNode: any;
+  			let waveBuffer, sampleRate: any;
   
-  			let currentAudio, currentAnalyser;
+  			let currentAudio: any, currentAnalyser: any;
   			const analyserBuffer = new Uint8Array( 1024 );
   
   
@@ -83,6 +87,7 @@ async function onReady(__stage) {
   			}
   
   
+			async function init() {
   
   				startButton.remove();
   
@@ -141,7 +146,7 @@ async function onReady(__stage) {
   						const waveOffset = originalWave.element( index.sub( delayOffset.mul( sampleRate ).mul( i ) ).mul( pitch ) );
   						const waveOffsetVolume = waveOffset.mul( delayVolume.div( i * i ) );
   
-  						wave = wave.add( waveOffsetVolume );
+  						(wave as any) = wave.add( waveOffsetVolume );
   
   					}
   
@@ -200,13 +205,14 @@ async function onReady(__stage) {
   				//
   
   				playAudioBuffer();
+			}
   
   			
   
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( currentAnalyser ) {
     					currentAnalyser.getByteFrequencyData( analyserBuffer );
     					analyserTexture.needsUpdate = true;

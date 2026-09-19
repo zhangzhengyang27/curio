@@ -14,9 +14,10 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
+// @ts-expect-error demuxer_mp4.js 无类型声明(env.d.ts 候选: declare module 'three/examples/jsm/libs/demuxer_mp4.js')
 import { MP4Demuxer } from 'three/examples/jsm/libs/demuxer_mp4.js';
 
 const props = defineProps({
@@ -26,8 +27,10 @@ const props = defineProps({
   }
 })
 
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Video Frames</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -65,17 +68,17 @@ function onReady(__stage) {
   				} );
   
   				new MP4Demuxer( ASSET_HOST + 'textures/sintel.mp4', {
-  					onConfig( config ) {
+  					onConfig( config: any ) {
   
   						decoder.configure( config );
   
   					},
-  					onChunk( chunk ) {
+  					onChunk( chunk: any ) {
   
   						decoder.decode( chunk );
   
   					},
-  					setStatus( kind, status ) {
+  					setStatus( kind: any, status: any ) {
   
   						console.info( 'MP4Demuxer:', kind );
   
@@ -88,7 +91,7 @@ function onReady(__stage) {
   								// In case our VideoFrameTexture is no longer needed, we should close its backed VideoFrame, see issue #30379:
   								if ( videoTexture.image instanceof VideoFrame ) videoTexture.image.close();
   
-  								videoTexture.image = null;
+  								(videoTexture.image as any) = null;
   
   								scene.remove( mesh );
   

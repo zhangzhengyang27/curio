@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -37,7 +37,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - morph targets - face<br/>\n\t\t\tmodel by <a href=\"https://www.bannaflak.com/face-cap\" target=\"_blank\" rel=\"noopener\">Face Cap</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -53,7 +53,7 @@ function onReady(__stage) {
   
   
   
-  			let stats, mixer, timer;
+  			let stats, mixer: any, timer;
   
   			
   
@@ -93,13 +93,13 @@ function onReady(__stage) {
   
   						// GUI
   
-  						const head = mesh.getObjectByName( 'mesh_2' );
+  						const head = mesh.getObjectByName( 'mesh_2' ) as any;
   						const influences = head.morphTargetInfluences;
   
   						gui = new GUI();
   						gui.close();
   
-  						for ( const [ key, value ] of Object.entries( head.morphTargetDictionary ) ) {
+  						for ( const [ key, value ] of Object.entries( head.morphTargetDictionary as { [ key: string ]: number } ) ) {
   
   							gui.add( influences, value, 0, 1, 0.01 )
   								.name( key.replace( 'blendShape1.', '' ) )
@@ -134,7 +134,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) {

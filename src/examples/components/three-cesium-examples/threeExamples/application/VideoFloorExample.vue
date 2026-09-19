@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -36,7 +36,7 @@ function onReady(ctx) {
   const ambientLight = new THREE.AmbientLight(0xffffff, 2)
   scene.add(ambientLight)
   
-  async function createVideoPlane(url, width, height, positionY) {
+  async function createVideoPlane(url: string, width: number, height: number, positionY: number) {
   
       const video = document.createElement('video')
       video.crossOrigin = 'anonymous'
@@ -50,7 +50,6 @@ function onReady(ctx) {
       const material = new THREE.MeshStandardMaterial({
           color: 0xffffff * Math.random(), // 随机颜色
           alphaMap: texture,
-          opecity: 0.5, // 透明度，可调整
           transparent: true,
           side: THREE.DoubleSide,
       })

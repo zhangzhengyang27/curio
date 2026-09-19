@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders, } from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Poly.js'
@@ -21,14 +21,14 @@ const fragmentShader = `precision mediump float;
       gl_FragColor=texture2D(u_Sampler,v_Pin);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
   
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;

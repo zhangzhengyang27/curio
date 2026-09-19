@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Backdrop</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -38,8 +38,8 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let portals, rotate = true;
-  			let mixer, timer;
+  			let portals: any, rotate = true;
+  			let mixer: any, timer;
   
   			
   
@@ -67,7 +67,7 @@ function onReady(__stage) {
   					const object = gltf.scene;
   					mixer = new THREE.AnimationMixer( object );
   
-  					const material = object.children[ 0 ].children[ 0 ].material;
+  					const material = (object.children[ 0 ].children[ 0 ] as any).material;
   					material.outputNode = oscSine( time.mul( .1 ) ).mix( output, posterize( output.add( .1 ), 4 ).mul( 2 ) );
   
   					const action = mixer.clipAction( gltf.animations[ 0 ] );
@@ -84,7 +84,7 @@ function onReady(__stage) {
   				portals = new THREE.Group();
   				scene.add( portals );
   
-  				function addBackdropSphere( backdropNode, backdropAlphaNode = null ) {
+  				function addBackdropSphere( backdropNode: any, backdropAlphaNode: any = null ) {
   
   					const distance = 1;
   					const id = portals.children.length;
@@ -139,7 +139,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

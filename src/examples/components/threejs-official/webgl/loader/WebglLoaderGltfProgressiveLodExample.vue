@@ -15,13 +15,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import { useNeedleProgressive } from '@needle-tools/gltf-progressive';
+let mixer: any;
 
 const props = defineProps({
   example: {
@@ -31,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - GLTF progressive loading: 82x faster - <a href=\"https://www.npmjs.com/package/@needle-tools/gltf-progressive\" target=\"_blank\" rel=\"noopener\">@needle-tools/gltf-progressive</a><br />\n\t\t\tMobile Home & Peachy Balloon by\n\t\t\t<a href=\"https://sketchfab.com/3d-models/mobile-home-5240b1dbc29c4ea28be7f91b3638951a\" target=\"_blank\" rel=\"noopener\">ConradJustin</a><br/>\n\t\t\tThe Forgotten Knight by \n\t\t\t<a href=\"https://sketchfab.com/3d-models/the-forgotten-knight-d14eb14d83bd4e7ba7cbe443d76a10fd\" target=\"_blank\" rel=\"noopener\">Dark Igorek</a><br />\n\t\t\t<a href=\"https://hdrihaven.com/hdri/?h=quarry_01\" target=\"_blank\" rel=\"noopener\">Quarry 01</a> from <a href=\"https://hdrihaven.com/\" target=\"_blank\" rel=\"noopener\">HDRI Haven</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,7 +44,7 @@ function onReady(__stage) {
   
   
   
-  			let airshipModel;
+  			let airshipModel: any;
   
   			
   
@@ -180,7 +181,7 @@ function onReady(__stage) {
   			timer.connect( document );
   			let time = 0;
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const dt = timer.getDelta();
     				time += dt;

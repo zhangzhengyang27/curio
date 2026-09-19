@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -48,7 +48,7 @@ async function onReady(ctx) {
   
   const zip = new JSZip();
   
-  input.onchange = async (e) => {
+  input.onchange = async (e: any) => {
   
     const file = e.target.files[0]
   
@@ -69,7 +69,7 @@ async function onReady(ctx) {
   
   }
   
-  function downloadBlob(blob, filename) {
+  function downloadBlob(blob: Blob, filename: string) {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = filename;
@@ -79,7 +79,7 @@ async function onReady(ctx) {
     URL.revokeObjectURL(link.href);
   }
   
-  function loadZipChunksModel(zipBlob) {
+  function loadZipChunksModel(zipBlob: Blob) {
   
     const loader = new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath(props.example?.globals?.FILE_HOST + 'js/three/draco/'))
   
@@ -87,14 +87,14 @@ async function onReady(ctx) {
   
       const chunkFiles = Object.keys(unzipped.files).filter(name => name.endsWith('.chunk')).sort((a, b) => parseInt(a) - parseInt(b))
   
-      const chunks = []
+      const chunks: any[] = []
       for (const chunkFile of chunkFiles) {
         const chunkData = await unzipped.files[chunkFile].async('arraybuffer')
         chunks.push(chunkData)
       }
   
       const completeArray = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.byteLength, 0))
-      let offset = 0
+      let offset: number = 0
       for (const chunk of chunks) {
         completeArray.set(new Uint8Array(chunk), offset)
         offset += chunk.byteLength
@@ -104,7 +104,7 @@ async function onReady(ctx) {
       const url = URL.createObjectURL(blob)
   
       loader.load(url, (gltf) => {
-        gltf.scene.traverse((child) => {
+        gltf.scene.traverse((child: any) => {
           if (child?.material) child.material.envMap = textureCube
         })
         scene.add(gltf.scene)

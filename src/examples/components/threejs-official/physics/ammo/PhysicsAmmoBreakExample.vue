@@ -15,13 +15,30 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ConvexObjectBreaker } from 'three/examples/jsm/misc/ConvexObjectBreaker.js';
 import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js';
+
+// 原 HTML 以 <script> 注入全局 Ammo,转换期丢失;按 jsm-compat/physics/AmmoPhysics.js 同源恢复懒加载
+async function loadAmmo(): Promise<any> {
+	if ( typeof ( globalThis as any ).Ammo === 'undefined' ) {
+		await new Promise( ( resolve, reject ) => {
+			const script = document.createElement( 'script' );
+			script.src = 'https://cdn.jsdelivr.net/gh/kripken/ammo.js@79190a1f03845794b1bba1777f30037349967658/builds/ammo.wasm.js';
+			script.onload = resolve;
+			script.onerror = reject;
+			document.head.appendChild( script );
+		} );
+	}
+	return ( globalThis as any ).Ammo();
+}
+
+// Ammo.js 全局工厂(原示例经 HTML script 标签注入;转模块后需显式声明,否则 strict 模式赋值未声明名抛 ReferenceError)
+let Ammo: any;
 
 const props = defineProps({
   example: {
@@ -31,7 +48,7 @@ const props = defineProps({
 })
 
 const infoHtml = "Physics threejs demo with convex objects breaking in real time<br />Press mouse to throw balls and move the camera."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,9 +64,9 @@ function onReady(__stage) {
   		// - Global variables -
   
   		// Graphics variables
-  		let container, stats;
+  		let container, stats: any;
   
-  		let textureLoader;
+  		let textureLoader: any;
   		const timer = new THREE.Timer();
   		timer.connect( document );
   
@@ -63,20 +80,22 @@ function onReady(__stage) {
   
   		let broadphase;
   		let solver;
-  		let physicsWorld;
+  		let dispatcher: any;
+  		let physicsWorld: any;
   		const margin = 0.05;
   
   		const convexBreaker = new ConvexObjectBreaker();
   
   		// Rigid bodies include all movable objects
-  		const rigidBodies = [];
+  		const rigidBodies: any = [];
   
   		const pos = new THREE.Vector3();
   		const quat = new THREE.Quaternion();
   
-  		let tempBtVec3_1;
+  		let tempBtVec3_1: any;
+  		let transformAux1: any;
   
-  		const objectsToRemove = [];
+  		const objectsToRemove: any = [];
   
   		for ( let i = 0; i < 500; i ++ ) {
   
@@ -91,7 +110,7 @@ function onReady(__stage) {
   
   		// - Main code -
   
-  		Ammo().then( function ( AmmoLib ) {
+  		loadAmmo().then( function ( AmmoLib: any ) {
   
   			Ammo = AmmoLib;
   
@@ -185,7 +204,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createObject( mass, halfExtents, pos, quat, material ) {
+  		function createObject( mass: any, halfExtents: any, pos: any, quat: any, material: any ) {
   
   			const object = new THREE.Mesh( new THREE.BoxGeometry( halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2 ), material );
   			object.position.copy( pos );
@@ -202,7 +221,7 @@ function onReady(__stage) {
   			quat.set( 0, 0, 0, 1 );
   			const ground = createParalellepipedWithPhysics( 40, 1, 40, 0, pos, quat, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
   			ground.receiveShadow = true;
-  			textureLoader.load( ASSET_HOST + 'textures/grid.png', function ( texture ) {
+  			textureLoader.load( ASSET_HOST + 'textures/grid.png', function ( texture: any ) {
   
   				texture.wrapS = THREE.RepeatWrapping;
   				texture.wrapT = THREE.RepeatWrapping;
@@ -263,7 +282,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createParalellepipedWithPhysics( sx, sy, sz, mass, pos, quat, material ) {
+  		function createParalellepipedWithPhysics( sx: any, sy: any, sz: any, mass: any, pos: any, quat: any, material: any ) {
   
   			const object = new THREE.Mesh( new THREE.BoxGeometry( sx, sy, sz, 1, 1, 1 ), material );
   			const shape = new Ammo.btBoxShape( new Ammo.btVector3( sx * 0.5, sy * 0.5, sz * 0.5 ) );
@@ -275,7 +294,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createDebrisFromBreakableObject( object ) {
+  		function createDebrisFromBreakableObject( object: any ) {
   
   			object.castShadow = true;
   			object.receiveShadow = true;
@@ -292,7 +311,7 @@ function onReady(__stage) {
   
   		}
   
-  		function removeDebris( object ) {
+  		function removeDebris( object: any ) {
   
   			scene.remove( object );
   
@@ -300,7 +319,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createConvexHullPhysicsShape( coords ) {
+  		function createConvexHullPhysicsShape( coords: any ) {
   
   			const shape = new Ammo.btConvexHullShape();
   
@@ -316,7 +335,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createRigidBody( object, physicsShape, mass, pos, quat, vel, angVel ) {
+  		function createRigidBody( object: any, physicsShape: any, mass: any, pos: any, quat: any, vel?: any, angVel?: any ) {
   
   			if ( pos ) {
   
@@ -391,7 +410,7 @@ function onReady(__stage) {
   
   		}
   
-  		function createMaterial( color ) {
+  		function createMaterial( color: any ) {
   
   			color = color || createRandomColor();
   			return new THREE.MeshPhongMaterial( { color: color } );
@@ -433,7 +452,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const deltaTime = timer.getDelta();
@@ -452,7 +471,7 @@ function onReady(__stage) {
   
   		}
   
-  		function updatePhysics( deltaTime ) {
+  		function updatePhysics( deltaTime: any ) {
   
   			// Step world
   			physicsWorld.stepSimulation( deltaTime, 10 );

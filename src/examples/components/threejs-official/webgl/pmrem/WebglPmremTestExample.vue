@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\t\t\tPMREM test by <a href=\"https://github.com/elalish\" target=\"_blank\" rel=\"noopener\">Emmett Lalish</a>\n\t\t\t\t<br>\n\t\t\t\t<br>1: white metal. 2: white dielectric. 3: black dielectric.\n\t\t\t\t<br>PMREM on: HDR with a single bright pixel. PMREM off: DirectionalLight.\n\t\t\t\t<br>The difference between these renders indicates the error in the PMREM approximations."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -102,11 +102,11 @@ function onReady(__stage) {
   				gui = new GUI();
   				gui.add( { enabled: true }, 'enabled' )
   					.name( 'PMREM' )
-  					.onChange( value => {
+  					.onChange( (value: any) => {
   
   						directionalLight.intensity = value ? 0 : 1;
   
-  						scene.traverse( function ( child ) {
+  						scene.traverse( function ( child: any ) {
   
   							if ( child.isMesh ) {
   
@@ -185,6 +185,9 @@ function onReady(__stage) {
   
   			}
   
+  			// init 的函数体已在 HTML→Vue 转换时内联进 onReady，此处仅维持 promise 链时序
+  			function init() {}
+
   			Promise.resolve()
   				.then( init )
   				.then( createObjects )

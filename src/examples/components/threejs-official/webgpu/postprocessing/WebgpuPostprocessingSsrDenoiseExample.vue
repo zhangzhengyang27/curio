@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, normalView, materialMetalness, materialRoughness, screenUV, sample, packNormalToRGB, unpackRGBToNormal, vec2, velocity, diffuseColor, vec3, vec4, uniform, mix, step, abs, float, renderOutput, saturation } from 'three/tsl';
@@ -28,7 +28,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
-import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch';
 
 const props = defineProps({
   example: {
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t<div class=\"title-wrapper\">\n\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSR + Denoising</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -55,7 +55,7 @@ async function onReady(__stage) {
   		// (irradiance) is left untouched. Equivalent to zeroing EnvironmentNode contributions,
   		// but scoped to this example rather than modifying the core library.
   		const _indirectSpecular = THREE.PhysicalLightingModel.prototype.indirectSpecular;
-		patchPrototype(THREE.PhysicalLightingModel, 'indirectSpecular', function ( builder ) {
+		patchPrototype(THREE.PhysicalLightingModel, 'indirectSpecular', function ( this: any, builder: any ) {
   
   			builder.context.radiance = vec3( 0 );
   
@@ -80,13 +80,13 @@ async function onReady(__stage) {
   		compareHint.hidden = true;
   		__stage.overlay?.appendChild( compareHint );
   
-  		function isCompareMode( output ) {
+  		function isCompareMode( output: any ) {
   
   			return output === OUTPUT_COMPARE_DENOISE || output === OUTPUT_COMPARE_SSR;
   
   		}
   
-  		function updateCompareHint( output ) {
+  		function updateCompareHint( output: any ) {
   
   			compareHint.hidden = ! isCompareMode( output );
   
@@ -95,7 +95,7 @@ async function onReady(__stage) {
   		const compareSplit = uniform( 0.5 );
   		const compareResolution = uniform( new THREE.Vector2( (__stage.container?.clientWidth || window.innerWidth), (__stage.container?.clientHeight || window.innerHeight) ) );
   
-  		function buildCompareNode( noisy, denoised ) {
+  		function buildCompareNode( noisy: any, denoised: any ) {
   
   			const compareColor = mix( noisy, denoised, step( compareSplit, screenUV.x ) );
   			const lineWidth = float( 1 ).div( compareResolution.x );
@@ -152,10 +152,10 @@ async function onReady(__stage) {
   			},
   		};
   
-  		let model, postProcessing, ssrNode, temporalReprojectNode, denoiseNode;
+  		let model, postProcessing: any, ssrNode: any, temporalReprojectNode: any, denoiseNode: any;
   
-  		let scenePassNode, combinedOutputNode, scenePassDepth, scenePassVelocity;
-  		let gammaUniform, contrastUniform, saturationUniform;
+  		let scenePassNode: any, combinedOutputNode: any, scenePassDepth: any, scenePassVelocity: any;
+  		let gammaUniform: any, contrastUniform: any, saturationUniform: any;
   
   		
   
@@ -177,8 +177,8 @@ async function onReady(__stage) {
   
   					object.castShadow = true;
   					object.receiveShadow = true;
-  					object.material.roughness = 0.3;
-  					object.material.normalMap = null;
+  					( object.material as any ).roughness = 0.3;
+  					( object.material as any ).normalMap = null;
   
   				} );
   
@@ -342,9 +342,9 @@ async function onReady(__stage) {
   			ssrGui.add( params.ssr, 'intensity', 0, 4 ).name( 'intensity' ).onChange( applyParams );
   			ssrGui.add( params.ssr, 'thickness', 0, 0.25 ).name( 'thickness' ).onChange( applyParams );
   			ssrGui.add( params.ssr, 'environmentIntensity', 0, 10 ).name( 'env intensity' ).onChange( applyParams );
-  			ssrGui.add( params, 'roughness', 0, 1 ).onChange( ( value ) => {
+  			ssrGui.add( params, 'roughness', 0, 1 ).onChange( ( value: any ) => {
   
-  				scene.traverse( ( object ) => {
+  				scene.traverse( ( object: any ) => {
   
   					if ( object.material ) object.material.roughness = value;
   
@@ -438,7 +438,7 @@ async function onReady(__stage) {
   
   		}
   
-  		function applyGrading( source ) {
+  		function applyGrading( source: any ) {
   
   			let rgb = source.rgb;
   
@@ -451,7 +451,7 @@ async function onReady(__stage) {
   
   		}
   
-  		function applyPostProcessing( source ) {
+  		function applyPostProcessing( source: any ) {
   
   			return sharpen( traa( applyGrading( source ), scenePassDepth, scenePassVelocity, camera ), 0 );
   
@@ -512,7 +512,7 @@ async function onReady(__stage) {
   
   		
   
-  		function onComparePointerMove( event ) {
+  		function onComparePointerMove( event: any ) {
   
   			if ( ! isCompareMode( params.output ) ) return;
   
@@ -531,7 +531,7 @@ async function onReady(__stage) {
   
   		}
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     postProcessing.render();
   })
 

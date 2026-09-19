@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -33,9 +33,9 @@ function onReady(ctx) {
   }
   
   class Flakes extends THREE.Points{
-    constructor(gu){
-      let flakeData = [];
-      let g = new THREE.BufferGeometry().setFromPoints(new Array(1000).fill().map(_ => {
+    constructor(gu: any){
+      let flakeData: any[] = [];
+      let g = new THREE.BufferGeometry().setFromPoints(new Array(1000).fill(undefined).map(_ => {
         flakeData.push(((Math.random() < 0.5) ? -1 : 1), 0, 0, 0);
         return new THREE.Vector3().random().subScalar(0.5).multiplyScalar(10)
       }));
@@ -43,7 +43,7 @@ function onReady(ctx) {
       let m = new THREE.PointsMaterial({
         color: 0xfbec5d,
         size: 0.75,
-        onBeforeCompile: shader => {
+        onBeforeCompile: (shader: any) => {
           shader.uniforms.time = gu.time;
           shader.vertexShader = `
             uniform float time;
@@ -128,7 +128,7 @@ function onReady(ctx) {
             `
           );
         }
-      })
+      } as any)
       super(g, m);
     }
   }

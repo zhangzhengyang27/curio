@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - VSM Shadows example by <a href=\"https://github.com/supereggbert\">Paul Brunt</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,9 +44,9 @@ function onReady(__stage) {
   
   
   
-  			let timer, stats;
-  			let dirLight, spotLight;
-  			let torusKnot, dirGroup;
+  			let timer: any, stats: any;
+  			let dirLight: any, spotLight: any;
+  			let torusKnot: any, dirGroup: any;
   
   			
   
@@ -65,13 +65,13 @@ function onReady(__stage) {
   				};
   
   				const spotlightFolder = gui.addFolder( 'Spotlight' );
-  				spotlightFolder.add( config, 'spotlightRadius' ).name( 'radius' ).min( 0 ).max( 25 ).onChange( function ( value ) {
+  				spotlightFolder.add( config, 'spotlightRadius' ).name( 'radius' ).min( 0 ).max( 25 ).onChange( function ( value: any ) {
   
   					spotLight.shadow.radius = value;
   
   				} );
   
-  				spotlightFolder.add( config, 'spotlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value ) {
+  				spotlightFolder.add( config, 'spotlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value: any ) {
   
   					spotLight.shadow.blurSamples = value;
   
@@ -79,13 +79,13 @@ function onReady(__stage) {
   				spotlightFolder.open();
   
   				const dirlightFolder = gui.addFolder( 'Directional Light' );
-  				dirlightFolder.add( config, 'dirlightRadius' ).name( 'radius' ).min( 0 ).max( 25 ).onChange( function ( value ) {
+  				dirlightFolder.add( config, 'dirlightRadius' ).name( 'radius' ).min( 0 ).max( 25 ).onChange( function ( value: any ) {
   
   					dirLight.shadow.radius = value;
   
   				} );
   
-  				dirlightFolder.add( config, 'dirlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value ) {
+  				dirlightFolder.add( config, 'dirlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value: any ) {
   
   					dirLight.shadow.blurSamples = value;
   
@@ -217,7 +217,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				timer.update();
   

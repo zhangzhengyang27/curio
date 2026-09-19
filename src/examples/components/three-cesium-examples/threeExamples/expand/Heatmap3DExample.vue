@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -32,9 +32,9 @@ function onReady(ctx) {
   
   // 渲染 
   
-  const getRandom = (max, min) => Math.round((Math.random() * (max - min + 1) + min) * 10) / 10
-  
-  var heatmap = h337.create({
+  const getRandom = (max: any, min: any) => Math.round((Math.random() * (max - min + 1) + min) * 10) / 10
+
+  var heatmap = (globalThis as any).h337.create({
       container: document.createElement('div'),
       width: 256,
       height: 256,

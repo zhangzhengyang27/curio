@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform, varying, vec4, add, sub, max, dot, sin, mat3, uint, negate, instancedArray, cameraProjectionMatrix, cameraViewMatrix, positionLocal, modelWorldMatrix, sqrt, float, Fn, If, cos, Loop, Continue, normalize, instanceIndex, length, vertexIndex } from 'three/tsl';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Birds</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   			let last = performance.now();
   
-  			let pointer, raycaster;
+  			let pointer: any, raycaster;
   			let computeVelocity, computePosition, effectController;
   
   			const BIRDS = 8192;
@@ -81,21 +81,21 @@ function onReady(__stage) {
   					const wingsSpan = 20;
   
   					// Body
-  					verts_push(
+  					(verts_push as any)(
   						0, 0, - 20,
   						0, - 8, 10,
   						0, 0, 30
   					);
   
   					// Left Wing
-  					verts_push(
+  					(verts_push as any)(
   						0, 0, - 15,
   						- wingsSpan, 0, 5,
   						0, 0, 15
   					);
   
   					// Right Wing
-  					verts_push(
+  					(verts_push as any)(
   						0, 0, 15,
   						wingsSpan, 0, 5,
   						0, 0, - 15
@@ -422,8 +422,8 @@ function onReady(__stage) {
   
   				scene.add( birdMesh );
   
-  				container.style.touchAction = 'none';
-  				container.addEventListener( 'pointermove', onPointerMove );
+  				container!.style.touchAction = 'none';
+  				container!.addEventListener( 'pointermove', onPointerMove );
   
   				
   
@@ -437,7 +437,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -446,7 +446,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const now = performance.now();
     				let deltaTime = ( now - last ) / 1000;
     				if ( deltaTime > 1 ) deltaTime = 1; // safety cap on large deltas

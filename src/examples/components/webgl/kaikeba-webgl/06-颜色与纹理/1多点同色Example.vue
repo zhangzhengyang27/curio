@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import {initShaders} from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Utils.js'
 const vertexShader = `attribute vec4 a_Position;
@@ -19,7 +19,7 @@ const fragmentShader = `precision mediump float;
         gl_FragColor=u_FragColor;
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
   
       
@@ -29,7 +29,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
   
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       initShaders(gl, vsSource, fsSource);
   
@@ -48,14 +48,14 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       // 写入数据
       gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
       // 获取attribute 变量
-      const a_Position = gl.getAttribLocation(gl.program, 'a_Position')
+      const a_Position = gl.getAttribLocation((gl as any).program, 'a_Position')
       // 修改attribute 变量
       gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
       // 赋能-批处理
       gl.enableVertexAttribArray(a_Position)
   
       // 获取uniform 变量
-      const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
+      const u_FragColor = gl.getUniformLocation((gl as any).program, "u_FragColor");
   
       // 修改uniform 变量
       gl.uniform4f(u_FragColor, 1, 1, 1, 1);

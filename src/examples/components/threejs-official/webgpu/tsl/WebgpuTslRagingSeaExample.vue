@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { float, mx_noise_float, Loop, color, positionLocal, sin, vec2, vec3, mul, time, uniform, Fn, transformNormalToView } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Raging Sea</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -72,7 +72,7 @@ function onReady(__stage) {
   
   				// TSL functions
   
-  				const wavesElevation = Fn( ( [ position ] ) => {
+  				const wavesElevation = Fn( ( [ position ]: any ) => {
   
   					// large waves
   
@@ -107,7 +107,7 @@ function onReady(__stage) {
   
   				// position
   
-  				const elevation = wavesElevation( positionLocal );
+  				const elevation = (wavesElevation as any)( (positionLocal as any) );
   				const position = positionLocal.add( vec3( 0, elevation, 0 ) );
   
   				material.positionNode = position;
@@ -117,8 +117,8 @@ function onReady(__stage) {
   				let positionA = positionLocal.add( vec3( normalComputeShift, 0, 0 ) );
   				let positionB = positionLocal.add( vec3( 0, 0, normalComputeShift.negate() ) );
   
-  				positionA = positionA.add( vec3( 0, wavesElevation( positionA ), 0 ) );
-  				positionB = positionB.add( vec3( 0, wavesElevation( positionB ), 0 ) );
+  				positionA = positionA.add( vec3( 0, (wavesElevation as any)( (positionA as any) ), 0 ) );
+  				positionB = positionB.add( vec3( 0, (wavesElevation as any)( (positionB as any) ), 0 ) );
   
   				const toA = positionA.sub( position ).normalize();
   				const toB = positionB.sub( position ).normalize();
@@ -158,11 +158,11 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.addColor( { color: material.color.getHex( THREE.SRGBColorSpace ) }, 'color' ).name( 'color' ).onChange( value => material.color.set( value ) );
+  				gui.addColor( { color: (material as any)!.color.getHex( THREE.SRGBColorSpace ) }, 'color' ).name( 'color' ).onChange( (value: any) => (material as any)!.color.set( value ) );
   				gui.add( material, 'roughness', 0, 1, 0.001 );
   
   				const colorGui = gui.addFolder( 'emissive' );
-  				colorGui.addColor( { color: emissiveColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).name( 'color' ).onChange( value => emissiveColor.value.set( value ) );
+  				colorGui.addColor( { color: emissiveColor.value.getHex( THREE.SRGBColorSpace ) }, 'color' ).name( 'color' ).onChange( (value: any) => emissiveColor.value.set( value ) );
   				colorGui.add( emissiveLow, 'value', - 1, 0, 0.001 ).name( 'low' );
   				colorGui.add( emissiveHigh, 'value', 0, 1, 0.001 ).name( 'high' );
   				colorGui.add( emissivePower, 'value', 1, 10, 1 ).name( 'power' );

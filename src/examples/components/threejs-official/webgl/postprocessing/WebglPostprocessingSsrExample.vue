@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -31,6 +31,9 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { ReflectorForSSRPass } from 'three/examples/jsm/objects/ReflectorForSSRPass.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
+let groundReflector: any;
+
+
 const props = defineProps({
   example: {
     type: Object,
@@ -39,7 +42,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\tSSRPass demo by <a href=\"https://github.com/gonnavis\" target=\"_blank\">Vis</a>.<br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -59,15 +62,15 @@ function onReady(__stage) {
   			otherMeshes: true,
   			groundReflector: true,
   		};
-  		let composer;
+  		let composer: any;
   		let ssrPass;
   
   		let stats;
   
   
-  		const otherMeshes = [];
+  		const otherMeshes: any = [];
   
-  		const selects = [];
+  		const selects: any = [];
   
   		const container = document.querySelector( '#container' );
   
@@ -246,11 +249,11 @@ function onReady(__stage) {
   
   				if ( params.otherMeshes ) {
   
-  					otherMeshes.forEach( mesh => mesh.visible = true );
+  					otherMeshes.forEach( (mesh: any) => mesh.visible = true );
   
   				} else {
   
-  					otherMeshes.forEach( mesh => mesh.visible = false );
+  					otherMeshes.forEach( (mesh: any) => mesh.visible = false );
   
   				}
   
@@ -263,7 +266,7 @@ function onReady(__stage) {
   				'Depth': SSRPass.OUTPUT.Depth,
   				'Normal': SSRPass.OUTPUT.Normal,
   				'Metalness': SSRPass.OUTPUT.Metalness,
-  			} ).onChange( function ( value ) {
+  			} ).onChange( function ( value: any ) {
   
   				ssrPass.output = value;
   
@@ -285,7 +288,7 @@ function onReady(__stage) {
   
   		
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     {
     if ( params.autoRotate ) {

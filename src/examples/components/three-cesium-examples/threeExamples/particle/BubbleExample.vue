@@ -7,10 +7,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -66,7 +66,7 @@ function onReady(ctx) {
        *
        * @param emitter {string}
        */
-      set emitter(emitter) {
+      set emitter(emitter: any) {
           if (this._emitters.indexOf(emitter) !== -1) {
               this._emitter = emitter;
               this.setPoints();
@@ -74,38 +74,38 @@ function onReady(ctx) {
           }
       }
   
-      set radius(radius) {
+      set radius(radius: any) {
           this._radius = radius;
           this.setPoints();
       }
   
-      set radius2(radius) {
+      set radius2(radius: any) {
           this._radius2 = radius;
           this.setPoints();
       }
   
-      set count(count) {
+      set count(count: any) {
           this._count = count;
           this.setPoints();
       }
   
-      set maxHeight(maxHeight) {
+      set maxHeight(maxHeight: any) {
           this._maxHeight = maxHeight;
           this.uniforms.maxHeight.value = maxHeight || 10;
           this.setPoints();
       }
   
-      set speed(speed) {
+      set speed(speed: any) {
           this._speed = speed;
           this.uniforms.speed.value = speed;
       }
   
-      set size(size) {
+      set size(size: any) {
           this._size = size;
           this.uniforms.size.value = size;
       }
   
-      set color(color) {
+      set color(color: any) {
           this._color = color;
           this.uniforms.color.value = new Color(color);
       }
@@ -228,7 +228,7 @@ function onReady(ctx) {
        * size:气泡大小
        * color:气泡颜色
        */
-      constructor(config) {
+      constructor(config: any) {
           super();
           this.material = this.initLineMaterial();
           this.geometry = new BufferGeometry();
@@ -251,9 +251,9 @@ function onReady(ctx) {
       }
   
       setPoints = () => {
-          let points = [];
-          let data1Array = [];
-          let data2Array = [];
+          let points: any[] = []
+          let data1Array: any[] = []
+          let data2Array: any[] = []
           for (let i = 0; i < this._count; i++) {
   
               //圆柱模式下,生成的数据用于半径和角度
@@ -278,9 +278,9 @@ function onReady(ctx) {
               let y = i / this._count * this.uniforms.maxHeight.value;
               points.push(new Vector3(0, y, 0));
           }
-          this.geometry.setFromPoints(points);
-          this.geometry.setAttribute('data1', new Float32BufferAttribute(data1Array, 1));
-          this.geometry.setAttribute('data2', new Float32BufferAttribute(data2Array, 1));
+          this.geometry!.setFromPoints(points);
+          this.geometry!.setAttribute('data1', new Float32BufferAttribute(data1Array, 1));
+          this.geometry!.setAttribute('data2', new Float32BufferAttribute(data2Array, 1));
       }
   
       onBeforeRender = () => {
@@ -288,9 +288,9 @@ function onReady(ctx) {
       }
   }
   
-  let orbit;
+  let orbit: any = null;
   gui = new GUI();
-  let bubble;
+  let bubble: any = null;
 
   init();
   addMesh();
@@ -337,17 +337,17 @@ function onReady(ctx) {
           emitterOptions: ["cone", "cylinder", "box", "sphere"]
       };
   
-      gui.add(params, "speed", -2, 2).step(0.01).onChange(v => bubble.speed = v);
-      gui.add(params, "size").onChange(v => bubble.size = v);
-      gui.add(params, "maxHeight").onChange(v => bubble.maxHeight = v);
-      gui.addColor(params, "color").onChange(v => bubble.color = v);
-      gui.add(params, "count").onChange(v => bubble.count = v);
-      gui.add(params, "radius").onChange(v => bubble.radius = v);
-      gui.add(params, "rotateSpeed").onChange(v => bubble.rotateSpeed = v);
-      gui.addColor(params, 'backgroundColor').name('背景色').onChange(v => {
+      gui.add(params, "speed", -2, 2).step(0.01).onChange((v: any) => bubble.speed = v);
+      gui.add(params, "size").onChange((v: any) => bubble.size = v);
+      gui.add(params, "maxHeight").onChange((v: any) => bubble.maxHeight = v);
+      gui.addColor(params, "color").onChange((v: any) => bubble.color = v);
+      gui.add(params, "count").onChange((v: any) => bubble.count = v);
+      gui.add(params, "radius").onChange((v: any) => bubble.radius = v);
+      gui.add(params, "rotateSpeed").onChange((v: any) => bubble.rotateSpeed = v);
+      gui.addColor(params, 'backgroundColor').name('背景色').onChange((v: any) => {
           scene.background = new THREE.Color(v);
       });
-      gui.add(params, 'emitter', params.emitterOptions).name('粒子发射方式').onChange(v => {
+      gui.add(params, 'emitter', params.emitterOptions).name('粒子发射方式').onChange((v: any) => {
           bubble.emitter = v;
       });
   }

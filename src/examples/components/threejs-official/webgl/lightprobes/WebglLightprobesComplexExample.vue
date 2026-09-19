@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - light probe volume (multi-room)<br/>\n\t\t\tTwo rooms with independent probe volumes showcasing multi-volume scene.add() API"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,8 +42,8 @@ async function onReady(__stage) {
   
 
   
-  			let probesLeft, probesRight;
-  			let probesHelperLeft, probesHelperRight;
+  			let probesLeft: any, probesRight: any;
+  			let probesHelperLeft: any, probesHelperRight: any;
 
   				// Camera
   
@@ -280,7 +280,7 @@ async function onReady(__stage) {
   					resolution: 6
   				};
   
-  				async function bakeWithResolution( resolution ) {
+  				async function bakeWithResolution( resolution: any ) {
   
   					// Remove both volumes before baking to prevent feedback
   
@@ -344,18 +344,18 @@ async function onReady(__stage) {
   				// GUI
   
   				gui = new GUI();
-  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value ) => {
+  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value: any ) => {
   
   					probesLeft.visible = value;
   					probesRight.visible = value;
   
   				} );
-  				gui.add( params, 'resolution', 2, 12, 1 ).name( 'Resolution' ).onFinishChange( ( value ) => {
+  				gui.add( params, 'resolution', 2, 12, 1 ).name( 'Resolution' ).onFinishChange( ( value: any ) => {
   
   					bakeWithResolution( value );
   
   				} );
-  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value ) => {
+  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value: any ) => {
   
   					probesHelperLeft.visible = value;
   					probesHelperRight.visible = value;

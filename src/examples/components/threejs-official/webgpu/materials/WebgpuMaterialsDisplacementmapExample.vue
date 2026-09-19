@@ -12,7 +12,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Displacement Map</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,9 +47,9 @@ function onReady(__stage) {
   				normalScale: 1.0
   			};
   
-  			let mesh, material;
+  			let mesh, material: any;
   
-  			let pointLight, ambientLight;
+  			let pointLight: any, ambientLight: any;
   
   			const height = 500; // of camera frustum
   
@@ -63,43 +63,43 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'settings' );
   
-  				gui.add( settings, 'metalness', 0, 1 ).onChange( function ( value ) {
+  				gui.add( settings, 'metalness', 0, 1 ).onChange( function ( value: any ) {
   
   					material.metalness = value;
   
   				} );
   
-  				gui.add( settings, 'roughness', 0, 1 ).onChange( function ( value ) {
+  				gui.add( settings, 'roughness', 0, 1 ).onChange( function ( value: any ) {
   
   					material.roughness = value;
   
   				} );
   
-  				gui.add( settings, 'aoMapIntensity', 0, 1 ).onChange( function ( value ) {
+  				gui.add( settings, 'aoMapIntensity', 0, 1 ).onChange( function ( value: any ) {
   
   					material.aoMapIntensity = value;
   
   				} );
   
-  				gui.add( settings, 'ambientIntensity', 0, 1 ).onChange( function ( value ) {
+  				gui.add( settings, 'ambientIntensity', 0, 1 ).onChange( function ( value: any ) {
   
   					ambientLight.intensity = value;
   
   				} );
   
-  				gui.add( settings, 'envMapIntensity', 0, 3 ).onChange( function ( value ) {
+  				gui.add( settings, 'envMapIntensity', 0, 3 ).onChange( function ( value: any ) {
   
   					material.envMapIntensity = value;
   
   				} );
   
-  				gui.add( settings, 'displacementScale', 0, 3.0 ).onChange( function ( value ) {
+  				gui.add( settings, 'displacementScale', 0, 3.0 ).onChange( function ( value: any ) {
   
   					material.displacementScale = value;
   
   				} );
   
-  				gui.add( settings, 'normalScale', - 1, 1 ).onChange( function ( value ) {
+  				gui.add( settings, 'normalScale', - 1, 1 ).onChange( function ( value: any ) {
   
   					material.normalScale.set( 1, - 1 ).multiplyScalar( value );
   
@@ -196,7 +196,7 @@ function onReady(__stage) {
   				loader.load( ASSET_HOST + 'models/obj/ninja/ninjaHead_Low.obj', function ( group ) {
   
   					const geometry = group.children[ 0 ].geometry;
-  					geometry.center();
+  					geometry!.center();
   
   					mesh = new THREE.Mesh( geometry, material );
   					mesh.scale.multiplyScalar( 25 );
@@ -215,7 +215,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     pointLight.position.x = 2500 * Math.cos( r );
     				pointLight.position.z = 2500 * Math.sin( r );

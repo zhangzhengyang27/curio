@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { If, TWO_PI, atan, color, frontFacing, output, positionLocal, Fn, uniform, vec4 } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Angular Slicing</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -80,7 +80,7 @@ function onReady(__stage) {
   
   				// TSL functions
   			
-  				const inAngle = Fn( ( [ position, angleStart, angleArc ] ) => {
+  			const inAngle = Fn( ( [ position, angleStart, angleArc ]: any ) => {
   
   					const angle = atan( position.y, position.x ).sub( angleStart ).mod( TWO_PI ).toVar();
   					return angle.greaterThan( 0 ).and( angle.lessThan( angleArc ) );
@@ -112,7 +112,7 @@ function onReady(__stage) {
   
   				// mask
   
-  				const mask = inAngle( positionLocal.xy, sliceStart, sliceArc ).not();
+  			const mask = (inAngle as any)( (positionLocal.xy as any), sliceStart, sliceArc ).not();
   
   				slicedMaterial.maskNode = mask;
   				//slicedMaterial.maskShadowNode = mask; // optional: custom mask shadows
@@ -201,7 +201,7 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   				gui.add( sliceStart, 'value', - Math.PI, Math.PI, 0.001 ).name( 'sliceStart' );
   				gui.add( sliceArc, 'value', 0, Math.PI * 2, 0.001 ).name( 'sliceArc' );
-  				gui.addColor( { color: sliceColor.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).onChange( value => sliceColor.value.set( value ) );
+  				gui.addColor( { color: sliceColor.value.getHexString( THREE.SRGBColorSpace ) }, 'color' ).onChange( (value: any) => sliceColor.value.set( value ) );
   
   			
   

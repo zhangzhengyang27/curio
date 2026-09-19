@@ -5,7 +5,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const viewerOptions = {
@@ -22,7 +22,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const Cesium = ctx.cesium
   ctx.viewer.imageryLayers.add(
     Cesium.ImageryLayer.fromProviderAsync(

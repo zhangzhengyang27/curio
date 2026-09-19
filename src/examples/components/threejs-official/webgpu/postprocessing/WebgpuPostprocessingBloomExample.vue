@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Bloom</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -109,19 +109,19 @@ async function onReady(__stage) {
   
   				const bloomFolder = gui.addFolder( 'bloom' );
   
-  				bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value ) {
+  				bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value: any ) {
   
   					bloomPass.threshold.value = value;
   
   				} );
   
-  				bloomFolder.add( params, 'strength', 0.0, 3.0 ).onChange( function ( value ) {
+  				bloomFolder.add( params, 'strength', 0.0, 3.0 ).onChange( function ( value: any ) {
   
   					bloomPass.strength.value = value;
   
   				} );
   
-  				bloomFolder.add( params, 'radius', 0.0, 1.0, 0.01 ).onChange( function ( value ) {
+  				bloomFolder.add( params, 'radius', 0.0, 1.0, 0.01 ).onChange( function ( value: any ) {
   
   					bloomPass.radius.value = value;
   
@@ -129,7 +129,7 @@ async function onReady(__stage) {
   
   				const toneMappingFolder = gui.addFolder( 'tone mapping' );
   
-  				toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value ) {
+  				toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value: any ) {
   
   					renderer.toneMappingExposure = Math.pow( value, 4.0 );
   
@@ -142,7 +142,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				mixer.update( delta );

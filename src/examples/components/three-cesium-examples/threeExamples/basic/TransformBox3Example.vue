@@ -11,7 +11,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
@@ -28,11 +28,11 @@ const props = defineProps({
 
 const FILE_HOST = props.example?.globals?.FILE_HOST || '/external-examples/3d-file-server/'
 
-let guiRef = null
-let transformControls = null
-let box3Helper = null
+let guiRef: any = null
+let transformControls: any = null
+let box3Helper: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -46,7 +46,7 @@ function onReady(ctx) {
   transformControls = new TransformControls(camera, renderer.domElement)
   guiRef.add(transformControls, 'mode', ['translate', 'rotate', 'scale']).name('模式')
 
-  transformControls.addEventListener('dragging-changed', (event) => {
+  transformControls.addEventListener('dragging-changed', (event: any) => {
     controls.enabled = !event.value
   })
 
@@ -69,7 +69,7 @@ function onReady(ctx) {
   new GLTFLoader().load(FILE_HOST + 'files/model/Fox.glb', (gltf) => {
     const model = gltf.scene
     model.scale.set(0.01, 0.01, 0.01)
-    model.traverse((child) => {
+    model.traverse((child: any) => {
       if (child.isMesh) child.material.envMap = texture
     })
     scene.add(model)

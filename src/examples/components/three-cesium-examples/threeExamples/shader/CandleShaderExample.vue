@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -87,7 +87,7 @@ function onReady(ctx) {
       extrudePath: candlewickCurve
   });
   
-  var colors = [];
+  var colors: any[] = [];
   var color1 = new THREE.Color("black");
   var color2 = new THREE.Color(0x994411);
   var color3 = new THREE.Color(0xffff44);
@@ -117,8 +117,8 @@ function onReady(ctx) {
   candleLight2.castShadow = true;
   caseMesh.add(candleLight2);
   
-  var flameMaterials = [];
-  function flame(isFrontSide) {
+  var flameMaterials: any[] = [];
+  function flame(isFrontSide: any) {
       let flameGeo = new THREE.SphereGeometry(0.5, 32, 32);
       flameGeo.translate(0, 0.5, 0);
       let flameMat = getFlameMaterial(true);
@@ -155,7 +155,7 @@ function onReady(ctx) {
   })
   
   //reference Paul https://codepen.io/prisoner849/pen/XPVGLp
-  function getFlameMaterial(isFrontSide) {
+  function getFlameMaterial(isFrontSide: any) {
       let side = isFrontSide ? THREE.FrontSide : THREE.BackSide;
       return new THREE.ShaderMaterial({
           uniforms: {

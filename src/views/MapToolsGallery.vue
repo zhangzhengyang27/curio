@@ -53,8 +53,8 @@
   </div>
 </template>
 
-<script setup>
-import { TOOLS_EXAMPLES } from './tools-examples/index.js'
+<script setup lang="ts">
+import { TOOLS_EXAMPLES } from './tools-examples/index'
 </script>
 
 <style scoped>

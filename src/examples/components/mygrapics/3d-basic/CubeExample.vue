@@ -4,14 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {multiply} from '@/examples/jsm-compat/mygrapics/common/lib/math/functions/Mat4Func.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -50,7 +51,7 @@ async function initMyGrapicsExample() {
           }
         `;
     
-        const canvas = mgContainer.value.querySelector('canvas');
+        const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas, {
           depth: true,
         });
@@ -70,15 +71,15 @@ async function initMyGrapicsExample() {
             [h, -h, h],
           ];
     
-          const positions = [];
-          const color = [];
-          const cells = [];
+          const positions: any[] = [];
+          const color: any[] = [];
+          const cells: any[] = [];
     
           let colorIdx = 0;
           let cellsIdx = 0;
           const colorLen = colors.length;
     
-          function quad(a, b, c, d) {
+          function quad(a: any, b: any, c: any, d: any) {
             [a, b, c, d].forEach((i) => {
               positions.push(vertices[i]);
               color.push(colors[colorIdx % colorLen]);
@@ -114,7 +115,7 @@ async function initMyGrapicsExample() {
           0, 0, 0, 1,
         ];
     
-        function fromRotation(rotationX, rotationY, rotationZ) {
+        function fromRotation(rotationX: any, rotationY: any, rotationZ: any) {
           let c = Math.cos(rotationX);
           let s = Math.sin(rotationX);
           const rx = [
@@ -142,7 +143,7 @@ async function initMyGrapicsExample() {
             0, 0, 0, 1,
           ];
     
-          const ret = [];
+          const ret: any[] = [];
           multiply(ret, rx, ry);
           multiply(ret, ret, rz);
     

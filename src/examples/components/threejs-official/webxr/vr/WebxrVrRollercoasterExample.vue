@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import {
@@ -26,7 +26,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -114,7 +114,7 @@ function onReady(__stage) {
   
   				return {
   
-  					getPointAt: function ( t ) {
+  					getPointAt: function ( t: any ) {
   
   						t = t * PI2;
   
@@ -126,7 +126,7 @@ function onReady(__stage) {
   
   					},
   
-  					getTangentAt: function ( t ) {
+  					getTangentAt: function ( t: any ) {
   
   						const delta = 0.0001;
   						const t1 = Math.max( 0, t - delta );
@@ -162,7 +162,7 @@ function onReady(__stage) {
   			mesh.position.y = 0.1;
   			scene.add( mesh );
   
-  			const funfairs = [];
+  			const funfairs: any = [];
   
   			//
   
@@ -209,7 +209,7 @@ function onReady(__stage) {
   
   			let prevTime = performance.now();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now();
     				const delta = time - prevTime;
     				for ( let i = 0; i < funfairs.length; i ++ ) {

@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders, getMousePosInWebgl, ScaleLinear } from '@/examples/jsm-compat/webgl/kaikeba-webgl/05-复合变换/jsm/Utils.js'
 import { Matrix4, Vector3, Quaternion, Plane, Ray } from 'three'
@@ -18,7 +18,7 @@ const fragmentShader = `void main(){
       gl_FragColor=vec4(1.0,1.0,1.0,1.0);
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -26,7 +26,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
@@ -74,7 +74,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
       /* 建立顶点集合 */
       function crtVertices(offset = 0) {
-        const vertices = []
+        const vertices: any[] = []
         for (let z = minPosZ; z < maxPosZ; z += 0.04) {
           for (let x = minPosX; x < maxPosX; x += 0.03) {
             vertices.push(x, 0, z)
@@ -99,8 +99,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       }
   
       /* 正弦函数 */
-      function SinFn(a, Omega, phi) {
-        return function (x) {
+      function SinFn(a: number, Omega: number, phi: number) {
+        return function (x: number) {
           return a * Math.sin(Omega * x + phi);
         }
       }

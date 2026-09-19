@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { Water } from 'three/examples/jsm/objects/Water.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -25,7 +25,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -68,7 +68,7 @@ function onReady(ctx) {
   
       gltf => {
   
-          gltf.scene.traverse(child => {
+          gltf.scene.traverse((child: any) => {
   
               if (child.isMesh) {
   

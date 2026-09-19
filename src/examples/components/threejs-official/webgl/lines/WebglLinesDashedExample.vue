@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - dashed lines example"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -90,7 +90,7 @@ function onReady(__stage) {
   			
   
   
-  			function box( width, height, depth ) {
+  			function box( width: any, height: any, depth: any ) {
   
   				width = width * 0.5,
   				height = height * 0.5,
@@ -145,10 +145,10 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.001;
-    				scene.traverse( function ( object ) {
+    				scene.traverse( function ( object: any ) {
     					if ( object.isLine ) {
     						object.rotation.x = 0.25 * time;
     						object.rotation.y = 0.25 * time;
@@ -162,7 +162,7 @@ function onReady(__stage) {
   
   				const time = Date.now() * 0.001;
   
-  				scene.traverse( function ( object ) {
+  				scene.traverse( function ( object: any ) {
   
   					if ( object.isLine ) {
   

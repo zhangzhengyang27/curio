@@ -7,11 +7,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { AdditiveBlending, Points, ShaderMaterial, SphereGeometry } from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene, addUpdateCallback } = ctx
 
   const geo = new SphereGeometry()
@@ -44,7 +44,7 @@ function onReady(ctx) {
   const mesh = new Points(geo, mat)
   scene.add(mesh)
 
-  addUpdateCallback((delta, elapsed) => {
+  addUpdateCallback((delta: number, elapsed: number) => {
     mat.uniforms.time.value = elapsed * 1000
   })
 }

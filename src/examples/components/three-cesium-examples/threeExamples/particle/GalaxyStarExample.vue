@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three';
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -22,13 +22,13 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const initializeScene = ({ root, antialias = true } = {}) => {
+  const initializeScene = ({ root, antialias = true }: any = {}) => {
     // Create scene
   
     // Create camera
@@ -65,7 +65,7 @@ function onReady(ctx) {
       stats,
     };
   }
-  const getRandomPolarCoordinate = (radius) => {
+  const getRandomPolarCoordinate = (radius: any) => {
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.random() * Math.PI * 2;
     const x = radius * Math.sin(theta) * Math.cos(phi);
@@ -74,7 +74,7 @@ function onReady(ctx) {
     return { x, y, z };
   }
   
-  const init = (root) => {
+  const init = (root: any) => {
     const params = {
       particleCount: 250000,
       particleSize: 0.02,
@@ -93,9 +93,9 @@ function onReady(ctx) {
     controls.update();
   
     let spinDirection = 1;
-    let material = null;
-    let geometry = null;
-    let points = null;
+    let material: any = null;
+    let geometry: any = null;
+    let points: any = null;
   
     const particleTexture = new THREE.TextureLoader().load(props.example?.globals?.FILE_HOST + 'threeExamples/shader/star.png');
   

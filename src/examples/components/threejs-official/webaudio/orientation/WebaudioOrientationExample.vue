@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener noreferrer\">three.js</a> webaudio - orientation<br/>\n\t\tmusic by <a href=\"http://www.newgrounds.com/audio/listen/376737\" target=\"_blank\" rel=\"noopener noreferrer\">skullbeatz</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -122,8 +122,8 @@ function onReady(__stage) {
   
   					if ( object.isMesh ) {
   
-  						object.material.envMap = reflectionCube;
-  						object.geometry.rotateY( - Math.PI );
+  						(object!.material as any).envMap = reflectionCube;
+  						(object as any)!.geometry.rotateY( - Math.PI );
   						object.castShadow = true;
   
   					}

@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import * as THREE from 'three'
@@ -28,18 +28,24 @@ import ThreeGlobe from 'three-globe'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 
 const route = useRoute()
-const container = ref(null)
+const container = ref<HTMLElement | null>(null)
 const loading = ref(true)
-const demoTitle = computed(() => exampleMeta[route.params.example]?.title || route.params.example)
+const exKey = computed(() => (Array.isArray(route.params.example) ? route.params.example[0] : route.params.example) ?? '')
+const demoTitle = computed(() => exampleMeta[exKey.value]?.title || exKey.value)
 
-let renderer, scene, camera, controls, globe, animFrame
-let rafIds = []
-let cleanupFns = []
+let renderer: THREE.WebGLRenderer | null = null
+let scene: THREE.Scene | null = null
+let camera: THREE.PerspectiveCamera | null = null
+let controls: TrackballControls | null = null
+let globe: any = null // three-globe 无类型定义,链式 API 按.any 承接
+let animFrame: number | null = null
+let rafIds: number[] = []
+let cleanupFns: Array<() => void> = []
 
 const IMG_BASE = 'https://cdn.jsdelivr.net/npm/three-globe/example/img'
-const img = name => `${IMG_BASE}/${name}`
+const img = (name: string) => `${IMG_BASE}/${name}`
 
-const exampleMeta = {
+const exampleMeta: Record<string, { title: string }> = {
   basic: { title: '基础地球' },
   arcs: { title: '弧线链接' },
   polygons: { title: '国家多边形' },
@@ -69,6 +75,7 @@ function randGeoData(n = 300) {
 
 function setupBase() {
   const el = container.value
+  if (!el) return
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(el.clientWidth, el.clientHeight)
   renderer.setPixelRatio(Math.min(2, window.devicePixelRatio))
@@ -90,20 +97,20 @@ function setupBase() {
   scene.add(new THREE.DirectionalLight(0xffffff, 0.6 * Math.PI))
 
   const onResize = () => {
-    renderer.setSize(el.clientWidth, el.clientHeight)
-    camera.aspect = el.clientWidth / el.clientHeight
-    camera.updateProjectionMatrix()
+    renderer!.setSize(el.clientWidth, el.clientHeight)
+    camera!.aspect = el.clientWidth / el.clientHeight
+    camera!.updateProjectionMatrix()
   }
   window.addEventListener('resize', onResize)
   cleanupFns.push(() => window.removeEventListener('resize', onResize))
 }
 
-function startRender(postRender) {
+function startRender(postRender?: () => void) {
   function animate() {
     animFrame = requestAnimationFrame(animate)
-    controls.update()
+    controls!.update()
     if (postRender) postRender()
-    renderer.render(scene, camera)
+    renderer!.render(scene!, camera!)
   }
   animate()
 }
@@ -119,15 +126,16 @@ function disposeGlobe() {
   renderer = null; scene = null; camera = null; controls = null
 }
 
-async function loadExample(exId) {
+async function loadExample(exId: string | string[]) {
   disposeGlobe()
   if (!container.value) return
   loading.value = true
   setupBase()
+  if (!scene || !renderer || !camera || !controls) return
 
   switch (exId) {
     case 'basic':
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
         .pointsData(randGeoData(500))
@@ -137,7 +145,7 @@ async function loadExample(exId) {
       break
 
     case 'arcs':
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
         .arcsData([...Array(25).keys()].map(() => ({
@@ -154,11 +162,11 @@ async function loadExample(exId) {
     case 'polygons': {
       const res = await fetch('/three-globe-data/ne_110m_admin_0_countries.geojson')
       const world = await res.json()
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
-        .polygonsData(world.features.filter(d => d.properties.ISO_A2 !== 'AQ'))
+        .polygonsData(world.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
         .polygonGeoJsonGeometry('geometry')
-        .polygonCapColor(d => ['#330000', '#003300', '#000033'][(d.properties.ISO_A2 || '').length % 3])
+        .polygonCapColor((d: any) => ['#330000', '#003300', '#000033'][(d.properties.ISO_A2 || '').length % 3])
         .polygonSideColor(() => 'rgba(0, 100, 0, 0.15)')
         .polygonAltitude(0.01)
       scene.add(globe)
@@ -166,17 +174,17 @@ async function loadExample(exId) {
     }
 
     case 'paths': {
-      const paths = [[], []]
+      const paths: number[][][] = [[], []]
       for (let i = 0; i < 60; i++) {
         const t = i / 59
         paths[0].push([t * 360 - 180, 30 * Math.sin(t * Math.PI * 3)])
         paths[1].push([-30 * Math.cos(t * Math.PI * 3), t * 360 - 180])
       }
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .pathsData(paths)
         .pathColor(() => ['#ffffaa', '#00ffff'][Math.round(Math.random())])
-        .pathPointLat(p => p[1]).pathPointLng(p => p[0])
+        .pathPointLat((p: any) => p[1]).pathPointLng((p: any) => p[0])
         .pathDashLength(0.1).pathStroke(1)
       scene.add(globe)
       break
@@ -184,12 +192,12 @@ async function loadExample(exId) {
 
     case 'heatmap': {
       const d = randGeoData(2000)
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-night.jpg'))
         .heatmapsData([d])
         .heatmapPointLat('lat').heatmapPointLng('lng')
         .heatmapBandwidth(2.5)
-        .heatmapColorFn(() => (t) => `rgba(100,255,0,${0.3 + 0.5 * (1 - t)})`)
+        .heatmapColorFn(() => (t: number) => `rgba(100,255,0,${0.3 + 0.5 * (1 - t)})`)
         .heatmapBaseAltitude(0.01).heatmapTopAltitude(0.06)
       scene.add(globe)
       break
@@ -197,7 +205,7 @@ async function loadExample(exId) {
 
     case 'hexbin': {
       const d = randGeoData(6000)
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-night.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
         .hexBinPointsData(d)
@@ -212,8 +220,8 @@ async function loadExample(exId) {
     case 'hexed-polygons': {
       const res = await fetch('/three-globe-data/ne_110m_admin_0_countries.geojson')
       const world = await res.json()
-      globe = new ThreeGlobe()
-        .hexPolygonsData(world.features.filter(d => d.properties.ISO_A2 !== 'AQ'))
+      globe = (new ThreeGlobe() as any)
+        .hexPolygonsData(world.features.filter((d: any) => d.properties.ISO_A2 !== 'AQ'))
         .hexPolygonGeoJsonGeometry('geometry')
         .hexPolygonColor(() => `#${Math.round(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0')}`)
         .hexPolygonAltitude(0.01).hexPolygonResolution(3)
@@ -228,12 +236,12 @@ async function loadExample(exId) {
         size: Math.random() * 0.5,
         color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
       }))
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .tilesData(tiles)
-        .tileAltitude(d => d.size * 0.1)
-        .tileWidth(d => d.size * 20).tileHeight(d => d.size * 20)
-        .tileMaterial(d => new THREE.MeshLambertMaterial({ color: d.color }))
+        .tileAltitude((d: any) => d.size * 0.1)
+        .tileWidth((d: any) => d.size * 20).tileHeight((d: any) => d.size * 20)
+        .tileMaterial((d: any) => new THREE.MeshLambertMaterial({ color: d.color }))
       scene.add(globe)
       break
     }
@@ -246,7 +254,7 @@ async function loadExample(exId) {
         propagationSpeed: (Math.random() - 0.5) * 3 + 1,
         repeatPeriod: Math.random() * 3000 + 200
       }))
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .ringsData(rings)
         .ringColor(() => ['#ffff00', '#ff0000'][Math.round(Math.random())])
@@ -258,7 +266,7 @@ async function loadExample(exId) {
     case 'clouds': {
       const CLOUDS_ALT = 0.004
       const cloudsTexture = new THREE.TextureLoader().load('/three-globe-data/clouds.png')
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
       scene.add(globe)
@@ -277,11 +285,11 @@ async function loadExample(exId) {
     }
 
     case 'day-night': {
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
       scene.add(globe)
-      scene.children.forEach(c => { if (c instanceof THREE.DirectionalLight) scene.remove(c) })
+      scene!.children.forEach((c) => { if (c instanceof THREE.DirectionalLight) scene!.remove(c) })
       const light = new THREE.DirectionalLight(0xffffff, Math.PI * 0.7)
       scene.add(light)
       let angle = 0
@@ -296,15 +304,15 @@ async function loadExample(exId) {
     case 'solar-terminator': {
       const VELOCITY = 9
       let dt = +new Date()
-      const sunPosAt = d => {
+      const sunPosAt = (d: number) => {
         const day = new Date(+d).setUTCHours(0, 0, 0, 0)
         return [(day - d) / 864e5 * 360 - 180, 0]
       }
       const tile = { pos: sunPosAt(dt) }
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .tilesData([tile])
-        .tileLng(d => d.pos[0]).tileLat(d => d.pos[1])
+        .tileLng((d: any) => d.pos[0]).tileLat((d: any) => d.pos[1])
         .tileAltitude(0.005).tileWidth(180).tileHeight(180)
         .tileUseGlobeProjection(false)
         .tileMaterial(() => new THREE.MeshLambertMaterial({
@@ -334,7 +342,7 @@ async function loadExample(exId) {
         { lat: 19.0, lng: 72.8, text: 'Mumbai', color: 'white' },
         { lat: 48.9, lng: 2.3, text: 'Paris', color: 'white' },
       ]
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .labelsData(labels)
         .labelLat('lat').labelLng('lng').labelText('text').labelColor('color')
@@ -357,21 +365,21 @@ async function loadExample(exId) {
         return { ...m, obj: new CSS2DObject(el) }
       })
       const data = els.map(m => ({ lat: m.lat, lng: m.lng, obj: m.obj }))
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .customLayerData(data)
-        .customThreeObject(d => d.obj)
-        .customThreeObjectUpdate((obj, d) => Object.assign(obj.position, globe.getCoords(d.lat, d.lng, 0.02)))
+        .customThreeObject((d: any) => d.obj)
+        .customThreeObjectUpdate((obj: any, d: any) => Object.assign(obj.position, globe.getCoords(d.lat, d.lng, 0.02)))
       scene.add(globe)
       const lr = new CSS2DRenderer()
-      lr.setSize(container.value.clientWidth, container.value.clientHeight)
+      lr.setSize(container.value!.clientWidth, container.value!.clientHeight)
       lr.domElement.style.cssText = 'position:absolute;top:0;pointer-events:none'
-      container.value.appendChild(lr.domElement)
+      container.value!.appendChild(lr.domElement)
       cleanupFns.push(() => lr.domElement.remove())
       animFrame = requestAnimationFrame(function render() {
-        controls.update()
-        renderer.render(scene, camera)
-        lr.render(scene, camera)
+        controls!.update()
+        renderer!.render(scene!, camera!)
+        lr.render(scene!, camera!)
         animFrame = requestAnimationFrame(render)
       })
       loading.value = false
@@ -382,11 +390,11 @@ async function loadExample(exId) {
       const sat = await import('satellite.js')
       const tleText = await fetch('/three-globe-data/space-track-leo.txt').then(r => r.text())
       const lines = tleText.split('\n').filter(l => l.trim())
-      const sats = []
+      const sats: Array<{ name: string; satrec: any }> = []
       for (let i = 0; i + 2 < lines.length; i += 3) {
         try { sats.push({ name: lines[i].trim(), satrec: sat.twoline2satrec(lines[i + 1].trim(), lines[i + 2].trim()) }) } catch {}
       }
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-dark.jpg'))
         .pointsData(sats.map(() => ({ lat: 0, lng: 0, alt: 0 })))
         .pointColor(() => '#ff4444').pointAltitude('alt').pointRadius(0.3)
@@ -407,13 +415,13 @@ async function loadExample(exId) {
     }
 
     case 'tile-engine':
-      globe = new ThreeGlobe()
-        .globeTileEngineUrl((x, y, z) => `https://a.tile.openstreetmap.org/${z}/${x}/${y}.png`)
+      globe = (new ThreeGlobe() as any)
+        .globeTileEngineUrl((x: number, y: number, z: number) => `https://a.tile.openstreetmap.org/${z}/${x}/${y}.png`)
       scene.add(globe)
       break
 
     case 'custom-material':
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
         .globeMaterial(new THREE.MeshPhongMaterial({
@@ -430,15 +438,15 @@ async function loadExample(exId) {
         radius: Math.random() * 5,
         color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
       }))
-      globe = new ThreeGlobe()
+      globe = (new ThreeGlobe() as any)
         .globeImageUrl(img('earth-blue-marble.jpg'))
         .bumpImageUrl(img('earth-topology.png'))
         .customLayerData(gData)
-        .customThreeObject(d => new THREE.Mesh(
+        .customThreeObject((d: any) => new THREE.Mesh(
           new THREE.SphereGeometry(d.radius),
           new THREE.MeshLambertMaterial({ color: d.color })
         ))
-        .customThreeObjectUpdate((obj, d) => Object.assign(obj.position, globe.getCoords(d.lat, d.lng, d.alt)))
+        .customThreeObjectUpdate((obj: any, d: any) => Object.assign(obj.position, globe.getCoords(d.lat, d.lng, d.alt)))
       scene.add(globe)
       rafIds.push(requestAnimationFrame(function move() {
         if (!globe) return; rafIds.push(requestAnimationFrame(move))

@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -70,7 +70,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -86,9 +86,9 @@ function onReady(__stage) {
   
   
   
-  			let vertices1;
+  			let vertices1: any;
 
-  			let object;
+  			let object: any;
   
   			const WIDTH = (__stage.container?.clientWidth || window.innerWidth);
   			const HEIGHT = (__stage.container?.clientHeight || window.innerHeight);
@@ -125,7 +125,7 @@ function onReady(__stage) {
   
   				radius = 200;
   
-  				let boxGeometry1 = new THREE.BoxGeometry( radius, 0.1 * radius, 0.1 * radius, 50, 5, 5 );
+  				let boxGeometry1: any = new THREE.BoxGeometry( radius, 0.1 * radius, 0.1 * radius, 50, 5, 5 );
   
   				// if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
   
@@ -140,7 +140,7 @@ function onReady(__stage) {
   				const quaternion = new THREE.Quaternion();
   				const scale = new THREE.Vector3( 1, 1, 1 );
   
-  				function addGeo( geo, x, y, z, ry ) {
+  				function addGeo( geo: any, x: any, y: any, z: any, ry: any ) {
   
   					position.set( x, y, z );
   					rotation.set( 0, ry, 0 );
@@ -175,7 +175,7 @@ function onReady(__stage) {
   
   				// corner edges
   
-  				let boxGeometry2 = new THREE.BoxGeometry( 0.1 * radius, radius * 1.2, 0.1 * radius, 5, 60, 5 );
+  				let boxGeometry2: any = new THREE.BoxGeometry( 0.1 * radius, radius * 1.2, 0.1 * radius, 5, 60, 5 );
   
   				boxGeometry2.deleteAttribute( 'normal' );
   				boxGeometry2.deleteAttribute( 'uv' );
@@ -189,7 +189,7 @@ function onReady(__stage) {
   
   				const positionAttribute = new THREE.Float32BufferAttribute( vertices, 3 );
   
-  				const colors = [];
+  				const colors: any = [];
   				const sizes = [];
   
   				const color = new THREE.Color();
@@ -260,7 +260,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.01;
     				object.rotation.y = object.rotation.z = 0.02 * time;

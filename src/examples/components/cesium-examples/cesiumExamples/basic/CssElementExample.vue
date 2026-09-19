@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,8 +17,8 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
 const viewerOptions = {
 
@@ -36,7 +36,7 @@ const viewerOptions = {
 
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -44,8 +44,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   const url = GLOBAL_CONFIG.getLayerUrl()
@@ -87,7 +87,7 @@ function onReady(ctx) {
   viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(116.46, 39.92, 10000000) }) // 定位
   
   /* 设置2dDOM 移动 */
-  function setCss2dDom(viewer, DOM, position) {
+  function setCss2dDom(viewer: any, DOM: any, position: any) {
   
       if (!position) return
   
@@ -105,6 +105,8 @@ function onReady(ctx) {
   
       const { camera, scene } = viewer
   
+  // 转换遗留:原 HTML 全局变量
+  let css2dContainer: any
       css2dContainer.appendChild(DOM)
   
       const destroy = viewer.scene.postRender.addEventListener(() => {

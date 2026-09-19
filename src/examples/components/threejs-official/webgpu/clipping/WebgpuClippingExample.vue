@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Clipping Planes</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,7 +40,7 @@ function onReady(__stage) {
   
   
   
-  			let startTime, object;
+  			let startTime: any, object: any;
   
   			
   
@@ -224,7 +224,7 @@ function onReady(__stage) {
   
   				};
   
-  				gui.add( props, 'alphaToCoverage' ).onChange( function ( value ) {
+  				gui.add( props, 'alphaToCoverage' ).onChange( function ( value: any ) {
   
   					ground.material.alphaToCoverage = value;
   					ground.material.needsUpdate = true;
@@ -251,7 +251,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( currentTime ) {
+  			function animate( currentTime: any ) {
   
   				const time = ( currentTime - startTime ) / 1000;
   

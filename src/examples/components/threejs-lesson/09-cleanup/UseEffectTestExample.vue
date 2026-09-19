@@ -2,6 +2,6 @@
   <ExampleScene />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '../../ExampleScene.vue'
 </script>

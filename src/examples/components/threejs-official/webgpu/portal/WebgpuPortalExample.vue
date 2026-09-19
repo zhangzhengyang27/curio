@@ -16,13 +16,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, color, mx_worley_noise_float, time, screenUV, vec2, uv, normalWorld, mx_fractal_noise_vec3 } from 'three/tsl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let timer: any;
+let object: any;
 
 const props = defineProps({
   example: {
@@ -32,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Portal</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -49,7 +52,7 @@ function onReady(__stage) {
   			let sceneMain, scenePortal;
   
   
-  			const mixers = [];
+  			const mixers: any = [];
   
   			
   
@@ -89,7 +92,7 @@ function onReady(__stage) {
   				const loader = new GLTFLoader();
   				loader.load( ASSET_HOST + 'models/gltf/Xbot.glb', function ( gltf ) {
   
-  					const createModel = ( colorNode = null ) => {
+  					const createModel = ( colorNode: any = null ) => {
   
   
   			
@@ -103,7 +106,7 @@ function onReady(__stage) {
   
   							const children = object.children[ 0 ].children;
   
-  							const applyFX = ( index ) => {
+  							const applyFX = ( index: any ) => {
   
   								children[ index ].material = children[ index ].material.clone();
   								children[ index ].material.colorNode = colorNode;
@@ -177,7 +180,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				for ( const mixer of mixers ) {

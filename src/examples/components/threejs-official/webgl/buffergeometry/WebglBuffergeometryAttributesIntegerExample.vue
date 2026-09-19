@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> WebGL 2 - buffergeometry - integer attributes"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -104,7 +104,7 @@ function onReady(__stage) {
   				geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
   				geometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
   				geometry.setAttribute( 'textureIndex', new THREE.Int16BufferAttribute( textureIndices, 1 ) );
-  				geometry.attributes.textureIndex.gpuType = THREE.IntType;
+  				( geometry.attributes.textureIndex as any ).gpuType = THREE.IntType;
   
   				geometry.computeBoundingSphere();
   
@@ -170,7 +170,7 @@ function onReady(__stage) {
   				
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     				mesh.rotation.x = time * 0.25;
     				mesh.rotation.y = time * 0.5;

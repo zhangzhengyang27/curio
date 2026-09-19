@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three';
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -21,19 +21,19 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  const getRandomIntInclusive = function (min, max) {
+  const getRandomIntInclusive = function (min: number, max: number) {
   	const minCeiled = Math.ceil(min);
   	const maxFloored = Math.floor(max);
   	return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // 包含最小值和最大值
   }
   
-  const setAoMapEnable = function (mesh) {
+  const setAoMapEnable = function (mesh: any) {
   	mesh.geometry.setAttribute('uv2',
   		new THREE.Float32BufferAttribute(
   			mesh.geometry.attributes.uv.array, 2
@@ -131,7 +131,7 @@ function onReady(ctx) {
   		displacementScale: 0.1,
   		normalMap: door_normalTexture,
   		metalnessMap: door_metalnessTexture,
-  		roughness: door_roughnessTexture
+  		roughness: door_roughnessTexture as any
   	})
   )
   door.geometry.setAttribute('uv2',
@@ -245,9 +245,9 @@ function onReady(ctx) {
   
   gui = new GUI({
   	title: '控制面板',
-  	width: '320',
+  	width: '320' as any,
   	closeFolders: true
-  });
+  } as any);
   gui.add(ambientLight, 'intensity').name('环境光强度').min(0).max(1).step(0.001);
   gui.add(moonLight, 'intensity').name('平行光强度').min(0).max(1).step(0.001);
   gui.add(moonLight.position, 'x').name('平行光光源x').min(- 5).max(5).step(0.001);
@@ -314,7 +314,7 @@ function onReady(ctx) {
   	ghost3.position.x = Math.cos(-elapsedTime) * 5;
   	ghost3.position.z = Math.sin(-elapsedTime) * 5;
   	ghost3.position.y = Math.sin(elapsedTime * 2.5) + Math.cos(elapsedTime * 1.5);
-  	control.update();
+  	controls.update();
   	requestAnimationFrame(tick)
   }
   tick();

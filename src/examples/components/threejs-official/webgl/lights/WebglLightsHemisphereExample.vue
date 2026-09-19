@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -55,7 +55,7 @@ const skyFragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -63,7 +63,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			const mixers = [];
+  			const mixers: any[] = []
   			let stats;
   
   			const timer = new THREE.Timer();
@@ -122,7 +122,7 @@ function onReady(__stage) {
   
   				const groundGeo = new THREE.PlaneGeometry( 10000, 10000 );
   				const groundMat = new THREE.MeshLambertMaterial( { color: 0xffffff } );
-  				groundMat.color.setHSL( 0.095, 1, 0.75 );
+  				groundMat.color!.setHSL( 0.095, 1, 0.75 );
   
   				const ground = new THREE.Mesh( groundGeo, groundMat );
   				ground.position.y = - 33;
@@ -213,7 +213,7 @@ function onReady(__stage) {
   
   				gui.add( params, 'toggleHemisphereLight' ).name( 'toggle hemisphere light' );
   				gui.add( params, 'toggleDirectionalLight' ).name( 'toggle directional light' );
-  				gui.add( params, 'shadowIntensity', 0, 1 ).name( 'shadow intensity' ).onChange( ( value ) => {
+  				gui.add( params, 'shadowIntensity', 0, 1 ).name( 'shadow intensity' ).onChange( ( value: any ) => {
   
   					dirLight.shadow.intensity = value;
   
@@ -231,7 +231,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

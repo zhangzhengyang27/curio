@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mix, step, texture, screenUV, mrt, output, normalWorld, uv, vec2 } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Multiple Render Targets</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -42,8 +42,8 @@ async function onReady(__stage) {
   
   
   
-  			let torus;
-  			let quadMesh, sceneMRT, renderTarget, readbackTarget, material, readbackMaterial, pixelBuffer, pixelBufferTexture;
+  			let torus: any;
+  			let quadMesh: any, sceneMRT: any, renderTarget: any, readbackTarget: any, material: any, readbackMaterial: any, pixelBuffer, pixelBufferTexture: any;
   
   			const options = {
   				selection: 'mrt',
@@ -138,7 +138,7 @@ async function onReady(__stage) {
   
   			
   
-  			async function render( time ) {
+  			async function render( time: any ) {
   
   				const selection = options.selection;
   

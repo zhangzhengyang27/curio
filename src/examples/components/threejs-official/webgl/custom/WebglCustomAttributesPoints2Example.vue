@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -50,7 +50,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -63,7 +63,7 @@ function onReady(__stage) {
   
   
   			let stats;
-  			let sphere, length1;
+  			let sphere: any, length1: any;
   
   			const WIDTH = (__stage.container?.clientWidth || window.innerWidth);
   			const HEIGHT = (__stage.container?.clientHeight || window.innerHeight);
@@ -78,8 +78,8 @@ function onReady(__stage) {
   
   				const radius = 100, segments = 68, rings = 38;
   
-  				let sphereGeometry = new THREE.SphereGeometry( radius, segments, rings );
-  				let boxGeometry = new THREE.BoxGeometry( 0.8 * radius, 0.8 * radius, 0.8 * radius, 10, 10, 10 );
+  				let sphereGeometry: any = new THREE.SphereGeometry( radius, segments, rings );
+  				let boxGeometry: any = new THREE.BoxGeometry( 0.8 * radius, 0.8 * radius, 0.8 * radius, 10, 10, 10 );
   
   				// if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
   
@@ -95,7 +95,7 @@ function onReady(__stage) {
   				const combinedGeometry = BufferGeometryUtils.mergeGeometries( [ sphereGeometry, boxGeometry ] );
   				const positionAttribute = combinedGeometry.getAttribute( 'position' );
   
-  				const colors = [];
+  				const colors: any = [];
   				const sizes = [];
   
   				const color = new THREE.Color();
@@ -215,7 +215,7 @@ function onReady(__stage) {
   
   				}
   
-  				function numericalSort( a, b ) {
+  				function numericalSort( a: any, b: any ) {
   
   					return b[ 0 ] - a[ 0 ];
   
@@ -235,7 +235,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.005;
     				sphere.rotation.y = 0.02 * time;
@@ -273,7 +273,7 @@ function onReady(__stage) {
     					vector.applyMatrix4( matrix );
     					sortArray.push( [ vector.z, i ] );
     				}
-    				function numericalSort( a, b ) {
+    				function numericalSort( a: any, b: any ) {
     					return b[ 0 ] - a[ 0 ];
     				}
     				sortArray.sort( numericalSort );

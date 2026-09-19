@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -54,7 +54,7 @@ const fsSource = /* glsl */`
   }
 `;
 
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -124,8 +124,8 @@ async function onReady(__stage) {
   						const layerElementLength = layerByteLength / spiritedaway.mipmaps[ 0 ].data.BYTES_PER_ELEMENT;
   						textureArray.mipmaps[ 0 ].data.set(
   							spiritedaway.mipmaps[ 0 ].data.subarray(
-  								layerElementLength * ( formData.srcLayer % spiritedaway.image.depth ),
-  								layerElementLength * ( ( formData.srcLayer % spiritedaway.image.depth ) + 1 ),
+  								layerElementLength * ( formData.srcLayer % (spiritedaway.image as any).depth ),
+  								layerElementLength * ( ( formData.srcLayer % (spiritedaway.image as any).depth ) + 1 ),
   							),
   							layerByteLength * formData.destLayer,
   						);
@@ -138,7 +138,7 @@ async function onReady(__stage) {
   				};
   
   				gui = new GUI();
-  				gui.add( formData, 'srcLayer', 0, spiritedaway.image.depth - 1, 1 );
+  				gui.add( formData, 'srcLayer', 0, (spiritedaway.image as any).depth - 1, 1 );
   				gui.add( formData, 'destLayer', 0, textureArray.image.depth - 1, 1 );
   				gui.add( formData, 'transfer' );
   
@@ -155,7 +155,7 @@ async function onReady(__stage) {
   				} );
   
   				const geometry = new THREE.InstancedBufferGeometry();
-  				geometry.copy( new THREE.PlaneGeometry( planeWidth, planeHeight ) );
+  				geometry.copy( new THREE.PlaneGeometry( planeWidth, planeHeight ) as any );
   				geometry.instanceCount = 3;
   
   				const instancedIndexAttribute = new THREE.InstancedBufferAttribute(

@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - exporter - ply"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -43,7 +43,7 @@ function onReady(__stage) {
   
   
   
-  			let exporter, mesh;
+  			let exporter: any, mesh: any;
   
   			const params = {
   				exportASCII: exportASCII,
@@ -155,7 +155,7 @@ function onReady(__stage) {
   
   			function exportASCII() {
   
-  				exporter.parse( mesh, function ( result ) {
+  				exporter.parse( mesh, function ( result: any ) {
   
   					saveString( result, 'box.ply' );
   
@@ -165,7 +165,7 @@ function onReady(__stage) {
   
   			function exportBinaryBigEndian() {
   
-  				exporter.parse( mesh, function ( result ) {
+  				exporter.parse( mesh, function ( result: any ) {
   
   					saveArrayBuffer( result, 'box.ply' );
   
@@ -175,7 +175,7 @@ function onReady(__stage) {
   
   			function exportBinaryLittleEndian() {
   
-  				exporter.parse( mesh, function ( result ) {
+  				exporter.parse( mesh, function ( result: any ) {
   
   					saveArrayBuffer( result, 'box.ply' );
   
@@ -187,7 +187,7 @@ function onReady(__stage) {
   			link.style.display = 'none';
   			document.body.appendChild( link );
   
-  			function save( blob, filename ) {
+  			function save( blob: any, filename: any ) {
   
   				link.href = URL.createObjectURL( blob );
   				link.download = filename;
@@ -195,13 +195,13 @@ function onReady(__stage) {
   
   			}
   
-  			function saveString( text, filename ) {
+  			function saveString( text: any, filename: any ) {
   
   				save( new Blob( [ text ], { type: 'text/plain' } ), filename );
   
   			}
   
-  			function saveArrayBuffer( buffer, filename ) {
+  			function saveArrayBuffer( buffer: any, filename: any ) {
   
   				save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
   

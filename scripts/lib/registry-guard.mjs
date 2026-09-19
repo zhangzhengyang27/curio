@@ -3,7 +3,7 @@
  *
  * 背景
  * ----
- * `src/examples/registry/*.js` 是「机器生成」与「人工精修」混在一起的文件：
+ * `src/examples/registry/*.ts` 是「机器生成」与「人工精修」混在一起的文件：
  * 生成器按目录/配置推导条目，而人工又会改 title / description / tags / thumbnail、
  * 甚至手工追加脚本解析不到的条目。历史上多次出现「重跑生成脚本 → 手工数据被整体覆盖」，
  * 而且不会有任何报错，只能靠事后 git diff 发现。

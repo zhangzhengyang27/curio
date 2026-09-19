@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, uniform, float, int, color } from 'three/tsl';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Godrays</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -67,12 +67,12 @@ async function onReady(__stage) {
   				const gltf = await loader.loadAsync( ASSET_HOST + 'models/gltf/godrays_demo.glb' );
   				scene.add( gltf.scene );
   
-  				const pillars = gltf.scene.getObjectByName( 'concrete' );
+  				const pillars = gltf.scene.getObjectByName( 'concrete' )!;
   				pillars.material = new THREE.MeshStandardMaterial( {
   					color: 0x333333,
   				} );
   
-  				const base = gltf.scene.getObjectByName( 'base' );
+  				const base = gltf.scene.getObjectByName( 'base' )!;
   				base.material = new THREE.MeshStandardMaterial( {
   					color: 0x333333,
   					side: THREE.DoubleSide,
@@ -102,7 +102,7 @@ async function onReady(__stage) {
   
   				// shadow setup
   
-  				scene.traverse( obj => {
+  				scene.traverse( (obj: any) => {
   
   					if ( obj.isMesh === true ) {
   
@@ -170,7 +170,7 @@ async function onReady(__stage) {
   				compositeFolder.add( edgeStrength, 'value', 0, 5 ).name( 'edge strength' );
   			
   				const blurFolder = gui.addFolder( 'blur' );
-  				blurFolder.add( params, 'enabledBlur' ).name( 'enabled' ).onChange( ( value ) => {
+  				blurFolder.add( params, 'enabledBlur' ).name( 'enabled' ).onChange( ( value: any ) => {
   
   					if ( value === true ) {
   
@@ -237,7 +237,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

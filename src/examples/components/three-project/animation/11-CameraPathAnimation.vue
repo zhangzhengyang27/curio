@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -7,11 +7,10 @@
   import gsap from "gsap"
 
   const containerRef = shallowRef(null)
-  let gui = null
+  let gui: any = null
   let pathLine = null
   let controlPointMeshes = []
-  let sceneObjects = []
-
+  let sceneObjects: any[] = []
   const params = {
     progress: 0,
     isPlaying: false,
@@ -54,7 +53,7 @@
     controlPoints.forEach((p) => {
       const sphere = new THREE.Mesh(sphereGeo, sphereMat)
       sphere.position.copy(p)
-      scene.value.add(sphere)
+      scene.value!.add(sphere)
       controlPointMeshes.push(sphere)
     })
   }
@@ -72,9 +71,9 @@
     objects.forEach(({ geo, color, pos }) => {
       const mat = new THREE.MeshStandardMaterial({ color, metalness: 0.5, roughness: 0.3 })
       const mesh = new THREE.Mesh(geo, mat)
-      mesh.position.set(...pos)
+      mesh.position.set(...(pos as [number, number, number]))
       mesh.castShadow = true
-      scene.value.add(mesh)
+      scene.value!.add(mesh)
       sceneObjects.push(mesh)
     })
   }
@@ -96,7 +95,7 @@
     gui.title("相机路径动画控制")
 
     const folder = gui.addFolder("🎬 动画控制")
-    folder.add(params, "isPlaying").name("▶ 播放/暂停").onChange((v) => {
+    folder.add(params, "isPlaying").name("▶ 播放/暂停").onChange((v: any) => {
       if (v) playAnimation()
     })
     folder.add(params, "speed", 0.1, 2, 0.1).name("速度")
@@ -127,7 +126,7 @@
     })
   }
 
-  const updateCameraPosition = (t) => {
+  const updateCameraPosition = (t: any) => {
     if (!camera.value) return
     const curve = new THREE.CatmullRomCurve3(controlPoints, false, "catmullrom", 0.5)
     const clampedT = Math.max(0, Math.min(1, t))

@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import { GUI } from 'lil-gui';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -37,7 +37,7 @@ function onReady(ctx) {
   // controls.maxDistance = 25;
   
   class PerlinNoise {
-    static noise(x, y) {
+    static noise(x: any, y: any) {
       const posIntX = Math.floor(x);
       const posIntY = Math.floor(y);
       const posFloatX = x - posIntX;
@@ -56,23 +56,23 @@ function onReady(ctx) {
       return PerlinNoise.mix(v0, v1, sy);
     }
   
-    static mix(a, b, t) {
+    static mix(a: any, b: any, t: any) {
       return a * (1 - t) + b * t;
     }
   
-    static hash(x, y) {
+    static hash(x: any, y: any) {
       const dot = x * 12.9898 + y * 78.233;
       const value = Math.sin(dot) * 43758.5453;
       return value - Math.floor(value);
     }
   
-    static cubicInterpolate(x) {
+    static cubicInterpolate(x: any) {
       return 3.0 * Math.pow(x, 2.0) - 2.0 * Math.pow(x, 3.0);
     }
   }
   
   class GroundGeometry extends THREE.PlaneGeometry {
-    constructor(width, height, widthSegments, heightSegments) {
+    constructor(width: any, height: any, widthSegments: any, heightSegments: any) {
       super(width, height, widthSegments, heightSegments);
   
       this.rotateX(-Math.PI / 2);
@@ -175,7 +175,7 @@ function onReady(ctx) {
   
   const timer = new THREE.Timer();
   
-  const tick = (delta, elapsed) => {
+  const tick = (delta: number, elapsed: number) => {
     controls.update(delta);
     ground_mat.uniforms.t.value = elapsed;
   };

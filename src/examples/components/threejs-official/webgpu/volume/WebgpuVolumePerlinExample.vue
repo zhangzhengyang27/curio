@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Volumetric Perlin</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -93,7 +93,7 @@ function onReady(__stage) {
   
   				// Shader
   
-  				const opaqueRaymarchingTexture = Fn( ( { texture, steps, threshold } ) => {
+  				const opaqueRaymarchingTexture = Fn( ( { texture, steps, threshold }: any ) => {
   
   					const finalColor = vec4( 0 ).toVar();
   
@@ -123,7 +123,7 @@ function onReady(__stage) {
   				const steps = uniform( 200 );
   
   				const material = new THREE.NodeMaterial();
-  				material.colorNode = opaqueRaymarchingTexture( {
+  				material.colorNode = ( opaqueRaymarchingTexture as any )( {
   					texture: texture3D( texture, null, 0 ),
   					steps,
   					threshold

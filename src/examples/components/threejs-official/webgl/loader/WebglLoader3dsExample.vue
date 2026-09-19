@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - 3DS loader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -68,8 +68,8 @@ function onReady(__stage) {
   
   						if ( child.isMesh ) {
   
-  							child.material.specular.setScalar( 0.1 );
-  							child.material.normalMap = normal;
+  							( child.material as THREE.MeshPhongMaterial ).specular.setScalar( 0.1 );
+  							( child.material as THREE.MeshPhongMaterial ).normalMap = normal;
   
   						}
   

@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t<br/>Fast subsurface scattering in Blinn-Phong shading demo<br/>\n\t\t[Thanks for the art support from <a href=\"https://github.com/shaochun\" target=\"_blank\" rel=\"noopener\">Shaochun Lin</a>]"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   		let container, stats;
   
-  		let model;
+  		let model: any;
   
   		
   
@@ -147,11 +147,11 @@ function onReady(__stage) {
   
   		}
   
-  		function initGUI( uniforms ) {
+  		function initGUI( uniforms: any ) {
   
   			gui = new GUI( { title: 'Thickness Control' } );
   
-  			const ThicknessControls = function () {
+  		const ThicknessControls = function ( this: any ) {
   
   				this.distortion = uniforms[ 'thicknessDistortion' ].value;
   				this.ambient = uniforms[ 'thicknessAmbient' ].value;
@@ -161,7 +161,7 @@ function onReady(__stage) {
   
   			};
   
-  			const thicknessControls = new ThicknessControls();
+  		const thicknessControls = new (ThicknessControls as any)();
   
   			gui.add( thicknessControls, 'distortion' ).min( 0.01 ).max( 1 ).step( 0.01 ).onChange( function () {
   
@@ -200,7 +200,7 @@ function onReady(__stage) {
   
   		//
   
-  		__stage.addUpdateCallback((_delta, _elapsed) => {
+  		__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( model ) model.rotation.y = performance.now() / 5000;
     }

@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -26,6 +26,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 
+let gui: any = null
+
 const props = defineProps({
   example: {
     type: Object,
@@ -34,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Tone Mapping<br />\n\t\t\tVenice Mask by\n\t\t\t<a href=\"https://sketchfab.com/D.art\" target=\"_blank\" rel=\"noopener\">DailyArt</a> is licensed under <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">CC Attribution-NonCommercial</a><br />\n\t\t\t<a href=\"https://hdrihaven.com/hdri/?h=venice_sunset\" target=\"_blank\" rel=\"noopener\">Venice Sunset</a> from <a href=\"https://hdrihaven.com/\" target=\"_blank\" rel=\"noopener\">HDRI Haven</a>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,7 +45,7 @@ async function onReady(__stage) {
   
 
   
-  			let gui, guiExposure = null;
+  				let guiExposure: any = null;
   
   			const params = {
   				exposure: 1.0,
@@ -63,18 +65,19 @@ async function onReady(__stage) {
   				Custom: THREE.CustomToneMapping
   			};
   
-  			init().catch( function ( err ) {
+  			init().catch( function ( err: any ) {
   
   				console.error( err );
   
   			} );
   
+			async function init() {
   
   
   				
   
   
-  				renderer.toneMapping = toneMappingOptions[ params.toneMapping ];
+  				renderer.toneMapping = (toneMappingOptions as any)[ params.toneMapping ];
   				renderer.toneMappingExposure = params.exposure;
   
   				// Set CustomToneMapping to Uncharted2
@@ -154,13 +157,13 @@ async function onReady(__stage) {
   
   						updateGUI();
   
-  						renderer.toneMapping = toneMappingOptions[ params.toneMapping ];
+  						renderer.toneMapping = (toneMappingOptions as any)[ params.toneMapping ];
   
   					} );
   
   				guiExposure = toneMappingFolder.add( params, 'exposure', 0, 2 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						renderer.toneMappingExposure = value;
   
@@ -170,7 +173,7 @@ async function onReady(__stage) {
   
   				backgroundFolder.add( params, 'blurriness', 0, 1 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						scene.backgroundBlurriness = value;
   
@@ -178,7 +181,7 @@ async function onReady(__stage) {
   
   				backgroundFolder.add( params, 'intensity', 0, 1 )
   
-  					.onChange( function ( value ) {
+  					.onChange( function ( value: any ) {
   
   						scene.backgroundIntensity = value;
   
@@ -188,6 +191,7 @@ async function onReady(__stage) {
   
   				gui.open();
   
+			}
   			
   
   

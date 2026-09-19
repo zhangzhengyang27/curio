@@ -19,9 +19,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useEarthStore } from '../stores/useEarthStore'
 
 const props = defineProps({
   onScreenshot: Function,

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -61,9 +61,9 @@ function onReady(stageCtx) {
       }
   }
   
-  function createText(text, x, y, z) {
+  function createText(text: string, x: number, y: number, z: number) {
       const canvas = document.createElement('canvas')
-const ctx = canvas.getContext("2d");canvas.width = 128
+const ctx = canvas.getContext("2d")!;canvas.width = 128
       canvas.height = 64
       
       ctx.font = '20px Arial'

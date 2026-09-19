@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { installHtmlInCanvasPolyfill } from 'three-html-render/polyfill';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl - HTMLTexture"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -40,14 +40,22 @@ function onReady(__stage) {
   
   
   
-  			if ( ! ( 'requestPaint' in HTMLCanvasElement.prototype ) ) {
+  				const info = document.createElement( 'div' );
+  				info.style.position = 'absolute';
+  				info.style.top = '10px';
+  				info.style.width = '100%';
+  				info.style.textAlign = 'center';
+  				info.style.color = '#fff';
+  				document.body.appendChild( info );
+
+  				if ( ! ( 'requestPaint' in HTMLCanvasElement.prototype ) ) {
   
   				installHtmlInCanvasPolyfill();
   				info.innerHTML += '<br><a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a> not available. Using <a href="https://github.com/repalash/three-html-render" target="_blank">polyfill</a>.';
   
   			}
   
-  			let mesh, interactions;
+  			let mesh: any, interactions: any;
   
   			
   
@@ -103,7 +111,7 @@ function onReady(__stage) {
   
   				// Button click handler
   
-  				element.querySelector( 'button' ).addEventListener( 'click', function () {
+  				element!.querySelector( 'button' )!.addEventListener( 'click', function () {
   
   					this.textContent = 'Clicked!';
   
@@ -116,7 +124,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				mesh.rotation.x = Math.sin( time * 0.0005 ) * 0.5;
   				mesh.rotation.y = Math.cos( time * 0.0008 ) * 0.5;

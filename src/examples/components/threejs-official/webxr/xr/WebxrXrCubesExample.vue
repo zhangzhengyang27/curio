@@ -15,12 +15,16 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
 import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+
+let room: any;
+let raycaster: any;
+
 
 const props = defineProps({
   example: {
@@ -30,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - interactive cubes"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -49,7 +53,7 @@ function onReady(__stage) {
   
   
   			let controller, controllerGrip;
-  			let INTERSECTED;
+  			let INTERSECTED: any;
   
   			
   
@@ -107,13 +111,13 @@ function onReady(__stage) {
   
   				//
   
-  				function onSelectStart() {
+  				function onSelectStart( this: any ) {
   
   					this.userData.isSelecting = true;
   
   				}
   
-  				function onSelectEnd() {
+  				function onSelectEnd( this: any ) {
   
   					this.userData.isSelecting = false;
   
@@ -122,12 +126,12 @@ function onReady(__stage) {
   				controller = renderer.xr.getController( 0 );
   				controller.addEventListener( 'selectstart', onSelectStart );
   				controller.addEventListener( 'selectend', onSelectEnd );
-  				controller.addEventListener( 'connected', function ( event ) {
+  				controller.addEventListener( 'connected', function ( this: any, event: any ) {
   
   					this.add( buildController( event.data ) );
   
   				} );
-  				controller.addEventListener( 'disconnected', function () {
+  				controller.addEventListener( 'disconnected', function ( this: any ) {
   
   					this.remove( this.children[ 0 ] );
   
@@ -152,7 +156,7 @@ function onReady(__stage) {
   			
   
   
-  			function buildController( data ) {
+  			function buildController( data: any ) {
   
   				let geometry, material;
   
@@ -182,7 +186,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta() * 60;
     				if ( controller.userData.isSelecting === true ) {

@@ -258,19 +258,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer } from '../map/createViewer.js'
-import { useCountryData, formatUSD, formatPopulation, formatAreaSqKm, gdpRank } from '../map/analysis/useCountryData.js'
-import { Choropleth } from '../map/analysis/choropleth.js'
+import { loadCesium } from '../map/cesiumLoader'
+import { createMapViewer } from '../map/createViewer'
+import { useCountryData, formatUSD, formatPopulation, formatAreaSqKm, gdpRank } from '../map/analysis/useCountryData'
+import { Choropleth } from '../map/analysis/choropleth'
 
-const containerRef = ref(null)
+const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
 const search = ref('')
-const selected = ref(null)
-const compare = ref([])
+const selected = ref<string | null>(null)
+const compare = ref<string[]>([])
 // ?debug=1 时暴露渲染器调试钩子与 HUD
 const debug = ref(new URLSearchParams(window.location.search).has('debug'))
 const yearIndex = ref(0)
@@ -279,13 +279,13 @@ const playing = ref(false)
 const { loading, error: dataError, years, countries, gdpByYear, load } = useCountryData()
 const route = useRoute()
 const router = useRouter()
-let viewer = null
-let choropleth = null
-let playTimer = null
-let debugTimer = null
-let pickHandler = null
-let trendChart = null
-const trendRef = ref(null)
+let viewer: any = null
+let choropleth: Choropleth | null = null
+let playTimer: ReturnType<typeof setInterval> | null = null
+let debugTimer: ReturnType<typeof setInterval> | null = null
+let pickHandler: any = null
+let trendChart: import('echarts').ECharts | null = null
+const trendRef = ref<HTMLDivElement | null>(null)
 const debugHeight = ref(0)
 
 const year = computed(() => years.value[yearIndex.value] ?? '')
@@ -303,7 +303,7 @@ const METRICS = [
 const metric = ref('gdp')
 const metricLabel = computed(() => METRICS.find((m) => m.key === metric.value)?.label || '')
 
-function setMetric(key) {
+function setMetric(key: string) {
   if (metric.value === key) return
   metric.value = key
   choropleth?.applyValues(metricValues.value, selected.value, compare.value)
@@ -313,7 +313,7 @@ const metricValues = computed(() => {
   if (metric.value === 'gdp') return gdpByYear.value[year.value] || {}
   if (metric.value === 'percapita') {
     const yearData = gdpByYear.value[year.value] || {}
-    const map = {}
+    const map: Record<string, number> = {}
     for (const c of countries.value) {
       const gdp = yearData[c.name]
       if (gdp != null && c.population) map[c.name] = gdp / c.population
@@ -321,13 +321,13 @@ const metricValues = computed(() => {
     return map
   }
   if (metric.value === 'population') {
-    const map = {}
+    const map: Record<string, number> = {}
     for (const c of countries.value) {
       if (c.population != null) map[c.name] = c.population
     }
     return map
   }
-  const map = {}
+  const map: Record<string, number> = {}
   for (const c of countries.value) {
     if (c.emission != null) map[c.name] = c.emission
   }
@@ -354,11 +354,11 @@ const perCapitaText = computed(() => {
 const emissionText = computed(() => (selectedCountry.value?.emission != null ? `${selectedCountry.value.emission} MtCO₂` : '暂无数据'))
 const carbonYear = computed(() => '2020')
 const gdpRankText = computed(() => {
-  const r = year.value ? gdpRank(gdpByYear.value, year.value, selected.value) : null
+  const r = year.value && selected.value ? gdpRank(gdpByYear.value, year.value, selected.value) : null
   return r ? `第 ${r} 位 / ${countries.value.length}` : ''
 })
 
-function compareCell(name, metric) {
+function compareCell(name: string, metric: string) {
   if (metric === 'gdp') return formatUSD(gdpByYear.value[year.value]?.[name] ?? null)
   if (metric === 'population') return formatPopulation(countries.value.find((c) => c.name === name)?.population)
   if (metric === 'emission') {
@@ -368,12 +368,12 @@ function compareCell(name, metric) {
   return '—'
 }
 
-function selectCountry(name) {
+function selectCountry(name: string) {
   selected.value = name
   choropleth?.flyTo(name)
 }
 
-function toggleCompare(name) {
+function toggleCompare(name: string) {
   const idx = compare.value.indexOf(name)
   if (idx > -1) compare.value.splice(idx, 1)
   else if (!compareFull.value) compare.value.push(name)
@@ -394,7 +394,7 @@ watch(playing, (on) => {
   playTimer = setInterval(() => {
     if (yearIndex.value >= years.value.length - 1) {
       playing.value = false
-      clearInterval(playTimer)
+      clearInterval(playTimer!)
       playTimer = null
       return
     }
@@ -425,7 +425,7 @@ function restoreFromQuery() {
 }
 
 watch([selected, year], () => {
-  const q = {}
+  const q: Record<string, string> = {}
   if (selected.value) q.country = selected.value
   if (year.value) q.year = String(year.value)
   router.replace({ query: q }).catch(() => {})
@@ -433,17 +433,18 @@ watch([selected, year], () => {
 
 // ---- 国家趋势图(A2):选中国 → GDP 2000~2020 折线,echarts 动态 import ----
 async function renderTrend() {
-  if (!selected.value || !trendRef.value) return
+  const sel = selected.value
+  if (!sel || !trendRef.value) return
   if (!trendChart) {
     const echarts = await import('echarts')
     trendChart = echarts.init(trendRef.value)
   }
-  const series = years.value.map((y) => gdpByYear.value[y]?.[selected.value] ?? null)
+  const series = years.value.map((y) => gdpByYear.value[y]?.[sel] ?? null)
   trendChart.setOption({
     grid: { left: 8, right: 12, top: 20, bottom: 4, containLabel: true },
     tooltip: { trigger: 'axis' },
     xAxis: { type: 'category', data: years.value, axisLabel: { fontSize: 9 } },
-    yAxis: { type: 'value', axisLabel: { fontSize: 9, formatter: (v) => (v >= 1e12 ? `${(v / 1e12).toFixed(1)}万亿` : '') } },
+    yAxis: { type: 'value', axisLabel: { fontSize: 9, formatter: (v: number) => (v >= 1e12 ? `${(v / 1e12).toFixed(1)}万亿` : '') } },
     series: [{ type: 'line', data: series, symbolSize: 4, itemStyle: { color: '#2271b2' } }],
   })
 }
@@ -455,13 +456,14 @@ watch(selected, () => {
 // ---- 当前视图数据导出(A4):CSV(UTF-8 BOM),随时间轴年份 ----
 function exportCsv() {
   const header = ['国家/地区', `GDP(${year.value},美元)`, '人口', '人均GDP(美元)', '面积(km²)', '人口密度(人/km²)', '碳排放(MtCO2)']
-  const esc = (v) => {
+  const esc = (v: unknown) => {
     const s = v == null ? '' : String(v)
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
   }
   const rows = countries.value.map((c) => {
-    const gdp = gdpByYear.value[year.value]?.[c.name] ?? ''
-    const percap = gdp !== '' && c.population ? Math.round(gdp / c.population) : ''
+    const gdpNum = gdpByYear.value[year.value]?.[c.name]
+    const gdp: number | string = gdpNum ?? ''
+    const percap = typeof gdp === 'number' && c.population ? Math.round(gdp / c.population) : ''
     return [c.name, gdp, c.population ?? '', percap, c.area ?? '', c.density ?? '', c.emission ?? '']
   })
   const csv = '\uFEFF' + [header, ...rows].map((r) => r.map(esc).join(',')).join('\n')
@@ -501,8 +503,8 @@ onMounted(async () => {
 
     // 点击地图选国(挂组件级引用,卸载时销毁——其余页面均如此)
     pickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
-    pickHandler.setInputAction((e) => {
-      const name = choropleth.pickName(e.position)
+    pickHandler.setInputAction((e: any) => {
+      const name = choropleth!.pickName(e.position)
       if (name) selectCountry(name)
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
     ready.value = true

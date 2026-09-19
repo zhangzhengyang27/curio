@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.scene.debugShowFramesPerSecond = true;
@@ -56,7 +56,17 @@ function onReady(ctx) {
   //喷雾特效
   //烟特效
   class smokeEffect {
-      constructor(viewer, obj) {
+    viewer: any
+    viewModel: any
+    emitterModelMatrix: any
+    translation: any
+    rotation: any
+    hpr: any
+    trs: any
+    scene: any
+    particleSystem: any
+    entity: any
+      constructor(viewer: any, obj: any) {
           this.viewer = viewer
           this.viewModel = {
               emissionRate: 5,
@@ -123,7 +133,7 @@ function onReady(ctx) {
                   //系统的粒子发射器
                   emitter: new Cesium.CircleEmitter(2.0),//BoxEmitter 盒形发射器，ConeEmitter 锥形发射器，SphereEmitter 球形发射器，CircleEmitter圆形发射器
                   //回调函数，实现各种喷泉、烟雾效果
-                  updateCallback: (p, dt) => {
+                  updateCallback: (p: any, dt: any) => {
                       return this.applyGravity(p, dt);
                   },
               })
@@ -135,7 +145,7 @@ function onReady(ctx) {
       //场景渲染事件
       preUpdateEvent() {
           let _this = this;
-          this.viewer.scene.preUpdate.addEventListener(function (scene, time) {
+          this.viewer.scene.preUpdate.addEventListener(function (scene: any, time: any) {
               //发射器地理位置
               _this.particleSystem.modelMatrix = _this.computeModelMatrix(_this.entity, time);
               //发射器局部位置
@@ -149,7 +159,7 @@ function onReady(ctx) {
           });
       }
   
-      computeModelMatrix(entity, time) {
+      computeModelMatrix(entity: any, time: any) {
           return entity.computeModelMatrix(time, new Cesium.Matrix4());
       }
   
@@ -169,7 +179,7 @@ function onReady(ctx) {
           );
       }
   
-      applyGravity(p, dt) {
+      applyGravity(p: any, dt: any) {
           var gravityScratch = new Cesium.Cartesian3()
           var position = p.position
           Cesium.Cartesian3.normalize(position, gravityScratch)

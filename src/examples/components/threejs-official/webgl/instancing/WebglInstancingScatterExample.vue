@@ -9,10 +9,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js';
@@ -27,7 +27,9 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
+
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -49,11 +51,11 @@ function onReady(__stage) {
   
   			};
   
-  			let stemMesh, blossomMesh;
+  			let stemMesh: any, blossomMesh: any;
   			let stemGeometry, blossomGeometry;
   			let stemMaterial, blossomMaterial;
   
-  			let sampler;
+  			let sampler: any;
   			const count = api.count;
   			const ages = new Float32Array( count );
   			const scales = new Float32Array( count );
@@ -69,7 +71,7 @@ function onReady(__stage) {
   			const surface = new THREE.Mesh( surfaceGeometry, surfaceMaterial );
   
   			// Source: https://gist.github.com/gre/1650294
-  			const easeOutCubic = function ( t ) {
+  			const easeOutCubic = function ( t: any ) {
   
   				return ( -- t ) * t * t + 1;
   
@@ -77,7 +79,7 @@ function onReady(__stage) {
   
   			// Scaling curve causes particles to grow quickly, ease gradually into full scale, then
   			// disappear quickly. More of the particle's lifetime is spent around full scale.
-  			const scaleCurve = function ( t ) {
+  			const scaleCurve = function ( t: any ) {
   
   				return Math.abs( easeOutCubic( ( t > 0.5 ? 1 - t : t ) * 2 ) );
   
@@ -90,8 +92,8 @@ function onReady(__stage) {
   				const _stemMesh = gltf.scene.getObjectByName( 'Stem' );
   				const _blossomMesh = gltf.scene.getObjectByName( 'Blossom' );
   
-  				stemGeometry = _stemMesh.geometry.clone();
-  				blossomGeometry = _blossomMesh.geometry.clone();
+  				stemGeometry = (_stemMesh as any)!.geometry.clone();
+  				blossomGeometry = (_blossomMesh as any)!.geometry.clone();
   
   				const defaultTransform = new THREE.Matrix4()
   					.makeRotationX( Math.PI )
@@ -100,8 +102,8 @@ function onReady(__stage) {
   				stemGeometry.applyMatrix4( defaultTransform );
   				blossomGeometry.applyMatrix4( defaultTransform );
   
-  				stemMaterial = _stemMesh.material;
-  				blossomMaterial = _blossomMesh.material;
+  				stemMaterial = _stemMesh!.material;
+  				blossomMaterial = _blossomMesh!.material;
   
   				stemMesh = new THREE.InstancedMesh( stemGeometry, stemMaterial, count );
   				blossomMesh = new THREE.InstancedMesh( blossomGeometry, blossomMaterial, count );
@@ -229,7 +231,7 @@ function onReady(__stage) {
   
   			}
   
-  			function resampleParticle( i ) {
+  			function resampleParticle( i: any ) {
   
   				sampler.sample( _position, _normal );
   				_normal.add( _position );
@@ -244,7 +246,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateParticle( i ) {
+  			function updateParticle( i: any ) {
   
   				// Update lifecycle.
   
@@ -280,7 +282,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     if ( stemMesh && blossomMesh ) {
     					const time = Date.now() * 0.001;

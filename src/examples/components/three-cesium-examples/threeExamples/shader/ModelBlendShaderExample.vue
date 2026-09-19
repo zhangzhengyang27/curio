@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -31,7 +31,7 @@ function onReady(ctx) {
   
   scene.add(new THREE.AxesHelper(1000))
   
-  let car = null
+  let car: any = null
   
   const loader = new GLTFLoader()
   
@@ -47,7 +47,7 @@ function onReady(ctx) {
   
           scene.add(car)
   
-          modelBlendShader(car, box)
+          modelBlendShader(car, ctx.canvas)
   
       }
   
@@ -58,11 +58,11 @@ function onReady(ctx) {
   })
   
   /* 混合着色 */
-  function modelBlendShader(model, DOM) {
+  function modelBlendShader(model: any, DOM: any) {
   
-      let materials = []
+      let materials: any[] = []
   
-      model.traverse(c => c.isMesh && materials.push(c.material))
+      model.traverse((c: any) => c.isMesh && materials.push(c.material))
   
       materials = [... new Set(materials)]
   
@@ -82,7 +82,7 @@ function onReady(ctx) {
   
       materials.forEach(material => {
   
-          material.onBeforeCompile = shader => {
+          material.onBeforeCompile = (shader: any) => {
   
               shader.uniforms.iResolution = uniforms.iResolution
   

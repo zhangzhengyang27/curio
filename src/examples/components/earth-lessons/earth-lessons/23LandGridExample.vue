@@ -11,15 +11,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
-import { pushEarthLessonsBaseUrl, popEarthLessonsBaseUrl } from './useEarthLessonsBaseUrl.js'
+import { pushEarthLessonsBaseUrl, popEarthLessonsBaseUrl } from './useEarthLessonsBaseUrl'
 
 const baseUrl = '/external-examples/earth-lessons/23-land-grid/'
 const rotationSpeed = 0.004
 
-async function onReady(ctx) {
+async function onReady(ctx: { scene: THREE.Scene; addUpdateCallback(fn: () => void): void }) {
   pushEarthLessonsBaseUrl(baseUrl)
 
   const { createEarth } = await import(`${baseUrl}earth.js`)

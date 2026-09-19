@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - light probe volume<br/>\n\t\t\tPosition-dependent diffuse global illumination via L2 SH probe grid"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,7 +42,7 @@ async function onReady(__stage) {
   
 
   
-  			let probes, probesHelper;
+  			let probes: any, probesHelper: any;
   
   			
   
@@ -161,7 +161,7 @@ async function onReady(__stage) {
   
   				// Bake light probe volume
   
-  				async function bakeWithResolution( resolution ) {
+  				async function bakeWithResolution( resolution: any ) {
   
   					if ( probes ) {
   
@@ -204,17 +204,17 @@ async function onReady(__stage) {
   				// GUI
   
   				gui = new GUI();
-  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value ) => {
+  				gui.add( params, 'enabled' ).name( 'GI' ).onChange( ( value: any ) => {
   
   					probes.visible = value;
   
   				} );
-  				gui.add( params, 'resolution', 2, 12, 1 ).name( 'Resolution' ).onFinishChange( ( value ) => {
+  				gui.add( params, 'resolution', 2, 12, 1 ).name( 'Resolution' ).onFinishChange( ( value: any ) => {
   
   					bakeWithResolution( value );
   
   				} );
-  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value ) => {
+  				gui.add( params, 'showProbes' ).name( 'Show Probes' ).onChange( ( value: any ) => {
   
   					probesHelper.visible = value;
   

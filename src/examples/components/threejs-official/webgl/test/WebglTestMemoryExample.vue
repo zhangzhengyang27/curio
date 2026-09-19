@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - memory test I"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -57,8 +57,8 @@ function onReady(__stage) {
   				canvas.height = 256;
   
   				const context = canvas.getContext( '2d' );
-  				context.fillStyle = 'rgb(' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ')';
-  				context.fillRect( 0, 0, 256, 256 );
+  				context!.fillStyle = 'rgb(' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ')';
+  				context!.fillRect( 0, 0, 256, 256 );
   
   				return canvas;
   
@@ -66,7 +66,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const geometry = new THREE.SphereGeometry( 50, Math.random() * 64, Math.random() * 32 );
     				const texture = new THREE.CanvasTexture( createImage() );
     				const material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );

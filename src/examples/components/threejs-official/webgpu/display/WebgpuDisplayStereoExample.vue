@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { stereoPass } from 'three/examples/jsm/tsl/display/StereoPassNode.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Stereo Effects</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -41,13 +41,13 @@ function onReady(__stage) {
   
   
   
-  			let renderPipeline;
+  			let renderPipeline: any;
   
-  			let stereo, anaglyph, parallaxBarrier;
+  			let stereo: any, anaglyph: any, parallaxBarrier: any;
   
   			let mesh, dummy, timer;
   
-  			let anaglyphFolder;
+  			let anaglyphFolder: any;
   
   			const position = new THREE.Vector3();
   
@@ -140,7 +140,7 @@ function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Stereo Settings' );
   				gui.add( params, 'effect', effects ).onChange( update );
-  				gui.add( params, 'eyeSep', 0.001, 0.15, 0.001 ).onChange( function ( value ) {
+  				gui.add( params, 'eyeSep', 0.001, 0.15, 0.001 ).onChange( function ( value: any ) {
   
   					stereo.stereo.eyeSep = value;
   					anaglyph.eyeSep = value; // Anaglyph has direct eyeSep property
@@ -150,17 +150,17 @@ function onReady(__stage) {
   
   				// Anaglyph-specific settings folder
   				anaglyphFolder = gui.addFolder( 'Anaglyph Options' );
-  				anaglyphFolder.add( params, 'anaglyphAlgorithm', anaglyphAlgorithms ).name( 'Algorithm' ).onChange( function ( value ) {
+  				anaglyphFolder.add( params, 'anaglyphAlgorithm', anaglyphAlgorithms ).name( 'Algorithm' ).onChange( function ( value: any ) {
   
   					anaglyph.algorithm = value;
   
   				} );
-  				anaglyphFolder.add( params, 'anaglyphColorMode', anaglyphColorModes ).name( 'Color Mode' ).onChange( function ( value ) {
+  				anaglyphFolder.add( params, 'anaglyphColorMode', anaglyphColorModes ).name( 'Color Mode' ).onChange( function ( value: any ) {
   
   					anaglyph.colorMode = value;
   
   				} );
-  				anaglyphFolder.add( params, 'planeDistance', 0.5, 10, 0.1 ).name( 'Plane Distance' ).onChange( function ( value ) {
+  				anaglyphFolder.add( params, 'planeDistance', 0.5, 10, 0.1 ).name( 'Plane Distance' ).onChange( function ( value: any ) {
   
   					anaglyph.planeDistance = value;
   
@@ -176,7 +176,7 @@ function onReady(__stage) {
   			
   
   
-  			function update( value ) {
+  			function update( value: any ) {
   
   				if ( value === 'stereo' ) {
   
@@ -201,7 +201,7 @@ function onReady(__stage) {
   
   			
   
-  			function extractPosition( matrix, position ) {
+  			function extractPosition( matrix: any, position: any ) {
   
   				position.x = matrix.elements[ 12 ];
   				position.y = matrix.elements[ 13 ];
@@ -209,7 +209,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const elapsedTime = timer.getElapsed() * 0.1;
     				for ( let i = 0; i < mesh.count; i ++ ) {

@@ -77,7 +77,7 @@ function findLocalThumbnail(category, id) {
  * （如 webglExamples / graphicsExamples 等含单引号 / 无引号 key 的文件），避免 JSON.parse 抛错。
  */
 async function loadExistingExamples(name) {
-  const p = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.js`)
+  const p = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.ts`)
   if (!fs.existsSync(p)) return null
   try {
     const mod = await import(pathToFileURL(p).href)
@@ -179,7 +179,7 @@ async function buildRegistry(name, sourceName, label, sourceKey) {
 }
 
 function writeRegistry(name, data) {
-  const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.js`)
+  const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', `${name}.ts`)
   const content = `// 由 scripts/generate-registry.js 生成（仅覆盖 three-cesium-examples 与 cesium-examples 两个源；其余 registry 需手动维护）。
 // 合并保护：重跑本脚本会从 public/external-examples 重新解析并覆盖本文件，title/description/thumbnail/tags 等手工改动会被尽量保留，但结构性改动仍可能丢失，建议重跑前先 git diff 确认。
 

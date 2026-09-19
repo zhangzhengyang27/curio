@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, uv, uniform } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>HDR</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -53,7 +53,7 @@ function onReady(__stage) {
   
   				const displayIsHDR = hdrMediaQuery.matches;
   				const el = document.querySelector( '#no-hdr' );
-  								if ( el ) el.style.display = displayIsHDR ? 'none' : '';
+  								if ( el ) (el as HTMLElement).style.display = displayIsHDR ? 'none' : '';
   
   			}
   
@@ -115,7 +115,7 @@ function onReady(__stage) {
   			brushMesh.scale.set( 300, 300, 1 ); // ~300px default brush size
   			brushScene.add( brushMesh );
   
-  			function onPointerMove( e ) {
+  			function onPointerMove( e: any ) {
   
   				const rect = renderer.domElement.getBoundingClientRect();
   				const x = e.clientX - rect.left;
@@ -129,9 +129,9 @@ function onReady(__stage) {
   			window.addEventListener( 'pointermove', onPointerMove, { passive: false } );
   
   			// Prevent mobile scroll on touch
-  			renderer.domElement.addEventListener( 'touchstart', ( e ) => e.preventDefault(), { passive: false } );
-  			renderer.domElement.addEventListener( 'touchmove', ( e ) => e.preventDefault(), { passive: false } );
-  			renderer.domElement.addEventListener( 'touchend', ( e ) => e.preventDefault(), { passive: false } );
+  			renderer.domElement.addEventListener( 'touchstart', ( e: any ) => e.preventDefault(), { passive: false } );
+  			renderer.domElement.addEventListener( 'touchmove', ( e: any ) => e.preventDefault(), { passive: false } );
+  			renderer.domElement.addEventListener( 'touchend', ( e: any ) => e.preventDefault(), { passive: false } );
   
   			// GUI setup
   			const gui = renderer.inspector.createParameters( 'Settings' );

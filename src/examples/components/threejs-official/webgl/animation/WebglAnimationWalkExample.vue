@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Skeletal Animation Walking\n\t\t\t(model from <a href=\"https://www.mixamo.com/\" target=\"_blank\" rel=\"noopener\">mixamo.com</a>)<br/>\n\t\t\tuse arrows to control characters"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,9 +44,9 @@ function onReady(__stage) {
   
   
   
-  			let floor, orbitControls;
-  			let group, followGroup, model, skeleton, mixer, timer;
-			let actions;
+  			let floor: any, orbitControls: any;
+  			let group: any, followGroup: any, model, skeleton: any, mixer: any, timer: any;
+			let actions: any;
   
   
   
@@ -202,7 +202,7 @@ function onReady(__stage) {
   					model.rotation.y = PI;
   					group.rotation.y = PI;
   
-  					model.traverse( function ( object ) {
+  				model.traverse( function ( object: any ) {
   
   						if ( object.isMesh ) {
   
@@ -267,7 +267,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateCharacter( delta ) {
+  			function updateCharacter( delta: any ) {
   
   				const fade = controls.fadeDuration;
   				const key = controls.key;
@@ -352,7 +352,7 @@ function onReady(__stage) {
   
   			}
   
-  			function unwrapRad( r ) {
+  			function unwrapRad( r: any ) {
   
   				return Math.atan2( Math.sin( r ), Math.cos( r ) );
   
@@ -372,7 +372,7 @@ function onReady(__stage) {
   
   			}
   
-  			function setWeight( action, weight ) {
+  			function setWeight( action: any, weight: any ) {
   
   				action.enabled = true;
   				action.setEffectiveTimeScale( 1 );
@@ -380,7 +380,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				const key = controls.key;
   				switch ( event.code ) {
@@ -395,7 +395,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onKeyUp( event ) {
+  			function onKeyUp( event: any ) {
   
   				const key = controls.key;
   				switch ( event.code ) {
@@ -412,7 +412,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// Render loop
     				const delta = timer.getDelta();

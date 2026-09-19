@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - multiple elements with text - webgl"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
@@ -39,14 +39,14 @@ function onReady(__stage) {
   
   
   
-  			const scenes = [];
+  			const scenes: any = [];
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
   
-  			let views, t, canvas;
+  			let views, t: any, canvas: any;
   
-  			window.onload = init;
+  			// window.onload = init;  // init 函数体已由生成器内联至 onReady，此处不再引用（TS2304 修复）
   
   			
   
@@ -75,7 +75,7 @@ function onReady(__stage) {
   
   					const vertices = [];
   
-  					if ( views[ n ].lattice ) {
+  					if ( (views[ n ] as any).lattice ) {
   
   						const range = balls / 2;
   						for ( let i = - range; i <= range; i ++ ) {
@@ -115,9 +115,9 @@ function onReady(__stage) {
   					canvas2.width = 128;
   					canvas2.height = 128;
   					const context = canvas2.getContext( '2d' );
-  					context.arc( 64, 64, 64, 0, 2 * Math.PI );
-  					context.fillStyle = colors[ index ];
-  					context.fill();
+  					context!.arc( 64, 64, 64, 0, 2 * Math.PI );
+  					context!.fillStyle = colors[ index ];
+  					context!.fill();
   					const texture = new THREE.CanvasTexture( canvas2 );
   					texture.colorSpace = THREE.SRGBColorSpace;
   
@@ -154,7 +154,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const width = canvas.clientWidth;
@@ -167,7 +167,7 @@ function onReady(__stage) {
     				renderer.clear();
     				renderer.setClearColor( 0x000000 );
     				renderer.setScissorTest( true );
-    				scenes.forEach( function ( scene ) {
+    				scenes.forEach( function ( scene: any ) {
     					const rect = scene.userData.view.getBoundingClientRect();
     					// check if it's offscreen. If so skip it
     					if ( rect.bottom < 0 || rect.top > renderer.domElement.clientHeight ||

@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { sample, pass, mrt, screenUV, normalView, velocity, vec3, vec4, packNormalToRGB, unpackRGBToNormal, colorSpaceToWorking, builtinAOContext } from 'three/tsl';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>AO</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -50,7 +50,7 @@ async function onReady(__stage) {
   
   			let renderPipeline;
   
-  			let aoPass, traaPass, transparentMesh;
+  			let aoPass: any, traaPass, transparentMesh: any;
   
   			const params = {
   				samples: 16,
@@ -156,7 +156,7 @@ async function onReady(__stage) {
   
   				// wall-mounted spotlights
   
-  				function addSpotLight( position, targetPosition ) {
+  				function addSpotLight( position: any, targetPosition: any ) {
   
   					const light = new THREE.SpotLight( 0xffe09e, 40 );
   					light.position.copy( position );
@@ -181,7 +181,7 @@ async function onReady(__stage) {
   				const floorCanvas = document.createElement( 'canvas' );
   				floorCanvas.width = tilesX * 32;
   				floorCanvas.height = tilesZ * 32;
-  				const floorCtx = floorCanvas.getContext( '2d' );
+  				const floorCtx = floorCanvas.getContext( '2d' )!;
   
   				for ( let x = 0; x < tilesX; x ++ ) {
   
@@ -245,7 +245,7 @@ async function onReady(__stage) {
   
   				const columnMat = new THREE.MeshStandardMaterial( { color: '#e8e4de', roughness: 0.5, metalness: 0 } );
   
-  				function addColumn( x, z ) {
+  				function addColumn( x: any, z: any ) {
   
   					const columnGroup = new THREE.Group();
   
@@ -387,7 +387,7 @@ async function onReady(__stage) {
   
   				// picture frames
   
-  				function addFrame( x, y, z, width, height, paintColor, rotY = 0 ) {
+  				function addFrame( x: any, y: any, z: any, width: any, height: any, paintColor: any, rotY = 0 ) {
   
   					const frameGroup = new THREE.Group();
   					const t = 0.1;
@@ -496,7 +496,7 @@ async function onReady(__stage) {
   				gui.add( aoPass, 'useTemporalFiltering' ).name( 'temporal filtering' );
   				gui.add( transparentMesh, 'visible' ).name( 'show transparent mesh' );
   				gui.add( params, 'transparentOpacity', 0, 1, 0.01 ).name( 'transparent opacity' ).onChange( updateParameters );
-  				gui.add( params, 'aoOnly' ).onChange( ( value ) => {
+  				gui.add( params, 'aoOnly' ).onChange( ( value: any ) => {
   
   					if ( value === true ) {
   
@@ -531,7 +531,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

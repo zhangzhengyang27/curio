@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -61,7 +61,7 @@ function onReady(ctx) {
   // 设置相机控件轨道控制器OrbitControls
   
   // 圆扩散
-  function scatter3DCircle(r) {
+  function scatter3DCircle(r: any) {
     const geometry = new THREE.SphereGeometry(
       r,
       120,

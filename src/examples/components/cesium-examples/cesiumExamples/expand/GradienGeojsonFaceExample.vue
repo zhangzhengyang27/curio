@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const props = defineProps({
@@ -16,14 +16,20 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let dataSource = null
+let Cesium: any = null
+let viewer: any = null
+let dataSource: any = null
 
 const MATERIAL_TYPE = 'GradientGeojsonFaceCustom'
 
 class CustomMaterialProperty {
-  constructor(options = {}) {
+  _definitionChanged: any
+  _color: any
+  _colorSubscription: any
+  color: any
+  duration: any
+  _time: any
+  constructor(options: any = {}) {
     this._definitionChanged = new Cesium.Event()
     this._color = undefined
     this._colorSubscription = undefined
@@ -45,13 +51,13 @@ class CustomMaterialProperty {
     return MATERIAL_TYPE
   }
 
-  getValue(time, result = {}) {
+  getValue(time: any, result: any = {}) {
     result.color = Cesium.Property.getValueOrUndefined(this.color, time)
     result.time = ((performance.now() - this._time) % this.duration) / this.duration
     return result
   }
 
-  equals(other) {
+  equals(other: any) {
     return (
       this === other ||
       (other instanceof CustomMaterialProperty && this._color === other._color)
@@ -70,7 +76,7 @@ const COLOR_CONFIGS = [
   [19, 159, 240],
 ]
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -85,7 +91,7 @@ function viewerOptions(Cesium) {
   }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -99,8 +105,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || '/external-examples/three-cesium-examples/'
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   Cesium.Material._materialCache.addMaterial(MATERIAL_TYPE, {
@@ -136,7 +142,7 @@ async function onReady(ctx) {
       ([r, g, b]) => new Cesium.Color(r / 255, g / 255, b / 255, 1)
     )
 
-    entities.forEach((entity, index) => {
+    entities.forEach((entity: any, index: any) => {
       entity.polygon.extrudedHeight = 10000
       entity.polygon.outline = false
       entity.polygon.material = new CustomMaterialProperty({

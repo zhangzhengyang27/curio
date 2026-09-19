@@ -16,7 +16,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, mix, normalWorld, output, Fn, uniform, vec4, rotate, screenCoordinate, screenSize } from 'three/tsl';
@@ -32,11 +32,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Halftone</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   
 
   
@@ -45,7 +46,7 @@ function onReady(__stage) {
   
   
   
-  			let timer, halftoneSettings;
+  			let timer: any, halftoneSettings: any;
   
   			init();
   
@@ -125,14 +126,14 @@ function onReady(__stage) {
   
   					const uniforms = {};
   
-  					uniforms.count = uniform( settings.count );
-  					uniforms.color = uniform( color( settings.color ) );
-  					uniforms.direction = uniform( settings.direction );
-  					uniforms.start = uniform( settings.start );
-  					uniforms.end = uniform( settings.end );
-  					uniforms.mixLow = uniform( settings.mixLow );
-  					uniforms.mixHigh = uniform( settings.mixHigh );
-  					uniforms.radius = uniform( settings.radius );
+  					(uniforms as any).count = uniform( settings.count );
+  					(uniforms as any).color = uniform( color( settings.color ) );
+  					(uniforms as any).direction = uniform( settings.direction );
+  					(uniforms as any).start = uniform( settings.start );
+  					(uniforms as any).end = uniform( settings.end );
+  					(uniforms as any).mixLow = uniform( settings.mixLow );
+  					(uniforms as any).mixHigh = uniform( settings.mixHigh );
+  					(uniforms as any).radius = uniform( settings.radius );
   
   					settings.uniforms = uniforms;
   
@@ -140,27 +141,27 @@ function onReady(__stage) {
   
   					const folder = gui.addFolder( `⚪️ halftone ${index}` );
   
-  					folder.addColor( { color: uniforms.color.value }, 'color' );
-  					folder.add( uniforms.count, 'value', 1, 200, 1 ).name( 'count' );
-  					folder.add( uniforms.direction.value, 'x', - 1, 1, 0.01 ).listen();
-  					folder.add( uniforms.direction.value, 'y', - 1, 1, 0.01 ).listen();
-  					folder.add( uniforms.direction.value, 'z', - 1, 1, 0.01 ).listen();
-  					folder.add( uniforms.start, 'value', - 1, 1, 0.01 ).name( 'start' );
-  					folder.add( uniforms.end, 'value', - 1, 1, 0.01 ).name( 'end' );
-  					folder.add( uniforms.mixLow, 'value', 0, 1, 0.01 ).name( 'mix low' );
-  					folder.add( uniforms.mixHigh, 'value', 0, 1, 0.01 ).name( 'mix high' );
-  					folder.add( uniforms.radius, 'value', 0, 1, 0.01 ).name( 'radius' );
+  					folder.addColor( { color: (uniforms as any).color.value }, 'color' );
+  					folder.add( (uniforms as any).count, 'value', 1, 200, 1 ).name( 'count' );
+  					folder.add( (uniforms as any).direction.value, 'x', - 1, 1, 0.01 ).listen();
+  					folder.add( (uniforms as any).direction.value, 'y', - 1, 1, 0.01 ).listen();
+  					folder.add( (uniforms as any).direction.value, 'z', - 1, 1, 0.01 ).listen();
+  					folder.add( (uniforms as any).start, 'value', - 1, 1, 0.01 ).name( 'start' );
+  					folder.add( (uniforms as any).end, 'value', - 1, 1, 0.01 ).name( 'end' );
+  					folder.add( (uniforms as any).mixLow, 'value', 0, 1, 0.01 ).name( 'mix low' );
+  					folder.add( (uniforms as any).mixHigh, 'value', 0, 1, 0.01 ).name( 'mix high' );
+  					folder.add( (uniforms as any).radius, 'value', 0, 1, 0.01 ).name( 'radius' );
   
   				}
   
   				// halftone functions
   
-  				const halftone = Fn( ( [ count, color, direction, start, end, radius, mixLow, mixHigh ] ) => {
+  			const halftone = Fn( ( [ count, color, direction, start, end, radius, mixLow, mixHigh ]: any ) => {
   
   					// grid pattern
   
   					let gridUv = screenCoordinate.xy.div( screenSize.yy ).mul( count );
-  					gridUv = rotate( gridUv, Math.PI * 0.25 ).mod( 1 );
+  					gridUv = (rotate as any)( gridUv, Math.PI * 0.25 ).mod( 1 );
   
   					// orientation strength
   
@@ -178,13 +179,13 @@ function onReady(__stage) {
   
   				} );
   
-  				const halftones = Fn( ( [ input ] ) => {
+  			const halftones = Fn( ( [ input ]: any ) => {
   
   					const halftonesOutput = input;
   
   					for ( const settings of halftoneSettings ) {
   
-  						const halfToneOutput = halftone( settings.uniforms.count, settings.uniforms.color, settings.uniforms.direction, settings.uniforms.start, settings.uniforms.end, settings.uniforms.radius, settings.uniforms.mixLow, settings.uniforms.mixHigh );
+  				const halfToneOutput = (halftone as any)( (settings.uniforms.count as any), settings.uniforms.color, settings.uniforms.direction, settings.uniforms.start, settings.uniforms.end, settings.uniforms.radius, settings.uniforms.mixLow, settings.uniforms.mixHigh );
   						halftonesOutput.rgb.assign( mix( halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a ) );
   
   					}
@@ -196,7 +197,7 @@ function onReady(__stage) {
   				// default material
   
   				const defaultMaterial = new THREE.MeshStandardNodeMaterial( { color: '#ff622e' } );
-  				defaultMaterial.outputNode = halftones( output );
+  				defaultMaterial.outputNode = (halftones as any)( (output as any) );
   
   				const folder = gui.addFolder( '🎨 default material' );
   				folder.addColor( { color: defaultMaterial.color }, 'color' );
@@ -228,7 +229,7 @@ function onReady(__stage) {
   						model.traverse( ( child ) => {
   
   							if ( child.isMesh )
-  								child.material.outputNode = halftones( output );
+  								(child!.material as any).outputNode = (halftones as any)( (output as any) );
   
   						} );
   
@@ -250,7 +251,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     timer.update();
     				const time = timer.getElapsed();
     				halftoneSettings[ 1 ].uniforms.direction.value.x = Math.cos( time );

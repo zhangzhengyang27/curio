@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders, getMousePosInWebgl, glToCssPos } from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Utils.js'
 import Poly from '@/examples/jsm-compat/webgl/kaikeba-webgl/03-绘制三角形/jsm/Poly.js'
@@ -33,7 +33,7 @@ const fragmentShader = `precision mediump float;
       }
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -49,7 +49,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const fsSource = fragmentShader;
   
       //三维画笔
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   
@@ -68,9 +68,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const compose = new Compose()
   
       //正在绘制的多边形
-      let poly = null
+      let poly: any = null
       //鼠标划上的点
-      let point = null
+      let point: any = null
   
       //取消右击提示
       canvas.oncontextmenu = function () {
@@ -109,7 +109,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
         requestAnimationFrame(ani)
       })()
   
-      function crtPoly(x, y) {
+      function crtPoly(x: number, y: number) {
         let o1 = point ? point : { x, y, pointSize: random(), alpha: 1 }
         const o2 = { x, y, pointSize: random(), alpha: 1 }
         poly = new Poly({
@@ -124,7 +124,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
         crtTrack(o2)
       }
   
-      function addVertice(x, y) {
+      function addVertice(x: number, y: number) {
         const { geoData } = poly
         if (point) {
           geoData[geoData.length - 1] = point
@@ -140,7 +140,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
         poly = null
       }
   
-      function crtTrack(obj) {
+      function crtTrack(obj: any) {
         const { pointSize } = obj
         const track = new Track(obj)
         track.start = new Date()
@@ -167,7 +167,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
         compose.add(track)
       }
   
-      function hoverPoint(mx, my) {
+      function hoverPoint(mx: number, my: number) {
         for (let { geoData } of sky.children) {
           for (let obj of geoData) {
             if (poly && obj === poly.geoData[poly.geoData.length - 1]) {

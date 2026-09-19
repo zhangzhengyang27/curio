@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - anisotropic texture filtering example"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -44,7 +44,7 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let scene1, scene2;
+  			let scene1: any, scene2: any;
   
   			let mouseX = 0, mouseY = 0;
   
@@ -113,8 +113,8 @@ function onReady(__stage) {
   
   				if ( maxAnisotropy > 0 ) {
   
-  					valLeftEl.innerHTML = texture1.anisotropy;
-  					valRightEl.innerHTML = texture2.anisotropy;
+  					(valLeftEl.innerHTML as any) = texture1.anisotropy;
+  					(valRightEl.innerHTML as any) = texture2.anisotropy;
   
   				} else {
   
@@ -158,7 +158,7 @@ function onReady(__stage) {
   
   
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX );
   				mouseY = ( event.clientY - windowHalfY );
@@ -166,7 +166,7 @@ function onReady(__stage) {
   			}
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     				camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY - 200 ) - camera.position.y ) * .05, 50, 1000 );

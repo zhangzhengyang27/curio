@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Lens Flares</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -109,7 +109,7 @@ function onReady(__stage) {
   				addLight( 0.1, 0.85, 0.65, 0, 0, - 1000 );
   				addLight( 0.995, 0.5, 0.95, 5000, 5000, - 1000 );
   
-  				function addLight( h, s, l, x, y, z ) {
+  				function addLight( h: any, s: any, l: any, x: any, y: any, z: any ) {
   
   					const light = new THREE.PointLight( 0xffffff, 1.5, 2000, 0 );
   					light.color.setHSL( h, s, l );
@@ -157,7 +157,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

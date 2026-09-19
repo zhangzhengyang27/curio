@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,13 +17,13 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  let mouse, baseParticle, particleSystem;
+  let mouse: any, baseParticle: any, particleSystem: any;
 
   mouse = [window.innerWidth / 2, window.innerHeight / 2];
   
@@ -37,20 +37,20 @@ function onReady(ctx) {
   	new THREE.MeshBasicMaterial({ color: 0xffffff })
   );
   
-  particleSystem = new ParticleSystem(99);
+  particleSystem = new (ParticleSystem as any)(99);
   
-  function randomFloat(a, b) {
+  function randomFloat(a: any, b: any) {
   	var r = (Math.random() * (b - a) + a);
   	return r;
   }
   
-  function partToHex(part) {
+  function partToHex(part: any) {
   	var h = part.toString(16);
   	return h.length == 1 ? "0" + h : h;
   }
   
-  var color;
-  function FireParticle() {
+  var color: any;
+  function FireParticle(this: any): any {
   	this.direction;
   	this.scaleSpeed;
   	this.curAge;
@@ -60,7 +60,7 @@ function onReady(ctx) {
   	this.obj;
   	this.colorRamp = [[255, 255, 0], [255, 136, 34], [255, 17, 68], [153, 136, 136]];
   
-  	this.update = function () {
+  	this.update = function (this: any) {
   		if (Math.abs(this.parent.pos.x - this.obj.position.x) > 10 || Math.abs(-this.parent.pos.y - this.obj.position.y) > 10) {
   			this.obj.scale.x *= .8;
   			this.obj.scale.y *= .8;
@@ -96,7 +96,7 @@ function onReady(ctx) {
   		this.obj.scale.z *= this.scaleSpeed;
   	}
   
-  	this.init = function () {
+  	this.init = function (this: any) {
   		this.direction = new THREE.Vector3(randomFloat(-.01, .01), randomFloat(.01, .1), randomFloat(-.01, .01));
   		this.scaleSpeed = randomFloat(.8, .99);
   		this.curAge = 0;
@@ -119,7 +119,7 @@ function onReady(ctx) {
   
   }
   
-  function ParticleSystem(size) {
+  function ParticleSystem(this: any, size: any): any {
   	this.particles = [];
   	this.obj = new THREE.Group();
   
@@ -128,9 +128,9 @@ function onReady(ctx) {
   	this.dis;
   	this.pos = new THREE.Vector3(0, 0, 0);
   
-  	this.init = function () {
+  	this.init = function (this: any) {
   		for (var i = 0; i < size; i++) {
-  			this.particles.push(new FireParticle());
+  			this.particles.push(new (FireParticle as any)());
   			this.particles[i].parent = this;
   			this.particles[i].init();
   		}
@@ -139,7 +139,7 @@ function onReady(ctx) {
   	}
   	this.init();
   
-  	this.update = function () {
+  	this.update = function (this: any) {
   		this.p.set((mouse[0] / window.innerWidth) * 2 - 1, (mouse[1] / window.innerHeight) * 2 - 1, .5);
   		this.p.unproject(camera);
   		this.d = this.p.sub(camera.position).normalize();

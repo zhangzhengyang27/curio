@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - buffergeometry - lines - indexed"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -54,9 +54,9 @@ function onReady(__stage) {
   				const geometry = new THREE.BufferGeometry();
   				const material = new THREE.LineBasicMaterial( { vertexColors: true } );
   
-  				const indices = [];
-  				const positions = [];
-  				const colors = [];
+  				const indices: any = [];
+  				const positions: any = [];
+  				const colors: any = [];
   
   				let next_positions_index = 0;
   
@@ -65,7 +65,7 @@ function onReady(__stage) {
   				const iteration_count = 4;
   				const rangle = 60 * Math.PI / 180.0;
   
-  				function add_vertex( v ) {
+  				function add_vertex( v: any ) {
   
   					positions.push( v.x, v.y, v.z );
   					colors.push( Math.random() * 0.5 + 0.5, Math.random() * 0.5 + 0.5, 1 );
@@ -76,7 +76,7 @@ function onReady(__stage) {
   
   				// simple Koch curve
   
-  				function snowflake_iteration( p0, p4, depth ) {
+  				function snowflake_iteration( p0: any, p4: any, depth: any ) {
   
   					if ( -- depth < 0 ) {
   
@@ -107,7 +107,7 @@ function onReady(__stage) {
   
   				}
   
-  				function snowflake( points, loop, x_offset ) {
+  				function snowflake( points: any, loop: any, x_offset: any ) {
   
   					for ( let iteration = 0; iteration != iteration_count; iteration ++ ) {
   
@@ -215,7 +215,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.001;
     				parent_node.rotation.z = time * 0.5;
     				stats.update();

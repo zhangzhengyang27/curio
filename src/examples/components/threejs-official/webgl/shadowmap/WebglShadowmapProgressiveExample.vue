@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Progressive Lightmaps by <a href=\"https://github.com/zalo\" target=\"_blank\" rel=\"noopener\">zalo</a><br/>\n\t\t\t[Inspired by <a href=\"http://madebyevan.com/shaders/lightmap/\" target=\"_blank\" rel=\"noopener\">evanw's Lightmap Generation</a>]"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,8 +48,8 @@ function onReady(__stage) {
   
   			// ShadowMap + LightMap Res and Number of Directional Lights
   			const shadowMapRes = 512, lightMapRes = 1024, lightCount = 8;
-  			let control, control2, object = new THREE.Mesh(), lightOrigin = null, progressiveSurfacemap;
-  			const dirLights = [], lightmapObjects = [];
+  			let control, control2, object = new THREE.Mesh(), lightOrigin = null, progressiveSurfacemap: any;
+  			const dirLights: any = [], lightmapObjects: any = [];
   			const params = { 'Enable': true, 'Blur Edges': true, 'Blend Window': 200,
   							 'Light Radius': 50, 'Ambient Weight': 0.5, 'Debug Lightmap': false };
   			
@@ -174,7 +174,7 @@ function onReady(__stage) {
   				const loader = new GLTFLoader( manager );
   				loader.load( ASSET_HOST + 'models/gltf/ShadowmappableMesh.glb', function ( obj ) {
   
-  					object = obj.scene.children[ 0 ];
+  					(object as any) = obj.scene.children[ 0 ];
   
   				} );
   
@@ -207,7 +207,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     // Update the inertia on the orbit controls
     				// Accumulate Surface Maps
     				if ( params[ 'Enable' ] ) {

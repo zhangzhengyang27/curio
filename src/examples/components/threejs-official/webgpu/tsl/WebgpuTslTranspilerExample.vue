@@ -36,10 +36,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import Transpiler from 'three/examples/jsm/transpiler/Transpiler.js'
 import GLSLDecoder from 'three/examples/jsm/transpiler/GLSLDecoder.js'
+// @ts-expect-error WGSLEncoder.js 无类型声明(env.d.ts 候选: declare module 'three/examples/jsm/transpiler/WGSLEncoder.js')
 import WGSLEncoder from 'three/examples/jsm/transpiler/WGSLEncoder.js'
 import TSLEncoder from 'three/examples/jsm/transpiler/TSLEncoder.js'
 
@@ -49,10 +50,10 @@ const resultRef = ref(null)
 const options = ref({ decoder: 'GLSL', encoder: 'TSL' })
 const encoderLanguages = { TSL: 'javascript', WGSL: 'wgsl' }
 
-let editor = null
-let resultEditor = null
-let timeout = null
-let monacoLoaded = false
+let editor: any = null
+let resultEditor: any = null
+let timeout: any = null
+let monacoLoaded: boolean = false
 
 const glslCode = `/*
  * Perlin noise
@@ -102,8 +103,8 @@ float pNoise(vec2 p, int res){
 
 function loadMonacoScript() {
   return new Promise((resolve, reject) => {
-    if (window.require) {
-      resolve()
+    if ((window.require as any)) {
+      (resolve as any)()
       return
     }
     const script = document.createElement('script')
@@ -115,12 +116,12 @@ function loadMonacoScript() {
 }
 
 function initEditors() {
-  window.require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs' } })
+  (window.require as any).config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs' } })
 
-  window.require(['vs/editor/editor.main'], () => {
+  (window.require as any)(['vs/editor/editor.main'], () => {
     monacoLoaded = true
 
-    editor = window.monaco.editor.create(sourceRef.value, {
+    editor = (window as any).monaco.editor.create(sourceRef.value, {
       value: glslCode,
       language: 'c',
       theme: 'vs-dark',
@@ -129,7 +130,7 @@ function initEditors() {
       minimap: { enabled: false }
     })
 
-    resultEditor = window.monaco.editor.create(resultRef.value, {
+    resultEditor = (window as any).monaco.editor.create(resultRef.value, {
       value: '',
       language: 'javascript',
       theme: 'vs-dark',
@@ -148,7 +149,7 @@ function initEditors() {
   })
 }
 
-function showCode(code) {
+function showCode(code: any) {
   if (!resultEditor) return
   resultEditor.setValue(code)
   resultEditor.revealLine(1)
@@ -172,14 +173,14 @@ function build() {
     const transpiler = new Transpiler(decoder, encoder)
     const tsl = transpiler.parse(glsl)
     showCode(tsl)
-  } catch (e) {
+  } catch (e: any) {
     showCode('Error: ' + e.message)
   }
 }
 
 watch(() => options.value.encoder, (value) => {
   if (monacoLoaded && resultEditor) {
-    window.monaco.editor.setModelLanguage(resultEditor.getModel(), encoderLanguages[value])
+    (window as any).monaco.editor.setModelLanguage(resultEditor.getModel(), (encoderLanguages as any)[value])
   }
   build()
 })

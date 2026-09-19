@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,10 +23,10 @@ const props = defineProps({
 
 const HOST = props.example?.globals?.HOST || '/external-examples/three-cesium-examples/'
 
-let list = []
-let meshs = []
+let list: any[] = []
+let meshs: any[] = []
 
-function createDom(text) {
+function createDom(text: string) {
   const div = document.createElement('div')
   div.style.position = 'absolute'
   div.style.transition = 'all 0.2s'
@@ -51,22 +51,22 @@ function createDom(text) {
   return div
 }
 
-function setCss3dDOM(div, position, scene) {
+function setCss3dDOM(div: HTMLElement, position: { x: number, y: number, z: number }, scene: THREE.Scene) {
   const mesh = new CSS3DObject(div)
-  mesh.div = div
+  ;(mesh as any).div = div
   mesh.position.set(position.x, position.y, position.z)
   scene.add(mesh)
   return mesh
 }
 
-function createRender(mesh, camera) {
+function createRender(mesh: any, camera: any) {
   const direction = new THREE.Vector3().subVectors(mesh.position, camera.position).normalize()
   const raycaster = new THREE.Raycaster(camera.position, direction, 0, mesh.position.distanceTo(camera.position))
   const intersects = raycaster.intersectObjects(meshs)
   mesh.div.style.opacity = intersects.length > 0 ? '0' : '1'
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
 
@@ -78,7 +78,7 @@ function onReady(ctx) {
     const mesh = setCss3dDOM(createDom('顽皮宝' + i), { x: R(), y: R(), z: R() }, scene)
     mesh.scale.multiplyScalar(0.02)
     mesh.lookAt(R(), R(), R())
-    mesh.update = () => createRender(mesh, camera)
+    ;(mesh as any).update = () => createRender(mesh, camera)
     list.push(mesh)
 
     if (i % 40 === 0) {

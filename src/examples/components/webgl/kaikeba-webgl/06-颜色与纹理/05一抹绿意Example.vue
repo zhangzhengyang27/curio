@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders, getMousePosInWebgl, ScaleLinear, SinFn } from '@/examples/jsm-compat/webgl/kaikeba-webgl/06-颜色与纹理/jsm/Utils.js'
 import { Matrix4, Vector3, Quaternion, Plane, Ray, Color } from 'three'
@@ -23,7 +23,7 @@ const fragmentShader = `precision mediump float;
         gl_FragColor=v_Color;
     }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
       
       
@@ -31,7 +31,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const gl = canvas.getContext('webgl');
+      const gl = canvas.getContext("webgl")!!!;
   
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
@@ -106,7 +106,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       render()
   
       /* 动画:偏移phi */
-      let offset = 0
+      let offset: number = 0
       ;(function ani() {
         offset += 0.08
         updateSource(offset)
@@ -122,8 +122,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       }
   
       /* 建立顶点集合 */
-      function getSource(cols, rows, minPosX, maxPosX, minPosZ, maxPosZ) {
-        const source = []
+      function getSource(cols: number, rows: number, minPosX: number, maxPosX: number, minPosZ: number, maxPosZ: number) {
+        const source: any[] = []
         const spaceZ = (maxPosZ - minPosZ) / rows
         const spaceX = (maxPosX - minPosX) / cols
         for (let z = 0; z < rows; z++) {

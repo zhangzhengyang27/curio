@@ -64,7 +64,7 @@ const data = {
   examples: collectExamples(),
 }
 
-const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', 'earthLessons.js')
+const outputPath = path.join(projectRoot, 'src', 'examples', 'registry', 'earthLessons.ts')
 
 // 保留人工/流水线产出的字段（title/description/tags/thumbnail/runner），避免覆盖丢失
 const { preserved } = preserveCuratedFields(data.examples, await loadExistingExamples(outputPath))

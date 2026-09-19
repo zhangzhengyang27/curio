@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { GUI } from 'lil-gui'
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const controls = ctx.controls
 
@@ -55,7 +55,7 @@ function onReady(ctx) {
   gui.add({ startFlow: () => pipe.startFlow() }, 'startFlow').name('开始流动')
   gui.add({ stopFlow: () => pipe.stopFlow() }, 'stopFlow').name('停止流动')
 
-  function addAndGetPipe(fileHost) {
+  function addAndGetPipe(fileHost: string) {
     const p1 = new THREE.Vector3(0, 0, 0)
     const p2 = new THREE.Vector3(0, 1400, 0)
     const p3 = new THREE.Vector3(50, 1450, 0)
@@ -80,7 +80,9 @@ function onReady(ctx) {
 }
 
 class DemoPipe extends THREE.Mesh {
-  constructor(name, options, fileHost) {
+  flowTexture: THREE.Texture
+  flowAnimation: any
+  constructor(name: string, options: any, fileHost: string) {
     const defaultOptions = {
       radius: 70,
       color: 0x777777,

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
@@ -19,11 +19,11 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
-let rafId = null
-let renderer = null
-let pickHandler = null
+let Cesium: any = null
+let viewer: any = null
+let rafId: any = null
+let renderer: any = null
+let pickHandler: any = null
 
 const CENTER_WGS84 = [115.73, 40.55]
 const TERRAIN_FOLLOW = { scale: 120, offset: 5, intervalMs: 1500 }
@@ -43,7 +43,7 @@ const viewerOptions = {
   useDefaultRenderLoop: false
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -90,7 +90,7 @@ async function onReady(ctx) {
     }),
     orbit: viewer.entities.add({
       id: 'fusion-orbit',
-      position: new Cesium.CallbackProperty((time, result) => {
+      position: new Cesium.CallbackProperty((time: any, result: any) => {
         const seconds = Cesium.JulianDate.secondsDifference(time, viewer.clock.startTime)
         const angle = seconds * 0.34
         const lon = CENTER_WGS84[0] + Math.cos(angle) * 0.18
@@ -125,7 +125,7 @@ async function onReady(ctx) {
   initThree(viewer, FILE_HOST, Y_UP_TO_Z_UP)
 }
 
-function initThree(viewerInstance, FILE_HOST, Y_UP_TO_Z_UP) {
+function initThree(viewerInstance: any, FILE_HOST: any, Y_UP_TO_Z_UP: any) {
   const canvas = viewerInstance.scene.canvas
   const gl = viewerInstance.scene.context._gl
   const scene = new THREE.Scene()
@@ -202,7 +202,7 @@ function initThree(viewerInstance, FILE_HOST, Y_UP_TO_Z_UP) {
   const fillLight = new THREE.AmbientLight(0x7aa4d6, 0.55)
   scene.add(fillLight)
 
-  pickHandler.setInputAction((movement) => {
+  pickHandler.setInputAction((movement: any) => {
     const position = movement.position
     const threePick = pickThreeObject(position, renderer, camera, scene, raycaster, pointerNdc)
     const cesiumPick = viewerInstance.scene.pick(position)
@@ -251,7 +251,7 @@ function initThree(viewerInstance, FILE_HOST, Y_UP_TO_Z_UP) {
   render()
 }
 
-function loadFusionModel(worldRoot, FILE_HOST) {
+function loadFusionModel(worldRoot: any, FILE_HOST: any) {
   const dracoLoader = new DRACOLoader().setDecoderPath(FILE_HOST + 'js/three/draco/')
   new GLTFLoader()
     .setDRACOLoader(dracoLoader)
@@ -279,9 +279,9 @@ function loadFusionModel(worldRoot, FILE_HOST) {
     )
 }
 
-function startTerrainFollow(viewerInstance, object3D, lon, lat, options, Y_UP_TO_Z_UP) {
-  let syncing = false
-  let lastSync = 0
+function startTerrainFollow(viewerInstance: any, object3D: any, lon: any, lat: any, options: any, Y_UP_TO_Z_UP: any) {
+  let syncing: boolean = false
+  let lastSync: number = 0
 
   const sync = async () => {
     if (syncing) return
@@ -307,7 +307,7 @@ function startTerrainFollow(viewerInstance, object3D, lon, lat, options, Y_UP_TO
   })
 }
 
-function createScanRing(radius) {
+function createScanRing(radius: any) {
   const geometry = new THREE.RingGeometry(radius * 0.6, radius, 96)
   const material = new THREE.ShaderMaterial({
     transparent: true,
@@ -335,7 +335,7 @@ function createScanRing(radius) {
   return new THREE.Mesh(geometry, material)
 }
 
-function createFlowLine(points, color, radius) {
+function createFlowLine(points: any, color: any, radius: any) {
   const curve = new THREE.CatmullRomCurve3(points)
   const geometry = new THREE.TubeGeometry(curve, 140, radius, 12, false)
   const material = new THREE.ShaderMaterial({
@@ -367,7 +367,7 @@ function createFlowLine(points, color, radius) {
   return new THREE.Mesh(geometry, material)
 }
 
-function animateFusion(elapsed, box, box2, scanRing, flowLines) {
+function animateFusion(elapsed: any, box: any, box2: any, scanRing: any, flowLines: any) {
   box.rotation.y = elapsed * FUSION_CONFIG.rotate
   box2.rotation.z = elapsed * (FUSION_CONFIG.rotate * 1.35)
   const pulse = (Math.sin(elapsed * FUSION_CONFIG.pulse.speed) + 1) * 0.5
@@ -376,20 +376,20 @@ function animateFusion(elapsed, box, box2, scanRing, flowLines) {
   if (box2.material?.emissiveIntensity !== undefined) box2.material.emissiveIntensity = emissive * 1.1
   scanRing.scale.setScalar(0.9 + pulse * 0.25)
   scanRing.material.uniforms.uTime.value = elapsed
-  flowLines.forEach((line, i) => { line.material.uniforms.uTime.value = elapsed + i * 0.8 })
+  flowLines.forEach((line: any, i: any) => { line.material.uniforms.uTime.value = elapsed + i * 0.8 })
 }
 
-function pickThreeObject(position, rendererInstance, camera, scene, raycaster, pointerNdc) {
+function pickThreeObject(position: any, rendererInstance: any, camera: any, scene: any, raycaster: any, pointerNdc: any) {
   const width = rendererInstance.domElement.clientWidth
   const height = rendererInstance.domElement.clientHeight
   pointerNdc.x = position.x / width * 2 - 1
   pointerNdc.y = -(position.y / height) * 2 + 1
   raycaster.setFromCamera(pointerNdc, camera)
   const intersections = raycaster.intersectObjects(scene.children, true)
-  return intersections.find(item => item.object.userData.pickable)
+  return intersections.find((item: any) => item.object.userData.pickable)
 }
 
-function resolveUnifiedPick(position, threePick, cesiumPick, viewerInstance, scratchThreeCartesian) {
+function resolveUnifiedPick(position: any, threePick: any, cesiumPick: any, viewerInstance: any, scratchThreeCartesian: any) {
   if (!threePick && !cesiumPick) return null
   if (threePick && !cesiumPick) return 'three'
   if (!threePick && cesiumPick) return 'cesium'
@@ -406,13 +406,13 @@ function resolveUnifiedPick(position, threePick, cesiumPick, viewerInstance, scr
   return threeDistance <= cesiumDistance ? 'three' : 'cesium'
 }
 
-function resolvePickedCesiumEntity(cesiumPick) {
+function resolvePickedCesiumEntity(cesiumPick: any) {
   if (!cesiumPick?.id) return null
   if (!cesiumPick.id.point) return null
   return cesiumPick.id
 }
 
-function setThreeHighlight(object, state) {
+function setThreeHighlight(object: any, state: any) {
   if (state.activeThree?.userData.baseScale) state.activeThree.scale.copy(state.activeThree.userData.baseScale)
   state.activeThree = null
   if (!object) return
@@ -421,7 +421,7 @@ function setThreeHighlight(object, state) {
   state.activeThree = object
 }
 
-function setCesiumHighlight(entity, state) {
+function setCesiumHighlight(entity: any, state: any) {
   if (state.activeCesium?.point && state.previousCesiumColor && state.previousCesiumPixelSize !== null) {
     state.activeCesium.point.color = new Cesium.ConstantProperty(state.previousCesiumColor)
     state.activeCesium.point.pixelSize = new Cesium.ConstantProperty(state.previousCesiumPixelSize)
@@ -439,7 +439,7 @@ function setCesiumHighlight(entity, state) {
   entity.point.pixelSize = new Cesium.ConstantProperty(previousSize + 4)
 }
 
-function getFusionTimeSeconds(viewerInstance, fallbackClock) {
+function getFusionTimeSeconds(viewerInstance: any, fallbackClock: any) {
   const now = viewerInstance.clock.currentTime
   const start = viewerInstance.clock.startTime
   const seconds = Cesium.JulianDate.secondsDifference(now, start)
@@ -447,7 +447,7 @@ function getFusionTimeSeconds(viewerInstance, fallbackClock) {
   return fallbackClock.getElapsedTime()
 }
 
-function placeObjectOnEarth(object3D, lon, lat, height = 0, scale = 1, Y_UP_TO_Z_UP) {
+function placeObjectOnEarth(object3D: any, lon: any, lat: any, height = 0, scale = 1, Y_UP_TO_Z_UP: any) {
   const origin = Cesium.Cartesian3.fromDegrees(lon, lat, height)
   const enuMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
   const scaleMatrix = Cesium.Matrix4.fromUniformScale(scale)
@@ -462,7 +462,7 @@ function placeObjectOnEarth(object3D, lon, lat, height = 0, scale = 1, Y_UP_TO_Z
   )
 }
 
-function syncCesiumThree(camera, viewerInstance) {
+function syncCesiumThree(camera: any, viewerInstance: any) {
   camera.fov = Cesium.Math.toDegrees(viewerInstance.camera.frustum.fovy)
   camera.matrixAutoUpdate = false
   const cvm = viewerInstance.camera.viewMatrix

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     // 禁用动画控件（左下角仪表）
     animation: false,
@@ -37,7 +37,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -45,8 +45,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 启用地形深度检测，使墙体能够贴合地形
@@ -96,7 +96,7 @@ function onReady(ctx) {
    * @param {Object} val - 颜色值对象，键为位置比例(0.0-1.0)，值为CSS颜色字符串
    * @returns {HTMLCanvasElement} 包含垂直渐变的canvas元素
    */
-  function getColorRamp(val) {
+  function getColorRamp(val: Record<string, string>) {
       // 创建canvas元素用于绘制渐变色带
       const ramp = document.createElement('canvas');
       ramp.width = 1;      // 宽度为 1 像素（只需要垂直方向的渐变）
@@ -106,7 +106,7 @@ function onReady(ctx) {
       const ctx = ramp.getContext("2d");
       
       // 创建垂直线性渐变，从顶部(0,0)到底部(0,100)
-      const grd = ctx.createLinearGradient(0, 0, 0, 100);
+      const grd = ctx!.createLinearGradient(0, 0, 0, 100);
       
       // 添加颜色断点到渐变中
       for (let key in val) {
@@ -115,8 +115,8 @@ function onReady(ctx) {
       }
       
       // 应用渐变填充整个canvas
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 1, 100);
+      ctx!.fillStyle = grd;;
+      ctx!.fillRect(0, 0, 1, 100);
       
       // 返回生成的渐变图像
       return ramp;

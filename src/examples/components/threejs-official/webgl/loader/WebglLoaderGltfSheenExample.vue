@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - GLTFLoader + <a href=\"https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_sheen\" target=\"_blank\" rel=\"noopener\">KHR_materials_sheen</a><br />\n\t\t\tSheen Chair from <a href=\"https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/SheenChair\" target=\"_blank\" rel=\"noopener\">glTF-Sample-Models</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -66,7 +66,7 @@ function onReady(__stage) {
   
   						gui = new GUI();
   
-  						gui.add( object.material, 'sheen', 0, 1 );
+  						gui.add( object!.material, 'sheen', 0, 1 );
   						gui.open();
   
   					} );

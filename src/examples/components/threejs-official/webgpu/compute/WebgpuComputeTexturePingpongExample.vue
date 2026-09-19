@@ -13,11 +13,14 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { storageTexture, textureStore, Fn, instanceIndex, uniform, float, vec2, vec4, uvec2, ivec2, int, NodeAccess } from 'three/tsl';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+
+let material: any;
+
 
 const props = defineProps({
   example: {
@@ -27,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t\t<span>Compute Ping/Pong Texture</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -75,7 +78,7 @@ function onReady(__stage) {
   
   				}
   
-  				const rand2 = Fn( ( [ n ] ) => {
+  				const rand2 = Fn( ( [ n ]: any ) => {
   
   					return n.dot( vec2( 12.9898, 4.1414 ) ).sin().mul( 43758.5453 ).fract();
   
@@ -94,9 +97,9 @@ function onReady(__stage) {
   					const indexUV = uvec2( posX, posY );
   					const uv = vec2( float( posX ).div( width ), float( posY ).div( height ) );
   
-  					const r = rand2( uv.add( seed.mul( 100 ) ) ).sub( rand2( uv.add( seed.mul( 300 ) ) ) );
-  					const g = rand2( uv.add( seed.mul( 200 ) ) ).sub( rand2( uv.add( seed.mul( 300 ) ) ) );
-  					const b = rand2( uv.add( seed.mul( 200 ) ) ).sub( rand2( uv.add( seed.mul( 100 ) ) ) );
+  					const r = (rand2 as any)( (uv.add as any)( seed.mul( 100 ) ) ).sub( (rand2 as any)( (uv.add as any)( seed.mul( 300 ) ) ) );
+  					const g = (rand2 as any)( (uv.add as any)( seed.mul( 200 ) ) ).sub( (rand2 as any)( (uv.add as any)( seed.mul( 300 ) ) ) );
+  					const b = (rand2 as any)( (uv.add as any)( seed.mul( 200 ) ) ).sub( (rand2 as any)( (uv.add as any)( seed.mul( 100 ) ) ) );
   
   					textureStore( writePing, indexUV, vec4( r, g, b, 1 ) );
   
@@ -105,7 +108,7 @@ function onReady(__stage) {
   				computeInitNode = computeInit().compute( width * height );
   
   				// compute ping-pong: blur function using .load() for textureLoad
-  				const blur = Fn( ( [ readTex, uv ] ) => {
+  				const blur = Fn( ( [ readTex, uv ]: any ) => {
   
   					const c0 = readTex.load( uv.add( ivec2( - 1, 1 ) ) );
   					const c1 = readTex.load( uv.add( ivec2( - 1, - 1 ) ) );
@@ -118,20 +121,20 @@ function onReady(__stage) {
   				} );
   
   				// compute loop: read from one texture, blur, write to another
-  				const computePingPong = Fn( ( [ readTex, writeTex ] ) => {
+  				const computePingPong = Fn( ( [ readTex, writeTex ]: any ) => {
   
   					const posX = instanceIndex.mod( width );
   					const posY = instanceIndex.div( width );
   					const indexUV = ivec2( int( posX ), int( posY ) );
   
-  					const color = blur( readTex, indexUV );
+  					const color = (blur as any)( readTex, indexUV );
   
   					textureStore( writeTex, indexUV, vec4( color.rgb.mul( 1.05 ), 1 ) );
   
   				} );
   
-  				computeToPong = computePingPong( readPing, writePong ).compute( width * height );
-  				computeToPing = computePingPong( readPong, writePing ).compute( width * height );
+			computeToPong = (computePingPong as any)( readPing, writePong ).compute( width * height );
+				computeToPing = (computePingPong as any)( readPong, writePing ).compute( width * height );
   
   				//
   
@@ -152,7 +155,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now();
     				const seconds = Math.floor( time / 1000 );
     				// reset every second

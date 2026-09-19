@@ -16,17 +16,25 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, If, Loop, vec2, vec4, uvec2, uvec4, mat4, uint, float, int, min, max, clamp, ceil, log2, length, dFdx, dFdy, atomicMax, atomicAdd, atomicStore, atomicLoad, floor, cos, sin, dot, bool, storage, uniform, uniformArray, instanceIndex, vertexIndex, distance, screenSize, screenCoordinate, time, texture, varyingProperty, sqrt, normalize, cross, sign, positionGeometry, cameraViewMatrix, Discard, context, positionView, positionViewDirection, overrideNodes } from 'three/tsl';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { UltraHDRLoader } from 'three/examples/jsm/loaders/UltraHDRLoader.js';
+// @ts-expect-error meshopt_clusterizer.module.js 无类型声明(env.d.ts 候选: declare module 'three/examples/jsm/libs/meshopt_clusterizer.module.js')
 import { MeshoptClusterizer } from 'three/examples/jsm/libs/meshopt_clusterizer.module.js';
+// @ts-expect-error meshopt_simplifier.module.js 无类型声明(env.d.ts 候选: declare module 'three/examples/jsm/libs/meshopt_simplifier.module.js')
 import { MeshoptSimplifier } from 'three/examples/jsm/libs/meshopt_simplifier.module.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+
+let sourceMesh: any;
+let prevProjScreenUniform: any;
+let prevCameraPosUniform: any;
+let maxPixels: any;
+
 
 const props = defineProps({
   example: {
@@ -36,7 +44,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>GPU-Driven Compute Rasterizer — IBL</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -60,23 +68,23 @@ async function onReady(__stage) {
   			}
   
   			let timer;
-  			let computeRasterize, computeClear, computeFrustum, computeDispatch, computeHWArgs;
-  			let resolveMesh, hwMesh;
+  			let computeRasterize: any, computeClear: any, computeFrustum: any, computeDispatch: any, computeHWArgs: any;
+  			let resolveMesh: any, hwMesh: any;
   			let cameraPos, projScreenMatrixUniform, frustumPlanesUniform, cotHalfFovUniform;
   
-  			let outputModeUniform;
+  			let outputModeUniform: any;
   
-  			let screenTriAttr, screenTriAtomic, screenTriRead;
-  			let screenInstAttr, screenInstAtomic, screenInstRead;
+  			let screenTriAttr: any, screenTriAtomic: any, screenTriRead: any;
+  			let screenInstAttr: any, screenInstAtomic: any, screenInstRead: any;
   
   
-  			let sceneRT, blitQuad, blitTexNode;
+  			let sceneRT: any, blitQuad, blitTexNode: any;
   
   			// Hierarchical Z pyramid (max depth per tile) for occlusion culling
-  			let depthSourceTexNode;
-  			let hzbBuffer, hzbRead, hzbLevelTable, hzbLevelCountUniform, hzbLevelCount = 0;
+  			let depthSourceTexNode: any;
+  			let hzbBuffer: any, hzbRead: any, hzbLevelTable: any, hzbLevelCountUniform: any, hzbLevelCount = 0;
   
-  			const hzbKernels = [];
+  			const hzbKernels: any = [];
   			const MAX_HZB_LEVELS = 16;
   
   			const instanceCount = 15625; // 125x125 plane or 25x25x25 volume
@@ -97,7 +105,7 @@ async function onReady(__stage) {
   			const DEPTH_TRI_MAX = 2 ** ( 32 - TRIANGLE_INDEX_BITS ) - 1; 	// 17-bit depth packed above the triangle index
   			const DEPTH_INST_MAX = 2 ** ( 32 - INSTANCE_INDEX_BITS ) - 1; 	// 15-bit depth packed above the instance id
   
-  			const getVisColor = ( outputMode, normal, normalMap, uv, roughness, metalness, ao, emissive ) => {
+  			const getVisColor = ( outputMode: any, normal: any, normalMap: any, uv: any, roughness: any, metalness: any, ao: any, emissive: any ) => {
   
   				return Fn( () => {
   
@@ -173,7 +181,7 @@ async function onReady(__stage) {
   				envTexture.mapping = THREE.EquirectangularReflectionMapping;
   
   
-  				gltf.scene.traverse( ( child ) => {
+  				gltf.scene.traverse( ( child: any ) => {
   
   					if ( child.isMesh ) sourceMesh = child;
   
@@ -218,7 +226,7 @@ async function onReady(__stage) {
   				const sourceIndices = geom.index ? new Uint32Array( geom.index.array ) : new Uint32Array( Array.from( { length: vertexCount }, ( _, i ) => i ) );
   				const sourceScale = MeshoptSimplifier.getScale( posAttr.array, 3 );
   
-  				const lods = [];
+  				const lods: any = [];
   				let totalChunks = 0;
   
   				let indices = sourceIndices;
@@ -289,7 +297,7 @@ async function onReady(__stage) {
   
   				}
   
-  				console.info( 'LOD Meshlets count: ', lods.map( l => l.numChunks ) );
+  				console.info( 'LOD Meshlets count: ', lods.map( (l: any) => l.numChunks ) );
   
   				const totalVertices = lods.length * vertexCount;
   				const totalIndices = totalChunks * 64 * 3;
@@ -393,7 +401,7 @@ async function onReady(__stage) {
   				}
   
   				// Upload LOD offsets to GPU (vec4: triangleStart, numTriangles, chunkStart, 0)
-  				const lodOffsetsUniform = uniformArray( lods.map( ( lod ) => new THREE.Vector4( lod.indexOffset / 3, lod.numTriangles, lod.chunkStart, 0 ) ), 'vec4' );
+  				const lodOffsetsUniform = uniformArray( lods.map( ( lod: any ) => new THREE.Vector4( lod.indexOffset / 3, lod.numTriangles, lod.chunkStart, 0 ) ), 'vec4' );
   				const chunkBoundsBuffer = storage( new THREE.StorageBufferAttribute( chunkBoundsData, 4 ), 'vec4', totalChunks ).toReadOnly();
   
   				// Storage Buffers
@@ -588,7 +596,7 @@ async function onReady(__stage) {
   
   									for ( let dx = 0; dx < 2; dx ++ ) {
   
-  										depthMax.assign( max( depthMax, depthSourceTexNode.load( uvec2( min( sx.add( dx ), sw ), min( sy.add( dy ), sh ) ) ).r ) );
+   										depthMax.assign( max( depthMax, depthSourceTexNode.load( uvec2( ( min as any )( (sx as any).add( dx ), (sw as any) ), ( min as any )( (sy as any).add( dy ), (sh as any) ) ) ).r ) );
   
   									}
   
@@ -607,9 +615,9 @@ async function onReady(__stage) {
   
   									for ( let dx = 0; dx < 2; dx ++ ) {
   
-  										const tx = min( sx.add( dx ), swMax );
-  										const ty = min( sy.add( dy ), shMax );
-  										depthMax.assign( max( depthMax, hzbBuffer.element( srcOffset.add( ty.mul( srcWidth ) ).add( tx ) ) ) );
+  										const tx = min( (sx as any).add( dx ), (swMax as any) );
+  										const ty = min( (sy as any).add( dy ), (shMax as any) );
+   										depthMax.assign( max( depthMax, hzbBuffer.element( srcOffset.add( (ty as any).mul( srcWidth ) ).add( (tx as any) ) ) ) );
   
   									}
   
@@ -628,7 +636,7 @@ async function onReady(__stage) {
   				// Conservative sphere vs pyramid test, using the previous frame's
   				// depth and matrices (the helmets only rotate in place, so their
   				// bounding spheres are identical between frames)
-  				const sphereOccluded = ( center, radius ) => {
+  				const sphereOccluded = ( center: any, radius: any ) => {
   
   					const toCamera = prevCameraPosUniform.sub( center );
   					const dist = length( toCamera );
@@ -657,12 +665,12 @@ async function onReady(__stage) {
   
   					const x0 = uint( clamp( px.sub( 0.5 ), 0.0, float( levelWidth.sub( 1 ) ) ) );
   					const y0 = uint( clamp( py.sub( 0.5 ), 0.0, float( levelHeight.sub( 1 ) ) ) );
-  					const x1 = min( x0.add( 1 ), levelWidth.sub( 1 ) );
-  					const y1 = min( y0.add( 1 ), levelHeight.sub( 1 ) );
+  					const x1 = min( (x0 as any).add( 1 ), (levelWidth.sub as any)( 1 ) );
+  					const y1 = min( (y0 as any).add( 1 ), (levelHeight.sub as any)( 1 ) );
   
   					const maxZ = max(
-  						max( hzbRead.element( levelOffset.add( y0.mul( levelWidth ) ).add( x0 ) ), hzbRead.element( levelOffset.add( y0.mul( levelWidth ) ).add( x1 ) ) ),
-  						max( hzbRead.element( levelOffset.add( y1.mul( levelWidth ) ).add( x0 ) ), hzbRead.element( levelOffset.add( y1.mul( levelWidth ) ).add( x1 ) ) )
+   						max( hzbRead.element( levelOffset.add( y0.mul( levelWidth ) ).add( x0 ) ), hzbRead.element( levelOffset.add( y0.mul( levelWidth ) ).add( (x1 as any) ) ) ),
+   						max( hzbRead.element( levelOffset.add( (y1 as any).mul( levelWidth ) ).add( x0 ) ), hzbRead.element( levelOffset.add( (y1 as any).mul( levelWidth ) ).add( (x1 as any) ) ) )
   					);
   
   					//const bias = occlusionBiasUniform.mul( dist );
@@ -721,11 +729,11 @@ async function onReady(__stage) {
   					Loop( { start: 0, end: 6 }, ( { i: planeIndex } ) => {
   
   						const plane = frustumPlanesUniform.element( planeIndex );
-  						const dist = dot( plane.xyz, pos ).add( plane.w );
+  						const dist = dot( (plane as any).xyz, pos ).add( (plane as any).w );
   
   						If( dist.lessThan( radius.negate() ), () => {
   
-  							visible.assign( false );
+  							visible.assign( (false as any) );
   
   						} );
   
@@ -774,15 +782,15 @@ async function onReady(__stage) {
   						}
   
   						const lodData = lodOffsetsUniform.element( lodLevel );
-  						const lodTriStart = uint( lodData.x );
-  						const lodNumTriangles = uint( lodData.y );
-  						const lodChunkStart = uint( lodData.z );
+  						const lodTriStart = uint( (lodData as any).x );
+  						const lodNumTriangles = uint( (lodData as any).y );
+  						const lodChunkStart = uint( (lodData as any).z );
   
   						// Calculate Work Items (64 triangles per item)
   						const workItems = lodNumTriangles.add( 63 ).div( 64 );
   
   						// Evaluate each Chunk (Cluster)
-  						Loop( { name: 'cIdx', type: 'uint', start: uint( 0 ), end: workItems, condition: '<' }, ( { cIdx: chunkIndex } ) => {
+  						(Loop as any)( { name: 'cIdx', type: 'uint', start: uint( 0 ), end: workItems, condition: '<' }, ( { cIdx: chunkIndex } : any ) => {
   
   							const globalChunkId = lodChunkStart.add( uint( chunkIndex ) );
   							const chunkBounds = chunkBoundsBuffer.element( globalChunkId );
@@ -796,14 +804,14 @@ async function onReady(__stage) {
   							const chunkVisible = bool( true ).toVar();
   
   							// Frustum cull the chunk
-  							Loop( { name: 'pIdx', start: 0, end: 6 }, ( { pIdx: planeIndex } ) => {
+  							(Loop as any)( { name: 'pIdx', start: 0, end: 6 }, ( { pIdx: planeIndex } : any ) => {
   
   								const plane = frustumPlanesUniform.element( planeIndex );
-  								const chunkDist = dot( plane.xyz, chunkCenterWorld ).add( plane.w );
+  								const chunkDist = dot( (plane as any).xyz, chunkCenterWorld ).add( (plane as any).w );
   
   								If( chunkDist.lessThan( chunkRadiusWorld.negate() ), () => {
   
-  									chunkVisible.assign( false );
+  									chunkVisible.assign( (false as any) );
   
   								} );
   
@@ -851,7 +859,7 @@ async function onReady(__stage) {
   					const maxDim = uint( 65535 );
   
   					// Split totalWorkgroups into 2D dispatch if it exceeds 65535
-  					const dispatchX = min( totalWorkgroups, maxDim );
+   					const dispatchX = ( min as any )( totalWorkgroups, maxDim );
   					const dispatchY = totalWorkgroups.add( maxDim ).sub( 1 ).div( maxDim );
   
   					dispatchBuffer.element( 0 ).assign( dispatchX );
@@ -861,7 +869,7 @@ async function onReady(__stage) {
   				} )().compute( 1 ).setName( 'Compute Dispatch' );
   
   				// Edge function for barycentric coordinates
-  				const edgeFunction = Fn( ( [ a, b, c ] ) => {
+   				const edgeFunction = Fn( ( [ a, b, c ]: any ) => {
   
   					// (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
   					return c.y.sub( a.y ).mul( b.x.sub( a.x ) ).sub( c.x.sub( a.x ).mul( b.y.sub( a.y ) ) );
@@ -915,7 +923,7 @@ async function onReady(__stage) {
   								const ndc2 = p2.xyz.div( p2.w );
   
   								// Early Backface Culling in NDC
-  								const areaNdc = edgeFunction( ndc0, ndc1, ndc2 );
+   								const areaNdc = (edgeFunction as any)( ndc0, ndc1, ndc2 );
   
   								If( areaNdc.greaterThan( 0.0 ), () => {
   
@@ -958,7 +966,7 @@ async function onReady(__stage) {
   										// Sub-pixel / Valid bounds rejection + big triangle guard
   										If( startX.lessThanEqual( endX ).and( startY.lessThanEqual( endY ) ).and( bbWidth.lessThanEqual( maxRasterSizeUniform ) ).and( bbHeight.lessThanEqual( maxRasterSizeUniform ) ), () => {
   
-  											const area = edgeFunction( s0, s1, s2 );
+  											const area = (edgeFunction as any)( s0, s1, s2 );
   
   											const stepX_w0 = s1.y.sub( s2.y );
   											const stepY_w0 = s2.x.sub( s1.x );
@@ -980,9 +988,9 @@ async function onReady(__stage) {
   
   											const pStart = vec2( float( startX ).add( 0.5 ), float( startY ).add( 0.5 ) );
   
-  											const row_w0 = edgeFunction( s1, s2, pStart ).toVar();
-  											const row_w1 = edgeFunction( s2, s0, pStart ).toVar();
-  											const row_w2 = edgeFunction( s0, s1, pStart ).toVar();
+   											const row_w0 = (edgeFunction as any)( s1, s2, pStart ).toVar();
+   											const row_w1 = (edgeFunction as any)( s2, s0, pStart ).toVar();
+   											const row_w2 = (edgeFunction as any)( s0, s1, pStart ).toVar();
   
   											row_w0.addAssign( bias0 );
   											row_w1.addAssign( bias1 );
@@ -997,14 +1005,14 @@ async function onReady(__stage) {
   											const stepX_z = stepX_w0.div( area ).mul( ndc0.z ).add( stepX_w1.div( area ).mul( ndc1.z ) ).add( stepX_w2.div( area ).mul( ndc2.z ) );
   											const stepY_z = stepY_w0.div( area ).mul( ndc0.z ).add( stepY_w1.div( area ).mul( ndc1.z ) ).add( stepY_w2.div( area ).mul( ndc2.z ) );
   
-  											Loop( { name: 'y', type: 'int', start: startY, end: endY, condition: '<=' }, ( { y } ) => {
+  											(Loop as any)( { name: 'y', type: 'int', start: startY, end: endY, condition: '<=' }, ( { y }: any ) => {
   
   												const w0 = row_w0.toVar();
   												const w1 = row_w1.toVar();
   												const w2 = row_w2.toVar();
   												const z = row_z.toVar();
   
-  												Loop( { name: 'x', type: 'int', start: startX, end: endX, condition: '<=' }, ( { x } ) => {
+  												(Loop as any)( { name: 'x', type: 'int', start: startX, end: endX, condition: '<=' }, ( { x }: any ) => {
   
   													If( w0.greaterThanEqual( 0.0 ).and( w1.greaterThanEqual( 0.0 ) ).and( w2.greaterThanEqual( 0.0 ) ), () => {
   
@@ -1021,7 +1029,7 @@ async function onReady(__stage) {
   															const pixelIndex = uint( y ).mul( uint( screenSize.x ) ).add( uint( x ) );
   
   															// Early depth pre-check: skip the atomics if the pixel already has a closer fragment
-  															const currentDepth = atomicLoad( screenTriAtomic.element( pixelIndex ) ).shiftRight( TRIANGLE_INDEX_BITS );
+  															const currentDepth = (atomicLoad as any)( screenTriAtomic.element( pixelIndex ) ).shiftRight( TRIANGLE_INDEX_BITS );
   															If( depthTri.greaterThanEqual( currentDepth ), () => {
   
   																// Depth occupies the high bits, so atomicMax resolves the depth
@@ -1078,7 +1086,7 @@ async function onReady(__stage) {
   
   					} ); // End instanceIndex bounds check
   
-  				} )().compute( dispatchAttr ).setName( 'Compute Rasterize' );
+  				} )().compute( (dispatchAttr as any) ).setName( 'Compute Rasterize' );
   
   				// Compute HW Draw Indirect Args
   				computeHWArgs = Fn( () => {
@@ -1094,12 +1102,12 @@ async function onReady(__stage) {
   				} )().compute( 1 ).setName( 'Compute HW Args' );
   
   				// Hash function for meshlet colors (shared between HW mesh and fullscreen resolve)
-  				const hashColor = Fn( ( [ id_in ] ) => {
+   				const hashColor = Fn( ( [ id_in ]: any ) => {
   
   					let id = uint( id_in ).toVar();
-  					id = id.mul( uint( 747796405 ) ).add( uint( 289559509 ) );
-  					id = id.shiftRight( 16 ).bitXor( id ).mul( uint( 277803737 ) );
-  					id = id.shiftRight( 16 ).bitXor( id );
+  					(id as any) = id.mul( uint( 747796405 ) ).add( uint( 289559509 ) );
+  					(id as any) = id.shiftRight( 16 ).bitXor( id ).mul( uint( 277803737 ) );
+  					(id as any) = id.shiftRight( 16 ).bitXor( id );
   
   					const r = float( id.bitAnd( uint( 255 ) ) ).div( 255.0 );
   					const g = float( id.shiftRight( 8 ).bitAnd( uint( 255 ) ) ).div( 255.0 );
@@ -1111,7 +1119,7 @@ async function onReady(__stage) {
   
   				// Tangent from the triangle's world-space edges and UVs,
   				// for normal mapping without precomputed tangents
-  				const computeTangent = ( w0, w1, w2, uv0, uv1, uv2, normal ) => {
+  				const computeTangent = ( w0: any, w1: any, w2: any, uv0: any, uv1: any, uv2: any, normal: any ) => {
   
   					const dp1 = w1.sub( w0 );
   					const dp2 = w2.sub( w0 );
@@ -1126,7 +1134,7 @@ async function onReady(__stage) {
   
   				};
   
-  				const applyNormalMap = ( normal, tangent, mapSample ) => {
+  				const applyNormalMap = ( normal: any, tangent: any, mapSample: any ) => {
   
   					const bitangent = cross( normal, tangent );
   					const mapN = mapSample.xyz.mul( 2.0 ).sub( 1.0 );
@@ -1208,7 +1216,7 @@ async function onReady(__stage) {
   					// Shaded: the standard material pipeline lights the pulled geometry
   			
   
-  					const sampleMapHW = ( map ) => texture( map, vUv );
+  					const sampleMapHW = ( map: any ) => texture( map, vUv );
   
   					// Specular antialiasing from hardware derivatives of the geometric normal
   					const hwNormal = normalize( vNormal );
@@ -1219,7 +1227,7 @@ async function onReady(__stage) {
   					const hwShadedMaterial = new THREE.MeshStandardNodeMaterial();
   					hwShadedMaterial.positionNode = hwPosition;
   					hwShadedMaterial.colorNode = sampleMapHW( sourceMaterial.map );
-  					hwShadedMaterial.normalNode = applyNormalMap( hwNormal, normalize( vTangent ), sampleMapHW( sourceMaterial.normalMap ) ).transformDirection( cameraViewMatrix );
+  					hwShadedMaterial.normalNode = (applyNormalMap as any)( hwNormal, normalize( vTangent ), sampleMapHW( sourceMaterial.normalMap ) ).transformDirection( cameraViewMatrix );
   					const metalRoughHW = sampleMapHW( sourceMaterial.roughnessMap ); // glTF packs roughness (g) and metalness (b) in one texture
   					hwShadedMaterial.roughnessNode = sqrt( metalRoughHW.g.mul( metalRoughHW.g ).add( hwKernelRoughness ) );
   					hwShadedMaterial.metalnessNode = metalRoughHW.b;
@@ -1233,7 +1241,7 @@ async function onReady(__stage) {
   
   						const meshletId = meshletIdBuffer.element( vMegaTriIdx ).add( vInstId.mul( 1000 ) );
   
-  						return hashColor( meshletId );
+   						return (hashColor as any)( (meshletId as any) );
   
   					} )();
   
@@ -1317,10 +1325,10 @@ async function onReady(__stage) {
   					const p = vec2( screenCoordinate.x, flippedY );
   
   					// Compute Barycentrics
-  					const area = edgeFunction( s0, s1, s2 );
-  					const w0b = edgeFunction( s1, s2, p );
-  					const w1b = edgeFunction( s2, s0, p );
-  					const w2b = edgeFunction( s0, s1, p );
+   					const area = (edgeFunction as any)( s0, s1, s2 );
+   					const w0b = (edgeFunction as any)( s1, s2, p );
+   					const w1b = (edgeFunction as any)( s2, s0, p );
+   					const w2b = (edgeFunction as any)( s0, s1, p );
   
   					// Guard against division by zero for safe execution
   					const safeArea = area.equal( 0.0 ).select( 1.0, area );
@@ -1378,7 +1386,7 @@ async function onReady(__stage) {
   
   					// Sample with explicit gradients
   
-  					const sampleMap = ( map ) => texture( map, uv_interp ).grad( dUvDx, dUvDy );
+  					const sampleMap = ( map: any ) => texture( map, uv_interp ).grad( dUvDx, dUvDy );
   
   					// Specular antialiasing (Tokuyoshi & Kaplanyan) — widen roughness by the
   					// normal's screen-space variance so sub-pixel geometry does not alias
@@ -1398,7 +1406,7 @@ async function onReady(__stage) {
   					const kernelRoughness = min( dNdx.dot( dNdx ).add( dNdy.dot( dNdy ) ).mul( SPECULAR_AA_VARIANCE ), SPECULAR_AA_MAX );
   
   					// Discard pixels the rasterizer did not cover so the background shows through
-  					const coveredColor = ( colorNode ) => Fn( () => {
+  					const coveredColor = ( colorNode: any ) => Fn( () => {
   
   						If( packedTri.shiftRight( TRIANGLE_INDEX_BITS ).equal( 0 ), () => {
   
@@ -1437,7 +1445,7 @@ async function onReady(__stage) {
   					resolveShadedMaterial.vertexNode = fullscreenVertex;
   					resolveShadedMaterial.depthNode = resolveDepth;
   					resolveShadedMaterial.colorNode = coveredColor( sampleMap( sourceMaterial.map ) );
-  					resolveShadedMaterial.normalNode = applyNormalMap(
+  					resolveShadedMaterial.normalNode = (applyNormalMap as any)(
   						normal_interp,
   						computeTangent( w0, w1, w2, t_uv0, t_uv1, t_uv2, normal_interp ),
   						sampleMap( sourceMaterial.normalMap )
@@ -1452,7 +1460,7 @@ async function onReady(__stage) {
   					const resolveDebugMaterial = new THREE.NodeMaterial();
   					resolveDebugMaterial.vertexNode = fullscreenVertex;
   					resolveDebugMaterial.depthNode = resolveDepth;
-  					resolveDebugMaterial.fragmentNode = coveredColor( hashColor( meshletIdBuffer.element( megaTriangleIndex ).add( instId.mul( 1000 ) ) ) );
+   					resolveDebugMaterial.fragmentNode = coveredColor( (hashColor as any)( (meshletIdBuffer as any).element( megaTriangleIndex ).add( instId.mul( 1000 ) ) ) );
   
   					// Vis material: unlit visualization of channels
   					const resolveVisMaterial = new THREE.NodeMaterial();
@@ -1522,7 +1530,7 @@ async function onReady(__stage) {
   
   				} else if ( outputVal !== 'Default' ) {
   
-  					outputModeUniform.value = outputModes[ outputVal ];
+  					outputModeUniform.value = (outputModes as any)[ outputVal ];
   
   					resolveMesh.material = resolveMesh.userData.visMaterial;
   					hwMesh.material = hwMesh.userData.visMaterial;
@@ -1684,7 +1692,7 @@ async function onReady(__stage) {
   			const prevCameraPos = new THREE.Vector3();
   			let prevValid = false;
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				if ( resolveMesh === undefined ) return; // still loading
     				controls.update( timer.getDelta() );
@@ -1712,7 +1720,7 @@ async function onReady(__stage) {
     				const planesArray = frustumPlanesUniform.array;
     				for ( let i = 0; i < 6; i ++ ) {
     					const p = planes[ i ];
-    					planesArray[ i ].set( p.normal.x, p.normal.y, p.normal.z, p.constant );
+    					(planesArray as any)[ i ].set( p.normal.x, p.normal.y, p.normal.z, p.constant );
     				}
     				// Compute & Render
     				renderer.compute( computeClear );

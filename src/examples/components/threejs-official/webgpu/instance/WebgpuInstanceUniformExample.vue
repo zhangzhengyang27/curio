@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { uniform, cubeTexture } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Instanced Uniform</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,6 +46,9 @@ function onReady(__stage) {
   
   
   			class InstanceUniformNode extends THREE.Node {
+	updateType: any;
+	uniformNode: any;
+
   
   				constructor() {
   
@@ -57,7 +60,7 @@ function onReady(__stage) {
   
   				}
   
-  				update( frame ) {
+  				update( frame: any ): any {
   
   					const mesh = frame.object;
   
@@ -77,7 +80,7 @@ function onReady(__stage) {
   
   
   
-  			const objects = [];
+  			const objects: any = [];
   
   			
   
@@ -113,8 +116,8 @@ function onReady(__stage) {
   				const cubeTextureNode = cubeTexture( cTexture );
   
   				const material = new THREE.MeshBasicNodeMaterial();
-  				material.colorNode = instanceUniform.add( cubeTextureNode );
-  				material.emissiveNode = instanceUniform.mul( cubeTextureNode );
+  				material.colorNode = (instanceUniform as any).add( cubeTextureNode );
+  				(material as any).emissiveNode = (instanceUniform as any).mul( cubeTextureNode );
   
   				// Geometry
   
@@ -147,11 +150,11 @@ function onReady(__stage) {
   			
   
   
-  			function addMesh( geometry, material ) {
+  			function addMesh( geometry: any, material: any ) {
   
   				const mesh = new THREE.Mesh( geometry, material );
   
-  				mesh.color = new THREE.Color( Math.random() * 0xffffff );
+  				(mesh as any).color = new THREE.Color( Math.random() * 0xffffff );
   
   				mesh.position.x = ( objects.length % 4 ) * 200 - 300;
   				mesh.position.z = Math.floor( objects.length / 4 ) * 200 - 200;
@@ -170,7 +173,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     for ( let i = 0, l = objects.length; i < l; i ++ ) {
     					const object = objects[ i ];
     					object.rotation.x += 0.01;

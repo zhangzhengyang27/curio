@@ -37,14 +37,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
-import { useInteractionStore } from '../stores/useInteractionStore.js'
-import { useEarthStore } from '../stores/useEarthStore.js'
+import { useInteractionStore } from '../stores/useInteractionStore'
+import { useEarthStore } from '../stores/useEarthStore'
 
-const props = defineProps({
-  onFlyTo: Function
-})
+const props = defineProps<{
+  onFlyTo?: (lon: number, lat: number) => void
+}>()
 
 const interactionStore = useInteractionStore()
 const earthStore = useEarthStore()
@@ -59,9 +59,10 @@ const isCompared = computed(() => {
 function onShowDetail() {
   const target = interactionStore.contextMenuTarget
   if (target) {
+    const gdpNum = typeof target.gdp === 'number' ? target.gdp : 0
     interactionStore.openInfoPanel({
       name: target.name,
-      gdp: target.gdp ? (target.gdp / 1000000000000).toFixed(3) + ' 万亿美元' : '数据缺失',
+      gdp: target.gdp ? (gdpNum / 1000000000000).toFixed(3) + ' 万亿美元' : '数据缺失',
       lon: target.lon,
       lat: target.lat
     })
@@ -71,7 +72,7 @@ function onShowDetail() {
 
 function handleFlyTo() {
   const target = interactionStore.contextMenuTarget
-  if (target && props.onFlyTo) {
+  if (target && props.onFlyTo && target.lon != null && target.lat != null) {
     props.onFlyTo(target.lon, target.lat)
   }
   interactionStore.closeContextMenu()
@@ -85,7 +86,7 @@ function onToggleCompare() {
 }
 
 // 点击空白关闭
-let clickOutsideHandler = null
+let clickOutsideHandler: (() => void) | null = null
 
 onMounted(() => {
   if (typeof window !== 'undefined' && !clickOutsideHandler) {

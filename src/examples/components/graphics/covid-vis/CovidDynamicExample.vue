@@ -5,15 +5,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -28,19 +28,19 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const dateInfo = gContainer.value.querySelector('#dateInfo')
+  const dateInfo = gContainer.value!.querySelector('#dateInfo')
   await loadScript("/graphics/assets/external/topojson.min.js");
   {
     
           const width = 1024;
           const height = 512;
-          function projection([longitude, latitude]) {
+          function projection([longitude, latitude]: any) {
             const x = (width * (180 + longitude)) / 360;
             const y = height * (1.0 - (90 + latitude) / 180); // Canvas坐标系y轴朝下
             return [x, y];
           }
     
-          function drawPoints(ctx, points) {
+          function drawPoints(ctx: any, points: any) {
             ctx.beginPath();
             ctx.moveTo(...points[0]);
             for (let i = 1; i < points.length; i++) {
@@ -49,24 +49,24 @@ async function initGraphicsExample() {
             ctx.fill();
           }
     
-          function mapDataToCountries(geoData, covidData) {
-            const covidDataMap = {};
-            covidData.dailyReports.forEach((d) => {
+          function mapDataToCountries(geoData: any, covidData: any) {
+            const covidDataMap: any = {};
+            covidData.dailyReports.forEach((d: any) => {
               const date = d.updatedDate;
               const countries = d.countries;
-              countries.forEach((country) => {
+              countries.forEach((country: any) => {
                 const name = country.country;
                 covidDataMap[name] = covidDataMap[name] || {};
                 covidDataMap[name][date] = country;
               });
             });
-            geoData.features.forEach((d) => {
+            geoData.features.forEach((d: any) => {
               const name = d.properties.name;
               d.properties.covid = covidDataMap[name];
             });
           }
     
-          function mapColor(confirmed) {
+          function mapColor(confirmed: any) {
             if (!confirmed) {
               return "#3ac";
             }
@@ -88,7 +88,7 @@ async function initGraphicsExample() {
             return "rgb(151, 32, 19)";
           }
     
-          function formatDate(date) {
+          function formatDate(date: any) {
             const year = date.getFullYear();
             let month = date.getMonth() + 1;
             month = month > 9 ? month : `0${month}`;
@@ -97,10 +97,10 @@ async function initGraphicsExample() {
             return `${year}-${month}-${day}`;
           }
     
-          function drawMap(ctx, countries, date) {
+          function drawMap(ctx: any, countries: any, date: any) {
             date = formatDate(date);
-            dateInfo.innerHTML = date;
-            countries.features.forEach(({ geometry, properties }) => {
+            dateInfo!.innerHTML = date;
+            countries.features.forEach(({ geometry, properties }: any) => {
               const covid = properties.covid ? properties.covid[date] : null;
               let confirmed;
               if (covid) {
@@ -113,8 +113,8 @@ async function initGraphicsExample() {
               if (geometry.type === "MultiPolygon") {
                 const coordinates = geometry.coordinates;
                 if (coordinates) {
-                  coordinates.forEach((contours) => {
-                    contours.forEach((path) => {
+                  coordinates.forEach((contours: any) => {
+                    contours.forEach((path: any) => {
                       const points = path.map(projection);
                       drawPoints(ctx, points);
                     });
@@ -122,7 +122,7 @@ async function initGraphicsExample() {
                 }
               } else if (geometry.type === "Polygon") {
                 const contours = geometry.coordinates;
-                contours.forEach((path) => {
+                contours.forEach((path: any) => {
                   const points = path.map(projection);
                   drawPoints(ctx, points);
                 });
@@ -130,7 +130,7 @@ async function initGraphicsExample() {
             });
           }
     
-          const canvas = gContainer.value.querySelector('canvas');
+          const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
           const ctx = canvas.getContext("2d");
     
           (async function () {

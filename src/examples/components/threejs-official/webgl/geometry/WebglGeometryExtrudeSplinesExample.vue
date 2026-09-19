@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - spline extrusion examples"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -48,7 +48,7 @@ function onReady(__stage) {
   
   			let container, stats;
   
-  			let splineCamera, cameraHelper, cameraEye;
+  			let splineCamera: any, cameraHelper: any, cameraEye: any;
   
   			const direction = new THREE.Vector3();
   			const binormal = new THREE.Vector3();
@@ -85,7 +85,7 @@ function onReady(__stage) {
   			sampleClosedSpline.closed = true;
   
   			// Keep a dictionary of Curve instances
-  			const splines = {
+  			const splines: Record<string, any> = {
   				GrannyKnot: new Curves.GrannyKnot(),
   				HeartCurve: new Curves.HeartCurve( 3.5 ),
   				VivianiCurve: new Curves.VivianiCurve( 70 ),
@@ -104,7 +104,7 @@ function onReady(__stage) {
   				SampleClosedSpline: sampleClosedSpline
   			};
   
-  			let parent, tubeGeometry, mesh;
+  			let parent: any, tubeGeometry: any, mesh: any;
   
   			const params = {
   				spline: 'GrannyKnot',
@@ -147,7 +147,7 @@ function onReady(__stage) {
   			}
   
   
-  			function addGeometry( geometry ) {
+  			function addGeometry( geometry: any ) {
   
   				// 3D shape
   
@@ -281,7 +281,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     // animate camera along spline
     				const time = Date.now();

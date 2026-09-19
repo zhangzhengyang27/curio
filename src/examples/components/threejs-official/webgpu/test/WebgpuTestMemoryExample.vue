@@ -13,13 +13,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mrt, packNormalToRGB, normalView, screenUV, context, sample, unpackRGBToNormal } from 'three/tsl';
 import { outline } from 'three/examples/jsm/tsl/display/OutlineNode.js';
 import { ao } from 'three/examples/jsm/tsl/display/GTAONode.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
+
+let light: any;
+
 
 const props = defineProps({
   example: {
@@ -29,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>WebGPU Memory Test I</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,10 +44,10 @@ function onReady(__stage) {
   
   
   			let generateMeshes = true;
-  			let mesh;
-  			let renderPipeline;
-  			let aoNode, outlineNode, scenePass, prePass;
-  			const selectedObjects = [];
+  			let mesh: any;
+  			let renderPipeline: any;
+  			let aoNode: any, outlineNode: any, scenePass: any, prePass: any;
+  			const selectedObjects: any = [];
   
   			const params = {
   				castShadow: true,
@@ -115,7 +118,7 @@ function onReady(__stage) {
   				// Inspector UI
   				const gui = renderer.inspector.createParameters( 'Settings' );
   
-  				gui.add( params, 'castShadow' ).name( 'Cast Shadow' ).onChange( ( value ) => {
+  				gui.add( params, 'castShadow' ).name( 'Cast Shadow' ).onChange( ( value: any ) => {
   
   					if ( light ) light.castShadow = value;
   
@@ -224,7 +227,7 @@ function onReady(__stage) {
   				canvas.width = 256;
   				canvas.height = 256;
   
-  				const canvas2DContext = canvas.getContext( '2d' );
+  				const canvas2DContext = canvas.getContext( '2d' )!;
   				canvas2DContext.fillStyle = 'rgb(' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ',' + Math.floor( Math.random() * 256 ) + ')';
   				canvas2DContext.fillRect( 0, 0, 256, 256 );
   
@@ -234,7 +237,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( generateMeshes ) {
     					if ( mesh ) {
     						scene.remove( mesh );

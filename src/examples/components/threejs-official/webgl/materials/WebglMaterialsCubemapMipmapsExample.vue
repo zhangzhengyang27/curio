@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - cubemap customized mipmaps demo.<br/>\n\t\t\tLeft: webgl generated mipmaps<br/>\n\t\t\tRight: manual mipmaps<br/>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -47,10 +47,10 @@ async function onReady(__stage) {
   
   				const path = ASSET_HOST + 'textures/cube/angus/';
   				const format = '.jpg';
-  				const mipmaps = [];
+  				const mipmaps: any = [];
   				const maxLevel = 8;
   
-  				async function loadCubeTexture( urls ) {
+  				async function loadCubeTexture( urls: any ) {
   
   					return new Promise( function ( resolve ) {
   

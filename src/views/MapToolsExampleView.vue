@@ -16,9 +16,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { getToolsExample } from './tools-examples/index.js'
+import { getToolsExample } from './tools-examples/index'
 
 const props = defineProps({
   slug: { type: String, required: true },

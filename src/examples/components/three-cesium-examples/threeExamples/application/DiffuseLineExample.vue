@@ -8,12 +8,12 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -29,16 +29,21 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class InitFly {
+      flyId: any
+      flyArr: any
+      baicSpeed: number
+      texture: any
+      flyShader: any
       constructor({
           texture
-      } = opt) {
+      }: any = {}) {
           this.flyId = 0; //id
           this.flyArr = []; //存储所有飞线
           this.baicSpeed = 1; //基础速度
@@ -101,7 +106,7 @@ function onReady(ctx) {
           repeat = 1,
           texture = null,
           callback
-      } = opt) {
+      }: any = {}) {
           let colorArr = this.getColorArr(color);
           let geometry = new THREE.BufferGeometry();
           let material = new THREE.ShaderMaterial({
@@ -139,18 +144,18 @@ function onReady(ctx) {
               depthTest: false,
               vertexShader: this.flyShader.vertexshader,
               fragmentShader: this.flyShader.fragmentshader
-          });
-          const [position, u_index] = [
+          } as any);
+          const [position, u_index]: any[] = [
               [],
               []
           ];
-          curve.forEach(function (elem, index) {
+          curve.forEach(function (elem: any, index: any) {
               position.push(elem.x, elem.y, elem.z);
               u_index.push(index);
           })
           geometry.setAttribute("position", new THREE.Float32BufferAttribute(position, 3));
           geometry.setAttribute("u_index", new THREE.Float32BufferAttribute(u_index, 1));
-          let mesh = new THREE.Points(geometry, material);
+          let mesh: any = new THREE.Points(geometry, material);
           mesh.name = "fly";
           mesh._flyId = this.flyId;
           mesh._speed = speed;
@@ -167,7 +172,7 @@ function onReady(ctx) {
        * @param {*} arr 需要生成的线条组
        * @param {*} dpi 密度
        */
-      tranformPath(arr, dpi = 1) {
+      tranformPath(arr: any, dpi = 1) {
           const vecs = [];
           for (let i = 1; i < arr.length; i++) {
               let src = arr[i - 1];
@@ -175,7 +180,7 @@ function onReady(ctx) {
               let s = new THREE.Vector3(src.x, src.y, src.z);
               let d = new THREE.Vector3(dst.x, dst.y, dst.z);
               let length = s.distanceTo(d) * dpi;
-              let len = parseInt(length);
+              let len = parseInt(length as any);
               for (let i = 0; i <= len; i++) {
                   vecs.push(s.clone().lerp(d, i / len))
               }
@@ -186,10 +191,10 @@ function onReady(ctx) {
        * [remove 删除]
        * @param   {Object}  mesh  [当前飞线]
        */
-      remove(mesh) {
+      remove(mesh: any) {
           mesh.material.dispose();
           mesh.geometry.dispose();
-          this.flyArr = this.flyArr.filter(elem => elem._flyId != mesh._flyId);
+          this.flyArr = this.flyArr.filter((elem: any) => elem._flyId != mesh._flyId);
           mesh.parent.remove(mesh);
           mesh = null;
       }
@@ -199,7 +204,7 @@ function onReady(ctx) {
        */
       animation(delta = 0.015) {
           if (delta > 0.2) return;
-          this.flyArr.forEach(elem => {
+          this.flyArr.forEach((elem: any) => {
               if (!elem.parent) return;
               if (elem._been > elem._repeat) {
                   elem.visible = false;
@@ -219,12 +224,12 @@ function onReady(ctx) {
               }
           })
       }
-      color(c) {
+      color(c?: any) {
           return new THREE.Color(c);
       }
-      getColorArr(str) {
+      getColorArr(str: any) {
           if (Array.isArray(str)) return str; //error
-          var _arr = [];
+          var _arr: any[] = [];
           str = str + '';
           str = str.toLowerCase().replace(/\s/g, "");
           if (/^((?:rgba)?)\(\s*([^\)]*)/.test(str)) {
@@ -244,22 +249,22 @@ function onReady(ctx) {
               _arr[1] = 1;
           }
   
-          function pad2(c) {
+          function pad2(c: any) {
               return c.length == 1 ? '0' + c : '' + c;
           }
           return _arr;
       }
   }
   
-  function Initialize(opt) {
+  const Initialize: any = function (this: any, opt: any) {
       
       var clock = new THREE.Clock();
       var thm = this;
-      var df_Mouse, df_Raycaster;
+      var df_Mouse: any, df_Raycaster: any;
       var df_Width, df_Height; //当前盒子的高宽
-      var df_canvas;
+      var df_canvas: any;
   
-      var stats
+      var stats: any
   
       function init() {
           
@@ -286,7 +291,7 @@ function onReady(ctx) {
           }
       }
   
-      function onDocumentMouse(event) {
+      function onDocumentMouse(event: any) {
           event.preventDefault();
           df_Mouse.x = ((event.clientX - df_canvas.getBoundingClientRect().left) / df_canvas.offsetWidth) * 2 - 1;
           df_Mouse.y = -((event.clientY - df_canvas.getBoundingClientRect().top) / df_canvas.offsetHeight) * 2 + 1;
@@ -301,7 +306,7 @@ function onReady(ctx) {
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
       }
-      function onDocumentMouseUp(event) {
+      function onDocumentMouseUp(event: any) {
           if (typeof opt.mouseUp === 'function') {
               opt.mouseUp(onDocumentMouse(event))
           }
@@ -315,16 +320,16 @@ function onReady(ctx) {
   
   }
   
-  var _Fly;
+  var _Fly: any;
   var GL = new Initialize({
       id: "#box",
-      animation: function (dalte) {
+      animation: function (dalte: any) {
           if (_Fly) {
               // 更新线 必须
               _Fly.animation(dalte);
           }
       },
-      load({ scene, camera }) {
+      load({ scene, camera }: any) {
           _Fly = new InitFly({
               texture: props.example?.globals?.FILE_HOST + "threeExamples/application/flyLine/point.png"
           });

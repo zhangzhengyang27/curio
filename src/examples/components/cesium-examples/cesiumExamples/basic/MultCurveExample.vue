@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
 
     animation: false,//是否创建动画小器件，左下角仪表    
@@ -38,7 +38,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -46,8 +46,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   // 经纬度坐标5个点
@@ -55,14 +55,14 @@ function onReady(ctx) {
   
   const getColor = () => '#' + Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, '0') // 随机16进制颜色
   
-  setCurveCollection(viewer, curveCollection => {
+  setCurveCollection(viewer, (curveCollection: any) => {
   
       curveCollection.add({ positions: points, color: getColor(), width: 2, opacity: 0.5, id: 'curve1', multiplier: 1 }) // 添加一条曲线
   
       // 随机生成 300 个曲线
       for (let i = 0; i < 300; i++) {
   
-          const positions = Array.from({ length: 10 }, () => Math.random() * 360 - 180).reduce((acc, cur) => acc.concat(cur), [])
+          const positions = Array.from({ length: 10 }, () => Math.random() * 360 - 180).reduce((acc: any, cur: any) => acc.concat(cur), [])
   
           curveCollection.add({ positions, color: getColor(), width: 2, opacity: 0.5, id: i, multiplier: 20 })
   
@@ -71,10 +71,10 @@ function onReady(ctx) {
   })
   
   /* 创建曲线合集 */
-  function setCurveCollection(viewer, callback) {
+  function setCurveCollection(viewer: any, callback: any) {
   
       /* 曲线算法 */
-      function generateCurvePoints(flattenedPoints, multiplier = 30) {
+      function generateCurvePoints(flattenedPoints: any, multiplier = 30) {
   
           const numOfPoints = flattenedPoints.length / 2 * multiplier
   
@@ -115,9 +115,9 @@ function onReady(ctx) {
   
       const curveCollection = {
   
-          instances: [],
+          instances: [] as any[],
   
-          add({ positions, color = '#fff', id = '', width = 1.0, opacity = 1, multiplier = 10 }) {
+          add({ positions, color = '#fff', id = '', width = 1.0, opacity = 1, multiplier = 10 }: any) {
   
               if (!positions) return
   

@@ -9,19 +9,19 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let materialRef = null
-let cameraRef = null
+let materialRef: any = null
+let cameraRef: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
@@ -232,7 +232,7 @@ function onReady(ctx) {
   gui.add(data, 'step_size', 0.005, 0.05, 0.0001).name('步进步长')
   gui.addColor(data, 'color').name('颜色')
 
-  ctx.addUpdateCallback((delta, elapsed) => {
+  ctx.addUpdateCallback((delta: number, elapsed: number) => {
     controls.update()
     material.uniforms.time.value = elapsed
     material.uniforms.camera.value.pos.copy(camera.position)
@@ -241,7 +241,7 @@ function onReady(ctx) {
   })
 }
 
-function onResize({ width, height }) {
+function onResize({ width, height }: any) {
   if (!materialRef || !cameraRef) return
   materialRef.uniforms.resolution.value.set(width, height)
   materialRef.uniforms.camera.value.proj_inv.copy(cameraRef.projectionMatrixInverse)

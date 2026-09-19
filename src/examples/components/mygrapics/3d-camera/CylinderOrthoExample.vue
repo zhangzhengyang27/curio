@@ -4,17 +4,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {Mat4} from '@/examples/jsm-compat/mygrapics/common/lib/math/Mat4.js'
 import {multiply, ortho} from '@/examples/jsm-compat/mygrapics/common/lib/math/functions/Mat4Func.js'
 import {cross, subtract, normalize} from '@/examples/jsm-compat/mygrapics/common/lib/math/functions/Vec3Func.js'
 import {normalFromMat4} from '@/examples/jsm-compat/mygrapics/common/lib/math/functions/Mat3Func.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -67,7 +68,7 @@ async function initMyGrapicsExample() {
           }
         `;
     
-        const canvas = mgContainer.value.querySelector('canvas');
+        const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas, {
           depth: true,
         });
@@ -75,12 +76,12 @@ async function initMyGrapicsExample() {
         renderer.useProgram(program);
     
         function cylinder(radius = 1.0, height = 1.0, segments = 30, colorCap = [0, 0, 1, 1], colorSide = [1, 0, 0, 1]) {
-          const positions = [];
-          const cells = [];
-          const color = [];
+          const positions: any[] = [];
+          const cells: any[] = [];
+          const color: any[] = [];
           const cap = [[0, 0]];
           const h = 0.5 * height;
-          const normal = [];
+          const normal: any[] = [];
     
           // 顶和底的圆
           for(let i = 0; i <= segments; i++) {
@@ -106,8 +107,8 @@ async function initMyGrapicsExample() {
     
           color.push(...positions.map(() => colorCap));
     
-          const tmp1 = [];
-          const tmp2 = [];
+          const tmp1: any[] = [];
+          const tmp2: any[] = [];
           // 侧面
           offset = positions.length;
           for(let i = 1; i < cap.length; i++) {
@@ -119,7 +120,7 @@ async function initMyGrapicsExample() {
     
             positions.push(a, b, c, d);
     
-            const norm = [];
+            const norm: any[] = [];
             cross(norm, subtract(tmp1, b, a), subtract(tmp2, c, a));
             normalize(norm, norm);
             normal.push(norm, norm, norm, norm);
@@ -136,14 +137,14 @@ async function initMyGrapicsExample() {
     
         renderer.uniforms.lightColor = [1, 0, 0, 0.8];
     
-        function projection(left, right, bottom, top, near, far) {
+        function projection(left: any, right: any, bottom: any, top: any, near: any, far: any) {
           return ortho([], left, right, bottom, top, near, far);
         }
     
         const projectionMatrix = projection(-2, 2, -2, 2, -2, 2);
         renderer.uniforms.projectionMatrix = projectionMatrix;
     
-        function updateCamera(eye, target = [0, 0, 0]) {
+        function updateCamera(eye: any, target = [0, 0, 0]) {
           const [x, y, z] = eye;
           const m = new Mat4(
             1, 0, 0, 0,

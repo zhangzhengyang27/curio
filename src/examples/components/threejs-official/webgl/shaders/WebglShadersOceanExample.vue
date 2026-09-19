@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl ocean"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -48,9 +48,9 @@ function onReady(__stage) {
   
   
   
-  			let container, stats, timer;
+  			let container, stats, timer: any;
   
-  			let water, sun, sky, mesh, bloomPass;
+  			let water: any, sun: any, sky: any, mesh: any, bloomPass;
   
   			
   
@@ -136,7 +136,7 @@ function onReady(__stage) {
   				const pmremGenerator = new THREE.PMREMGenerator( renderer );
   				const sceneEnv = new THREE.Scene();
   
-  				let renderTarget;
+  				let renderTarget: any;
   
   				function updateSun() {
   
@@ -189,7 +189,7 @@ function onReady(__stage) {
   				const folderSky = gui.addFolder( 'Sky' );
   				folderSky.add( parameters, 'elevation', 0, 90, 0.1 ).onChange( updateSun );
   				folderSky.add( parameters, 'azimuth', - 180, 180, 0.1 ).onChange( updateSun );
-  				folderSky.add( parameters, 'exposure', 0, 1, 0.0001 ).onChange( function ( value ) {
+  				folderSky.add( parameters, 'exposure', 0, 1, 0.0001 ).onChange( function ( value: any ) {
   
   					renderer.toneMappingExposure = value;
   
@@ -223,7 +223,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const time = performance.now() * 0.001;

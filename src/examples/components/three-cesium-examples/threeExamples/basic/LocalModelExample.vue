@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -48,11 +48,11 @@ function onReady(ctx) {
     left: '100px',
     zIndex: 9999
   })
-  input.onchange = (e) => {
+  input.onchange = (e: any) => {
     const file = e.target.files[0]
     const url = URL.createObjectURL(file)
     new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath(props.example?.globals?.FILE_HOST + 'js/three/draco/')).load(url, (gltf) => {
-      gltf.scene.traverse((child) => {
+      gltf.scene.traverse((child: any) => {
         if (child?.material) child.material.envMap = textureCube
       })
       scene.add(gltf.scene)

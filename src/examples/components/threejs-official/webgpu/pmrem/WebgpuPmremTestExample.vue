@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>PMREM Directional Light Test</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -98,11 +98,11 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Settings' );
   				gui.add( { enabled: true }, 'enabled' )
   					.name( 'PMREM' )
-  					.onChange( value => {
+  					.onChange( (value: any) => {
   
   						directionalLight.intensity = value ? 0 : 1;
   
-  						scene.traverse( function ( child ) {
+  						scene.traverse( function ( child: any ) {
   
   							if ( child.isMesh ) {
   
@@ -177,6 +177,8 @@ function onReady(__stage) {
   
   			}
   
+  			async function init() { } // init body flattened into onReady above
+
   			Promise.resolve()
   				.then( init )
   				.then( createObjects );

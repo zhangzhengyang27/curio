@@ -29,14 +29,14 @@
     </div>
     <VcOverlayWind
       :show="windShow"
-      :data="DATA"
+      :data="(DATA as any)"
       :options="WIND_OPTIONS"
       @ready="onReady"
     />
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcOverlayWind } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'

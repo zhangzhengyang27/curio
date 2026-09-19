@@ -222,17 +222,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { loadCesium } from '../map/cesiumLoader.js'
-import { createMapViewer } from '../map/createViewer.js'
-import { useEarthquakeFeed, LEVELS, STATUS_LABEL } from '../map/monitor/useEarthquakeFeed.js'
-import { useTourEngine } from '../composables/useTourEngine.js'
+import { loadCesium } from '../map/cesiumLoader'
+import { createMapViewer } from '../map/createViewer'
+import { useEarthquakeFeed, LEVELS, STATUS_LABEL } from '../map/monitor/useEarthquakeFeed'
+import type { QuakeEvent, QuakeStatus } from '../map/monitor/useEarthquakeFeed'
+import { useTourEngine } from '../composables/useTourEngine'
+import type { TourStep } from '../composables/useTourEngine'
 
-const containerRef = ref(null)
+const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
 const loadError = ref('')
-const selected = ref(null)
+const selected = ref<QuakeEvent | null>(null)
 const streaming = ref(!new URLSearchParams(window.location.search).has('nostream'))
 const streamIntervalMs = 7000
 const pendingCount = computed(() => feedPool.value)
@@ -259,7 +261,7 @@ const feedPool = ref(0)
 
 // 巡游大屏(K3)复用全局巡游引擎(X1):未处置事件序列 → 纯相机分镜
 const tour = useTourEngine({
-  flyTo: (lon, lat, durationMs = 1400) => {
+  flyTo: (lon: number, lat: number, durationMs = 1400) => {
     viewer?.camera.flyTo({
       destination: window.Cesium.Cartesian3.fromDegrees(lon, lat, 450_000),
       duration: durationMs / 1000,
@@ -307,8 +309,9 @@ function stepTour() {
 watch(
   () => tour.route.value?.steps[tour.stepIndex.value],
   (step) => {
-    if (step?.eventId != null) {
-      const ev = events.value.find((x) => x.id === step.eventId)
+    const eventId = (step as (TourStep & { eventId?: number }) | undefined)?.eventId
+    if (eventId != null) {
+      const ev = events.value.find((x) => x.id === eventId)
       if (ev) selected.value = ev
     }
   }
@@ -327,8 +330,8 @@ function onResetDrill() {
 }
 
 // ---- 阈值告警(K2) ----
-function onThresholdChange(e) {
-  setThreshold(e.target.value)
+function onThresholdChange(e: Event) {
+  setThreshold(Number((e.target as HTMLInputElement).value))
   syncMarkers()
 }
 
@@ -348,21 +351,21 @@ function toggleReplay() {
   }, 300)
 }
 
-let viewer = null
-let markerEntities = new Map() // eventId → Cesium.Entity
-let handler = null
-let poolTimer = null
+let viewer: any = null
+let markerEntities = new Map<number, any>() // eventId → Cesium.Entity
+let handler: any = null
+let poolTimer: ReturnType<typeof setInterval> | null = null
 
-const LEVEL_COLORS = { open: null, processing: '#42a5f5', resolved: '#9e9e9e' }
+const LEVEL_COLORS: Record<QuakeStatus, string | null> = { open: null, processing: '#42a5f5', resolved: '#9e9e9e' }
 
-function markerColorFor(e) {
+function markerColorFor(e: QuakeEvent) {
   const Cesium = window.Cesium
   if (e.status === 'resolved') return Cesium.Color.fromCssColorString(LEVEL_COLORS.resolved)
   if (e.status === 'processing') return Cesium.Color.fromCssColorString(LEVEL_COLORS.processing)
   return Cesium.Color.fromCssColorString(LEVELS[e.level].color)
 }
 
-function addMarker(e) {
+function addMarker(e: QuakeEvent) {
   const Cesium = window.Cesium
   const color = markerColorFor(e)
   const entity = viewer.entities.add({
@@ -388,7 +391,7 @@ function addMarker(e) {
   markerEntities.set(e.id, entity)
 }
 
-function refreshMarker(e) {
+function refreshMarker(e: QuakeEvent) {
   const entity = markerEntities.get(e.id)
   if (entity) entity.point.color = markerColorFor(e)
 }
@@ -412,7 +415,7 @@ function syncMarkers() {
   }
 }
 
-function selectEvent(e) {
+function selectEvent(e: QuakeEvent) {
   selected.value = e
   viewer.camera.flyTo({
     destination: window.Cesium.Cartesian3.fromDegrees(e.lon, e.lat, 450_000),
@@ -420,7 +423,7 @@ function selectEvent(e) {
   })
 }
 
-function setStatus(id, status) {
+function setStatus(id: number, status: QuakeStatus) {
   setEventStatus(id, status)
   const e = events.value.find((x) => x.id === id)
   if (e) refreshMarker(e)
@@ -439,7 +442,7 @@ onMounted(async () => {
     for (const e of arrivedEvents.value) addMarker(e)
 
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
-    handler.setInputAction((e) => {
+    handler.setInputAction((e: any) => {
       const picked = viewer.scene.pick(e.position)
       const eqId = picked?.id?.id?.replace(/^eq_/, '')
       if (eqId != null && markerEntities.has(Number(eqId))) {

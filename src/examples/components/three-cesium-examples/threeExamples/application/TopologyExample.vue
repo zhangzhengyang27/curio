@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -76,8 +76,8 @@ function onReady(ctx) {
   // 创建连接线
   boxArr.forEach((i, k) => {
       const { line } = i.info
-      line.map((id, z) => {
-          const mesh = boxArr.find(j => j.info.id === id)
+      line.map((id: any, z: any) => {
+          const mesh = boxArr.find((j: any) => j.info.id === id)
           if (mesh) try {
               const flowLine = createFlowLine(i.position, mesh.position, { ...options, radius: 0.1, color: i.info.color })
               group.add(flowLine)
@@ -87,15 +87,15 @@ function onReady(ctx) {
   
   // 创建容器
   arr2.forEach((i, k) => {
-      const positions = i.map(j => boxArr.find(z => z.info.id === j).position)
+      const positions = i.map((j: any) => boxArr.find((z: any) => z.info.id === j).position)
       const mesh = createContainerNode(positions, meshScale)
       group.add(mesh)
   })
   
   /* 创建容器 */
-  function createContainerNode(positions, meshScale) {
-      const max = ['x', 'y', 'z'].map(i => Math.max(...positions.map(j => j[i])))
-      const min = ['x', 'y', 'z'].map(i => Math.min(...positions.map(j => j[i])))
+  function createContainerNode(positions: any, meshScale: number) {
+      const max = ['x', 'y', 'z'].map((i: any) => Math.max(...positions.map((j: any) => j[i])))
+      const min = ['x', 'y', 'z'].map((i: any) => Math.min(...positions.map((j: any) => j[i])))
       const [width, height, depth] = max.map((i, k) => Math.abs(i - min[k])).map(i => i + meshScale * 2)
       const geometry = new THREE.BoxGeometry(width, height, depth)
       const material = new THREE.MeshBasicMaterial({ color: 'red', transparent: true, opacity: 0.2 })
@@ -106,9 +106,9 @@ function onReady(ctx) {
   }
   
   /* 创建立方体节点 */
-  function createBoxNode(meshScale, xzScale, i) {
+  function createBoxNode(meshScale: number, xzScale: number, i: any) {
       const { coord } = i
-      const box = new THREE.Mesh(
+      const box: any = new THREE.Mesh(
           new THREE.BoxGeometry(meshScale, meshScale, meshScale),
           new THREE.MeshBasicMaterial({ color: i.color || '' })
       )
@@ -130,7 +130,7 @@ function onReady(ctx) {
   }
   
   /* 创建流程线 */
-  function createFlowLine(p1, p2, options = {}) {
+  function createFlowLine(p1: any, p2: any, options: any = {}) {
       const { meshScale, flowDirection } = options
       let p3
       if (flowDirection === 'right') p3 = new THREE.Vector3(p1.x, 0, p2.z)
@@ -161,7 +161,7 @@ function onReady(ctx) {
       return group
   }
   
-  function getDirectionQuaternion(start, end) {
+  function getDirectionQuaternion(start: any, end: any) {
       const direction = new THREE.Vector3()
       direction.subVectors(end, start).normalize()
       const quaternion = new THREE.Quaternion()

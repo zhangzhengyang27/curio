@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -50,7 +50,7 @@ function onReady(ctx) {
   // 事件
   const raycaster = new THREE.Raycaster()
   
-  const getPoint = event => {
+  const getPoint = (event: any) => {
   
       const mouse = new THREE.Vector2((event.offsetX / event.target.clientWidth) * 2 - 1, -(event.offsetY / event.target.clientHeight) * 2 + 1)
   
@@ -63,9 +63,9 @@ function onReady(ctx) {
   }
   
   /* 开始绘制 */
-  const pointList = []; let drawMesh = null; let fenceHeight = 1
+  const pointList: any[] = []; let drawMesh: any = null; let fenceHeight = 1
   
-  ctx.container?.addEventListener('click', (event) => {
+  ctx.container?.addEventListener('click', (event: any) => {
   
       const point = getPoint(event)
   
@@ -106,15 +106,15 @@ function onReady(ctx) {
   })
   
   /* 处理顶点算法 */
-  function multShapeGroup(formatPoints) {
+  function multShapeGroup(formatPoints: any) {
   
       const { length } = formatPoints
   
-      const indexGroup = formatPoints.map((_, k) => (k - 1 > -1 && k + 1 < length) && (k % 2 === 0 ? [k, k + 1, k - 1] : [k, k - 1, k + 1])).filter((i) => i).reduce((i, j) => [...i, ...j], [])
+      const indexGroup = formatPoints.map((_: any, k: any) => (k - 1 > -1 && k + 1 < length) && (k % 2 === 0 ? [k, k + 1, k - 1] : [k, k - 1, k + 1])).filter((i: any) => i).reduce((i: any, j: any) => [...i, ...j], [])
   
-      const faceGroup = formatPoints.reduce((j, i) => [...j, i.x, i.y, i.z], [])
+      const faceGroup = formatPoints.reduce((j: any, i: any) => [...j, i.x, i.y, i.z], [])
   
-      const uvMaxMin = formatPoints.reduce((p, i) => ({ x: [...p['x'], i['x']], y: [...p['y'], i['y']], z: [...p['z'], i['z']] }), { x: [], y: [], z: [] })
+      const uvMaxMin = formatPoints.reduce((p: any, i: any) => ({ x: [...p['x'], i['x']], y: [...p['y'], i['y']], z: [...p['z'], i['z']] }), { x: [], y: [], z: [] })
   
       const Maxp = new THREE.Vector3(Math.max(...uvMaxMin.x), Math.max(...uvMaxMin.y), Math.max(...uvMaxMin.z))  // 最大点
   
@@ -126,14 +126,14 @@ function onReady(ctx) {
   
       const L = W > H ? W : H
   
-      const uvGroup = formatPoints.map(i => new THREE.Vector2((i.x - Minp.x) / L, (i.y - Minp.y) / L)).reduce((i, j) => [...i, ...j], [])
+      const uvGroup = formatPoints.map((i: any) => new THREE.Vector2((i.x - Minp.x) / L, (i.y - Minp.y) / L)).reduce((i: any, j: any) => [...i, ...j], [])
   
       return { indexGroup, faceGroup, uvGroup }
   
   }
   
   /* 根据顶点组生成物体 */
-  function multShapePlaneGeometry(faceGroup, indexGroup, uvGroup) {
+  function multShapePlaneGeometry(faceGroup: any, indexGroup: any, uvGroup: any) {
   
       const geometry = new THREE.BufferGeometry()
   
@@ -152,7 +152,7 @@ function onReady(ctx) {
   }
   
   /* 更新顶点 */
-  function updateMultShapePlaneGeometry(geometry, faceGroup, indexGroup, uvGroup) {
+  function updateMultShapePlaneGeometry(geometry: any, faceGroup: any, indexGroup: any, uvGroup: any) {
   
       geometry.setIndex(indexGroup)
   

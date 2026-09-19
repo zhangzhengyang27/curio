@@ -13,10 +13,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -248,11 +248,14 @@ const birdFragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  let gpuCompute: any;
+  let velocityUniforms: any;
+  let birdUniforms: any;
 
   
   
@@ -290,7 +293,7 @@ function onReady(__stage) {
   
   					let v = 0;
   
-  					function verts_push() {
+  					function verts_push( ..._args: any[] ) {
   
   						for ( let i = 0; i < arguments.length; i ++ ) {
   
@@ -372,9 +375,9 @@ function onReady(__stage) {
   			let last = performance.now();
   
   
-  			let velocityVariable;
-  			let positionVariable;
-  			let positionUniforms;
+  			let velocityVariable: any;
+  			let positionVariable: any;
+  			let positionUniforms: any;
   
   
   
@@ -510,7 +513,7 @@ function onReady(__stage) {
   
   			}
   
-  			function fillPositionTexture( texture ) {
+  			function fillPositionTexture( texture: any ) {
   
   				const theArray = texture.image.data;
   
@@ -529,7 +532,7 @@ function onReady(__stage) {
   
   			}
   
-  			function fillVelocityTexture( texture ) {
+  			function fillVelocityTexture( texture: any ) {
   
   				const theArray = texture.image.data;
   
@@ -550,7 +553,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( event.isPrimary === false ) return;
   
@@ -561,7 +564,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const now = performance.now();
     				let delta = ( now - last ) / 1000;

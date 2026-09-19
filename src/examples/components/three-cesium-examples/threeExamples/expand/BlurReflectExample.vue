@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { KawaseBlurPass } from "postprocessing"
@@ -25,7 +25,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -46,7 +46,8 @@ function onReady(ctx) {
   const { DepthFormat, DepthTexture, LinearFilter, Matrix4, MeshStandardMaterial, PerspectiveCamera, Plane, UnsignedShortType, Vector3, Vector4, WebGLRenderTarget } = THREE
   
   class MeshReflectorMaterial extends MeshStandardMaterial {
-      constructor(renderer, camera, scene, object, {
+      [key: string]: any
+      constructor(renderer: any, camera: any, scene: any, object: any, {
           mixBlur = 0,
           mixStrength = 1,
           resolution = 256,
@@ -63,7 +64,7 @@ function onReady(ctx) {
           bufferSamples = 8,
           planeNormal = new Vector3(0, 0, 1),
           parameters = {}
-      } = {}) {
+      }: any = {}) {
           super(parameters);
   
           this.gl = renderer
@@ -111,7 +112,7 @@ function onReady(ctx) {
           }
       }
   
-      setupBuffers(resolution, blur, bufferSamples) {
+      setupBuffers(resolution: any, blur: any, bufferSamples: any) {
           const parameters = {
               minFilter: LinearFilter,
               magFilter: LinearFilter,
@@ -219,8 +220,8 @@ function onReady(ctx) {
           this.gl.setRenderTarget(null)
       }
   
-      onBeforeCompile(shader, ...args) {
-          super.onBeforeCompile(shader, ...args);
+      onBeforeCompile(shader: any, ...args: any[]) {
+          (super.onBeforeCompile as any)(shader, ...args);
   
           if (this.defines === undefined) this.defines = {}
   

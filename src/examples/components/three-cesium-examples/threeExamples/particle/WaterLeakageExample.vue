@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -67,7 +67,7 @@ function onReady(ctx) {
       // 设置UI
       gui = new GUI();
       const particleFolder = gui.addFolder('粒子系统');
-      particleFolder.add(params, 'maxParticles').name('最大粒子数').onChange(value => {
+      particleFolder.add(params, 'maxParticles').name('最大粒子数').onChange((value: any) => {
           scene.remove(emitter.points);
           emitter = new ParticleSystem(value);
           scene.add(emitter.points);
@@ -83,20 +83,20 @@ function onReady(ctx) {
       const particleVisualFolder = gui.addFolder('视觉属性');
       particleVisualFolder.add(params, 'minSize').name('最小粒子尺寸');
       particleVisualFolder.add(params, 'maxSize').name('最大粒子尺寸');
-      particleVisualFolder.addColor(params, 'color').name('粒子颜色').onChange(value => {
+      particleVisualFolder.addColor(params, 'color').name('粒子颜色').onChange((value: any) => {
           emitter.material.uniforms.color.value.set(value);
           splashSystem.material.uniforms.color.value.set(value); // 同步更新水花颜色
       });
       particleVisualFolder.add(params, 'burstProbability').name('突发概率');
       particleVisualFolder.add(params, 'burstMultiplier').name('突发倍数');
-      particleVisualFolder.add(params, 'blendingMode', ['Additive', 'Normal']).name('混合模式').onChange(value => {
+      particleVisualFolder.add(params, 'blendingMode', ['Additive', 'Normal']).name('混合模式').onChange((value: any) => {
           emitter.material.blending = value === 'Additive' ? THREE.AdditiveBlending : THREE.NormalBlending;
           emitter.material.needsUpdate = true;
       });
-      particleVisualFolder.add(params, 'rainLength', 0.1, 1.0).name('雨滴长度').onChange(value => {
+      particleVisualFolder.add(params, 'rainLength', 0.1, 1.0).name('雨滴长度').onChange((value: any) => {
           emitter.material.uniforms.rainLength.value = value;
       });
-      particleVisualFolder.add(params, 'opacity', 0.1, 1.0).step(0.1).name('整体透明度').onChange(value => {
+      particleVisualFolder.add(params, 'opacity', 0.1, 1.0).step(0.1).name('整体透明度').onChange((value: any) => {
           emitter.material.uniforms.globalOpacity.value = value;
           splashSystem.material.uniforms.globalOpacity.value = value; // 同步更新水花透明度
       });
@@ -115,7 +115,13 @@ function onReady(ctx) {
       particleVisualFolder.open();
   
       class SplashParticle {
-          constructor(position) {
+          position: any
+          velocity: any
+          life: any
+          maxLife: any
+          size: any
+
+          constructor(position: any) {
               this.position = position.clone();
               const angle = Math.random() * Math.PI * 2;
               const speed = Math.random() * params.splashSpeed;
@@ -129,7 +135,7 @@ function onReady(ctx) {
               this.size = params.splashSize * (0.5 + Math.random() * 0.5);
           }
   
-          update(delta) {
+          update(delta: any) {
               this.velocity.y -= params.gravity * delta * 0.8;
               this.position.addScaledVector(this.velocity, delta);
               this.life += delta;
@@ -142,6 +148,15 @@ function onReady(ctx) {
       }
   
       class SplashSystem {
+          maxCount: any
+          particles: any
+          geometry: any
+          positions: any
+          sizes: any
+          opacities: any
+          material: any
+          points: any
+
           constructor(maxCount = 1000) {
               this.maxCount = maxCount;
               this.particles = [];
@@ -196,7 +211,7 @@ function onReady(ctx) {
               scene.add(this.points);
           }
   
-          addSplash(position) {
+          addSplash(position: any) {
               if (!params.enableSplash) return;
               for (let i = 0; i < params.splashParticles; i++) {
                   if (this.particles.length < this.maxCount) {
@@ -205,9 +220,9 @@ function onReady(ctx) {
               }
           }
   
-          update(delta) {
+          update(delta: any) {
               let alive = 0;
-              let aliveParticles = [];
+              let aliveParticles: any[] = [];
               for (let i = 0; i < this.particles.length; i++) {
                   const p = this.particles[i];
                   if (p.update(delta)) {
@@ -227,11 +242,18 @@ function onReady(ctx) {
               this.geometry.attributes.opacity.needsUpdate = true;
           }
       }
-  
+
       const splashSystem = new SplashSystem();
       splashSystem.points.frustumCulled = false // 禁用视锥体剔除，以确保水花在相机外也能渲染
   
       class Particle {
+          position: any
+          velocity: any
+          life: any
+          maxLife: any
+          size: any
+          initialSize: any
+
           constructor() {
               this.position = new THREE.Vector3(0, 5, 0);
               const angle = Math.random() * Math.PI * 2;
@@ -246,7 +268,7 @@ function onReady(ctx) {
               this.maxLife = 1 + Math.random() * 0.5;
               this.size = this.initialSize = Math.random() * (params.maxSize - params.minSize) + params.minSize;
           }
-          update(delta) {
+          update(delta: any) {
               this.velocity.y -= params.gravity * delta * 0.5;
               this.position.addScaledVector(this.velocity, delta);
               this.life += delta;
@@ -261,6 +283,15 @@ function onReady(ctx) {
       }
   
       class ParticleSystem {
+          maxCount: any
+          particles: any
+          geometry: any
+          positions: any
+          sizes: any
+          opacities: any
+          material: any
+          points: any
+
           constructor(maxCount = params.maxParticles) {
               this.maxCount = maxCount;
               this.particles = [];
@@ -328,9 +359,9 @@ function onReady(ctx) {
                   this.particles.push(new Particle());
               }
           }
-          update(delta) {
+          update(delta: any) {
               let alive = 0;
-              let aliveParticles = [];
+              let aliveParticles: any[] = [];
               for (let i = 0; i < this.particles.length; i++) {
                   const p = this.particles[i];
                   if (p.update(delta)) {

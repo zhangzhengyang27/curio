@@ -2,13 +2,13 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
-          var webgl = null;
+          var webgl: any = null;
           // 定义 顶点数组
           var projMat4 = glMatrix.mat4.create();
   
@@ -45,7 +45,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function initWebgl() {
               let webglDiv = canvas;
               // 通过容器获取上下文
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               // 设置投影矩阵
@@ -55,8 +55,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           // 初始化着色器，shader 供 gpu 使用的
           function initShader() {
               // 定义 shader 容器对象 (顶点、片元)
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               // 将 shader 代码注入到容器中
               webgl.shaderSource(vsshader, vertexstring);
@@ -90,17 +90,16 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.useProgram(program);
   
               // 将程序对象保存到 webgl 容器中
-              webgl.program = program
+              (webgl as any).program = program
           }
   
-          var points = [];
-          var colors = [];
-  
+          var points: any[] = [];
+          var colors: any[] = [];
           // 初始化缓冲区
           function initBuffer() {
               // 创建缓冲区对象 获取 a_position 的位置
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
-              let aColor = webgl.getAttribLocation(webgl.program, "a_color");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
+              let aColor = webgl.getAttribLocation((webgl as any).program, "a_color");
   
               document.addEventListener("mousedown", function (e) {
                   let x = e.clientX;
@@ -109,7 +108,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
                   // getBoundingClientRect() 返回一个 DOMRect 对象，提供有关元素大小及其相对于 视区 的位置的信息。
   
                   // 坐标转换 ，将直角坐标转换为 webgl 坐标
-                  let rect = e.target.getBoundingClientRect();
+                  let rect = (e.target as HTMLElement).getBoundingClientRect();
                   let pointx = ((x - rect.left) - 512) / 512;
                   let pointy = (350 - (y - rect.top)) / 350;
                   points.push(pointx);
@@ -164,7 +163,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               })
   
               // 获取投影矩阵的位置
-              let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
+              let uniformProj = webgl.getUniformLocation((webgl as any).program, "proj");
               // 将投影矩阵传入到着色器中  false 是否转秩
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
           }

@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - paint"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -85,7 +85,7 @@ function onReady(__stage) {
   
   				// controllers
   
-  				function onSelectStart() {
+  				function onSelectStart( this: any ) {
   
   					this.updateMatrixWorld( true );
   
@@ -99,13 +99,13 @@ function onReady(__stage) {
   
   				}
   
-  				function onSelectEnd() {
+  				function onSelectEnd( this: any ) {
   
   					this.userData.isSelecting = false;
   
   				}
   
-  				function onSqueezeStart() {
+  				function onSqueezeStart( this: any ) {
   
   					this.userData.isSqueezing = true;
   					this.userData.positionAtSqueezeStart = this.position.y;
@@ -115,7 +115,7 @@ function onReady(__stage) {
   
   				}
   
-  				function onSqueezeEnd() {
+  				function onSqueezeEnd( this: any ) {
   
   					this.userData.isSqueezing = false;
   
@@ -160,7 +160,7 @@ function onReady(__stage) {
   
   			//
   
-  			function handleController( controller ) {
+  			function handleController( controller: any ) {
   
   				controller.updateMatrixWorld( true );
   
@@ -194,7 +194,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     handleController( controller1 );
     				handleController( controller2 );
   })

@@ -17,7 +17,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -30,10 +30,10 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - instancing - dynamic<br/>\n\t\t\tBased on <a href=\"https://oosmoxiecode.com/archive/js_webgl/cubescape/\" target=\"_blank\" rel=\"noopener\">Cubescape</a>\n\t\t\tby <a href=\"https://github.com/oosmoxiecode\" target=\"_blank\" rel=\"noopener\">oosmoxiecode</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,8 +51,8 @@ function onReady(__stage) {
   			const count = Math.pow( amount, 2 );
   			const dummy = new THREE.Object3D();
   
-  			const seeds = [];
-  			const baseColors = [];
+  			const seeds: any = [];
+  			const baseColors: any = [];
   
   			const color = new THREE.Color();
   			const colors = [ new THREE.Color( 0x00ffff ), new THREE.Color( 0xffff00 ), new THREE.Color( 0xff00ff ) ];
@@ -152,7 +152,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const time = timer.getElapsed();
     				TWEEN.update();
@@ -184,7 +184,7 @@ function onReady(__stage) {
     					}
     				}
     				mesh.instanceMatrix.needsUpdate = true;
-    				if ( animation.t > 0 ) mesh.instanceColor.needsUpdate = true;
+    				if ( animation.t > 0 ) (mesh as any)!.instanceColor.needsUpdate = true;
     				mesh.computeBoundingSphere();
   })
   

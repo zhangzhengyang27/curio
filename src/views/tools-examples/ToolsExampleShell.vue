@@ -58,12 +58,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { VcConfigProvider, VcViewer } from 'vue-cesium'
 import 'vue-cesium/dist/index.css'
-import { loadCesium } from '../../map/cesiumLoader.js'
-import { applyTdtStack, applyViewerConstraints } from '../../map/createViewer.js'
+import { loadCesium } from '../../map/cesiumLoader'
+import { applyTdtStack, applyViewerConstraints } from '../../map/createViewer'
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -98,7 +98,7 @@ const cameraProp = computed(() => ({
  * 天地图底图与统一约束在 viewer 就绪后叠加：
  * baseLayer=false 避免闪官方 NaturalEarthII，ready 后由 applyTdtStack 补齐。
  */
-function onViewerReady(readyObj) {
+function onViewerReady(readyObj: any) {
   const { Cesium, viewer } = readyObj
   Cesium.RequestScheduler.requestsPerServer = 1
   // 每个新 viewer 的 imageryLayers 都是空的（baseLayer=false），applyTdtStack 幂等
@@ -112,7 +112,7 @@ onMounted(async () => {
     await loadCesium()
     // window.Cesium 就绪后，vue-cesium 的 getCesiumScript 直接复用，不重复注入脚本
     cesiumReady.value = true
-  } catch (err) {
+  } catch (err: any) {
     loadError.value = err?.message || 'Cesium 加载失败'
   }
 })

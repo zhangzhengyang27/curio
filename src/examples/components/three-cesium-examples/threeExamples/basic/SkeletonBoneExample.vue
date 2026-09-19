@@ -9,10 +9,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -21,17 +21,17 @@ const state = {
   animateBones: false,
 }
 
-let mesh = null
-let skeletonHelper = null
+let mesh: any = null
+let skeletonHelper: any = null
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const controls = ctx.controls
 
   controls.enableZoom = false
 
-  const lights = []
+  const lights: any[] = []
   lights[0] = new THREE.DirectionalLight(0xffffff, 3)
   lights[1] = new THREE.DirectionalLight(0xffffff, 3)
   lights[2] = new THREE.DirectionalLight(0xffffff, 3)
@@ -57,12 +57,12 @@ function onReady(ctx) {
   })
 }
 
-function createGeometry(sizing) {
+function createGeometry(sizing: any) {
   const geometry = new THREE.BoxGeometry(5, sizing.height, 5, 1, sizing.segmentCount * 10)
   const position = geometry.attributes.position
   const vertex = new THREE.Vector3()
-  const skinIndices = []
-  const skinWeights = []
+  const skinIndices: any[] = []
+  const skinWeights: any[] = []
 
   for (let i = 0; i < position.count; i++) {
     vertex.fromBufferAttribute(position, i)
@@ -80,8 +80,8 @@ function createGeometry(sizing) {
   return geometry
 }
 
-function createBones(sizing) {
-  const bones = []
+function createBones(sizing: any) {
+  const bones: any[] = []
   let prevBone = new THREE.Bone()
   bones.push(prevBone)
   prevBone.position.y = -sizing.halfHeight
@@ -97,7 +97,7 @@ function createBones(sizing) {
   return bones
 }
 
-function createMesh(geometry, bones, scene) {
+function createMesh(geometry: THREE.BufferGeometry, bones: any, scene: THREE.Scene) {
   const material = new THREE.MeshPhongMaterial({
     color: 0x156289,
     emissive: 0x072534,
@@ -157,7 +157,7 @@ function setupDatGui() {
   }
 }
 
-function initBones(scene) {
+function initBones(scene: THREE.Scene) {
   const segmentHeight = 8
   const segmentCount = 4
   const height = segmentHeight * segmentCount

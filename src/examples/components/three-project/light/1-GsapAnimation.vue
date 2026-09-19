@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -9,8 +9,8 @@
   const containerRef = shallowRef(null)
 
   // 立方体引用
-  let cube = null
-  let animate1 = null
+  let cube: any = null
+  let animate1: any = null
 
   // 使用封装的场景
   const { scene, camera: _camera, renderer: _renderer, controls: _controls, startAnimation } = useThreeScene(containerRef, {

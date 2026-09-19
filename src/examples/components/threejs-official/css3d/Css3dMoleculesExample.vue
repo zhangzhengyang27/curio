@@ -14,10 +14,10 @@
   </CSS3DExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import CSS3DExampleScene from '@/examples/components/CSS3DExampleScene.vue'
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> css3d - molecules"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,9 +44,9 @@ function onReady(__stage) {
   
   
   
-  			let root;
+  			let root: any;
   
-  			const objects = [];
+  			const objects: any = [];
   			const tmpVec1 = new THREE.Vector3();
   			const tmpVec2 = new THREE.Vector3();
   			const tmpVec3 = new THREE.Vector3();
@@ -136,7 +136,7 @@ function onReady(__stage) {
   
   			}
   
-  			function changeVizType( value ) {
+  			function changeVizType( value: any ) {
   
   				if ( value === 0 ) showAtoms();
   				else if ( value === 1 ) showBonds();
@@ -212,7 +212,7 @@ function onReady(__stage) {
   
   			//
   
-  			function colorify( ctx, width, height, color ) {
+  			function colorify( ctx: any, width: any, height: any, color: any ) {
   
   				const r = color.r, g = color.g, b = color.b;
   
@@ -231,7 +231,7 @@ function onReady(__stage) {
   
   			}
   
-  			function imageToCanvas( image ) {
+  			function imageToCanvas( image: any ) {
   
   				const width = image.width;
   				const height = image.height;
@@ -242,7 +242,7 @@ function onReady(__stage) {
   				canvas.height = height;
   
   				const context = canvas.getContext( '2d' );
-  				context.drawImage( image, 0, 0, width, height );
+  				context!.drawImage( image, 0, 0, width, height );
   
   				return canvas;
   
@@ -250,7 +250,7 @@ function onReady(__stage) {
   
   			//
   
-  			function loadMolecule( model ) {
+  			function loadMolecule( model: any ) {
   
   				const url = ASSET_HOST + 'models/pdb/' + model;
   
@@ -270,7 +270,7 @@ function onReady(__stage) {
   					const json = pdb.json;
   
   					geometryAtoms.computeBoundingBox();
-  					geometryAtoms.boundingBox.getCenter( offset ).negate();
+  					(geometryAtoms as any)!.boundingBox.getCenter( offset ).negate();
   
   					geometryAtoms.translate( offset.x, offset.y, offset.z );
   					geometryBonds.translate( offset.x, offset.y, offset.z );
@@ -289,7 +289,7 @@ function onReady(__stage) {
   						const atomJSON = json.atoms[ i ];
   						const element = atomJSON[ 4 ];
   
-  						if ( ! colorSpriteMap[ element ] ) {
+  						if ( ! (colorSpriteMap as any)[ element ] ) {
   
   							const canvas = imageToCanvas( baseSprite );
   							const context = canvas.getContext( '2d' );
@@ -298,11 +298,11 @@ function onReady(__stage) {
   
   							const dataUrl = canvas.toDataURL();
   
-  							colorSpriteMap[ element ] = dataUrl;
+  							(colorSpriteMap as any)[ element ] = dataUrl;
   
   						}
   
-  						const colorSprite = colorSpriteMap[ element ];
+  						const colorSprite = (colorSpriteMap as any)[ element ];
   
   						const atom = document.createElement( 'img' );
   						atom.src = colorSprite;
@@ -412,7 +412,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.0004;
     				root.rotation.x = time;
     				root.rotation.y = time * 0.7;

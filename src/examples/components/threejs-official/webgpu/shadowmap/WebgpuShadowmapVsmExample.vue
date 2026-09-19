@@ -15,11 +15,14 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -29,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>VSM Shadows</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,8 +44,8 @@ function onReady(__stage) {
   
   
   
-  			let dirLight, spotLight;
-  			let torusKnot, dirGroup;
+  			let dirLight: any, spotLight: any;
+  			let torusKnot: any, dirGroup: any;
   
   			const config = {
   				spotlightRadius: 4,
@@ -62,26 +65,26 @@ function onReady(__stage) {
   				const gui = renderer.inspector.createParameters( 'Settings' );
   
   				const spotlightFolder = gui.addFolder( 'Spotlight' );
-  				spotlightFolder.add( config, 'spotlightRadius', 0, 25 ).name( 'radius' ).onChange( function ( value ) {
+  				spotlightFolder.add( config, 'spotlightRadius', 0, 25 ).name( 'radius' ).onChange( function ( value: any ) {
   
   					spotLight.shadow.radius = value;
   
   				} );
   
-  				spotlightFolder.add( config, 'spotlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value ) {
+  				spotlightFolder.add( config, 'spotlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value: any ) {
   
   					spotLight.shadow.blurSamples = value;
   
   				} );
   
   				const dirlightFolder = gui.addFolder( 'Directional Light' );
-  				dirlightFolder.add( config, 'dirlightRadius', 0, 25 ).name( 'radius' ).onChange( function ( value ) {
+  				dirlightFolder.add( config, 'dirlightRadius', 0, 25 ).name( 'radius' ).onChange( function ( value: any ) {
   
   					dirLight.shadow.radius = value;
   
   				} );
   
-  				dirlightFolder.add( config, 'dirlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value ) {
+  				dirlightFolder.add( config, 'dirlightSamples', 1, 25, 1 ).name( 'samples' ).onChange( function ( value: any ) {
   
   					dirLight.shadow.blurSamples = value;
   
@@ -212,7 +215,7 @@ function onReady(__stage) {
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				timer.update();
   

@@ -17,13 +17,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, texture, uv, uint, instancedArray, positionWorld, billboarding, time, hash, deltaTime, vec2, instanceIndex, positionGeometry, If } from 'three/tsl';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -33,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Compute Rain</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -52,7 +55,7 @@ function onReady(__stage) {
   
   
   			let computeParticles;
-  			let monkey;
+  			let monkey: any;
   
   
   			let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
@@ -128,7 +131,7 @@ function onReady(__stage) {
   
   				const computeUpdate = Fn( () => {
   
-  					const getCoord = ( pos ) => pos.add( 50 ).div( 100 );
+  					const getCoord = ( pos: any ) => pos.add( 50 ).div( 100 );
   
   					const position = positionBuffer.element( instanceIndex );
   					const velocity = velocityBuffer.element( instanceIndex );
@@ -164,8 +167,8 @@ function onReady(__stage) {
   
   						// next drops will not fall in the same place
   
-  						position.x = hash( instanceIndex.add( time ) ).mul( 100 ).add( - 50 );
-  						position.z = hash( instanceIndex.add( time.add( randUint() ) ) ).mul( 100 ).add( - 50 );
+  						position.x = hash( instanceIndex.add( (time as any) ) ).mul( 100 ).add( - 50 );
+  						position.z = hash( instanceIndex.add( (time.add as any)( randUint() ) ) ).mul( 100 ).add( - 50 );
   
   					} );
   
@@ -249,7 +252,7 @@ function onReady(__stage) {
   				//
   
   				collisionBox = new THREE.Mesh( new THREE.BoxGeometry( 30, 1, 15 ), new THREE.MeshStandardMaterial() );
-  				collisionBox.material.color.set( 0x333333 );
+  				(collisionBox as any)!.material.color.set( 0x333333 );
   				collisionBox.position.y = 12;
   				collisionBox.scale.x = 3.5;
   				collisionBox.layers.enable( 1 );
@@ -310,14 +313,14 @@ function onReady(__stage) {
   
   				gui.add( collisionBoxPosUI, 'z', - 50, 50, .001 ).name( 'position' );
   				gui.add( collisionBox.scale, 'x', .1, 3.5, 0.01 ).name( 'scale' );
-  				gui.add( rainParticles, 'count', 200, maxParticleCount, 1 ).name( 'drop count' ).onChange( ( v ) => rippleParticles.count = v );
+  				gui.add( rainParticles, 'count', 200, maxParticleCount, 1 ).name( 'drop count' ).onChange( ( v: any ) => rippleParticles.count = v );
   
   			
   
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( monkey ) {

@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> wegbl - modified material.\n\t\t\t<a href=\"https://casual-effects.com/data/\" target=\"_blank\" rel=\"noopener\">Lee Perry-Smith</a> head."
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -86,7 +86,7 @@ function onReady(__stage) {
   			
   
   
-  			function buildTwistMaterial( amount ) {
+  			function buildTwistMaterial( amount: any ) {
   
   				const material = new THREE.MeshNormalMaterial();
   				material.onBeforeCompile = function ( shader ) {
@@ -128,9 +128,9 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
-    scene.traverse( function ( child ) {
+    scene.traverse( function ( child: any ) {
     					if ( child.isMesh ) {
     						const shader = child.material.userData.shader;
     						if ( shader ) {
@@ -144,7 +144,7 @@ function onReady(__stage) {
   
   			function render() {
   
-  				scene.traverse( function ( child ) {
+  				scene.traverse( function ( child: any ) {
   
   					if ( child.isMesh ) {
   

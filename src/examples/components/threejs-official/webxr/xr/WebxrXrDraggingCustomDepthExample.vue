@@ -15,7 +15,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> xr - dragging"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -55,12 +55,12 @@ function onReady(__stage) {
   			let controllerGrip1, controllerGrip2;
   			let isDepthSupplied = false;
   
-  			let raycaster;
+  			let raycaster: any;
   
-  			const intersected = [];
+  			const intersected: any = [];
   			const tempMatrix = new THREE.Matrix4();
   
-  			let group;
+  			let group: any;
   
   			
   			animate();
@@ -325,7 +325,7 @@ function onReady(__stage) {
   
   			
   
-  			function onSelectStart( event ) {
+  			function onSelectStart( event: any ) {
   
   				const controller = event.target;
   
@@ -347,7 +347,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onSelectEnd( event ) {
+  			function onSelectEnd( event: any ) {
   
   				const controller = event.target;
   
@@ -363,7 +363,7 @@ function onReady(__stage) {
   
   			}
   
-  			function getIntersections( controller ) {
+  			function getIntersections( controller: any ) {
   
   				controller.updateMatrixWorld();
   
@@ -376,7 +376,7 @@ function onReady(__stage) {
   
   			}
   
-  			function intersectObjects( controller ) {
+  			function intersectObjects( controller: any ) {
   
   				// Do not highlight in mobile-ar
   
@@ -424,16 +424,16 @@ function onReady(__stage) {
   
   				}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( renderer.xr.hasDepthSensing() && ! isDepthSupplied ) {
-    					group.children.forEach( child => {
+    					group.children.forEach( (child: any) => {
     						child.material.uniforms.depthColor.value = renderer.xr.getDepthTexture();
     						child.material.uniforms.depthWidth.value = 1680;
     						child.material.uniforms.depthHeight.value = 1760;
     						isDepthSupplied = true;
     					} );
     				} else if ( ! renderer.xr.hasDepthSensing() && isDepthSupplied ) {
-    					group.children.forEach( child => {
+    					group.children.forEach( (child: any) => {
     						child.material.uniforms.depthWidth.value = 0;
     						child.material.uniforms.depthHeight.value = 0;
     						isDepthSupplied = false;

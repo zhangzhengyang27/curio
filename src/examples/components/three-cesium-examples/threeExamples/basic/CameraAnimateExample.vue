@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { GUI } from 'lil-gui'
@@ -25,7 +25,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -42,7 +42,7 @@ function onReady(ctx) {
   
   new GLTFLoader().load(props.example?.globals?.FILE_HOST + 'models/glb/daodan.glb', gltf => {
   
-    gltf.scene.traverse(child => {
+    gltf.scene.traverse((child: any) => {
   
       if (child.isMesh) {
   
@@ -58,7 +58,7 @@ function onReady(ctx) {
   
   gui = new GUI()
   
-  let shakeAnimation;
+  let shakeAnimation: any = null
   
   const t = { type: 'camera' }
   
@@ -108,7 +108,7 @@ function onReady(ctx) {
       const jumpDuration = 0.5;
       const jump = () => {
         // 同时为相机位置和目标点添加跳跃动画
-        [c, t].forEach(obj => {
+        [c, t].forEach((obj: any) => {
           gsap.to(obj, {
             y: obj.y + jumpHeight,
             duration: jumpDuration,

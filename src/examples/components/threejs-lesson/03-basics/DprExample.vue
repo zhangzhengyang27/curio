@@ -7,15 +7,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
 const devicePixelRatio = window.devicePixelRatio
 
-let cubes = []
+let cubes: any[] = []
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const geometry = new THREE.BoxGeometry()
   const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 })
 

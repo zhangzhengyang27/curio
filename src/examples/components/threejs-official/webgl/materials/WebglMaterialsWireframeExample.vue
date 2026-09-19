@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -56,7 +56,7 @@ const fragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -72,7 +72,7 @@ function onReady(__stage) {
   				thickness: 1
   			};
   
-  			let mesh2;
+  			let mesh2: any;
   
   			
   
@@ -156,7 +156,7 @@ function onReady(__stage) {
   			
   
   
-  			function setupAttributes( geometry ) {
+  			function setupAttributes( geometry: any ) {
   
   				const vectors = [
   					new THREE.Vector3( 1, 0, 0 ),

@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { TDT_TOKEN } from '@/examples/components/cesium-examples/cesiumConstants.js'
 
@@ -18,10 +18,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,
     baseLayerPicker: false,
@@ -42,7 +42,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -50,8 +50,8 @@ async function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.scene.sun.show = false
@@ -65,7 +65,7 @@ async function onReady(ctx) {
   viewer.scene.postProcessStages.fxaa.enabled = false
   viewer._cesiumWidget._creditContainer.style.display = 'none'
   
-  function addTdt(layer, max = 18) {
+  function addTdt(layer: any, max = 18) {
       viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({
           url: `https://t{s}.tianditu.gov.cn/${layer}_w/wmts?tk=${TDT_TOKEN}&service=wmts&request=GetTile&version=1.0.0&LAYER=${layer}&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles`,
           layer,
@@ -85,7 +85,7 @@ async function onReady(ctx) {
       const geojson = await (await fetch('/external-examples/3d-file-server/cesium-examples/data/china_geo_bound.json')).json()
       const geom = geojson.features[0].geometry
       const ring = geom.type === 'Polygon' ? geom.coordinates[0] : geom.coordinates[0][0]
-      const positions = ring.flatMap(([lng, lat]) => [lng, lat])
+      const positions = ring.flatMap(([lng, lat]: [number, number]) => [lng, lat])
   
       const line = viewer.entities.add({
           polyline: {

@@ -13,7 +13,7 @@
   </WebXRExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> vr - panorama with depth<br />\n\t\t\tCreated by <a href=\"https://orfleisher.com\" target=\"_blank\" rel=\"noopener\">@juniorxsound</a>. Panorama from <a href=\"https://krpano.com/examples/?depthmap\" target=\"_blank\" rel=\"noopener\">krpano</a>."
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -111,7 +111,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// If we are not presenting move the camera a little so the effect is visible
     				if ( renderer.xr.isPresenting === false ) {

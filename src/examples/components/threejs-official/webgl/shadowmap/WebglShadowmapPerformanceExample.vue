@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - shadowmap - models by <a href=\"https://mirada.com/\" target=\"_blank\" rel=\"noopener\">mirada</a> from <a href=\"http://www.ro.me\" target=\"_blank\" rel=\"noopener\">rome</a><br />\n\t\tmove camera with WASD / RF + mouse"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -58,9 +58,9 @@ function onReady(__stage) {
   
   			const NEAR = 5, FAR = 3000;
   
-  			let morph, mixer;
+  			let morph, mixer: any;
   
-  			const morphs = [], animGroups = [];
+  			const morphs: any = [], animGroups: any = [];
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -178,7 +178,7 @@ function onReady(__stage) {
   					} );
   
   					textGeo.computeBoundingBox();
-  					const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+  					const centerOffset = - 0.5 * ( (textGeo as any)!.boundingBox.max.x - (textGeo as any)!.boundingBox.min.x );
   
   					const textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
   
@@ -226,7 +226,7 @@ function onReady(__stage) {
   
   				// MORPHS
   
-  				function addMorph( mesh, clip, speed, duration, x, y, z, fudgeColor, massOptimization ) {
+  				function addMorph( mesh: any, clip: any, speed: any, duration: any, x: any, y: any, z: any, fudgeColor: any, massOptimization: any ) {
   
   					mesh = mesh.clone();
   					mesh.material = mesh.material.clone();
@@ -297,7 +297,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				stats.begin();
     {

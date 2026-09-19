@@ -13,7 +13,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, texture } from 'three/tsl';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Masking</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -87,7 +87,7 @@ function onReady(__stage) {
   				const sceneMask1 = pass( maskScene1, camera ).a;
   				const sceneMask2 = pass( maskScene2, camera ).a;
   
-  				let compose = base;
+  				let compose: any = base;
   				compose = sceneMask1.mix( compose, texture( texture1 ) );
   				compose = sceneMask2.mix( compose, texture( texture2 ) );
   
@@ -99,7 +99,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() * 0.001 + 6000;
     				box.position.x = Math.cos( time / 1.5 ) * 2;
     				box.position.y = Math.sin( time ) * 2;

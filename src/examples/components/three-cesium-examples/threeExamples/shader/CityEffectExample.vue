@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -35,7 +35,7 @@ function onReady(ctx) {
   
   scene.background = textureCube;
   
-  const renderList = []
+  const renderList: any[] = []
   
   const light = new THREE.AmbientLight(0xadadad)
   
@@ -52,7 +52,7 @@ function onReady(ctx) {
    * shader中会存在#include <begin_vertex>等语句，这些事three定义的glsl，具体脚本内容查看three源码中renderer/shaders/shaderChunk下对应脚本文件
    * 而修改shader就是在对应的脚本语句后修改脚本或增加语句
    */
-  const applyGrowShader = (shader) => {
+  const applyGrowShader = (shader: any) => {
       shader.uniforms.uProgress = { value: 0 }
       shader.vertexShader = `
       uniform float uProgress;
@@ -65,12 +65,12 @@ function onReady(ctx) {
         transformed.z = position.z * min(uProgress, 1.0);
       `
       )
-      renderList.push((progress) => {
+      renderList.push((progress: any) => {
           shader.uniforms.uProgress.value = progress
       })
   }
   // 建筑表面流动上升效果
-  const applyRiseShader = (shader) => {
+  const applyRiseShader = (shader: any) => {
       shader.uniforms.uRiseTime = { value: 0 }
       shader.uniforms.uRiseColor = { value: new THREE.Color('#87CEEB') }
   
@@ -116,13 +116,13 @@ function onReady(ctx) {
         gl_FragColor = gl_FragColor + vec4(riseLine(), 1.0);
       `
       )
-      renderList.push((time) => {
+      renderList.push((time: any) => {
           shader.uniforms.uRiseTime.value = time * 30.0
       })
   }
   
   // 扩散波效果
-  const applySpreadShader = (shader) => {
+  const applySpreadShader = (shader: any) => {
       shader.uniforms.uSpreadTime = { value: 0 }
       shader.uniforms.uSpreadColor = { value: new THREE.Color('#9932CC') }
   
@@ -165,12 +165,12 @@ function onReady(ctx) {
         gl_FragColor = gl_FragColor + vec4(spread(), 1.0);
       `
       )
-      renderList.push((time) => {
+      renderList.push((time: any) => {
           shader.uniforms.uSpreadTime.value = time * 200.0
       })
   }
   // 扫光
-  const applySweepShader = (shader) => {
+  const applySweepShader = (shader: any) => {
       shader.uniforms.uSweepTime = { value: 0 }
       shader.uniforms.uSweepColor = { value: new THREE.Color('#00FFFF') }
   
@@ -212,13 +212,13 @@ function onReady(ctx) {
         gl_FragColor = gl_FragColor + vec4(sweep(), 1.0);
       `
       )
-      renderList.push((time) => {
+      renderList.push((time: any) => {
           shader.uniforms.uSweepTime.value = time * 160.0
       })
   }
   
   const modelHandlerMap = {
-      CITY_UNTRIANGULATED: (model, group) => {
+      CITY_UNTRIANGULATED: (model: any, group: any) => {
           // 城市建筑
           const { geometry, position, material } = model
   
@@ -231,7 +231,7 @@ function onReady(ctx) {
           group.add(lineBox)
   
           // 在原先材质效果的基础上修改shader
-          material.onBeforeCompile = (shader) => {
+          material.onBeforeCompile = (shader: any) => {
               material.color = new THREE.Color('#0e233d')
               material.transparent = true
               material.opacity = 0.9
@@ -245,14 +245,14 @@ function onReady(ctx) {
               applyGrowShader(shader)
           }
       },
-      LANDMASS: (model) => {
+      LANDMASS: (model: any) => {
           // 地面
           const material = model.material
           material.color = new THREE.Color('#040912')
           material.transparent = true
           material.opacity = 0.8
       },
-      ROADS: (model) => {
+      ROADS: (model: any) => {
           // 道路
           const material = model.material
           material.color = new THREE.Color('#292e4c')
@@ -267,7 +267,7 @@ function onReady(ctx) {
   
           const clonedData = item.clone()
   
-          modelHandlerMap[clonedData.name]?.(clonedData, group)
+          ;(modelHandlerMap as any)[clonedData.name]?.(clonedData, group)
   
           group.add(clonedData)
   

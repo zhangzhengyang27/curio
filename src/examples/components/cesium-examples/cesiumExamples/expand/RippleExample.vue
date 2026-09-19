@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 
@@ -17,10 +17,10 @@ const props = defineProps({
   }
 })
 
-let Cesium = null
-let viewer = null
+let Cesium: any = null
+let viewer: any = null
 
-function viewerOptions(Cesium) {
+function viewerOptions(Cesium: any) {
   return {
     animation: false,//是否创建动画小器件，左下角仪表    
     baseLayerPicker: false,//是否显示图层选择器，右上角图层选择按钮
@@ -41,7 +41,7 @@ function viewerOptions(Cesium) {
 }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -49,8 +49,8 @@ function onReady(ctx) {
   const HOST = props.example?.globals?.HOST || "/external-examples/three-cesium-examples/"
   const GLOBAL_CONFIG = {
     getLayerUrl: () => 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
-    getFileUrl: (url) => FILE_HOST + url,
-    ElMessage: (msg) => console.log('[ElMessage]', msg)
+    getFileUrl: (url: string) => FILE_HOST + url,
+    ElMessage: (msg: any) => console.log('[ElMessage]', msg)
   }
 
   viewer.camera.setView({
@@ -65,7 +65,7 @@ function onReady(ctx) {
    * @param {Number} options.count 波浪数量
    * @param {Number} options.gradient 渐变曲率
    */
-  function CircleWaveMaterialProperty(options) {
+  function CircleWaveMaterialProperty(this: any, options: any) {
       this._definitionChanged = new Cesium.Event();
       this.color = Cesium.defaultValue(options.color && new Cesium.Color.fromCssColorString(options.color), Cesium.Color.RED);
       this.duration = Cesium.defaultValue(options.duration, 1000);
@@ -98,9 +98,9 @@ function onReady(ctx) {
   CircleWaveMaterialProperty.prototype.getType = function () {
       return Cesium.Material.CircleWaveMaterialType;
   };
-  CircleWaveMaterialProperty.prototype.getValue = function (time, result) {
+  CircleWaveMaterialProperty.prototype.getValue = function (time: any, result: any) {
       if (!Cesium.defined(result)) {
-          result = {};
+          result = {} as any;
       }
       result.color = Cesium.Property.getValueOrClonedDefault(this.color, time, Cesium.Color.WHITE, result.color);
       result.time = ((new Date().getTime() - this.time) % this.duration) / this.duration;
@@ -108,10 +108,10 @@ function onReady(ctx) {
       result.gradient = 1 + 10 * (1 - this.gradient);
       return result;
   };
-  CircleWaveMaterialProperty.prototype.equals = function (other) {
+  CircleWaveMaterialProperty.prototype.equals = function (other: any) {
       const reData =
           this === other ||
-          (other instanceof CircleWaveMaterialProperty
+          (other instanceof (CircleWaveMaterialProperty as any)
               && Cesium.Property.equals(this.color, other.color)
               && Cesium.Property.equals(this.duration, other.duration)
               && Cesium.Property.equals(this.count, other.count)
@@ -176,7 +176,7 @@ function onReady(ctx) {
               semiMinorAxis: 1000,
               semiMajorAxis: 1000,
               height: 10,
-              material: new CircleWaveMaterialProperty({
+              material: new (CircleWaveMaterialProperty as any)({
                   color: '#FFCB33',
                   duration: 3000,
                   gradient: 0,

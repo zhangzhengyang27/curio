@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,7 +27,7 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const app = gContainer.value.querySelector('#app')
+  const app = gContainer.value!.querySelector('#app')
   await loadScript("/graphics/assets/external/spritejs.min.js");
   await loadScript("/graphics/assets/external/index.js");
   {
@@ -84,7 +84,7 @@ async function initGraphicsExample() {
     
         const axisLeft = new Axis({
           orient: "left",
-          formatter: (val) => {
+          formatter: (val: any) => {
             return `${val} ml`
           },
         })
@@ -94,7 +94,7 @@ async function initGraphicsExample() {
     
         const axisRight = new Axis({
           orient: "right",
-          formatter: (val) => {
+          formatter: (val: any) => {
             return `${val} °C`
           },
         })
@@ -105,7 +105,7 @@ async function initGraphicsExample() {
         const axisBottom = new Axis().style("scale", true).style("grid", false);
     
         const legend = new Legend({ align: ["center", "bottom"] })
-          .style("point", (i, j, k) => {
+          .style("point", (i: any, j: any, k: any) => {
             return { borderRadius: 10, bgcolor: k === 0 ? "#47A1FF" : "#6CD3FF" }
           })
           .style("text", { fontSize: 12 });

@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { texture, uniform, vec3 } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>SSS</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -44,7 +44,7 @@ function onReady(__stage) {
   
   			let container;
   
-  			let model;
+  			let model: any;
   
   			
   
@@ -133,11 +133,11 @@ function onReady(__stage) {
   
   			}
   
-  			function initGUI( material ) {
+  			function initGUI( material: any ) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				const ThicknessControls = function () {
+  				const ThicknessControls = function ( this: any ) {
   
   					this.distortion = material.thicknessDistortionNode.value;
   					this.ambient = material.thicknessAmbientNode.value;
@@ -147,7 +147,7 @@ function onReady(__stage) {
   
   				};
   
-  				const thicknessControls = new ThicknessControls();
+  				const thicknessControls = new (ThicknessControls as any)();
   
   				gui.add( thicknessControls, 'distortion', 0.01, 1, 0.01 ).onChange( function () {
   
@@ -185,7 +185,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( model ) model.rotation.y = performance.now() / 5000;
   })
   

@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Instance Path</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -88,7 +88,7 @@ function onReady(__stage) {
   				for ( let i = 0; i < count; i ++ ) {
   
   					const t = i / count;
-  					path.getPointAt( t, v );
+  					path.getPointAt( t, (v as any) );
   
   					v.x += ( 0.5 - Math.random() );
   					v.y += ( 0.5 - Math.random() );
@@ -116,18 +116,18 @@ function onReady(__stage) {
   				const instanceSeed = instancedBufferAttribute( seedAttribute );
   				const instanceTime = instancedBufferAttribute( timeAttribute );
   
-  				const localTime = instanceTime.add( time );
+  				const localTime = (instanceTime as any).add( time );
   				const modTime = mod( time.mul( 0.4 ), 1 );
   			
   				const s0 = sin( localTime.add( instanceSeed ) ).mul( 0.25 );
   			
-  				const dist = abs( instanceTime.sub( modTime ) ).toConst(); // modTime and instanceTime are in the range [0,1]
+  				const dist = abs( (instanceTime as any).sub( modTime ) ).toConst(); // modTime and instanceTime are in the range [0,1]
   				const wrapDist = select( dist.greaterThan( 0.5 ), dist.oneMinus(), dist ).toConst(); // the normalized distance should wrap around 0/1
   				const s1 = select( wrapDist.greaterThan( 0.1 ), float( 1 ), wrapDist.remap( 0, 0.1, 3, 1 ) ); // compute a scale in a range around the current interpolated value
   			
-  				const offset = vec3( instancePosition.x, instancePosition.y.add( s0 ), instancePosition.z ).toConst( 'offset' );
+  				const offset = vec3( (instancePosition as any).x, ((instancePosition as any).y as any).add( s0 ), (instancePosition as any).z ).toConst( 'offset' );
   				material.positionNode = add( positionLocal.mul( s1 ), offset );
-  				material.colorNode = instanceColor;
+  				(material as any).colorNode = instanceColor;
   			
   				//
   

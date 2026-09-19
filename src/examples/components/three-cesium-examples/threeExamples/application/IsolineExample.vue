@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -37,11 +37,11 @@ function onReady(ctx) {
   // next comment
   
   // a texture with isolines
-  var canvas = document.createElement('CANVAS');
+  var canvas = document.createElement('CANVAS') as HTMLCanvasElement;
   canvas.width = 16;
   canvas.height = 128;
-  
-  var context = canvas.getContext('2d');
+
+  var context = canvas.getContext('2d')!;
   context.fillStyle = 'royalblue';
   context.fillRect(0, 0, 16, 128);
   context.fillStyle = 'white';

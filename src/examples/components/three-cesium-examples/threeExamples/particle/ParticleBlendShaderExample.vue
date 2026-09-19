@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { GUI } from 'lil-gui'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -55,7 +55,7 @@ function onReady(ctx) {
   
   const setVelocities = {
   
-      '全随机': (i) => {
+      '全随机': (i: number) => {
   
           velocities[i * 3] += (Math.random() - 0.5) * parameters.maxVelocity / 1000
   
@@ -65,7 +65,7 @@ function onReady(ctx) {
   
       },
   
-      '随机向上': (i) => {
+      '随机向上': (i: number) => {
   
           velocities[i * 3] += (Math.random() - 0.5) * parameters.maxVelocity / 1000
   
@@ -75,7 +75,7 @@ function onReady(ctx) {
   
       },
   
-      '随机向下': (i) => {
+      '随机向下': (i: number) => {
   
           velocities[i * 3] += (Math.random() - 0.5) * parameters.maxVelocity / 1000
   
@@ -85,7 +85,7 @@ function onReady(ctx) {
   
       },
   
-      '直线匀速向上': (i) => {
+      '直线匀速向上': (i: number) => {
   
           velocities[i * 3] = 0
   
@@ -95,7 +95,7 @@ function onReady(ctx) {
   
       },
   
-      '直线匀速向下': (i) => {
+      '直线匀速向下': (i: number) => {
   
           velocities[i * 3] = 0
   
@@ -105,11 +105,11 @@ function onReady(ctx) {
   
       }
   
-  }[parameters.sportType]
+  }[parameters.sportType as '全随机']
   
   function getPosition() {
   
-      let x, y, z
+      let x: any, y: any, z: any
   
       do {
   
@@ -131,7 +131,7 @@ function onReady(ctx) {
   
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   
-  geometry.geometryRender = () => {
+  ;(geometry as any).geometryRender = () => {
   
       for (let i = 0; i < parameters.particlesSum; i++) {
   
@@ -286,7 +286,7 @@ function onReady(ctx) {
   
           } `,
   
-      fragmentShader: Object.keys(uniforms_all).map(i => 'uniform ' + uniforms[i].unit + ' ' + i + ';').join('\n') + `
+      fragmentShader: Object.keys(uniforms_all).map(i => 'uniform ' + (uniforms as any)[i].unit + ' ' + i + ';').join('\n') + `
   
           void main() {
   
@@ -314,7 +314,7 @@ function onReady(ctx) {
   scene.add(mesh)
   
   ctx.addUpdateCallback(() => {
-    mesh.geometry.geometryRender?.()
+    ;(mesh.geometry as any).geometryRender?.()
         uniforms.iTime.value += uniforms.speed.value
   })
   
@@ -327,7 +327,7 @@ function onReady(ctx) {
   gui.add(uniforms.mixRatio, 'value', 0, 1).name('mixRatio')
 
   const mixColorDebug = { value: '#ffffff' }
-  gui.addColor(mixColorDebug, 'value').name('mixColor').onChange((v) => {
+  gui.addColor(mixColorDebug, 'value').name('mixColor').onChange((v: any) => {
       uniforms.mixColor.value.set(v)
   })
 

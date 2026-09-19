@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "\"W\" translate | \"E\" rotate | \"R\" scale | \"+/-\" adjust size<br />\n\t\t\t\"Q\" toggle world/local space |  \"Shift\" hold to snap to grid<br />\n\t\t\t\"X\" toggle X | \"Y\" toggle Y | \"Z\" toggle Z | \"Spacebar\" toggle enabled<br />\n\t\t\t\"Esc\" reset current transform<br />\n\t\t\t\"C\" toggle camera | \"V\" random zoom"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   const camera = __stage.camera
@@ -40,7 +40,7 @@ function onReady(__stage) {
   
   
   
-  			let cameraPersp, cameraOrtho, currentCamera;
+  			let cameraPersp: any, cameraOrtho: any, currentCamera: any;
   			let control, orbit;
   
   			
@@ -208,6 +208,27 @@ function onReady(__stage) {
   
   			
   
+  			function onWindowResize() {
+
+  				const width = ( __stage.container?.clientWidth || window.innerWidth );
+  				const height = ( __stage.container?.clientHeight || window.innerHeight );
+  				const resizeAspect = width / height;
+
+  				cameraPersp.aspect = resizeAspect;
+  				cameraPersp.updateProjectionMatrix();
+
+  				cameraOrtho.left = - frustumSize * resizeAspect;
+  				cameraOrtho.right = frustumSize * resizeAspect;
+  				cameraOrtho.top = frustumSize;
+  				cameraOrtho.bottom = - frustumSize;
+  				cameraOrtho.updateProjectionMatrix();
+
+  				renderer.setSize( width, height );
+
+  				render();
+
+  			}
+
   			function render() {
   
   				renderer.render( scene, currentCamera );

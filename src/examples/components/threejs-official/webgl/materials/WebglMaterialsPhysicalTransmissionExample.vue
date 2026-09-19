@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - Transmission"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -141,7 +141,7 @@ function onReady(__stage) {
   				gui.addColor( params, 'color' )
   					.onChange( function () {
   
-  						material.color.set( params.color );
+  						(material as any).color.set( params.color );
   						render();
   
   					} );
@@ -252,8 +252,8 @@ function onReady(__stage) {
   				canvas.height = 2;
   
   				const context = canvas.getContext( '2d' );
-  				context.fillStyle = 'white';
-  				context.fillRect( 0, 1, 2, 1 );
+  				context!.fillStyle = 'white';
+  				context!.fillRect( 0, 1, 2, 1 );
   
   				return canvas;
   

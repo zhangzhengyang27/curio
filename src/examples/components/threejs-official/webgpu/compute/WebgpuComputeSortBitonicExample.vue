@@ -12,10 +12,10 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { storage, If, vec3, not, uniform, uv, uint, Fn, vec2, abs, int, uvec2, floor, instanceIndex } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t<br /> This example demonstrates a bitonic sort running step by step in a compute shader.\n\t\t\t<br /> The left canvas swaps values within workgroup local arrays. The right swaps values within storage buffers.\n\t\t\t<br /> Reference implementation by <a href=\"https://poniesandlight.co.uk/reflect/bitonic_merge_sort/\">Tim Gfrerer</a>\n\t\t\t<br />\n\t\t\t<div id=\"local_swap\" class=\"swap_area\" style=\"left: 0;\">"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -120,7 +120,7 @@ function onReady(__stage) {
   
   			// Display utilities
   
-  			const getElementIndex = Fn( ( [ uvNode, gridWidth, gridHeight ] ) => {
+  		const getElementIndex = Fn( ( [ uvNode, gridWidth, gridHeight ]: any ) => {
   
   				const newUV = uvNode.mul( vec2( gridWidth, gridHeight ) );
   				const pixel = uvec2( uint( floor( newUV.x ) ), uint( floor( newUV.y ) ) );
@@ -135,7 +135,7 @@ function onReady(__stage) {
   				return: 'uint'
   			} );
   
-  			const getColor = Fn( ( [ colorChanger, gridWidth, gridHeight ] ) => {
+  		const getColor = Fn( ( [ colorChanger, gridWidth, gridHeight ]: any ) => {
   
   				const subtracter = colorChanger.div( gridWidth.mul( gridHeight ) );
   				return vec3( subtracter.oneMinus() ).toVar();
@@ -147,7 +147,7 @@ function onReady(__stage) {
   				return: 'vec3'
   			} );
   
-  			const randomizeDataArray = ( array ) => {
+  			const randomizeDataArray = ( array: any ) => {
   
   				let currentIndex = array.length;
   				while ( currentIndex !== 0 ) {
@@ -163,7 +163,7 @@ function onReady(__stage) {
   
   			};
   
-  			const windowResizeCallback = ( renderer, scene, camera ) => {
+  			const windowResizeCallback = ( renderer: any, scene: any, camera: any ) => {
   
   
   				const aspect = ( (__stage.container?.clientWidth || window.innerWidth) / 2 ) / (__stage.container?.clientHeight || window.innerHeight);
@@ -175,7 +175,7 @@ function onReady(__stage) {
   
   			};
   
-  			const constructInnerHTML = ( isGlobal, colorsArr ) => {
+  			const constructInnerHTML = ( isGlobal: any, colorsArr: any ) => {
   
   				return `
   
@@ -189,7 +189,7 @@ function onReady(__stage) {
   
   			};
   
-  			const createDisplayMesh = ( elementsStorage, algoStorage = null, blockHeightStorage = null ) => {
+  		const createDisplayMesh = ( elementsStorage: any, algoStorage: any = null, blockHeightStorage: any = null ) => {
   
   				const material = new THREE.MeshBasicNodeMaterial( { color: 0x00ff00 } );
   
@@ -197,15 +197,15 @@ function onReady(__stage) {
   
   					const { gridWidth, gridHeight, highlight } = effectController;
   
-  					const elementIndex = getElementIndex( uv(), gridWidth, gridHeight );
-  					const color = getColor( elementsStorage.element( elementIndex ), gridWidth, gridHeight ).toVar();
+  					const elementIndex = (getElementIndex as any)( (uv as any)(), gridWidth, gridHeight );
+  					const color = (getColor as any)( (elementsStorage.element as any)( elementIndex ), gridWidth, gridHeight ).toVar();
   
   					if ( algoStorage !== null && blockHeightStorage !== null ) {
   
-  						If( highlight.equal( 1 ).and( not( algoStorage.element( 0 ).equal( StepType.NONE ) ) ), () => {
+  						If( highlight.equal( 1 ).and( not( (algoStorage as any).element( 0 ).equal( StepType.NONE ) ) ), () => {
   
-  							const boolCheck = int( elementIndex.mod( blockHeightStorage.element( 0 ) ).lessThan( blockHeightStorage.element( 0 ).div( 2 ) ) );
-  							color.z.assign( algoStorage.element( 0 ).lessThanEqual( StepType.DISPERSE_LOCAL ) );
+  							const boolCheck = int( elementIndex.mod( (blockHeightStorage as any).element( 0 ) ).lessThan( (blockHeightStorage as any).element( 0 ).div( 2 ) ) );
+  							color.z.assign( (algoStorage as any).element( 0 ).lessThanEqual( StepType.DISPERSE_LOCAL ) );
   							color.x.mulAssign( boolCheck );
   							color.y.mulAssign( abs( boolCheck.sub( 1 ) ) );
   
@@ -223,7 +223,7 @@ function onReady(__stage) {
   
   			};
   
-  			const createDisplayMesh2 = ( elementsStorage, infoStorage ) => {
+  			const createDisplayMesh2 = ( elementsStorage: any, infoStorage: any ) => {
   
   				const material = new THREE.MeshBasicNodeMaterial( { color: 0x00ff00 } );
   
@@ -231,8 +231,8 @@ function onReady(__stage) {
   
   					const { gridWidth, gridHeight, highlight } = effectController;
   
-  					const elementIndex = getElementIndex( uv(), gridWidth, gridHeight );
-  					const color = getColor( elementsStorage.element( elementIndex ), gridWidth, gridHeight ).toVar();
+  					const elementIndex = (getElementIndex as any)( (uv as any)(), gridWidth, gridHeight );
+  					const color = (getColor as any)( (elementsStorage.element as any)( elementIndex ), gridWidth, gridHeight ).toVar();
   
   
   					If( highlight.equal( 1 ).and( not( infoStorage.element( 0 ).equal( StepType.SWAP_LOCAL ) ) ), () => {
@@ -255,7 +255,7 @@ function onReady(__stage) {
   
   			};
   			
-  			const setupDomElement = ( renderer ) => {
+  			const setupDomElement = ( renderer: any ) => {
   
   
   				renderer.domElement.style.position = 'absolute';
@@ -411,7 +411,7 @@ function onReady(__stage) {
   				const randomizedElementsStorage = storage( randomizedElementsBuffer, 'uint', size ).setPBO( true ).setName( 'RandomizedElements' );
   
   				// Swap the elements in local storage
-  				const globalCompareAndSwap = ( idxBefore, idxAfter ) => {
+  				const globalCompareAndSwap = ( idxBefore: any, idxAfter: any ) => {
   
   					// If the later element is less than the current element
   					If( currentElementsStorage.element( idxAfter ).lessThan( currentElementsStorage.element( idxBefore ) ), () => {

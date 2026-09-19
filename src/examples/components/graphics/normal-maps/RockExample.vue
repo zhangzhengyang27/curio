@@ -4,14 +4,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import {Renderer, Camera, Transform, Program, Geometry, Mesh, Orbit, Color, Texture, Vec3, Vec2} from '@/examples/jsm-compat/graphics/common/lib/ogl/index.mjs'
 import {Phong, Material, vertex as v, fragment as f} from '@/examples/jsm-compat/graphics/common/lib/phong.js'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
@@ -186,7 +186,7 @@ async function initGraphicsExample() {
           }
         `;
     
-        const canvas = gContainer.value.querySelector('canvas');
+        const canvas = gContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new Renderer({
           canvas,
           width: 512,
@@ -214,7 +214,7 @@ async function initGraphicsExample() {
         });
         const matrial = new Material(new Color('#808080'));
     
-        function loadTexture(src) {
+        function loadTexture(src: any) {
           const texture = new Texture(gl);
           return new Promise((resolve) => {
             const img = new Image();
@@ -226,10 +226,10 @@ async function initGraphicsExample() {
           });
         }
     
-        function createTB(geometry) {
+        function createTB(geometry: any) {
           const {position, index, uv} = geometry.attributes;
           if(!uv) throw new Error('NO uv.');
-          function getTBNTriangle(p1, p2, p3, uv1, uv2, uv3) {
+          function getTBNTriangle(p1: any, p2: any, p3: any, uv1: any, uv2: any, uv3: any) {
             const edge1 = new Vec3().sub(p2, p1);
             const edge2 = new Vec3().sub(p3, p1);
             const deltaUV1 = new Vec2().sub(uv2, uv1);
@@ -321,7 +321,7 @@ async function initGraphicsExample() {
     
           const controls = new Orbit(camera);
           requestAnimationFrame(update);
-          function update(t) {
+          function update(t: any) {
             requestAnimationFrame(update);
             controls.update();
             program.uniforms.uTime.value = t * 0.001;

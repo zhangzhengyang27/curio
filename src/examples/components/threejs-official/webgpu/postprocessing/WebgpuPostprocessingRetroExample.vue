@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { pass, mix, mul, oneMinus, positionLocal, smoothstep, texture, time, rotateUV, Fn, uv, vec2, vec3, vec4, uniform, posterize, floor, float, sin, fract, dot, step, color, normalWorld, length, atan, replaceDefaultUV, screenSize } from 'three/tsl';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Retro</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -49,9 +49,9 @@ function onReady(__stage) {
   
   
   
-  			let renderPipeline;
-  			let environment;
-  			let currentModel;
+  			let renderPipeline: any;
+  			let environment: any;
+  			let currentModel: any;
   
   			init();
   
@@ -143,12 +143,12 @@ function onReady(__stage) {
   
   				// Model
   
-  				const models = {
+  				const models: Record<string, string> = {
   					'Coffee Mug': ASSET_HOST + 'models/gltf/coffeeMug.glb',
   					'Damaged Helmet': ASSET_HOST + 'models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',
   				};
   
-  				function loadModel( name ) {
+  				function loadModel( name: any ) {
   
   					function loadEnvironment() {
   
@@ -172,7 +172,7 @@ function onReady(__stage) {
   					if ( currentModel ) {
   
   						scene.remove( currentModel );
-  						currentModel.traverse( ( child ) => {
+  						currentModel.traverse( ( child: any ) => {
   
   							if ( child.isMesh ) {
   
@@ -331,7 +331,7 @@ function onReady(__stage) {
   
   				const retro = retroPass( scene, camera, { affineDistortion } );
   
-  				let retroPipeline = retro;
+  				let retroPipeline: any = retro;
   				retroPipeline = replaceDefaultUV( distortedUV, retroPipeline );
   				retroPipeline = colorBleeding( retroPipeline, bleeding.add( distortedDelta ) );
   				retroPipeline = bayerDither( retroPipeline, colorDepthSteps );
@@ -359,7 +359,7 @@ function onReady(__stage) {
   
   				gui.add( { model: 'Coffee Mug' }, 'model', Object.keys( models ) ).name( 'Model' ).onChange( loadModel );
   
-  				gui.add( { enabled: true }, 'enabled' ).onChange( v => {
+  				gui.add( { enabled: true }, 'enabled' ).onChange( (v: any) => {
   
   					renderPipeline.outputNode = v ? retroPipeline : defaultPass;
   					renderPipeline.needsUpdate = true;
@@ -386,7 +386,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     renderPipeline.render();
   })
   

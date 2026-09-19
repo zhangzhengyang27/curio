@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { toonOutlinePass } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Toon Material</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -45,8 +45,8 @@ function onReady(__stage) {
   
   			let container;
   
-  			let renderPipeline;
-  			let particleLight;
+  			let renderPipeline: any;
+  			let particleLight: any;
   
   			const loader = new FontLoader();
   			loader.load( ASSET_HOST + 'fonts/gentilis_regular.typeface.json', function ( font ) {
@@ -55,7 +55,7 @@ function onReady(__stage) {
   
   			} );
   
-  			function init( font ) {
+  			function init( font: any ) {
   
   				
   
@@ -128,7 +128,7 @@ function onReady(__stage) {
   
   				}
   
-  				function addLabel( name, location ) {
+  				function addLabel( name: any, location: any ) {
   
   					const textGeo = new TextGeometry( name, {
   
@@ -180,7 +180,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const timer = Date.now() * 0.00025;
     				particleLight.position.x = Math.sin( timer * 7 ) * 300;
     				particleLight.position.y = Math.cos( timer * 5 ) * 400;

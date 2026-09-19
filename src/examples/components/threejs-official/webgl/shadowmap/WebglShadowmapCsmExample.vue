@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - cascaded shadow maps<br>\n\t\t\tby <a href=\"https://github.com/strandedkitty/\" target=\"_blank\" rel=\"noopener\">StrandedKitty</a> (<a href=\"https://github.com/strandedkitty/three-csm\" target=\"_blank\" rel=\"noopener\">original repository</a>)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -45,7 +45,7 @@ function onReady(__stage) {
   
   
   
-  			let orthoCamera, csm, csmHelper;
+  			let orthoCamera: any, csm, csmHelper: any;
   
   			const params = {
   				orthographic: false,
@@ -113,7 +113,7 @@ function onReady(__stage) {
   				csm = new CSM( {
   					maxFar: params.far,
   					cascades: 4,
-  					mode: params.mode,
+  					mode: params.mode as any,
   					parent: scene,
   					shadowMapSize: 1024,
   					lightDirection: new THREE.Vector3( params.lightX, params.lightY, params.lightZ ).normalize(),
@@ -161,25 +161,25 @@ function onReady(__stage) {
   
   				gui = new GUI();
   
-  				gui.add( params, 'orthographic' ).onChange( function ( value ) {
+  				gui.add( params, 'orthographic' ).onChange( function ( value: any ) {
   
   					csm.camera = value ? orthoCamera : camera;
   					csm.updateFrustums();
   
   				} );
   
-  				gui.add( params, 'fade' ).onChange( function ( value ) {
+  				gui.add( params, 'fade' ).onChange( function ( value: any ) {
   
   					csm.fade = value;
   					csm.updateFrustums();
   
   				} );
   
-  				gui.add( params, 'shadows' ).onChange( function ( value ) {
+  				gui.add( params, 'shadows' ).onChange( function ( value: any ) {
   
   					renderer.shadowMap.enabled = value;
   
-  					scene.traverse( function ( child ) {
+  					scene.traverse( function ( child: any ) {
   
   						if ( child.material ) {
   
@@ -191,45 +191,45 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'far', 1, 5000 ).step( 1 ).name( 'shadow far' ).onChange( function ( value ) {
+  				gui.add( params, 'far', 1, 5000 ).step( 1 ).name( 'shadow far' ).onChange( function ( value: any ) {
   
   					csm.maxFar = value;
   					csm.updateFrustums();
   
   				} );
   
-  				gui.add( params, 'mode', [ 'uniform', 'logarithmic', 'practical' ] ).name( 'frustum split mode' ).onChange( function ( value ) {
+  				gui.add( params, 'mode', [ 'uniform', 'logarithmic', 'practical' ] ).name( 'frustum split mode' ).onChange( function ( value: any ) {
   
   					csm.mode = value;
   					csm.updateFrustums();
   
   				} );
   
-  				gui.add( params, 'lightX', - 1, 1 ).name( 'light direction x' ).onChange( function ( value ) {
+  				gui.add( params, 'lightX', - 1, 1 ).name( 'light direction x' ).onChange( function ( value: any ) {
   
   					csm.lightDirection.x = value;
   
   				} );
   
-  				gui.add( params, 'lightY', - 1, 1 ).name( 'light direction y' ).onChange( function ( value ) {
+  				gui.add( params, 'lightY', - 1, 1 ).name( 'light direction y' ).onChange( function ( value: any ) {
   
   					csm.lightDirection.y = value;
   
   				} );
   
-  				gui.add( params, 'lightZ', - 1, 1 ).name( 'light direction z' ).onChange( function ( value ) {
+  				gui.add( params, 'lightZ', - 1, 1 ).name( 'light direction z' ).onChange( function ( value: any ) {
   
   					csm.lightDirection.z = value;
   
   				} );
   
-  				gui.add( params, 'margin', 0, 200 ).name( 'light margin' ).onChange( function ( value ) {
+  				gui.add( params, 'margin', 0, 200 ).name( 'light margin' ).onChange( function ( value: any ) {
   
   					csm.lightMargin = value;
   
   				} );
   
-  				gui.add( params, 'lightNear', 1, 10000 ).name( 'light near' ).onChange( function ( value ) {
+  				gui.add( params, 'lightNear', 1, 10000 ).name( 'light near' ).onChange( function ( value: any ) {
   
   					for ( let i = 0; i < csm.lights.length; i ++ ) {
   
@@ -240,7 +240,7 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.add( params, 'lightFar', 1, 10000 ).name( 'light far' ).onChange( function ( value ) {
+  				gui.add( params, 'lightFar', 1, 10000 ).name( 'light far' ).onChange( function ( value: any ) {
   
   					for ( let i = 0; i < csm.lights.length; i ++ ) {
   
@@ -294,7 +294,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     camera.updateMatrixWorld();
     				csm.update();
     				if ( params.orthographic ) {

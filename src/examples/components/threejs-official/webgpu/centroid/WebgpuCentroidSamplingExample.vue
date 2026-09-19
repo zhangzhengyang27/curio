@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { varying, uv, texture, Fn } from 'three/tsl';
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   const renderer = __stage.renderer
@@ -29,8 +29,8 @@ function onReady(__stage) {
   
   
   
-  			let rendererAntialiasingEnabled;
-  			let rendererAntialiasingDisabled;
+  			let rendererAntialiasingEnabled: any;
+  			let rendererAntialiasingDisabled: any;
   
   
   			let gui;
@@ -43,7 +43,7 @@ function onReady(__stage) {
   			atlasCanvas.width = 16;
   			atlasCanvas.height = 16;
   
-  			const ctx = atlasCanvas.getContext( '2d' );
+  			const ctx = atlasCanvas.getContext( '2d' )!;
   			ctx.fillStyle = 'red';
   			ctx.fillRect( 0, 0, 8, 8 );
   
@@ -88,7 +88,7 @@ function onReady(__stage) {
   
   				
   
-  				const makeFaceGeometry = ( uvs ) => {
+  				const makeFaceGeometry = ( uvs: any ) => {
   
   					const geometry = new THREE.BufferGeometry();
   					const positions = [ - 1, - 1, 0, 1, - 1, 0, 1, 1, 0, - 1, 1, 0 ];
@@ -112,7 +112,7 @@ function onReady(__stage) {
   				const material = new THREE.MeshBasicNodeMaterial();
   				const testUV = varying( uv(), 'testUV' );
   
-  				const createShader = ( type, sampling ) => {
+  				const createShader = ( type: any, sampling: any ) => {
   
   					return Fn( () => {
   
@@ -151,7 +151,7 @@ function onReady(__stage) {
   
   				material.colorNode = withoutInterpolationShader();
   
-  				const faceMeshes = [];
+  				const faceMeshes: any = [];
   
   				for ( let x = - 5; x < 5; x ++ ) {
   
@@ -184,16 +184,27 @@ function onReady(__stage) {
   					forceWebGL: forceWebGL
   				} );
   
-  				document.body.querySelector( '#antialiasing-enabled' ).appendChild( rendererAntialiasingEnabled.domElement );
+  				document.body.querySelector( '#antialiasing-enabled' )!.appendChild( rendererAntialiasingEnabled.domElement );
   				rendererAntialiasingEnabled.setPixelRatio( window.devicePixelRatio );
   				rendererAntialiasingEnabled.setSize( (__stage.container?.clientWidth || window.innerWidth) / 2, (__stage.container?.clientHeight || window.innerHeight) );
   				rendererAntialiasingEnabled.setAnimationLoop( animateAliased );
   				rendererAntialiasingEnabled.inspector = new Inspector();
   
-  				document.body.querySelector( '#antialiasing-disabled' ).appendChild( rendererAntialiasingDisabled.domElement );
-  				document.body.querySelector( '#antialiasing-disabled' ).appendChild( rendererAntialiasingDisabled.domElement );
+  				document.body.querySelector( '#antialiasing-disabled' )!.appendChild( rendererAntialiasingDisabled.domElement );
+  				document.body.querySelector( '#antialiasing-disabled' )!.appendChild( rendererAntialiasingDisabled.domElement );
   
   				onWindowResize();
+
+  		function onWindowResize() {
+  			const halfWidth = ( __stage.container?.clientWidth || window.innerWidth ) / 2;
+  			rendererAntialiasingDisabled.setSize( halfWidth, ( __stage.container?.clientHeight || window.innerHeight ) );
+  			rendererAntialiasingEnabled.setSize( halfWidth, ( __stage.container?.clientHeight || window.innerHeight ) );
+  			const aspect = ( halfWidth ) / ( __stage.container?.clientHeight || window.innerHeight );
+
+  			camera.aspect = aspect;
+  			camera.updateProjectionMatrix();
+
+  		}
   
   				
   
@@ -206,7 +217,7 @@ function onReady(__stage) {
   					'flat either'
   				] ).onChange( () => {
   
-  					const interpolationShaderLib = {
+  					const interpolationShaderLib: any = {
   						[ THREE.InterpolationSamplingMode.NORMAL ]: withoutInterpolationShader,
   						[ THREE.InterpolationSamplingMode.CENTROID ]: withInterpolationShader,
   						[ THREE.InterpolationSamplingMode.SAMPLE ]: withSampleShader,

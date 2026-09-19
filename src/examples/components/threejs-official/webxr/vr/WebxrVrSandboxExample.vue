@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebXRExampleScene from '@/examples/components/WebXRExampleScene.vue'
 import * as THREE from 'three';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
@@ -30,7 +30,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -200,14 +200,14 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() * 0.0002;
     				const torus = scene.getObjectByName( 'torus' );
     				torus.rotation.x = time * 0.4;
     				torus.rotation.y = time;
     				stats.update();
     				// Canvas elements doesn't trigger DOM updates, so we have to update the texture
-    				statsMesh.material.map.update();
+    				( statsMesh.material.map as any ).update();
   })
   
   		

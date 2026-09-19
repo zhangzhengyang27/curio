@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -23,6 +23,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+let gui: any = null;
 
 const props = defineProps({
   example: {
@@ -32,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Rhino 3DM loader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -41,7 +42,6 @@ function onReady(__stage) {
   
 
   
-  			let gui;
   
   			
   
@@ -100,18 +100,18 @@ function onReady(__stage) {
   
   			}
   
-  			function initGUI( layers ) {
+  			function initGUI( layers: any ) {
   
   				gui = new GUI( { title: 'layers' } );
   
   				for ( let i = 0; i < layers.length; i ++ ) {
   
   					const layer = layers[ i ];
-  					gui.add( layer, 'visible' ).name( layer.name ).onChange( function ( val ) {
+  					gui.add( layer, 'visible' ).name( layer.name ).onChange( function ( val: any ) {
   
-  						const name = this.object.name;
+  						const name = layer.name;
   
-  						scene.traverse( function ( child ) {
+  						scene.traverse( function ( child: any ) {
   
   							if ( child.userData.hasOwnProperty( 'attributes' ) ) {
   

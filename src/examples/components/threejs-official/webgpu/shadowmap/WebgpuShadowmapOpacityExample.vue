@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, mix } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Opacity Shadow Map</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -98,14 +98,14 @@ async function onReady(__stage) {
   				dragon.position.set( - 1.5, - 0.8, 1 );
   
   				const dragon2 = dragon.clone();
-  				dragon2.material = dragon.material.clone();
-  				dragon2.material.attenuationColor = new THREE.Color( 0xff0000 );
+  				dragon2.material = (dragon.material as any).clone();
+  				(dragon2.material as any).attenuationColor = new THREE.Color( 0xff0000 );
   				dragon2.position.x += 4;
   				gltf.scene.add( dragon2 );
   
   				// shadow node
   
-  				const customShadow = Fn( ( [ color, opacity = 1 ] ) => {
+  				const customShadow = Fn( ( [ color, opacity = 1 ]: any ) => {
   
   					//return vec4( color, opacity ); // opacity by blending
   					return mix( 1, color, opacity ); // opacity by color
@@ -119,8 +119,8 @@ async function onReady(__stage) {
   				dragon.castShadow = dragon2.castShadow = true;
   				dragon.receiveShadow = dragon2.receiveShadow = true;
   
-  				dragon.material.castShadowNode = customShadow( dragon.material.attenuationColor );
-  				dragon2.material.castShadowNode = customShadow( dragon2.material.attenuationColor );
+  				(dragon.material as any).castShadowNode = (customShadow as any)( (dragon.material as any).attenuationColor );
+  				(dragon2.material as any).castShadowNode = (customShadow as any)( (dragon2.material as any).attenuationColor );
   
   				//
   

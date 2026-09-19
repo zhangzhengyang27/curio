@@ -7,10 +7,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GUI } from 'lil-gui'
@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -66,10 +66,10 @@ function onReady(ctx) {
   }
   
   let totalAngle = 0 // 已卷绕的总角度(弧度)
-  let stripMesh = null
+  let stripMesh: any = null
   
   // 构建钢带几何体：水平进料段 + 螺旋卷绕段
-  function buildStripGeometry(angle, coreRadius, stripThickness, width, feedLen) {
+  function buildStripGeometry(angle: any, coreRadius: any, stripThickness: any, width: any, feedLen: any) {
       const segsPerRad = 10
       const coilSegs = Math.max(Math.floor(angle * segsPerRad), 1)
       const feedSegs = 20
@@ -77,10 +77,10 @@ function onReady(ctx) {
       const halfW = width / 2
       const halfT = stripThickness / 2
   
-      const positions = []
-      const indices = []
+      const positions: any[] = []
+      const indices: any[] = []
   
-      const radiusAt = (a) => coreRadius + (a / (Math.PI * 2)) * stripThickness
+      const radiusAt = (a: any) => coreRadius + (a / (Math.PI * 2)) * stripThickness
   
       for (let i = 0; i <= totalSegs; i++) {
           let cx, cy, nx, ny
@@ -174,13 +174,13 @@ function onReady(ctx) {
   // GUI
   gui = new GUI()
   gui.add(params, 'speed', 0.1, 5).name('速度')
-  gui.add(params, 'coreRadius', 0.5, 4).name('卷芯半径').onChange(v => {
+  gui.add(params, 'coreRadius', 0.5, 4).name('卷芯半径').onChange((v: any) => {
       core.geometry.dispose()
       core.geometry = new THREE.CylinderGeometry(v, v, params.stripWidth + 0.2, 32)
   })
   gui.add(params, 'thickness', 0.05, 0.5).name('钢带厚度')
   gui.add(params, 'maxTurns', 2, 20, 1).name('最大圈数')
-  gui.add(params, 'stripWidth', 1, 8).name('钢带宽度').onChange(v => {
+  gui.add(params, 'stripWidth', 1, 8).name('钢带宽度').onChange((v: any) => {
       core.geometry.dispose()
       core.geometry = new THREE.CylinderGeometry(params.coreRadius, params.coreRadius, v + 0.2, 32)
   })

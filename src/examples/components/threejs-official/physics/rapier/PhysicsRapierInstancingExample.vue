@@ -17,7 +17,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -31,10 +31,10 @@ const props = defineProps({
   }
 })
 
-let _intervalId = null
+let _intervalId: any = null
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> physics - <a href=\"https://github.com/dimforge/rapier.js\" target=\"_blank\">rapier</a> instancing<br />\n\t\t\t<button id=\"shake\" style=\"margin-top: 25px;\">SHAKE</button>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -153,7 +153,7 @@ async function onReady(__stage) {
   				controls.target.y = 0.5;
   				controls.update();
   
-  				document.querySelector( 'button#shake' ).addEventListener( 'click', () => {
+  				document.querySelector( 'button#shake' )!.addEventListener( 'click', () => {
   
   					const impulse = new THREE.Vector3();
   
@@ -198,7 +198,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.update();
   })
   

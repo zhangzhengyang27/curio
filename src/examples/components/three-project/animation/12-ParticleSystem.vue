@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { shallowRef, onMounted, onUnmounted } from "vue"
   import * as THREE from "three"
   import { useThreeScene } from "@/examples/components/three-project/_shared/useThreeScene"
@@ -6,10 +6,9 @@
   import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 
   const containerRef = shallowRef(null)
-  let gui = null
-  let particleSystem = null
-  let particleData = []
-
+  let gui: any = null
+  let particleSystem: any = null
+  let particleData: any[] = []
   const params = {
     count: 2000,
     speed: 1,
@@ -28,7 +27,7 @@
       showAxesHelper: false
     })
 
-  const initParticleData = (count) => {
+  const initParticleData = (count: any) => {
     particleData = []
     for (let i = 0; i < count; i++) {
       particleData.push({

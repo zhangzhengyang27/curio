@@ -4,14 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { Renderer as GlRenderer } from '@/examples/jsm-compat/mygrapics/common/lib/ogl/core/Renderer.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {Animator} from '@/examples/jsm-compat/mygrapics/common/lib/animator/index.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
-async function loadScript(src) {
+async function loadScript(src: any) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -73,14 +74,14 @@ async function initMyGrapicsExample() {
             gl_FragColor = d1 * d2 * vec4(hsb2rgb(vec3(random(i_uv), 1.0, 1.0)), 1.0);
           }
         `;
-        const canvas = mgContainer.value.querySelector('canvas');
+        const canvas = mgContainer.value!.querySelector('canvas') as HTMLCanvasElement;
         const renderer = new GlRenderer(canvas);
         const program = renderer.compileSync(fragment, vertex);
         renderer.useProgram(program);
         renderer.uniforms.rotation = 0.0;
     
         const animator = new Animator({duration: 2000, iterations: Infinity});
-        animator.animate(renderer, ({target, timing}) => {
+        animator.animate(renderer, ({ target, timing }: { target: any; timing: any }) => {
           target.uniforms.rotation = timing.p * 2 * Math.PI;
         });
     

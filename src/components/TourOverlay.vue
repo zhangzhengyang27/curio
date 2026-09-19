@@ -53,7 +53,7 @@
       class="tour-bar tv-glass-panel"
       data-testid="tour-bar"
     >
-      <span class="tour-bar-title">{{ tour.route.value.title }}</span>
+      <span class="tour-bar-title">{{ (tour.route.value as TourRouteWithDuration)?.title }}</span>
 
       <div class="tour-dots">
         <button
@@ -107,22 +107,29 @@
   </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
+import type { useTourEngine } from '../composables/useTourEngine'
+import type { TourRouteWithDuration } from '../three/tours/routes'
+
+type TourEngine = ReturnType<typeof useTourEngine>
 
 /**
  * 数据巡游播放器：路线选择浮层 + 字幕卡 + 播放条。
  * 纯展示与键鼠交互，播放状态机在 useTourEngine（props.tour）。
  * tour 是引擎返回的普通对象，内部为 ref，模板中需显式 .value。
  */
-const props = defineProps({
-  tour: { type: Object, required: true },
-  routes: { type: Array, default: () => [] }
-})
+const props = defineProps<{
+  tour: TourEngine
+  routes: TourRouteWithDuration[]
+}>()
 
-const emit = defineEmits(['pick', 'close'])
+const emit = defineEmits<{
+  pick: [route: TourRouteWithDuration]
+  close: []
+}>()
 
-function onKeydown(e) {
+function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
     props.tour.stop()
     // 无论在选线页还是播放中，Esc 都等同于退出整个巡游界面

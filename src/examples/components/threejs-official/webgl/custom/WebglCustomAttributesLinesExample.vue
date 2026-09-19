@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
@@ -62,7 +62,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -74,9 +74,9 @@ function onReady(__stage) {
   
   
   
-  			let stats;
+  			let stats: any;
   
-  			let line, uniforms;
+  			let line: any, uniforms: any;
   
   			const loader = new FontLoader();
   			loader.load( ASSET_HOST + 'fonts/helvetiker_bold.typeface.json', function ( font ) {
@@ -85,7 +85,7 @@ function onReady(__stage) {
   
   			} );
   
-  			function init( font ) {
+  			function init( font: any ) {
   
   				
   				camera.position.z = 400;
@@ -168,7 +168,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.001;
     				line.rotation.y = 0.25 * time;

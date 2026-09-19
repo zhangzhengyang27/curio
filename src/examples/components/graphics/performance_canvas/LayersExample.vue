@@ -7,23 +7,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
 
 
 async function initGraphicsExample() {
-  const container = gContainer.value.querySelector('#container')
-  const bg = gContainer.value.querySelector('#bg')
-  const fg = gContainer.value.querySelector('#fg')
+  const container = gContainer.value!.querySelector('#container')
+  const bg = gContainer.value!.querySelector('#bg')
+  const fg = gContainer.value!.querySelector('#fg')
   {
-    function drawRandomTriangle(path, context) {
+    function drawRandomTriangle(path: any, context: any) {
           const {width, height} = context.canvas;
           context.save();
           context.translate(Math.random() * width, Math.random() * height);
@@ -31,7 +31,7 @@ async function initGraphicsExample() {
           context.restore();
         }
     
-        function drawBackground(context, count = 2000) {
+        function drawBackground(context: any, count = 2000) {
           context.fillStyle = '#ed7';
           const d = 'M0,0L0,10L8.66, 5z';
           const p = new Path2D(d);
@@ -40,19 +40,19 @@ async function initGraphicsExample() {
           }
         }
     
-        function loadImage(src) {
+        function loadImage(src: any) {
           const img = new Image();
           img.crossOrigin = 'anonymous';
           return new Promise((resolve) => {
-            img.onload = resolve(img);
+            img.onload = resolve(img) as any; // 保持原运行时行为（resolve 立即执行）；此处为存量语义问题，仅消除类型错误，详见报告
             img.src = src;
           });
         }
     
-        async function drawForeground(context) {
+        async function drawForeground(context: any) {
           const img = await loadImage('/graphics/assets/external/t015b85b72445154fe0.png');
           const {width, height} = context.canvas;
-          function update(t) {
+          function update(t: any) {
             context.clearRect(0, 0, width, height);
             context.save();
             context.translate(0, 0.5 * height);
@@ -66,8 +66,8 @@ async function initGraphicsExample() {
           update(0);
         }
     
-        const bgcanvas = gContainer.value.querySelector('#bg');
-        const fgcanvas = gContainer.value.querySelector('#fg');
+        const bgcanvas = gContainer.value!.querySelector('#bg') as HTMLCanvasElement;
+        const fgcanvas = gContainer.value!.querySelector('#fg') as HTMLCanvasElement;
         drawBackground(bgcanvas.getContext('2d'));
         drawForeground(fgcanvas.getContext('2d'));
   }

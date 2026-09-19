@@ -12,10 +12,10 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { instancedArray, Loop, If, vec3, dot, clamp, storage, uvec4, subgroupAdd, uniform, uv, uint, float, Fn, vec2, invocationLocalIndex, invocationSubgroupIndex, uvec2, floor, instanceIndex, workgroupId, workgroupBarrier, workgroupArray, subgroupSize, select, countTrailingZeros } from 'three/tsl';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a>\n\t\t\t<br /> This example demonstrates the performance of various simple parallel reduction kernels.\n\t\t\t<br /> Reference implementations are translated from the CUDA/WGSL code present in the following books/repos:\n\t\t\t<br /> Impl. 0 - 2: <a href=\"https://www.cambridge.org/core/books/programming-in-parallel-with-cuda/C43652A69033C25AD6933368CDBE084C\"><i>Programming in Parallel with CUDA</i></a> by <a href=\"https://people.bss.phy.cam.ac.uk/~rea1/\">Richard Ansorge</a>\n\t\t\t<br /> Impl. 3: <a href=\"https://github.com/frost-beta/betann/blob/main/betann/wgsl/reduce_all.wgsl\"><i>betann reduce_all kernel</i></a> by <a href=\"https://github.com/zcbenz\">zcbenz</a>\n\t\t\t<br /> Impl. 4: <a href=\"https://github.com/b0nes164/GPUPrefixSums/blob/main/GPUPrefixSumsWebGPUapis/SharedShaders/rts.wgsl\"><i>GPUPrefixSums reduction approach</i></a> by <a href=\"https://github.com/b0nes164\">b0nes164</a>\n\t\t\t<div id=\"left_side_display\" style=\"position: absolute;top: 150px;left: 0;padding: 10px;background: rgba( 0, 0, 0, 0.5 );color: #fff;font-family: monospace;font-size: 12px;line-height: 1.5;pointer-events: none;text-align: left;\">"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -53,7 +53,7 @@ async function onReady(__stage) {
   				right_side_display: rightDisplay
   			};
   
-  			const divRoundUp = ( size, part_size ) => {
+  			const divRoundUp = ( size: any, part_size: any ) => {
   
   				return Math.floor( ( size + part_size - 1 ) / part_size );
   
@@ -73,7 +73,7 @@ async function onReady(__stage) {
   			panelTitle.textContent = `Reduce (Subgroup Size: ${cssSubgroupSize}, Workgroup Size: ${cssWorkgroupSize})`;
   			panelDiv.prepend( panelTitle );
   
-  			const createThreadWithData = ( data ) => {
+  			const createThreadWithData = ( data: any ) => {
   
   				const threadEle = document.createElement( 'div' );
   				threadEle.className = 'thread';
@@ -87,9 +87,9 @@ async function onReady(__stage) {
   			};
   
   			// Create thread elements
-  			const workgroupThreads = [];
-  			const initialSubgroups = [];
-  			const initialData = [];
+  			const workgroupThreads: any = [];
+  			const initialSubgroups: any = [];
+  			const initialData: any = [];
   			let currentSubgroupDiv = null;
   			for ( let i = 0; i < cssWorkgroupSize; i ++ ) {
   
@@ -114,21 +114,21 @@ async function onReady(__stage) {
   
   				const thread = createThreadWithData( data );
   				workgroupThreads.push( thread );
-  				currentSubgroupDiv.appendChild( thread );
+  				currentSubgroupDiv!.appendChild( thread );
   
   			}
   
-  			const deactivateLabelAnimation = ( subgroupDiv, idx ) => {
+  			const deactivateLabelAnimation = ( subgroupDiv: any, idx: any ) => {
   
   				subgroupDiv.classList.remove( 'anim' );
   
   				const subgroupReductionBufferElement = subgroupReductionContainer.querySelector( `#subgroup_reduction_element_${idx} .thread_data` );
   
-  				subgroupReductionBufferElement.innerHTML = 0;
+  				(subgroupReductionBufferElement as any)!.innerHTML = 0;
   
   			};
   
-  			const activateLabelAnimation = ( subgroupDiv, idx ) => {
+  			const activateLabelAnimation = ( subgroupDiv: any, idx: any ) => {
   
   				const threads = Array.from( subgroupDiv.children );
   				let total = 0;
@@ -143,7 +143,7 @@ async function onReady(__stage) {
   
   				setTimeout( () => {
   
-  					threads.forEach( t => {
+  					threads.forEach( ( t: any ) => {
   
   						t.querySelector( '.thread_data' ).textContent = total;
   
@@ -151,7 +151,7 @@ async function onReady(__stage) {
   
   					const subgroupReductionBufferElement = subgroupReductionContainer.querySelector( `#subgroup_reduction_element_${idx} .thread_data` );
   
-  					subgroupReductionBufferElement.innerHTML = total;
+  					(subgroupReductionBufferElement as any)!.innerHTML = total;
   
   				}, 1000 );
   
@@ -166,7 +166,7 @@ async function onReady(__stage) {
   
   			subgroupReductionContainer.addEventListener( 'mouseenter', () => {
   
-  				initialSubgroups.forEach( ( subgroupDiv, idx ) => {
+  				initialSubgroups.forEach( ( subgroupDiv: any, idx: any ) => {
   
   					activateLabelAnimation( subgroupDiv, idx );
   
@@ -176,13 +176,13 @@ async function onReady(__stage) {
   
   			subgroupReductionContainer.addEventListener( 'mouseleave', () => {
   
-  				initialSubgroups.forEach( ( subgroupDiv, idx ) => {
+  				initialSubgroups.forEach( ( subgroupDiv: any, idx: any ) => {
   
   					deactivateLabelAnimation( subgroupDiv, idx );
   
   				} );
   
-  				workgroupThreads.forEach( ( thread, idx ) => {
+  				workgroupThreads.forEach( ( thread: any, idx: any ) => {
   
   					thread.querySelector( '.thread_data' ).textContent = initialData[ idx ];
   
@@ -283,13 +283,13 @@ async function onReady(__stage) {
   
   			gui.add( leftEffectController, 'displayMode', displayModes ).name( 'Left Display Mode' ).onChange( () => {
   
-  				leftMaterial.colorNode = leftDisplayColorNodes[ leftEffectController.displayMode ];
+  				leftMaterial.colorNode = (leftDisplayColorNodes as any)[ leftEffectController.displayMode ];
   				leftMaterial.needsUpdate = true;
   
   			} );
   			gui.add( rightEffectController, 'displayMode', displayModes ).name( 'Right Display Mode' ).onChange( () => {
   
-  				rightMaterial.colorNode = rightDisplayColorNodes[ rightEffectController.displayMode ];
+  				rightMaterial.colorNode = (rightDisplayColorNodes as any)[ rightEffectController.displayMode ];
   				rightMaterial.needsUpdate = true;
   
   			} );
@@ -305,7 +305,7 @@ async function onReady(__stage) {
   			debugFolder.close();
   
   			// HELPER FUNCTIONS
-  			const pow2Ceil = Fn( ( [ x ] ) => {
+  			const pow2Ceil = Fn( ( [ x ]: any ) => {
   
   				If( x.equal( uint( 0 ) ), () => {
   
@@ -359,7 +359,7 @@ async function onReady(__stage) {
   				 */
   
   
-  			const createReduce1Fn = ( createReduce1FnProps ) => {
+  			const createReduce1Fn = ( createReduce1FnProps: any ) => {
   
   				const { dispatchSize, numElements, inputBuffer, workgroupSize } = createReduce1FnProps;
   
@@ -369,7 +369,7 @@ async function onReady(__stage) {
   					const tSum = uint( 0 ).toVar();
   					const k = instanceIndex.toVar( 'k' );
   
-  					Loop( k.lessThan( uint( numElements ) ), ( ) => {
+  					Loop( (k.lessThan as any)( uint( numElements ) ), ( ) => {
   
   						tSum.addAssign( inputBuffer.element( k ) );
   						k.addAssign( uint( dispatch ) );
@@ -388,7 +388,7 @@ async function onReady(__stage) {
   			// REDUCE 2
   
   			// For non power of 2 # of workgroups
-  			const createReduce2Fn = ( createReduce2FnProps ) => {
+  			const createReduce2Fn = ( createReduce2FnProps: any ) => {
   
   				const { workgroupSize, dispatchSize, numElements, inputBuffer } = createReduce2FnProps;
   
@@ -397,11 +397,11 @@ async function onReady(__stage) {
   					const tSum = workgroupArray( 'uint', workgroupSize );
   
   					const k = instanceIndex.toVar( 'k' );
-  					tSum.element( invocationLocalIndex ).assign( uint( 0 ) );
+  					(tSum as any).element( invocationLocalIndex ).assign( uint( 0 ) );
   
-  					Loop( k.lessThan( uint( numElements ) ), () => {
+  					Loop( (k.lessThan as any)( uint( numElements ) ), () => {
   
-  						tSum.element( invocationLocalIndex ).addAssign( inputBuffer.element( k ) );
+  						(tSum as any).element( invocationLocalIndex ).addAssign( inputBuffer.element( k ) );
   
   						k.addAssign( uint( dispatchSize ) );
   
@@ -410,13 +410,13 @@ async function onReady(__stage) {
   					workgroupBarrier();
   
   					// Reset the loop condition (account for numWorkgroups % 2 != 0)
-  					k.assign( pow2Ceil( uint( workgroupSize ) ).div( 2 ) );
+  					k.assign( (pow2Ceil as any)( (uint as any)( workgroupSize ) ).div( 2 ) );
   
-  					Loop( k.greaterThan( 0 ), () => {
+  					Loop( (k.greaterThan as any)( 0 ), () => {
   
   						If( invocationLocalIndex.lessThan( k ).and( invocationLocalIndex.add( k ).lessThan( workgroupSize ) ), () => {
   
-  							tSum.element( invocationLocalIndex ).addAssign( tSum.element( invocationLocalIndex.add( k ) ) );
+  							(tSum as any).element( invocationLocalIndex ).addAssign( (tSum as any).element( invocationLocalIndex.add( k ) ) );
   
   						} );
   						workgroupBarrier();
@@ -426,7 +426,7 @@ async function onReady(__stage) {
   
   					If( invocationLocalIndex.equal( uint( 0 ) ), () => {
   
-  						inputBuffer.element( workgroupId.x ).assign( tSum.element( uint( 0 ) ) );
+  						inputBuffer.element( workgroupId.x ).assign( (tSum as any).element( uint( 0 ) ) );
   
   					} );
   
@@ -439,7 +439,7 @@ async function onReady(__stage) {
   			// REDUCE 3
   
   			/* Create array with enough indices for worst-case subgroup size */
-  			const createSubgroupArray = ( type, workgroupSize, minSubgroupSize = 4 ) => {
+  			const createSubgroupArray = ( type: any, workgroupSize: any, minSubgroupSize = 4 ) => {
   
   				return workgroupArray( 'uint', workgroupSize / minSubgroupSize );
   
@@ -447,7 +447,7 @@ async function onReady(__stage) {
   
   			// zcbenz implementation
   			// https://github.com/frost-beta/betann/blob/8aa2701caf63fb29bd4cd2454e656973342c1588/betann/wgsl/reduce_ops.wgsl#L71
-  			const RowReduce = ( rowReduceProps ) => {
+  			const RowReduce = ( rowReduceProps: any ) => {
   
   				const { workgroupSize, inputBuffer, total, rowOffset, currentRowSize, workPerThread, vectorized } = rowReduceProps;
   
@@ -458,18 +458,18 @@ async function onReady(__stage) {
   
   				// At rowSize of 2048, there will be two blocks
   				const blockLimiter = currentRowSize.div( blockSize ).toVar( 'blockLimiter' );
-  				Loop( block.lessThan( blockLimiter ), () => {
+  				Loop( (block.lessThan as any)( blockLimiter ), () => {
   
   					const blockOffset = block.mul( blockSize );
   					const startThread = blockOffset.add( invocationLocalIndex.mul( workPerThread ) );
   					const localThreadOffset = uint( 0 ).toVar( 'localThreadOffset' );
-  					Loop( localThreadOffset.lessThan( workPerThread ), () => {
+  					Loop( (localThreadOffset.lessThan as any)( workPerThread ), () => {
   
   						const inputElement = inputBuffer.element( rowOffset.add( startThread ).addLocal );
   
   						if ( vectorized ) {
   
-  							const value = dot( inputElement, uvec4( 1 ) );
+  							const value = dot( inputElement, (uvec4 as any)( 1 ) );
   							total.addAssign( value );
   
   						} else {
@@ -493,7 +493,7 @@ async function onReady(__stage) {
   
   			};
   
-  			const WorkgroupReduce = ( workgroupReduceProps ) => {
+  			const WorkgroupReduce = ( workgroupReduceProps: any ) => {
   
   				const { total, workgroupSize } = workgroupReduceProps;
   
@@ -506,12 +506,12 @@ async function onReady(__stage) {
   
   				const subgroupMetaRank = invocationLocalIndex.div( subgroupSize );
   
-  				Loop( float( delta ).greaterThan( 1.0 ), () => {
+  				Loop( (float as any)( delta ).greaterThan( 1.0 ), () => {
   
   					If( invocationSubgroupIndex.equal( 0 ), () => {
   
   						// Each subgroup will populate the subgroupSums array
-  						subgroupSums.element( subgroupMetaRank ).assign( total );
+  						(subgroupSums as any).element( subgroupMetaRank ).assign( total );
   
   					} );
   
@@ -519,7 +519,7 @@ async function onReady(__stage) {
   					workgroupBarrier();
   
   					// Thread 0 - subgroupsInWorkgroup will assign a value to total
-  					total.assign( select( invocationLocalIndex.lessThan( delta ), subgroupSums.element( invocationLocalIndex ), 0 ).uniformFlow() );
+  					total.assign( select( invocationLocalIndex.lessThan( delta ), (subgroupSums as any).element( invocationLocalIndex ), 0 ).uniformFlow() );
   					// # of subgroups in workgroup is invariably less than # of threads in subgroup, so subgroupAdd will still sync here
   					total.assign( subgroupAdd( total ) );
   
@@ -529,7 +529,7 @@ async function onReady(__stage) {
   
   			};
   
-  			const createReduce3Fn = ( createReduce3FnProps ) => {
+  			const createReduce3Fn = ( createReduce3FnProps: any ) => {
   
   				const { workgroupSize, workPerThread, inputBuffer, intermediateBuffer, rowSize } = createReduce3FnProps;
   
@@ -543,7 +543,7 @@ async function onReady(__stage) {
   					// otherwise, select existing ROW_SIZE
   					const currentRowSize = select(
   						( rowOffset.add( rowSize ) ).greaterThan( inputSize ),
-  						select( inputSize.greaterThan( rowOffset ), inputSize.sub( rowOffset ), 0 ).uniformFlow(),
+  						(select as any)( inputSize.greaterThan( rowOffset ), inputSize.sub( rowOffset ), 0 ).uniformFlow(),
   						rowSize,
   					).uniformFlow();
   
@@ -579,7 +579,7 @@ async function onReady(__stage) {
   			// REDUCE 4
   
   			// b0nes164 inspired implementation with vec4
-  			const createReduce4Fn = ( props ) => {
+  			const createReduce4Fn = ( props: any ) => {
   
   				// Can't pass in subgroup size since we can't always be certain what size is at runtime
   				const { size, workPerThread, workgroupSize, inputBuffer, intermediateBuffer } = props;
@@ -615,7 +615,7 @@ async function onReady(__stage) {
   					// Each thread will accumulate values from across 'workPerThread' subgroups
   					If( workgroupId.x.lessThan( uint( numWorkgroups ).sub( 1 ) ), () => {
   
-  						Loop( {
+  						(Loop as any)( {
   							start: uint( 0 ),
   							end: workPerThread,
   							type: 'uint',
@@ -627,7 +627,7 @@ async function onReady(__stage) {
   							const val = inputBuffer.element( startThread );
   
   							// Sum values within vec4 together by using result of dot product
-  							subgroupReduction.addAssign( dot( uvec4( 1 ), val ) );
+  							subgroupReduction.addAssign( (dot as any)( (uvec4 as any)( 1 ), val ) );
   
   							// Increment so thread will scan value in next subgroup
   							startThread.addAssign( subgroupSize );
@@ -639,7 +639,7 @@ async function onReady(__stage) {
   					// Ensure that the last workgroup does not access out of bounds indices
   					If( workgroupId.x.equal( uint( numWorkgroups ).sub( 1 ) ), () => {
   
-  						Loop( {
+  						(Loop as any)( {
   							start: uint( 0 ),
   							end: workPerThread,
   							type: 'uint',
@@ -650,7 +650,7 @@ async function onReady(__stage) {
   							// Ensure index is less than number of available vectors in inputBuffer
   							const val = select( startThread.lessThan( uint( vecSize ) ), inputBuffer.element( startThread ), uvec4( 0 ) ).uniformFlow();
   
-  							subgroupReduction.addAssign( dot( val, uvec4( 1 ) ) );
+  							subgroupReduction.addAssign( (dot as any)( val, uvec4( 1 ) ) );
   							startThread.addAssign( subgroupSize );
   
   						} );
@@ -665,7 +665,7 @@ async function onReady(__stage) {
   					// Delegate one thread per subgroup to assign each subgroup's reduction to the workgroup array
   					If( invocationSubgroupIndex.equal( uint( 0 ) ), () => {
   
-  						perSubgroupReductionArray.element( subgroupMetaRank ).assign( subgroupReduction );
+  						(perSubgroupReductionArray as any).element( subgroupMetaRank ).assign( subgroupReduction );
   
   					} );
   
@@ -692,9 +692,9 @@ async function onReady(__stage) {
   					// countTrailingZeros/findLSB(subgroupSize) -> TSL function that counts trailing zeros in number bit representation
   					// Can technically petition GPU for subgroupSize in shader and calculate logs on CPU at cost of shader being generalizable across devices
   					// May also break if subgroupSize changes when device is lost or if program is rerun on lower power device
-  					const subgroupSizeLog = countTrailingZeros( subgroupSize ).toVar( 'subgroupSizeLog' );
+  					const subgroupSizeLog = (countTrailingZeros as any)( subgroupSize ).toVar( 'subgroupSizeLog' );
   					const spineSize = uint( workgroupSize ).shiftRight( subgroupSizeLog );
-  					const spineSizeLog = countTrailingZeros( spineSize ).toVar( 'spineSizeLog' );
+  					const spineSizeLog = (countTrailingZeros as any)( spineSize ).toVar( 'spineSizeLog' );
   
   
   					// Align size to powers of subgroupSize
@@ -709,7 +709,7 @@ async function onReady(__stage) {
   
   					// In cases where the number of subgroups in a workgroup is greater than the subgroup size itself,
   					// we need to iterate over the array again to capture all the data in the workgroup array buffer
-  					Loop( { start: subgroupSize, end: alignedSize, condition: '<=', name: 'j', type: 'uint', update: '<<= subgroupSizeLog' }, () => {
+  					(Loop as any)( { start: subgroupSize, end: alignedSize, condition: '<=', name: 'j', type: 'uint', update: '<<= subgroupSizeLog' }, () => {
   
   						const subgroupIndex = ( ( invocationLocalIndex.add( 1 ) ).shiftLeft( offset ) ).sub( 1 );
   
@@ -717,10 +717,10 @@ async function onReady(__stage) {
   
   						// Reduce values within the local workgroup memory.
   						// Set toVar to ensure subgroupAdd executes before (not within) the if statement.
-  						const t = subgroupAdd(
+  						const t = (subgroupAdd as any)(
   							select(
   								isValidSubgroupIndex,
-  								perSubgroupReductionArray.element( subgroupIndex ),
+  								(perSubgroupReductionArray as any).element( subgroupIndex ),
   								0
   							).uniformFlow()
   						).toVar( 't' );
@@ -729,7 +729,7 @@ async function onReady(__stage) {
   						// subgroup threads work in lockstop for subgroupAdd
   						If( isValidSubgroupIndex, () => {
   
-  							perSubgroupReductionArray.element( subgroupIndex ).assign( t );
+  							(perSubgroupReductionArray as any).element( subgroupIndex ).assign( t );
   
   						} );
   
@@ -744,7 +744,7 @@ async function onReady(__stage) {
   					// Assign single thread from workgroup to assign workgroup reduction
   					If( invocationLocalIndex.equal( uint( 0 ) ), () => {
   
-  						const reducedWorkgroupSum = perSubgroupReductionArray.element( uint( spineSize ).sub( 1 ) );
+  						const reducedWorkgroupSum = (perSubgroupReductionArray as any).element( uint( spineSize ).sub( 1 ) );
   						intermediateBuffer.element( workgroupId.x ).assign( reducedWorkgroupSum );
   
   					} );
@@ -758,7 +758,7 @@ async function onReady(__stage) {
   
   			// INCORRECT BASELINE
   
-  			const createIncorrectBaselineFn = ( incorrectBaselineProps ) => {
+  			const createIncorrectBaselineFn = ( incorrectBaselineProps: any ) => {
   
   				const { inputBuffer } = incorrectBaselineProps;
   
@@ -818,9 +818,9 @@ async function onReady(__stage) {
   
   				const logFunctionName = `Log ${leftSideDisplay ? 'Left' : 'Right'} Side`;
   				const functionObj = {};
-  				functionObj[ logFunctionName ] = async() => {
+  				(functionObj as any)[ logFunctionName ] = async() => {
   
-  					const selectedBuffer = buffers[ unifiedEffectController.loggedBuffer ];
+  					const selectedBuffer = (buffers as any)[ unifiedEffectController.loggedBuffer ];
   					const readbackBuffer = new THREE.ReadbackBuffer( selectedBuffer.value );
   
   					const result = new Uint32Array( await renderer.getArrayBufferAsync( readbackBuffer ) );
@@ -872,11 +872,11 @@ async function onReady(__stage) {
   
   					const { numThreadsDispatched } = effectController;
   
-  					inputStorage.element( instanceIndex ).addAssign( inputStorage.element( instanceIndex.add( numThreadsDispatched ) ) );
+  					inputStorage.element( instanceIndex ).addAssign( inputStorage.element( instanceIndex.add( (numThreadsDispatched as any) ) ) );
   
   				} )();
   
-  				const reduce0Calls = [];
+  				const reduce0Calls: any = [];
   
   				for ( let i = size / 2; i >= 1; i /= 2 ) {
   
@@ -978,7 +978,7 @@ async function onReady(__stage) {
   					'Incorrect Baseline': incorrectBaselineCalls
   				};
   
-  				const getColor = ( bufferToCheck, colorChanger, width, height ) => {
+  				const getColor = ( bufferToCheck: any, colorChanger: any, width: any, height: any ) => {
   
   					const subtracter = float( colorChanger ).div( width.mul( height ) );
   
@@ -1006,7 +1006,7 @@ async function onReady(__stage) {
   				};
   
   				const displayNodes = leftSideDisplay ? leftDisplayColorNodes : rightDisplayColorNodes;
-  				displayNodes[ 'Input Grid' ] = Fn( () => {
+  				(displayNodes as any)[ 'Input Grid' ] = Fn( () => {
   
   					const { gridElementWidth, gridElementHeight, gridDisplayWidth, gridDisplayHeight } = unifiedEffectController;
   
@@ -1026,7 +1026,7 @@ async function onReady(__stage) {
   
   				} )();
   
-  				displayNodes[ 'Input Log2' ] = Fn( () => {
+  				(displayNodes as any)[ 'Input Log2' ] = Fn( () => {
   
   					const { gridElementWidth, gridElementHeight } = unifiedEffectController;
   
@@ -1035,14 +1035,14 @@ async function onReady(__stage) {
   					const colorChanger = uint( 0 ).toVar();
   					const color = vec3( 0 ).toVar( 'color' );
   
-  					colorChanger.assign( inputStorage.element( uint( 1 ).shiftLeft( newUV.x ) ) );
+  					colorChanger.assign( inputStorage.element( uint( 1 ).shiftLeft( (newUV.x as any) ) ) );
   					color.assign( getColor( inputStorage, colorChanger, gridElementWidth, gridElementHeight ) );
   
   					return color;
   
   				} )();
   
-  				displayNodes[ 'Input Element 0' ] = Fn( () => {
+  				(displayNodes as any)[ 'Input Element 0' ] = Fn( () => {
   
   					const { gridElementWidth, gridElementHeight } = unifiedEffectController;
   
@@ -1050,13 +1050,13 @@ async function onReady(__stage) {
   					const color = vec3( 0 ).toVar( 'color' );
   
   					// Clamp display of single element to shade where green is still readable
-  					colorChanger.assign( clamp( inputStorage.element( 0 ), 0, size / 2 ) );
+  					colorChanger.assign( clamp( (inputStorage.element as any)( 0 ), 0, size / 2 ) );
   					color.assign( getColor( inputStorage, colorChanger, gridElementWidth, gridElementHeight ) );
   					return color;
   
   				} )();
   
-  				displayNodes[ 'Workgroup Sum Grid' ] = Fn( () => {
+  				(displayNodes as any)[ 'Workgroup Sum Grid' ] = Fn( () => {
   
   					const width = uint( 8 );
   					const height = uint( 16 );
@@ -1077,7 +1077,7 @@ async function onReady(__stage) {
   
   				} )();
   
-  				( leftSideDisplay ? leftMaterial : rightMaterial ).colorNode = displayNodes[ effectController.displayMode ];
+  				( leftSideDisplay ? leftMaterial : rightMaterial ).colorNode = (displayNodes as any)[ effectController.displayMode ];
   				( leftSideDisplay ? leftMaterial : rightMaterial ).needsUpdate = true;
   
   				const plane = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), ( leftSideDisplay ? leftMaterial : rightMaterial ) );
@@ -1152,7 +1152,7 @@ async function onReady(__stage) {
   
   							default: {
   
-  								const currentAlgoCalls = calls[ currentAlgorithm ];
+  								const currentAlgoCalls = (calls as any)[ currentAlgorithm ];
   
   								for ( let i = 0; i < currentAlgoCalls.length; i ++ ) {
   

@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import gsap from 'gsap';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -76,7 +76,7 @@ function onReady(ctx) {
      } );
       var circle = new THREE.Mesh( geometry, material );
       circle.castShadow  = true;
-      circle.receivedShadow = true;
+      ;(circle as any).receivedShadow = true;
 
       circle.position.x = -Math.random()* circle_start + Math.random()* circle_start;
       circle.position.z = -Math.random()* circle_start + Math.random()* circle_start;
@@ -88,7 +88,7 @@ function onReady(ctx) {
     }
     scene.add(world);
   }
-  function primitiveElement() {
+  function primitiveElement(this: any) {
     this.mesh = new THREE.Object3D();
     var geo = new THREE.IcosahedronGeometry();
     var mat = new THREE.MeshBasicMaterial({color:0x500000});
@@ -96,9 +96,9 @@ function onReady(ctx) {
   
     //this.mesh.add(mesh);
   }
-  var _primitive;
+  var _primitive: any;
   function createPrimitive() {
-    _primitive = new primitiveElement();
+    _primitive = new (primitiveElement as any)();
     _primitive.mesh.scale.set(1,1,1);
     scene.add(_primitive.mesh);
   }

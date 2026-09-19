@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -39,7 +39,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Bloom pass by <a href=\"http://eduperiment.com\" target=\"_blank\" rel=\"noopener\">Prashant Sharma</a> and <a href=\"https://clara.io\" target=\"_blank\" rel=\"noopener\">Ben Houston</a>\n\t\t\t<br/>\n\t\t\tModel: <a href=\"https://blog.sketchfab.com/art-spotlight-primary-ion-drive/\" target=\"_blank\" rel=\"noopener\">Primary Ion Drive</a> by\n\t\t\t<a href=\"http://mjmurdock.com/\" target=\"_blank\" rel=\"noopener\">Mike Murdock</a>, CC Attribution."
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -132,19 +132,19 @@ async function onReady(__stage) {
   
   				const bloomFolder = gui.addFolder( 'bloom' );
   
-  				bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value ) {
+  				bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value: any ) {
   
   					bloomPass.threshold = Number( value );
   
   				} );
   
-  				bloomFolder.add( params, 'strength', 0.0, 3.0 ).onChange( function ( value ) {
+  				bloomFolder.add( params, 'strength', 0.0, 3.0 ).onChange( function ( value: any ) {
   
   					bloomPass.strength = Number( value );
   
   				} );
   
-  				gui.add( params, 'radius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'radius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value: any ) {
   
   					bloomPass.radius = Number( value );
   
@@ -152,7 +152,7 @@ async function onReady(__stage) {
   
   				const toneMappingFolder = gui.addFolder( 'tone mapping' );
   
-  				toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value ) {
+  				toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value: any ) {
   
   					renderer.toneMappingExposure = Math.pow( value, 4.0 );
   
@@ -165,7 +165,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				mixer.update( delta );

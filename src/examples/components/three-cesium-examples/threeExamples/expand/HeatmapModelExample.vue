@@ -9,13 +9,13 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -31,7 +31,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -42,6 +42,7 @@ function onReady(ctx) {
   // 渲染
   
   class InterpolatedGradientMaterial extends THREE.ShaderMaterial {
+      declare dataPointsLength: any
       constructor({
           dataPoints = [],
           dataValues = [],
@@ -52,7 +53,7 @@ function onReady(ctx) {
           opacity = 1,
           weightFunction = 'inverse_square',
           smoothstepEdges = { min: 0.0, max: 1.0 }
-      }) {
+      }: any = {}) {
           // 如果数据为空，填充假数据
           if (dataPoints.length === 0 || dataValues.length === 0) {
               console.warn("dataPoints and dataValues are empty. Using default fake data.")
@@ -149,7 +150,7 @@ function onReady(ctx) {
           this.dataPointsLength = dataPoints.length
       }
   
-      updateData(dataPoints, dataValues) {
+      updateData(dataPoints: any, dataValues: any) {
           if (dataPoints.length !== this.dataPointsLength) {
               console.warn('New data length does not match the original length. Shader recompilation required.')
               this.recompileShader(dataPoints.length)
@@ -160,7 +161,7 @@ function onReady(ctx) {
           this.uniformsNeedUpdate = true
       }
   
-      recompileShader(newLength) {
+      recompileShader(newLength: any) {
           const newFragmentShader = this.fragmentShader.replace(
               new RegExp(this.dataPointsLength.toString(), 'g'),
               newLength.toString()
@@ -202,11 +203,11 @@ function onReady(ctx) {
   
   )
   
-  function setHeat(box3) {
+  function setHeat(box3: any) {
   
       // 定义数据点和数据值
-      const dataPoints = []
-      const dataValues = []
+      const dataPoints: any[] = []
+      const dataValues: any[] = []
   
       const getPoint = () => new THREE.Vector3(  
   

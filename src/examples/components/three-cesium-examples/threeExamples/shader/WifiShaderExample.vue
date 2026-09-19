@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,14 +19,18 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
   class RadioSignals extends THREE.InstancedMesh {
-  	constructor(gu, camera, amount, colors = []) {
+  	uniforms: any
+  	items: any
+  	update: any
+
+  	constructor(gu: any, camera: any, amount: any, colors = []) {
   		const segs = 36;
   		const offsets = [0.0625, 0.25 + 0.1875, 0.5 + 0.1875, 0.75 + 0.1875];
   		const gs = offsets.map((offset, idx) => {
@@ -45,7 +49,7 @@ function onReady(ctx) {
   			)
   		);
   		const material = new THREE.MeshBasicMaterial({
-  			onBeforeCompile: shader => {
+  			onBeforeCompile: (shader: any) => {
   				shader.uniforms.time = gu.time;
   				shader.uniforms.bendAngle = this.uniforms.bendAngle;
   				shader.vertexShader = `
@@ -74,7 +78,7 @@ function onReady(ctx) {
                   }`
   				);
   			}
-  		});
+  		} as any);
   		super(g, material, amount);
   		this.uniforms = { bendAngle: { value: (Math.PI * 2) / 3 } };
   		this.items = Array.from({ length: amount }, (_, idx) => {
@@ -95,7 +99,7 @@ function onReady(ctx) {
   			return o;
   		});
   		this.update = () => {
-  			this.items.forEach((o, idx) => {
+  			this.items.forEach((o: any, idx: any) => {
   				o.quaternion.copy(camera.quaternion);
   				o.updateMatrix();
   				this.setMatrixAt(idx, o.matrix);

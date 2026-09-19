@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, color, mx_worley_noise_float, time } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Projector Light</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -79,7 +79,7 @@ function onReady(__stage) {
   
   				// Lights
   
-  				const causticEffect = Fn( ( [ projectorUV ] ) => {
+  			const causticEffect = Fn( ( [ projectorUV ]: any ) => {
   
   					const waterLayer0 = mx_worley_noise_float( projectorUV.mul( 10 ).add( time ) );
   
@@ -94,7 +94,7 @@ function onReady(__stage) {
   				scene.add( ambient );
   
   				projectorLight = new THREE.ProjectorLight( 0xffffff, 100 );
-  				projectorLight.colorNode = causticEffect;
+  				(projectorLight as any).colorNode = causticEffect;
   				projectorLight.position.set( 2.5, 5, 2.5 );
   				projectorLight.angle = Math.PI / 6;
   				projectorLight.penumbra = 1;
@@ -159,16 +159,16 @@ function onReady(__stage) {
   					shadows: true,
   				};
   
-  				let videoTexture, mapTexture;
+  				let videoTexture: any, mapTexture;
   
-  				gui.add( params, 'type', [ 'procedural', 'video', 'texture' ] ).onChange( function ( val ) {
+  				gui.add( params, 'type', [ 'procedural', 'video', 'texture' ] ).onChange( function ( val: any ) {
   
-  					projectorLight.colorNode = null;
+  					(projectorLight as any).colorNode = null;
   					projectorLight.map = null;
   
   					if ( val === 'procedural' ) {
   
-  						projectorLight.colorNode = causticEffect;
+  						(projectorLight as any).colorNode = causticEffect;
   
   						focus.setValue( 1 );
   
@@ -208,54 +208,54 @@ function onReady(__stage) {
   
   				} );
   
-  				gui.addColor( params, 'color' ).onChange( function ( val ) {
+  				gui.addColor( params, 'color' ).onChange( function ( val: any ) {
   
   					projectorLight.color.setHex( val );
   
   				} );
   
-  				gui.add( params, 'intensity', 0, 500 ).onChange( function ( val ) {
+  				gui.add( params, 'intensity', 0, 500 ).onChange( function ( val: any ) {
   
   					projectorLight.intensity = val;
   
   				} );
   
   
-  				gui.add( params, 'distance', 0, 20 ).onChange( function ( val ) {
+  				gui.add( params, 'distance', 0, 20 ).onChange( function ( val: any ) {
   
   					projectorLight.distance = val;
   
   				} );
   
-  				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
+  				gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val: any ) {
   
   					projectorLight.angle = val;
   
   				} );
   
-  				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
+  				gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val: any ) {
   
   					projectorLight.penumbra = val;
   
   				} );
   
-  				gui.add( params, 'decay', 1, 2 ).onChange( function ( val ) {
+  				gui.add( params, 'decay', 1, 2 ).onChange( function ( val: any ) {
   
   					projectorLight.decay = val;
   
   				} );
   
-  				const focus = gui.add( params, 'focus', 0, 1 ).onChange( function ( val ) {
+  				const focus = gui.add( params, 'focus', 0, 1 ).onChange( function ( val: any ) {
   
   					projectorLight.shadow.focus = val;
   
   				} );
   
-  				gui.add( params, 'shadows' ).onChange( function ( val ) {
+  				gui.add( params, 'shadows' ).onChange( function ( val: any ) {
   
   					renderer.shadowMap.enabled = val;
   
-  					scene.traverse( function ( child ) {
+  					scene.traverse( function ( child: any ) {
   
   						if ( child.material ) {
   
@@ -272,7 +272,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = performance.now() / 3000;
     				projectorLight.position.x = Math.cos( time ) * 2.5;
     				projectorLight.position.z = Math.sin( time ) * 2.5;

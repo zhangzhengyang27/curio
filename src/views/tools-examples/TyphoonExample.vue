@@ -29,21 +29,21 @@
       </p>
     </div>
     <VcOverlayTyphoon
-      :typhoon-routes="[ROUTE]"
+      :typhoon-routes="([ROUTE] as any)"
       :show="typhoonShow"
       @ready="onReady"
     />
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcOverlayTyphoon } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
 
 // 字段与 vue-cesium 的 VcTyphoonPoint 类型一一对应(time/lng/lat/strong/power/
 // speed/move_dir/move_speed/pressure/radius7/radius10/radius12/风圈四象限)
-function pt(time, lng, lat, strong, power, speed, pressure, r7, r10, r12) {
+function pt(time: any, lng: any, lat: any, strong: any, power: any, speed: any, pressure: any, r7: any, r10: any, r12: any) {
   return {
     time,
     lng,

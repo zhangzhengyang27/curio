@@ -6,13 +6,16 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+
+let mapBg: any;
+
 
 const props = defineProps({
   example: {
@@ -21,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -31,7 +34,7 @@ function onReady(__stage) {
   
   
   
-  			const materials = [];
+  			const materials: any = [];
   
   			const params = {
   				blendEquation: THREE.AddEquation
@@ -56,16 +59,16 @@ function onReady(__stage) {
   				const canvas = document.createElement( 'canvas' );
   				const ctx = canvas.getContext( '2d' );
   				canvas.width = canvas.height = 128;
-  				ctx.fillStyle = '#ddd';
-  				ctx.fillRect( 0, 0, 128, 128 );
-  				ctx.fillStyle = '#555';
-  				ctx.fillRect( 0, 0, 64, 64 );
-  				ctx.fillStyle = '#999';
-  				ctx.fillRect( 32, 32, 32, 32 );
-  				ctx.fillStyle = '#555';
-  				ctx.fillRect( 64, 64, 64, 64 );
-  				ctx.fillStyle = '#777';
-  				ctx.fillRect( 96, 96, 32, 32 );
+  				ctx!.fillStyle = '#ddd';
+  				ctx!.fillRect( 0, 0, 128, 128 );
+  				ctx!.fillStyle = '#555';
+  				ctx!.fillRect( 0, 0, 64, 64 );
+  				ctx!.fillStyle = '#999';
+  				ctx!.fillRect( 32, 32, 32, 32 );
+  				ctx!.fillStyle = '#555';
+  				ctx!.fillRect( 64, 64, 64, 64 );
+  				ctx!.fillStyle = '#777';
+  				ctx!.fillRect( 96, 96, 32, 32 );
   
   				mapBg = new THREE.CanvasTexture( canvas );
   				mapBg.colorSpace = THREE.SRGBColorSpace;
@@ -199,19 +202,19 @@ function onReady(__stage) {
   
   			//
   
-  			function generateLabelMaterial( text, bg ) {
+  			function generateLabelMaterial( text: any, bg: any ) {
   
   				const canvas = document.createElement( 'canvas' );
   				const ctx = canvas.getContext( '2d' );
   				canvas.width = 128;
   				canvas.height = 32;
   
-  				ctx.fillStyle = bg;
-  				ctx.fillRect( 0, 0, 128, 32 );
+  				ctx!.fillStyle = bg;
+  				ctx!.fillRect( 0, 0, 128, 32 );
   
-  				ctx.fillStyle = 'white';
-  				ctx.font = 'bold 11pt arial';
-  				ctx.fillText( text, 8, 22 );
+  				ctx!.fillStyle = 'white';
+  				ctx!.font = 'bold 11pt arial';
+  				ctx!.fillText( text, 8, 22 );
   
   				const map = new THREE.CanvasTexture( canvas );
   				map.colorSpace = THREE.SRGBColorSpace;
@@ -221,7 +224,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updateBlendEquation( value ) {
+  			function updateBlendEquation( value: any ) {
   
   				for ( const material of materials ) {
   
@@ -231,7 +234,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = Date.now() * 0.00025;
     				const ox = ( time * - 0.01 * mapBg.repeat.x ) % 1;
     				const oy = ( time * - 0.01 * mapBg.repeat.y ) % 1;

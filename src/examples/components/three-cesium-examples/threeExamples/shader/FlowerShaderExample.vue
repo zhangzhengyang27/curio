@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import gsap from "gsap";
 import { GUI } from 'lil-gui';
@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -32,7 +32,7 @@ function onReady(ctx) {
 
   
   var _width, _height;
-  var mat;
+  var mat: any;
   
   function createWorld() {
     _width = window.innerWidth;
@@ -113,7 +113,7 @@ function onReady(ctx) {
     }
   }
   
-  var speedRandom = Math.random(10) / 10000;
+  var speedRandom = Math.random() / 10000;
   
   var options = {
     perlin: {
@@ -155,7 +155,7 @@ function onReady(ctx) {
     colorGUI.open();
   }
   
-  var primitiveElement = function() {
+  var primitiveElement: any = function(this: any) {
     this.mesh = new THREE.Object3D();
     var geo = new THREE.IcosahedronGeometry(1, 6);
     mat = new THREE.ShaderMaterial({
@@ -392,7 +392,7 @@ function onReady(ctx) {
     this.mesh.add(mesh);
   }
   
-  var _primitive;
+  var _primitive: any;
   function createPrimitive() {
     _primitive = new primitiveElement();
     _primitive.mesh.scale.set(1,1,1);
@@ -401,7 +401,7 @@ function onReady(ctx) {
   
   var start = Date.now();
   ctx.addUpdateCallback(() => {
-    gsap.to(camera.position, 1, {z:options.cam.zoom+5});
+    (gsap.to as any)(camera.position, 1, {z:options.cam.zoom+5});
       _primitive.mesh.rotation.y += 0.001;
       mat.uniforms['time'].value = options.perlin.speed * (Date.now() - start);
       mat.uniforms['pointscale'].value = options.perlin.perlins;

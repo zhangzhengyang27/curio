@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OBB } from 'three/examples/jsm/math/OBB.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener noreferrer\">three.js</a> - OBB (Oriented Bounding Box)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,9 +42,9 @@ function onReady(__stage) {
   
   
   
-  			let timer, stats, raycaster, hitbox;
+  			let timer, stats, raycaster: any, hitbox: any;
   
-  			const objects = [], mouse = new THREE.Vector2();
+  			const objects: any = [], mouse = new THREE.Vector2();
   
   			
   
@@ -128,7 +128,7 @@ function onReady(__stage) {
   			
   
   
-  			function onClick( event ) {
+  			function onClick( event: any ) {
   
   				event.preventDefault();
   
@@ -174,7 +174,7 @@ function onReady(__stage) {
   
   			}
   
-  			function sortIntersections( a, b ) {
+  			function sortIntersections( a: any, b: any ) {
   
   				return a.distance - b.distance;
   
@@ -184,7 +184,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				// transform cubes
     				const delta = timer.getDelta();

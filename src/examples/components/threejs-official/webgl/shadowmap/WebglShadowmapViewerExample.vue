@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - ShadowMapViewer example by <a href=\"https://github.com/arya-s\">arya-s</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,10 +41,10 @@ function onReady(__stage) {
   
   
   
-  			let timer, stats;
-  			let dirLight, spotLight;
-  			let torusKnot, cube;
-  			let dirLightShadowMapViewer, spotLightShadowMapViewer;
+  			let timer: any, stats: any;
+  			let dirLight: any, spotLight: any;
+  			let torusKnot: any, cube: any;
+  			let dirLightShadowMapViewer: any, spotLightShadowMapViewer: any;
   
   			
   
@@ -101,7 +101,7 @@ function onReady(__stage) {
   				scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
   
   				// Geometry
-  				let geometry = new THREE.TorusKnotGeometry( 25, 8, 75, 20 );
+  			let geometry: any = new THREE.TorusKnotGeometry( 25, 8, 75, 20 );
   				let material = new THREE.MeshPhongMaterial( {
   					color: 0xff0000,
   					shininess: 150,
@@ -184,7 +184,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

@@ -35,13 +35,13 @@
       :max="100"
       :data="HEAT_POINTS"
       :options="HEAT_OPTIONS"
-      :segments="HEAT_SEGMENTS"
+      :segments="(HEAT_SEGMENTS as any)"
       @ready="onReady"
     />
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { VcOverlayHeatmap } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'
@@ -79,8 +79,8 @@ const HEAT_SEGMENTS = [
   [30, '#2f9f6e'],
   [55, '#ffd94d'],
   [80, '#ff8c2f'],
-  [100, '#e8312f'],
-]
+  [100, "#e8312f"],
+] as any
 
 const heatShow = ref(true)
 const statusText = computed(() =>

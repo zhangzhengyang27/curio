@@ -7,10 +7,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -139,7 +139,7 @@ function onReady(ctx) {
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.75,
-      onBeforeCompile: shader => {
+      onBeforeCompile: (shader: any) => {
           shader.uniforms.time = gu.time;
           shader.uniforms.color1 = gu.color1;
           shader.uniforms.color2 = gu.color2;
@@ -202,7 +202,7 @@ function onReady(ctx) {
           `
           );
       }
-  });
+  } as any);
   m.defines = { "USE_UV": "" } // to use vUv
   let o = new THREE.Mesh(g, m);
   scene.add(o);

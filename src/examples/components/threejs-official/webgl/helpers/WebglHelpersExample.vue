@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - helpers"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -37,8 +37,8 @@ function onReady(__stage) {
 
   
   			let light;
-  			let vnh;
-  			let vth;
+  			let vnh: any;
+  			let vth: any;
   
   			
   
@@ -74,7 +74,7 @@ function onReady(__stage) {
   
   					const mesh = gltf.scene.children[ 0 ];
   
-  					mesh.geometry.computeTangents(); // generates bad data due to degenerate UVs
+  					mesh.geometry!.computeTangents(); // generates bad data due to degenerate UVs
   
   					const group = new THREE.Group();
   					group.scale.multiplyScalar( 50 );
@@ -94,7 +94,7 @@ function onReady(__stage) {
   					scene.add( new THREE.BoxHelper( mesh ) );
   
   					const wireframe = new THREE.WireframeGeometry( mesh.geometry );
-  					let line = new THREE.LineSegments( wireframe );
+  				let line: any = new THREE.LineSegments( wireframe );
   					line.material.depthTest = false;
   					line.material.opacity = 0.25;
   					line.material.transparent = true;
@@ -126,7 +126,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const time = - performance.now() * 0.0003;
     				camera.position.x = 400 * Math.cos( time );
     				camera.position.z = 400 * Math.sin( time );

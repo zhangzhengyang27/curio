@@ -15,13 +15,16 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { WebGLNodesHandler } from 'three/examples/jsm/tsl/WebGLNodesHandler.js';
 import { WebGLRenderer } from 'three';
 import { mx_fractal_noise_float, mx_fractal_noise_vec3, positionLocal, positionWorld, Fn, color } from 'three/tsl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+let timer: any;
+
 
 const props = defineProps({
   example: {
@@ -31,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Shadow Map</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -42,8 +45,8 @@ function onReady(__stage) {
   
   
   
-  			let dirLight, spotLight;
-  			let torusKnot, dirGroup;
+  			let dirLight: any, spotLight;
+  			let torusKnot: any, dirGroup: any;
   
   			
   
@@ -133,7 +136,7 @@ function onReady(__stage) {
   				const planeGeometry = new THREE.PlaneGeometry( 200, 200 );
   
   				const planeMaterial = new THREE.MeshPhongNodeMaterial();
-  				planeMaterial.color.setHex( 0x999999 );
+  				(planeMaterial as any)!.color.setHex( 0x999999 );
   				planeMaterial.shininess = 0;
   				planeMaterial.specular.setHex( 0x111111 );
   
@@ -186,7 +189,7 @@ function onReady(__stage) {
   
   			}
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				timer.update();
   

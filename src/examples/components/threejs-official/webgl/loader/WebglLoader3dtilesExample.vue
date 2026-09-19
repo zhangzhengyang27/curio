@@ -13,12 +13,14 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { TileCreasedNormalsPlugin } from 'three/examples/jsm/misc/TileCreasedNormalsPlugin.js';
-import { TilesRenderer, GlobeControls, CAMERA_FRAME } from '3d-tiles-renderer';
+import { TilesRenderer, GlobeControls } from '3d-tiles-renderer';
+// 上游 .d.ts 漏导出 CAMERA_FRAME(运行时 build/index.js 存在),经命名空间断言取值
+import * as __threeTiles from '3d-tiles-renderer';
 import { CesiumIonAuthPlugin } from '3d-tiles-renderer/core/plugins';
 import { GLTFExtensionsPlugin, TilesFadePlugin, UpdateOnChangePlugin } from '3d-tiles-renderer/three/plugins';
 import { EffectMaterial, EffectPass, NormalPass, SMAAEffect } from 'postprocessing';
@@ -35,6 +37,8 @@ import { AerialPerspectiveEffect, PrecomputedTexturesGenerator, getSunDirectionE
 import { STBNLoader, DEFAULT_STBN_URL } from '@takram/three-geospatial';
 import { DitheringEffect, LensFlareEffect } from '@takram/three-geospatial-effects';
 
+const CAMERA_FRAME: any = ( __threeTiles as any ).CAMERA_FRAME;
+
 const props = defineProps({
   example: {
     type: Object,
@@ -43,7 +47,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\t\t<a href=\"https://github.com/NASA-AMMOS/3DTilesRendererJS\" target=\"_blank\" rel=\"noopener\">3d-tiles-renderer</a> +\n\t\t\t<a href=\"https://github.com/takram-design-engineering/three-geospatial\" target=\"_blank\" rel=\"noopener\">three-clouds</a><br/>\n\t\t\t<a href=\"https://developers.google.com/maps/documentation/tile/3d-tiles\" target=\"_blank\" rel=\"noopener\">Google Photorealistic Tiles</a> token courtesy of <a href=\"https://ion.cesium.com/\" target=\"_blank\" rel=\"noopener\">Cesium Ion</a>.<br/>\n\t\t\t<label>time of day: <input id=\"hour\" type=\"range\" min=\"0\" max=\"24\" value=\"0\" step=\"0.01\" style=\"pointer-events: all; vertical-align: middle;\"></label>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -57,8 +61,8 @@ async function onReady(__stage) {
   			// A personal Cesium Ion key can be used for development.
   			const ION_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiMTFiZTRmZS1mMWIxLTQ5YzYtYjA4Zi0xYTE0MjFmYzQ5OGYiLCJpZCI6MjY3NzgzLCJpYXQiOjE3MzY0NzQxMDh9.ppGPgpse1lq7QeNyljX7THUyK5w1x_4HksSHSlhe5sY';
   
-  			let tiles;
-  			let clouds, aerialPerspective;
+  			let tiles: any;
+  			let clouds: any, aerialPerspective: any;
   			let _prevTime = 0, _deltaTime = 0;
   
   			
@@ -159,7 +163,7 @@ async function onReady(__stage) {
   				clouds.shadow.splitLambda = 0.71;
   
   				// sync cloud shadows to atmosphere
-  				clouds.events.addEventListener( 'change', ( event ) => {
+  				clouds.events.addEventListener( 'change', ( event: any ) => {
   
   					if ( event.property === 'atmosphereOverlay' ) aerialPerspective.overlay = clouds.atmosphereOverlay;
   					if ( event.property === 'atmosphereShadow' ) aerialPerspective.shadow = clouds.atmosphereShadow;
@@ -169,9 +173,14 @@ async function onReady(__stage) {
   
   				// adapter: bridges pmndrs postprocessing passes to renderer.setEffects()
   
-  				class EffectPassAdapter {
-  
-  					constructor( pass ) {
+				class EffectPassAdapter {
+
+					pass: any;
+					needsSwap: any;
+					enabled: any;
+					_initialized: any;
+
+					constructor( pass: any ) {
   
   						this.pass = pass;
   						this.needsSwap = pass.needsSwap !== false;
@@ -180,7 +189,7 @@ async function onReady(__stage) {
   
   					}
   
-  					render( renderer, writeBuffer, readBuffer ) {
+  					render( renderer: any, writeBuffer: any, readBuffer: any ) {
   
   						if ( ! this._initialized ) {
   
@@ -207,7 +216,7 @@ async function onReady(__stage) {
   
   					}
   
-  					setSize( width, height ) {
+  					setSize( width: any, height: any ) {
   
   						if ( this._initialized ) this.pass.setSize( width, height );
   
@@ -233,7 +242,7 @@ async function onReady(__stage) {
   				// load cloud textures
   				const textureLoader = new THREE.TextureLoader();
   
-  				function loadCloudTexture( url, property ) {
+  				function loadCloudTexture( url: any, property: any ) {
   
   					textureLoader.load( url, ( texture ) => {
   
@@ -252,7 +261,7 @@ async function onReady(__stage) {
   				loadCloudTexture( DEFAULT_LOCAL_WEATHER_URL, 'localWeatherTexture' );
   				loadCloudTexture( DEFAULT_TURBULENCE_URL, 'turbulenceTexture' );
   
-  				function loadData3DTexture( url, size, property ) {
+  				function loadData3DTexture( url: any, size: any, property: any ) {
   
   					fetch( url ).then( res => res.arrayBuffer() ).then( buffer => {
   
@@ -295,21 +304,28 @@ async function onReady(__stage) {
   				__stage.overlay?.appendChild( hourInput );
   				hourInput.addEventListener( 'input', ( e ) => {
   
-  					params.hourUTC = parseFloat( e.target.value );
+  					params.hourUTC = parseFloat( ( e.target as HTMLInputElement ).value );
   					updateSunDirection();
   
   				} );
   
   				// start rendering
   				
-  				onWindowResize();
+	  				onWindowResize();
+
+	  			function onWindowResize() {
+
+	  				camera.aspect = ( __stage.container?.clientWidth || window.innerWidth ) / ( __stage.container?.clientHeight || window.innerHeight );
+	  				camera.updateProjectionMatrix();
+
+	  			}
   
   			
   
   
   			
   
-  			function animate( time ) {
+  			function animate( time: any ) {
   
   				_deltaTime = ( time - _prevTime ) / 1000;
   				_prevTime = time;
@@ -320,6 +336,9 @@ async function onReady(__stage) {
   
   
   			}
+
+  			// 原版 renderer.setAnimationLoop( animate ) 转换期丢失,按仓库惯用法注册
+  			__stage.addUpdateCallback( animate );
   
   		
 }

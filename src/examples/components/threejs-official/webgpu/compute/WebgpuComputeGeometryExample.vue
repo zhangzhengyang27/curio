@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec4, storage, Fn, If, uniform, instanceIndex, objectWorldMatrix, color, screenUV, attribute } from 'three/tsl';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Compute Geometry</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -39,7 +39,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let raycaster, pointer;
+  			let raycaster: any, pointer: any;
   
   			let mesh;
   
@@ -64,7 +64,7 @@ function onReady(__stage) {
   
   				// Attributes
   
-  				const positionAttribute = storage( positionBaseAttribute, 'vec3', count );
+  				const positionAttribute = (storage as any)( positionBaseAttribute, 'vec3', count );
   				const positionStorageAttribute = storage( positionStorageBufferAttribute, 'vec3', count );
   
   				const speedAttribute = storage( speedBufferAttribute, 'vec3', count );
@@ -191,7 +191,7 @@ function onReady(__stage) {
   			
   
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.set( ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1, - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1 );
   

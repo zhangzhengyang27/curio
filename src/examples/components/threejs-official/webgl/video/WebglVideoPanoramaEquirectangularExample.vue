@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - video panorama"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -82,7 +82,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				isUserInteracting = true;
   
@@ -94,7 +94,7 @@ function onReady(__stage) {
   
   			}
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				if ( isUserInteracting === true ) {
   
@@ -111,7 +111,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     lat = Math.max( - 85, Math.min( 85, lat ) );
     				phi = THREE.MathUtils.degToRad( 90 - lat );
     				theta = THREE.MathUtils.degToRad( lon );

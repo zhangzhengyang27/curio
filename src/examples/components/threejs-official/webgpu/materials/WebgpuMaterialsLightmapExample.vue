@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { vec4, color, positionLocal, mix } from 'three/tsl';
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -101,9 +101,9 @@ async function onReady(__stage) {
   
   				const gui = renderer.inspector.createParameters( 'Parameters' );
   
-  				gui.add( params, 'intensity', 0, 1 ).name( 'Light Map Intensity' ).onChange( ( value ) => {
+  				gui.add( params, 'intensity', 0, 1 ).name( 'Light Map Intensity' ).onChange( ( value: any ) => {
   
-  					for ( const material of object.material ) {
+  					for ( const material of (object.material as any) ) {
   
   						material.lightMapIntensity = value;
   

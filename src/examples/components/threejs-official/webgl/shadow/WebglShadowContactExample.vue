@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - contact shadows"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -47,7 +47,7 @@ function onReady(__stage) {
   
   			let stats, gui;
   
-  			const meshes = [];
+  			const meshes: any = [];
   
   			const PLANE_WIDTH = 2.5;
   			const PLANE_HEIGHT = 2.5;
@@ -66,9 +66,9 @@ function onReady(__stage) {
   				showWireframe: false,
   			};
   
-  			let shadowGroup, renderTarget, renderTargetBlur, shadowCamera, cameraHelper, depthMaterial, horizontalBlurMaterial, verticalBlurMaterial;
+  			let shadowGroup, renderTarget: any, renderTargetBlur: any, shadowCamera: any, cameraHelper, depthMaterial, horizontalBlurMaterial: any, verticalBlurMaterial: any;
   
-  			let plane, blurPlane, fillPlane;
+  			let plane, blurPlane: any, fillPlane;
   
   			
   
@@ -248,7 +248,7 @@ function onReady(__stage) {
   			
   
   			// renderTarget --> blurPlane (horizontalBlur) --> renderTargetBlur --> blurPlane (verticalBlur) --> renderTarget
-  			function blurShadow( amount ) {
+  			function blurShadow( amount: any ) {
   
   				blurPlane.visible = true;
   
@@ -272,8 +272,8 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
-    meshes.forEach( mesh => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
+    meshes.forEach( (mesh: any) => {
     					mesh.rotation.x += 0.01;
     					mesh.rotation.y += 0.02;
     				} );

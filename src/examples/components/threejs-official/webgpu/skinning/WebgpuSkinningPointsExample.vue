@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { color, computeSkinning, objectWorldMatrix, instancedArray, instanceIndex, Fn, shapeCircle } from 'three/tsl';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Skinning Points</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -37,7 +37,7 @@ function onReady(__stage) {
   const controls = __stage.controls
 
   
-  			let mixer, timer;
+  			let mixer: any, timer;
   
   			
   
@@ -63,7 +63,7 @@ function onReady(__stage) {
   					const action = mixer.clipAction( gltf.animations[ 0 ] );
   					action.play();
   
-  					object.traverse( function ( child ) {
+  					object.traverse( function ( child: any ) {
   
   						if ( child.isMesh ) {
   
@@ -75,10 +75,10 @@ function onReady(__stage) {
   							const pointSpeedArray = instancedArray( countOfPoints, 'vec3' ).setPBO( true );
   
   							const pointSpeedAttribute = pointSpeedArray.toAttribute();
-  							const skinningPosition = computeSkinning( child );
+  							const skinningPosition = computeSkinning( child ) as any;
   
   							const materialPoints = new THREE.PointsNodeMaterial();
-  							materialPoints.colorNode = pointSpeedAttribute.mul( .6 ).mix( color( 0x0066ff ), color( 0xff9000 ) );
+  							materialPoints.colorNode = ( pointSpeedAttribute.mul( .6 ) as any ).mix( color( 0x0066ff ), color( 0xff9000 ) );
   							materialPoints.opacityNode = shapeCircle();
   							materialPoints.sizeNode = pointSpeedAttribute.length().exp().min( 5 ).mul( 5 ).add( 1 );
   							materialPoints.sizeAttenuation = false;
@@ -89,7 +89,7 @@ function onReady(__stage) {
   								const pointPosition = pointPositionArray.element( instanceIndex );
   								const pointSpeed = pointSpeedArray.element( instanceIndex );
   
-  								const skinningWorldPosition = objectWorldMatrix( child ).mul( skinningPosition );
+  								const skinningWorldPosition = objectWorldMatrix( child ).mul( skinningPosition ) as any;
   
   								const skinningSpeed = skinningWorldPosition.sub( pointPosition );
   
@@ -139,7 +139,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) mixer.update( delta );

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import gsap from 'gsap'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -77,7 +77,7 @@ function onReady(ctx) {
       side: THREE.DoubleSide,
   })
   // 创建加号几何体数组
-  const geometries = []
+  const geometries: any[] = []
   
   for (let row = 0; row < opt.gridDivision + 1; row++) {
       for (let col = 0; col < opt.gridDivision + 1; col++) {
@@ -148,7 +148,7 @@ function onReady(ctx) {
   
   const points = new THREE.Points(pointGeometry, pointMaterial)
   
-  let shaderProgram = null
+  let shaderProgram: any = null
   if (opt.diffuse) {
   
       // 给材质添加着色器
@@ -248,7 +248,7 @@ function onReady(ctx) {
       const resetTime = opt.gridSize / opt.diffuseSpeed
   
       const clock = new THREE.Clock()
-      points.render = () => {
+      ;(points as any).render = () => {
           if (shaderProgram) {
               shaderProgram.uniforms.uTime.value += clock.getDelta() // 增加时间
               // 当时间超过一定值时重置，形成循环动画
@@ -264,8 +264,8 @@ function onReady(ctx) {
   scene.add(gridGroup)
   
   ctx.addUpdateCallback(() => {
-    if (points.render) {
-            points.render() // 调用自定义渲染方法
+    if ((points as any).render) {
+            (points as any).render() // 调用自定义渲染方法
         }
   })
   

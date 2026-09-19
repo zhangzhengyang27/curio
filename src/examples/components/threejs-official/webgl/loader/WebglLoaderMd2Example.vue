@@ -15,16 +15,17 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MD2Character } from 'three/examples/jsm/misc/MD2Character.js';
+let character: any;
 
 const props = defineProps({
   example: {
@@ -34,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - MD2 Loader"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -57,7 +58,7 @@ function onReady(__stage) {
   
   
   
-  			const playbackConfig = {
+  			const playbackConfig: any = {
   
   				speed: 1.0,
   				wireframe: false
@@ -120,9 +121,9 @@ function onReady(__stage) {
   
   				const ground = new THREE.Mesh( gg, gm );
   				ground.rotation.x = - Math.PI / 2;
-  				ground.material.map.repeat.set( 8, 8 );
-  				ground.material.map.wrapS = ground.material.map.wrapT = THREE.RepeatWrapping;
-  				ground.material.map.colorSpace = THREE.SRGBColorSpace;
+  				ground.material.map!.repeat.set( 8, 8 );
+  				ground.material.map!.wrapS = ground.material.map!.wrapT = THREE.RepeatWrapping;
+  				ground.material.map!.colorSpace = THREE.SRGBColorSpace;
   				ground.receiveShadow = true;
   
   				scene.add( ground );
@@ -216,7 +217,7 @@ function onReady(__stage) {
   
   			// GUI
   
-  			function labelize( text ) {
+  			function labelize( text: any ) {
   
   				const parts = text.split( '.' );
   
@@ -233,11 +234,11 @@ function onReady(__stage) {
   
   			//
   
-  			function setupWeaponsGUI( character ) {
+  			function setupWeaponsGUI( character: any ) {
   
   				const folder = gui.addFolder( 'Weapons' );
   
-  				const generateCallback = function ( index ) {
+  				const generateCallback = function ( index: any ) {
   
   					return function () {
   
@@ -263,11 +264,11 @@ function onReady(__stage) {
   
   			//
   
-  			function setupSkinsGUI( character ) {
+  			function setupSkinsGUI( character: any ) {
   
   				const folder = gui.addFolder( 'Skins' );
   
-  				const generateCallback = function ( index ) {
+  				const generateCallback = function ( index: any ) {
   
   					return function () {
   
@@ -292,11 +293,11 @@ function onReady(__stage) {
   
   			//
   
-  			function setupGUIAnimations( character ) {
+  			function setupGUIAnimations( character: any ) {
   
   				const folder = gui.addFolder( 'Animations' );
   
-  				const generateCallback = function ( animationClip ) {
+  				const generateCallback = function ( animationClip: any ) {
   
   					return function () {
   
@@ -322,7 +323,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const delta = timer.getDelta();

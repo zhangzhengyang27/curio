@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t<div class=\"title-wrapper\">\n\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Batch Mesh</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,8 +40,8 @@ function onReady(__stage) {
   
   
   		let gui;
-  		let geometries, mesh, material;
-  		const ids = [];
+  		let geometries: any, mesh: any, material: any;
+  		const ids: any = [];
   
   		const matrix = new THREE.Matrix4();
   
@@ -81,7 +81,7 @@ function onReady(__stage) {
   
   		//
   
-  		function randomizeMatrix( matrix ) {
+  		function randomizeMatrix( matrix: any ) {
   
   			position.x = Math.random() * 40 - 20;
   			position.y = Math.random() * 40 - 20;
@@ -99,7 +99,7 @@ function onReady(__stage) {
   
   		}
   
-  		function randomizeRotationSpeed( rotation ) {
+  		function randomizeRotationSpeed( rotation: any ) {
   
   			rotation.x = Math.random() * 0.01;
   			rotation.y = Math.random() * 0.01;
@@ -248,7 +248,7 @@ function onReady(__stage) {
   			gui.add( api, 'count', 1, MAX_GEOMETRY_COUNT, 1 ).onChange( initMesh );
   			gui.add( api, 'dynamic', 0, MAX_GEOMETRY_COUNT, 1 );
   
-  			gui.add( api, 'opacity', 0, 1 ).onChange( v => {
+  			gui.add( api, 'opacity', 0, 1 ).onChange( (v: any) => {
   
   				if ( v < 1 ) {
   
@@ -279,7 +279,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     animateMeshes();
     				if ( mesh.isBatchedMesh ) {
     					mesh.sortObjects = api.sortObjects;
@@ -310,11 +310,11 @@ function onReady(__stage) {
   
   		//
   
-  		function sortFunction( list, camera ) {
+  		function sortFunction( this: any, list: any, camera: any ) {
   
   			// initialize options
   			this._options = this._options || {
-  				get: el => el.z,
+  				get: (el: any) => el.z,
   				aux: new Array( this.maxInstanceCount )
   			};
   

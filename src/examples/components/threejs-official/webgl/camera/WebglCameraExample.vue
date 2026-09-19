@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - cameras<br/>\n\t\t<b>O</b> orthographic <b>P</b> perspective"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -44,10 +44,10 @@ function onReady(__stage) {
   			let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
   
   			let container, stats;
-  			let mesh;
-  			let cameraRig, activeCamera, activeHelper;
-  			let cameraPerspective, cameraOrtho;
-  			let cameraPerspectiveHelper, cameraOrthoHelper;
+  			let mesh: any;
+  			let cameraRig: any, activeCamera: any, activeHelper: any;
+  			let cameraPerspective: any, cameraOrtho: any;
+  			let cameraPerspectiveHelper: any, cameraOrthoHelper: any;
   			const frustumSize = 600;
   
   			
@@ -151,7 +151,7 @@ function onReady(__stage) {
   
   			//
   
-  			function onKeyDown( event ) {
+  			function onKeyDown( event: any ) {
   
   				switch ( event.keyCode ) {
   
@@ -179,7 +179,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const r = Date.now() * 0.0005;
     				mesh.position.x = 700 * Math.cos( r );

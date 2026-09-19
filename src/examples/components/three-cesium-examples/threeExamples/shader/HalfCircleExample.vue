@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,14 +19,14 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  var shader_material, rayMarchingFireMaterial, shaderMaterial
-  var clock, stats
+  var shader_material, rayMarchingFireMaterial: any, shaderMaterial
+  var clock, stats: any
   const vs = `
   varying vec2 vUv;
   varying vec3 vPosition;

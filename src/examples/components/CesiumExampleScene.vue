@@ -5,7 +5,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, provide } from 'vue'
 
 const props = defineProps({
@@ -18,8 +18,8 @@ const props = defineProps({
 
 const emit = defineEmits(['ready', 'before-dispose'])
 
-const containerRef = ref(null)
-let viewer = null
+const containerRef = ref<HTMLElement | null>(null)
+let viewer: any = null
 
 function loadCesiumScript() {
   return new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ function loadCesiumScript() {
 
 async function init() {
   if (!containerRef.value) return
-  const Cesium = await loadCesiumScript()
+  const Cesium: any = await loadCesiumScript()
   if (!Cesium) {
     console.warn('[CesiumExampleScene] window.Cesium is not available')
     return
@@ -47,7 +47,7 @@ async function init() {
     ? props.viewerOptions(Cesium)
     : props.viewerOptions
 
-  viewer = new Cesium.Viewer(containerRef.value, {
+  viewer = new Cesium.Viewer(containerRef.value!, {
     animation: false,
     baseLayerPicker: false,
     fullscreenButton: false,

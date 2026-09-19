@@ -2,22 +2,20 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
-          var webgl = null;
+          var webgl: any = null;
           // 定义 顶点数组
           var projMat4 = glMatrix.mat4.create();
           var uniformTexture = 0;
           var uniformTexture1 = 0;
           var uniformAnim = 0;
           var count = 0;
-          var texture0;
-          var texture1;
-  
+          var texture0: WebGLTexture;          var texture1: WebGLTexture;  
           //  通过 varying vec2 inUV; 顶点着色器与片元着色器传递数据
           let vertexstring = `
           attribute vec4 a_position;
@@ -65,7 +63,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function initWebgl() {
               let webglDiv = canvas;
               // 通过容器获取上下文
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
               // 设置投影矩阵
@@ -75,8 +73,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           // 初始化着色器，shader 供 gpu 使用的
           function initShader() {
   
-              let vsshader = webgl.createShader(webgl.VERTEX_SHADER);
-              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER);
+              let vsshader = webgl.createShader(webgl.VERTEX_SHADER)!;
+              let fsshader = webgl.createShader(webgl.FRAGMENT_SHADER)!;
   
               webgl.shaderSource(vsshader, vertexstring);
               webgl.shaderSource(fsshader, fragmentstring);
@@ -100,7 +98,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.linkProgram(program);
               webgl.useProgram(program);
   
-              webgl.program = program
+              (webgl as any).program = program
           }
   
           // 初始化缓冲区
@@ -116,23 +114,23 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
                   500, 500, 0, 1, 1, 1,
               ]
               let pointPosition = new Float32Array(arr);
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               let triangleBuffer = webgl.createBuffer();
               webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
               webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
               webgl.enableVertexAttribArray(aPsotion);
               webgl.vertexAttribPointer(aPsotion, 4, webgl.FLOAT, false, 6 * 4, 0);
   
-              let uniformProj = webgl.getUniformLocation(webgl.program, "proj");
+              let uniformProj = webgl.getUniformLocation((webgl as any).program, "proj");
               webgl.uniformMatrix4fv(uniformProj, false, projMat4);
   
-              let attribOutUV = webgl.getAttribLocation(webgl.program, "outUV");
+              let attribOutUV = webgl.getAttribLocation((webgl as any).program, "outUV");
               webgl.enableVertexAttribArray(attribOutUV);
               webgl.vertexAttribPointer(attribOutUV, 2, webgl.FLOAT, false, 6 * 4, 4 * 4);
   
               // 将 webgl 数据转换为 纹理可以识别的对象
-              uniformTexture = webgl.getUniformLocation(webgl.program, "texture");
-              uniformTexture1 = webgl.getUniformLocation(webgl.program, "texture1");
+              uniformTexture = webgl.getUniformLocation((webgl as any).program, "texture");
+              uniformTexture1 = webgl.getUniformLocation((webgl as any).program, "texture1");
   
               texture1 = initTexture("/webgl/study-webgl/2-texture/images/fog.png");
               texture0 = initTexture("/webgl/study-webgl/2-texture/images/山水.png");
@@ -141,8 +139,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
   
           }
   
-          function initTexture(imageFile, num) {
-              let textureHandle = webgl.createTexture();
+          function initTexture(imageFile: any, num?: any) {
+              let textureHandle = webgl.createTexture()!;
               textureHandle.image = new Image();
               textureHandle.image.src = imageFile;
               textureHandle.image.onload = function () {
@@ -152,7 +150,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           }
   
           // 绘制纹理
-          function handleLoadedTexture(texture) {
+          function handleLoadedTexture(texture: any, _num?: any) {
               // 生成纹理
               webgl.bindTexture(webgl.TEXTURE_2D, texture);
               // 设置纹理参数
@@ -173,7 +171,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
               webgl.enable(webgl.DEPTH_TEST);
               // 纹理变动
-              uniformAnim = webgl.getUniformLocation(webgl.program, "anim");
+              uniformAnim = webgl.getUniformLocation((webgl as any).program, "anim");
               // 设置变量
               count = count + 0.01;
               // 传递变量

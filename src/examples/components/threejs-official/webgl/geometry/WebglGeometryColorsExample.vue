@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - vertex colors"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -66,7 +66,7 @@ function onReady(__stage) {
   				canvas.width = 128;
   				canvas.height = 128;
   
-  				const context = canvas.getContext( '2d' );
+  				const context = canvas.getContext( '2d' )!;
   				const gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
   				gradient.addColorStop( 0.1, 'rgba(210,210,210,1)' );
   				gradient.addColorStop( 1, 'rgba(255,255,255,1)' );
@@ -104,7 +104,7 @@ function onReady(__stage) {
   
   				const count = geometry1.attributes.position.count;
   				const arrayType = ( typeof Float16Array !== 'undefined' ) ? Float16Array : Float32Array;
-  				geometry1.setAttribute( 'color', new THREE.BufferAttribute( new arrayType( count * 3 ), 3 ) );
+  				geometry1.setAttribute( 'color', new THREE.BufferAttribute( new arrayType( count * 3 ) as any, 3 ) );
   
   				const geometry2 = geometry1.clone();
   				const geometry3 = geometry1.clone();
@@ -174,7 +174,7 @@ function onReady(__stage) {
   
   			
   
-  			function onDocumentMouseMove( event ) {
+  			function onDocumentMouseMove( event: any ) {
   
   				mouseX = ( event.clientX - windowHalfX );
   				mouseY = ( event.clientY - windowHalfY );
@@ -183,7 +183,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     camera.position.x += ( mouseX - camera.position.x ) * 0.05;
     				camera.position.y += ( - mouseY - camera.position.y ) * 0.05;

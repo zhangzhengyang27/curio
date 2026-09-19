@@ -15,7 +15,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, If, Loop, vec4, vec2, uvec4, mat4, uint, float, int, min, max, atomicMax, atomicAdd, atomicStore, atomicLoad, floor, cos, sin, dot, bool, storage, uniform, uniformArray, uv, instanceIndex, vertexIndex, distance, screenSize, time, texture, varyingProperty, sqrt } from 'three/tsl';
@@ -23,6 +23,9 @@ import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonCont
 import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+
+let maxPixels: any;
+
 
 const props = defineProps({
   example: {
@@ -32,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>GPU-Driven Compute Rasterizer</span>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   const scene = __stage.scene
   let camera = __stage.camera
@@ -56,12 +59,12 @@ function onReady(__stage) {
   			}
   
   			let timer;
-  			let computeRasterize, computeClear, computeFrustum, computeDispatch, computeHWArgs;
-  			let quadMesh, hwScene, hwMesh;
+  			let computeRasterize: any, computeClear: any, computeFrustum: any, computeDispatch: any, computeHWArgs: any;
+  			let quadMesh: any, hwScene, hwMesh: any;
   			let cameraPos, projScreenMatrixUniform, frustumPlanesUniform, cotHalfFovUniform;
   
-  			let screenTriAttr, screenTriAtomic, screenTriRead;
-  			let screenInstAttr, screenInstAtomic, screenInstRead;
+  			let screenTriAttr: any, screenTriAtomic: any, screenTriRead: any;
+  			let screenInstAttr: any, screenInstAtomic: any, screenInstRead: any;
   
   
   			const rows = 400;
@@ -118,20 +121,20 @@ function onReady(__stage) {
   					const uvs = geom.attributes.uv;
   					const idx = geom.index ? Array.from( geom.index.array ) : Array.from( { length: pos.count }, ( _, i ) => i );
   
-  					lod.numVertices = pos.count;
-  					lod.numTriangles = idx.length / 3;
-  					lod.vertexOffset = totalVertices;
-  					lod.indexOffset = totalIndices;
-  					lod.positions = pos;
-  					lod.uvs = uvs;
-  					lod.indices = idx;
+  					(lod as any).numVertices = pos.count;
+  					(lod as any).numTriangles = idx.length / 3;
+  					(lod as any).vertexOffset = totalVertices;
+  					(lod as any).indexOffset = totalIndices;
+  					(lod as any).positions = pos;
+  					(lod as any).uvs = uvs;
+  					(lod as any).indices = idx;
   
   					totalVertices += pos.count;
   					totalIndices += idx.length;
   
   				}
   
-  				const maxTrianglesPerInstance = lods[ 0 ].numTriangles;
+  				const maxTrianglesPerInstance = (lods[ 0 ] as any).numTriangles;
   				const totalTriangles = rows * cols * maxTrianglesPerInstance;
   				const triangleCountEl = document.createElement( 'div' );
   				triangleCountEl.style.cssText = 'position:absolute;top:10px;left:10px;color:#fff;font-size:12px;';
@@ -147,30 +150,30 @@ function onReady(__stage) {
   
   				for ( const lod of lods ) {
   
-  					for ( let i = 0; i < lod.numVertices; i ++ ) {
+  					for ( let i = 0; i < (lod as any).numVertices; i ++ ) {
   
-  						const vIdx = lod.vertexOffset + i;
-  						vertexArray[ vIdx * 4 + 0 ] = lod.positions.getX( i );
-  						vertexArray[ vIdx * 4 + 1 ] = lod.positions.getY( i );
-  						vertexArray[ vIdx * 4 + 2 ] = lod.positions.getZ( i );
+  						const vIdx = (lod as any).vertexOffset + i;
+  						vertexArray[ vIdx * 4 + 0 ] = ((lod as any).positions as any).getX(i );
+  						vertexArray[ vIdx * 4 + 1 ] = ((lod as any).positions as any).getY(i );
+  						vertexArray[ vIdx * 4 + 2 ] = ((lod as any).positions as any).getZ(i );
   						vertexArray[ vIdx * 4 + 3 ] = 1.0;
   
-  						if ( lod.uvs ) {
+  						if ( (lod as any).uvs ) {
   
-  							uvArray[ vIdx * 2 + 0 ] = lod.uvs.getX( i );
-  							uvArray[ vIdx * 2 + 1 ] = lod.uvs.getY( i );
+  							uvArray[ vIdx * 2 + 0 ] = ((lod as any).uvs as any).getX(i );
+  							uvArray[ vIdx * 2 + 1 ] = ((lod as any).uvs as any).getY(i );
   
   						}
   
   					}
   
   					let currentTriCount = 0;
-  					for ( let i = 0; i < lod.numTriangles; i ++ ) {
+  					for ( let i = 0; i < (lod as any).numTriangles; i ++ ) {
   
-  						const triIdx = ( lod.indexOffset / 3 ) + i;
-  						indexArray[ triIdx * 3 + 0 ] = lod.vertexOffset + lod.indices[ i * 3 + 0 ];
-  						indexArray[ triIdx * 3 + 1 ] = lod.vertexOffset + lod.indices[ i * 3 + 1 ];
-  						indexArray[ triIdx * 3 + 2 ] = lod.vertexOffset + lod.indices[ i * 3 + 2 ];
+  						const triIdx = ( (lod as any).indexOffset / 3 ) + i;
+  						indexArray[ triIdx * 3 + 0 ] = (lod as any).vertexOffset + (lod as any).indices[ i * 3 + 0 ];
+  						indexArray[ triIdx * 3 + 1 ] = (lod as any).vertexOffset + (lod as any).indices[ i * 3 + 1 ];
+  						indexArray[ triIdx * 3 + 2 ] = (lod as any).vertexOffset + (lod as any).indices[ i * 3 + 2 ];
   
   						if ( currentTriCount >= 126 ) {
   
@@ -192,9 +195,9 @@ function onReady(__stage) {
   				let totalChunks = 0;
   				for ( const lod of lods ) {
   
-  					lod.numChunks = Math.ceil( lod.numTriangles / 64 );
-  					lod.chunkStart = totalChunks;
-  					totalChunks += lod.numChunks;
+  					(lod as any).numChunks = Math.ceil( (lod as any).numTriangles / 64 );
+  					(lod as any).chunkStart = totalChunks;
+  					totalChunks += (lod as any).numChunks;
   
   				}
   
@@ -203,13 +206,13 @@ function onReady(__stage) {
   
   				for ( const lod of lods ) {
   
-  					const positions = lod.positions;
-  					const indices = lod.indices;
+  					const positions = (lod as any).positions;
+  					const indices = (lod as any).indices;
   
-  					for ( let c = 0; c < lod.numChunks; c ++ ) {
+  					for ( let c = 0; c < (lod as any).numChunks; c ++ ) {
   
   						const startTri = c * 64;
-  						const endTri = Math.min( startTri + 64, lod.numTriangles );
+  						const endTri = Math.min( startTri + 64, (lod as any).numTriangles );
   
   						// 1. Calculate Center
   						let cx = 0, cy = 0, cz = 0;
@@ -264,9 +267,9 @@ function onReady(__stage) {
   				const lodOffsetsData = new Uint32Array( lods.length * 4 );
   				for ( let i = 0; i < lods.length; i ++ ) {
   
-  					lodOffsetsData[ i * 4 + 0 ] = lods[ i ].indexOffset / 3;
-  					lodOffsetsData[ i * 4 + 1 ] = lods[ i ].numTriangles;
-  					lodOffsetsData[ i * 4 + 2 ] = lods[ i ].chunkStart;
+  					lodOffsetsData[ i * 4 + 0 ] = (lods[ i ] as any).indexOffset / 3;
+  					lodOffsetsData[ i * 4 + 1 ] = (lods[ i ] as any).numTriangles;
+  					lodOffsetsData[ i * 4 + 2 ] = (lods[ i ] as any).chunkStart;
   
   				}
   
@@ -289,7 +292,7 @@ function onReady(__stage) {
   				const timeScale = uniform( 1.0 );
   
   				const parameterGroup = renderer.inspector.createParameters( 'Parameters' );
-  				parameterGroup.add( options, 'Mode', { 'Meshlet Debug': 'Meshlet Debug', 'Texture': 'Texture' } ).addEventListener( 'change', ( e ) => {
+  				parameterGroup.add( options, 'Mode', { 'Meshlet Debug': 'Meshlet Debug', 'Texture': 'Texture' } ).addEventListener( 'change', ( e: any ) => {
   
   					materialModeUniform.value = e.value === 'Texture' ? 1 : 0;
   
@@ -415,11 +418,11 @@ function onReady(__stage) {
   					Loop( { start: 0, end: 6 }, ( { i: planeIndex } ) => {
   
   						const plane = frustumPlanesUniform.element( planeIndex );
-  						const dist = dot( plane.xyz, pos ).add( plane.w );
+  						const dist = dot( (plane as any).xyz, pos ).add( (plane as any).w );
   
   						If( dist.lessThan( radius.negate() ), () => {
   
-  							visible.assign( false );
+  							visible.assign( (false as any) );
   
   						} );
   
@@ -469,7 +472,7 @@ function onReady(__stage) {
   						const workItems = lodNumTriangles.add( 63 ).div( 64 );
   
   						// Evaluate each Chunk (Cluster)
-  						Loop( { name: 'cIdx', type: 'uint', start: uint( 0 ), end: workItems, condition: '<' }, ( { cIdx: chunkIndex } ) => {
+  						(Loop as any)( { name: 'cIdx', type: 'uint', start: uint( 0 ), end: workItems, condition: '<' }, ( { cIdx: chunkIndex } : any ) => {
   
   							const globalChunkId = lodChunkStart.add( uint( chunkIndex ) );
   							const chunkBounds = chunkBoundsBuffer.element( globalChunkId );
@@ -483,14 +486,14 @@ function onReady(__stage) {
   							const chunkVisible = bool( true ).toVar();
   
   							// Frustum cull the chunk
-  							Loop( { name: 'pIdx', start: 0, end: 6 }, ( { pIdx: planeIndex } ) => {
+  							(Loop as any)( { name: 'pIdx', start: 0, end: 6 }, ( { pIdx: planeIndex } : any ) => {
   
   								const plane = frustumPlanesUniform.element( planeIndex );
-  								const chunkDist = dot( plane.xyz, chunkCenterWorld ).add( plane.w );
+  								const chunkDist = dot( (plane as any).xyz, chunkCenterWorld ).add( (plane as any).w );
   
   								If( chunkDist.lessThan( chunkRadiusWorld.negate() ), () => {
   
-  									chunkVisible.assign( false );
+  									chunkVisible.assign( (false as any) );
   
   								} );
   
@@ -525,7 +528,7 @@ function onReady(__stage) {
   					const maxDim = uint( 65535 );
   
   					// Split totalWorkgroups into 2D dispatch if it exceeds 65535
-  					const dispatchX = min( totalWorkgroups, maxDim );
+  					const dispatchX = (min as any)( totalWorkgroups, maxDim );
   					const dispatchY = totalWorkgroups.add( maxDim ).sub( 1 ).div( maxDim );
   
   					dispatchBuffer.element( 0 ).assign( dispatchX );
@@ -535,7 +538,7 @@ function onReady(__stage) {
   				} )().compute( 1 ).setName( 'Compute Dispatch' );
   
   				// Edge function for barycentric coordinates
-  				const edgeFunction = Fn( ( [ a, b, c ] ) => {
+  				const edgeFunction = Fn( ( [ a, b, c ]: any ) => {
   
   					// (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
   					return c.y.sub( a.y ).mul( b.x.sub( a.x ) ).sub( c.x.sub( a.x ).mul( b.y.sub( a.y ) ) );
@@ -589,7 +592,7 @@ function onReady(__stage) {
   								const ndc2 = p2.xyz.div( p2.w );
   
   								// Early Backface Culling in NDC
-  								const areaNdc = edgeFunction( ndc0, ndc1, ndc2 );
+  								const areaNdc = (edgeFunction as any)( ndc0, ndc1, ndc2 );
   
   								If( areaNdc.greaterThan( 0.0 ), () => {
   
@@ -633,7 +636,7 @@ function onReady(__stage) {
   										// Sub-pixel / Valid bounds rejection + big triangle guard
   										If( startX.lessThanEqual( endX ).and( startY.lessThanEqual( endY ) ).and( bbWidth.lessThanEqual( maxRasterSizeUniform ) ).and( bbHeight.lessThanEqual( maxRasterSizeUniform ) ), () => {
   
-  											const area = edgeFunction( s0, s1, s2 );
+  											const area = (edgeFunction as any)( s0, s1, s2 );
   
   											const stepX_w0 = s1.y.sub( s2.y );
   											const stepY_w0 = s2.x.sub( s1.x );
@@ -655,9 +658,9 @@ function onReady(__stage) {
   
   											const pStart = vec2( float( startX ).add( 0.5 ), float( startY ).add( 0.5 ) );
   
-  											const row_w0 = edgeFunction( s1, s2, pStart ).toVar();
-  											const row_w1 = edgeFunction( s2, s0, pStart ).toVar();
-  											const row_w2 = edgeFunction( s0, s1, pStart ).toVar();
+										const row_w0 = (edgeFunction as any)( s1, s2, pStart ).toVar();
+											const row_w1 = (edgeFunction as any)( s2, s0, pStart ).toVar();
+											const row_w2 = (edgeFunction as any)( s0, s1, pStart ).toVar();
   
   											row_w0.addAssign( bias0 );
   											row_w1.addAssign( bias1 );
@@ -672,14 +675,14 @@ function onReady(__stage) {
   											const stepX_z = stepX_w0.div( area ).mul( ndc0.z ).add( stepX_w1.div( area ).mul( ndc1.z ) ).add( stepX_w2.div( area ).mul( ndc2.z ) );
   											const stepY_z = stepY_w0.div( area ).mul( ndc0.z ).add( stepY_w1.div( area ).mul( ndc1.z ) ).add( stepY_w2.div( area ).mul( ndc2.z ) );
   
-  											Loop( { name: 'y', type: 'int', start: startY, end: endY, condition: '<=' }, ( { y } ) => {
+  											(Loop as any)( { name: 'y', type: 'int', start: startY, end: endY, condition: '<=' }, ( { y }: any ) => {
   
   												const w0 = row_w0.toVar();
   												const w1 = row_w1.toVar();
   												const w2 = row_w2.toVar();
   												const z = row_z.toVar();
   
-  												Loop( { name: 'x', type: 'int', start: startX, end: endX, condition: '<=' }, ( { x } ) => {
+  												(Loop as any)( { name: 'x', type: 'int', start: startX, end: endX, condition: '<=' }, ( { x }: any ) => {
   
   													If( w0.greaterThanEqual( 0.0 ).and( w1.greaterThanEqual( 0.0 ) ).and( w2.greaterThanEqual( 0.0 ) ), () => {
   
@@ -696,7 +699,7 @@ function onReady(__stage) {
   															const pixelIndex = uint( y ).mul( uint( screenSize.x ) ).add( uint( x ) );
   
   															// Early depth pre-check: skip the atomics if the pixel already has a closer fragment
-  															const currentDepth = atomicLoad( screenTriAtomic.element( pixelIndex ) ).shiftRight( TRIANGLE_INDEX_BITS );
+  															const currentDepth = (atomicLoad as any)( screenTriAtomic.element( pixelIndex ) ).shiftRight( TRIANGLE_INDEX_BITS );
   															If( depthTri.greaterThanEqual( currentDepth ), () => {
   
   																// Depth occupies the high bits, so atomicMax resolves the depth
@@ -747,7 +750,7 @@ function onReady(__stage) {
   
   					} ); // End instanceIndex bounds check
   
-  				} )().compute( dispatchAttr ).setName( 'Compute Rasterize' );
+  				} )().compute( (dispatchAttr as any) ).setName( 'Compute Rasterize' );
   
   				// Compute HW Draw Indirect Args
   				computeHWArgs = Fn( () => {
@@ -763,12 +766,12 @@ function onReady(__stage) {
   				} )().compute( 1 ).setName( 'Compute HW Args' );
   
   				// Hash function for meshlet colors (shared between HW mesh and fullscreen quad)
-  				const hashColor = Fn( ( [ id_in ] ) => {
+  				const hashColor = Fn( ( [ id_in ]: any ) => {
   
   					let id = uint( id_in ).toVar();
-  					id = id.mul( uint( 747796405 ) ).add( uint( 289559509 ) );
-  					id = id.shiftRight( 16 ).bitXor( id ).mul( uint( 277803737 ) );
-  					id = id.shiftRight( 16 ).bitXor( id );
+  					(id as any) = id.mul( uint( 747796405 ) ).add( uint( 289559509 ) );
+  					(id as any) = id.shiftRight( 16 ).bitXor( id ).mul( uint( 277803737 ) );
+  					(id as any) = id.shiftRight( 16 ).bitXor( id );
   
   					const r = float( id.bitAnd( uint( 255 ) ) ).div( 255.0 );
   					const g = float( id.shiftRight( 8 ).bitAnd( uint( 255 ) ) ).div( 255.0 );
@@ -837,7 +840,7 @@ function onReady(__stage) {
   						If( materialModeUniform.equal( 0 ), () => {
   
   							const meshletId = meshletIdBuffer.element( megaTriangleIndex ).add( instId.mul( 1000 ) );
-  							outColor.assign( hashColor( meshletId ) );
+  							outColor.assign( (hashColor as any)( (meshletId as any) ) );
   
   						} ).Else( () => {
   
@@ -937,10 +940,10 @@ function onReady(__stage) {
   						const p = vec2( uv().x.mul( screenSize.x ), uv().y.oneMinus().mul( screenSize.y ) );
   
   						// Compute Barycentrics
-  						const area = edgeFunction( s0, s1, s2 );
-  						const w0 = edgeFunction( s1, s2, p );
-  						const w1 = edgeFunction( s2, s0, p );
-  						const w2 = edgeFunction( s0, s1, p );
+  						const area = (edgeFunction as any)( s0, s1, s2 );
+					const w0 = (edgeFunction as any)( s1, s2, p );
+						const w1 = (edgeFunction as any)( s2, s0, p );
+						const w2 = (edgeFunction as any)( s0, s1, p );
   
   						// Guard against division by zero for safe execution
   						const safeArea = area.equal( 0.0 ).select( 1.0, area );
@@ -988,7 +991,7 @@ function onReady(__stage) {
   						If( materialModeUniform.equal( 0 ), () => {
   
   							const meshletId = meshletIdBuffer.element( megaTriangleIndex ).add( instId.mul( 1000 ) );
-  							outColor.assign( hashColor( meshletId ) );
+  							outColor.assign( (hashColor as any)( (meshletId as any) ) );
   
   						} ).Else( () => {
   
@@ -1071,7 +1074,7 @@ function onReady(__stage) {
   			const projScreenMatrix = new THREE.Matrix4();
   			const cameraInverse = new THREE.Matrix4();
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				controls.update( timer.getDelta() );
     				camera.updateMatrixWorld();
@@ -1087,7 +1090,7 @@ function onReady(__stage) {
     				const planesArray = frustumPlanesUniform.array;
     				for ( let i = 0; i < 6; i ++ ) {
     					const p = planes[ i ];
-    					planesArray[ i ].set( p.normal.x, p.normal.y, p.normal.z, p.constant );
+    					(planesArray as any)[ i ].set( p.normal.x, p.normal.y, p.normal.z, p.constant );
     				}
     				// Compute & Render
     				renderer.compute( computeClear );

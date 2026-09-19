@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> + <a href=\"https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_animation_pointer\" target=\"_blank\" rel=\"noopener\">KHR_animation_pointer</a> using <a href=\"https://www.npmjs.com/package/@needle-tools/three-animation-pointer\" target=\"_blank\" rel=\"noopener\">@needle-tools/three-animation-pointer</a><br/>\n\t\t\tDragonDispersion from <a href=\"https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/DragonDispersion\" target=\"_blank\" rel=\"noopener\">glTF-Sample-Assets</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -46,7 +46,7 @@ function onReady(__stage) {
   
   
   
-  			let mixer;
+  			let mixer: any;
   
   			const timer = new THREE.Timer();
   			timer.connect( document );
@@ -110,7 +110,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				mixer.update( delta );

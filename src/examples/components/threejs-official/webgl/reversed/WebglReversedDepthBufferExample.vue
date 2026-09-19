@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -32,7 +32,7 @@ const props = defineProps({
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - reverse depth buffer<br/>"
 
-let _extraRenderers = []
+let _extraRenderers: any[] = []
 
 function onBeforeDispose() {
   _extraRenderers.forEach(r => {
@@ -41,7 +41,7 @@ function onBeforeDispose() {
   _extraRenderers = []
 }
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   const renderer = __stage.renderer
@@ -51,10 +51,10 @@ function onReady(__stage) {
   			// https://webgpu.github.io/webgpu-samples/?sample=reversedZ
   
   
-  			let stats, reversedCamera;
-  			let normalRenderer, logarithmicRenderer, reverseRenderer;
-  			let normalComposer, logarithmicComposer, reverseComposer;
-  			const meshes = [];
+  			let stats: any, reversedCamera: any;
+  			let normalRenderer: any, logarithmicRenderer: any, reverseRenderer: any;
+  			let normalComposer: any, logarithmicComposer: any, reverseComposer: any;
+  			const meshes: any = [];
   
   			const renderTarget = new THREE.WebGLRenderTarget();
   			renderTarget.depthTexture = new THREE.DepthTexture();
@@ -191,11 +191,32 @@ function onReady(__stage) {
   
   				
   				onWindowResize();
+  				function onWindowResize() {
+  					const width = 0.33 * (__stage.container?.clientWidth || window.innerWidth);
+  					const height = (__stage.container?.clientHeight || window.innerHeight);
+  					const dpr = window.devicePixelRatio;
+
+  					normalComposer.setSize( width * dpr, height * dpr );
+  					logarithmicComposer.setSize( width * dpr, height * dpr );
+  					reverseComposer.setSize( width * dpr, height * dpr );
+
+  					normalRenderer.setSize( width, height );
+  					logarithmicRenderer.setSize( width, height );
+  					reverseRenderer.setSize( width, height );
+
+  					camera.aspect = width / height;
+  					camera.updateProjectionMatrix();
+
+  					reversedCamera.aspect = width / height;
+  					reversedCamera.updateProjectionMatrix();
+
+  				}
+
   
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     const now = performance.now() / 1000;
     				for ( let i = 0; i < meshes.length; i ++ ) {
     					const angle = THREE.MathUtils.degToRad( 30 );

@@ -9,35 +9,35 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import GLRenderer from '@/examples/jsm-compat/graphics/gl-raffle/lib/gl-renderer.js'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
 
 
 
 async function initGraphicsExample() {
-  const updateBtn = gContainer.value.querySelector('#updateBtn')
-  const user = gContainer.value.querySelector('#user')
-  const glDoodle = gContainer.value.querySelector('#glDoodle')
+  const updateBtn = gContainer.value!.querySelector('#updateBtn')
+  const user = gContainer.value!.querySelector('#user')
+  const glDoodle = gContainer.value!.querySelector('#glDoodle')
   {
-    const container = gContainer.value.querySelector('#glDoodle');
+    const container = gContainer.value!.querySelector('#glDoodle');
         const doodle = new GLRenderer(container, {autoUpdate: false});
         const width = 512,
           height = 512;
-        const button = gContainer.value.querySelector('#updateBtn');
+        const button = gContainer.value!.querySelector('#updateBtn');
         (async function() {
           const textureCanvas = new OffscreenCanvas(width, height);
           const ctx = textureCanvas.getContext('2d');
           const program = await doodle.load('./lib/fragment.glsl');
           doodle.useProgram(program);
     
-          button.addEventListener('click', () => {
+          button!.addEventListener('click', () => {
             const texture = doodle.createTexture(textureCanvas.transferToImageBitmap());
             doodle.uniforms.resolution = [width, height];
             doodle.uniforms.rate = 0.2; // 30% 中奖概率
@@ -45,7 +45,7 @@ async function initGraphicsExample() {
             doodle.uniforms.texture = texture;
             doodle.render();
             doodle.deleteTexture(texture);
-            ctx.drawImage(doodle.canvas, 0, 0, width, height);
+            ctx!.drawImage(doodle.canvas, 0, 0, width, height);
           });
         }());
   }

@@ -4,18 +4,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 import {loadImage, getImageData, traverse} from '@/examples/jsm-compat/mygrapics/pixels/lib/util.js'
 import {transformColor} from '@/examples/jsm-compat/mygrapics/pixels/lib/color-matrix.js'
 
-const mgContainer = ref(null)
+const mgContainer = ref<HTMLElement | null>(null)
 const { runInit } = useGraphicsCleanup()
 
 async function initMyGrapicsExample() {
   {
-    function brightness(p) {
+    function brightness(p: any) {
           return [
             p, 0, 0, 0, 0,
             0, p, 0, 0, 0,
@@ -24,7 +24,7 @@ async function initMyGrapicsExample() {
           ];
         }
     
-        function saturate(p) {
+        function saturate(p: any) {
           const r = 0.212 * (1 - p);
           const g = 0.714 * (1 - p);
           const b = 0.074 * (1 - p);
@@ -36,7 +36,7 @@ async function initMyGrapicsExample() {
           ];
         }
     
-        function grayscale(p) {
+        function grayscale(p: any) {
           const r = 0.212 * p;
           const g = 0.714 * p;
           const b = 0.074 * p;
@@ -49,7 +49,7 @@ async function initMyGrapicsExample() {
           ];
         }
     
-        function channel({r = 1, g = 1, b = 1}) {
+        function channel({r = 1, g = 1, b = 1}: any) {
           return [
             r, 0, 0, 0, 0,
             0, g, 0, 0, 0,
@@ -58,14 +58,14 @@ async function initMyGrapicsExample() {
           ];
         }
     
-        const canvas = mgContainer.value.querySelector('#paper');
-        const context = canvas.getContext('2d');
+        const canvas = mgContainer.value!.querySelector('#paper') as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
     
         (async function () {
           const img = await loadImage('assets/girl1.jpg');
           const imageData = getImageData(img);
     
-          traverse(imageData, ({r, g, b, a}) => {
+          traverse(imageData, ({r, g, b, a}: any) => {
             return transformColor(
               [r, g, b, a],
               channel({r: 1.2}),

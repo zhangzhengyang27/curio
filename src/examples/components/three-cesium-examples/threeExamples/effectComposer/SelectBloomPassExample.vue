@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { BlendFunction, SelectiveBloomEffect, EffectComposer, EffectPass, RenderPass } from "postprocessing";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -63,10 +63,10 @@ function onReady(ctx) {
   
   scene.add(box1, box2)
   
-  bloomEffect.selection.set([box1], true)
+  ;(bloomEffect.selection.set as any)([box1], true)
   
   // 点击立方体时，高亮立方体
-  ctx.container?.addEventListener('click', e => {
+  ctx.container?.addEventListener('click', (e: any) => {
   
       const raycaster = new THREE.Raycaster()
   

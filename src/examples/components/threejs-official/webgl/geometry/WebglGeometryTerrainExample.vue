@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - webgl terrain + fog demo <br />(left click: forward, right click: backward)"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -104,7 +104,7 @@ function onReady(__stage) {
   
   			
   
-  			function generateHeight( width, height ) {
+  			function generateHeight( width: any, height: any ) {
   
   				let seed = Math.PI / 4;
   				window.Math.random = function () {
@@ -136,7 +136,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateTexture( data, width, height ) {
+  			function generateTexture( data: any, width: any, height: any ) {
   
   				let context, image, imageData, shade;
   
@@ -150,10 +150,10 @@ function onReady(__stage) {
   				canvas.height = height;
   
   				context = canvas.getContext( '2d' );
-  				context.fillStyle = '#000';
-  				context.fillRect( 0, 0, width, height );
+  				context!.fillStyle = '#000';
+  				context!.fillRect( 0, 0, width, height );
   
-  				image = context.getImageData( 0, 0, canvas.width, canvas.height );
+  				image = context!.getImageData( 0, 0, canvas.width, canvas.height );
   				imageData = image.data;
   
   				for ( let i = 0, j = 0, l = imageData.length; i < l; i += 4, j ++ ) {
@@ -171,7 +171,7 @@ function onReady(__stage) {
   
   				}
   
-  				context.putImageData( image, 0, 0 );
+  				context!.putImageData( image, 0, 0 );
   
   				// Scaled 4x
   
@@ -180,10 +180,10 @@ function onReady(__stage) {
   				canvasScaled.height = height * 4;
   
   				context = canvasScaled.getContext( '2d' );
-  				context.scale( 4, 4 );
-  				context.drawImage( canvas, 0, 0 );
+  				context!.scale( 4, 4 );
+  				context!.drawImage( canvas, 0, 0 );
   
-  				image = context.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
+  				image = context!.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
   				imageData = image.data;
   
   				for ( let i = 0, l = imageData.length; i < l; i += 4 ) {
@@ -196,7 +196,7 @@ function onReady(__stage) {
   
   				}
   
-  				context.putImageData( image, 0, 0 );
+  				context!.putImageData( image, 0, 0 );
   
   				return canvasScaled;
   
@@ -204,7 +204,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     controls.update( timer.getDelta() );

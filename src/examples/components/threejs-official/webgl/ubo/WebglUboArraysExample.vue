@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -92,7 +92,7 @@ const fragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -232,7 +232,7 @@ function onReady(__stage) {
   				gui = new GUI();
   				gui.add( api, 'count', 1, pointLightsMax ).step( 1 ).onChange( function () {
   
-  					lightingUniformsGroup.uniforms[ 2 ].value = api.count;
+  					(lightingUniformsGroup.uniforms[ 2 ] as any).value = api.count;
   
   				} );
   
@@ -250,7 +250,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const elapsedTime = timer.getElapsed();
     				const lights = lightingUniformsGroup.uniforms[ 0 ];
@@ -258,8 +258,8 @@ function onReady(__stage) {
     				const radius = 5; // Smaller radius for individual circular movements
     				const speed = 0.5; // Speed of rotation
     				// Update each light's position
-    				for ( let i = 0; i < lights.length; i ++ ) {
-    					const light = lights[ i ];
+    				for ( let i = 0; i < (lights as any).length; i ++ ) {
+    					const light = (lights as any)[ i ];
     					const center = lightCenters[ i ];
     					// Calculate circular movement around the light's center
     					const angle = speed * elapsedTime + i * 0.5; // Phase difference for each light

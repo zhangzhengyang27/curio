@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -40,7 +40,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - Ground Truth Ambient Occlusion (GTAO) by <a href=\"https://github.com/Rabbid76\" target=\"_blank\" rel=\"noopener\">Rabbid76</a><br/>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,7 +51,7 @@ function onReady(__stage) {
   
   
   
-  			let composer, timer, stats, mixer;
+  			let composer, timer, stats, mixer: any;
   
   			
   
@@ -127,7 +127,7 @@ function onReady(__stage) {
   					'AO Only + Denoise': GTAOPass.OUTPUT.Denoise,
   					'Depth': GTAOPass.OUTPUT.Depth,
   					'Normal': GTAOPass.OUTPUT.Normal
-  				} ).onChange( function ( value ) {
+  				} ).onChange( function ( value: any ) {
   
   					gtaoPass.output = value;
   
@@ -176,7 +176,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				const delta = timer.getDelta();
     				if ( mixer ) {

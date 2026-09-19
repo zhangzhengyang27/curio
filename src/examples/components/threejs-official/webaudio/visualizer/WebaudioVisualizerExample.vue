@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 
@@ -46,7 +46,8 @@ const fragmentShader = /* glsl */`
   }
 `;
 
-function onReady(__stage) {
+function onReady(__stage: any) {
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -103,7 +104,7 @@ function onReady(__stage) {
   const mesh = new THREE.Mesh( geometry, material );
   scene.add( mesh );
 
-  __stage.addUpdateCallback((_delta, _elapsed) => {
+  __stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     analyser.getFrequencyData();
     uniforms.tAudioData.value.needsUpdate = true;
   })

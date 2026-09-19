@@ -4,15 +4,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup.js'
+import { useGraphicsCleanup } from '@/examples/composables/useGraphicsCleanup'
 
-const gContainer = ref(null)
-const gfxLoadedScripts = []
+const gContainer = ref<HTMLElement | null>(null)
+const gfxLoadedScripts: any[] = []
 const { runInit } = useGraphicsCleanup(gfxLoadedScripts)
 
-async function loadScript(src) {
+async function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script')
     s.src = src
@@ -27,12 +27,13 @@ async function loadScript(src) {
 
 
 async function initGraphicsExample() {
-  const container = gContainer.value.querySelector('#container')
+  const container = gContainer.value!.querySelector('#container')
   await loadScript("/graphics/assets/external/d3.js");
   await loadScript("/graphics/assets/external/spritejs.js");
+  const d3: any = (globalThis as any).d3 // d3 由上方 loadScript 注入为全局，env.d.ts 未声明（不许改），此处局部断言
   {
     const {Scene, Sprite} = spritejs;
-        const container = gContainer.value.querySelector('#container');
+        const container = gContainer.value!.querySelector('#container');
         const scene = new Scene({
           container,
           width: 800,
@@ -50,12 +51,12 @@ async function initGraphicsExample() {
           .enter()
           .append('sprite')
           .attr('x', 450)
-          .attr('y', (d, i) => {
+          .attr('y', (d: any, i: any) => {
             return 200 + i * 45;
           })
-          .attr('width', d => d)
+          .attr('width', (d: any) => d)
           .attr('height', 40)
-          .attr('bgcolor', (d, i) => colors[i]);
+          .attr('bgcolor', (d: any, i: any) => colors[i]);
   }
 }
 

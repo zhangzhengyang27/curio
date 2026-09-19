@@ -15,7 +15,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -29,11 +29,12 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> -\n\t\t\tSTL loader test by <a href=\"https://github.com/aleeper\" target=\"_blank\" rel=\"noopener\">aleeper</a>.<br/>\n\t\t\tPR2 head from <a href=\"http://www.ros.org/wiki/pr2_description\">www.ros.org</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
   const controls = __stage.controls
+  const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
   
   
@@ -128,9 +129,9 @@ function onReady(__stage) {
   
   					let meshMaterial = material;
   
-  					if ( geometry.hasColors ) {
+  					if ( ( geometry as any ).hasColors ) {
   
-  						meshMaterial = new THREE.MeshPhongMaterial( { opacity: geometry.alpha, vertexColors: true } );
+  						meshMaterial = new THREE.MeshPhongMaterial( { opacity: ( geometry as any ).alpha, vertexColors: true } );
   
   					}
   
@@ -175,7 +176,7 @@ function onReady(__stage) {
   			
   
   
-  			function addShadowedLight( x, y, z, color, intensity ) {
+  			function addShadowedLight( x: any, y: any, z: any, color: any, intensity: any ) {
   
   				const directionalLight = new THREE.DirectionalLight( color, intensity );
   				directionalLight.position.set( x, y, z );
@@ -198,7 +199,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const timer = Date.now() * 0.0005;
     				camera.position.x = Math.cos( timer ) * 3;

@@ -5,7 +5,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const viewerOptions = {
@@ -26,7 +26,7 @@ const viewerOptions = {
   skyBox: null,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const viewer = ctx.viewer
   viewer.scene.sun.show = false
   viewer.scene.moon.show = false

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three"
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -74,7 +74,7 @@ function onReady(ctx) {
   // fish
   let fishGeom = createFishGeometry();
   let fishMat = createFishMaterial();
-  let fishSize = new THREE.Box3().setFromBufferAttribute(fishGeom.attributes.position);
+  let fishSize = new THREE.Box3().setFromBufferAttribute(fishGeom.attributes.position as THREE.BufferAttribute);
   fishMat.userData.uniforms.totalLength.value = fishSize.max.x;
   //console.log(fishSize.max.x);
   let fish = new THREE.Mesh(fishGeom, fishMat)
@@ -101,7 +101,7 @@ function onReady(ctx) {
     let m = new THREE.MeshBasicMaterial({
       color: 0x66775f,
       side: THREE.BackSide,
-      onBeforeCompile: shader => {
+      onBeforeCompile: (shader: any) => {
         shader.fragmentShader = `
           ${shader.fragmentShader}
         `.replace(
@@ -114,7 +114,7 @@ function onReady(ctx) {
         ;
         //console.log(shader.fragmentShader);
       }
-    });
+    } as any);
     m.defines = {"USE_UV" : ""};
     return m;
   }
@@ -128,7 +128,7 @@ function onReady(ctx) {
   function createWeedMaterial(){
     let m = new THREE.MeshLambertMaterial({
       wireframe: false,
-      onBeforeCompile: shader => {
+      onBeforeCompile: (shader: any) => {
         shader.uniforms.time = m.userData.uniforms.time;
         shader.vertexShader = `
           uniform float time;
@@ -186,7 +186,7 @@ function onReady(ctx) {
         );
         //console.log(shader.fragmentShader);
       }
-    });
+    } as any);
     m.defines = {"USE_UV" : ""};
     m.userData = {
       uniforms: {
@@ -210,7 +210,7 @@ function onReady(ctx) {
     let m = new THREE.MeshPhongMaterial({
       color: 0x446655,
       wireframe: false,
-      onBeforeCompile: shader => {
+      onBeforeCompile: (shader: any) => {
         shader.uniforms.time = m.userData.uniforms.time;
         shader.uniforms.totalLength = m.userData.uniforms.totalLength;
         shader.vertexShader = `
@@ -341,7 +341,7 @@ function onReady(ctx) {
         );
   
       }
-    });
+    } as any);
     m.defines = {"USE_UV" : " "};
     m.userData = {
       uniforms: {
@@ -399,8 +399,8 @@ function onReady(ctx) {
     let frames = computeFrames();
     //console.log(frames);
     // frames to geometry
-    let pts = [];
-    let parts = [];
+    let pts: any[] = [];
+    let parts: any[] = [];
     frames.forEach(f => {
       f.forEach(p => {
         pts.push(p.x, p.y, p.z);
@@ -428,8 +428,8 @@ function onReady(ctx) {
     let tailfinSlices = 5;
     let tailRatioStep = 1 / tailfinSlices;
     let vTemp = new THREE.Vector3();
-    let tailPts = [];
-    let tailParts = [];
+    let tailPts: any[] = [];
+    let tailParts: any[] = [];
     for(let i = 0; i <= tailfinSlices; i++){
       let ratio = i * tailRatioStep;
       frames[frames.length - 1].forEach( (p, idx) => {
@@ -495,20 +495,20 @@ function onReady(ctx) {
     //console.log(mainGeom.attributes.position.count)
     return mainGeom;
   
-    function createFin(basePoints, contourPoints, isTop){
-      let basePts = [];
+    function createFin(basePoints: any, contourPoints: any, isTop: any){
+      let basePts: any[] = [];
       let shift = 0.05;
       let shiftSign = isTop ? 1 : -1;
       let vAdd = new THREE.Vector3(0, -shift * shiftSign, 0);
   
-      contourPoints.forEach((p, idx) => {
-        basePts.push(getPoint(basePoints, p.x).add(vAdd));
+      contourPoints.forEach((p: any, idx: any) => {
+        basePts.push(getPoint(basePoints, p.x)!.add(vAdd));
       });
   
       let basePtsRev = basePts.map(p => {return p.clone()}).reverse();
       basePtsRev.shift();
   
-      let contourPointsRev = contourPoints.map(p => {return p.clone()}).reverse();
+      let contourPointsRev = contourPoints.map((p: any) => {return p.clone()}).reverse();
       contourPointsRev.shift();
   
       basePts.forEach((p, idx, arr) => {
@@ -520,11 +520,11 @@ function onReady(ctx) {
   
       console.log(contourPoints.length, contourPointsRev.length, basePts.length, basePtsRev.length);
   
-      let fullPoints = [];
+      let fullPoints: any[] = [];
       fullPoints = fullPoints.concat(contourPoints, contourPointsRev, basePts, basePtsRev);
   
-      let ps = [];
-      let parts = [];
+      let ps: any[] = [];
+      let parts: any[] = [];
       fullPoints.forEach(p => {
         ps.push(p.x, p.y, p.z);
         parts.push(1);
@@ -549,14 +549,14 @@ function onReady(ctx) {
       return frames;
     }
   
-    function getFrame(x){
+    function getFrame(x: any){
       let top = getPoint(topPoints, x);
       let bottom = getPoint(bottomPoints, x);
       let side = getPoint(sidePoints, x);
       return getFramePoints(top, bottom, side);
     }
   
-    function getFramePoints(top, bottom, side){
+    function getFramePoints(top: any, bottom: any, side: any){
       let sideR = side;
       let sideL = sideR.clone().setZ(sideR.z * -1);
       let baseCurve = new THREE.CatmullRomCurve3([
@@ -570,7 +570,7 @@ function onReady(ctx) {
       return framePoints;
     }
   
-    function getPoint(curvePoints, x){
+    function getPoint(curvePoints: any, x: any){
       let v = new THREE.Vector3();
       for(let i = 0; i < curvePoints.length - 1; i++){
         let i1 = curvePoints[i];

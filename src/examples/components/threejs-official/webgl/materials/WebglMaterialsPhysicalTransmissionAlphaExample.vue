@@ -16,10 +16,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">threejs</a> - transmission - alpha"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -64,7 +64,7 @@ function onReady(__stage) {
   			};
   
   
-  			let mesh, material;
+  			let mesh, material: any;
   
   			const hdrEquirect = new UltraHDRLoader()
   				.setPath( ASSET_HOST + 'textures/equirectangular/' )
@@ -78,24 +78,24 @@ function onReady(__stage) {
   
   							gltf.scene.traverse( function ( child ) {
   
-  								if ( child.isMesh && child.material.isMeshPhysicalMaterial ) {
+  								if ( child.isMesh && (child.material as any).isMeshPhysicalMaterial ) {
   
   									mesh = child;
   									material = mesh.material;
   
   									const color = new THREE.Color();
   
-  									params.color = color.copy( mesh.material.color ).getHex();
-  									params.roughness = mesh.material.roughness;
-  									params.metalness = mesh.material.metalness;
+  									params.color = color.copy( (mesh.material as any).color ).getHex();
+  									params.roughness = (mesh.material as any).roughness;
+  									params.metalness = (mesh.material as any).metalness;
   
-  									params.ior = mesh.material.ior;
-  									params.specularIntensity = mesh.material.specularIntensity;
+  									params.ior = (mesh.material as any).ior;
+  									params.specularIntensity = (mesh.material as any).specularIntensity;
   
-  									params.transmission = mesh.material.transmission;
-  									params.thickness = mesh.material.thickness;
-  									params.attenuationColor = color.copy( mesh.material.attenuationColor ).getHex();
-  									params.attenuationDistance = mesh.material.attenuationDistance;
+  									params.transmission = (mesh.material as any).transmission;
+  									params.thickness = (mesh.material as any).thickness;
+  									params.attenuationColor = color.copy( (mesh.material as any).attenuationColor ).getHex();
+  									params.attenuationDistance = (mesh.material as any).attenuationDistance;
   
   								}
   

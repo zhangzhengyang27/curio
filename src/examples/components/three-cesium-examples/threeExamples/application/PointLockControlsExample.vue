@@ -8,10 +8,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
@@ -25,13 +25,12 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
   const controls = ctx.controls
 
-  pointLockControls.enableDamping = true
   
   scene.add(new THREE.AmbientLight(0xffffff, 1))
   
@@ -58,11 +57,11 @@ function onReady(ctx) {
   })
   
   // 创建第一人称漫游控制器
-  const pointLockControls = new PointerLockControls(camera, renderer.domElement);
+  const pointLockControls: any = new PointerLockControls(camera, renderer.domElement);
   pointLockControls.speed = 2
   
   // 处理键盘事件以实现相机的移动
-  const keyboard = {};
+  const keyboard: any = {};
   const moveForward = () => pointLockControls.moveForward(pointLockControls.speed)
   const moveBackward = () => pointLockControls.moveForward(-pointLockControls.speed)
   const moveLeft = () => pointLockControls.moveRight(-pointLockControls.speed)
@@ -81,13 +80,13 @@ function onReady(ctx) {
   }
   
   // 键盘事件 
-  const onKeyDown = function (event) {
+  const onKeyDown = function (event: any) {
       event.preventDefault();
       keyboard[event.code] = true
   }
   
   // 键盘事件
-  const onKeyUp = function (event) {
+  const onKeyUp = function (event: any) {
       event.preventDefault();
       keyboard[event.code] = false
   }
@@ -105,10 +104,10 @@ function onReady(ctx) {
   })
   
   gui = new GUI()
-  gui.add(pointLockControls, 'isLocked').onChange((v) => v ? pointLockControls.lock() : pointLockControls.unlock()).name('漫游').listen()
+  gui.add(pointLockControls, 'isLocked').onChange((v: any) => v ? pointLockControls.lock() : pointLockControls.unlock()).name('漫游').listen()
   gui.add(pointLockControls, 'speed').name('漫游速度')
   
-  GLOBAL_CONFIG.ElMessage('键盘事件：WASD移动, esc退出')
+  (globalThis as any).GLOBAL_CONFIG.ElMessage('键盘事件：WASD移动, esc退出')
 }
 
 onUnmounted(() => {

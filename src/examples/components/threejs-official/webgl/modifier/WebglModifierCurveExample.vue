@@ -16,7 +16,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - curve modifier"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -43,11 +43,11 @@ function onReady(__stage) {
   
   
   			const ACTION_SELECT = 1, ACTION_NONE = 0;
-  			const curveHandles = [];
+  			const curveHandles: any = [];
   			const mouse = new THREE.Vector2();
   
-  			let stats;
-  			let rayCaster, control, flow, action = ACTION_NONE;
+  			let stats: any;
+  			let rayCaster, control, flow: any, action = ACTION_NONE;
   
   			
   
@@ -78,7 +78,7 @@ function onReady(__stage) {
   				}
   
   				const curve = new THREE.CatmullRomCurve3(
-  					curveHandles.map( ( handle ) => handle.position )
+  					curveHandles.map( ( handle: any ) => handle.position )
   				);
   				curve.curveType = 'centripetal';
   				curve.closed = true;
@@ -162,7 +162,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerDown( event ) {
+  			function onPointerDown( event: any ) {
   
   				action = ACTION_SELECT;
   				mouse.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
@@ -170,7 +170,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     if ( action === ACTION_SELECT ) {
     					rayCaster.setFromCamera( mouse, camera );
     					action = ACTION_NONE;

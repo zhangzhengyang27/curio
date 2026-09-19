@@ -13,7 +13,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - cube panorama demo"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -73,9 +73,9 @@ function onReady(__stage) {
   			
   
   
-  			function getTexturesFromAtlasFile( atlasImgUrl, tilesNum ) {
+  			function getTexturesFromAtlasFile( atlasImgUrl: any, tilesNum: any ) {
   
-  				const textures = [];
+  				const textures: any = [];
   
   				for ( let i = 0; i < tilesNum; i ++ ) {
   
@@ -95,7 +95,7 @@ function onReady(__stage) {
   							context = canvas.getContext( '2d' );
   							canvas.height = tileWidth;
   							canvas.width = tileWidth;
-  							context.drawImage( image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth );
+  							context!.drawImage( image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth );
   							textures[ i ].colorSpace = THREE.SRGBColorSpace;
   							textures[ i ].image = canvas;
   							textures[ i ].needsUpdate = true;

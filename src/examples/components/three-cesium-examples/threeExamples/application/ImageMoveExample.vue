@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -35,7 +35,7 @@ function onReady(ctx) {
   const tex = urls.map(u => loader.load(u));
   tex[2].wrapS = tex[2].wrapT = THREE.RepeatWrapping; tex[2].repeat.set(.1, .1);
   
-  function R(g, t) {
+  function R(g: any, t: any) {
       const m = new THREE.MeshMatcapMaterial({ matcap: t, transparent: true });
       m.onBeforeCompile = sh => {
           sh.vertexShader = sh.vertexShader

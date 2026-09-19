@@ -14,7 +14,7 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { Fn, If, Return, instancedArray, instanceIndex, uniform, attribute, float, clamp, struct, atomicStore, int, ivec3, array, vec3, atomicAdd, Loop, atomicLoad, max, pow, mat3, vec4, cross, step, storage } from 'three/tsl';
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Fluid Particles</span>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -51,14 +51,14 @@ async function onReady(__stage) {
   			const gridSize = new THREE.Vector3( gridSize1d, gridSize1d, gridSize1d );
   			const fixedPointMultiplier = 1e7;
   
-  			let particleCountUniform, stiffnessUniform, restDensityUniform, dynamicViscosityUniform, dtUniform, gravityUniform, gridSizeUniform;
-  			let particleBuffer, cellBuffer, cellBufferFloat;
-  			let clearGridKernel, p2g1Kernel, p2g2Kernel, updateGridKernel, g2pKernel, workgroupKernel;
-  			let p2g1KernelWorkgroupBuffer, p2g2KernelWorkgroupBuffer, g2pKernelWorkgroupBuffer;
-  			let particleMesh;
+  			let particleCountUniform: any, stiffnessUniform: any, restDensityUniform: any, dynamicViscosityUniform: any, dtUniform: any, gravityUniform: any, gridSizeUniform: any;
+  			let particleBuffer: any, cellBuffer: any, cellBufferFloat: any;
+  			let clearGridKernel: any, p2g1Kernel: any, p2g2Kernel: any, updateGridKernel: any, g2pKernel: any, workgroupKernel: any;
+  			let p2g1KernelWorkgroupBuffer: any, p2g2KernelWorkgroupBuffer: any, g2pKernelWorkgroupBuffer: any;
+  			let particleMesh: any;
   			const mouseCoord = new THREE.Vector3();
   			const prevMouseCoord = new THREE.Vector3();
-  			let mouseRayOriginUniform, mouseRayDirectionUniform, mouseForceUniform;
+  			let mouseRayOriginUniform: any, mouseRayDirectionUniform: any, mouseForceUniform: any;
   
   			if ( WebGPU.isAvailable() === false ) {
   
@@ -127,7 +127,7 @@ async function onReady(__stage) {
   
   				} )().compute( 1 );
   
-  				gui.add( params, 'particleCount', 4096, maxParticles, 4096 ).onChange( value => {
+  				gui.add( params, 'particleCount', 4096, maxParticles, 4096 ).onChange( (value: any) => {
   
   					particleMesh.count = value;
   					p2g1Kernel.count = value;
@@ -159,7 +159,7 @@ async function onReady(__stage) {
   
   				}
   
-  				particleBuffer = instancedArray( particleArray, particleStruct );
+  				particleBuffer = ( instancedArray as any )( particleArray, particleStruct );
   
   				const cellCount = gridSize.x * gridSize.y * gridSize.z;
   
@@ -170,7 +170,7 @@ async function onReady(__stage) {
   					mass: { type: 'int', atomic: true },
   				} );
   
-  				cellBuffer = instancedArray( cellCount, cellStruct );
+  				cellBuffer = instancedArray( cellCount, (cellStruct as any) );
   				cellBufferFloat = instancedArray( cellCount, 'vec4' );
   
   			}
@@ -203,13 +203,13 @@ async function onReady(__stage) {
   				// the implementation closely follows https://github.com/matsuoka-601/WebGPU-Ocean
   
   				// because webgpu only supports int atomics, we use fixed point floats by multiplying/dividing the float values with a high integer constant
-  				const encodeFixedPoint = ( f32 ) => {
+  				const encodeFixedPoint = ( f32: any ) => {
   
   					return int( f32.mul( fixedPointMultiplier ) );
   			
   				};
   
-  				const decodeFixedPoint = ( i32 ) => {
+  				const decodeFixedPoint = ( i32: any ) => {
   
   					return float( i32 ).div( fixedPointMultiplier );
   			
@@ -239,13 +239,13 @@ async function onReady(__stage) {
   					const w2 = float( 0.5 ).mul( float( 0.5 ).add( cellDiff ) ).mul( float( 0.5 ).add( cellDiff ) );
   					const weights = array( [ w0, w1, w2 ] ).toConst( 'weights' );
   
-  					Loop( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx } ) => {
+  					(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx }: any ) => {
   
-  						Loop( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy } ) => {
+  						(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy }: any ) => {
   
-  							Loop( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz } ) => {
+  							(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz }: any ) => {
   
-  								const weight = weights.element( gx ).x.mul( weights.element( gy ).y ).mul( weights.element( gz ).z );
+  								const weight = (weights as any).element( gx ).x.mul( (weights as any).element( gy ).y ).mul( (weights as any).element( gz ).z );
   								const cellX = cellIndex.add( ivec3( gx, gy, gz ) ).toConst();
   								const cellDist = vec3( cellX ).add( 0.5 ).sub( gridPosition ).toConst( 'cellDist' );
   								const Q = C.mul( cellDist );
@@ -281,13 +281,13 @@ async function onReady(__stage) {
   					const weights = array( [ w0, w1, w2 ] ).toConst( 'weights' );
   
   					const density = float( 0 ).toVar( 'density' );
-  					Loop( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx } ) => {
+  					(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx }: any ) => {
   
-  						Loop( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy } ) => {
+  						(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy }: any ) => {
   
-  							Loop( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz } ) => {
+  							(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz }: any ) => {
   
-  								const weight = weights.element( gx ).x.mul( weights.element( gy ).y ).mul( weights.element( gz ).z );
+  								const weight = (weights as any).element( gx ).x.mul( (weights as any).element( gy ).y ).mul( (weights as any).element( gz ).z );
   								const cellX = cellIndex.add( ivec3( gx, gy, gz ) ).toConst();
   								const cellPtr = cellX.x.mul( int( gridSize.y * gridSize.z ) ).add( cellX.y.mul( int( gridSize.z ) ) ).add( cellX.z ).toConst();
   								const cell = cellBuffer.element( cellPtr );
@@ -302,20 +302,20 @@ async function onReady(__stage) {
   
   					const volume = float( 1 ).div( density );
   					const pressure = max( 0.0, pow( density.div( restDensityUniform ), 5.0 ).sub( 1 ).mul( stiffnessUniform ) ).toConst( 'pressure' );
-  					const stress = mat3( pressure.negate(), 0, 0, 0, pressure.negate(), 0, 0, 0, pressure.negate() ).toVar( 'stress' );
+  					const stress = mat3( (pressure.negate as any)(), 0, 0, 0, (pressure.negate as any)(), 0, 0, 0, (pressure.negate as any)() ).toVar( 'stress' );
   					const dudv = particleBuffer.element( instanceIndex ).get( 'C' ).toConst( 'C' );
   
   					const strain = dudv.add( dudv.transpose() );
   					stress.addAssign( strain.mul( dynamicViscosityUniform ) );
   					const eq16Term0 = volume.mul( - 4 ).mul( stress ).mul( dtUniform );
   
-  					Loop( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx } ) => {
+  					(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx }: any ) => {
   
-  						Loop( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy } ) => {
+  						(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy }: any ) => {
   
-  							Loop( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz } ) => {
+  							(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz }: any ) => {
   
-  								const weight = weights.element( gx ).x.mul( weights.element( gy ).y ).mul( weights.element( gz ).z );
+  								const weight = (weights as any).element( gx ).x.mul( (weights as any).element( gy ).y ).mul( (weights as any).element( gz ).z );
   								const cellX = cellIndex.add( ivec3( gx, gy, gz ) ).toConst();
   								const cellDist = vec3( cellX ).add( 0.5 ).sub( gridPosition ).toConst( 'cellDist' );
   								const momentum = eq16Term0.mul( weight ).mul( cellDist ).toConst( 'momentum' );
@@ -372,7 +372,7 @@ async function onReady(__stage) {
   				} )().compute( cellCount ).setName( 'updateGridKernel' );
   
   
-  				const clampToRoundedBox = ( pos, box, radius ) => {
+  				const clampToRoundedBox = ( pos: any, box: any, radius: any ) => {
   
   					const result = pos.sub( 0.5 ).toVar();
   					const pp = step( box, result.abs() ).mul( result.add( box.negate().mul( result.sign() ) ) );
@@ -402,14 +402,14 @@ async function onReady(__stage) {
   					const w2 = float( 0.5 ).mul( float( 0.5 ).add( cellDiff ) ).mul( float( 0.5 ).add( cellDiff ) );
   					const weights = array( [ w0, w1, w2 ] ).toConst( 'weights' );
   
-  					const B = mat3( 0 ).toVar( 'B' );
-  					Loop( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx } ) => {
+  					const B = ( mat3 as any )( 0 ).toVar( 'B' );
+  					(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gx', condition: '<' }, ( { gx }: any ) => {
   
-  						Loop( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy } ) => {
+  						(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gy', condition: '<' }, ( { gy }: any ) => {
   
-  							Loop( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz } ) => {
+  							(Loop as any)( { start: 0, end: 3, type: 'int', name: 'gz', condition: '<' }, ( { gz }: any ) => {
   
-  								const weight = weights.element( gx ).x.mul( weights.element( gy ).y ).mul( weights.element( gz ).z );
+  								const weight = (weights as any).element( gx ).x.mul( (weights as any).element( gy ).y ).mul( (weights as any).element( gz ).z );
   								const cellX = cellIndex.add( ivec3( gx, gy, gz ) ).toConst();
   								const cellDist = vec3( cellX ).add( 0.5 ).sub( gridPosition ).toConst( 'cellDist' );
   								const cellPtr = cellX.x.mul( int( gridSize.y * gridSize.z ) ).add( cellX.y.mul( int( gridSize.z ) ) ).add( cellX.z ).toConst();
@@ -486,7 +486,7 @@ async function onReady(__stage) {
   				material.positionNode = Fn( () => {
   
   					const particlePosition = particleBuffer.element( instanceIndex ).get( 'position' );
-  					return attribute( 'position' ).add( particlePosition );
+  					return (attribute as any)( 'position' ).add( particlePosition );
   			
   				} )();
   				particleMesh = new THREE.Mesh( geometry, material );
@@ -502,7 +502,7 @@ async function onReady(__stage) {
   				const raycaster = new THREE.Raycaster();
   				const raycastPlane = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ) );
   
-  				const onMove = ( event ) => {
+  				const onMove = ( event: any ) => {
   
   					const pointer = new THREE.Vector2( ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1, - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1 );
   					raycaster.setFromCamera( pointer, camera );
@@ -531,7 +531,7 @@ async function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     timer.update();
     				const deltaTime = THREE.MathUtils.clamp( timer.getDelta(), 0.00001, 1 / 60 ); // don't advance the time too far, for example when the window is out of focus
     				dtUniform.value = deltaTime;

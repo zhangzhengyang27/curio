@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { ShadowMesh } from 'three/examples/jsm/objects/ShadowMesh.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - shadow mesh<br />\n\t\t\t<input id=\"lightButton\" type=\"button\" value=\"Switch to PointLight\">"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   const renderer = __stage.renderer
@@ -48,13 +48,13 @@ function onReady(__stage) {
   
   			const sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 3 );
   			let useDirectionalLight = true;
-  			let arrowHelper1, arrowHelper2, arrowHelper3;
+  			let arrowHelper1: any, arrowHelper2: any, arrowHelper3: any;
   			const arrowDirection = new THREE.Vector3();
   			const arrowPosition1 = new THREE.Vector3();
   			const arrowPosition2 = new THREE.Vector3();
   			const arrowPosition3 = new THREE.Vector3();
-  			let groundMesh;
-  			let lightSphere, lightHolder;
+  			let groundMesh: any;
+  			let lightSphere: any, lightHolder: any;
   			let pyramid, pyramidShadow;
   			let sphere, sphereShadow;
   			let cube, cubeShadow;
@@ -188,7 +188,7 @@ function onReady(__stage) {
   			
   
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     				frameTime = timer.getDelta();
     				cube.rotation.x += 1.0 * frameTime;
@@ -220,6 +220,18 @@ function onReady(__stage) {
   
   			
   
+  			function onWindowResize() {
+
+  				SCREEN_WIDTH = ( __stage.container?.clientWidth || window.innerWidth );
+  				SCREEN_HEIGHT = ( __stage.container?.clientHeight || window.innerHeight );
+
+  				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+  				camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+  				camera.updateProjectionMatrix();
+
+  			}
+
   			function lightButtonHandler() {
   
   				useDirectionalLight = ! useDirectionalLight;

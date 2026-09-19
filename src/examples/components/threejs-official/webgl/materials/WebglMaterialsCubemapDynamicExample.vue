@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js webgl</a> - materials - dynamic cube reflection"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -46,10 +46,10 @@ function onReady(__stage) {
   
   
   
-  			let stats;
-  			let cube, sphere, torus, material;
+  			let stats: any;
+  			let cube: any, sphere, torus: any, material;
   
-  			let cubeCamera, cubeRenderTarget;
+  			let cubeCamera: any, cubeRenderTarget;
   
   
   			
@@ -134,7 +134,7 @@ function onReady(__stage) {
   
   			}
   
-  			function animate( msTime ) {
+  			function animate( msTime: any ) {
   
   				const time = msTime / 1000;
   

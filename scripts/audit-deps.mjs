@@ -33,9 +33,9 @@ const TEXT_EXT = new Set([
 // 注意：刻意不含 package.json —— 它「声明」依赖（"three": "^0.185.0"），
 // 扫它会让每个包都命中一次，彻底污染结论。package.json 只用于提取 scripts 做 bin 判定。
 const CONFIG_FILES = [
-  'vite.config.js',
-  'eslint.config.js',
-  'playwright.config.js',
+  'vite.config.ts',
+  'eslint.config.ts',
+  'playwright.config.ts',
   'tsconfig.json',
   'tsconfig.node.json',
 ]
@@ -113,7 +113,7 @@ for (const name of names) {
       break
     }
   }
-  // config 层既可能 import 包（vite.config.js 引 vite），也可能把包名写成裸字符串
+  // config 层既可能 import 包（vite.config.ts 引 vite），也可能把包名写成裸字符串
   // （alias 的 replacement、optimizeDeps.include、分包 test 正则、tsconfig 的 types 数组）
   for (const { text } of configCorpus) {
     if (strictRe.test(text) || pathRe.test(text) || looseRe.test(text)) {

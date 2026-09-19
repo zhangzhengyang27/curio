@@ -21,14 +21,14 @@
       </p>
     </div>
     <VcOverviewMap
-      :width="220"
-      :height="150"
+      width="220"
+      height="150"
       @ready="onReady"
     />
   </ToolsExampleShell>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { VcOverviewMap } from 'vue-cesium'
 import ToolsExampleShell from './ToolsExampleShell.vue'

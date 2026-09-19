@@ -6,16 +6,16 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 import { GUI } from 'lil-gui'
 
-let Cesium = null
-let viewer = null
-let globalHandler = null
-let entitys = []
-let gui = null
-let distance = 0
+let Cesium: any = null
+let viewer: any = null
+let globalHandler: any = null
+let entitys: any[] = []
+let gui: any = null
+let distance: number = 0
 
 const viewerOptions = {
   animation: false,
@@ -31,7 +31,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -59,7 +59,7 @@ function onReady(ctx) {
       globalHandler = null
     }
     globalHandler = new Cesium.ScreenSpaceEventHandler(viewer.canvas)
-    globalHandler.setInputAction(function (movement) {
+    globalHandler.setInputAction(function (movement: any) {
       const ray = viewer.camera.getPickRay(movement.position)
       const cartesian = viewer.scene.globe.pick(ray, viewer.scene)
       if (cartesian) {
@@ -75,7 +75,7 @@ function onReady(ctx) {
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
   }
 
-  function drawPointOnMap(coordinates, name) {
+  function drawPointOnMap(coordinates: any, name: any) {
     const pointEntity = viewer.entities.add({
       position: Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1]),
       point: {
@@ -111,7 +111,7 @@ function onReady(ctx) {
     }
   }
 
-  function requestAngleAndDistance(lon, lat) {
+  function requestAngleAndDistance(lon: any, lat: any) {
     setTimeout(() => {
       const value = prompt(
         '请输入方位角&距离(km/>0)\n45&10 表示从正北方向顺时针45度方向,距离10公里',
@@ -139,7 +139,7 @@ function onReady(ctx) {
     }, 500)
   }
 
-  function newPointByAngleAndDistance(lon, lat, dist, angle) {
+  function newPointByAngleAndDistance(lon: any, lat: any, dist: any, angle: any) {
     const angleRad = (angle * Math.PI) / 180
     const R = 6378137 - ((6378137 - 6356752) * lat) / 90
     const latRad = (lat * Math.PI) / 180

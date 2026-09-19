@@ -15,11 +15,28 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// 原 HTML 以 <script> 注入全局 Ammo,转换期丢失;按 jsm-compat/physics/AmmoPhysics.js 同源恢复懒加载
+async function loadAmmo(): Promise<any> {
+	if ( typeof ( globalThis as any ).Ammo === 'undefined' ) {
+		await new Promise( ( resolve, reject ) => {
+			const script = document.createElement( 'script' );
+			script.src = 'https://cdn.jsdelivr.net/gh/kripken/ammo.js@79190a1f03845794b1bba1777f30037349967658/builds/ammo.wasm.js';
+			script.onload = resolve;
+			script.onerror = reject;
+			document.head.appendChild( script );
+		} );
+	}
+	return ( globalThis as any ).Ammo();
+}
+
+// Ammo.js 全局工厂(原示例经 HTML script 标签注入;转模块后需显式声明,否则 strict 模式赋值未声明名抛 ReferenceError)
+let Ammo: any;
 
 const props = defineProps({
   example: {
@@ -29,7 +46,7 @@ const props = defineProps({
 })
 
 const infoHtml = "Ammo.js physics terrain heightfield demo"
-function onReady(__stage) {
+function onReady(__stage: any) {
   const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
   let scene = __stage.scene
   let camera = __stage.camera
@@ -53,7 +70,7 @@ function onReady(__stage) {
   			const terrainMinHeight = - 2;
   
   			// Graphics variables
-  			let container, stats;
+  			let container, stats: any;
   
   			let terrainMesh;
   			const timer = new THREE.Timer();
@@ -64,11 +81,12 @@ function onReady(__stage) {
   			let dispatcher;
   			let broadphase;
   			let solver;
-  			let physicsWorld;
-  			const dynamicObjects = [];
+  			let transformAux1: any;
+  			let physicsWorld: any;
+  			const dynamicObjects: any = [];
   
   
-  			let heightData = null;
+  			let heightData: any = null;
   			let ammoHeightData = null;
   
   			let time = 0;
@@ -76,7 +94,7 @@ function onReady(__stage) {
   			let timeNextSpawn = time + objectTimePeriod;
   			const maxNumObjects = 30;
   
-  			Ammo().then( function ( AmmoLib ) {
+  			loadAmmo().then( function ( AmmoLib: any ) {
   
   				Ammo = AmmoLib;
   
@@ -211,7 +229,7 @@ function onReady(__stage) {
   
   			}
   
-  			function generateHeight( width, depth, minHeight, maxHeight ) {
+  			function generateHeight( width: any, depth: any, minHeight: any, maxHeight: any ) {
   
   				// Generates the height data (a sinus wave)
   
@@ -391,7 +409,7 @@ function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     timer.update();
     {
     const deltaTime = timer.getDelta();
@@ -482,7 +500,7 @@ function onReady(__stage) {
   
   			}
   
-  			function updatePhysics( deltaTime ) {
+  			function updatePhysics( deltaTime: any ) {
   
   				physicsWorld.stepSimulation( deltaTime, 10 );
   

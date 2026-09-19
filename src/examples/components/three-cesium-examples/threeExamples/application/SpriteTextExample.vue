@@ -6,7 +6,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(stageCtx) {
+async function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -55,7 +55,7 @@ async function onReady(stageCtx) {
   }
   
   // 创建canvas文字方法
-  function createCanvasText(params) {
+  function createCanvasText(params: any) {
   
     const defaultParams = { dpr: 1, maxWidth: 100, fontSize: 20, color: 'white', fontFamily: 'serif', align: 'center', border: false, ...params } // 默认参数
   
@@ -71,7 +71,7 @@ async function onReady(stageCtx) {
     canvas.height = fontSize * devicePixelRatio
   
     // 获取 2d 上下文
-const ctx = canvas.getContext("2d");ctx.imageSmoothingQuality = 'high'
+const ctx = canvas.getContext("2d")!;ctx.imageSmoothingQuality = 'high'
   
     ctx.scale(devicePixelRatio, devicePixelRatio)
   
@@ -98,7 +98,7 @@ const ctx = canvas.getContext("2d");ctx.imageSmoothingQuality = 'high'
     }
   
     // 创建文字
-    const createText = ({ text, color, fontSize, fontFamily }) => {
+    const createText = ({ text, color, fontSize, fontFamily }: any) => {
   
       // 参数设定
       ctx.fillStyle = color || defaultParams.color
@@ -106,9 +106,9 @@ const ctx = canvas.getContext("2d");ctx.imageSmoothingQuality = 'high'
       ctx.font = fontSize || defaultParams.fontSize + 'px ' + fontFamily || defaultParams.fontFamily
   
       // 文本长度计算
-      let textMaxNum = 0
+      let textMaxNum: number = 0
   
-      let totalWidth = 0
+      let totalWidth: number = 0
   
       for (let i = 0; i < text.length; i++) {
   
@@ -131,7 +131,7 @@ const ctx = canvas.getContext("2d");ctx.imageSmoothingQuality = 'high'
   
       const textFillHeight = (canvas.height / devicePixelRatio - actualHeight) / 2 + metrics.actualBoundingBoxAscent
   
-      let textLeftOffset = 0
+      let textLeftOffset: number = 0
   
       if (align === 'center') textLeftOffset = (canvas.width / devicePixelRatio - metrics.width) / 2
   
@@ -139,7 +139,7 @@ const ctx = canvas.getContext("2d");ctx.imageSmoothingQuality = 'high'
   
     }
   
-    return (parameters) => {
+    return (parameters: any) => {
   
       ctx.clearRect(0, 0, canvas.width, canvas.height)  // 清空  canvas 文字 
   

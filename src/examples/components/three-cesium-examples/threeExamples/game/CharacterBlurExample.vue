@@ -9,10 +9,15 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
+let _resizeObserver: any = null
+
+function onBeforeDispose() {
+  if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
+}
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GUI } from 'lil-gui';
@@ -25,7 +30,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -56,7 +61,7 @@ async function onReady(ctx) {
   
       /** @type {THREE.MeshPhongMaterial} */
       const m = obj.material;
-      m.onBeforeCompile = (shader) => {
+      m.onBeforeCompile = (shader: any) => {
         shader.uniforms.blur = {
           get value() {
             return modelMaterialUniforms.blur;
@@ -94,7 +99,7 @@ async function onReady(ctx) {
   });
   const mixer = new THREE.AnimationMixer(model);
   const action = mixer.clipAction(model.animations[0]);
-  action.setLoop(THREE.LoopRepeat);
+  action.setLoop(THREE.LoopRepeat, Infinity);
   action.play();
   
   const light_ambient = new THREE.AmbientLight(0xffffff, 0.7);
@@ -117,7 +122,7 @@ async function onReady(ctx) {
   
   const timer = new THREE.Timer();
   
-  const tick = (delta, elapsed) => {
+  const tick = (delta: number, elapsed: number) => {
     controls.update(delta);
   
     // 更新动画并限制模型不进行移动
@@ -158,13 +163,7 @@ async function onReady(ctx) {
   gui = new GUI();
   gui.add(data, "blur", 0, 1, 0.001).name("虚化强度");
   gui.add(data, "blockSize", 2.0, 20.0, 4.0).name("虚化区块大小");
-  
-  let _resizeObserver = null
-  
-  function onBeforeDispose() {
-    if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null }
-  }
-  
+
   _resizeObserver = new ResizeObserver(() => {
     const rect = document.body.getBoundingClientRect();
     const w = rect.width;

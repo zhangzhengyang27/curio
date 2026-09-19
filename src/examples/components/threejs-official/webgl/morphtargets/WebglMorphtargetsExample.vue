@@ -14,10 +14,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - morph targets<br/>\n\t\t\tby <a href=\"https://discoverthreejs.com/\" target=\"_blank\" rel=\"noopener\">Discover three.js</a>"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -41,7 +41,7 @@ function onReady(__stage) {
   
   
   
-  			let container, mesh;
+  			let container, mesh: any;
   
   			
   
@@ -97,7 +97,7 @@ function onReady(__stage) {
   				const spherePositions = [];
   
   				// for the second morph target, we'll twist the cubes vertices
-  				const twistPositions = [];
+  				const twistPositions: any = [];
   				const direction = new THREE.Vector3( 1, 0, 0 );
   				const vertex = new THREE.Vector3();
   
@@ -141,12 +141,12 @@ function onReady(__stage) {
   				};
   				gui = new GUI( { title: 'Morph Targets' } );
   
-  				gui.add( params, 'Spherify', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'Spherify', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					mesh.morphTargetInfluences[ 0 ] = value;
   
   				} );
-  				gui.add( params, 'Twist', 0, 1, 0.01 ).onChange( function ( value ) {
+  				gui.add( params, 'Twist', 0, 1, 0.01 ).onChange( function ( value: any ) {
   
   					mesh.morphTargetInfluences[ 1 ] = value;
   

@@ -87,7 +87,7 @@ src/
 ├── views/                  # EarthView、ThreeGlobeGallery、GlobeDemo、BMap
 └── examples/               # ★ 示例中心
     ├── registry/           # 11 个数据源注册表 + 聚合入口 index.js
-    ├── components/         # 1429 个示例组件，按 {source}/{category}/{Id}Example.vue 约定
+    ├── components/         # 1429 个示例组件(全部 lang="ts")，按 {source}/{category}/{Id}Example.vue 约定
     ├── views/              # ExampleGallery（画廊）/ ExampleDemo（详情）/ ExampleHost（宿主）
     ├── runners/            # IframeRunner
     ├── composables/        # useExampleFilters、各技术栈 stage

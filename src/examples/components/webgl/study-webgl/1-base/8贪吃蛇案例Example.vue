@@ -2,13 +2,13 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
-import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix.js'
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+import { loadGlMatrixModern } from '@/examples/utils/loadGlMatrix'
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   await loadGlMatrixModern('/webgl/study-webgl/libs/gl-matrix.js');
   // 定义 webgl 容器
-          var webgl = null;
+          var webgl: any = null;
           var angley = 0;
           var anglex = 0;
   
@@ -42,7 +42,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
           function initWebgl() {
               let webglDiv = canvas;
               // 通过容器获取上下文
-              webgl = webglDiv.getContext("webgl");
+              webgl = webglDiv.getContext("webgl")!;
               // 设置视口
               webgl.viewport(0, 0, webglDiv.clientWidth, webglDiv.clientHeight);
           }
@@ -86,14 +86,14 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               webgl.useProgram(program);
   
               // 将程序对象保存到 webgl 容器中
-              webgl.program = program
+              (webgl as any).program = program
           }
   
   
           // 初始化缓冲区
           function initBuffer() {
               // 创建缓冲区对象 获取 a_position 的位置
-              let aPsotion = webgl.getAttribLocation(webgl.program, "a_position");
+              let aPsotion = webgl.getAttribLocation((webgl as any).program, "a_position");
               // 顶点坐标
               let arr = [
                   0.1, 0.4, 0,
@@ -113,8 +113,8 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               //缓冲区中的数据按照一定的规律传递给位置变量 aPosition
               webgl.vertexAttribPointer(aPsotion, 3, webgl.FLOAT, false, 0, 0);
   
-              let anglexShader = webgl.getUniformLocation(webgl.program, "anglex");
-              let angleyShader = webgl.getUniformLocation(webgl.program, "angley");
+              let anglexShader = webgl.getUniformLocation((webgl as any).program, "anglex");
+              let angleyShader = webgl.getUniformLocation((webgl as any).program, "angley");
               webgl.uniform1f(anglexShader, anglex);
               webgl.uniform1f(angleyShader, angley);
           }
@@ -123,7 +123,7 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
               document.onkeydown = handleKeyDown;
           }
   
-          function handleKeyDown(event) {
+          function handleKeyDown(event: any) {
   
               if (String.fromCharCode(event.keyCode) == 'W') {
                   angley += 0.01;

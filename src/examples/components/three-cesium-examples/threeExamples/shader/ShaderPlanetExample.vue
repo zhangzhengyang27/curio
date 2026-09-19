@@ -6,10 +6,10 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import * as THREE from "three";
 import noiseModuleUrl from '/external-examples/3d-file-server/js/wasm/three_noise.js?url'
 import { GUI } from 'lil-gui';
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-async function onReady(ctx) {
+async function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -74,7 +74,7 @@ async function onReady(ctx) {
       texture.needsUpdate = true;
       return texture;
   };
-  let material,mesh;
+  let material: any,mesh: any;
   const add_sky_sphere = async () => {
       const texture = await generate_texture();
       const uniforms = {

@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -27,9 +27,9 @@ function onReady(ctx) {
 
   scene.background = new THREE.CubeTextureLoader().load([0, 1, 2, 3, 4, 5].map(k => (props.example?.globals?.FILE_HOST + 'files/sky/skyBox0/' + (k + 1) + '.png')));
   
-  let grass = null
+  let grass: any = null
   animate()
-  function animate(time) {
+  function animate(time?: any) {
      if(grass) grass.update(time);
       requestAnimationFrame(animate)
   }
@@ -40,17 +40,17 @@ function onReady(ctx) {
   const BLADE_VERTEX_COUNT = 5
   const BLADE_TIP_OFFSET = 0.1
   
-  function interpolate(val, oldMin, oldMax, newMin, newMax) {
+  function interpolate(val: any, oldMin: any, oldMax: any, newMin: any, newMax: any) {
     return ((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
   }
   
   class GrassGeometry extends THREE.BufferGeometry {
-    constructor(size, count) {
+    constructor(size: any, count: any) {
       super()
   
-      const positions = []
-      const uvs = []
-      const indices = []
+      const positions: any[] = []
+      const uvs: any[] = []
+      const indices: any[] = []
   
       for (let i = 0; i < count; i++) {
         const surfaceMin = (size / 2) * -1
@@ -84,7 +84,7 @@ function onReady(ctx) {
   
     // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
     // TODO: reduce vertex count, optimize & possibly move to GPU
-    computeBlade(center, index = 0) {
+    computeBlade(center: any, index = 0) {
       const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION
       const vIndex = index * BLADE_VERTEX_COUNT
   
@@ -126,8 +126,8 @@ function onReady(ctx) {
   const cloudTexture = new THREE.TextureLoader().load(props.example?.globals?.FILE_HOST + 'threeExamples/shader/cloud.jpg')
   cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
   
-  class Grass extends THREE.Mesh {
-    constructor(size, count) {
+  class Grass extends THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial> {
+    constructor(size: any, count: any) {
       const geometry = new GrassGeometry(size, count)
       const material = new THREE.ShaderMaterial({
         uniforms: {
@@ -193,7 +193,7 @@ function onReady(ctx) {
       this.add(floor)
   
     }
-    update(time) {
+    update(time: any) {
       this.material.uniforms.uTime.value = time
     }
   }

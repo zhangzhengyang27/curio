@@ -6,11 +6,11 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '../../ExampleScene.vue'
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const { scene, addUpdateCallback } = ctx
 
   /* 已知条件 */
@@ -41,7 +41,7 @@ function onReady(ctx) {
   const points = [A.x, A.y, A.z]
   const trackPointNum = 20
   const trackGeo = new THREE.BufferGeometry()
-  const trackColors = []
+  const trackColors: any[] = []
   for (let i = 0; i < trackPointNum; i++) {
     const n = i / trackPointNum
     trackColors.push(1, n, 0)

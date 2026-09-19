@@ -15,10 +15,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> - UltraHDR texture loader <br/>\n\t\t\tConverted from hdr with <a href=\"https://gainmap-creator.mono-grid.com/\" target=\"_blank\" rel=\"noopener\">converter</a>. <br />"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -82,7 +82,7 @@ function onReady(__stage) {
   
   				const loadEnvironment = function ( resolution = '2k', type = 'HalfFloatType' ) {
   
-  					loader.setDataType( THREE[ type ] );
+  					loader.setDataType( ( THREE as any )[ type ] );
   
   					loader.load( `textures/equirectangular/spruit_sunrise_${resolution}.hdr.jpg`, function ( texture ) {
   
@@ -104,12 +104,12 @@ function onReady(__stage) {
   				gui.add( params, 'metalness', 0, 1, 0.01 );
   				gui.add( params, 'roughness', 0, 1, 0.01 );
   				gui.add( params, 'exposure', 0, 4, 0.01 );
-  				gui.add( params, 'resolution', [ '2k', '4k' ] ).onChange( ( value ) => {
+  				gui.add( params, 'resolution', [ '2k', '4k' ] ).onChange( ( value: any ) => {
   
   					loadEnvironment( value, params.type );
   			
   				} );
-  				gui.add( params, 'type', [ 'HalfFloatType', 'FloatType' ] ).onChange( ( value ) => {
+  				gui.add( params, 'type', [ 'HalfFloatType', 'FloatType' ] ).onChange( ( value: any ) => {
   
   					loadEnvironment( params.resolution, value );
   			
@@ -124,7 +124,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     torusMesh.material.roughness = params.roughness;
     				torusMesh.material.metalness = params.metalness;
     				if ( params.autoRotate ) {

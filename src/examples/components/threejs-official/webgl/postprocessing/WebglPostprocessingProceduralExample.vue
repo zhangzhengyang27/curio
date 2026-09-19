@@ -12,10 +12,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -62,7 +62,7 @@ void main() {
 }
 `
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   const scene = __stage.scene
   const camera = __stage.camera
   let renderer = __stage.renderer
@@ -73,7 +73,7 @@ function onReady(__stage) {
   
   
   			let postCamera, postScene;
-  			let postMaterial, noiseRandom1DMaterial, noiseRandom2DMaterial, noiseRandom3DMaterial, postQuad;
+  			let postMaterial: any, noiseRandom1DMaterial, noiseRandom2DMaterial, noiseRandom3DMaterial, postQuad;
   			let stats;
   
   			const params = { procedure: 'noiseRandom3D' };
@@ -121,7 +121,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     switch ( params.procedure ) {
     					case 'noiseRandom1D': postMaterial = noiseRandom1DMaterial; break;
     					case 'noiseRandom2D': postMaterial = noiseRandom2DMaterial; break;

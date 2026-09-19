@@ -8,14 +8,14 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from "three";
 import { ImprovedNoise } from 'three/examples/jsm/Addons.js';
 import {  DirectionalLight, AmbientLight, Mesh, PlaneGeometry, MeshLambertMaterial, Vector2,Color } from 'three';
 import { gsap } from 'gsap';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
-let _intervalId = null
+let _intervalId: any = null
 
 const props = defineProps({
   example: {
@@ -31,7 +31,7 @@ function onBeforeDispose() {
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -95,7 +95,7 @@ function onReady(ctx) {
   };
   
   let terrain;
-  let plane, material;
+  let plane: any = null, material;
   const load_terrain = () => {
       let perlin = new ImprovedNoise();
       plane = new PlaneGeometry(50, 50, 500, 500);
@@ -184,7 +184,7 @@ function onReady(ctx) {
       gsap.to(position_array, {
           duration: 1.5, // 动画时长
           ease: "power2.out", // 缓动效果
-          endArray: new_position_array, // 动画目标值
+          endArray: new_position_array as any, // 动画目标值
           onUpdate: () => {
               position.needsUpdate = true; // 通知 Three.js 属性已更新
           },

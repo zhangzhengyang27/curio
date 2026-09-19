@@ -14,7 +14,7 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> webgl - interactive - buffergeometry"
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -40,9 +40,9 @@ function onReady(__stage) {
   			let container, stats;
   
   
-  			let raycaster, pointer;
+  			let raycaster: any, pointer: any;
   
-  			let mesh, line;
+  			let mesh: any, line: any;
   
   			
   
@@ -180,7 +180,7 @@ function onReady(__stage) {
   
   				geometry.computeBoundingSphere();
   
-  				let material = new THREE.MeshPhongMaterial( {
+  				let material: any = new THREE.MeshPhongMaterial( {
   					color: 0xaaaaaa, specular: 0xffffff, shininess: 250,
   					side: THREE.DoubleSide, vertexColors: true
   				} );
@@ -222,7 +222,7 @@ function onReady(__stage) {
   
   			
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				pointer.x = ( event.clientX / (__stage.container?.clientWidth || window.innerWidth) ) * 2 - 1;
   				pointer.y = - ( event.clientY / (__stage.container?.clientHeight || window.innerHeight) ) * 2 + 1;
@@ -231,7 +231,7 @@ function onReady(__stage) {
   
   			//
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     {
     const time = Date.now() * 0.001;
     				mesh.rotation.x = time * 0.15;
@@ -240,9 +240,9 @@ function onReady(__stage) {
     				const intersects = raycaster.intersectObject( mesh );
     				if ( intersects.length > 0 ) {
     					const intersect = intersects[ 0 ];
-    					const face = intersect.face;
-    					const linePosition = line.geometry.attributes.position;
-    					const meshPosition = mesh.geometry.attributes.position;
+    					const face = intersect.face!;
+    					const linePosition = line.geometry.attributes.position as THREE.BufferAttribute;
+    					const meshPosition = mesh.geometry.attributes.position as THREE.BufferAttribute;
     					linePosition.copyAt( 0, meshPosition, face.a );
     					linePosition.copyAt( 1, meshPosition, face.b );
     					linePosition.copyAt( 2, meshPosition, face.c );
@@ -271,10 +271,10 @@ function onReady(__stage) {
   				if ( intersects.length > 0 ) {
   
   					const intersect = intersects[ 0 ];
-  					const face = intersect.face;
+  					const face = intersect.face!;
   
-  					const linePosition = line.geometry.attributes.position;
-  					const meshPosition = mesh.geometry.attributes.position;
+  					const linePosition = line.geometry.attributes.position as THREE.BufferAttribute;
+  					const meshPosition = mesh.geometry.attributes.position as THREE.BufferAttribute;
   
   					linePosition.copyAt( 0, meshPosition, face.a );
   					linePosition.copyAt( 1, meshPosition, face.b );

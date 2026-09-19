@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -40,7 +40,7 @@ function onReady(ctx) {
   
   scene.add(pointLight)
   
-  let model = null
+  let model: any = null
   
   // 加载模型
   new FBXLoader().load(props.example?.globals?.HOST + '/files/model/city.FBX', (object3d) => {
@@ -53,7 +53,7 @@ function onReady(ctx) {
   
       model = object3d
   
-      modelBlendShader(object3d, box)
+      modelBlendShader(object3d)
   
   })
   
@@ -64,11 +64,11 @@ function onReady(ctx) {
   })
   
   /* 混合着色 */
-  function modelBlendShader(model) {
+  function modelBlendShader(model: any) {
   
-      let materials = []
+      let materials: any[] = []
   
-      model.traverse(c => c.isMesh && materials.push(c.material))
+      model.traverse((c: any) => c.isMesh && materials.push(c.material))
   
       materials = [... new Set(materials)]
   
@@ -127,7 +127,7 @@ function onReady(ctx) {
   
       materials.forEach(material => {
   
-          material.onBeforeCompile = (shader) => {
+          material.onBeforeCompile = (shader: any) => {
   
               Object.keys(uniforms).forEach((key) => shader.uniforms[key] = uniforms[key])
   

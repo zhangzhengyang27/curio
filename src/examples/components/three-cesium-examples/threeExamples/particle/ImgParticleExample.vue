@@ -8,7 +8,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(stageCtx) {
+function onReady(stageCtx: any) {
   const scene = stageCtx.scene
   const camera = stageCtx.camera
   const renderer = stageCtx.renderer
@@ -73,7 +73,7 @@ function onReady(stageCtx) {
       scene.add(particles);
   });
   
-  function createParticles(config, callback) {
+  function createParticles(config: any, callback: (particles: any) => void) {
       new THREE.TextureLoader().load(config.imageUrl, texture => {
           const { width: w, height: h } = texture.image;
           const scale = w >= h ? config.targetSize/w : config.targetSize/h;
@@ -87,7 +87,7 @@ const ctx = canvas.getContext("2d");
           const data = ctx.getImageData(0, 0, w, h).data;
   
           // 收集顶点和颜色数据，按间隔采样以控制粒子数量
-          const [positions, colors] = [[], []];
+          const [positions, colors] = [[], []] as any[][];
           for(let i = 0; i < data.length; i += 4 * config.particleGap) {
               if(data[i + 3] > 0) {
                   const x = (i/4 % w - w/2) * scale;

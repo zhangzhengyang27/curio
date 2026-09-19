@@ -7,7 +7,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ExampleScene from '@/examples/components/ExampleScene.vue'
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   const scene = ctx.scene
   const camera = ctx.camera
   const renderer = ctx.renderer
@@ -33,12 +33,12 @@ function onReady(ctx) {
   
   scene.add(new THREE.GridHelper(100, 40))
   
-  let character
+  let character: any
   
   new GLTFLoader().load(props.example?.globals?.FILE_HOST + "files/model/Fox.glb", (gltf) => {
   
     character = gltf.scene
-    character.traverse(i => i.isMesh && (i.material.envMap = textureCube))
+    character.traverse((i: any) => i.isMesh && (i.material.envMap = textureCube))
   
     scene.add(character)
     character.scale.multiplyScalar(0.03)
@@ -59,8 +59,8 @@ function onReady(ctx) {
   
   // 移动状态
   const keys = { w: false, s: false, a: false, d: false };
-  document.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-  document.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+  document.addEventListener('keydown', (e: any) => (keys as any)[e.key.toLowerCase()] = true);
+  document.addEventListener('keyup', (e: any) => (keys as any)[e.key.toLowerCase()] = false);
   
   function update() {
   

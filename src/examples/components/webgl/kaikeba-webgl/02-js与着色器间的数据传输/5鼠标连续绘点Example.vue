@@ -2,7 +2,7 @@
   <WebGLExampleScene @ready="onReady" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGLExampleScene from '@/examples/components/WebGLExampleScene.vue'
 import { initShaders } from '@/examples/jsm-compat/webgl/kaikeba-webgl/02-js与着色器间的数据传输/jsm/Utils.js'
 const vertexShader = `attribute vec4 a_Position;
@@ -17,7 +17,7 @@ const fragmentShader = `void main(){
           gl_FragColor=vec4(1,1,0,1);
       }`
 
-async function onReady({ canvas, container, addUpdateCallback, resize }) {
+async function onReady({ canvas, container, addUpdateCallback, resize }: { canvas: HTMLCanvasElement; container: HTMLElement; addUpdateCallback: (fn: () => void) => void; resize: (w: number, h: number) => void }) {
   
   
       
@@ -27,12 +27,12 @@ async function onReady({ canvas, container, addUpdateCallback, resize }) {
       const vsSource = vertexShader;
       const fsSource = fragmentShader;
   
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl")!!;
   
       initShaders(gl, vsSource, fsSource);
   
       //设置attribute 变量
-      const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+      const a_Position = gl.getAttribLocation((gl as any).program, "a_Position");
   
       const a_points = [{ x: 0, y: 0 }];
   

@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import ExampleScene from '../../ExampleScene.vue'
@@ -19,12 +19,12 @@ const gltfLoader = new GLTFLoader()
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 
-let cabinets = []
-let curCabinet = null
+let cabinets: any[] = []
+let curCabinet: any = null
 let maps = new Map()
-let ctxRef = null
+let ctxRef: any = null
 
-function crtTexture(imgName) {
+function crtTexture(imgName: string) {
   let texture = maps.get(imgName)
   if (!texture) {
     texture = new THREE.TextureLoader().load(modelPath + imgName)
@@ -36,7 +36,7 @@ function crtTexture(imgName) {
   return texture
 }
 
-function changeMat(obj, map, color) {
+function changeMat(obj: any, map?: any, color?: any) {
   if (map) {
     obj.material = new THREE.MeshBasicMaterial({
       map: crtTexture(map.name),
@@ -46,10 +46,10 @@ function changeMat(obj, map, color) {
   }
 }
 
-function loadGLTF(scene) {
+function loadGLTF(scene: any) {
   gltfLoader.load(modelPath + 'machineRoom.gltf', ({ scene: { children } }) => {
     children.forEach((obj) => {
-      const { map, color } = obj.material || {}
+      const { map, color } = (obj.material ?? {}) as { map?: unknown; color?: unknown }
       changeMat(obj, map, color)
       if (obj.name && obj.name.includes('cabinet')) {
         cabinets.push(obj)
@@ -59,7 +59,7 @@ function loadGLTF(scene) {
   })
 }
 
-function selectCabinet(x, y) {
+function selectCabinet(x: number, y: number) {
   if (!ctxRef) return
   const { camera, renderer } = ctxRef
   const { width, height } = renderer.domElement
@@ -74,14 +74,14 @@ function selectCabinet(x, y) {
   if (intersectObj) {
     if (intersectObj !== curCabinet) {
       curCabinet = intersectObj
-      intersectObj.material.setValues({ map: maps.get('cabinet-hover.jpg') })
+      ;(intersectObj.material as any).setValues({ map: maps.get('cabinet-hover.jpg') })
     }
   } else if (curCabinet) {
     curCabinet = null
   }
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   ctxRef = ctx
   const { scene, canvas } = ctx
 
@@ -94,7 +94,7 @@ function onReady(ctx) {
   crtTexture('cabinet-hover.jpg')
   loadGLTF(scene)
 
-  canvas.addEventListener('mousemove', (e) => {
+  canvas.addEventListener('mousemove', (e: any) => {
     selectCabinet(e.offsetX, e.offsetY)
   })
 }

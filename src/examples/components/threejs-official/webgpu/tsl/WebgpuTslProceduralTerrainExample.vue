@@ -15,13 +15,16 @@
   </WebGPUExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import WebGPUExampleScene from '@/examples/components/WebGPUExampleScene.vue'
 import * as THREE from 'three/webgpu';
 import { mx_noise_float, color, cross, dot, float, transformNormalToView, positionLocal, sign, step, Fn, uniform, varying, vec2, vec3, Loop } from 'three/tsl';
 import { Inspector } from 'three/examples/jsm/inspector/Inspector.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+
+let drag: any;
+
 
 const props = defineProps({
   example: {
@@ -33,7 +36,7 @@ const props = defineProps({
 const infoHtml = "<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\" class=\"logo-link\"></a>\n\n\t\t\t<div class=\"title-wrapper\">\n\t\t\t\t<a href=\"https://threejs.org/\" target=\"_blank\" rel=\"noopener\">three.js</a><span>Procedural Terrain</span>"
 const ASSET_HOST = props.example?.globals?.ASSET_HOST || '/threejs-official/'
 
-function onReady(__stage) {
+function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -108,7 +111,7 @@ function onReady(__stage) {
   				const vNormal = varying( vec3() );
   				const vPosition = varying( vec3() );
   
-  				const terrainElevation = Fn( ( [ position ] ) => {
+  			const terrainElevation = Fn( ( [ position ]: any ) => {
   
   					const warpedPosition = position.add( offset ).toVar();
   					warpedPosition.addAssign( mx_noise_float( warpedPosition.mul( positionFrequency ).mul( warpFrequency ), 1, 0 ).mul( warpStrength ) );
@@ -139,11 +142,11 @@ function onReady(__stage) {
   					// elevations
   
   					const position = positionLocal.xyz.toVar();
-  					const elevation = terrainElevation( positionLocal.xz );
+  				const elevation = (terrainElevation as any)( (positionLocal.xz as any) );
   					position.y.addAssign( elevation );
   			
-  					neighbourA.y.addAssign( terrainElevation( neighbourA.xz ) );
-  					neighbourB.y.addAssign( terrainElevation( neighbourB.xz ) );
+  				neighbourA.y.addAssign( (terrainElevation as any)( (neighbourA.xz as any) ) );
+  					neighbourB.y.addAssign( (terrainElevation as any)( (neighbourB.xz as any) ) );
   
   					// compute normal
   
@@ -302,19 +305,19 @@ function onReady(__stage) {
   				terrainGui.add( warpStrength, 'value', 0, 2, 0.001 ).name( 'warpStrength' );
   
   				const colorSandDebug = { color: colorSand.value.getHex() };
-  				terrainGui.addColor( colorSandDebug, 'color' ).name( 'colorSand' ).onChange( ( val ) => {
+  				terrainGui.addColor( colorSandDebug, 'color' ).name( 'colorSand' ).onChange( ( val: any ) => {
   					colorSand.value.set( val );
   				} );
   				const colorGrassDebug = { color: colorGrass.value.getHex() };
-  				terrainGui.addColor( colorGrassDebug, 'color' ).name( 'colorGrass' ).onChange( ( val ) => {
+  				terrainGui.addColor( colorGrassDebug, 'color' ).name( 'colorGrass' ).onChange( ( val: any ) => {
   					colorGrass.value.set( val );
   				} );
   				const colorSnowDebug = { color: colorSnow.value.getHex() };
-  				terrainGui.addColor( colorSnowDebug, 'color' ).name( 'colorSnow' ).onChange( ( val ) => {
+  				terrainGui.addColor( colorSnowDebug, 'color' ).name( 'colorSnow' ).onChange( ( val: any ) => {
   					colorSnow.value.set( val );
   				} );
   				const colorRockDebug = { color: colorRock.value.getHex() };
-  				terrainGui.addColor( colorRockDebug, 'color' ).name( 'colorRock' ).onChange( ( val ) => {
+  				terrainGui.addColor( colorRockDebug, 'color' ).name( 'colorRock' ).onChange( ( val: any ) => {
   					colorRock.value.set( val );
   				} );
   
@@ -322,9 +325,9 @@ function onReady(__stage) {
   
   				waterGui.add( water.material, 'roughness', 0, 1, 0.01 );
   				waterGui.add( water.material, 'ior', 1, 2, 0.001 );
-  				const waterColorDebug = { color: water.material.color.getHex() };
-  				waterGui.addColor( waterColorDebug, 'color' ).name( 'color' ).onChange( ( val ) => {
-  					water.material.color.set( val );
+  				const waterColorDebug = { color: (water as any)!.material.color.getHex() };
+  				waterGui.addColor( waterColorDebug, 'color' ).name( 'color' ).onChange( ( val: any ) => {
+  					(water as any)!.material.color.set( val );
   				} );
   
   				// events
@@ -367,7 +370,7 @@ function onReady(__stage) {
   
   			
   
-  			__stage.addUpdateCallback(async (_delta, _elapsed) => {
+  			__stage.addUpdateCallback(async (_delta: any, _elapsed: any) => {
     drag.update();
   })
   

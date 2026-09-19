@@ -17,10 +17,10 @@
   </ExampleScene>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onUnmounted } from 'vue'
 
-let gui = null
+let gui: any = null
 import ExampleScene from '@/examples/components/ExampleScene.vue'
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -30,7 +30,11 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { acceleratedRaycast, computeBatchedBoundsTree } from 'three-mesh-bvh';
 import { createRadixSort, extendBatchedMeshPrototype, getBatchedMeshLODCount } from '@three.ez/batched-mesh-extensions';
 import { performanceRangeLOD, simplifyGeometriesByErrorLOD } from '@three.ez/simplify-geometry';
-import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch.js';
+import { patchPrototype, restorePrototype } from '@/examples/composables/usePrototypePatch';
+
+let batchedMesh: any;
+let onPointerMoveHandler: any = null;
+
 
 const props = defineProps({
   example: {
@@ -40,7 +44,7 @@ const props = defineProps({
 })
 
 const infoHtml = "<a href=\"https://threejs.org\" target=\"_blank\" rel=\"noopener\">three.js</a> batch lod bvh - <a href=\"https://github.com/agargaro/batched-mesh-extensions\" target=\"_blank\" rel=\"noopener\">@three.ez/batched-mesh-extensions</a><br/>\n\t\t\tBatchedMesh with 10 geometries and 500k instances.<br>\n\t\t\tEach geometry has 5 LODs (4 generated with meshoptimizer). <br>\n\t\t\tFrustum culling and raycasting are accelerated by using BVHs (TLAS & BLAS). <br>"
-async function onReady(__stage) {
+async function onReady(__stage: any) {
   let scene = __stage.scene
   let camera = __stage.camera
   let renderer = __stage.renderer
@@ -62,7 +66,7 @@ async function onReady(__stage) {
   
   			const instancesCount = 500000;
   
-  			let lastHoveredInstance = null;
+  			let lastHoveredInstance: any = null
   			const lastHoveredColor = new THREE.Color();
   			const highlight = new THREE.Color( 'red' );
   
@@ -175,28 +179,28 @@ async function onReady(__stage) {
   				};
   			
   				const bvh = batchedMesh.bvh;
-  				const lods = batchedMesh._geometryInfo.map( x => x.LOD );
+  				const lods = batchedMesh._geometryInfo.map( (x: any) => x.LOD );
   				const onBeforeRender = batchedMesh.onBeforeRender;
   			
   				gui = new GUI();
   
   				gui.add( batchedMesh, 'instanceCount' ).disable();
   			
-  				gui.add( config, 'freeze' ).onChange( v => {
+  				gui.add( config, 'freeze' ).onChange( (v: any) => {
   
   					batchedMesh.onBeforeRender = v ? () => {} : onBeforeRender;
   
   				} );
   
   				const frustumCullingFolder = gui.addFolder( 'Frustum culling & raycasting' );
-  				frustumCullingFolder.add( config, 'useBVH' ).onChange( v => {
+  				frustumCullingFolder.add( config, 'useBVH' ).onChange( (v: any) => {
   
   					batchedMesh.bvh = v ? bvh : null;
   
   				} );
   
   				const geometriesFolder = gui.addFolder( 'Geometries' );
-  				geometriesFolder.add( config, 'useLOD' ).onChange( v => {
+  				geometriesFolder.add( config, 'useLOD' ).onChange( (v: any) => {
   
   					const geometryInfo = batchedMesh._geometryInfo;
   					for ( let i = 0; i < geometryInfo.length; i ++ ) {
@@ -207,15 +211,24 @@ async function onReady(__stage) {
   
   				} );
   
-  				document.addEventListener( 'pointermove', onPointerMove );
+  				onPointerMoveHandler = onPointerMove
+				document.addEventListener( 'pointermove', onPointerMove );
   				
   				onWindowResize();
+
+				function onWindowResize() {
+					const w = __stage.container?.clientWidth || window.innerWidth
+					const h = __stage.container?.clientHeight || window.innerHeight
+					camera.aspect = w / h
+					camera.updateProjectionMatrix()
+					renderer.setSize(w, h)
+				}
   			
   				
   
   
   
-  			function onPointerMove( event ) {
+  			function onPointerMove( event: any ) {
   
   				event.preventDefault();
   
@@ -255,7 +268,7 @@ async function onReady(__stage) {
   
   			}
   
-  			__stage.addUpdateCallback((_delta, _elapsed) => {
+  			__stage.addUpdateCallback((_delta: any, _elapsed: any) => {
     stats.begin();
     				stats.end();
   })
@@ -265,7 +278,7 @@ async function onReady(__stage) {
 function onBeforeDispose() {
   restorePrototype(THREE.Mesh, 'raycast')
   restorePrototype(THREE.BatchedMesh, 'computeBoundsTree')
-  document.removeEventListener('pointermove', onPointerMove)
+  document.removeEventListener('pointermove', onPointerMoveHandler)
 }
 
 onUnmounted(() => {

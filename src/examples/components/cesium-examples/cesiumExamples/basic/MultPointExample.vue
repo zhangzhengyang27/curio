@@ -6,14 +6,14 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CesiumExampleScene from '@/examples/components/CesiumExampleScene.vue'
 
 const HOST = '/external-examples/three-cesium-examples/'
 
-let Cesium = null
-let viewer = null
-let billboards = null
+let Cesium: any = null
+let viewer: any = null
+let billboards: any = null
 
 const viewerOptions = {
   animation: false,
@@ -29,7 +29,7 @@ const viewerOptions = {
   baseLayer: false,
 }
 
-function onReady(ctx) {
+function onReady(ctx: any) {
   Cesium = ctx.cesium
   viewer = ctx.viewer
 
@@ -49,7 +49,7 @@ function onReady(ctx) {
     },
   })
 
-  viewer.screenSpaceEventHandler.setInputAction(function (event) {
+  viewer.screenSpaceEventHandler.setInputAction(function (event: any) {
     const object = viewer.scene.pick(event.position)
     if (object && object.id) {
     }
