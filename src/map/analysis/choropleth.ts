@@ -31,10 +31,13 @@ export class Choropleth {
     this.byName = new Map()
   }
 
-  /** 装载 worldZh 多边形；onProgress(loaded, total) 供调试/状态显示 */
-  async load(onProgress?: (loaded: number, total: number) => void): Promise<number> {
-    const res = await fetch('/data/worldZh.json')
-    const geo = await res.json()
+  /**
+   * 装载 worldZh 多边形；onProgress(loaded, total) 供调试/状态显示。
+   * @param geo 已解析的 worldZh GeoJSON。分析页/工作台的数据层本来就要读这份文件，
+   *            传进来即可省掉第二次 2.4 MB 的 fetch + JSON.parse；缺省才自行拉取。
+   */
+  async load(geo?: any, onProgress?: (loaded: number, total: number) => void): Promise<number> {
+    if (!geo) geo = await (await fetch('/data/worldZh.json')).json()
     const ds = await this.Cesium.GeoJsonDataSource.load(geo, {
       stroke: this.Cesium.Color.fromCssColorString('#9a9a9a'),
       fill: this.Cesium.Color.fromCssColorString('#e8e8e2').withAlpha(0.85),

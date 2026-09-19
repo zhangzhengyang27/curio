@@ -276,7 +276,7 @@ const debug = ref(new URLSearchParams(window.location.search).has('debug'))
 const yearIndex = ref(0)
 const playing = ref(false)
 
-const { loading, error: dataError, years, countries, gdpByYear, load } = useCountryData()
+const { loading, error: dataError, years, countries, gdpByYear, world, load } = useCountryData()
 const route = useRoute()
 const router = useRouter()
 let viewer: any = null
@@ -490,7 +490,7 @@ onMounted(async () => {
       view: { lon: 60, lat: 28, height: 9_500_000 },
     })
     choropleth = new Choropleth(Cesium, viewer)
-    await choropleth.load()
+    await choropleth.load(world.value)
 
     if (debug.value) {
       // 调试钩子：供探针读取渲染器真实状态

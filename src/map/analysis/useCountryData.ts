@@ -1,5 +1,5 @@
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { ref, shallowRef } from 'vue'
+import type { Ref, ShallowRef } from 'vue'
 
 /** 分析页国家行：数值缺失为 null */
 export interface CountryRow {
@@ -28,6 +28,8 @@ export function useCountryData(): {
   years: Ref<string[]>
   countries: Ref<CountryRow[]>
   gdpByYear: Ref<Record<string, Record<string, number>>>
+  /** 已解析的 worldZh GeoJSON，供 Choropleth 复用（shallowRef：2.4 MB 对象不做深响应） */
+  world: ShallowRef<any>
   load(): Promise<void>
 } {
   const loading = ref(true)
@@ -35,24 +37,27 @@ export function useCountryData(): {
   const years = ref<string[]>([])
   const countries = ref<CountryRow[]>([]) // [{ name, population, area, density, emission }]
   const gdpByYear = ref<Record<string, Record<string, number>>>({})
+  // 2.4 MB 的多边形集合：用 shallowRef 只换引用、不建深响应代理
+  const world = shallowRef<any>(null)
 
   async function load(): Promise<void> {
     loading.value = true
     error.value = ''
     try {
-      const [timeline, population, carbon, world] = await Promise.all([
+      const [timeline, population, carbon, worldGeo] = await Promise.all([
         fetch('/data/mock/gdp-timeline.json').then((r) => r.json()),
         fetch('/data/mock/population.json').then((r) => r.json()),
         fetch('/data/mock/carbon.json').then((r) => r.json()),
         fetch('/data/worldZh.json').then((r) => r.json()),
       ])
+      world.value = worldGeo
 
       const yearKeys: string[] = Object.keys(timeline).sort()
       years.value = yearKeys
       gdpByYear.value = timeline
 
       const zhFromGeo = new Set<string>()
-      for (const f of world.features || []) {
+      for (const f of worldGeo.features || []) {
         const p = f.properties || {}
         zhFromGeo.add(p.nameZh || p.name)
       }
@@ -81,7 +86,7 @@ export function useCountryData(): {
     }
   }
 
-  return { loading, error, years, countries, gdpByYear, load }
+  return { loading, error, years, countries, gdpByYear, world, load }
 }
 
 /** GDP 美元 → 可读文本（万亿/亿） */

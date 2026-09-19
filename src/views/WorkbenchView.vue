@@ -193,7 +193,7 @@ watch(theme, (t: string) => {
 
 // dataError = 数据层错误(数据文件拉取失败);loadError = Cesium 初始化错误。
 // 曾只解构数据不接 error,数据失败时页面静默全灰(审查 P2 死代码分支)
-const { countries, gdpByYear, load, error: dataError } = useCountryData()
+const { countries, gdpByYear, world, load, error: dataError } = useCountryData()
 let viewer: any = null
 let choropleth: Choropleth | null = null
 let chartInstance: import('echarts').ECharts | null = null
@@ -408,7 +408,7 @@ onMounted(async () => {
       view: { lon: 60, lat: 28, height: 9_500_000 },
     })
     choropleth = new Choropleth(Cesium, viewer)
-    await choropleth.load()
+    await choropleth.load(world.value)
     choropleth.applyValues(values.value)
     ready.value = true
     await nextTick()
