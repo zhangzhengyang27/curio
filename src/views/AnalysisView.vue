@@ -402,7 +402,9 @@ watch(playing, (on) => {
   }, 700)
 })
 
-watch([year, selected, compare, metric], () => {
+// 对比国必须用长度做源：多源 watch 对 ref 只读 .value、不做 traverse，
+// toggleCompare 的 push/splice 原地改数组不会触发回调（曾致勾选对比后地图不重着色）
+watch([year, selected, () => compare.value.length, metric], () => {
   choropleth?.applyValues(metricValues.value, selected.value, compare.value)
 })
 

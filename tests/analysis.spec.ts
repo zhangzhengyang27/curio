@@ -69,6 +69,46 @@ test.describe('全球数据分析', () => {
     await expect(page.locator('[data-testid="compare-table"]')).toContainText('美国')
   })
 
+  // 回归：对比勾选只更新了对比表，地图却没重着色。
+  // 根因是 watch([year, selected, compare, metric]) 的多源形态对 ref 只读 .value、
+  // 不做 traverse，而 toggleCompare 用 push/splice 原地改数组 → 回调永不触发。
+  // 上面那条用例只断言对比表（模板直接 v-for compare，天然生效），所以漏掉了地图侧。
+  test('对比勾选同步重着色地图(回归:原地 push 不触发多源 watch)', async ({ page }) => {
+    await page.goto('/analysis?debug=1')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+
+    // 读 Cesium 实体真实填充色。按「同名最后一个实体」取——与 Choropleth.byName
+    // 的 set 语义一致（多部件国家只着色最后一个，另见已知缺陷）。
+    const fillOf = (name) =>
+      page.evaluate((n) => {
+        const { viewer } = window.__tvMapDebug
+        const t = viewer.clock.currentTime
+        const list = viewer.dataSources.get(0).entities.values.filter((e) => e.__nameZh === n)
+        const m = list[list.length - 1]?.polygon?.material
+        if (!m) return null
+        return (m.color ? m.color.getValue(t) : m).toCssColorString()
+      }, name)
+
+    const before = await fillOf('中国')
+    expect(before).not.toBeNull()
+
+    await page.evaluate(async () => {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+      const el = document.querySelector('[data-testid="country-search"]')
+      el.value = '中国'
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+      await sleep(150)
+      document.querySelector('[data-testid="country-中国"] .compare-toggle input').click()
+      await sleep(150)
+    })
+
+    // COMPARE_COLORS[0] = #e0457b，高亮 alpha 0.95
+    await expect
+      .poll(() => fillOf('中国'), { timeout: 15_000, message: '中国多边形未获得对比高亮色' })
+      .toBe('rgba(224,69,123,0.95)')
+    expect(await fillOf('中国')).not.toBe(before)
+  })
+
   test('对比满 4 国后其余复选框禁用(回归:曾静默丢弃第 5 国勾选)', async ({ page }) => {
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
