@@ -144,7 +144,31 @@ test.describe('全球数据分析', () => {
     expect(s.mixed, `${s.mixed} 个国家的各块色值不一致`).toBe(0)
   })
 
+  // 回归：深链 ?country= 时 restoreFromQuery 在 ready 之前就设了 selected，
+  // 那次 watch(selected)→renderTrend 因面板尚未 v-if 出来而早退，之后再无人补调
+  // → 趋势图永久空白（手动点列表选国不受影响，所以只有分享链接会暴露）。
+  test('深链 ?country= 直达时趋势图照样渲染(回归:ready 前设 selected 导致永久空白)', async ({ page }) => {
+    await page.goto('/analysis?country=中国&year=2015')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+    await expect(page.locator('[data-testid="country-中国"]')).toHaveCount(1)
+    await expect(page.locator('[data-testid="trend-chart"] canvas')).toBeVisible({
+      timeout: CHART_FIRST_RENDER,
+    })
+  })
+
+  // 回归：本页 catch 只 console.error，模板又只有 dataError/loading 两态，
+  // 引擎挂掉时 ready 停在 false、所有面板被 v-if 掉 → 纯黑屏零提示。
+  test('引擎加载失败给出可见提示，而非黑屏（回归：本页曾漏 loadError）', async ({ page }) => {
+    await page.route('**/cesium/Build/Cesium/Cesium.js', (route) => route.abort())
+    await page.goto('/analysis')
+    await expect(page.locator('.load-error')).toBeVisible({ timeout: 30000 })
+    await expect(page.locator('.load-error')).toContainText('加载失败')
+  })
+
   test('对比满 4 国后其余复选框禁用(回归:曾静默丢弃第 5 国勾选)', async ({ page }) => {
+    // 本用例含 4 次「全图重着色」（343 块多边形逐块设 material），实测冷机器 36s、
+    // 满载机器会越过默认 60s。定点放宽，理由同 KNOWN_PITFALLS A5。
+    test.setTimeout(120_000)
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
 

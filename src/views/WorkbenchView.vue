@@ -278,7 +278,16 @@ function focusCountry(name: string) {
 }
 
 async function renderDrill() {
-  if (!drillCountry.value || !drillRef.value) return
+  if (!drillCountry.value || !drillRef.value) {
+    // drillCountry 清空会让 .drill-box 被 v-if 卸载，但实例还绑在已脱离文档的旧 div 上。
+    // 不丢掉的话，下次下钻会命中 !drillChart 短路、把 setOption 打进死容器 → 图永久空白。
+    // 只在「国家被清空」这一支丢，避免把尚未挂载（drillRef 暂时为 null）的有效实例误杀。
+    if (!drillCountry.value && drillChart) {
+      drillChart.dispose()
+      drillChart = null
+    }
+    return
+  }
   if (!drillChart) {
     const echarts = await import('echarts')
     drillChart = echarts.init(drillRef.value)

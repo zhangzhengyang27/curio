@@ -109,8 +109,32 @@ test.describe('主题分析工作台', () => {
 
     const firstName = (await page.locator('[data-testid="rank-item-0"] .rank-name').innerText()).trim()
     await page.locator('[data-testid="rank-item-0"]').evaluate((el) => el.click())
-    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible()
     await expect(page.locator('.panel-right')).toContainText(`${firstName} · GDP 走势`)
+  })
+
+  // 回归：setTheme 会把 drillCountry 置 null → .drill-box 被 v-if 卸载，
+  // 但 echarts 实例仍绑在那个已脱离文档的旧 div 上。再下钻时 renderDrill 命中
+  // !drillChart 短路、把 setOption 打进死容器 → 新 div 里永远没有 canvas，下钻图永久空白。
+  test('切主题再切回后下钻图仍能渲染(回归:实例绑在已卸载的旧 div 上)', async ({ page }) => {
+    // 本用例含 3 次「全图重着色」（343 块多边形逐块设 material），实测冷机器 36s、
+    // 满载机器会越过默认 60s。定点放宽，理由同 KNOWN_PITFALLS A5。
+    test.setTimeout(120_000)
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
+
+    // 第一次下钻：正常
+    await page.locator('[data-testid="rank-item-0"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible()
+
+    // 切主题清空下钻 → 切回 GDP → 再下钻，必须仍能出图
+    await page.locator('[data-testid="theme-carbon"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('MtCO₂')
+    await page.locator('[data-testid="theme-gdp"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('万亿美元')
+
+    await page.locator('[data-testid="rank-item-0"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible()
   })
 
   test('报告模板:摘要版无指纹段,完整版含指纹(W2)', async ({ page }) => {

@@ -12,6 +12,12 @@
       {{ dataError }}
     </div>
     <div
+      v-else-if="loadError"
+      class="load-error tv-glass-panel"
+    >
+      {{ loadError }}
+    </div>
+    <div
       v-else-if="loading"
       class="load-error tv-glass-panel"
     >
@@ -268,6 +274,10 @@ import { Choropleth } from '../map/analysis/choropleth'
 
 const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
+// 引擎/多边形装载失败提示：原先 catch 只 console.error，
+// ready 停在 false → 所有面板 v-if 掉，用户看到纯黑屏且零提示
+// （monitor / workbench 两页均有此态，此前只有本页漏了）
+const loadError = ref('')
 const search = ref('')
 const selected = ref<string | null>(null)
 const compare = ref<string[]>([])
@@ -510,7 +520,13 @@ onMounted(async () => {
       if (name) selectCountry(name)
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
     ready.value = true
+    // 深链 ?country= 时 restoreFromQuery 在 ready 之前就设了 selected，
+    // 那次 watch(selected) → renderTrend 会因为面板还没 v-if 出来而早退，
+    // 之后再没人补调 → 趋势图永久空白。ready 后补一次。
+    await nextTick()
+    renderTrend()
   } catch (err) {
+    loadError.value = '地图引擎加载失败，请刷新重试。'
     console.error('[analysis] 初始化失败:', err)
   }
 })

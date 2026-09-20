@@ -82,8 +82,9 @@ compare.value = ['y']     // → n 变 1
   `locator.waitFor()`/`.evaluate()`/`.click()` 走的是 `actionTimeout`，只调 `expect` 会
   在另一个地方继续超时）；
 - 重画布交互的 spec 用 `test.describe.configure({ mode: 'serial' })` 消除互抢；
-- 用例级预算**定点放宽**：凡含 ≥2 次整页加载（`goto`/`reload`）的用例写
-  `test.setTimeout(120_000)`，与 M4/M10/W2 的既有做法同口径。
+- 用例级预算**定点放宽**，两类需要放：① 含 ≥2 次整页加载（`goto`/`reload`）；
+  ② 单次加载但内含多次「全图重着色」（choropleth 要逐块设 343 个多边形的 material）
+  或多次图表首渲染。写 `test.setTimeout(120_000)`，与 M4/M10/W2 的既有做法同口径。
 
 > **不要用文件级 `test.slow()`**。它把整个文件的用例预算 ×3（60s→180s），
 > 机器满载时一条卡死的用例会烧掉 3 分钟才失败而不是快速失败 —— 实测在
