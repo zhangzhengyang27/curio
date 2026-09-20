@@ -98,6 +98,40 @@ test.describe('业务监控', () => {
     await expect(page.locator('[data-testid="detail-status"]')).toHaveText('未处理')
   })
 
+  // 回归：读侧有 try/catch，写侧原先没有。隐私模式/配额满时
+  // persistStatus 的 setItem 抛错会让「状态已改」但后续刷新地图标记被中断；
+  // resetDrill 的 removeItem 抛错更狠——它后面的 revealAt 循环整段不执行，
+  // 事件已全部重置、列表却被清空，「重置演练」把页面清成空白。
+  test('localStorage 不可用时处置与重置演练仍然生效(回归:写侧未包 try/catch)', async ({ page }) => {
+    await page.addInitScript(() => {
+      // 只废这一个键：直接替换 Storage.prototype 会连 sessionStorage 一起打死，
+      // 页面初始化阶段就抛错，测的就不是「写侧没包」而是「整页起不来」了
+      const origSet = Storage.prototype.setItem
+      const origRm = Storage.prototype.removeItem
+      const boom = () => { throw new DOMException('quota', 'QuotaExceededError') }
+      Storage.prototype.setItem = function (k, v) {
+        if (k === 'tv-monitor-status') boom()
+        return origSet.call(this, k, v)
+      }
+      Storage.prototype.removeItem = function (k) {
+        if (k === 'tv-monitor-status') boom()
+        return origRm.call(this, k)
+      }
+    })
+    await page.goto('/monitor?nostream=1')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+
+    await page.locator('[data-testid="feed-list"] .feed-item').first().evaluate((el) => el.click())
+    await page.locator('[data-testid="act-processing"]').evaluate((el) => el.click())
+    await page.locator('[data-testid="act-resolve"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('1')
+
+    await page.locator('[data-testid="reset-drill"]').evaluate((el) => el.click())
+    await expect(page.locator('[data-testid="stats-resolved"]')).toContainText('0')
+    // 关键断言：重置后初始事件必须照常回到列表里，而不是留下一片空白
+    await expect(page.locator('[data-testid="feed-list"] .feed-item')).toHaveCount(10)
+  })
+
   test('流开关：nostream 进入后可手动开启自动推送', async ({ page }) => {
     await page.goto('/monitor?nostream=1')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })

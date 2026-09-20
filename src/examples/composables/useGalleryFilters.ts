@@ -137,6 +137,20 @@ export function useGalleryFilters() {
     return pages
   })
 
+  // 页码钳制。两个来源会让 currentPage 落到有效范围之外：
+  //   ① 顶栏写 ?search= 时是 {...route.query}（src/App.vue），旧 page 被原样保留——
+  //      在第 3 页输入关键词、结果不足 3 页时 paginatedExamples 为空，
+  //      而 filteredExamples.length 又 >0，连空态提示都不显示 → 用户见「共 N 个」配空白网格；
+  //   ② 手输/分享的 ?page=999、?page=-3、?page=2.5 直接落进 slice（负数会从尾部取错数据）。
+  // 放在这里而不是让 selectTech/selectCategory 重置，是因为它们管不到「搜索」这条路径，
+  // 且前进/后退还原 URL 时不该被额外重置。
+  watch([totalPages, currentPage], () => {
+    const max = Math.max(1, totalPages.value)
+    const cur = Math.floor(Number(currentPage.value))
+    if (!Number.isFinite(cur) || cur < 1) currentPage.value = 1
+    else if (cur > max) currentPage.value = max
+  })
+
   // 用户主动切换技术 / 子分类时，重置子分类与页码。
   // 注意：不再用 watch(currentTech) / watch([keyword, currentSubCategory]) 自动重置，
   // 否则在浏览器前进/后退（syncQueryToState 从 URL 还原状态）时也会触发重置，

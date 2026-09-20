@@ -235,6 +235,24 @@ test.describe('冒烟测试：核心链路', () => {
     await expect(page.locator('.page-btn.active')).toContainText('2')
   })
 
+  // 回归：顶栏写 ?search= 时用的是 {...route.query}，旧 page 被原样带过来。
+  // 在第 7 页搜一个只剩 1 页结果的词，paginatedExamples 会 slice 出空数组，
+  // 而 filteredExamples.length 又 >0 → 连空态提示都不渲染，用户看到「共 N 个」配空白网格。
+  // ?page=999 / 负数 / 小数同属这一类越界。
+  test('页码越界自动钳制，不出现空白网格(回归:搜索保留旧 page)', async ({ page }) => {
+    // 「地球」实测 11 条 = 1 页；单页时 .pagination 整个不渲染，
+    // 所以这里断言的是「卡片可见 + 越界的 page 参数被写回清掉」，而不是分页按钮
+    await page.goto('/examples?search=地球&page=7')
+    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 15_000 })
+    expect(new URL(page.url()).searchParams.has('page'), '钳回第 1 页后 page 参数应被省略').toBe(false)
+    await expect(page.locator('.example-card')).toHaveCount(11)
+
+    // 负数会让 slice 从尾部取错数据，属于同一类脏 URL；这条有多页，可以断按钮
+    await page.goto('/examples?page=-3')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    await expect(page.locator('.page-btn.active')).toHaveText('1')
+  })
+
   test('示例详情页能按命名约定解析到 Vue 组件', async ({ page }) => {
     await page.goto(DEMO_PATH)
 

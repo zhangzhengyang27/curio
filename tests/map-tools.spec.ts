@@ -283,6 +283,42 @@ test.describe('地图工具箱', () => {
     expect(hBefore).not.toBe(hAfter)
   })
 
+  // 回归：三通道是串行 await（每通道最长 8s），期间用户改词再搜完全可能。
+  // 没有序号守卫时，先发起的那次慢返回会把结果列表覆盖回去，
+  // 于是「列表/飞行目标」和输入框里的关键词不一致。
+  test('地名搜索以最后一次输入为准(回归:旧请求慢返回覆盖新结果)', async ({ page }) => {
+    await page.goto('/tools/toolbox?debug=1', { waitUntil: 'domcontentloaded' })
+    await page.locator('.panel-left').waitFor({ timeout: 30_000 })
+
+    // 天地图/高德一律失败，只留 Nominatim——它是唯一无需 key 必注册的通道，
+    // 这样用例不随本机 env 配置变化。回声里带上关键词，好判断结果归属哪次搜索。
+    await page.route('**/api.tianditu.gov.cn/search*', (route) =>
+      route.fulfill({ status: 404, contentType: 'text/html', body: '<html>no</html>' })
+    )
+    await page.route('**/restapi.amap.com/v3/place/text*', (route) =>
+      route.fulfill({ contentType: 'application/json', body: JSON.stringify({ status: '0', info: 'stub' }) })
+    )
+    await page.route('**/nominatim.openstreetmap.org/search*', async (route) => {
+      const kw = new URL(route.request().url()).searchParams.get('q') || ''
+      if (kw.includes('慢')) await new Promise((r) => setTimeout(r, 1500))
+      const name = `结果-${kw}`
+      await route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify([{ name, display_name: name, lon: '114.3054', lat: '30.5428' }]),
+      })
+    })
+
+    const box = page.locator('[data-testid="place-search"]')
+    await box.fill('慢武汉')
+    await box.press('Enter')
+    await box.fill('武汉')
+    await box.press('Enter')
+
+    // 越过慢请求的 1.5s：此时列表必须仍是最后一次搜索的结果
+    await page.waitForTimeout(2500)
+    await expect(page.locator('[data-testid="place-results"] .place-item').first()).toContainText('结果-武汉')
+  })
+
   test('地名搜索:天地图无权限时自动落高德兜底并纠偏坐标(M1 三通道)', async ({ page }) => {
     // 高德通道仅在 env 配了 key 时注册(构建期注入);未配时跳过,配 key 的环境可跑
     test.skip(!process.env.VITE_AMAP_KEY, '需 VITE_AMAP_KEY 环境变量(值任意)才能验证高德兜底通道')

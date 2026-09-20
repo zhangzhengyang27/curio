@@ -764,9 +764,15 @@ async function searchNominatim(q: string) {
     .slice(0, 8)
 }
 
+// 三通道是串行 await（天地图→高德→Nominatim，每通道最长 8s），期间用户完全可以
+// 改关键词再搜一次。没有序号守卫时，先发起的那次慢返回会把 placeResults/hint 覆盖回去，
+// 列表与飞行目标从此和输入框里的词不一致。
+let searchSeq = 0
+
 async function searchPlace() {
   const q = placeQuery.value.trim()
   if (!q) return
+  const seq = ++searchSeq
   placeResults.value = []
   placeHint.value = ''
   const channels: Array<() => Promise<PlaceResult[]>> = []
@@ -777,6 +783,7 @@ async function searchPlace() {
   let attempted = 0
   let errored = 0
   for (const run of channels) {
+    if (seq !== searchSeq) return // 已被更新的搜索取代，本次结果作废
     attempted++
     try {
       found = await run()
@@ -785,6 +792,7 @@ async function searchPlace() {
       errored++
     }
   }
+  if (seq !== searchSeq) return
   if (found.length) {
     placeResults.value = found
   } else {

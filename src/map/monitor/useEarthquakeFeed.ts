@@ -45,7 +45,12 @@ function persistStatus(events: QuakeEvent[]): void {
   for (const e of events) {
     if (e.status !== 'open') map[e.id] = e.status
   }
-  localStorage.setItem(STATUS_KEY, JSON.stringify(map))
+  // 写侧要包：隐私模式/配额满时 setItem 会抛，而调用方此刻已经改过 e.status——
+  // 不包会让「改状态」成功、「刷新地图标记」被中断，列表徽标与地图颜色从此脱钩。
+  // 持久化只是锦上添花，失败就当本次不留档。读侧本来就有 try/catch。
+  try {
+    localStorage.setItem(STATUS_KEY, JSON.stringify(map))
+  } catch { /* 忽略：无法持久化不影响本次会话内的处置流转 */ }
 }
 
 export const LEVELS: Record<QuakeLevel, { label: string; color: string }> = {
@@ -192,7 +197,11 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
       e.level = levelOf(e.mag, threshold.value)
     }
     feed.value = []
-    localStorage.removeItem(STATUS_KEY)
+    // 同上：removeItem 抛错会让下面的 revealAt 整段不执行，
+    // 事件已被全部重置、列表却被清空 → 「重置演练」把页面清成空白
+    try {
+      localStorage.removeItem(STATUS_KEY)
+    } catch { /* 忽略 */ }
     for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
   }
 
