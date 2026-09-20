@@ -21,8 +21,14 @@ export class Choropleth {
   Cesium: any
   viewer: any
   dataSource: any
-  /** nameZh → entity */
-  byName: Map<string, any>
+  /**
+   * nameZh → 该国**全部**多边形实体。
+   *
+   * 必须存数组：worldZh 的 343 个多边形只对应 168 个国家名，37 国是多部件
+   * （美国 15 块、中国 3 块）。原先只留最后一个，导致多部件国家只有最小的一块
+   * 拿到色值、其余停在默认灰——而最低档色阶 #f7fbff 与默认灰几乎同色，肉眼看不出来。
+   */
+  byName: Map<string, any[]>
 
   constructor(Cesium: any, viewer: any) {
     this.Cesium = Cesium
@@ -51,7 +57,9 @@ export class Choropleth {
       const props = entity.properties
       const name = (props.nameZh && props.nameZh.getValue()) || (props.name && props.name.getValue())
       if (name) {
-        this.byName.set(name, entity)
+        const list = this.byName.get(name)
+        if (list) list.push(entity)
+        else this.byName.set(name, [entity])
         entity.__nameZh = name
       }
       onProgress?.(i + 1, total)
@@ -90,19 +98,26 @@ export class Choropleth {
       return idx === -1 ? null : COMPARE_COLORS[idx % COMPARE_COLORS.length]
     }
 
-    for (const [name] of entries) {
-      const entity = this.byName.get(name)
-      if (!entity?.polygon) continue
-      const percent = entries.length > 1 ? entries.findIndex(([n]) => n === name) / (entries.length - 1) : 1
+    // entries 已按数值降序，直接用位次取百分位（原先每轮再 findIndex 一次，是 O(n²)）
+    for (let rank = 0; rank < entries.length; rank++) {
+      const [name] = entries[rank]
+      const entities = this.byName.get(name)
+      if (!entities) continue
+      const percent = entries.length > 1 ? rank / (entries.length - 1) : 1
       const highlight = name === selected ? SELECT_COLOR : compareColorOf(name)
       const css = highlight || rampColor(percent)
-      entity.polygon.material = Cesium.Color.fromCssColorString(css).withAlpha(highlight ? 0.95 : 0.85)
+      const color = Cesium.Color.fromCssColorString(css).withAlpha(highlight ? 0.95 : 0.85)
+      for (const entity of entities) {
+        if (entity.polygon) entity.polygon.material = color
+      }
     }
     // 无数据的国家置灰
-    for (const [name, entity] of this.byName) {
+    for (const [name, entities] of this.byName) {
       if (!(name in values) && !(name === selected) && !compared.includes(name)) {
-        if (entity.polygon) {
-          entity.polygon.material = Cesium.Color.fromCssColorString('#dcdcd6').withAlpha(0.6)
+        for (const entity of entities) {
+          if (entity.polygon) {
+            entity.polygon.material = Cesium.Color.fromCssColorString('#dcdcd6').withAlpha(0.6)
+          }
         }
       }
     }
@@ -115,11 +130,11 @@ export class Choropleth {
     return typeof name === 'string' ? name : null
   }
 
-  /** 相机飞往国家 */
+  /** 相机飞往国家。多部件国家传实体数组，Cesium 会把整个国家框进视野 */
   flyTo(name: string): void {
-    const entity = this.byName.get(name)
-    if (!entity) return
-    this.viewer.flyTo(entity, { duration: 1.2 })
+    const entities = this.byName.get(name)
+    if (!entities?.length) return
+    this.viewer.flyTo(entities, { duration: 1.2 })
   }
 
   destroy(): void {

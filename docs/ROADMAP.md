@@ -85,7 +85,6 @@
 
 | 项 | 说明 | 备注 |
 |---|---|---|
-| `/analysis` 多部件国家只着色一块 | `Choropleth.byName` 是 `nameZh → 单个 entity` 的 Map，而 `worldZh.json` 的 343 个多边形只对应 168 个国家名（37 国为多部件：中国 3 块、美国 15 块）。`applyValues` 只改 `byName.get(name)` 拿到的**最后一个**实体，其余 175 块永远停在默认填充色 `#e8e8e2` | 2026-09-20 排查对比着色时实测发现（读 `?debug=1` 下实体 material）。低 GDP 档色阶 `#f7fbff` 与默认灰几乎同色，掩盖了症状。修法：`byName` 改存 `nameZh → entity[]`，着色与置灰两个循环都遍历数组 |
 | 建立远端仓库并推送 | 当前仓库 **没有任何 remote**，40+ 个提交只存在于本机磁盘 | 一次磁盘故障即全部丢失 |
 | 轮换已泄露的凭据 | 百度 AK 与天地图令牌曾以明文存在于工作区，应视为已泄露 | 需在对应控制台轮换 + 配置白名单 |
 | 首次跑通 CI | `.github/workflows/ci.yml` **已存在**（含 lint / typecheck / verify / build / e2e，verify 链已含新增的漂移检测），但**从未真正执行过** —— 需先建远端并推送后才可能跑。**分步已在本机手工验过**：`npm run lint` 干净、`npm run verify` 全绿、`npm run typecheck` 0 error、`vite build` EXIT=0、E2E dev + preview 各 15/15；`npm ci --dry-run --legacy-peer-deps` 亦通过，且本地 `node_modules` 同为 npm 安装 —— 即 CI 将装出的依赖树与本机一致。剩余风险主要是 GitHub 环境差异（`npx playwright install --with-deps chromium` 等）。⚠ 在这些步骤真正跑通前，仍应视为「未验证」 |

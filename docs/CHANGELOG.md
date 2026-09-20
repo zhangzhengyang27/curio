@@ -6,6 +6,27 @@
 
 ## 2026-09 治理轮次
 
+### 平台页缺陷排查与修复（2026-09-20）
+
+对四条平台页 + three.js 首页 + 示例基建做了一轮排查，逐条实测后修复。闸门基线：
+`verify` 全绿、`typecheck` 0 error、`lint:ci` 0 error / 4 warning。
+
+| 项 | 说明 |
+|---|---|
+| `/analysis` 对比勾选不重着色 | 多源 `watch([year, selected, compare, metric])` 对 ref 只读 `.value` 不做 traverse，`toggleCompare` 的 `push/splice` 原地改数组永不触发（KNOWN_PITFALLS A4）。改为 `() => compare.value.length` |
+| `/analysis` 多部件国家只着色一块 | `byName` 由 `nameZh → entity` 改存 `nameZh → entity[]`。修复前实测 **175 块**多边形从未被 `applyValues` 碰过（343 实体 / 168 国名 / 37 国多部件），修复后归零且各国各块色值统一；`flyTo` 顺带传数组，多部件国家可整体框进视野 |
+| `EarthCanvas` 卸载竞态 | `onMounted` 为 async，期间切走路由后续跑打在已置 null 的 `tweenGroup` 上抛 `TypeError`，被外层 catch 静默吞掉。加 `disposed` 守卫。**排查过程中更正了结论**：原判断「僵尸 rAF + 整体泄漏」经同窗对照实测（留在首页 27 帧 vs 切走后 0 帧）不成立，已降级为加固 |
+| `worldZh.json` 双重 fetch+parse | 数据层与 `Choropleth.load` 各读一遍 2.4 MB；改为数据层把已解析结果交下去（`shallowRef` 承载，避免深响应代理）。浏览器实测请求数 2 → 1 |
+| E2E 11 条红 | 根因是三处超时预算与重型页冷启动不匹配，且 spec 里写死了 32 处 `{ timeout: 15_000 }` 使配置改动空转。`expect`/`actionTimeout` 各提到 30s、字面量删除、图表用 `tests/helpers/timeouts.ts` 的 `CHART_FIRST_RENDER`；用例级按「≥2 次整页加载」定点 `test.setTimeout(120_000)`。workbench 实测 11/11 绿、analysis+workbench 24/24 绿 |
+| 教训沉淀 | ① **子代理与结构推演给出的「泄漏」级结论必须实测**——本轮一条 P0 被判据推翻（见上）。② 放宽超时要区分「慢」与「卡死」：文件级 `test.slow()` 会让卡死用例烧 3 分钟才失败，已改回定点。③ 断言要打在真正受影响的一侧——对比表断言天然生效、地图断言才暴露了 A4 |
+
+### 遗留（本轮发现未修）
+
+- `/analysis` 色阶方向存疑：`entries` 按数值**降序**后排百分位，`rampColor` 注释写「0=最弱」，
+  实际 rank 0（最强）取到 `RAMP[0]`（最浅）。即 GDP 最高的 24 个经济体着色最浅，与等值区图惯例相反。
+  属产品/视觉决策（也可能是刻意反向），未擅自改动。
+- ROADMAP P0 三项未动：**无 git remote**（全部提交仅存本机磁盘）、**已泄露凭据未轮换**、**CI 从未真跑**。
+
 ### vue-cesium 工具类组件补齐至全覆盖（2026-09-17）
 
 对照官方文档 90 组件页盘点：工具/控件/覆盖物/后处理四族组件全部迁入，`/tools` 示例列表 6 → 17 卡片。

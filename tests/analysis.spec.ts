@@ -110,6 +110,40 @@ test.describe('全球数据分析', () => {
     expect(await fillOf('中国')).not.toBe(before)
   })
 
+  // 回归：Choropleth.byName 曾把「国名 → 实体」当一对一存，而 worldZh 的 343 个多边形
+  // 只对应 168 个国家名（37 国多部件，美国 15 块）。applyValues 只改 Map 里留存的
+  // 最后一个实体，其余 175 块永远停在 GeoJsonDataSource 的默认填充色上。
+  // 最低档色阶 #f7fbff 与默认灰 #e8e8e2 几乎同色，所以肉眼长期没发现。
+  test('多部件国家的每一块都拿到同一色值(回归:曾只着色最后一块)', async ({ page }) => {
+    await page.goto('/analysis?debug=1')
+    await page.locator('.panel-left').waitFor({ timeout: 30000 })
+
+    const stat = () =>
+      page.evaluate(() => {
+        const { viewer } = window.__tvMapDebug
+        const t = viewer.clock.currentTime
+        const entities = viewer.dataSources.get(0).entities.values
+        const css = (e) => {
+          const m = e.polygon.material
+          return (m && m.color ? m.color.getValue(t) : m).toCssColorString()
+        }
+        const byName = {}
+        for (const e of entities) (byName[e.__nameZh] = byName[e.__nameZh] || []).push(e)
+        return {
+          total: entities.length,
+          // 仍是默认填充色 = 这块从未被 applyValues 碰过
+          untouched: entities.filter((e) => css(e) === 'rgba(232,232,226,0.85)').length,
+          mixed: Object.values(byName).filter((parts) => new Set(parts.map(css)).size > 1).length,
+          multiPart: Object.values(byName).filter((parts) => parts.length > 1).length,
+        }
+      })
+
+    const s = await stat()
+    expect(s.multiPart, '样本应包含多部件国家,否则本用例测不到回归点').toBeGreaterThan(10)
+    expect(s.untouched, `${s.untouched} 块多边形从未被着色`).toBe(0)
+    expect(s.mixed, `${s.mixed} 个国家的各块色值不一致`).toBe(0)
+  })
+
   test('对比满 4 国后其余复选框禁用(回归:曾静默丢弃第 5 国勾选)', async ({ page }) => {
     await page.goto('/analysis')
     await page.locator('.panel-left').waitFor({ timeout: 30000 })
