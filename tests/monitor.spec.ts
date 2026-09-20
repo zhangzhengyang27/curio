@@ -14,11 +14,6 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('业务监控', () => {
-  // 平台页每条用例都要整页冷启动（Cesium 底座 + 大体积数据），实测 dev 空载 11.5~18.3s；
-  // expect/action 预算提到 30s 后，单步就可能吃掉默认 60s 的用例级超时，
-  // 表现为「Test timeout exceeded」而不是断言失败。slow 把用例预算一并放宽到 180s。
-  // 与 workbench.spec 同口径（详见 KNOWN_PITFALLS A5）。
-  test.slow()
   test('页面打开：事件流与统计大盘就绪，无页面错误', async ({ page }) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
@@ -69,6 +64,10 @@ test.describe('业务监控', () => {
   })
 
   test('处置持久化：刷新后状态与统计恢复；重置演练全部回到未处理', async ({ page }) => {
+    // 本用例含 2 次整页加载（每次都是 Cesium 底座冷启动），60s 的用例预算不够。
+    // 定点放宽而非文件级 test.slow()：满载机器上后者会让一条卡死的用例烧 3 分钟
+    // 而不是快速失败。与 M4/M10/W2 既有做法同口径（KNOWN_PITFALLS A5）。
+    test.setTimeout(120_000)
     // 处置状态存 localStorage,测试间互不污染;⚠ addInitScript 每次导航都执行,
     // 裸清会把 reload 后刚存的状态也清掉(map-tools 书签用例同款坑),须只清一次
     await page.addInitScript(() => {

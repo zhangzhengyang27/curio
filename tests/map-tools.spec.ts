@@ -23,11 +23,6 @@ test.describe('地图工具箱', () => {
   // 画布 mouse 事件在 2 worker 并行(CPU 竞争)时会偶发丢失,probe 单跑稳定、
   // CI 本就是 workers=1;本地串行消除该噪音(见 KNOWN_PITFALLS C13)
   test.describe.configure({ mode: 'serial' })
-  // 平台页每条用例都要整页冷启动（Cesium 底座 + 大体积数据），实测 dev 空载 11.5~18.3s；
-  // expect/action 预算提到 30s 后，单步就可能吃掉默认 60s 的用例级超时，
-  // 表现为「Test timeout exceeded」而不是断言失败。slow 把用例预算一并放宽到 180s。
-  // 与 workbench.spec 同口径（详见 KNOWN_PITFALLS A5）。
-  test.slow()
 
   test.beforeEach(async ({ page }) => {
     // 书签/标注存 localStorage，测试间互不污染。
@@ -130,6 +125,10 @@ test.describe('地图工具箱', () => {
   })
 
   test('书签：保存、刷新持久化、删除', async ({ page }) => {
+    // 本用例含 2 次整页加载（每次都是 Cesium 底座冷启动），60s 的用例预算不够。
+    // 定点放宽而非文件级 test.slow()：满载机器上后者会让一条卡死的用例烧 3 分钟
+    // 而不是快速失败。与 M4/M10/W2 既有做法同口径（KNOWN_PITFALLS A5）。
+    test.setTimeout(120_000)
     await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-right').waitFor()
 
@@ -178,6 +177,10 @@ test.describe('地图工具箱', () => {
   })
 
   test('标绘持久化：刷新后标注恢复(M3)', async ({ page }) => {
+    // 本用例含 3 次整页加载（每次都是 Cesium 底座冷启动），60s 的用例预算不够。
+    // 定点放宽而非文件级 test.slow()：满载机器上后者会让一条卡死的用例烧 3 分钟
+    // 而不是快速失败。与 M4/M10/W2 既有做法同口径（KNOWN_PITFALLS A5）。
+    test.setTimeout(120_000)
     await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor()
 
@@ -485,6 +488,10 @@ test.describe('地图工具箱', () => {
   })
 
   test('矩形 GeoJSON 导出为 Polygon,刷新后恢复(M6)', async ({ page }) => {
+    // 本用例含 2 次整页加载（每次都是 Cesium 底座冷启动），60s 的用例预算不够。
+    // 定点放宽而非文件级 test.slow()：满载机器上后者会让一条卡死的用例烧 3 分钟
+    // 而不是快速失败。与 M4/M10/W2 既有做法同口径（KNOWN_PITFALLS A5）。
+    test.setTimeout(120_000)
     await page.goto('/tools/toolbox', { waitUntil: 'domcontentloaded' })
     await page.locator('.panel-left').waitFor({ timeout: 30_000 })
     await page.locator('[data-tool="rectangle"]').click()

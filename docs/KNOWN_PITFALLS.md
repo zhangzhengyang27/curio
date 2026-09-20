@@ -77,12 +77,19 @@ compare.value = ['y']     // → n 变 1
 （实测 dev 下 `/workbench` 到 `.panel-left` 可见 11.5~18.3s，空载单机），
 两个 worker 互抢 CPU 时成倍放大 —— 于是一批用例只在本地红、CI 绿。
 
-**收敛后的规则**：凡整页冷启动的页面 spec（analysis / map-tools / monitor / workbench /
-tour / viz-loading）一律 `test.describe.configure({ mode: 'serial' })` + `test.slow()`。
-只放宽 `expect` 会换个地方死：先撞 60s 的用例级超时（表现为
-`Test timeout of 60000ms exceeded` 而不是断言失败），而 `locator.waitFor()`/
-`.evaluate()`/`.click()` 走的是 `use.actionTimeout` 而不是 `expect.timeout`。
-三者已统一：`expect` 与 `actionTimeout` 各 30s，用例级由 `slow()` 放到 180s。
+**收敛后的规则**：
+- 断言级 `expect.timeout` 与操作级 `use.actionTimeout` 各 30s（二者互不替代：
+  `locator.waitFor()`/`.evaluate()`/`.click()` 走的是 `actionTimeout`，只调 `expect` 会
+  在另一个地方继续超时）；
+- 重画布交互的 spec 用 `test.describe.configure({ mode: 'serial' })` 消除互抢；
+- 用例级预算**定点放宽**：凡含 ≥2 次整页加载（`goto`/`reload`）的用例写
+  `test.setTimeout(120_000)`，与 M4/M10/W2 的既有做法同口径。
+
+> **不要用文件级 `test.slow()`**。它把整个文件的用例预算 ×3（60s→180s），
+> 机器满载时一条卡死的用例会烧掉 3 分钟才失败而不是快速失败 —— 实测在
+> 一台被其它任务占满的机器上（load 36、swap 用尽），monitor 首条用例报了
+> **14.9 分钟**的耗时却仍声称超时是 180s，整轮测量直接作废。
+> 放宽预算的目的是让**慢**通过，不是让**卡死**更体面。
 
 图表类断言另用 `tests/helpers/timeouts.ts` 的 `CHART_FIRST_RENDER`（60s）：
 图表是在整页冷启动**之后**再 `await import('echarts')`（dev 下 1.1 MB 未打包 chunk）

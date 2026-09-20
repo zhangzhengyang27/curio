@@ -28,7 +28,6 @@ test.describe('数据巡游', () => {
   // 本页每条用例都要整页冷启动，与四平台页同口径：serial 消除互抢，
   // slow 把用例预算放宽到 180s（详见 KNOWN_PITFALLS A5）。
   test.describe.configure({ mode: 'serial' })
-  test.slow()
   test('工具栏入口打开路线选择，四条路线可见', async ({ page }) => {
     await page.goto('/')
     await page.locator(TOUR_BTN).click()

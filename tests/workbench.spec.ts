@@ -17,7 +17,6 @@ test.describe('主题分析工作台', () => {
   // 实测空载 11.5~18.3s，并行时成倍放大——serial 消除互抢，slow 把 60s 用例预算一并放宽，
   // 否则放宽 expect 预算后先撞的反而是用例级超时。
   test.describe.configure({ mode: 'serial' })
-  test.slow()
 
   test('页面打开：Top10 排行与图表就绪，无页面错误', async ({ page }) => {
     const errors = []
@@ -158,6 +157,10 @@ test.describe('主题分析工作台', () => {
   })
 
   test('URL 状态:?theme= 还原主题;切换主题地址同步(X2)', async ({ page }) => {
+    // 本用例含 2 次整页加载（每次都是 Cesium 底座冷启动），60s 的用例预算不够。
+    // 定点放宽而非文件级 test.slow()：满载机器上后者会让一条卡死的用例烧 3 分钟
+    // 而不是快速失败。与 M4/M10/W2 既有做法同口径（KNOWN_PITFALLS A5）。
+    test.setTimeout(120_000)
     await page.goto('/workbench?theme=carbon')
     await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('MtCO₂')
     await expect(page.locator('[data-testid="theme-carbon"]')).toHaveClass(/active/)

@@ -2,7 +2,8 @@
  * 重型页面的等待预算——单一来源，不要在 spec 里另写字面量。
  *
  * 三个超时各管一段，只改一个不够（见 KNOWN_PITFALLS A5）：
- *   用例级 → playwright.config `timeout`（test.slow() 会 ×3）
+ *   用例级 → playwright.config `timeout`（60s；含 ≥2 次整页加载的用例定点
+ *            test.setTimeout(120_000)，**不要**用文件级 test.slow()）
  *   断言级 → config `expect.timeout`（30s，普通断言够用）
  *   操作级 → config `use.actionTimeout`（30s，管 waitFor/evaluate/click）
  */
