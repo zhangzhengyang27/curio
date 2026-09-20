@@ -633,6 +633,12 @@ onUnmounted(() => {
   countryMeshStates = []
   originalGdpColors = {}
   earthStore.setEarthGroup(null)
+  // layerStore 里的 children 指向刚被 dispose 的边界/色块 Object3D。
+  // 不清的话：Pinia store 比组件活得久，卸载到下次进 / 之间这段时间里，
+  // setVisible/setOpacity 会遍历一批已释放对象；已 dispose 的 geometry 也不该再被引用。
+  // 注意只清 children，layer.visible / layer.opacity 是刻意跨路由保留的用户偏好。
+  layerStore.setLayerChildren('borders', [])
+  layerStore.setLayerChildren('countries', [])
   disposeLabels?.(); disposeOrbit?.(); disposeScene?.()
 })
 

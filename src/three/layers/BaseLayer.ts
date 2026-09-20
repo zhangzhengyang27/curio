@@ -235,7 +235,10 @@ export class BaseLayer {
     this.digests.forEach(d => { try { d.clear() } catch (_e) { /* ignore */ } })
     this.digests = []
 
-    this.objects.forEach(obj => this._remove(obj))
+    // 必须从头弹：_remove 内部会对 this.objects 做 splice，
+    // 用 forEach 迭代同一个数组会跳元素（删一个、游标前移一格 → 半数被跳过），
+    // 被跳过的那些对象的 transitionTweens 就不会 stop，图层重建后旧 tween 仍在跑。
+    while (this.objects.length > 0) this._remove(this.objects[0])
     this.objects = []
 
     // 清理未被追踪的遗留子节点
