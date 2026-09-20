@@ -14,9 +14,13 @@
       <div
         v-else
         class="thumb-placeholder"
-        :style="{ '--thumb-gradient': placeholderGradient }"
       >
-        <span class="thumb-emoji">{{ ex.icon || '🧊' }}</span>
+        <span class="thumb-icon">
+          <UiIcon
+            name="globe"
+            :size="26"
+          />
+        </span>
       </div>
       <div class="card-play">
         <svg
@@ -48,6 +52,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import UiIcon from '../../components/UiIcon'
 import { getSources } from '../registry/index.ts'
 
 const props = defineProps({
@@ -68,20 +73,6 @@ const thumbOk = computed(() => !!props.ex.thumbnail && !thumbFailed.value)
 function onThumbError() {
   thumbFailed.value = true
 }
-
-const gradients = [
-  'linear-gradient(135deg, #0057c2 0%, #50dcff 100%)',
-  'linear-gradient(135deg, #00687b 0%, #48d7f9 100%)',
-  'linear-gradient(135deg, #9e3d00 0%, #ffb695 100%)',
-  'linear-gradient(135deg, #0057c2 0%, #afc6ff 100%)',
-  'linear-gradient(135deg, #00687b 0%, #afecff 100%)',
-  'linear-gradient(135deg, #181c22 0%, #414755 100%)',
-]
-
-const placeholderGradient = computed(() => {
-  const idx = (props.ex.title.length + props.ex.category.length) % gradients.length
-  return gradients[idx]
-})
 
 // 部分手工维护的条目可能没有 tags 字段，做一次兜底避免整张卡片渲染报错
 const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
@@ -140,7 +131,9 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--thumb-gradient);
+  background:
+    radial-gradient(320px 120px at 50% 20%, color-mix(in srgb, var(--tv-primary) 10%, transparent), transparent),
+    var(--tv-surface-container);
   transition: transform 0.5s ease;
 }
 
@@ -148,9 +141,16 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
   transform: scale(1.05);
 }
 
-.thumb-emoji {
-  font-size: 48px;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+.thumb-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tv-radius-lg);
+  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-primary) 22%, transparent);
 }
 
 .card-play {
@@ -164,11 +164,11 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
   align-items: center;
   justify-content: center;
   border-radius: var(--tv-radius-full);
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--tv-secondary-fixed);
-  border: 1px solid color-mix(in srgb, var(--tv-secondary-fixed) 30%, transparent);
+  background: rgba(8, 12, 22, 0.66);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--tv-dur) var(--tv-ease), transform var(--tv-dur) var(--tv-ease);
   pointer-events: none;
 }
 
@@ -183,10 +183,10 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
   right: 10px;
   padding: 2px 8px;
   border-radius: var(--tv-radius-sm);
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--tv-secondary-fixed);
-  border: 1px solid color-mix(in srgb, var(--tv-secondary-fixed) 30%, transparent);
-  font-size: 11px;
+  background: rgba(8, 12, 22, 0.66);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: var(--tv-fs-xs);
   line-height: 16px;
   font-weight: 500;
   backdrop-filter: blur(4px);
@@ -228,12 +228,12 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
 }
 
 .card-tag {
-  padding: 2px 8px;
-  border-radius: var(--tv-radius-sm);
-  background: color-mix(in srgb, var(--tv-secondary-container) 20%, transparent);
-  color: var(--tv-on-secondary-container);
-  font-family: monospace;
-  font-size: 12px;
+  padding: 2px 9px;
+  border-radius: var(--tv-radius-full);
+  background: var(--tv-surface-container-high);
+  border: 1px solid var(--tv-outline-variant);
+  color: var(--tv-on-surface-variant);
+  font-size: var(--tv-fs-xs);
   line-height: 16px;
 }
 </style>

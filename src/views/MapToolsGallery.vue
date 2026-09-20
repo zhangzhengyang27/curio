@@ -24,11 +24,13 @@
           :data-slug="ex.slug"
           data-testid="tools-example-card"
         >
-          <div
-            class="card-media"
-            :style="{ '--card-gradient': ex.gradient }"
-          >
-            <span class="card-emoji">{{ ex.icon }}</span>
+          <div class="card-media">
+            <span class="card-icon-chip">
+              <UiIcon
+                :name="iconFor(ex.slug)"
+                :size="22"
+              />
+            </span>
           </div>
           <div class="card-body">
             <h3 class="card-title">
@@ -54,7 +56,33 @@
 </template>
 
 <script setup lang="ts">
+import UiIcon, { type UiIconName } from '../components/UiIcon'
 import { TOOLS_EXAMPLES } from './tools-examples/index'
+
+// 卡头不再使用彩虹渐变：统一为「图标芯片 + 主题色微光」，按 slug 选用语义图标
+const SLUG_ICONS: Record<string, UiIconName> = {
+  toolbox: 'toolbox',
+  measurements: 'ruler',
+  drawings: 'pencil',
+  analyses: 'eye',
+  flood: 'wave',
+  navigation: 'compass',
+  'overview-map': 'map',
+  print: 'printer',
+  'selection-indicator': 'marquee',
+  'navigation-sm': 'target',
+  'overlay-heatmap': 'flame',
+  'overlay-html': 'tag',
+  'overlay-echarts': 'chart',
+  'overlay-typhoon': 'cyclone',
+  'overlay-wind': 'wind',
+  'overlay-dynamic': 'layers',
+  'post-process': 'camera',
+}
+
+function iconFor(slug: string): UiIconName {
+  return SLUG_ICONS[slug] ?? 'map'
+}
 </script>
 
 <style scoped>
@@ -66,78 +94,106 @@ import { TOOLS_EXAMPLES } from './tools-examples/index'
   bottom: 0;
   overflow: auto;
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgb(45 106 159 / 25%), transparent),
-    #0b1220;
-  color: #dce7f2;
+    radial-gradient(1100px 520px at 85% -12%, color-mix(in srgb, var(--tv-primary) 9%, transparent), transparent),
+    var(--tv-background);
 }
 
 .gallery-main {
-  max-width: 1080px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 36px 24px 48px;
+  padding: 48px 24px 64px;
 }
 
 .page-title {
-  margin: 0 0 6px;
-  font-size: 26px;
-  color: #fff;
+  margin: 0 0 8px;
+  font-size: var(--tv-fs-3xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--tv-on-surface);
 }
 
 .page-subtitle {
-  margin: 0 0 28px;
-  font-size: 14px;
-  color: #8fa3b8;
+  margin: 0 0 36px;
+  font-size: var(--tv-fs-md);
+  color: var(--tv-on-surface-variant);
 }
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .example-card {
-  display: block;
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-lg);
   overflow: hidden;
-  background: rgb(255 255 255 / 4%);
+  background: var(--tv-surface-container-low);
   text-decoration: none;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform var(--tv-dur) var(--tv-ease), border-color var(--tv-dur) var(--tv-ease),
+    box-shadow var(--tv-dur) var(--tv-ease);
 }
 
 .example-card:hover {
   transform: translateY(-3px);
-  border-color: rgb(143 199 255 / 45%);
+  border-color: color-mix(in srgb, var(--tv-primary) 45%, transparent);
+  box-shadow: var(--tv-shadow-3);
+}
+
+.example-card:hover .card-icon-chip {
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
+  border-color: transparent;
 }
 
 .card-media {
-  height: 110px;
+  height: 104px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--card-gradient);
+  background:
+    radial-gradient(340px 130px at 50% 0%, color-mix(in srgb, var(--tv-primary) 10%, transparent), transparent),
+    var(--tv-surface-container);
+  border-bottom: 1px solid var(--tv-outline-variant);
 }
 
-.card-emoji {
-  font-size: 42px;
-  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 40%));
+.card-icon-chip {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tv-radius-lg);
+  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-primary) 22%, transparent);
+  transition: background var(--tv-dur) var(--tv-ease), color var(--tv-dur) var(--tv-ease),
+    border-color var(--tv-dur) var(--tv-ease);
 }
 
 .card-body {
-  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 18px;
 }
 
 .card-title {
   margin: 0 0 6px;
-  font-size: 16px;
-  color: #fff;
+  font-size: var(--tv-fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--tv-on-surface);
 }
 
 .card-desc {
-  margin: 0 0 12px;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #9db0c3;
+  margin: 0 0 14px;
+  font-size: var(--tv-fs-sm);
+  line-height: 1.65;
+  color: var(--tv-on-surface-variant);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -148,14 +204,20 @@ import { TOOLS_EXAMPLES } from './tools-examples/index'
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-top: auto;
 }
 
 .card-tag {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  color: #8ec9ff;
-  background: rgb(77 163 255 / 12%);
-  border: 1px solid rgb(77 163 255 / 25%);
+  padding: 2px 9px;
+  border-radius: var(--tv-radius-full);
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+  background: var(--tv-surface-container-high);
+  border: 1px solid var(--tv-outline-variant);
+}
+
+.example-card:hover .card-tag {
+  color: var(--tv-on-surface);
 }
 </style>

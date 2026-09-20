@@ -49,7 +49,9 @@ test.describe('数据巡游', () => {
   })
 
   test('下一站推进分镜并与 URL step 同步', async ({ page }) => {
-    await page.goto('/')
+    // tour-dwell 把首步自动前进拉到 60s 外：本用例断言的是「暂停后手动步进」，
+    // 原先与 10.5s 自动前进竞速，满载下暂停晚到一步就会多进一站（偶发 3/8）
+    await page.goto('/?tour-dwell=60000')
     await page.locator(TOUR_BTN).click()
     await page.locator('[data-tour-id="global-overview"]').click()
     await expect(page.locator(BAR)).toBeVisible()

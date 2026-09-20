@@ -152,12 +152,22 @@
           />
         </template>
       </template>
-      <p
+      <div
         v-else
-        class="empty-tip"
+        class="empty-state"
       >
-        点击地图上的国家，或在左侧列表选择。
-      </p>
+        <UiIcon
+          class="empty-icon"
+          name="target"
+          :size="26"
+        />
+        <p class="empty-state-title">
+          未选择国家
+        </p>
+        <p class="empty-tip">
+          点击地图上的国家，或在左侧列表选择。
+        </p>
+      </div>
 
       <!-- 导出当前视图(A4):不依赖选国,常驻 -->
       <button
@@ -165,7 +175,12 @@
         data-testid="export-csv"
         @click="exportCsv"
       >
-        ⬇ 导出当前视图 CSV
+        <UiIcon
+          class="btn-icon"
+          name="download"
+          :size="14"
+        />
+        导出当前视图 CSV
       </button>
 
       <template v-if="compare.length">
@@ -237,7 +252,11 @@
         data-testid="timeline-play"
         @click="togglePlay"
       >
-        {{ playing ? '⏸ 暂停' : '▶ 播放' }}
+        <UiIcon
+          :name="playing ? 'pause' : 'play'"
+          :size="13"
+        />
+        {{ playing ? '暂停' : '播放' }}
       </button>
       <input
         v-model.number="yearIndex"
@@ -271,6 +290,7 @@ import { loadCesium } from '../map/cesiumLoader'
 import { createMapViewer } from '../map/createViewer'
 import { useCountryData, formatUSD, formatPopulation, formatAreaSqKm, gdpRank } from '../map/analysis/useCountryData'
 import { Choropleth } from '../map/analysis/choropleth'
+import UiIcon from '../components/UiIcon'
 
 const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
@@ -550,7 +570,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: #000;
+  background: var(--tv-background);
 }
 
 .map-container,
@@ -634,7 +654,8 @@ onUnmounted(() => {
 }
 
 .country-row.active {
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.15));
+  background: color-mix(in srgb, var(--tv-primary) 16%, transparent);
+  color: var(--tv-primary);
 }
 
 .country-name {
@@ -719,22 +740,56 @@ onUnmounted(() => {
 
 .mini-btn {
   margin-top: 8px;
-  padding: 5px 10px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-md);
   background: transparent;
-  color: inherit;
-  font-size: 12px;
+  color: var(--tv-on-surface);
+  font-size: var(--tv-fs-xs);
+  font-family: inherit;
   cursor: pointer;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease);
 }
 
 .mini-btn:hover {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary);
+  color: var(--tv-primary);
+}
+
+.btn-icon {
+  flex-shrink: 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 12px;
+  margin: 8px 0;
+  text-align: center;
+  border: 1px dashed var(--tv-outline-variant);
+  border-radius: var(--tv-radius-lg);
+}
+
+.empty-icon {
+  color: var(--tv-on-surface-variant);
+  opacity: 0.7;
+}
+
+.empty-state-title {
+  font-size: var(--tv-fs-sm);
+  font-weight: 600;
+  color: var(--tv-on-surface);
 }
 
 .empty-tip {
-  font-size: 11px;
-  opacity: 0.55;
+  font-size: var(--tv-fs-xs);
+  opacity: 0.7;
   line-height: 1.6;
 }
 
@@ -758,15 +813,24 @@ onUnmounted(() => {
 }
 
 .play-btn {
-  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
   border: none;
-  border-radius: var(--tv-radius-full, 999px);
-  background: var(--tv-primary, #4f8ef7);
-  color: var(--tv-on-primary, #fff);
-  font-size: 12px;
+  border-radius: var(--tv-radius-full);
+  background: var(--tv-primary);
+  color: var(--tv-on-primary);
+  font-size: var(--tv-fs-sm);
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
+  transition: transform var(--tv-dur-fast) var(--tv-ease), filter var(--tv-dur-fast) var(--tv-ease);
+}
+
+.play-btn:active {
+  transform: scale(0.97);
 }
 
 .timeline-range {
@@ -807,22 +871,33 @@ onUnmounted(() => {
 
 .metric-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
 }
 
 .metric-tab {
-  padding: 2px 8px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: var(--tv-radius-full, 999px);
+  padding: 3px 9px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-full);
   background: transparent;
-  color: inherit;
-  font-size: 11px;
+  color: var(--tv-on-surface-variant);
+  font-size: var(--tv-fs-xs);
+  font-family: inherit;
+  white-space: nowrap;
   cursor: pointer;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
+    color var(--tv-dur-fast) var(--tv-ease);
+}
+
+.metric-tab:hover {
+  color: var(--tv-on-surface);
+  border-color: var(--tv-outline);
 }
 
 .metric-tab.active {
-  border-color: var(--tv-primary, #4f8ef7);
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  border-color: transparent;
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
   font-weight: 600;
 }
 

@@ -54,22 +54,34 @@
         data-testid="tour-btn"
         @click="toggleTour"
       >
-        {{ tourStatus === 'playing' ? '⏸ 停止巡游' : '▶ 巡游大屏' }}
+        <UiIcon
+          :name="tourStatus === 'playing' ? 'pause' : 'play'"
+          :size="13"
+        />
+        {{ tourStatus === 'playing' ? '停止巡游' : '巡游大屏' }}
       </button>
       <button
-        class="mini-btn"
+        class="mini-btn icon-only"
         data-testid="tour-step"
         title="步进到下一个未处置事件"
+        aria-label="步进到下一个未处置事件"
         @click="stepTour"
       >
-        ⏭
+        <UiIcon
+          name="skip"
+          :size="14"
+        />
       </button>
       <button
         class="mini-btn"
         data-testid="replay-btn"
         @click="toggleReplay"
       >
-        {{ replaying ? '⏹ 停止回放' : '⏪ 时间回放' }}
+        <UiIcon
+          :name="replaying ? 'stop' : 'rewind'"
+          :size="13"
+        />
+        {{ replaying ? '停止回放' : '时间回放' }}
       </button>
     </header>
 
@@ -88,7 +100,11 @@
           :title="streaming ? '停止自动推送' : '开启自动推送（每 7 秒一条）'"
           @click="toggleStream"
         >
-          {{ streaming ? '⏸ 停止推送' : '▶ 开启推送' }}
+          <UiIcon
+            :name="streaming ? 'pause' : 'play'"
+            :size="13"
+          />
+          {{ streaming ? '停止推送' : '开启推送' }}
         </button>
         <button
           class="mini-btn"
@@ -212,12 +228,22 @@
           </button>
         </div>
       </template>
-      <p
+      <div
         v-else
-        class="empty-tip"
+        class="empty-state"
       >
-        点击左侧事件流或地球上的标记查看详情并处置。
-      </p>
+        <UiIcon
+          class="empty-icon"
+          name="activity"
+          :size="26"
+        />
+        <p class="empty-state-title">
+          未选择事件
+        </p>
+        <p class="empty-tip">
+          点击左侧事件流或地球上的标记查看详情并处置。
+        </p>
+      </div>
     </aside>
   </div>
 </template>
@@ -230,6 +256,7 @@ import { useEarthquakeFeed, LEVELS, STATUS_LABEL } from '../map/monitor/useEarth
 import type { QuakeEvent, QuakeStatus } from '../map/monitor/useEarthquakeFeed'
 import { useTourEngine } from '../composables/useTourEngine'
 import type { TourStep } from '../composables/useTourEngine'
+import UiIcon from '../components/UiIcon'
 
 const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
@@ -480,7 +507,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: #000;
+  background: var(--tv-background);
 }
 
 .map-container,
@@ -507,26 +534,39 @@ onUnmounted(() => {
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
   padding: 10px 22px;
-  border-radius: var(--tv-radius-full, 999px);
-  font-size: 13px;
+  border-radius: var(--tv-radius-full);
+  font-size: var(--tv-fs-sm);
   white-space: nowrap;
 }
 
 .stats-title {
   font-weight: 700;
+  font-size: var(--tv-fs-md);
   margin-right: 6px;
 }
 
+.stat {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--tv-on-surface-variant);
+}
+
 .stat b {
-  font-size: 16px;
-  margin-left: 4px;
+  font-size: var(--tv-fs-lg);
+  margin-left: 5px;
+  font-weight: 700;
+  color: var(--tv-on-surface);
   font-variant-numeric: tabular-nums;
 }
 
 .stat.warn {
-  color: #ef5350;
+  color: var(--tv-error);
+}
+
+.stat.warn b {
+  color: var(--tv-error);
 }
 
 .threshold-row {
@@ -594,22 +634,23 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 8px;
-  border: 1px solid rgba(128, 128, 128, 0.22);
-  border-radius: 10px;
+  padding: 7px 9px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-md);
   background: transparent;
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease);
 }
 
 .feed-item:hover {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary);
 }
 
 .feed-item.active {
-  border-color: var(--tv-primary, #4f8ef7);
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  border-color: var(--tv-primary);
+  background: color-mix(in srgb, var(--tv-primary) 14%, transparent);
 }
 
 .level-dot {
@@ -638,31 +679,57 @@ onUnmounted(() => {
 }
 
 .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: rgba(128, 128, 128, 0.2);
+  padding: 2px 8px;
+  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--tv-outline-variant);
+  background: transparent;
+  color: var(--tv-on-surface-variant);
   white-space: nowrap;
   flex: none;
 }
 
+/* 状态点用伪元素绘制（不产生文本节点，测试对徽标做精确文本断言） */
+.status-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tv-on-surface-variant);
+  flex: none;
+}
+
+.status-badge[data-status='open']::before {
+  background: var(--tv-error);
+}
+
 .status-badge[data-status='open'] {
-  color: #ef5350;
-  background: rgba(239, 83, 80, 0.15);
+  border-color: color-mix(in srgb, var(--tv-error) 45%, transparent);
+  color: var(--tv-error);
+}
+
+.status-badge[data-status='processing']::before {
+  background: var(--tv-primary);
 }
 
 .status-badge[data-status='processing'] {
-  color: #42a5f5;
-  background: rgba(66, 165, 245, 0.15);
+  border-color: color-mix(in srgb, var(--tv-primary) 45%, transparent);
+  color: var(--tv-primary);
+}
+
+.status-badge[data-status='resolved']::before {
+  background: var(--tv-success);
 }
 
 .status-badge[data-status='resolved'] {
-  color: #9e9e9e;
-  background: rgba(158, 158, 158, 0.18);
+  color: var(--tv-on-surface-variant);
 }
 
 .status-badge.big {
-  font-size: 11px;
+  font-size: var(--tv-fs-xs);
 }
 
 .metrics {
@@ -701,18 +768,26 @@ onUnmounted(() => {
 }
 
 .mini-btn {
-  padding: 6px 10px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-md);
   background: transparent;
-  color: inherit;
-  font-size: 12px;
+  color: var(--tv-on-surface);
+  font-size: var(--tv-fs-xs);
+  font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
+    color var(--tv-dur-fast) var(--tv-ease);
 }
 
 .mini-btn:hover:not(:disabled) {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary);
+  color: var(--tv-primary);
 }
 
 .mini-btn:disabled {
@@ -721,15 +796,42 @@ onUnmounted(() => {
 }
 
 .mini-btn.primary {
-  background: var(--tv-primary, #4f8ef7);
+  background: var(--tv-primary);
   border-color: transparent;
-  color: var(--tv-on-primary, #fff);
+  color: var(--tv-on-primary);
   font-weight: 600;
 }
 
+.mini-btn.icon-only {
+  padding: 6px 8px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 12px;
+  margin-top: 8px;
+  text-align: center;
+  border: 1px dashed var(--tv-outline-variant);
+  border-radius: var(--tv-radius-lg);
+}
+
+.empty-icon {
+  color: var(--tv-on-surface-variant);
+  opacity: 0.7;
+}
+
+.empty-state-title {
+  font-size: var(--tv-fs-sm);
+  font-weight: 600;
+  color: var(--tv-on-surface);
+}
+
 .empty-tip {
-  font-size: 11px;
-  opacity: 0.55;
+  font-size: var(--tv-fs-xs);
+  opacity: 0.7;
   line-height: 1.6;
 }
 

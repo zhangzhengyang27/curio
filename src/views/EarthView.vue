@@ -23,13 +23,19 @@
       />
     </aside>
 
-    <!-- Right Info Panel -->
-    <aside class="right-panel tv-glass-panel">
+    <!-- Right Info Panel（按需渲染：未选中任何地点时不留空壳面板） -->
+    <aside
+      v-if="interactionStore.showInfoPanel"
+      class="right-panel tv-glass-panel"
+    >
       <InfoPanel />
     </aside>
 
     <!-- Right Floating Toolbar -->
-    <aside class="tools-panel tv-glass-panel">
+    <aside
+      class="tools-panel tv-glass-panel"
+      :class="{ 'with-info': interactionStore.showInfoPanel }"
+    >
       <Toolbar
         :on-screenshot="handleScreenshot"
         :on-cloud-toggle="handleCloudToggle"
@@ -60,10 +66,12 @@
           class="viz-icon viz-spinner"
           aria-label="加载中"
         />
-        <span
+        <UiIcon
           v-else-if="mode.icon"
           class="viz-icon"
-        >{{ mode.icon }}</span>
+          :name="mode.icon"
+          :size="15"
+        />
         <span>{{ mode.label }}</span>
       </button>
     </div>
@@ -120,27 +128,30 @@ import { useEarthStore } from '../stores/useEarthStore'
 import { useLayerStore } from '../stores/useLayerStore'
 import { useTimelineStore } from '../stores/useTimelineStore'
 import type { TourRouteWithDuration } from '../three/tours/routes'
+import UiIcon, { type UiIconName } from '../components/UiIcon'
+import { useInteractionStore } from '../stores/useInteractionStore'
 
 const earthStore = useEarthStore()
 const layerStore = useLayerStore()
 const timelineStore = useTimelineStore()
+const interactionStore = useInteractionStore()
 const earthCanvasRef = ref<InstanceType<typeof EarthCanvas> | null>(null)
 const splitMode = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 
-const vizModes = [
-  { key: 'gdp', label: 'GDP', icon: '💰' },
-  { key: 'population', label: '人口', icon: '👥' },
-  { key: 'carbon', label: '碳排放', icon: '🏭' },
-  { key: 'trade', label: '贸易', icon: '🚢' },
-  { key: 'flights', label: '航班', icon: '✈️' },
-  { key: 'earthquake', label: '地震', icon: '🌊' },
-  { key: 'nightlights', label: '夜间灯光', icon: '💡' },
-  { key: 'china', label: '中国', icon: '🇨🇳' },
-  { key: 'landmarks', label: '地标', icon: '📍' },
-  { key: 'heatmap', label: '热力图', icon: '🔥' },
-  { key: 'import', label: '导入数据', icon: '📁' },
-  { key: 'default', label: '默认', icon: '🌍' }
+const vizModes: Array<{ key: string; label: string; icon?: UiIconName }> = [
+  { key: 'gdp', label: 'GDP', icon: 'banknote' },
+  { key: 'population', label: '人口', icon: 'users' },
+  { key: 'carbon', label: '碳排放', icon: 'factory' },
+  { key: 'trade', label: '贸易', icon: 'trade' },
+  { key: 'flights', label: '航班', icon: 'plane' },
+  { key: 'earthquake', label: '地震', icon: 'activity' },
+  { key: 'nightlights', label: '夜间灯光', icon: 'bulb' },
+  { key: 'china', label: '中国', icon: 'flag' },
+  { key: 'landmarks', label: '地标', icon: 'pin' },
+  { key: 'heatmap', label: '热力图', icon: 'flame' },
+  { key: 'import', label: '导入数据', icon: 'download' },
+  { key: 'default', label: '默认', icon: 'globe' }
 ]
 
 const vizLoadingLabel = computed(() => vizModes.find(m => m.key === earthStore.vizLoading)?.label ?? earthStore.vizLoading)
@@ -314,9 +325,16 @@ const TourOverlay = defineAsyncComponent(() => import('../components/TourOverlay
 const routeInfo = useRoute()
 const router = useRouter()
 
+// ?tour-dwell=<ms>：测试注入的自动前进停留时长（同 ?nostream 惯例），
+// 拉长首步定时器让「暂停后手动步进」类断言不与自动前进竞速；不传=分镜自带节奏
+const tourDwellOverride = (() => {
+  const v = Number(new URLSearchParams(window.location.search).get('tour-dwell'))
+  return Number.isFinite(v) && v > 0 ? v : undefined
+})()
 const tour = useTourEngine({
   switchMode: (mode: string) => earthCanvasRef.value?.switchVisualization(mode),
-  flyTo: (lon: number, lat: number, duration?: number) => earthCanvasRef.value?.flyTo(lon, lat, duration)
+  flyTo: (lon: number, lat: number, duration?: number) => earthCanvasRef.value?.flyTo(lon, lat, duration),
+  dwellOverrideMs: tourDwellOverride
 })
 const tourRoutes = shallowRef<TourRouteWithDuration[] | null>(null)
 const tourPickerVisible = ref(false)
@@ -469,6 +487,12 @@ watch(() => earthStore.currentVisualization, (v) => {
   padding: var(--tv-md) var(--tv-sm);
   border-radius: var(--tv-radius-full);
   gap: var(--tv-sm);
+  transition: right var(--tv-dur) var(--tv-ease);
+}
+
+/* 信息面板收起时，工具条回到右缘 */
+.tools-panel:not(.with-info) {
+  right: var(--tv-margin);
 }
 
 .bottom-bar {
@@ -513,7 +537,8 @@ watch(() => earthStore.currentVisualization, (v) => {
 }
 
 .viz-icon {
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
 }
 
@@ -521,7 +546,7 @@ watch(() => earthStore.currentVisualization, (v) => {
   .right-panel {
     width: 280px;
   }
-  .tools-panel {
+  .tools-panel.with-info {
     right: calc(var(--tv-margin) + 280px + var(--tv-md));
   }
 }

@@ -73,32 +73,6 @@
         </Transition>
       </div>
     </div>
-
-    <div class="panel-footer">
-      <button class="add-layer-btn">
-        <svg
-          class="btn-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <line
-            x1="12"
-            y1="5"
-            x2="12"
-            y2="19"
-          />
-          <line
-            x1="5"
-            y1="12"
-            x2="19"
-            y2="12"
-          />
-        </svg>
-        添加自定义图层
-      </button>
-    </div>
   </div>
 </template>
 
@@ -287,44 +261,11 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
 }
 
 .opacity-value {
-  font-size: 11px;
+  font-size: var(--tv-fs-xs);
   color: var(--tv-on-surface-variant);
   min-width: 32px;
   text-align: right;
-}
-
-.panel-footer {
-  margin-top: auto;
-  padding-top: var(--tv-md);
-  border-top: 1px solid var(--tv-outline-variant);
-}
-
-.add-layer-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--tv-xs);
-  padding: var(--tv-sm);
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-lowest);
-  color: var(--tv-primary);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.add-layer-btn:hover {
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
-  border-color: var(--tv-primary);
-}
-
-.btn-icon {
-  width: 16px;
-  height: 16px;
+  font-variant-numeric: tabular-nums;
 }
 
 .expand-enter-active,

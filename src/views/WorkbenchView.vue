@@ -35,7 +35,7 @@
           :data-testid="`theme-${key}`"
           @click="setTheme(key)"
         >
-          {{ THEMES[key].title }}
+          {{ THEMES[key].short }}
         </button>
       </div>
 
@@ -117,7 +117,12 @@
         :disabled="exporting"
         @click="exportReport"
       >
-        {{ exporting ? '报告生成中…' : '⬇ 生成分析报告' }}
+        <UiIcon
+          v-if="!exporting"
+          name="download"
+          :size="14"
+        />
+        {{ exporting ? '报告生成中…' : '生成分析报告' }}
       </button>
     </aside>
   </div>
@@ -131,9 +136,27 @@ import { loadCesium } from '../map/cesiumLoader'
 import { createMapViewer } from '../map/createViewer'
 import { Choropleth } from '../map/analysis/choropleth'
 import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData'
+import UiIcon from '../components/UiIcon'
+
+// 数轴刻度压缩：原始值如 5,000,000,000,000 会让相邻刻度互相重叠成一团，
+// 统一压缩为 万/亿/万亿 量级（与排行/摘要的中文单位口径一致）
+function formatCompact(v: number): string {
+  const abs = Math.abs(v)
+  if (abs >= 1e12) return `${Number((v / 1e12).toFixed(1))}万亿`
+  if (abs >= 1e8) return `${Number((v / 1e8).toFixed(0))}亿`
+  if (abs >= 1e4) return `${Number((v / 1e4).toFixed(0))}万`
+  return `${v}`
+}
+
+// 图表文字色取自主题令牌：ECharts 默认按浅色底渲染，暗色下不注入会看不清
+function chartTextColor(): string {
+  return getComputedStyle(document.documentElement).getPropertyValue('--tv-on-surface-variant').trim() || '#97a0b4'
+}
 
 interface WorkbenchTheme {
   title: string
+  /** 分段按钮里的短标签（面板窄，全称会挤成三行） */
+  short: string
   word: string
   unit: string
   fmt: (v: number) => string
@@ -143,6 +166,7 @@ interface WorkbenchTheme {
 const THEMES: Record<string, WorkbenchTheme> = {
   gdp: {
     title: '全球经济 · GDP',
+    short: 'GDP',
     word: 'GDP 总量',
     unit: '万亿美元',
     fmt: (v: number) => `${(v / 1e12).toFixed(2)}`,
@@ -150,6 +174,7 @@ const THEMES: Record<string, WorkbenchTheme> = {
   },
   carbon: {
     title: '全球碳排放',
+    short: '碳排放',
     word: '碳排放总量',
     unit: 'MtCO₂',
     fmt: (v: number) => Math.round(v).toLocaleString(),
@@ -157,6 +182,7 @@ const THEMES: Record<string, WorkbenchTheme> = {
   },
   population: {
     title: '人口规模',
+    short: '人口',
     word: '人口总量',
     unit: '亿人',
     fmt: (v: number) => (v / 1e8).toFixed(2),
@@ -164,6 +190,7 @@ const THEMES: Record<string, WorkbenchTheme> = {
   },
   density: {
     title: '人口密度',
+    short: '密度',
     word: '人口密度',
     unit: '人/km²',
     fmt: (v: number) => Math.round(v).toLocaleString(),
@@ -297,8 +324,8 @@ async function renderDrill() {
   drillChart.setOption({
     grid: { left: 6, right: 10, top: 8, bottom: 4, containLabel: true },
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: years, axisLabel: { fontSize: 9 } },
-    yAxis: { type: 'value', axisLabel: { fontSize: 9 } },
+    xAxis: { type: 'category', data: years, axisLabel: { fontSize: 9, color: chartTextColor(), hideOverlap: true } },
+    yAxis: { type: 'value', axisLabel: { fontSize: 9, color: chartTextColor(), formatter: formatCompact, hideOverlap: true } },
     series: [{ type: 'line', data: series, symbolSize: 3, itemStyle: { color: '#2271b2' } }],
   })
 }
@@ -307,13 +334,14 @@ function renderChart() {
   if (!chartInstance || !chartRef.value) return
   const top = top10.value
   chartInstance.setOption({
-    grid: { left: 8, right: 16, top: 8, bottom: 8, containLabel: true },
+    // right 预留条形末端「数值 + 单位」标签的宽度，避免贴边裁切
+    grid: { left: 8, right: 72, top: 8, bottom: 8, containLabel: true },
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'value', axisLabel: { fontSize: 10 } },
+    xAxis: { type: 'value', axisLabel: { fontSize: 10, color: chartTextColor(), formatter: formatCompact, hideOverlap: true } },
     yAxis: {
       type: 'category',
       data: top.map((t) => t.name).reverse(),
-      axisLabel: { fontSize: 11 },
+      axisLabel: { fontSize: 11, color: chartTextColor() },
     },
     series: [{
       type: 'bar',
@@ -451,7 +479,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: #000;
+  background: var(--tv-background);
 }
 
 .map-container,
@@ -499,26 +527,35 @@ onUnmounted(() => {
 }
 
 .theme-tabs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 6px;
   margin-bottom: 10px;
 }
 
 .theme-tab {
-  flex: 1;
   padding: 6px 4px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 8px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-md);
   background: transparent;
-  color: inherit;
-  font-size: 12px;
+  color: var(--tv-on-surface-variant);
+  font-size: var(--tv-fs-xs);
+  font-family: inherit;
+  white-space: nowrap;
   cursor: pointer;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
+    color var(--tv-dur-fast) var(--tv-ease);
+}
+
+.theme-tab:hover {
+  color: var(--tv-on-surface);
+  border-color: var(--tv-outline);
 }
 
 .theme-tab.active {
-  border-color: var(--tv-primary, #4f8ef7);
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  border-color: transparent;
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
   font-weight: 600;
 }
 
@@ -584,18 +621,26 @@ onUnmounted(() => {
 
 .mode-pill {
   flex: 1;
-  padding: 4px 8px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 999px;
+  padding: 5px 8px;
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-full);
   background: transparent;
-  color: inherit;
-  font-size: 11px;
+  color: var(--tv-on-surface-variant);
+  font-size: var(--tv-fs-xs);
+  font-family: inherit;
   cursor: pointer;
+  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
+    color var(--tv-dur-fast) var(--tv-ease);
+}
+
+.mode-pill:hover {
+  color: var(--tv-on-surface);
 }
 
 .mode-pill.active {
-  border-color: var(--tv-primary, #4f8ef7);
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.14));
+  border-color: transparent;
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
   font-weight: 600;
 }
 
@@ -609,14 +654,24 @@ onUnmounted(() => {
 .mini-btn {
   margin-top: 10px;
   width: 100%;
-  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
   border: none;
-  border-radius: 8px;
-  background: var(--tv-primary, #4f8ef7);
-  color: var(--tv-on-primary, #fff);
-  font-size: 12px;
+  border-radius: var(--tv-radius-md);
+  background: var(--tv-primary);
+  color: var(--tv-on-primary);
+  font-size: var(--tv-fs-sm);
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
+  transition: transform var(--tv-dur-fast) var(--tv-ease), filter var(--tv-dur-fast) var(--tv-ease);
+}
+
+.mini-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .mini-btn:disabled {

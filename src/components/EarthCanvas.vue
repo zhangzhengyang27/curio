@@ -216,11 +216,11 @@ onMounted(async () => {
       tweenGroup: tweenGroup!
     })
 
-    // 应用初始化空窗期间排队的可视化切换请求
+    // 应用初始化空窗期间排队的可视化切换请求（来自用户，须带 fromUser 语义）
     if (pendingVizMode) {
       const queued = pendingVizMode
       pendingVizMode = null
-      switchVisualization(queued)
+      switchVisualization(queued, true)
     }
 
     // 加载时序GDP数据
@@ -243,7 +243,9 @@ onMounted(async () => {
     cloudLayer.visible = false
     toggleRealisticEarth()
     layerStore.setVisible('borders', false)
-    visualizationLayer?.switchVisualization('default')
+    // 初始化落在「无数据图例」的干净状态；启动期用户已点过可视化模式时，
+    // 以用户的选择为准（此后到达的点击由 switchVisualization 正常处理）
+    if (!userVizLocked) switchVisualization('default')
 
     const renderFn = () => {
       if (earthStore.isRotating && !isAnimatingIn) earth.rotateY(earthStore.rotationSpeed)
@@ -326,14 +328,22 @@ const VIZ_MODES_WITH_DATA = new Set(['population', 'carbon', 'trade', 'flights',
 
 // 画布初始化完成前收到的切换请求会排队，就绪后自动应用
 let pendingVizMode: string | null = null
+// 最近一次真正应用到图层的模式。去重只认它，不认 store：
+// 启动期 store 是乐观值（默认 'gdp'），初始化落地 'default' 后两者会脱节，
+// 按 store 去重会把启动期点击静默丢弃。
+let appliedVizMode: string | null = null
+// 启动期用户已明确选过可视化模式；此后初始化不得再用 'default' 覆盖用户的选择
+let userVizLocked = false
 
-async function switchVisualization(mode: string) {
-  if (mode === earthStore.currentVisualization && !pendingVizMode) return
+async function switchVisualization(mode: string, fromUser = false) {
+  if (fromUser) userVizLocked = true
   // 画布未就绪时先排队（旧实现直接静默 no-op，用户启动期点击会被无声丢弃）
   if (!visualizationLayer) {
     pendingVizMode = mode
     return
   }
+  if (mode === appliedVizMode) return
+  appliedVizMode = mode
   if (VIZ_MODES_WITH_DATA.has(mode)) earthStore.setVizLoading(mode)
   try {
     await visualizationLayer?.switchVisualization(mode)
@@ -493,14 +503,16 @@ function clearRealisticHighlight() {
   realisticHighlightMesh = null
 }
 
-defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization, toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
+// 对外暴露的 switchVisualization 是用户入口（底栏点击 / 巡游 / URL hash），
+// 一律视为用户主动选择，启动期可阻断初始化的 'default' 落地覆盖
+defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization: (mode: string) => switchVisualization(mode, true), toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
 
 // === Timeline year watch — GDP柱状动画 ===
 const stopWatch = watch(() => timelineStore.currentYear, (year: number) => {
   if (!earth?.meshArr || !timelineStore.yearlyData) return
-  // 切到GDP模式
+  // 切到GDP模式（走包装函数以维护 appliedVizMode，避免重复应用）
   if (earthStore.currentVisualization !== 'gdp') {
-    visualizationLayer?.switchVisualization('gdp')
+    switchVisualization('gdp')
   }
   updatePillars(year)
 })
@@ -645,6 +657,7 @@ onUnmounted(() => {
 // === 自定义数据导入 ===
 async function loadCustomScatter(points: Array<Record<string, any>>) {
   await visualizationLayer?.switchVisualization('import', points)
+  appliedVizMode = 'import'
 }
 function toggleCloud() {
   if (!cloudLayer) return

@@ -1,9 +1,9 @@
 :root {
   /* Orbital Data / TerraVista 3D Design Tokens - Light Mode */
-  --tv-background: #f8f9ff;
-  --tv-surface: #f8f9ff;
+  --tv-background: #f4f6fb;
+  --tv-surface: #f4f6fb;
   --tv-surface-dim: #d7dae2;
-  --tv-surface-bright: #f8f9ff;
+  --tv-surface-bright: #f4f6fb;
   --tv-surface-container-lowest: #ffffff;
   --tv-surface-container-low: #f1f3fc;
   --tv-surface-container: #ebeef6;
@@ -12,17 +12,17 @@
   --tv-surface-variant: #dfe2eb;
 
   --tv-on-surface: #181c22;
-  --tv-on-surface-variant: #414755;
+  --tv-on-surface-variant: #454b59;
   --tv-inverse-surface: #2d3137;
   --tv-inverse-on-surface: #eef1f9;
 
   --tv-outline: #727786;
-  --tv-outline-variant: #c1c6d7;
+  --tv-outline-variant: #c5cad9;
 
   --tv-primary: #0057c2;
   --tv-on-primary: #ffffff;
-  --tv-primary-container: #006ef2;
-  --tv-on-primary-container: #fefcff;
+  --tv-primary-container: #d6e4fa;
+  --tv-on-primary-container: #002d5e;
   --tv-inverse-primary: #afc6ff;
   --tv-primary-fixed: #d9e2ff;
   --tv-primary-fixed-dim: #afc6ff;
@@ -31,26 +31,28 @@
 
   --tv-secondary: #00687b;
   --tv-on-secondary: #ffffff;
-  --tv-secondary-container: #50dcff;
-  --tv-on-secondary-container: #005f71;
+  --tv-secondary-container: #c5e8f0;
+  --tv-on-secondary-container: #004d59;
   --tv-secondary-fixed: #afecff;
   --tv-secondary-fixed-dim: #48d7f9;
   --tv-on-secondary-fixed: #001f27;
   --tv-on-secondary-fixed-variant: #004e5d;
 
-  --tv-tertiary: #9e3d00;
+  --tv-tertiary: #8a3a08;
   --tv-on-tertiary: #ffffff;
-  --tv-tertiary-container: #c64f00;
-  --tv-on-tertiary-container: #fffbff;
+  --tv-tertiary-container: #ffd9c4;
+  --tv-on-tertiary-container: #4a1d00;
   --tv-tertiary-fixed: #ffdbcc;
   --tv-tertiary-fixed-dim: #ffb695;
   --tv-on-tertiary-fixed: #351000;
   --tv-on-tertiary-fixed-variant: #7c2e00;
 
-  --tv-error: #ba1a1a;
+  --tv-error: #b3261e;
   --tv-on-error: #ffffff;
   --tv-error-container: #ffdad6;
   --tv-on-error-container: #93000a;
+  --tv-warning: #9a6b00;
+  --tv-success: #22704b;
 
   --tv-surface-tint: #0059c7;
 
@@ -75,69 +77,106 @@
   --tv-top-nav-height: 56px;
   --tv-panel-width: 260px;
   --tv-info-panel-width: 320px;
+
+  /* Typography（中文界面：系统栈优先，不引入外部字体文件） */
+  --tv-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --tv-font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale */
+  --tv-fs-xs: 12px;
+  --tv-fs-sm: 13px;
+  --tv-fs-md: 14px;
+  --tv-fs-lg: 16px;
+  --tv-fs-xl: 20px;
+  --tv-fs-2xl: 26px;
+  --tv-fs-3xl: 34px;
+
+  /* Motion */
+  --tv-ease: cubic-bezier(0.2, 0, 0, 1);
+  --tv-dur-fast: 150ms;
+  --tv-dur: 250ms;
+
+  /* Elevation（带背景色相的阴影，不用纯黑） */
+  --tv-shadow-1: 0 1px 2px rgba(24, 38, 66, 0.06), 0 2px 8px rgba(24, 38, 66, 0.05);
+  --tv-shadow-2: 0 4px 14px rgba(24, 38, 66, 0.1), 0 2px 6px rgba(24, 38, 66, 0.06);
+  --tv-shadow-3: 0 16px 44px rgba(24, 38, 66, 0.16), 0 4px 12px rgba(24, 38, 66, 0.08);
+
+  /* Focus */
+  --tv-focus-ring: 0 0 0 2px var(--tv-background), 0 0 0 4px color-mix(in srgb, var(--tv-primary) 70%, transparent);
 }
 
 html.dark {
-  /* Dark Mode - Deep Space */
-  --tv-background: #0b0d14;
-  --tv-surface: rgba(20, 22, 35, 0.85);
-  --tv-surface-dim: #0b0d14;
-  --tv-surface-bright: #1a1c2c;
-  --tv-surface-container-lowest: rgba(11, 13, 20, 0.9);
-  --tv-surface-container-low: rgba(20, 22, 35, 0.8);
-  --tv-surface-container: rgba(27, 29, 45, 0.85);
-  --tv-surface-container-high: rgba(35, 37, 55, 0.85);
-  --tv-surface-container-highest: rgba(45, 47, 65, 0.85);
-  --tv-surface-variant: rgba(45, 47, 65, 0.6);
+  /* Dark Mode - Deep Space（唯一基调：色相统一到靛蓝夜空，单一 accent） */
+  --tv-background: #0a0e17;
+  --tv-surface: rgba(18, 23, 36, 0.82);
+  --tv-surface-dim: #0a0e17;
+  --tv-surface-bright: #1a2030;
+  --tv-surface-container-lowest: rgba(10, 14, 23, 0.92);
+  --tv-surface-container-low: rgba(19, 24, 38, 0.8);
+  --tv-surface-container: rgba(25, 31, 48, 0.85);
+  --tv-surface-container-high: rgba(33, 40, 60, 0.85);
+  --tv-surface-container-highest: rgba(43, 51, 72, 0.85);
+  --tv-surface-variant: rgba(43, 51, 72, 0.6);
 
-  --tv-on-surface: #e8e9ed;
-  --tv-on-surface-variant: #8b909a;
+  --tv-on-surface: #e6eaf2;
+  --tv-on-surface-variant: #97a0b4;
   --tv-inverse-surface: #eef1f9;
   --tv-inverse-on-surface: #2d3137;
 
-  --tv-outline: rgba(255, 255, 255, 0.15);
-  --tv-outline-variant: rgba(255, 255, 255, 0.08);
+  --tv-outline: rgba(214, 226, 248, 0.22);
+  --tv-outline-variant: rgba(214, 226, 248, 0.1);
 
-  --tv-primary: #4fc3f7;
-  --tv-on-primary: #0b0d14;
-  --tv-primary-container: #006ef2;
-  --tv-on-primary-container: #fefcff;
+  --tv-primary: #6ba7e2;
+  --tv-on-primary: #071120;
+  --tv-primary-container: #1c3a5f;
+  --tv-on-primary-container: #cfe2fa;
   --tv-inverse-primary: #0057c2;
   --tv-primary-fixed: #d9e2ff;
   --tv-primary-fixed-dim: #afc6ff;
   --tv-on-primary-fixed: #001a43;
   --tv-on-primary-fixed-variant: #004398;
 
-  --tv-secondary: #00cccc;
-  --tv-on-secondary: #0b0d14;
-  --tv-secondary-container: #50dcff;
-  --tv-on-secondary-container: #005f71;
+  --tv-secondary: #63b3a9;
+  --tv-on-secondary: #071613;
+  --tv-secondary-container: #16403e;
+  --tv-on-secondary-container: #b2e0d8;
   --tv-secondary-fixed: #afecff;
   --tv-secondary-fixed-dim: #48d7f9;
   --tv-on-secondary-fixed: #001f27;
   --tv-on-secondary-fixed-variant: #004e5d;
 
-  --tv-tertiary: #ffb695;
-  --tv-on-tertiary: #0b0d14;
-  --tv-tertiary-container: #c64f00;
-  --tv-on-tertiary-container: #fffbff;
+  --tv-tertiary: #f0b493;
+  --tv-on-tertiary: #22100a;
+  --tv-tertiary-container: #5a2c12;
+  --tv-on-tertiary-container: #ffdcc8;
   --tv-tertiary-fixed: #ffdbcc;
   --tv-tertiary-fixed-dim: #ffb695;
   --tv-on-tertiary-fixed: #351000;
   --tv-on-tertiary-fixed-variant: #7c2e00;
 
-  --tv-error: #ff6b6b;
-  --tv-on-error: #0b0d14;
-  --tv-error-container: #ffdad6;
-  --tv-on-error-container: #93000a;
+  --tv-error: #ec6a60;
+  --tv-on-error: #2b0805;
+  --tv-error-container: #5c1a15;
+  --tv-on-error-container: #ffdad6;
+  --tv-warning: #e0a34e;
+  --tv-success: #58b78e;
 
-  --tv-surface-tint: #4fc3f7;
+  --tv-surface-tint: #6ba7e2;
+
+  --tv-shadow-1: 0 1px 2px rgba(2, 6, 14, 0.4), 0 2px 8px rgba(2, 6, 14, 0.3);
+  --tv-shadow-2: 0 4px 16px rgba(2, 6, 14, 0.5), 0 2px 6px rgba(2, 6, 14, 0.35);
+  --tv-shadow-3: 0 18px 50px rgba(2, 6, 14, 0.6), 0 4px 14px rgba(2, 6, 14, 0.4);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -150,25 +189,45 @@ body,
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--tv-font-sans);
   background-color: var(--tv-background);
   color: var(--tv-on-surface);
-  font-size: 14px;
+  font-size: var(--tv-fs-md);
   line-height: 22px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 数据密集界面的数字对齐 */
+.tv-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 键盘可达性：统一的焦点环 */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--tv-focus-ring);
+  border-radius: var(--tv-radius-md);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--tv-primary) 30%, transparent);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--tv-outline);
+  background-color: color-mix(in srgb, var(--tv-on-surface-variant) 45%, transparent);
   border-radius: 20px;
-  opacity: 0.3;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--tv-on-surface-variant) 70%, transparent);
 }
 
 /* Utility classes */
@@ -177,20 +236,20 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--tv-outline-variant);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tv-shadow-1);
   border-radius: var(--tv-radius-lg);
 }
 
 .tv-card-hover {
-  transition: all 0.3s ease;
+  transition: transform var(--tv-dur) var(--tv-ease), box-shadow var(--tv-dur) var(--tv-ease),
+    border-color var(--tv-dur) var(--tv-ease);
 }
 .tv-card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 87, 194, 0.15);
-  border-color: rgba(0, 110, 242, 0.4);
+  box-shadow: var(--tv-shadow-3);
+  border-color: color-mix(in srgb, var(--tv-primary) 40%, transparent);
 }
 
 html.dark .tv-glass-panel {
   background: var(--tv-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }

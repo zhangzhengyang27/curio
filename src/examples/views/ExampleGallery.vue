@@ -21,7 +21,7 @@
               整合 threejs-lesson、three-cesium-examples 等优质 Three.js 示例
             </p>
           </div>
-          <div class="result-count">
+          <div class="result-count tv-num">
             共 {{ filteredExamples.length }} 个示例
           </div>
         </header>
@@ -109,6 +109,9 @@ function goToPage(page: number) {
   flex-direction: row;
   align-items: flex-start;
   gap: var(--tv-lg);
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 var(--tv-lg);
 }
 
 
@@ -116,7 +119,7 @@ function goToPage(page: number) {
 .content-area {
   flex: 1;
   min-width: 0;
-  padding: var(--tv-lg) var(--tv-margin) var(--tv-lg) 0;
+  padding: var(--tv-lg) 0 var(--tv-xl);
 }
 
 .content-header {
@@ -135,26 +138,25 @@ function goToPage(page: number) {
 }
 
 .content-title {
-  font-size: 32px;
-  line-height: 40px;
-  font-weight: 600;
+  font-size: var(--tv-fs-3xl);
+  line-height: 1.2;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--tv-on-surface);
   margin-bottom: var(--tv-xs);
 }
 
 .content-subtitle {
-  font-size: 14px;
+  font-size: var(--tv-fs-md);
   line-height: 22px;
   color: var(--tv-on-surface-variant);
 }
 
 .result-count {
-  font-size: 12px;
-  line-height: 18px;
+  font-size: var(--tv-fs-sm);
+  line-height: 20px;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--tv-outline);
+  color: var(--tv-on-surface-variant);
   white-space: nowrap;
 }
 
@@ -173,13 +175,15 @@ function goToPage(page: number) {
   padding: 8px 16px;
   border-radius: var(--tv-radius-full);
   border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-low);
+  background: transparent;
   color: var(--tv-on-surface-variant);
-  font-size: 14px;
+  font-size: var(--tv-fs-md);
   line-height: 22px;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease),
+    border-color var(--tv-dur-fast) var(--tv-ease);
 }
 
 .tech-tab:hover {
@@ -188,9 +192,9 @@ function goToPage(page: number) {
 }
 
 .tech-tab.active {
-  background: var(--tv-primary);
-  border-color: var(--tv-primary);
-  color: var(--tv-on-primary);
+  background: var(--tv-primary-container);
+  border-color: transparent;
+  color: var(--tv-on-primary-container);
   font-weight: 600;
 }
 
@@ -201,27 +205,17 @@ function goToPage(page: number) {
   min-width: 20px;
   height: 18px;
   padding: 0 6px;
-  border-radius: var(--tv-radius-md);
+  border-radius: var(--tv-radius-full);
   background: color-mix(in srgb, var(--tv-on-surface-variant) 15%, transparent);
-  font-size: 11px;
+  font-size: var(--tv-fs-xs);
   line-height: 16px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .tech-tab.active .tech-tab-count {
-  background: color-mix(in srgb, var(--tv-on-primary) 22%, transparent);
-  color: var(--tv-on-primary);
-}
-
-html.dark .tech-tab.active {
-  background: var(--tv-secondary-fixed);
-  border-color: var(--tv-secondary-fixed);
-  color: var(--tv-on-secondary-fixed);
-}
-
-html.dark .tech-tab.active .tech-tab-count {
-  background: color-mix(in srgb, var(--tv-on-secondary-fixed) 22%, transparent);
-  color: var(--tv-on-secondary-fixed);
+  background: color-mix(in srgb, var(--tv-on-primary-container) 18%, transparent);
+  color: var(--tv-on-primary-container);
 }
 
 /* Card grid */
@@ -249,18 +243,7 @@ html.dark .tech-tab.active .tech-tab-count {
   text-align: center;
   padding: var(--tv-xl) 0;
   color: var(--tv-on-surface-variant);
-  font-size: 14px;
-}
-
-/* Dark mode overrides */
-
-html.dark .example-card:hover .card-title {
-  color: var(--tv-secondary-fixed);
-}
-
-html.dark .example-card:hover {
-  border-color: color-mix(in srgb, var(--tv-secondary-fixed) 40%, transparent);
-  box-shadow: 0 12px 24px color-mix(in srgb, var(--tv-secondary-fixed) 12%, rgba(0, 0, 0, 0.2));
+  font-size: var(--tv-fs-md);
 }
 
 </style>

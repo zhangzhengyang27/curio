@@ -21,6 +21,12 @@ export interface TourEngineOptions {
   switchMode?: (mode: string) => void
   /** 分镜无 camera 字段时不调用 */
   flyTo?: (lon: number, lat: number, durationMs?: number) => void
+  /**
+   * 覆盖自动前进的停留时长（ms），显式高于一切步骤自身 dwell。
+   * 测试注入用（?tour-dwell=<ms>，同 ?nostream 惯例）：拉长首步定时器，
+   * 让「暂停后再手动步进」的断言不与 10.5s 自动前进竞速。不传=步骤自带值。
+   */
+  dwellOverrideMs?: number
 }
 
 /**
@@ -47,7 +53,7 @@ export function useTourEngine(options: TourEngineOptions = {}): {
   goTo(i: number): void
   stop(): void
 } {
-  const { switchMode, flyTo } = options
+  const { switchMode, flyTo, dwellOverrideMs } = options
   const status = ref<TourStatus>('idle')
   const route = ref<TourRoute | null>(null)
   const stepIndex = ref(0) // 0-based，URL 同步时 +1 转为 1-based
@@ -76,7 +82,8 @@ export function useTourEngine(options: TourEngineOptions = {}): {
     }
     clearTimer()
     if (schedule) {
-      const total = (step.flyDuration ?? 2500) + (step.dwell ?? 8000)
+      const dwell = dwellOverrideMs ?? step.dwell ?? 8000
+      const total = (step.flyDuration ?? 2500) + dwell
       dwellTimer = setTimeout(() => {
         if (stepIndex.value >= steps.length - 1) stop()
         else if (status.value === 'playing') applyStep(stepIndex.value + 1, { schedule: true })
