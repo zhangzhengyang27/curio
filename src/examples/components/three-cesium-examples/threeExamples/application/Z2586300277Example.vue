@@ -34,21 +34,25 @@ function onReady(ctx: any) {
   let path: any = null
   
   new OBJLoader().load(
-  
+
       props.example?.globals?.FILE_HOST + 'files/model/z2586300277.obj',
-  
+
       (obj) => {
-  
+
           sampler = new MeshSurfaceSampler(obj.children[0] as THREE.Mesh).build();
-  
+
           path = new Path();
-  
+
           scene.add(path.line);
-  
-          }
-  
+
+          },
+
+      undefined,
+
+      (err) => console.error('[z2586300277] OBJ 加载失败:', err)
+
   )
-  
+
   const tempPosition = new THREE.Vector3();
   
   class Path {
@@ -99,15 +103,20 @@ function onReady(ctx: any) {
   }
   
   function render() {
-  
+
+      if (!path) return
+
       if (path.vertices.length < 50000) {
-  
+
           Array.from({ length: 10 }).forEach(() => path.update())
-  
+
       }
-  
+
       controls.update();
-  
+
   }
+
+  // 原移植版本定义了 render 却从未注册进渲染循环，线条永远长不出来（黑屏）
+  ctx.addUpdateCallback(render)
 }
 </script>
