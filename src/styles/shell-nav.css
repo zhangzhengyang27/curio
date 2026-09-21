@@ -1,0 +1,320 @@
+/**
+ * 两个外壳（数据产品 / 示例资源库）共用的顶栏样式。
+ *
+ * 原先在 App.vue 的 <style scoped> 里。拆成两个外壳组件后必须变成全局样式，
+ * 所以**每条规则都以 .app-nav 打头**：scoped 的隔离作用没了，得手工补回来。
+ * 不这么做的话 `.search-input`、`.action-btn`、`.icon` 这些通用类名会直接
+ * 漏到首页 SearchBox.vue 和各页面的同名元素上（它们各自有 scoped 版本），
+ * 表现为「样式写了却没生效」或反过来「别处控件莫名变样」。
+ *
+ * 类名保持与拆分前一致（.app-nav / .nav-search / .search-input …），
+ * 因为 perf.spec.ts 用 .app-nav 作为首页的 ready 选择器、
+ * smoke.spec.ts 用 .nav-search .search-input 区分顶栏与首页地球那两个搜索框。
+ */
+
+.app-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--tv-top-nav-height);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 var(--tv-gutter);
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--tv-outline-variant);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.app-nav .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  justify-self: start;
+}
+
+.app-nav .brand-logo {
+  width: 32px;
+  height: 32px;
+  color: var(--tv-primary);
+}
+
+.app-nav .brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tv-primary);
+  letter-spacing: -0.01em;
+  /* 它原先是 <span>，现在是 RouterLink；不关掉就是浏览器默认的下划线链接 */
+  text-decoration: none;
+}
+
+.app-nav .brand-tag {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  padding: 1px 7px;
+  border-radius: var(--tv-radius-full);
+  color: var(--tv-on-surface-variant);
+  background: var(--tv-surface-container-high);
+  border: 1px solid var(--tv-outline-variant);
+  white-space: nowrap;
+}
+
+.app-nav .nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-lg);
+  height: 100%;
+  justify-self: center;
+}
+
+.app-nav .nav-links a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--tv-on-surface-variant);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-top: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.app-nav .nav-links a:hover {
+  color: var(--tv-primary);
+}
+
+.app-nav .nav-links a.active {
+  color: var(--tv-primary);
+  border-bottom-color: var(--tv-primary);
+}
+
+.app-nav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  justify-self: end;
+}
+
+.app-nav .nav-search {
+  display: flex;
+  align-items: center;
+  background: var(--tv-surface-container);
+  border-radius: var(--tv-radius-full);
+  padding: 0 var(--tv-md);
+  height: 36px;
+  min-width: 200px;
+}
+
+.app-nav .nav-search .search-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--tv-outline);
+  flex-shrink: 0;
+}
+
+.app-nav .nav-search .search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--tv-on-surface);
+  flex: 1;
+  padding: 0 var(--tv-sm);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.app-nav .nav-search .search-input::placeholder {
+  color: var(--tv-outline);
+}
+
+.app-nav .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+}
+
+.app-nav .action-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tv-radius-full);
+  border: none;
+  background: transparent;
+  color: var(--tv-on-surface-variant);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.app-nav .action-btn:hover {
+  background: var(--tv-surface-container);
+  color: var(--tv-primary);
+}
+
+.app-nav .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* 顶栏右侧「去另一个产品」的文字链。用 <a> 而不是按钮：它是导航，不是动作 */
+.app-nav .shell-switch {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--tv-md);
+  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--tv-outline-variant);
+  color: var(--tv-on-surface-variant);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.app-nav .shell-switch:hover {
+  color: var(--tv-primary);
+  border-color: var(--tv-primary);
+}
+
+/* ── 示例中心技术栈下拉 ───────────────────────────────────────── */
+
+.app-nav .nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.app-nav .dropdown-trigger {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--tv-on-surface-variant);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-top: 2px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.app-nav .dropdown-trigger:hover {
+  color: var(--tv-primary);
+}
+
+.app-nav .dropdown-trigger.active {
+  color: var(--tv-primary);
+  border-bottom-color: var(--tv-primary);
+}
+
+.app-nav .dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.app-nav .dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.app-nav .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 95%, transparent);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--tv-radius-xl);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  min-width: 220px;
+  z-index: 1001;
+}
+
+.app-nav .dropdown-menu.single-column {
+  min-width: 160px;
+  padding: 8px;
+}
+
+.app-nav .dropdown-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-nav .dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-sm);
+  padding: 8px 10px;
+  border-radius: var(--tv-radius-lg);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.app-nav .dropdown-item:hover,
+.app-nav .dropdown-item.active {
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
+}
+
+.app-nav .dropdown-label {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.app-nav .dropdown-count {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--tv-on-surface-variant);
+  background: var(--tv-surface-container-high);
+  padding: 1px 6px;
+  border-radius: var(--tv-radius-full);
+}
+
+.app-nav .dropdown-item:hover .dropdown-count,
+.app-nav .dropdown-item.active .dropdown-count {
+  background: color-mix(in srgb, var(--tv-on-primary-container) 15%, transparent);
+  color: var(--tv-on-primary-container);
+}
+
+.app-nav .dropdown-fade-enter-active,
+.app-nav .dropdown-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.app-nav .dropdown-fade-enter-from,
+.app-nav .dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+html.dark .app-nav .dropdown-menu {
+  background: color-mix(in srgb, var(--tv-surface-container-lowest) 92%, transparent);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+html.dark .app-nav .dropdown-item:hover,
+html.dark .app-nav .dropdown-item.active {
+  background: var(--tv-secondary-container);
+  color: var(--tv-on-secondary-container);
+}
+
+html.dark .app-nav .dropdown-item:hover .dropdown-count,
+html.dark .app-nav .dropdown-item.active .dropdown-count {
+  background: color-mix(in srgb, var(--tv-on-secondary-container) 15%, transparent);
+  color: var(--tv-on-secondary-container);
+}
