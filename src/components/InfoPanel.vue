@@ -32,37 +32,6 @@
           </span>
           <h3>{{ interactionStore.infoPanelData?.name || '地点详情' }}</h3>
         </div>
-        <button
-          class="more-btn"
-          aria-label="更多操作"
-        >
-          <svg
-            class="icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <circle
-              cx="12"
-              cy="5"
-              r="1"
-              fill="currentColor"
-            />
-            <circle
-              cx="12"
-              cy="12"
-              r="1"
-              fill="currentColor"
-            />
-            <circle
-              cx="12"
-              cy="19"
-              r="1"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
       </div>
 
       <div class="panel-body custom-scrollbar">
@@ -175,25 +144,6 @@
             <span class="metric-value mono">{{ formatCoord(interactionStore.infoPanelData.lat, 'lat') }}</span>
           </div>
         </div>
-
-        <div class="chart-section">
-          <h4 class="section-title">
-            GDP 增长（10年）
-          </h4>
-          <div class="chart-placeholder">
-            <svg
-              class="chart-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M3 3v18h18" />
-              <path d="m19 9-5 5-4-4-3 3" />
-            </svg>
-            <span>趋势图占位</span>
-          </div>
-        </div>
       </div>
 
       <div class="panel-footer">
@@ -301,30 +251,6 @@ h3 {
   line-height: 28px;
 }
 
-.more-btn {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--tv-radius-full);
-  border: none;
-  background: transparent;
-  color: var(--tv-on-surface-variant);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.more-btn:hover {
-  background: var(--tv-surface-container);
-  color: var(--tv-primary);
-}
-
-.icon {
-  width: 18px;
-  height: 18px;
-}
-
 .panel-body {
   flex: 1;
   overflow-y: auto;
@@ -384,30 +310,6 @@ h3 {
 .metric-value.mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
-}
-
-.chart-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-placeholder {
-  height: 96px;
-  border-radius: var(--tv-radius-lg);
-  background: var(--tv-surface-container);
-  border: 1px solid var(--tv-outline-variant);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--tv-xs);
-  color: var(--tv-outline);
-  font-size: 12px;
-}
-
-.chart-icon {
-  width: 28px;
-  height: 28px;
 }
 
 .panel-footer {
