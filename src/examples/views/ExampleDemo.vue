@@ -135,7 +135,9 @@ const example = computed(() => {
   if (!registryReady.value) return null
   const parsed2 = parsed.value as { source: string; category: string; id: string }
   if (!parsed2.source || !parsed2.category || !parsed2.id) return null
-  return getExampleById(parsed2.source, parsed2.category, parsed2.id)
+  const found = getExampleById(parsed2.source, parsed2.category, parsed2.id)
+  // 被展示层隐藏的条目走同一条「未找到示例」分支，直连 URL 也进不去
+  return found && !found.displayHidden ? found : null
 })
 
 const exampleKey = computed(() => {

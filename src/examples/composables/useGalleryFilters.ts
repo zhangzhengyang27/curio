@@ -30,7 +30,11 @@ export function useGalleryFilters() {
   const pageSize = PAGE_SIZE
 
   const allExamplesList = shallowRef<RegistryExample[]>([])
-  ensureRegistryLoaded().then(list => { allExamplesList.value = list })
+  ensureRegistryLoaded().then(list => {
+    // displayHidden 在这里过滤，而不是在 registry 缓存处删条目 ——
+    // 否则 verify-registry / verify-thumbnails 会跟着少检这些条目（见 metadata/index.ts）
+    allExamplesList.value = list.filter(ex => !ex.displayHidden)
+  })
   const allExamples = computed(() => allExamplesList.value)
 
   /**

@@ -2,6 +2,8 @@
 // ⚠ 显式 .ts 扩展：本模块同时被 Vite 应用与 verify-registry(Node strip-types)消费,
 // 后者无法解析无扩展名导入;tsconfig 已开 allowImportingTsExtensions。
 
+import { applyDisplayOverrides, loadDisplayOverrides } from '../metadata/index.ts'
+
 /** registry 单条示例条目(生成器维护,字段见 scripts/generate-registry.js) */
 export interface RegistryExample {
   id: string
@@ -46,8 +48,14 @@ export function loadAllRegistries() {
     Object.entries(registryLoaders).map(async ([source, loader]) => {
       const mod = await loader()
       const registry = (mod.default || mod) as unknown as { source: string; label: string; examples: RegistryExample[] }
-      _registryCache.set(source, registry)
-      return registry
+      // 覆盖层必须在写缓存之前套上：getExampleById / getExamplesBySource 直接读
+      // _registryCache，在这里套一次三条读路径才一致（见 metadata/index.ts）
+      await loadDisplayOverrides()
+      _registryCache.set(source, {
+        ...registry,
+        examples: applyDisplayOverrides(source, registry.examples),
+      })
+      return _registryCache.get(source)!
     })
   ).then(registries => {
     const list: RegistryExample[] = []
