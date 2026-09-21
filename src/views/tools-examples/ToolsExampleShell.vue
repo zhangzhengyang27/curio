@@ -141,7 +141,7 @@ onMounted(async () => {
   transform: translate(-50%, -50%);
   padding: 16px 24px;
   border-radius: 12px;
-  color: #eee;
+  color: var(--tv-outline-variant);
   z-index: 5;
 }
 
@@ -157,7 +157,7 @@ onMounted(async () => {
 
 .back-link {
   font-size: 12px;
-  color: #8ec9ff;
+  color: var(--tv-primary);
   text-decoration: none;
 }
 
@@ -175,7 +175,7 @@ onMounted(async () => {
   margin: 0;
   font-size: 12px;
   line-height: 1.6;
-  color: #b9c6d4;
+  color: var(--tv-on-surface-variant);
 }
 
 /* 示例功能面板：与 header 同列堆叠，风格对齐综合工具箱的左面板。

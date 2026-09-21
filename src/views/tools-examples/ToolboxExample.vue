@@ -1120,7 +1120,7 @@ onUnmounted(() => {
   transform: translate(-50%, -50%);
   padding: 16px 24px;
   border-radius: 12px;
-  color: #eee;
+  color: var(--tv-outline-variant);
 }
 
 .panel {
@@ -1280,11 +1280,11 @@ onUnmounted(() => {
 }
 
 .tool-item:hover {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary, var(--tv-primary));
 }
 
 .tool-item.active {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary, var(--tv-primary));
   background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.12));
 }
 
@@ -1381,7 +1381,7 @@ onUnmounted(() => {
 }
 
 .mini-btn:hover:not(:disabled) {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary, var(--tv-primary));
 }
 
 .mini-btn:disabled {
@@ -1391,7 +1391,7 @@ onUnmounted(() => {
 
 .mini-btn.primary {
   width: 100%;
-  background: var(--tv-primary, #4f8ef7);
+  background: var(--tv-primary, var(--tv-primary));
   border-color: transparent;
   color: var(--tv-on-primary, #fff);
   font-weight: 600;
@@ -1430,7 +1430,7 @@ onUnmounted(() => {
 }
 
 .bookmark-goto:hover {
-  border-color: var(--tv-primary, #4f8ef7);
+  border-color: var(--tv-primary, var(--tv-primary));
 }
 
 .bookmark-del {
@@ -1492,7 +1492,7 @@ onUnmounted(() => {
   padding: 4px 10px;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.65);
-  color: #7fff9f;
+  color: var(--tv-success);
   font: 11px/1.6 monospace;
   white-space: nowrap;
   pointer-events: none;

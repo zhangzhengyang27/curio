@@ -104,7 +104,7 @@ const statusText = computed(() => {
   margin: 0 0 10px;
   font-size: 12px;
   line-height: 1.7;
-  color: #b9c6d4;
+  color: var(--tv-on-surface-variant);
 }
 
 .btn-row {
@@ -118,7 +118,7 @@ const statusText = computed(() => {
   border: 1px solid rgb(255 255 255 / 18%);
   border-radius: 8px;
   background: rgb(255 255 255 / 6%);
-  color: #dce7f2;
+  color: var(--tv-on-surface);
   font-size: 12px;
   cursor: pointer;
 }
@@ -135,6 +135,6 @@ const statusText = computed(() => {
 .status {
   margin: 10px 0 0;
   font-size: 12px;
-  color: #9fd0a8;
+  color: var(--tv-success);
 }
 </style>

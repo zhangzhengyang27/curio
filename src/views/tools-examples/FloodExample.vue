@@ -138,7 +138,7 @@ onUnmounted(stopPolling)
 .terrain-status {
   margin: 0 0 10px;
   font-size: 12px;
-  color: #b9c6d4;
+  color: var(--tv-on-surface-variant);
 }
 
 .btn-row {
@@ -151,7 +151,7 @@ onUnmounted(stopPolling)
   border: 1px solid rgb(255 255 255 / 18%);
   border-radius: 8px;
   background: rgb(255 255 255 / 6%);
-  color: #dce7f2;
+  color: var(--tv-on-surface);
   font-size: 12px;
   cursor: pointer;
 }
@@ -163,6 +163,6 @@ onUnmounted(stopPolling)
 .status {
   margin: 10px 0 0;
   font-size: 12px;
-  color: #9fd0a8;
+  color: var(--tv-success);
 }
 </style>

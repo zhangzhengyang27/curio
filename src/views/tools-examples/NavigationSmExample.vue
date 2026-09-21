@@ -49,12 +49,12 @@ function onReady() {
   margin: 0 0 8px;
   font-size: 12px;
   line-height: 1.7;
-  color: #b9c6d4;
+  color: var(--tv-on-surface-variant);
 }
 
 .status {
   margin: 0;
   font-size: 12px;
-  color: #9fd0a8;
+  color: var(--tv-success);
 }
 </style>
