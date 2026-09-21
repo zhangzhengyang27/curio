@@ -95,9 +95,6 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .bmap-actions input {
-  padding: 0.45rem 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
   min-width: 180px;
 }
 </style>

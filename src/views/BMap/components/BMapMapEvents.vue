@@ -129,7 +129,6 @@ onBeforeUnmount(() => {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  color: #6b7280;
   font-size: 0.9rem;
 }
 </style>

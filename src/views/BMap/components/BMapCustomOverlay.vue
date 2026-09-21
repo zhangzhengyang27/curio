@@ -123,6 +123,7 @@ onBeforeUnmount(() => {
   padding: 0.35rem 0.65rem;
   border-radius: 8px;
   background: var(--overlay-color);
+  /* theme-tokens:allow 文字压在每条 marker 自带的动态数据色上，不是主题面 */
   color: #fff;
   font-size: 0.85rem;
   font-weight: 600;

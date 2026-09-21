@@ -112,6 +112,7 @@ onBeforeUnmount(() => {
 
 .bmap-container :deep(.info-window-content p) {
   margin: 0;
+  /* theme-tokens:allow 这段渲染在 BMapGL 自绘的白色气泡里，套暗色令牌反而读不清 */
   color: #6b7280;
   font-size: 0.85rem;
 }
