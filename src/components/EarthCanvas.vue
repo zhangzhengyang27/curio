@@ -69,6 +69,8 @@ let stopLoop: () => void
 let disposeLabels: () => void
 let labelManager: ReturnType<typeof useLabels> & { mainLabel?: CSS2DObject }
 let flyToFn: (lon: number, lat: number, duration?: number) => void
+// 渲染循环里那个 renderFn 的引用，供「取一帧」用（见 captureFrame）
+let renderFrameFn: (() => void) | null = null
 let cancelFlight: () => void
 let earth: TexturedEarthGroup
 let overlayGroup: THREE.Group | null
@@ -290,6 +292,7 @@ onMounted(async () => {
       }
       labelManager.labelRenderer.render(scene, camera)
     }
+    renderFrameFn = renderFn
     renderLoop.setRenderFn(renderFn); renderLoop.start(); stopLoop = renderLoop.stop
 
     canvasEl.addEventListener('click', onCanvasClick)
@@ -505,7 +508,42 @@ function clearRealisticHighlight() {
 
 // 对外暴露的 switchVisualization 是用户入口（底栏点击 / 巡游 / URL hash），
 // 一律视为用户主动选择，启动期可阻断初始化的 'default' 落地覆盖
-defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, getControls: () => controls, switchVisualization: (mode: string) => switchVisualization(mode, true), toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
+/**
+ * 渲染一帧并立刻取图。render 与 toDataURL 必须在同一次同步任务里：
+ * renderer 未开 preserveDrawingBuffer，分开调用只会拿到清屏后的纯黑图
+ * （实测旧「截图」按钮产出的 PNG 全帧只有 1 种颜色 0,0,0）。
+ */
+function captureFrame(): string | null {
+  if (!renderFrameFn || !renderer) return null
+  renderFrameFn()
+  return renderer.domElement.toDataURL('image/png')
+}
+
+let captureScratch: HTMLCanvasElement | null = null
+
+/**
+ * 渲染一帧并按需降采样取像素，给 GIF 用。
+ * 刻意不走 toDataURL + Image.decode：整画布 PNG 单次就有 ~2.7 MB，
+ * 每 250ms 编一次会把主线程压死（实测连点两次录制按钮能把一次 JS 往返拖到超时）。
+ */
+function captureFrameScaled(maxWidth: number): { data: Uint8Array; w: number; h: number } | null {
+  if (!renderFrameFn || !renderer) return null
+  const src = renderer.domElement
+  if (!src.width) return null
+  const w = Math.min(maxWidth, src.width)
+  const h = Math.max(1, Math.round((src.height / src.width) * w))
+  if (!captureScratch) captureScratch = document.createElement('canvas')
+  captureScratch.width = w
+  captureScratch.height = h
+  const ctx = captureScratch.getContext('2d', { willReadFrequently: true })
+  if (!ctx) return null
+  renderFrameFn()
+  // drawImage 与 render 必须同处一次同步任务，理由同 captureFrame
+  ctx.drawImage(src, 0, 0, w, h)
+  return { data: new Uint8Array(ctx.getImageData(0, 0, w, h).data.buffer), w, h }
+}
+
+defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, captureFrame, captureFrameScaled, getControls: () => controls, switchVisualization: (mode: string) => switchVisualization(mode, true), toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
 
 // === Timeline year watch — GDP柱状动画 ===
 const stopWatch = watch(() => timelineStore.currentYear, (year: number) => {

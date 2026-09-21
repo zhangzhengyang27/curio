@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useEarthStore } from '../stores/useEarthStore'
 
 const props = defineProps({
@@ -87,7 +87,9 @@ function handleRealisticEarthToggle() {
   realisticActive.value = props.onRealisticEarthToggle?.() ?? realisticActive.value
 }
 
-const tools = [
+// 必须是 computed：写成普通数组的话 active/title 只在 setup 时求值一次，
+// 实测点「云层」「自动旋转」后按钮状态毫无变化，11 个开关全都不反馈开合状态。
+const tools = computed(() => [
   { key: 'tour', title: '数据巡游', icon: icons.tour, action: () => props.onTour?.() },
   { key: 'screenshot', title: '截图', icon: icons.screenshot, action: () => props.onScreenshot?.() },
   { key: 'rotate', title: '自动旋转', icon: icons.rotate, action: toggleRotation, active: earthStore.isRotating },
@@ -99,7 +101,7 @@ const tools = [
   { key: 'record', title: recording.value ? '停止录制' : '录制 GIF', icon: icons.record, action: handleRecordGif, active: recording.value },
   { key: 'bloom', title: '辉光', icon: icons.bloom, action: handleBloomToggle, active: bloomActive.value },
   { key: 'realistic', title: '真实地球', icon: icons.realistic, action: handleRealisticEarthToggle, active: realisticActive.value }
-]
+])
 </script>
 
 <style scoped>

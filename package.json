@@ -18,7 +18,8 @@
     "verify:drift": "node --experimental-strip-types scripts/generate-registry.js --check && node --experimental-strip-types scripts/generate-threejs-lesson-registry.js --check && node --experimental-strip-types scripts/generate-earth-lessons-registry.js --check",
     "verify:thumbnails": "node --experimental-strip-types scripts/verify-thumbnails.mjs",
     "verify:three-compat": "node scripts/verify-three-compat.mjs",
-    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat"
+    "verify:theme": "node scripts/verify-theme-tokens.mjs",
+    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat && npm run verify:theme"
   },
   "dependencies": {
     "@cesium-extends/drawer": "^1.3.8",
@@ -47,6 +48,7 @@
     "coordtransform": "^2.1.2",
     "d3": "^7.9.0",
     "echarts": "^6.1.0",
+    "gifenc": "^1.0.3",
     "gl-matrix": "^3.4.3",
     "gsap": "^3.15.0",
     "highlight.js": "^11.11.1",
