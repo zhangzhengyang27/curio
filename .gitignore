@@ -38,6 +38,9 @@ pnpm-debug.log*
 .tmp
 node_modules/.vite
 
+# 地震后端的 SQLite 库与运行时产物（数据可随时重抓，不进版本库）
+/server/data/
+
 # OS
 Thumbs.db
 

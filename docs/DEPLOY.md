@@ -65,6 +65,13 @@ server {
     location / {
         try_files $uri $uri/ /index.html;
     }
+
+    # 仅当同机部署了地震数据后端（server/，见 §7）时需要。
+    # 不配这一段也不会白屏：前端会降级到打包快照。
+    location /api/ {
+        proxy_pass http://127.0.0.1:8787;
+        proxy_set_header Host $host;
+    }
 }
 ```
 
@@ -102,7 +109,35 @@ CI 全绿后再取 CI 构建产物（或以相同 commit 重新构建）发布�
 
 ---
 
-## 6. 后续可选（本轮未做）
+## 6. 地震数据后端（`server/`，/monitor 的真实数据源）
+
+`/monitor` 的地震事件来自 USGS。**前端不直连 USGS**（跨境可达性与配额都不可控），
+由 `server/` 子项目代抓：零 npm 依赖（`node:http` + `node:sqlite` + 进程内调度），
+Node ≥22.6，TypeScript 以 `--experimental-strip-types` 直跑。
+
+```bash
+npm run dev:server     # 开发（--watch，:8787）
+npm run start:server   # 生产起服
+npm run test:server    # node:test（含 stub USGS 的集成用例）
+```
+
+- **实时性**：进程内每 5 分钟轮询 `2.5_day` 增量；每天 02:00（Asia/Shanghai）
+  用 `2.5_week` 全量重同步并裁剪 7 天前数据。**不需要 OS crontab，也不需要
+  CI schedule**（本仓库当前无远端，CI cron 根本跑不了）。
+- **降级链**：后端不可达 → 前端退打包快照 `public/data/quake-snapshot.json`
+  （由 `npm run refresh:quakes` 重生成，进版本库）；后端自身抓不到 USGS →
+  继续服务 SQLite 里的旧数据，`/api/health.lastError` 暴露原因。
+  页面顶栏的数据源徽标会如实显示 `USGS 实时 / USGS 链路中断 / 打包快照`。
+- **进程守护**：与静态站同机时用 systemd/pm2 拉起 `npm run start:server`，
+  后端默认只监听 `127.0.0.1:8787`（`QUAKE_HOST` 可改），由 nginx 反代 `/api`（见 §3），
+  不要把端口直接暴露公网。
+- **SQLite 库文件**：`server/data/quakes.db`，已 gitignore、可随时重抓，
+  备份与迁移都不需要它。
+- **凭据**：USGS 公共领域、无 key，不涉及 R4 那套三件事；仅需署名（页面已带）。
+
+---
+
+## 7. 后续可选（本轮未做）
 
 - CI 增加 tag 触发的发布 job（前置依赖 P0 远端仓库建立，届时再展开）。
 - 首屏 16 张封面出更小的预览图（`docs/PERF_BASELINE.md` 剩余机会）。

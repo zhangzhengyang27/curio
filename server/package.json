@@ -1,0 +1,15 @@
+{
+  "name": "terravista-quake-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TerraVista 3D 业务监控的地震数据后端：抓取 USGS feed、SQLite 存储、进程内定时重同步、对前端提供增量 API",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning --experimental-strip-types src/index.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --experimental-strip-types --watch src/index.ts",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test test/*.test.ts"
+  }
+}

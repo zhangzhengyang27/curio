@@ -56,6 +56,11 @@ jobs:
         # 不要退回「只查 .ts 子集」的收敛配置：那是基于错误假设的降级方案。
         run: npm run typecheck
 
+      - name: 地震数据后端测试（server/，零依赖 node:test）
+        # 含 stub USGS 的集成用例，不依赖外网；typecheck 已覆盖 server 的类型，
+        # 这里补的是运行时行为（映射器 / 每日调度数学 / API）。
+        run: npm run test:server
+
       - name: 示例注册表一致性
         run: npm run verify:registry
 
