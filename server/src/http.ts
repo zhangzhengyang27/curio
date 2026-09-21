@@ -1,6 +1,7 @@
 import { createServer } from 'node:http'
 import type { IncomingMessage, Server, ServerResponse } from 'node:http'
 import type { QuakeStore } from './db.ts'
+import type { TileHandler } from './tiles.ts'
 
 export interface ApiState {
   startedAt: number
@@ -27,7 +28,7 @@ function json(res: ServerResponse, status: number, body: unknown): void {
   res.end(payload)
 }
 
-export function createApiServer(store: QuakeStore, state: ApiState): Server {
+export function createApiServer(store: QuakeStore, state: ApiState, tiles?: TileHandler): Server {
   return createServer((req: IncomingMessage, res: ServerResponse) => {
     const url = new URL(req.url || '/', 'http://localhost')
 
@@ -38,6 +39,17 @@ export function createApiServer(store: QuakeStore, state: ApiState): Server {
     }
     if (req.method !== 'GET') {
       json(res, 405, { error: 'method not allowed' })
+      return
+    }
+
+    // 瓦片反代优先：它是唯一会 await 的路由，且自带 404 之外的全部错误码
+    if (tiles && url.pathname.startsWith('/tiles/')) {
+      tiles.handle(req, res).then((handled) => {
+        if (!handled) json(res, 404, { error: 'not found' })
+      }).catch((err) => {
+        res.writeHead(500, { 'cache-control': 'no-store' })
+        res.end(String(err instanceof Error ? err.message : err))
+      })
       return
     }
 

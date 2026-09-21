@@ -5,8 +5,16 @@ import { createApiServer } from './http.ts'
 import type { ApiState } from './http.ts'
 import { startScheduler } from './schedule.ts'
 import { syncFeed } from './usgs.ts'
+import { createTileHandler, loadTileConfig, tileProxyEnabled } from './tiles.ts'
+import { applyEnvFile } from './envfile.ts'
+import type { ServerConfig } from './config.ts'
 
-export function startQuakeServer(config = loadConfig()) {
+export function startQuakeServer(configOverride?: ServerConfig) {
+  // 必须先于 loadConfig：天地图 key 与 DB 路径都从 .env.local 兜底读入
+  applyEnvFile()
+  const config = configOverride || loadConfig()
+  const tileConfig = loadTileConfig()
+  const tiles = createTileHandler(tileConfig)
   const store = openStore(config.dbPath)
   const state: ApiState = {
     startedAt: Date.now(),
@@ -55,12 +63,21 @@ export function startQuakeServer(config = loadConfig()) {
   })
   state.nextDailyAt = scheduler.nextDailyAt
 
-  const server = createApiServer(store, state)
+  const server = createApiServer(store, state, tiles)
   server.listen(config.port, config.host, () => {
     console.log(`[quake] 监听 ${config.host}:${config.port}，USGS=${config.usgsBase}，db=${config.dbPath}`)
+    console.log(
+      tileProxyEnabled(tileConfig)
+        ? `[tiles] 天地图反代已启用：/tiles/{vec|cva|img|cia}/{z}/{x}/{y}，上游并发 ${tileConfig.upstreamConcurrency}，缓存 ${tileConfig.cacheDir}`
+        : '[tiles] 未配置 TDT_TOKEN，瓦片反代关闭（前端将直连天地图）'
+    )
   })
   // 启动即拉一次，别让前端首屏等满一个轮询周期
   void poll()
+  // 缓存淘汰：启动清一次，之后每小时一次（sweep 只 stat 不读内容，2 万条目内是毫秒级）
+  void tiles.sweep().catch(() => {})
+  const sweepTimer = setInterval(() => void tiles.sweep().catch(() => {}), 3_600_000)
+  sweepTimer.unref()
 
   const shutdown = (): void => {
     scheduler.stop()
