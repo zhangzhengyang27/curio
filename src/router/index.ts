@@ -42,6 +42,25 @@ const router = createRouter({
   routes,
 })
 
+/**
+ * /bmap 的百度地图 GL SDK 只能在 HTML 解析期注入（document.write，见 KNOWN_PITFALLS C9），
+ * 而 index.html 现在只为 /bmap 注入它。于是「从别的页面客户端路由跳到 /bmap」
+ * 这条路径上 SDK 必然不在 —— 这里把它转成一次整页导航，让解析期注入生效。
+ *
+ * 三个不能触发的情况：
+ * - 未配置 AK：交给页面自己的降级提示，重载也拿不到 SDK；
+ * - 文档本身就是 /bmap：解析期那个 <script> 还在路上，重载会死循环；
+ * - window.BMapGL 已存在：无需任何动作。
+ */
+router.beforeResolve((to) => {
+  if (to.path !== '/bmap') return true
+  if (window.BMapGL) return true
+  if (!import.meta.env.VITE_BMAP_AK) return true
+  if (window.location.pathname === '/bmap') return true
+  window.location.assign(to.fullPath)
+  return false
+})
+
 router.afterEach((to) => {
   const title = to.meta.title
   document.title = typeof title === 'string' ? title : BRAND

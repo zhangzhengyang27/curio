@@ -30,8 +30,12 @@ interface ImportMetaEnv {
   readonly VITE_BMAP_AK?: string
   /** 天地图访问令牌（逗号分隔多 key 轮询）。仅在构建期注入，不入库。 */
   readonly VITE_TDT_TOKEN?: string
+  /** 天地图瓦片同源反代前缀（如 /tiles）。留空 = 直连天地图。非凭据，可入库。 */
+  readonly VITE_TILE_PROXY?: string
   /** 高德开放平台 Web 服务 key（地名搜索兜底通道 M1）。仅在构建期注入，不入库。 */
   readonly VITE_AMAP_KEY?: string
+  /** 地震数据后端 API 路径（默认 /api/quakes，dev 由 vite 代理到 :8787）。非凭据，可留空。 */
+  readonly VITE_QUAKE_API?: string
 }
 
 interface ImportMeta {

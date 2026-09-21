@@ -13,6 +13,16 @@
       因为百度官方加载器内部用 document.write 去注入真正的 SDK，而 document.write
       只在 HTML 解析阶段有效；运行时动态 append 的脚本里执行它不会生效，
       表现为 window.BMapGL 永远不出现（页面长期停留在「正在加载…」）。
+      —— 见 docs/KNOWN_PITFALLS.md C9。
+
+      为什么按路径判断、只在 /bmap 注入？
+      这条 document.write 是**解析阻塞**的，SDK 本体约 1MB，还会带出
+      dlswbr.baidu.com 的反爬指纹模块与 miao.baidu.com 上报。
+      而全站只有 /bmap 用百度地图：其余页面（含 /monitor、/tools 这类本身
+      就要加载 Cesium 的地图页）都在白付这份开销。实测 /monitor 上
+      window.BMapGL 存在但地图实例数为 0。
+      从别的页面客户端路由跳到 /bmap 时 SDK 不在，由 router 的
+      beforeResolve 守卫转成一次整页导航（见 src/router/index.ts）。
 
       未配置 AK 时整段跳过，交由页面展示可读的降级提示，而不是白屏。
     -->
@@ -21,6 +31,7 @@
         var ak = '%VITE_BMAP_AK%'
         // 未配置时 Vite 会保留占位符或置空，两种情况都跳过加载
         if (!ak || ak.charAt(0) === '%') return
+        if (!/^\/bmap(\/|$|\?|#)/.test(window.location.pathname)) return
         document.write(
           '<script type="text/javascript" src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=' +
             encodeURIComponent(ak) +

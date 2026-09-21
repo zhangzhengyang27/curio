@@ -21,6 +21,18 @@ export async function mockTianditu(page) {
   await page.route('**/tianditu.gov.cn/**', (route) =>
     route.fulfill({ status: 200, contentType: 'image/jpeg', body: TILE_PNG })
   )
+  // 同源瓦片反代（VITE_TILE_PROXY=/tiles 时启用，见 src/map/tileSource.ts）。
+  // 不一起拦的话：一旦有人在 .env.local 里开了这个开关，E2E 就会经 vite 代理
+  // 打真实天地图 —— 烧配额且结果取决于外部服务，正是本文件要避免的两件事。
+  // 形状 /tiles/{layer}/{z}/{x}/{y}；本仓没有其它 /tiles 路径，不会误伤。
+  await page.route('**/tiles/*/*/*/*', (route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: TILE_PNG })
+  )
+  // 反代的 health 探测决定前端走不走代理，测试里明确回「未启用」，
+  // 让底图稳定走直连分支（上面那条 route 已覆盖）。
+  await page.route('**/tiles/health*', (route) =>
+    route.fulfill({ status: 503, contentType: 'application/json', body: '{"ok":false,"enabled":false}' })
+  )
 }
 
 // 让所有引入本文件的用例自动获得 mock，无需逐条调用

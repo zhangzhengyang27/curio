@@ -63,7 +63,7 @@ import { ref, computed, onMounted } from 'vue'
 import { VcConfigProvider, VcViewer } from 'vue-cesium'
 import 'vue-cesium/dist/index.css'
 import { loadCesium } from '../../map/cesiumLoader'
-import { applyTdtStack, applyViewerConstraints } from '../../map/createViewer'
+import { applyTdtStack, applyViewerConstraints, TDT_REQUESTS_PER_SERVER } from '../../map/createViewer'
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -100,7 +100,7 @@ const cameraProp = computed(() => ({
  */
 function onViewerReady(readyObj: any) {
   const { Cesium, viewer } = readyObj
-  Cesium.RequestScheduler.requestsPerServer = 1
+  Cesium.RequestScheduler.requestsPerServer = TDT_REQUESTS_PER_SERVER
   // 每个新 viewer 的 imageryLayers 都是空的（baseLayer=false），applyTdtStack 幂等
   applyTdtStack(viewer, 'vec')
   applyViewerConstraints(Cesium, viewer)

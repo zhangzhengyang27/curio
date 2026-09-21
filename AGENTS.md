@@ -76,7 +76,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run typecheck` | 全量 `vue-tsc --noEmit`（覆盖 `src` 下全部 `.vue` + 自有 `.ts`，**并串了 `vue-tsc -p server/tsconfig.json`**，当前 0 error） |
 | `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
 | `npm run test:e2e` | Playwright 冒烟（dev server，端口 5299） |
-| `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具 |
+| `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具。配了 `TDT_TOKEN`（或回退读 `VITE_TDT_TOKEN`）后它同时是**天地图瓦片反代**，前端在 `.env.local` 设 `VITE_TILE_PROXY=/tiles` 才启用；没起时前端自动退回直连 |
 | `npm run refresh:quakes` | 重生成打包降级快照 `public/data/quake-snapshot.json`（进版本库；数据可随时再抓） |
 | `npm run verify` | **一键跑 6 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |

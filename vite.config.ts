@@ -93,6 +93,22 @@ function serveUnicodePublic() {
   }
 }
 
+// dev 与 preview 共用的代理规则（server/ 后端，默认 127.0.0.1:8787）。
+// 写 127.0.0.1 而非 localhost：后端默认只监听 IPv4 回环，
+// 而某些环境下 localhost 会先解析到 ::1 导致代理打不通。
+// 后端没起时：/api 返回 504 → 前端按设计降级到打包快照（quakeSource.ts）；
+// /tiles 探测失败 → tileSource.ts 自动退回直连天地图。两条都不白屏。
+const BACKEND_TARGET = 'http://127.0.0.1:8787'
+const TILE_PROXY_RULES = {
+  /** /monitor 的地震数据 API */
+  '/api': { target: BACKEND_TARGET, changeOrigin: true },
+  /**
+   * 天地图瓦片同源反代（同一个 server/ 进程，见 server/src/tiles.ts）。
+   * 只有 .env.local 配了 VITE_TILE_PROXY=/tiles 前端才会请求这个路径。
+   */
+  '/tiles': { target: BACKEND_TARGET, changeOrigin: true },
+}
+
 export default defineConfig({
   plugins: [
     serveUnicodePublic(),
@@ -121,8 +137,13 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173
+    port: 5173,
+    proxy: TILE_PROXY_RULES,
   },
+  // preview 与 dev 走同一套代理规则：AGENTS.md 第 5 节要求「dev 与 preview 都要跑」，
+  // 而 VITE_TILE_PROXY 是构建期注入的 —— 只在 dev 配代理的话，
+  // 产物里开着反代、preview 却没有 /tiles 可打，等于这条路径从来没被测过。
+  preview: { proxy: TILE_PROXY_RULES },
   build: {
     target: 'esnext',
     chunkSizeWarningLimit: 1000,

@@ -72,6 +72,19 @@ server {
         proxy_pass http://127.0.0.1:8787;
         proxy_set_header Host $host;
     }
+
+    # 仅当产物构建时开了 VITE_TILE_PROXY=/tiles 时需要（天地图瓦片反代，见 server/README.md）。
+    # 不配也不会白屏：前端 health 探测失败会自动退回直连天地图。
+    # ⚠ 必须带 proxy_set_header：后端向上游取瓦片时要伪装浏览器 UA + Referer，
+    #   这里转发的是浏览器→我们这一跳，与上游无关，但 Host 要让 /tiles/health 认得出同源。
+    location /tiles/ {
+        proxy_pass http://127.0.0.1:8787;
+        proxy_set_header Host $host;
+        # 瓦片是高频小对象，让 nginx 直接吃掉浏览器侧并发，
+        # 上游并发由 server/ 的 TILE_UPSTREAM_CONCURRENCY 收口
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
 }
 ```
 

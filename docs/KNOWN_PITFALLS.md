@@ -320,6 +320,17 @@ npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true
 替换进 `index.html`，在**文档解析期**同步写出 `<script>`；运行时只负责
 `waitForBMapGL()`。未配置 AK 时整段跳过，页面展示降级提示。
 
+**⚠ 但解析期注入必须按路径收口**：这段 `document.write` 是解析阻塞的，SDK 本体约 1MB，
+还会带出 `dlswbr.baidu.com` 反爬指纹与 `miao.baidu.com` 上报。全站只有 `/bmap` 用它，
+其余页面（含 `/monitor`、`/tools` 这类本身要加载 Cesium 的地图页）都在白付这份开销 ——
+实测 `/monitor` 上 `window.BMapGL` 存在但地图实例数为 0。
+现在 `index.html` 里先判 `location.pathname` 再决定要不要 `document.write`。
+
+**由此产生的新坑**：客户端路由从别的页面跳到 `/bmap` 时 SDK 必然不在
+（文档不是从 `/bmap` 加载的）。`src/router/index.ts` 的 `beforeResolve` 会把这次跳转
+转成一次整页导航。改这段时要保住三个不触发条件：未配置 AK、文档本身就是 `/bmap`
+（解析期那个 script 还在路上，重载会死循环）、`window.BMapGL` 已存在。
+
 **排查方法**：直接 curl 加载器 URL 看返回内容。若看到
 `document.write('<script ... getscript ...>')`，就说明必须走解析期注入这条路。
 
@@ -638,11 +649,27 @@ L3~4 整片占位（带字 jpg 4769B，主色深藏青 (7,6,40)）；**L5 瓦片
 2. **拉远上限** `maximumZoomDistance = 1000 万米`：天地图 L1~2 是全球占位区，
    禁止用户缩放进去了；
 3. 默认底图为矢量（零占位史），卫星影像为切换项；
-4. `VITE_TDT_TOKEN` 支持逗号分隔多 key，provider 轮换使用（每账号可建 5 个 key）；
-5. `RequestScheduler.requestsPerServer = 1` + 单子域名（t0）：全局串行拉瓦片，最稳
-   （更早版本曾用 3，48 并发实测必触发限流，见上文复现实验）；
-6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量；
-7. **全球视角的「米白观感」是另一个独立问题**：相机高于 150 万米时影像层被门控
+4. `VITE_TDT_TOKEN` 支持逗号分隔多 key，**按图层各分一个 key**（不是每张瓦片换一次）：
+   既摊配额，又保证同一张瓦片的 URL 稳定 —— 天地图回 `max-age=432000`，
+   而 tk 在 URL 里，每请求轮换等于把 5 天缓存打散成随机命中；
+5. `RequestScheduler.requestsPerServer = 6` + 单子域名（t0）。
+   **⚠ 这一条推翻了本文件早期版本写的「= 1 最稳」**，依据是 2026-09-21 实测：
+   天地图 t0~t7 只有 HTTP/1.1（同一 IP），浏览器单主机 6 连接是硬上限，
+   设成 1 连 1/6 都用不满；单瓦片 p50 113~225ms、p95 937ms、首包 803ms，
+   一次视角切换 150~270 张 → 串行排队就是十几秒量级（实测并发 1 补齐 5.2s / 并发 6 2.5s）。
+   安全性：单主机 8 并发（同一 key）、16 并发（轮转 5 key）实测全部真图，
+   未见 103B/4769B 占位；上面「48 并发必触发限流」是 **8 子域名 × 6** 的量级，
+   6 并发不在这个风险区。**再往上调必须重跑占位反验。**
+   更彻底的做法是开瓦片反代（下一条），把上游并发收口在服务端；
+6. **同源瓦片反代 + 磁盘缓存**（`server/src/tiles.ts`，`.env.local` 设
+   `VITE_TILE_PROXY=/tiles` 开启）：一次解决三件事 —— 浏览器侧并发不再等于
+   打给天地图的并发（上游由 `TILE_UPSTREAM_CONCURRENCY` 收口）、
+   瓦片 URL 不再含 tk（缓存键稳定）、重复访问实测从 0.3~2.9s/张 降到 3.5ms/张。
+   未开启或后端未起时前端探测失败自动退回直连，行为与本条加入前一致。
+   ⚠ 反代必须伪装浏览器 UA + Referer：天地图「浏览器端」key 拒绝非浏览器 UA
+   （实测 node 默认 UA → 403，带 Chrome UA → 200）；
+7. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量；
+8. **全球视角的「米白观感」是另一个独立问题**：相机高于 150 万米时影像层被门控
    隐藏，露出的矢量底图在深色玻璃 UI 下观感等于「地图没加载出来」（/monitor 首屏
    曾被如此反馈）。`createMapViewer` 的 opt-in 选项 `dimBaseAtHighAltitude` 在门控期
    把矢量底图压暗去饱和（`brightness 0.34 / saturation 0.3`），近景自动还原——
