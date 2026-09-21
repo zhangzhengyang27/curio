@@ -71,6 +71,11 @@ jobs:
       - name: three.js 兼容层守卫
         run: npm run verify:three-compat
 
+      - name: 主题令牌与对比度守卫
+        # 棘轮：硬编码色值只允许比基线更少；静态 color/background 对比度 < 4.5:1 直接失败。
+        # 拦的是「暗色主题重构漏掉某一页 → 白字白底整排不可读」这类五环闸门全都看不见的缺陷。
+        run: npm run verify:theme
+
       - name: 生产构建
         run: npm run build
 

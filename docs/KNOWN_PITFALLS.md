@@ -459,6 +459,89 @@ true），UI 零提示——典型的「静默假通过」。
 
 ---
 
+### C15. 顶栏搜索的跳转依赖「示例 chunk 是否已预热」，同一操作结果不确定
+
+**现象**（2026-09-20 实测）：在首页地球点顶栏搜索输入一个字符，**有时**被跳到
+`/examples?search=x`（three.js 场景随之销毁、无法恢复），**有时**原地不动。
+两种表现来自完全相同的代码路径。
+
+**根因**：旧实现（`App.vue` 的 `updateSearchQuery`）无条件
+`router.push({ path: '/examples', query })`，而 `/examples` 是懒加载路由。
+若该 chunk 尚未加载（用户本次会话还没进过示例中心），push 先进入 chunk 加载阶段，
+此期间的导航可被中止 —— 于是「劫持」只在示例 chunk 已预热时才稳定复现。
+`App.vue` 又刻意把 registry 加载推迟（见其 `:210-211` 注释与
+`smoke.spec.ts` 的「首页不为顶栏预载示例注册表」用例），进一步放大了不确定性。
+
+**测试教训（比现象本身更重要）**：给「不劫持」写回归用例时，若用
+`page.goto('/')` 直达首页再输入，**旧代码同样不会跳转** —— 用例在修复前后都绿，
+是彻底的假绿。必须：
+1. 先 `page.goto('/examples')` 预热 chunk；
+2. 再用 **SPA 内导航**（点顶栏链接）切到目标页 —— 不能 `goto`，整页加载会清掉模块缓存；
+3. 输入用 `fill()`：`pressSequentially()` 在本项目页面上不触发 `@input`（实测输入框值不变）。
+
+**验证方式**：按上面三步搭好后，旧代码必然红、新代码必然绿，才算这条守卫成立。
+
+**正确做法**：跨路由的跳转类副作用不要挂在输入事件上；改为显式提交（回车）
+或就地更新。写这类守卫前先按「反验」流程确认它在旧代码下会红。
+
+---
+
+### C16. 运行时 DOM 普查若按标签过滤，可访问性结论会整体反向
+
+**现象**（2026-09-20，本人真实踩坑并一度写进报告）：用
+`querySelectorAll('div,article')` + `cursor:pointer` 普查「可点击卡片」，
+得到「`/examples` 64 张、`/three-globe` 55 张、`/tools` 51 张卡片全部没有
+`href`/`tabindex`/`role`，整个示例库对键盘不可达」——一条听起来很严重的 WCAG 结论。
+
+**根因**：选择器里**没有 `a`**。卡片本来就是 `<router-link>`（`ExampleCard.vue:2`），
+渲染成带 `href` 的 `<a>`，被 `div,article` 直接排除；而 `withHref` 统计的是
+「div/article 里有多少个 href」，恒等于 0。命中的那些 `div` 是 `<a>` 内部的
+`.card-body`，属于嵌套装饰节点，不是独立控件。
+
+**实测真相**：三个画廊的卡片 100% 是可 Tab 聚焦的真链接
+（`/examples` 16/16、`/three-globe` 19/19、`/tools` 17/17 带 `href` 且 `tabIndex>=0`）。
+
+**正确做法**：做「可交互元素」普查时用 `a[href],button,input,select,textarea,[tabindex]`
+这类**能力选择器**，不要用「容器标签 + 样式特征」去猜；
+得出「某类元素完全不可达」这种强结论前，先 `find . -name 'XCard.vue'` 读一眼实现，
+或直接 `document.querySelector('.example-card').tagName` 验证一条。
+
+---
+
+### C17. WebGL 画布在渲染循环外 `toDataURL()` 拿到的是纯黑图（「截图」功能曾长期全黑）
+
+**现象**（2026-09-20 实测）：首页工具栏「截图」按钮（以及 `s` 快捷键）产出的 PNG
+**每次都是全黑**，但按钮有反应、文件能下载、控制台零报错。
+同一条路径喂给「录制 GIF」的帧也全是黑的。
+
+**根因**：`src/composables/useScene.ts:17` 建 renderer 时没传 `preserveDrawingBuffer`
+（默认 `false`）。合成器把帧呈现完就回收绘制缓冲，所以在**渲染循环之外**
+（点击回调、`setInterval` 里）调 `canvas.toDataURL()` 只能读到清屏后的黑帧。
+
+**量化证据**（同一页面、同一时刻，只差有没有先 render）：
+
+| 取法 | 体积 | 不同颜色数 | 平均亮度 |
+|---|---|---|---|
+| `canvas.toDataURL()`（旧写法） | 129 KB | **1** | **0** |
+| `renderFn(); canvas.toDataURL()` 同一同步任务内 | 2731 KB | **3592** | 24.8 |
+
+**正确做法**：把「渲染」和「取帧」放进**同一次同步任务**。已落地为
+`EarthCanvas.vue` 的 `captureFrame()`（截图，返回 PNG dataURL）与
+`captureFrameScaled(maxWidth)`（GIF 抓帧，返回像素）。
+不要为了省事给 renderer 开 `preserveDrawingBuffer: true` —— 那会让每帧都保留回读缓冲。
+
+**顺带一条性能教训**：GIF 抓帧最初复用 `captureFrame()` 拿 PNG dataURL 再
+`Image.decode()`，整画布单帧 PNG 就有 ~2.7 MB，每 250ms 编一次直接把主线程压死
+（实测连点两次录制按钮，一次 JS 往返能被拖到超时）。
+必须走 `render → drawImage 降采样 → getImageData`，绕开 PNG。
+
+**另一处同类**：`Toolbar.vue` 的 `tools` 原本写成普通数组而非 `computed`，
+`active`/`title` 只在 setup 求值一次 —— 实测点「云层」「自动旋转」后按钮状态毫无变化，
+11 个开关全都不反馈开合。列在这里是因为它和上面那条一样，
+都属于「功能在跑、界面不报错、但状态是死的」。
+
+---
+
 ## D. 凭据与配置
 
 ### D1. 地图凭据一律走环境变量
@@ -532,7 +615,14 @@ L3~4 整片占位（带字 jpg 4769B，主色深藏青 (7,6,40)）；**L5 瓦片
 4. `VITE_TDT_TOKEN` 支持逗号分隔多 key，provider 轮换使用（每账号可建 5 个 key）；
 5. `RequestScheduler.requestsPerServer = 1` + 单子域名（t0）：全局串行拉瓦片，最稳
    （更早版本曾用 3，48 并发实测必触发限流，见上文复现实验）；
-6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量。
+6. 根本解：企业/政府开发者认证（影像日配额 300 万+），或公开部署前评估访问量；
+7. **全球视角的「米白观感」是另一个独立问题**：相机高于 150 万米时影像层被门控
+   隐藏，露出的矢量底图在深色玻璃 UI 下观感等于「地图没加载出来」（/monitor 首屏
+   曾被如此反馈）。`createMapViewer` 的 opt-in 选项 `dimBaseAtHighAltitude` 在门控期
+   把矢量底图压暗去饱和（`brightness 0.34 / saturation 0.3`），近景自动还原——
+   大陆轮廓与国界保留，但不再刺眼。看板页另可开 `idleRender`
+   （`requestRenderMode` + 0.5s 兜底）省 GPU；开了它之后实体变更要自行
+   `scene.requestRender()`，否则新事件点不上屏。
 
 
 ## E. TypeScript 迁移(TS_MIGRATION.md)引入的操作坑(2026-09-17)

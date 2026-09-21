@@ -2,12 +2,20 @@
 
 ## 1. 总体形态
 
-项目由两条相互独立、仅共享顶栏导航的主线组成：
+项目由两条相互独立的主线组成，**各自拥有独立的顶栏外壳**
+（`src/shells/`，由 `App.vue` 按 `route.path` 首段选一个渲染）：
 
-| 主线 | 入口 | 目标 |
-|---|---|---|
-| 首页地球应用 | `/`（`src/views/EarthView.vue`） | 用 3D 地球承载多类数据可视化图层 |
-| 示例中心 | `/examples`（`src/examples/`） | 浏览 / 运行 / 查看 1417 条示例源码 |
+| 主线 | 入口 | 外壳 | 目标 |
+|---|---|---|---|
+| 数据产品 | `/`（`src/views/EarthView.vue`）、`/analysis`、`/workbench`、`/monitor` | `ProductShell` | 用 3D 地球承载多类数据可视化图层 |
+| 示例资源库 | `/examples`（`src/examples/`）、`/three-globe`、`/tools`、`/bmap` | `ResourceShell` | 浏览 / 运行 / 查看 1417 条示例源码 |
+
+分壳的动因：早期两条主线共用一条 8 项顶栏，把 4 个产品功能和 4 个示例集平铺在
+同一层，用户无法判断"这是软件还是素材库"；更要紧的是那条全局搜索挂在共用壳上，
+在任意页面敲一个字符就会 `router.push('/examples')`，首页地球场景随之销毁且不可恢复。
+现在示例搜索只存在于资源库壳，跨产品只剩一个显式切换链接。
+两个外壳的顶栏高度仍是同一个 `--tv-top-nav-height`（56px），
+所以全站 19 处页面偏移硬依赖未受影响。
 
 技术栈：Vue 3.5（`<script setup>`）· Vite 8 · Three.js 0.185（+ r186dev 本地兼容层）·
 Cesium 1.142 · Pinia 3 · vue-router（全部路由懒加载）。

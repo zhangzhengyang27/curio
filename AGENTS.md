@@ -15,12 +15,17 @@
 **TerraVista 3D（`earth-app`）**：Vue 3.5 + Vite 8（打包内核是 **Rolldown**）+
 Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由全部懒加载。
 
-两条主线，彼此独立，**只共享顶栏**：
+两条主线，**各自拥有独立的顶栏外壳**（`src/shells/`，由 `App.vue` 按 `route.path` 首段选择）：
 
-| 主线 | 入口 | 规模 |
-|---|---|---|
-| 首页 3D 地球应用 | `/` → `src/views/EarthView.vue` | 多类数据可视化图层（`src/three/layers/`） |
-| 示例中心 | `/examples` → `src/examples/` | **11 个来源 / 1417 条示例 / 1523 个 `.vue` 组件(2026-09 TS 迁移后全部 `lang="ts"`,平台侧无 `.js` 残留)** |
+| 主线 | 入口 | 外壳 | 规模 |
+|---|---|---|---|
+| 数据产品 | `/` → `src/views/EarthView.vue` | `ProductShell`（无搜索框） | 多类数据可视化图层（`src/three/layers/`） |
+| 示例资源库 | `/examples` → `src/examples/` | `ResourceShell`（带示例搜索） | **11 个来源 / 1417 条示例 / 1523 个 `.vue` 组件(2026-09 TS 迁移后全部 `lang="ts"`,平台侧无 `.js` 残留)** |
+
+> 早期版本两条主线**共用一条 8 项顶栏**，是「页面功能非常乱」的直接来源：
+> 4 个产品功能和 4 个示例集平铺在同一层，且那条全局搜索在任何页面敲一个字符
+> 都会把用户拽去 `/examples`（首页地球场景随之销毁、不可恢复）。
+> 现在跨产品只剩一个显式的「示例中心 / 返回地球」切换链接。
 
 - 路由表：`/`、`/three-globe`、`/three-globe/:example`、`/examples`、
   `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）、`/monitor`（数字地球平台·业务监控）。
@@ -71,7 +76,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run typecheck` | 全量 `vue-tsc --noEmit`（覆盖 `src` 下全部 `.vue` + 自有 `.ts`，当前 0 error） |
 | `npm run lint` / `npm run lint:ci` | ESLint（前者自动修复） |
 | `npm run test:e2e` | Playwright 冒烟（dev server，端口 5299） |
-| `npm run verify` | **一键跑 5 项一致性校验**（见下） |
+| `npm run verify` | **一键跑 6 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
 ---
@@ -79,7 +84,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 ## 5. 改完必须跑的闸门
 
 ```bash
-npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层
+npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 主题令牌/对比度
 npm run typecheck
 npm run lint:ci
 npm run build
@@ -92,6 +97,11 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
   —— 历史上 `manualChunks` 静默失效、以及一条 E2E 选择器歧义，都是 preview 才暴露的。
 - 改动涉及 `vite.config.ts` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
 - `npm run verify:drift` 是 `verify` 的第 3 环，也是判断「registry 与生成器是否一致」的唯一可靠手段。
+- `npm run verify:theme` 是**棘轮（ratchet）**：`scripts/_theme_token_baseline.json` 记录每个文件
+  允许的硬编码色值上限，**只允许下降**。改完一批 token 化后跑
+  `node scripts/verify-theme-tokens.mjs --update` 收紧基线；
+  **不要用 `--update` 让失败消失**，那等于把闸门关掉。静态对比度不达标（< 4.5:1）零容忍、不进基线。
+  刻意保留的例外（如压在地图 SDK 自绘白底上的色）写在上一行加 `/* theme-tokens:allow */`。
 
 ---
 
@@ -111,10 +121,13 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 
 ## 7. 改测试时的三个具体陷阱
 
-1. **首页有两个 `.search-input`**：顶栏的（`src/App.vue`）与首页地球的
-   （`src/components/SearchBox.vue`，在 `EarthView` 中无条件渲染）。
-   断言顶栏**必须**写 `.nav-search .search-input`，否则 strict mode violation。
-   该歧义在 dev 下曾因首页渲染慢而侥幸通过。
+1. **`.search-input` 的歧义已随分壳消失，但选择器别改回去**：以前首页有两个
+   （顶栏的 + `src/components/SearchBox.vue` 的），断言顶栏必须写
+   `.nav-search .search-input`。现在顶栏搜索只存在于 `ResourceShell`，
+   `/` 上仅剩 `SearchBox` 那一个，strict mode violation 不再可能发生；
+   保留 `.nav-search` 限定是因为它**同时表达了"这是顶栏那条"的意图**，
+   改窄会让以后重新引入产品侧搜索时悄悄改测到别的元素。
+   该歧义在 dev 下曾因首页渲染慢而侥幸通过，是 preview 才暴露的。
 2. **断言「首页是否预载 registry」时，识别正则要排除 `registry/index.js`** ——
    那是 barrel，被 `useExampleFilters` 静态导入，首页请求它属正常；
    只有 11 个**数据分块**才该被拦。

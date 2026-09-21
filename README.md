@@ -66,7 +66,7 @@ npm run build
 | 兼容层守卫 | `scripts/verify-three-compat.mjs` | three.js 本地兼容层被静默改动 |
 
 CI 定义在 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：
-`凭据扫描 → ESLint → 类型检查 → 四项校验 → 生产构建 → 冒烟 E2E（dev + 生产产物）`。
+`凭据扫描 → ESLint → 类型检查 → 五项校验 → 生产构建 → 冒烟 E2E（dev + 生产产物）`。
 
 > 冒烟测试要跑两种模式：dev server 反馈快，但**不经过生产打包**，
 > 测不出分包 / 产物相关问题，因此 CI 里还会用 `vite preview` 跑一遍真实产物。

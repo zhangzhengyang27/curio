@@ -19,7 +19,7 @@
  *
  * 用法：node scripts/verify-registry.mjs   （有问题则退出码 1）
  */
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { exampleComponentCandidates } from './lib/example-component.mjs'
@@ -34,8 +34,31 @@ const idx = await import(pathToFileURL(join(REG_DIR, 'index.ts')).href)
 const all = await idx.getAllExamplesAsync()
 const sources = idx.getSources()
 
+// ---- 0. 展示层覆盖不得削减校验覆盖面 ----
+// registry/index.ts 在写 _registryCache 处套了 src/examples/metadata 的展示元数据覆盖层。
+// 字段覆盖（title / description / tags）无所谓，但 hidden 绝不能在缓存处**删条目** ——
+// 那样本脚本的全部检查、以及 R3「id ↔ 组件文件按命名约定命中」都会静默跳过被隐藏的示例，
+// 而被隐藏示例的组件文件一旦被人删掉，CI 不会再报警。
+// 正确做法：只打 displayHidden 标记，由展示层（useGalleryFilters / ExampleDemo）过滤。
+// 这里用「分片文件里 "title": 的出现次数」做独立参照，条目被删就当场失败。
+const rawEntryCount = readdirSync(REG_DIR)
+  .filter(f => f.endsWith('.ts') && f !== 'index.ts')
+  .reduce((sum, f) => {
+    const text = readFileSync(join(REG_DIR, f), 'utf8')
+    return sum + (text.match(/"title":/g) || []).length
+  }, 0)
+
 const errors = []
 const warnings = []
+
+if (all.length !== rawEntryCount) {
+  errors.push(
+    `校验覆盖面被削减：getAllExamplesAsync() 返回 ${all.length} 条，` +
+    `但 registry 分片里实际有 ${rawEntryCount} 条。` +
+    `展示层的 hidden 只能打 displayHidden 标记、由展示层过滤，` +
+    `不要在 metadata/index.ts 的 applyDisplayOverrides 里删条目。`
+  )
+}
 
 // ---- 1. 主键唯一 ----
 const seen = new Map()
