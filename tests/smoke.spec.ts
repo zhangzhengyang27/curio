@@ -434,6 +434,45 @@ test.describe('冒烟测试：核心链路', () => {
     await expect(page).toHaveURL(/\/examples/)
   })
 
+  test('展示元数据覆盖层：补掉无信息描述，且不抹掉已写了技术点的条目', async ({ page }) => {
+    // 分类级规则只应对「…通过标准渲染流程呈现。」这类空洞生效。
+    // 同一章节里既有空洞条目也有写了具体技术点的条目，无条件按章节覆盖会把后者一起抹掉。
+    const CONTENT_FREE = /通过标准渲染流程呈现/
+
+    await page.goto('/examples?tech=webgl')
+    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
+
+    // WebGL 分片 134 条里原本 126 条共用两句模板，现在应全部换成章节主题
+    const texts = await page.locator('.example-card').allInnerTexts()
+    expect(texts.length).toBeGreaterThan(0)
+    for (const t of texts) {
+      expect(t, `卡片仍在展示无信息描述：\n${t}`).not.toMatch(CONTENT_FREE)
+    }
+    expect(texts.join('\n')).toMatch(/专题/)
+
+    // 逐条覆盖要能盖过分类规则：Theatrejs 的标题是人工改写的
+    await page.goto('/examples?search=Theatre')
+    await expect(page.locator('.example-card').first()).toContainText('Theatre.js 动画编排')
+
+    // 被标 hidden 的上游调试页不该能从详情直连进去。
+    //
+    // 这里刻意**只断言详情路由，不断言画廊列表**。试过并且放弃了：
+    // 注册表是懒加载的，列表类负向断言（toHaveCount(0) / .result-count 为「共 0 个示例」）
+    // 会在卡片渲染出来之前就先通过 —— 实测把 hidden 摘掉后两种写法都仍然"通过"，
+    // 是假绿。而详情路由的 .error-tip 是实打实会被示例内容替换掉的正向断言，
+    // 反验两次都能抓到（摘掉 hidden 即失败）。
+    // 另注：不能搜原来的「测试」—— 这两条的 title 已被逐条覆盖改写成
+    // 「影像图层调试页」/「综合调试页」，搜「测试」命中不到，等于没测。
+    const hiddenEntries = [
+      '/examples/cesium-examples/cesiumExamples/tools/test',
+      '/examples/three-cesium-examples/threeExamples/other/test',
+    ]
+    for (const href of hiddenEntries) {
+      await page.goto(href)
+      await expect(page.locator('.error-tip')).toContainText('未找到示例', { timeout: 30_000 })
+    }
+  })
+
   test('每条路由有自己的 document.title（含品牌名，与页面主标题一致）', async ({ page }) => {
     // 回归：document.title 此前在全仓无任何赋值处，标签页恒为 index.html 的静态标题。
     await page.goto('/monitor')
