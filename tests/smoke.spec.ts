@@ -72,7 +72,11 @@ test.describe('冒烟测试：核心链路', () => {
 
     await expect(page.locator('.app-nav')).toBeVisible()
     await expect(page.locator('.nav-brand')).toBeVisible()
-    await expect(page.locator('.nav-search .search-input')).toBeVisible()
+    await expect(page.locator('.nav-links a')).toHaveCount(4)
+    await expect(page.locator('.action-btn')).toBeVisible()
+    // 数据产品外壳**不该**有示例搜索框：它原先挂在共用顶栏上，
+    // 在首页敲一个字符就会把用户连人带地球场景拽去 /examples。
+    await expect(page.locator('.nav-search')).toHaveCount(0)
 
     expect(pageErrors, `首页出现未捕获异常：\n${pageErrors.join('\n')}`).toEqual([])
   })
@@ -122,23 +126,34 @@ test.describe('冒烟测试：核心链路', () => {
     ).toEqual([])
   })
 
-  test('打开顶栏「示例中心」下拉后按需加载注册表并显示分类计数', async ({ page }) => {
+  test('两个产品外壳物理分区：顶栏互不越界，产品外壳没有示例搜索框', async ({ page }) => {
+    // 回归：此前 8 项导航把 4 个产品功能和 4 个示例集平铺在一条顶栏里，
+    // 且那条顶栏搜索在任何页面敲一个字符都会把用户拽去 /examples。
+    // 现在按路由分壳，跨产品只剩一个显式的「切换」链接。
+    const productLinks = ['地球', '全球分析', '分析工作台', '业务监控']
+    const resourceLinks = ['示例中心', 'ThreeGlobe', '地图工具箱', '百度地图']
+    const navLinks = page.locator('.app-nav .nav-links a')
+
     await page.goto('/')
-
     await expect(page.locator('.app-nav')).toBeVisible()
-    await page.locator('.dropdown-trigger', { hasText: '示例中心' }).click()
-    await expect(page.locator('.dropdown-item').first()).toBeVisible()
+    // 用 toHaveText 而不是「读一次 allInnerTexts 再比」：main.ts 现在等
+    // router.isReady() 才挂载，goto 返回那一刻导航可能还没渲染，读一次会拿到空数组
+    await expect(navLinks).toHaveText(productLinks)
+    await expect(page.locator('.nav-search')).toHaveCount(0)
+    await expect(page.locator('.shell-switch')).toHaveText('示例中心')
 
-    // registry 是按需加载的，计数会在加载完成后由 0 变为真实值
-    await expect
-      .poll(
-        async () => {
-          const counts = await page.locator('.dropdown-count').allInnerTexts()
-          return counts.reduce((sum, c) => sum + (Number.parseInt(c, 10) || 0), 0)
-        },
-        { timeout: 20000, message: '下拉项计数应大于 0，说明 registry 已按需加载完成' }
-      )
-      .toBeGreaterThan(0)
+    await page.goto('/analysis')
+    await expect(navLinks).toHaveText(productLinks)
+
+    await page.goto('/examples')
+    await expect(navLinks).toHaveText(resourceLinks)
+    await expect(page.locator('.nav-search .search-input')).toBeVisible()
+    await expect(page.locator('.shell-switch')).toHaveText('返回地球')
+
+    // 切换链接必须真的能穿过去
+    await page.locator('.shell-switch').click()
+    await expect(page).toHaveURL(/\/$/)
+    await expect(page.locator('canvas')).toBeVisible({ timeout: 30_000 })
   })
 
   test('示例中心可加载、搜索框常驻且卡片渲染', async ({ page }) => {
@@ -175,6 +190,49 @@ test.describe('冒烟测试：核心链路', () => {
 
     expect(filtered, `「shader」应有命中（全部 ${total} 条，命中 ${filtered} 条）`).toBeGreaterThan(0)
     expect(filtered, `过滤后应少于全部（全部 ${total} 条，命中 ${filtered} 条）`).toBeLessThan(total)
+  })
+
+  test('资源库外壳内搜索不劫持当前路由：输入留在原页，回车才跳转', async ({ page }) => {
+    // 含两次 SPA 内导航 + 静置，与 A5 的定点放宽口径一致
+    test.setTimeout(120_000)
+    // 回归：这条搜索原先挂在两个产品共用的顶栏上，对任意路由每次按键都
+    // router.push('/examples')。拆壳后跨产品这条路已经不存在，但**同一个外壳内**
+    // （/tools、/bmap、/three-globe 上）输入仍然不该把用户从当前页拽走。
+    const nav = page.locator('.nav-search .search-input')
+
+    // 先访问一次示例中心再 SPA 切走：/examples 的懒加载 chunk 若未预载，
+    // 旧代码那次 push 会在 chunk 加载阶段被中止，本用例就抓不到劫持（实测踩过）。
+    await page.goto('/examples')
+    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
+    await page.locator('.app-nav a[href="/tools"]').click()
+    await expect(page.locator('.gallery-page')).toBeVisible({ timeout: 30_000 })
+    await page.waitForTimeout(2000)
+
+    await nav.fill('globe')
+    await page.waitForTimeout(1500)
+    expect(new URL(page.url()).pathname, '输入关键词不应把用户从地图工具箱带走').toBe('/tools')
+
+    await nav.press('Enter')
+    await expect(page).toHaveURL(/\/examples\?search=globe/)
+    expect([...new URL(page.url()).searchParams.keys()], '跳转只该带 search').toEqual(['search'])
+    await expect(page.locator('.example-gallery-page')).toBeVisible()
+  })
+
+  test('示例中心内输入用 replace，且不把旧 page 带进新结果集', async ({ page }) => {
+    // 回归：旧实现写 {...route.query}，第 3 页输入关键词后旧 page 被原样保留，
+    // 结果不足 3 页时网格空白却连空态都不显示（useGalleryFilters.ts:140-146 记录过）。
+    await page.goto('/examples?page=2')
+    await expect(page.locator('.example-card').first()).toBeVisible()
+    const posBefore = await page.evaluate(() => (history.state as { position?: number })?.position ?? 0)
+
+    await page.locator('.nav-search .search-input').fill('shader')
+    await page.waitForTimeout(600)
+
+    const params = new URL(page.url()).searchParams
+    expect(params.get('search')).toBe('shader')
+    expect(params.has('page'), '搜索词变了就不该沿用旧页码').toBe(false)
+    const posAfter = await page.evaluate(() => (history.state as { position?: number })?.position ?? 0)
+    expect(posAfter, '输入过程不应产生历史记录，否则后退键要按几十次').toBe(posBefore)
   })
 
   test('切换技术标签会过滤结果并写回 URL', async ({ page }) => {
@@ -316,6 +374,36 @@ test.describe('冒烟测试：核心链路', () => {
     await expect(page.locator('.bmap-page')).toBeVisible()
     await expect(page.locator('.bmap-header h1')).toContainText('百度地图')
 
+    // 回归：7b00e25「全站暗色主题」漏掉了本页 —— .bmap-tab 用 color:inherit 配
+    // 硬编码 #f3f4f6 底，47 个 tab 变成白字白底（对比度 1.15:1），整页导航不可读。
+    // 5 项 verify 闸门、typecheck、lint 都不看 CSS 值，所以这类缺陷只能这样拦。
+    const contrast = await page.evaluate(() => {
+      const lum = (c) => {
+        const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map((v) => {
+          const x = Number(v) / 255
+          return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
+        })
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b
+      }
+      const ratio = (fg, bg) => {
+        const a = lum(fg)
+        const b = lum(bg)
+        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+      }
+      const effBg = (el) => {
+        let n = el
+        while (n) {
+          const c = getComputedStyle(n).backgroundColor
+          if (c && !/rgba\(0, 0, 0, 0\)/.test(c)) return c
+          n = n.parentElement
+        }
+        return 'rgb(10, 14, 23)'
+      }
+      const tab = document.querySelector('.bmap-tab:not(.active)')
+      return { tab: ratio(getComputedStyle(tab).color, effBg(tab)) }
+    })
+    expect(contrast.tab, `/bmap tab 对比度仅 ${contrast.tab.toFixed(2)}:1，低于 AA 要求的 4.5`).toBeGreaterThanOrEqual(4.5)
+
     if (akConfigured) {
       // 已配置 VITE_BMAP_AK → SDK 动态加载成功，示例 tab 栏渲染出来
       await expect(page.locator('.bmap-nav')).toBeVisible({ timeout: 20000 })
@@ -327,5 +415,34 @@ test.describe('冒烟测试：核心链路', () => {
       })
       await expect(page.locator('.bmap-loading')).toHaveCount(0)
     }
+  })
+
+  test('未知路径渲染 404 页，而不是「导航条 + 空白」', async ({ page }) => {
+    // 回归：加 catch-all 之前 /foo 只产生一条 Vue Router console warn，
+    // 页面渲染成顶栏加空 body，用户与构建都不知道自己走错了地址。
+    await page.goto('/definitely-not-a-page')
+
+    await expect(page.locator('.not-found-page')).toBeVisible()
+    await expect(page.locator('.not-found-page h1')).toContainText('页面未找到')
+    await expect(page.locator('.not-found-page .path')).toContainText('/definitely-not-a-page')
+
+    // 两条出路必须是真链接，不能只是看起来像按钮
+    await expect(page.locator('.not-found-page a[href="/"]')).toBeVisible()
+    await expect(page.locator('.not-found-page a[href="/examples"]')).toBeVisible()
+
+    await page.locator('.not-found-page a[href="/examples"]').click()
+    await expect(page).toHaveURL(/\/examples/)
+  })
+
+  test('每条路由有自己的 document.title（含品牌名，与页面主标题一致）', async ({ page }) => {
+    // 回归：document.title 此前在全仓无任何赋值处，标签页恒为 index.html 的静态标题。
+    await page.goto('/monitor')
+    await expect(page).toHaveTitle(/地震应急监测/)
+
+    await page.goto('/examples')
+    await expect(page).toHaveTitle(/示例中心/)
+
+    await page.goto('/definitely-not-a-page')
+    await expect(page).toHaveTitle(/页面未找到/)
   })
 })
