@@ -85,7 +85,13 @@ export function loadTileConfig(env: NodeJS.ProcessEnv = process.env): TileConfig
     keys,
     cacheDir: env.TILE_CACHE_DIR || fileURLToPath(new URL('../data/tile-cache', import.meta.url)),
     ttlMs: Number(env.TILE_CACHE_TTL_MS || 5 * 86_400_000),
-    upstreamConcurrency: Number(env.TILE_UPSTREAM_CONCURRENCY || 4),
+    // 上游并发 8：实测（本机 → t0，冷缓存，一片全新海域一屏）
+    //   4 并发 → 补齐 3.16s、单张 p50 331ms
+    //   8 并发 → 补齐 2.31s、单张 p50 265ms（与直连的 2.19s 基本打平）
+    // 命中缓存时同场景单张 p50 7.2ms。
+    // 安全性：141 次上游请求 0 占位 0 错误；此前浏览器侧直连实测单主机 8 并发
+    // （同一 key）与 16 并发（轮转 5 key）也全部返回真图。再往上调要重跑占位反验。
+    upstreamConcurrency: Number(env.TILE_UPSTREAM_CONCURRENCY || 8),
     userAgent: env.TILE_UPSTREAM_UA || DEFAULT_UA,
     referer: env.TILE_UPSTREAM_REFERER || 'https://localhost/',
     maxEntries: Number(env.TILE_CACHE_MAX_ENTRIES || 20_000),

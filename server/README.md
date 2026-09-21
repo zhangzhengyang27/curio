@@ -41,13 +41,24 @@ CORS 全开（开发期前端在 5173、后端在 8787；生产由 nginx 反代 
 `VITE_TILE_PROXY=/tiles`；没设或本进程没起时，前端 health 探测失败会**自动退回直连**，
 底图行为与历史一致。
 
-解决的是直连天地图的三件事（2026-09-21 实测）：
+解决的是直连天地图的三件事（2026-09-21 实测，浏览器侧一屏新海域）：
 
-1. **延迟**：本机直连同一张 vec L8 瓦片三次实测 0.30s / 1.09s / 2.85s；
-   命中反代缓存 3.5ms。而一次视角切换要 150~270 张瓦片。
+| 场景 | 单张 p50 | 一屏补齐 |
+|---|---|---|
+| 直连（首访） | 117ms | 2.19s / 168 张 |
+| 反代 · 服务端缓存冷 | 265ms（上游并发 8） | 2.31s / 133 张 |
+| 反代 · 服务端缓存热 | **7.2ms** | 40 张抽样全部 `x-tile-cache: hit` |
+
+1. **重复访问的延迟**：本机直连同一张 vec L8 瓦片三次实测 0.30s / 1.09s / 2.85s；
+   命中反代缓存 7.2ms。而一次视角切换要 130~270 张瓦片。
+   ⚠ 别指望首访变快 —— 冷缓存下反代与直连基本打平（见上表），
+   它的收益从第二次访问同一区域开始，且要跨标签页/跨用户时才显出来
+   （浏览器自己的磁盘缓存只能救本标签页）。
 2. **并发与配额的冲突**：天地图只有 HTTP/1.1（t0~t7 同一 IP），浏览器单主机
    6 连接是硬上限；而 KNOWN_PITFALLS D3 记录过 48 并发必触发限流。走反代后
-   浏览器可以并行打同源，上游并发由 `TILE_UPSTREAM_CONCURRENCY`（默认 4）收口。
+   浏览器可以并行打同源，上游并发由 `TILE_UPSTREAM_CONCURRENCY`（默认 8）收口。
+   取 8 的依据：冷缓存同一屏，4 并发补齐 3.16s / 单张 p50 331ms，
+   8 并发补齐 2.31s / p50 265ms；141 次上游请求 0 占位 0 错误。
 3. **缓存键**：直连时 `tk` 在 URL 里，多 key 轮转 = 同一张瓦片多个缓存键；
    反代后浏览器侧 URL 不含 key，`max-age=432000` 与磁盘缓存都吃得满。
 
@@ -68,7 +79,7 @@ CORS 全开（开发期前端在 5173、后端在 8787；生产由 nginx 反代 
 
 瓦片反代相关：`TDT_TOKEN`（**未设则整层关闭**；缺省会回退读 `VITE_TDT_TOKEN`）/
 `TILE_CACHE_DIR`（`server/data/tile-cache`，已 gitignore）/ `TILE_CACHE_TTL_MS`（5 天）/
-`TILE_CACHE_MAX_ENTRIES`（2 万，超出按 mtime 淘汰）/ `TILE_UPSTREAM_CONCURRENCY`（4）/
+`TILE_CACHE_MAX_ENTRIES`（2 万，超出按 mtime 淘汰）/ `TILE_UPSTREAM_CONCURRENCY`（8）/
 `TILE_UPSTREAM_BASE`（测试指向本地 stub）/ `TILE_SUBDOMAINS`（`0,1,2,3`）/
 `TILE_UPSTREAM_UA` / `TILE_UPSTREAM_REFERER`。
 
