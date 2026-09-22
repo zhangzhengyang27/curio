@@ -29,8 +29,11 @@ export function useRaycaster() {
   ): THREE.Intersection | null {
     const cam = camera || _camera
     if (!cam) return null
-    const x = (event.clientX / window.innerWidth) * 2 - 1
-    const y = -(event.clientY / window.innerHeight) * 2 + 1
+    // 必须按画布自己的盒子归一化：画布挂在固定顶栏下方（top 56px），
+    // 用 window 尺寸会让每次点击都命中「光标下方 56px」的那个物体。
+    const rect = (event.currentTarget as HTMLCanvasElement).getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
     _ndc.set(x, y)
     raycaster.setFromCamera(_ndc, cam)
     const intersects = raycaster.intersectObjects(targets)

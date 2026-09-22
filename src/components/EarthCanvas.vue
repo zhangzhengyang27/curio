@@ -136,7 +136,12 @@ onMounted(async () => {
     const { label } = labelManager.createLabelEl('GDP')
     scene.add(label); labelManager.mainLabel = label; disposeLabels = labelManager.dispose
 
-    addResizeCallback(() => labelManager?.resize())
+    // 标签层与画布同尺寸，否则 CSS2D 投影点与实际命中点错位
+    const labelHost = canvasEl.parentElement
+    const sizeLabels = (w?: number, h?: number) =>
+      labelManager?.resize(w || labelHost?.clientWidth, h || labelHost?.clientHeight)
+    sizeLabels()
+    addResizeCallback(sizeLabels)
 
     earth = createEarth(R, { tweenGroup })
     earthStore.setEarthGroup(earth); scene.add(earth)
@@ -771,7 +776,8 @@ function toggleTerrain() {
 </script>
 
 <style scoped>
-.earth-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+/* 填满宿主容器：写死 100vh 会在顶栏下方再溢出 56px（底部出屏、拾取与投影一起偏） */
+.earth-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
 .earth-canvas { display: block; }
 .label-container { position: absolute; top: 0; left: 0; pointer-events: none; }
 </style>

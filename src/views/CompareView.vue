@@ -46,8 +46,10 @@ function goBack() {
 </script>
 
 <style scoped>
+/* 顶栏是 fixed 的，本视图在正常流里从 y=0 开始：不扣掉顶栏高度会整块被压住 56px */
 .compare-view {
-  width: 100vw; height: 100vh; display: flex; position: relative;
+  width: 100%; height: calc(100vh - var(--tv-top-nav-height)); margin-top: var(--tv-top-nav-height);
+  display: flex; position: relative;
 }
 .split-pane {
   flex: 1; position: relative; overflow: hidden; border-right: 1px solid rgba(255,255,255,0.1);

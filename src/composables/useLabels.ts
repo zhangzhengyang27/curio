@@ -50,8 +50,12 @@ export function useLabels() {
     labelObj.element.style.visibility = 'hidden'
   }
 
-  function resize(): void {
-    labelRenderer.setSize(window.innerWidth, window.innerHeight)
+  /**
+   * 尺寸必须与画布容器一致：CSS2DRenderer 用自己的宽高做 NDC→像素换算，
+   * 按 window 尺寸构建会让标签投影点与实际命中点错开。
+   */
+  function resize(width?: number, height?: number): void {
+    labelRenderer.setSize(width || window.innerWidth, height || window.innerHeight)
   }
 
   function dispose(): void {
