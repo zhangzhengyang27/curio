@@ -472,7 +472,16 @@ watch(() => earthStore.currentVisualization, (v) => {
   // 巡游播放中地址状态由 ?tour=&step= 统一管理；此时写 hash 会触发
   // vue-router 携带旧 query 的导航，把刚 replace 的 step 冲回去（竞态）
   if (tour.status.value !== 'idle') return
-  if (v && v !== 'gdp') window.location.hash = '#' + v
+  // replaceState 而不是直写 location.hash：直写每次点模式都往历史里压一条，
+  // 「后退」会在 12 个模式之间来回走而不是退出页面。
+  // gdp 是默认值，切回它要把 hash 清掉 —— 否则 carbon → gdp 后地址还留着
+  // #carbon，同一个链接再打开会落在别的模式上。
+  const base = window.location.pathname + window.location.search
+  if (v && v !== 'gdp') {
+    window.history.replaceState(null, '', base + '#' + v)
+  } else if (window.location.hash) {
+    window.history.replaceState(null, '', base)
+  }
 })
 </script>
 

@@ -787,14 +787,14 @@ function toggleCloud() {
   return cloudLayer.visible
 }
 
-let nightMode = false
 function toggleNightMode() {
-  nightMode = !nightMode
-  if (!sphereMesh) return nightMode
+  // 状态归 earthStore：快捷键 n 和工具栏按钮是同一个开关的两个入口
+  if (!sphereMesh) return earthStore.nightMode
+  earthStore.nightMode = !earthStore.nightMode
   const mat = sphereMesh.material as THREE.MeshPhongMaterial & { emissive: THREE.Color }
-  mat.emissiveIntensity = nightMode ? 0 : 0.1
-  mat.emissive.set(nightMode ? 0x112244 : 0x000022)
-  return nightMode
+  mat.emissiveIntensity = earthStore.nightMode ? 0 : 0.1
+  mat.emissive.set(earthStore.nightMode ? 0x112244 : 0x000022)
+  return earthStore.nightMode
 }
 
 function createStorm(lon = 139.7, lat = 35.7) {

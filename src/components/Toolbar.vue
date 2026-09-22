@@ -38,7 +38,6 @@ const props = defineProps({
 
 const earthStore = useEarthStore()
 const cloudActive = ref(false)
-const nightActive = ref(false)
 const terrainActive = ref(false)
 const recording = ref(false)
 const bloomActive = ref(false)
@@ -66,10 +65,6 @@ function handleCloudToggle() {
   cloudActive.value = props.onCloudToggle?.() ?? cloudActive.value
 }
 
-function handleNightToggle() {
-  nightActive.value = props.onNightToggle?.() ?? nightActive.value
-}
-
 function handleTerrainToggle() {
   terrainActive.value = props.onTerrainToggle?.() ?? terrainActive.value
 }
@@ -95,7 +90,8 @@ const tools = computed(() => [
   { key: 'screenshot', title: '截图', icon: icons.screenshot, action: () => props.onScreenshot?.() },
   { key: 'rotate', title: '自动旋转', icon: icons.rotate, action: toggleRotation, active: earthStore.isRotating },
   { key: 'cloud', title: '云层', icon: icons.cloud, action: handleCloudToggle, active: cloudActive.value },
-  { key: 'night', title: '夜间模式', icon: icons.night, action: handleNightToggle, active: nightActive.value },
+  // 夜间模式状态取自 store：快捷键 n 改的是同一份，按钮不能另存一份
+  { key: 'night', title: '夜间模式', icon: icons.night, action: () => props.onNightToggle?.(), active: earthStore.nightMode },
   { key: 'storm', title: '风暴', icon: icons.storm, action: () => props.onStorm?.() },
   { key: 'terrain', title: '地形', icon: icons.terrain, action: handleTerrainToggle, active: terrainActive.value },
   { key: 'split', title: '分屏对比', icon: icons.split, action: () => props.onSplitScreen?.() },

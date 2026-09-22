@@ -22,6 +22,9 @@ export const useEarthStore = defineStore('earth', () => {
   const vizLoading = ref<string | null>(null)
   // 加载失败的模式（key）：需要显式暴露给用户，否则按钮亮着、画面空、无任何提示
   const vizError = ref<string | null>(null)
+  // 夜间模式：快捷键 n 与工具栏按钮是同一个开关的两个入口，状态只能有一份，
+  // 否则按钮高亮会和实际画面脱钩（见 KNOWN_PITFALLS C17 同族问题）
+  const nightMode = ref(false)
 
   function setEarthGroup(group: Group | null) {
     earthGroup.value = group
@@ -67,7 +70,7 @@ export const useEarthStore = defineStore('earth', () => {
   return {
     earthGroup, rotationSpeed, isRotating,
     meshesByCountry, selectedCountry, compareCountries, currentVisualization,
-    searchIndex, vizLoading, vizError,
+    searchIndex, vizLoading, vizError, nightMode,
     setEarthGroup, addLayer, removeLayer,
     selectCountry, toggleCompare, setVisualization, setVizLoading, setVizError, setSearchIndex
   }
