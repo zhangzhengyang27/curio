@@ -60,6 +60,9 @@ test.describe('首页地球 · 后处理', () => {
   test.skip(IS_PREVIEW, '依赖 dev 模式下的 __vueParentComponent 句柄')
 
   test('Bloom 的渲染目标按需创建，开关与 resize 后画面仍正常', async ({ page }) => {
+    // 三次整页截图 + 页内 PNG 解码算像素占比，本身就重；
+    // 再叠上「等出帧」轮询（预算 60s）已经越过默认用例超时
+    test.slow()
     const errs = []
     page.on('console', (m) => {
       if (m.type() === 'error') errs.push(m.text())

@@ -77,6 +77,17 @@ async function sceneInkRatio(page) {
   }, b64)
 }
 
+/**
+ * 等地球真的可用。
+ *
+ * 判据用「画布上已有内容」而不是 __vueParentComponent 上的帧号：
+ * 后者只有 dev 构建才有，本文件在 preview 下也要跑。
+ * 单靠 networkidle 不够 —— 首屏少预取 gdp-timeline 之后，它比初始化更早触发。
+ */
+async function waitGlobeReady(page) {
+  await expect.poll(() => sceneInkRatio(page), { timeout: 90_000 }).toBeGreaterThan(0.15)
+}
+
 test.beforeEach(async ({ page }) => {
   await mockTianditu(page)
 })
@@ -87,6 +98,7 @@ test.describe('首页地球 · 搜索索引与相机', () => {
   test('搜索索引的经纬度全部有效（不含 NaN）', async ({ page }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
+    await waitGlobeReady(page)
 
     const res = await readEarthStore(page)
     expect(res.ok).toBe(true)
@@ -103,6 +115,7 @@ test.describe('首页地球 · 搜索索引与相机', () => {
   test('搜索 Polygon 类国家定位后，3D 场景仍在渲染', async ({ page }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
+    await waitGlobeReady(page)
 
     const before = await sceneInkRatio(page)
     expect(before).toBeGreaterThan(0.15)
@@ -125,6 +138,7 @@ test.describe('首页地球 · 搜索索引与相机', () => {
 
     await page.goto('/')
     await page.waitForLoadState('networkidle')
+    await waitGlobeReady(page)
     await page.locator('.viz-btn', { hasText: '人口' }).evaluate((el) => el.click())
     await expect(page.locator('.viz-btn', { hasText: '人口' })).toHaveClass(/active/, { timeout: 20_000 })
     await page.waitForTimeout(2000)
