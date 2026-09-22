@@ -149,11 +149,26 @@ export function getCountryGdpColor(gdpData: GdpData): Record<string, GdpColorEnt
 }
 
 /**
- * 通用数据加载器
+ * 通用数据加载器（模块级缓存）
+ *
+ * worldZh.json 约 2.4 MB、gdp.json 约 9.2 MB：双屏对比时两个 EarthCanvas 各自
+ * 加载一遍，路由往返也要重来。缓存的是**同一份对象引用**，所以消费方绝不可就地
+ * 改写它（buildEarthFromData 曾把 Polygon 的 coordinates 就地包一层，正是这个
+ * 约束被破坏的样子）。
+ * 失败的 promise 不入缓存，留给下一次重试。
  */
-export async function loadData(url: string): Promise<unknown> {
-  const res = await fetch(url)
-  return res.json()
+const dataCache = new Map<string, Promise<unknown>>()
+
+export function loadData(url: string): Promise<unknown> {
+  let cached = dataCache.get(url)
+  if (!cached) {
+    cached = fetch(url).then(r => r.json()).catch((err) => {
+      dataCache.delete(url)
+      throw err
+    })
+    dataCache.set(url, cached)
+  }
+  return cached
 }
 
 /**

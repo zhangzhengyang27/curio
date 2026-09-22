@@ -79,8 +79,9 @@ function handleRecordGif() {
   props.onRecordGif?.()
 }
 
-function handleBloomToggle() {
-  bloomActive.value = props.onBloomToggle?.() ?? bloomActive.value
+async function handleBloomToggle() {
+  // onBloomToggle 是 async 的（辉光模块按需拉取），不 await 会把 Promise 当布尔用
+  bloomActive.value = (await props.onBloomToggle?.()) ?? bloomActive.value
 }
 
 function handleRealisticEarthToggle() {

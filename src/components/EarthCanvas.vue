@@ -22,21 +22,18 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as THREE from 'three'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+// 后处理只在首次点「辉光」时才用得到，改成动态 import（见 ensureComposer）
+import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import type { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { useScene } from '../composables/useScene'
 import { useRenderLoop } from '../composables/useRenderLoop'
 import { useOrbitControls } from '../composables/useOrbitControls'
 import { useRaycaster } from '../composables/useRaycaster'
 import { useLabels } from '../composables/useLabels'
-import { createHtmlMarkers, updateHtmlMarkersVisibility } from '../three/objects/HtmlMarkers'
 import { disposeObject3D } from '../three/gc'
 import { useCameraFlight } from '../composables/useCameraFlight'
 import { createEarth } from '../three/objects/EarthSphere'
 import { createAtmosphereGlow } from '../three/objects/AtmosphereGlow'
-import { createGraticules } from '../three/objects/Graticules'
-import { createTileEngine, updateTileEnginePOV, disposeTileEngine } from '../three/objects/TileEngine'
 import { createCloudLayer } from '../three/objects/CloudLayer'
 import { createStormParticles, updateStormParticles } from '../three/objects/ParticleField'
 import { lon2xyz } from '../three/geo/coord'
@@ -94,6 +91,9 @@ let overlayGroup: THREE.Group | null
 let canvasEl: HTMLCanvasElement | null = null
 let visualizationLayer: VisualizationLayer
 let htmlMarkersGroup: THREE.Group | null = null
+// HTML 标记 / 经纬网格 / 瓦片引擎都只在被显式开启时才用得到，改按需 import，
+// 免得首屏为一条没人调的 API 背上整条子系统（含 three-slippy-map-globe）。
+let htmlMarkersApi: typeof import('../three/objects/HtmlMarkers') | null = null
 let atmosphere: THREE.Mesh
 let cloudLayer: THREE.Mesh
 let stormPoints: THREE.Points | THREE.Group | null
@@ -118,6 +118,7 @@ let isAnimatingIn = false // 入场动画期间暂停自转
 let tweenGroup: TWEEN.Group | null = null // 图层共享 Tween 组
 let graticulesMesh: THREE.LineSegments | null = null // 经纬网格
 let tileEngine: SlippyMapGlobe | null = null // 瓦片引擎
+let tileEngineApi: typeof import('../three/objects/TileEngine') | null = null
 let tileEngineBaseSphereVisible = true // 瓦片激活前记录地球本体可见性
 let isRealisticEarth = false // 是否使用真实地球贴图
 let proceduralTexture: THREE.Texture | null = null // 程序生成的地球纹理备份
@@ -251,12 +252,8 @@ onMounted(async () => {
       switchVisualization(queued, true)
     }
 
-    // 加载时序GDP数据
-    try {
-      const tlData = await fetch('/data/mock/gdp-timeline.json').then(r => r.json())
-      timelineStore.setYearlyData(tlData)
-      // 默认不自动显示GDP柱状图，保持页面干净
-    } catch (_e) { /* timeline data optional */ }
+    // 时序 GDP 数据只在真正要画柱体时才拉（见 ensureTimelineData），
+    // 首屏不预取：它是 GDP 柱状图的专属数据，默认视图用不到
     if (disposed) return
 
     const borderKids: THREE.Object3D[] = [], meshKids: THREE.Object3D[] = []
@@ -308,7 +305,7 @@ onMounted(async () => {
       })
       visualizationLayer?.update(nowSec)
       tweenGroup!.update(nowMs) // 图层共享 Tween 组，TWEEN 使用毫秒时间
-      updateTileEnginePOV(tileEngine, camera)
+      tileEngineApi?.updateTileEnginePOV(tileEngine, camera)
       // Bloom 关闭时直接渲染，跳过 EffectComposer 的 pass 管线开销
       if (composer && bloomPass?.enabled) {
         composer.render()
@@ -316,7 +313,7 @@ onMounted(async () => {
         renderer.render(scene, camera)
       }
       if (htmlMarkersGroup) {
-        updateHtmlMarkersVisibility(htmlMarkersGroup, camera, R)
+        htmlMarkersApi?.updateHtmlMarkersVisibility(htmlMarkersGroup, camera, R)
       }
       labelManager.labelRenderer.render(scene, camera)
     }
@@ -417,10 +414,13 @@ function setGlobeBumpMap(url: string) {
   earth?.setBumpMap?.(url)
 }
 
-function addHtmlMarkers(markersData: Array<Record<string, any>>) {
+async function addHtmlMarkers(markersData: Array<Record<string, any>>) {
   if (!scene) return
+  const mod = await import('../three/objects/HtmlMarkers')
+  if (disposed || !scene) return
+  htmlMarkersApi = mod
   clearHtmlMarkers()
-  htmlMarkersGroup = createHtmlMarkers(markersData, R, { className: 'earth-canvas-marker' })
+  htmlMarkersGroup = mod.createHtmlMarkers(markersData, R, { className: 'earth-canvas-marker' })
   scene.add(htmlMarkersGroup)
 }
 
@@ -434,12 +434,14 @@ function clearHtmlMarkers() {
 }
 
 // === 经纬网格 ===
-function showGraticules(options: Record<string, any> = {}) {
+async function showGraticules(options: Record<string, any> = {}) {
   if (!scene) return
   if (graticulesMesh) {
     graticulesMesh.visible = true
     return
   }
+  const { createGraticules } = await import('../three/objects/Graticules')
+  if (disposed || !scene) return
   graticulesMesh = createGraticules(R, options)
   graticulesMesh.name = 'graticules'
   scene.add(graticulesMesh)
@@ -450,11 +452,14 @@ function hideGraticules() {
 }
 
 // === 瓦片引擎 ===
-function setTileEngineUrl(urlFn: (x: number, y: number, level: number) => string, maxLevel: number) {
+async function setTileEngineUrl(urlFn: (x: number, y: number, level: number) => string, maxLevel: number) {
   if (!scene || typeof urlFn !== 'function') return
+  const mod = await import('../three/objects/TileEngine')
+  if (disposed || !scene) return
+  tileEngineApi = mod
   clearTileEngine()
   tileEngineBaseSphereVisible = sphereMesh ? sphereMesh.visible : true
-  tileEngine = createTileEngine(R, { tileUrl: urlFn, maxLevel })
+  tileEngine = mod.createTileEngine(R, { tileUrl: urlFn, maxLevel })
   tileEngine.name = 'tileEngine'
   scene.add(tileEngine)
   // 隐藏默认地球球体，避免瓦片与程序化纹理深度冲突
@@ -463,7 +468,7 @@ function setTileEngineUrl(urlFn: (x: number, y: number, level: number) => string
 
 function clearTileEngine() {
   if (!tileEngine) return
-  disposeTileEngine(tileEngine)
+  tileEngineApi?.disposeTileEngine(tileEngine)
   tileEngine = null
   if (sphereMesh) sphereMesh.visible = tileEngineBaseSphereVisible
 }
@@ -597,8 +602,23 @@ function captureFrameScaled(maxWidth: number): { data: Uint8Array; w: number; h:
 defineExpose({ flyTo: (lon: number, lat: number, duration?: number) => flyToFn?.(lon, lat, duration), getRenderer: () => renderer, captureFrame, captureFrameScaled, getControls: () => controls, switchVisualization: (mode: string) => switchVisualization(mode, true), toggleCloud, toggleNightMode, createStorm, toggleTerrain, loadCustomScatter, toggleBloom, setGlobeTexture, setGlobeBumpMap, addHtmlMarkers, clearHtmlMarkers, showGraticules, hideGraticules, setTileEngineUrl, clearTileEngine, toggleRealisticEarth, setRealisticEarth })
 
 // === Timeline year watch — GDP柱状动画 ===
-const stopWatch = watch(() => timelineStore.currentYear, (year: number) => {
-  if (!earth?.meshArr || !timelineStore.yearlyData) return
+let timelinePromise: Promise<void> | null = null
+/** 时序 GDP 数据按需拉一次；失败不缓存 promise，下次动年份还能再试 */
+function ensureTimelineData(): Promise<void> {
+  if (timelineStore.yearlyData) return Promise.resolve()
+  if (!timelinePromise) {
+    timelinePromise = fetch('/data/mock/gdp-timeline.json')
+      .then(r => r.json())
+      .then((tlData) => { if (!disposed) timelineStore.setYearlyData(tlData) })
+      .catch(() => { timelinePromise = null })
+  }
+  return timelinePromise
+}
+
+const stopWatch = watch(() => timelineStore.currentYear, async (year: number) => {
+  if (!earth?.meshArr) return
+  await ensureTimelineData()
+  if (disposed || !timelineStore.yearlyData) return
   // 切到GDP模式（走包装函数以维护 appliedVizMode，避免重复应用）
   if (earthStore.currentVisualization !== 'gdp') {
     switchVisualization('gdp')
@@ -718,7 +738,7 @@ onUnmounted(() => {
   }
   // 释放瓦片引擎并恢复地球本体可见性
   if (tileEngine) {
-    disposeTileEngine(tileEngine)
+    tileEngineApi?.disposeTileEngine(tileEngine)
     tileEngine = null
     if (sphereMesh) sphereMesh.visible = tileEngineBaseSphereVisible
   }
@@ -783,25 +803,49 @@ function createStorm(lon = 139.7, lat = 35.7) {
 }
 
 // === Bloom 后处理 ===
-/** 按画布实际尺寸惰性创建 composer + bloomPass（Bloom 默认关着，不该每次挂载都建） */
-function ensureComposer(): EffectComposer | null {
-  if (composer) return composer
+let composerPromise: Promise<EffectComposer | null> | null = null
+
+async function createComposer(): Promise<EffectComposer | null> {
   if (!renderer || !scene || !camera) return null
+  const [{ EffectComposer }, { RenderPass }, { UnrealBloomPass }] = await Promise.all([
+    import('three/examples/jsm/postprocessing/EffectComposer.js'),
+    import('three/examples/jsm/postprocessing/RenderPass.js'),
+    import('three/examples/jsm/postprocessing/UnrealBloomPass.js'),
+  ])
+  // 等模块期间可能已经卸载（renderer 已释放），也可能组件被重建
+  if (disposed || !renderer || !scene || !camera) return null
   const host = canvasEl?.parentElement
   const w = host?.clientWidth || window.innerWidth
   const h = host?.clientHeight || window.innerHeight
-  composer = new EffectComposer(renderer)
-  composer.addPass(new RenderPass(scene, camera))
-  bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.5, 0.4, 0.85)
-  // Pass 构造出来就是 enabled 的；不显式关掉的话，下面 toggleBloom 的第一次
-  // 取反会把它从 true 翻成 false —— 用户点「辉光」反而看不到辉光。
-  bloomPass.enabled = false
-  composer.addPass(bloomPass)
-  return composer
+  const c = new EffectComposer(renderer)
+  c.addPass(new RenderPass(scene, camera))
+  const pass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.5, 0.4, 0.85)
+  // Pass 构造出来就是 enabled 的；不显式关掉的话 toggleBloom 第一次取反
+  // 会把它从 true 翻成 false —— 用户点「辉光」反而看不到辉光。
+  pass.enabled = false
+  c.addPass(pass)
+  composer = c
+  bloomPass = pass
+  return c
 }
 
-function toggleBloom() {
-  if (!ensureComposer() || !bloomPass) return false
+/**
+ * 惰性创建 composer + bloomPass（辉光默认关着，而 UnrealBloomPass 一建就是
+ * 11 个 HalfFloat 渲染目标 + 4 个材质）。并发调用共享同一个创建 promise，
+ * 免得连点两下建出两个 composer。
+ */
+async function ensureComposer(): Promise<EffectComposer | null> {
+  if (composer) return composer
+  if (!composerPromise) composerPromise = createComposer()
+  try {
+    return await composerPromise
+  } finally {
+    composerPromise = null
+  }
+}
+
+async function toggleBloom() {
+  if (!(await ensureComposer()) || !bloomPass) return false
   bloomPass.enabled = !bloomPass.enabled
   return bloomPass.enabled
 }

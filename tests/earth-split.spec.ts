@@ -45,6 +45,9 @@ test.describe('首页地球 · 双屏对比', () => {
   test.describe.configure({ mode: 'serial' })
 
   test('两块画布不抢全局 store，联动真的联动相机', async ({ page }) => {
+    // 两条用例都要同时挂两颗完整地球（各自 177 个国家 Mesh），
+    // 与其余地球用例并行时 60s 默认预算不够（实测拖拽那一步会先超时）
+    test.slow()
     await page.goto('/')
     await page.waitForLoadState('networkidle')
     await expect
@@ -86,6 +89,7 @@ test.describe('首页地球 · 双屏对比', () => {
   })
 
   test('退出分屏后主地球仍可拾取', async ({ page }) => {
+    test.slow()
     await page.goto('/')
     await page.waitForLoadState('networkidle')
     await page.locator('.tool-btn').filter({ hasText: '分屏对比' }).evaluate((el) => el.click())

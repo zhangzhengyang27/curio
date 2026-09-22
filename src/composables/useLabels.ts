@@ -1,9 +1,4 @@
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
-import {
-  createHtmlMarker,
-  createHtmlMarkers,
-  updateHtmlMarkersVisibility
-} from '../three/objects/HtmlMarkers'
 
 /**
  * CSS2D 标签管理
@@ -75,10 +70,6 @@ export function useLabels() {
     showLabel,
     hideLabel,
     dispose,
-    resize,
-    // HTML DOM markers 辅助（复用同一个 CSS2DRenderer）
-    createHtmlMarker,
-    createHtmlMarkers,
-    updateHtmlMarkersVisibility
+    resize
   }
 }
