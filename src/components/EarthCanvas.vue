@@ -81,8 +81,8 @@ let atmosphere: THREE.Mesh
 let cloudLayer: THREE.Mesh
 let stormPoints: THREE.Points | THREE.Group | null
 let sphereMesh: THREE.Mesh // sphereMesh保存地球球体引用
-let composer: EffectComposer
-let bloomPass: UnrealBloomPass // post-processing
+let composer: EffectComposer | null = null
+let bloomPass: UnrealBloomPass | null = null // post-processing，按需创建（见 ensureComposer）
 let originalGdpColors: Record<string, { color: THREE.Color; gdp?: number }> = {} // 保存GDP原始颜色用于恢复
 let pillarGroup: THREE.Group | null = null // GDP柱状动画组
 interface PillarEntry {
@@ -141,7 +141,12 @@ onMounted(async () => {
     const sizeLabels = (w?: number, h?: number) =>
       labelManager?.resize(w || labelHost?.clientWidth, h || labelHost?.clientHeight)
     sizeLabels()
-    addResizeCallback(sizeLabels)
+    addResizeCallback((w, h) => {
+      sizeLabels(w, h)
+      // composer 的 RT 尺寸不会跟着 renderer 变，漏掉这步会让 Bloom 在 resize 后
+      // 按旧尺寸渲染（EffectComposer 不会自己监听尺寸）
+      composer?.setSize(w, h)
+    })
 
     earth = createEarth(R, { tweenGroup })
     earthStore.setEarthGroup(earth); scene.add(earth)
@@ -152,12 +157,10 @@ onMounted(async () => {
 
     overlayGroup = new THREE.Group(); scene.add(overlayGroup)
 
-    // Post-processing
-    composer = new EffectComposer(renderer)
-    composer.addPass(new RenderPass(scene, camera))
-    bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.5, 0.4, 0.85)
-    bloomPass.enabled = false
-    composer.addPass(bloomPass)
+    // Post-processing 延迟到首次开启 Bloom 时再建（见 ensureComposer）：
+    // UnrealBloomPass 一建就是 11 个 HalfFloat 渲染目标 + 4 个材质，
+    // 而 Bloom 默认是关的，每次挂载白建一遍、卸载还漏（EffectComposer.dispose
+    // 只释放 renderTarget1/2 和 copyPass，不会替 pass 收尾）。
 
     // 保存球体引用(buildEarthFromData会clear整个earthGroup)
     sphereMesh = earth.children[0] as THREE.Mesh
@@ -287,7 +290,7 @@ onMounted(async () => {
       tweenGroup!.update(nowMs) // 图层共享 Tween 组，TWEEN 使用毫秒时间
       updateTileEnginePOV(tileEngine, camera)
       // Bloom 关闭时直接渲染，跳过 EffectComposer 的 pass 管线开销
-      if (bloomPass && bloomPass.enabled) {
+      if (composer && bloomPass?.enabled) {
         composer.render()
       } else {
         renderer.render(scene, camera)
@@ -687,8 +690,12 @@ onUnmounted(() => {
     tweenGroup.removeAll()
     tweenGroup = null
   }
-  // 释放后处理
+  // 释放后处理。EffectComposer.dispose 只管 renderTarget1/2 与 copyPass，
+  // 不会替 addPass 进去的 pass 收尾 —— bloomPass 的 11 个渲染目标必须自己释放。
+  bloomPass?.dispose()
+  bloomPass = null
   composer?.dispose()
+  composer = null
   // 清理 store 引用与备份状态
   countryMeshStates = []
   originalGdpColors = {}
@@ -735,8 +742,25 @@ function createStorm(lon = 139.7, lat = 35.7) {
 }
 
 // === Bloom 后处理 ===
+/** 按画布实际尺寸惰性创建 composer + bloomPass（Bloom 默认关着，不该每次挂载都建） */
+function ensureComposer(): EffectComposer | null {
+  if (composer) return composer
+  if (!renderer || !scene || !camera) return null
+  const host = canvasEl?.parentElement
+  const w = host?.clientWidth || window.innerWidth
+  const h = host?.clientHeight || window.innerHeight
+  composer = new EffectComposer(renderer)
+  composer.addPass(new RenderPass(scene, camera))
+  bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.5, 0.4, 0.85)
+  // Pass 构造出来就是 enabled 的；不显式关掉的话，下面 toggleBloom 的第一次
+  // 取反会把它从 true 翻成 false —— 用户点「辉光」反而看不到辉光。
+  bloomPass.enabled = false
+  composer.addPass(bloomPass)
+  return composer
+}
+
 function toggleBloom() {
-  if (!bloomPass) return false
+  if (!ensureComposer() || !bloomPass) return false
   bloomPass.enabled = !bloomPass.enabled
   return bloomPass.enabled
 }
