@@ -71,6 +71,10 @@ test.describe('首页地球 · 后处理', () => {
 
     const before = await texCount(page)
     expect(before, '需要能从组件实例读到 renderer.info').not.toBeNull()
+    // 等到真的出帧再操作：初始化要跑好几秒，早于渲染循环建立时点辉光是空转
+    await expect
+      .poll(() => page.evaluate(() => document.querySelector('.earth-canvas')?.__vueParentComponent?.exposed?.getRenderer()?.info?.render?.frame ?? 0), { timeout: 60_000 })
+      .toBeGreaterThan(0)
 
     await bloomBtn(page).evaluate((el) => el.click())
     await page.waitForTimeout(1800)
