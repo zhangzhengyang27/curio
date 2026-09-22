@@ -127,6 +127,12 @@ export function useScene(canvas: HTMLCanvasElement) {
     disposeObject3D(scene)
     scene.clear()
     renderer.dispose()
+    // renderer.dispose() 只释放它自己登记的资源，**不会归还 WebGL 上下文**。
+    // 实测每进一次 / 就攒一个上下文，到 Chrome 的 ~16 上限后浏览器会去杀
+    // 最老的那个 —— 受害者可能是用户此刻还在看的别的画布。
+    // 上面的 webglcontextlost 监听已经先摘掉，所以这次主动丢失不会触发我们的提示。
+    const gl = renderer.getContext()
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
   }
 
   return { scene, camera, renderer, dispose, addResizeCallback, onContextLostOnce, onContextRestoredOnce }
