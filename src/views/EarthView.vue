@@ -88,8 +88,24 @@
       </div>
     </Transition>
 
-    <ComparePanel />
-    <TimelineSlider v-if="!tourUIVisible" />
+    <!-- 图层数据加载失败：必须给可重试入口，否则按钮亮着、画面空、用户无从下手 -->
+    <Transition name="fade">
+      <div
+        v-if="earthStore.vizError"
+        class="viz-loading viz-error tv-glass-panel"
+        data-testid="viz-error"
+      >
+        <span>「{{ vizErrorLabel }}」数据加载失败</span>
+        <button
+          class="viz-error-retry"
+          @click="retryViz"
+        >
+          重试
+        </button>
+      </div>
+    </Transition>
+
+    <ComparePanel />    <TimelineSlider v-if="!tourUIVisible" />
     <LegendBar />
     <ContextMenu :on-fly-to="handleFlyTo" />
     <TourOverlay
@@ -155,6 +171,12 @@ const vizModes: Array<{ key: string; label: string; icon?: UiIconName }> = [
 ]
 
 const vizLoadingLabel = computed(() => vizModes.find(m => m.key === earthStore.vizLoading)?.label ?? earthStore.vizLoading)
+const vizErrorLabel = computed(() => vizModes.find(m => m.key === earthStore.vizError)?.label ?? earthStore.vizError)
+
+function retryViz() {
+  const mode = earthStore.vizError
+  if (mode) earthCanvasRef.value?.switchVisualization(mode)
+}
 
 function switchViz(mode: string) {
   earthCanvasRef.value?.switchVisualization(mode)
@@ -619,6 +641,23 @@ watch(() => earthStore.currentVisualization, (v) => {
   font-size: 13px;
   white-space: nowrap;
   pointer-events: none;
+}
+
+.viz-error {
+  pointer-events: auto;
+  /* 加载提示是纯展示、被底栏压住无所谓；可重试的提示必须点得到，要盖过底栏（z 99/100） */
+  z-index: 300;
+  color: var(--tv-error);
+}
+
+.viz-error-retry {
+  border: 1px solid var(--tv-error);
+  border-radius: var(--tv-radius-full, 999px);
+  background: transparent;
+  color: var(--tv-error);
+  padding: 2px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .viz-loading-spinner,

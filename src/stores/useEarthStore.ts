@@ -20,6 +20,8 @@ export const useEarthStore = defineStore('earth', () => {
   const searchIndex = shallowRef<Record<string, CountryCoord>>({})
   // 正在加载数据的可视化模式（key），null = 无加载中。非阻塞提示用，见 EarthCanvas
   const vizLoading = ref<string | null>(null)
+  // 加载失败的模式（key）：需要显式暴露给用户，否则按钮亮着、画面空、无任何提示
+  const vizError = ref<string | null>(null)
 
   function setEarthGroup(group: Group | null) {
     earthGroup.value = group
@@ -54,6 +56,10 @@ export const useEarthStore = defineStore('earth', () => {
     vizLoading.value = modeOrNull
   }
 
+  function setVizError(modeOrNull: string | null) {
+    vizError.value = modeOrNull
+  }
+
   function setSearchIndex(index: Record<string, CountryCoord>) {
     searchIndex.value = index
   }
@@ -61,8 +67,8 @@ export const useEarthStore = defineStore('earth', () => {
   return {
     earthGroup, rotationSpeed, isRotating,
     meshesByCountry, selectedCountry, compareCountries, currentVisualization,
-    searchIndex, vizLoading,
+    searchIndex, vizLoading, vizError,
     setEarthGroup, addLayer, removeLayer,
-    selectCountry, toggleCompare, setVisualization, setVizLoading, setSearchIndex
+    selectCountry, toggleCompare, setVisualization, setVizLoading, setVizError, setSearchIndex
   }
 })

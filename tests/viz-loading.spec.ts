@@ -77,4 +77,27 @@ test.describe('图层加载反馈', () => {
     await expect(page.locator(CHIP)).toHaveCount(0)
     await expect(page.locator('.viz-btn', { hasText: 'GDP' })).toHaveClass(/active/)
   })
+
+  test('数据请求失败给出可重试提示，重点同一模式会重新发请求', async ({ page }) => {
+    let requests = 0
+    await page.route('**/data/mock/carbon.json', (route) => {
+      requests++
+      route.abort()
+    })
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    await page.locator('.viz-btn', { hasText: '碳排放' }).evaluate((el) => el.click())
+    // 正向锚点：这次点击确实发起了请求（否则「没有提示」也可能是根本没触发）
+    await expect.poll(() => requests).toBe(1)
+
+    const tip = page.locator('[data-testid="viz-error"]')
+    await expect(tip).toBeVisible()
+    await expect(tip).toContainText('碳排放')
+
+    // 缺陷本体：appliedVizMode 在 await 前就写死，失败后不回滚，
+    // 再点同一个模式会被去重静默丢弃 —— 用户只能切走再切回。
+    await tip.getByRole('button').click()
+    await expect.poll(() => requests).toBe(2)
+  })
 })

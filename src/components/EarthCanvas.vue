@@ -352,11 +352,16 @@ async function switchVisualization(mode: string, fromUser = false) {
   }
   if (mode === appliedVizMode) return
   appliedVizMode = mode
+  earthStore.setVizError(null)
   if (VIZ_MODES_WITH_DATA.has(mode)) earthStore.setVizLoading(mode)
   try {
     await visualizationLayer?.switchVisualization(mode)
   } catch (err) {
     console.error('Viz switch error:', mode, err)
+    // 失败必须回滚去重标记：不回滚的话再点同一个模式会被上面那行静默丢弃，
+    // 用户看到的是「按钮亮着、画面什么都没有」，只能切到别的模式再切回来。
+    appliedVizMode = null
+    earthStore.setVizError(mode)
   } finally {
     // 快速连切时 vizLoading 可能已被更新的请求覆盖，只在仍归属本次时清除
     if (earthStore.vizLoading === mode) earthStore.setVizLoading(null)
@@ -688,6 +693,8 @@ onUnmounted(() => {
   countryMeshStates = []
   originalGdpColors = {}
   earthStore.setEarthGroup(null)
+  // 失败态是终态，跨路由留着会在下次进首页时凭空弹出一个无法解释的提示
+  earthStore.setVizError(null)
   // layerStore 里的 children 指向刚被 dispose 的边界/色块 Object3D。
   // 不清的话：Pinia store 比组件活得久，卸载到下次进 / 之间这段时间里，
   // setVisible/setOpacity 会遍历一批已释放对象；已 dispose 的 geometry 也不该再被引用。
