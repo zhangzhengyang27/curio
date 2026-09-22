@@ -768,6 +768,10 @@ onUnmounted(() => {
     // 注意只清 children，layer.visible / layer.opacity 是刻意跨路由保留的用户偏好。
     layerStore.setLayerChildren('borders', [])
     layerStore.setLayerChildren('countries', [])
+    // 面板与右键菜单的载荷里存着刚被 dispose 的国家 Mesh；不清的话它会跟着
+    // Pinia store 一直活到下次进 /，面板也停留在一个已经不存在的地球上
+    interactionStore.closeInfoPanel()
+    interactionStore.closeContextMenu()
   }
   disposeLabels?.(); disposeOrbit?.(); disposeScene?.()
 })

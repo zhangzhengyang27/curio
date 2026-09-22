@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import type { Object3D } from 'three'
 
 /** 右键菜单 / 信息面板携带的国家数据（地球 Mesh 拾取结果，生产方见 EarthCanvas / ContextMenu） */
@@ -16,10 +16,13 @@ export interface CountryPayload {
 export const useInteractionStore = defineStore('interaction', () => {
   const showContextMenu = ref(false)
   const contextMenuPos = ref({ x: 0, y: 0 })
-  const contextMenuTarget = ref<CountryPayload | null>(null)
+  // shallowRef：载荷里带着被拾取的国家 Mesh（Object3D）。用普通 ref 会让 Vue
+  // 深度代理整棵对象树 —— 本仓对 Three 对象一律 shallowRef/markRaw（见
+  // useEarthStore、useLayerStore）。消费方只读平铺字段，不依赖深层响应。
+  const contextMenuTarget = shallowRef<CountryPayload | null>(null)
 
   const showInfoPanel = ref(false)
-  const infoPanelData = ref<CountryPayload | null>(null)
+  const infoPanelData = shallowRef<CountryPayload | null>(null)
 
   function openContextMenu(x: number, y: number, countryData: CountryPayload) {
     contextMenuPos.value = { x, y }

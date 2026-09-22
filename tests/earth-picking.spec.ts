@@ -68,6 +68,27 @@ test.describe('首页地球 · 射线拾取', () => {
     await expect(page.locator('.info-panel')).toBeHidden()
   })
 
+  test('离开首页再回来，不应残留上一个地球的面板', async ({ page }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    const box = await page.locator('.earth-canvas').boundingBox()
+    const inside = await firstHitInsideGlobe(page, box)
+    expect(inside.hit, '地球圆盘内应至少命中一个国家').toBe(true)
+    // 正向锚点：面板确实开着
+    await expect(page.locator('.info-panel')).toBeVisible()
+
+    // 走 SPA 路由（整页刷新会重建 store，测不到跨路由残留）
+    await page.locator('.shell-switch').evaluate((el) => (el as HTMLElement).click())
+    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
+    await page.locator('.shell-switch').evaluate((el) => (el as HTMLElement).click())
+    await expect(page.locator('.earth-canvas')).toBeVisible({ timeout: 30_000 })
+
+    // interactionStore 比组件活得久：卸载时不清，这里会凭空弹出一个
+    // 指向已 dispose Mesh 的旧面板
+    await expect(page.locator('.info-panel')).toHaveCount(0)
+  })
+
   test('画布不得溢出顶栏下方预留的高度', async ({ page }) => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
