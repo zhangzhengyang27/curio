@@ -54,6 +54,13 @@ import { useInteractionStore } from '../stores/useInteractionStore'
 import { useLayerStore } from '../stores/useLayerStore'
 import { useTimelineStore } from '../stores/useTimelineStore'
 
+/**
+ * primary=false 用于双屏对比：全局 store 描述的是「那一个地球」，
+ * 两块画布抢写同一份 earthGroup / layerChildren 会让后挂的赢、
+ * 先卸载的把幸存的那块也清成 null。
+ */
+const props = withDefaults(defineProps<{ primary?: boolean }>(), { primary: true })
+
 const R = 100
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const labelContainer = ref<HTMLElement | null>(null)
@@ -159,7 +166,8 @@ onMounted(async () => {
     })
 
     earth = createEarth(R, { tweenGroup })
-    earthStore.setEarthGroup(earth); scene.add(earth)
+    if (props.primary) earthStore.setEarthGroup(earth)
+    scene.add(earth)
 
     // 云层
     cloudLayer = createCloudLayer(R, { opacity: 0.2 })
@@ -256,8 +264,10 @@ onMounted(async () => {
       if (child.isLineLoop) borderKids.push(child)
       if (child.isMesh && child !== sphereMesh) meshKids.push(child)
     })
-    layerStore.setLayerChildren('borders', borderKids)
-    layerStore.setLayerChildren('countries', meshKids)
+    if (props.primary) {
+      layerStore.setLayerChildren('borders', borderKids)
+      layerStore.setLayerChildren('countries', meshKids)
+    }
 
     // 默认状态：真实地球、云层关闭、边界线关闭、无数据图例
     cloudLayer.visible = false
@@ -336,7 +346,9 @@ onMounted(async () => {
 
 function onCanvasClick(event: MouseEvent) {
   if (!camera) return
-  const hit = intersect(event, (earthStore.earthGroup as EarthGroupWithMeshes | null)?.meshArr || [], camera)
+  // 用本实例自己的 earth，而不是全局 store 的 earthGroup：
+  // 双屏对比下两块画布抢写同一份 store，从 store 取会拾到对面那块的 Mesh
+  const hit = intersect(event, earth?.meshArr || [], camera)
   if (hit) {
     const mesh = hit.object as CountryGdpMesh; selectMesh(mesh); earthStore.selectCountry(mesh.name)
     if (mesh.gdp) labelManager.showLabel(labelManager.mainLabel!, hit.point, mesh.name + ' GDP：' + (mesh.gdp / 1000000000000).toFixed(3) + '万亿美元')
@@ -350,7 +362,9 @@ function onCanvasClick(event: MouseEvent) {
 function onContextMenu(event: MouseEvent) {
   event.preventDefault()
   if (!camera) return
-  const hit = intersect(event, (earthStore.earthGroup as EarthGroupWithMeshes | null)?.meshArr || [], camera)
+  // 用本实例自己的 earth，而不是全局 store 的 earthGroup：
+  // 双屏对比下两块画布抢写同一份 store，从 store 取会拾到对面那块的 Mesh
+  const hit = intersect(event, earth?.meshArr || [], camera)
   if (hit) {
     const obj = hit.object as CountryGdpMesh
     interactionStore.openContextMenu(event.clientX, event.clientY, { name: obj.name, gdp: obj.gdp, mesh: obj, lon: obj.userData?.lon, lat: obj.userData?.lat })
@@ -720,18 +734,21 @@ onUnmounted(() => {
   bloomPass = null
   composer?.dispose()
   composer = null
-  // 清理 store 引用与备份状态
+  // 清理 store 引用与备份状态。非主画布（双屏对比的两块）从没写过这些，
+  // 去清反而会把幸存那块赖以工作的引用抹掉。
   countryMeshStates = []
   originalGdpColors = {}
-  earthStore.setEarthGroup(null)
-  // 失败态是终态，跨路由留着会在下次进首页时凭空弹出一个无法解释的提示
-  earthStore.setVizError(null)
-  // layerStore 里的 children 指向刚被 dispose 的边界/色块 Object3D。
-  // 不清的话：Pinia store 比组件活得久，卸载到下次进 / 之间这段时间里，
-  // setVisible/setOpacity 会遍历一批已释放对象；已 dispose 的 geometry 也不该再被引用。
-  // 注意只清 children，layer.visible / layer.opacity 是刻意跨路由保留的用户偏好。
-  layerStore.setLayerChildren('borders', [])
-  layerStore.setLayerChildren('countries', [])
+  if (props.primary) {
+    earthStore.setEarthGroup(null)
+    // 失败态是终态，跨路由留着会在下次进首页时凭空弹出一个无法解释的提示
+    earthStore.setVizError(null)
+    // layerStore 里的 children 指向刚被 dispose 的边界/色块 Object3D。
+    // 不清的话：Pinia store 比组件活得久，卸载到下次进 / 之间这段时间里，
+    // setVisible/setOpacity 会遍历一批已释放对象；已 dispose 的 geometry 也不该再被引用。
+    // 注意只清 children，layer.visible / layer.opacity 是刻意跨路由保留的用户偏好。
+    layerStore.setLayerChildren('borders', [])
+    layerStore.setLayerChildren('countries', [])
+  }
   disposeLabels?.(); disposeOrbit?.(); disposeScene?.()
 })
 

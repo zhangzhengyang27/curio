@@ -1,13 +1,19 @@
 <template>
   <div class="compare-view">
     <div class="split-pane">
-      <EarthCanvas ref="leftCanvas" />
+      <EarthCanvas
+        ref="leftCanvas"
+        :primary="false"
+      />
       <div class="pane-label">
         基准年
       </div>
     </div>
     <div class="split-pane">
-      <EarthCanvas ref="rightCanvas" />
+      <EarthCanvas
+        ref="rightCanvas"
+        :primary="false"
+      />
       <div class="pane-label">
         对比年
       </div>
@@ -32,13 +38,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import EarthCanvas from '../components/EarthCanvas.vue'
 
 const emit = defineEmits(['back'])
 const syncRotate = ref(false)
-const leftCanvas = ref(null)
-const rightCanvas = ref(null)
+const leftCanvas = ref<InstanceType<typeof EarthCanvas> | null>(null)
+const rightCanvas = ref<InstanceType<typeof EarthCanvas> | null>(null)
+
+// 「联动」以前只写 syncRotate、没人读，是个假开关。
+// 现在开启时把左栏的相机（拖拽/缩放的结果）逐帧镜像到右栏 ——
+// 两块地球各自的自转仍由各自的渲染循环驱动，联的是观察视角。
+let syncRaf = 0
+function syncLoop(): void {
+  const lc = leftCanvas.value?.getControls()
+  const rc = rightCanvas.value?.getControls()
+  if (lc && rc) {
+    rc.object.position.copy(lc.object.position)
+    rc.target.copy(lc.target)
+    rc.update()
+  }
+  syncRaf = requestAnimationFrame(syncLoop)
+}
+
+watch(syncRotate, (on) => {
+  if (on && !syncRaf) syncRaf = requestAnimationFrame(syncLoop)
+  if (!on && syncRaf) {
+    cancelAnimationFrame(syncRaf)
+    syncRaf = 0
+  }
+})
+
+onUnmounted(() => {
+  if (syncRaf) cancelAnimationFrame(syncRaf)
+})
 
 function goBack() {
   emit('back')
