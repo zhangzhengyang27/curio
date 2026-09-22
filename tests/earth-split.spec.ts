@@ -88,6 +88,53 @@ test.describe('首页地球 · 双屏对比', () => {
       .toBeLessThan(15)
   })
 
+  test('分屏里左键出详情面板、右键出菜单，退出后不留残面板', async ({ page }) => {
+    test.slow()
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    await page.locator('.tool-btn').filter({ hasText: '分屏对比' }).evaluate((el) => el.click())
+    await expect(page.locator('.earth-container')).toHaveCount(2)
+    await expect
+      .poll(() => page.evaluate(() => document.querySelectorAll('.earth-container canvas').length), { timeout: 60_000 })
+      .toBe(2)
+
+    const pane = await page.locator('.earth-container').first().boundingBox()
+    const cx = pane.x + pane.width / 2
+    const cy = pane.y + pane.height / 2
+    const r = Math.min(pane.width, pane.height) * 0.28
+    const offsets = [[0, 0], [0, -r], [0, r], [-r, 0], [r, 0], [-r * 0.7, r * 0.7]]
+
+    // 左键：详情面板（原先只挂在 EarthView 的 v-else 分支里，分屏下点了没反馈）
+    let panel = false
+    for (const [dx, dy] of offsets) {
+      await page.mouse.click(cx + dx, cy + dy)
+      await page.waitForTimeout(300)
+      if (await page.locator('.info-panel').isVisible()) { panel = true; break }
+    }
+    expect(panel, '分屏里左键应能看到详情面板').toBe(true)
+
+    // 右键：菜单（原先 preventDefault 之后什么都不弹，等于死路）
+    let menu = false
+    let menuName = ''
+    for (const [dx, dy] of offsets) {
+      await page.mouse.click(cx + dx, cy + dy, { button: 'right' })
+      await page.waitForTimeout(300)
+      if (await page.locator('.context-menu').isVisible()) {
+        menu = true
+        menuName = (await page.locator('.context-menu .menu-header').innerText()).trim()
+        break
+      }
+    }
+    expect(menu, '分屏里右键应弹出上下文菜单').toBe(true)
+    expect(menuName.length).toBeGreaterThan(0)
+
+    await page.locator('.ctrl-btn').filter({ hasText: '返回' }).evaluate((el) => el.click())
+    await expect(page.locator('.earth-container')).toHaveCount(1)
+    // 两块分屏画布都不是 primary，不会清全局交互状态 —— CompareView 自己清
+    await expect(page.locator('.info-panel')).toHaveCount(0)
+    await expect(page.locator('.context-menu')).toHaveCount(0)
+  })
+
   test('退出分屏后主地球仍可拾取', async ({ page }) => {
     test.slow()
     await page.goto('/')

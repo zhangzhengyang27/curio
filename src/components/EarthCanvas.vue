@@ -855,8 +855,10 @@ async function toggleBloom() {
 }
 let terrainActive = false
 function toggleTerrain() {
-  terrainActive = !terrainActive
+  // 先判空再翻状态：否则数据没到就点「地形」，按钮亮了、画面什么都没发生
+  // （和夜间模式那个开关同族的毛病）
   if (!earth?.meshArr) return terrainActive
+  terrainActive = !terrainActive
 
   earth.meshArr.forEach(mesh => {
     const pos = mesh.geometry.attributes.position

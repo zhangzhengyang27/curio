@@ -34,17 +34,44 @@
         联动 {{ syncRotate ? '✓' : '' }}
       </button>
     </div>
+
+    <!-- 右键菜单与信息面板原先只挂在 EarthView 的 v-else 分支里：
+         分屏下右键已经 preventDefault，却又什么都不弹，等于把交互做成了死路 -->
+    <aside
+      v-if="interactionStore.showInfoPanel"
+      class="right-panel tv-glass-panel"
+    >
+      <InfoPanel />
+    </aside>
+    <ContextMenu :on-fly-to="handleFlyTo" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import EarthCanvas from '../components/EarthCanvas.vue'
+import ContextMenu from '../components/ContextMenu.vue'
+import InfoPanel from '../components/InfoPanel.vue'
+import { useInteractionStore } from '../stores/useInteractionStore'
 
 const emit = defineEmits(['back'])
+const interactionStore = useInteractionStore()
 const syncRotate = ref(false)
 const leftCanvas = ref<InstanceType<typeof EarthCanvas> | null>(null)
 const rightCanvas = ref<InstanceType<typeof EarthCanvas> | null>(null)
+
+/** 分屏里「飞到这里」应当两块一起看，不然对比个寂寞 */
+function handleFlyTo(lon: number, lat: number) {
+  leftCanvas.value?.flyTo(lon, lat)
+  rightCanvas.value?.flyTo(lon, lat)
+}
+
+onUnmounted(() => {
+  // 两块画布都不是 primary，不会去清全局交互状态；
+  // 不在这里清的话，退出分屏后主视图会凭空弹出刚才在分屏里点过的那块面板
+  interactionStore.closeInfoPanel()
+  interactionStore.closeContextMenu()
+})
 
 // 「联动」以前只写 syncRotate、没人读，是个假开关。
 // 现在开启时把左栏的相机（拖拽/缩放的结果）逐帧镜像到右栏 ——
@@ -109,4 +136,16 @@ function goBack() {
 .ctrl-btn:hover { background: rgba(255,255,255,0.15); }
 .ctrl-btn.active { background: rgba(0,204,204,0.2); color: #00cccc; }
 .ctrl-label { color: #888; font-size: 13px; }
+/* 与 EarthView 的 .right-panel 同构：InfoPanel 自身只负责内容，定位靠宿主 */
+.right-panel {
+  position: absolute;
+  right: var(--tv-margin);
+  top: var(--tv-margin);
+  bottom: var(--tv-margin);
+  width: var(--tv-info-panel-width);
+  z-index: 300;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 </style>
