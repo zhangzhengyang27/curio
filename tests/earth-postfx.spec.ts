@@ -72,18 +72,20 @@ test.describe('首页地球 · 后处理', () => {
     await page.goto('/')
     await page.waitForLoadState('networkidle')
 
-    const before = await texCount(page)
-    expect(before, '需要能从组件实例读到 renderer.info').not.toBeNull()
+    const before0 = await texCount(page)
+    expect(before0, '需要能从组件实例读到 renderer.info').not.toBeNull()
     // 等到真的出帧再操作：初始化要跑好几秒，早于渲染循环建立时点辉光是空转
     await expect
       .poll(() => page.evaluate(() => document.querySelector('.earth-canvas')?.__vueParentComponent?.exposed?.getRenderer()?.info?.render?.frame ?? 0), { timeout: 60_000 })
       .toBeGreaterThan(0)
+    // 基线要在就绪之后再取，否则把初始化过程中陆续上传的纹理算成 Bloom 的增量
+    const before = await texCount(page)
 
     await bloomBtn(page).evaluate((el) => el.click())
-    await page.waitForTimeout(1800)
-    const afterOn = await texCount(page)
-    // 惰性创建：开 Bloom 才会多出 UnrealBloomPass 的那批渲染目标
-    expect(afterOn).toBeGreaterThan(before)
+    // 惰性创建：开 Bloom 才会多出 UnrealBloomPass 的那批渲染目标。
+    // 轮询而不是固定 sleep —— 那三个 chunk 是动态 import 的，
+    // 满载时创建完成时间不稳（实测固定等 1.8s 在 loadavg 34 下会假红）
+    await expect.poll(() => texCount(page), { timeout: 30_000 }).toBeGreaterThan(before)
     expect(await sceneInkRatio(page)).toBeGreaterThan(0.15)
 
     // resize 后 composer 必须跟着 setSize，否则 Bloom 按旧尺寸渲染
