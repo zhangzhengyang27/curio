@@ -8,6 +8,14 @@
       ref="labelContainer"
       class="label-container"
     />
+    <div
+      v-if="glError"
+      class="gl-error"
+      role="alert"
+      data-testid="gl-error"
+    >
+      {{ glError }}
+    </div>
   </div>
 </template>
 
@@ -49,6 +57,8 @@ import { useTimelineStore } from '../stores/useTimelineStore'
 const R = 100
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const labelContainer = ref<HTMLElement | null>(null)
+// WebGL 起不来 / 上下文丢失时给一句人话，而不是留一片安静的黑
+const glError = ref<string | null>(null)
 
 const earthStore = useEarthStore()
 const interactionStore = useInteractionStore()
@@ -303,10 +313,24 @@ onMounted(async () => {
     renderFrameFn = renderFn
     renderLoop.setRenderFn(renderFn); renderLoop.start(); stopLoop = renderLoop.stop
 
+    // 上下文丢失时 useScene 已经拦下默认行为，但渲染循环若继续跑就是对着
+    // 已死的上下文出帧 —— 用户看到的是一个「冻住」的画布且没有任何提示。
+    sceneCtx.onContextLostOnce(() => {
+      renderLoop.stop()
+      glError.value = 'WebGL 上下文已丢失（通常是 GPU 资源被系统回收），正在等待浏览器恢复…'
+    })
+    sceneCtx.onContextRestoredOnce(() => {
+      glError.value = null
+      renderLoop.start()
+    })
+
     canvasEl.addEventListener('click', onCanvasClick)
     canvasEl.addEventListener('contextmenu', onContextMenu)
   } catch (err) {
     console.error('EarthCanvas init error:', err)
+    // 建不出 WebGL 上下文时以前只有一行 console.error：页面一片黑、面板都在，
+    // 用户无从知道是渲染层坏了还是数据没到
+    glError.value = '地球 3D 渲染初始化失败，请检查浏览器是否启用 WebGL 或硬件加速。'
   }
 })
 
@@ -810,5 +834,19 @@ function toggleTerrain() {
 /* 填满宿主容器：写死 100vh 会在顶栏下方再溢出 56px（底部出屏、拾取与投影一起偏） */
 .earth-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
 .earth-canvas { display: block; }
+.gl-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--tv-gutter, 24px);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--tv-on-surface-variant);
+  z-index: 60;
+  pointer-events: none;
+}
 .label-container { position: absolute; top: 0; left: 0; pointer-events: none; }
 </style>
