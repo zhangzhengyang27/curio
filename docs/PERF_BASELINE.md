@@ -76,7 +76,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
  237 KB  gdp.json                 ← 首屏数据（GDP 模式默认加载）
  215 KB  worldZh.json             ← 首屏数据（中文世界地图）
   57 KB  vendor-3d-tiles          ← 首页 3D Tiles 图层，必需
-  48 KB  gdp-timeline.json        ← 首屏数据
+  48 KB  gdp-timeline.json        ← 曾计入首屏；2026-09-22 起改为画 GDP 柱体时才拉
   46 KB  vendor-d3
   42 KB  earth-topology.webp      ← 凹凸贴图（WebP q80）
 ```
@@ -104,7 +104,7 @@ E2E_TARGET=preview E2E_PREVIEW_OUT_DIR=/tmp/xxx npm run test:e2e -- --grep 性�
 
 | 机会 | 预估收益 | 说明 |
 |---|---|---|
-| 首屏数据延迟加载 | ~500 KB | `gdp.json`(237) + `worldZh.json`(215) + `gdp-timeline`(48) 在首页初始化即加载；若默认模式改为按需，首屏可再降近三成。属产品决策（默认展示什么），未做 |
+| 首屏数据延迟加载 | ~500 KB | `gdp-timeline.json`(48) 已于 2026-09-22 移出首屏（画 GDP 柱体时才拉）。`gdp.json`(237) + `worldZh.json`(215) 仍是首屏必需（默认就是 GDP 模式），但 `loadData` 已加模块级 promise 缓存：路由往返与双屏对比不再各拉一份。再往下要动的是「默认展示什么」，属产品决策 |
 | 地表贴图 | 627 KB | 已是 WebP q80；再降需降分辨率（4096→2048，肉眼可感），不建议 |
 | `vendor-three` | 369 KB | 首页必需，进一步压缩需裁剪 three.js 构建（风险高，不建议） |
 | 产物总量 34 MB / 3200+ chunks | — | 按需加载的示例块，不在首屏路径上。不必为总量优化 |
