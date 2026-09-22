@@ -87,7 +87,8 @@ export class LayerManager {
       parent: this.parent
     })
 
-    layer.create()
+    // update 在图层尚未创建时会带着数据走 create，
+    // 这里不再单独 create —— 否则 _build 会以空数据先跑一遍再被整个推翻
     layer.update(data, options)
     this.layers.set(name, layer)
     return layer

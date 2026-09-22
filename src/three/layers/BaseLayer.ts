@@ -97,10 +97,15 @@ export class BaseLayer {
 
   /**
    * 创建图层：将 group 加入父节点，并调用子类 _build
+   * @param data - 一并带上首帧数据，避免创建后立刻被 update 重建一遍
+   * @param options - 构建选项
    */
-  create(): this {
+  create(data?: any, options?: Record<string, any>): this {
     if (this.created) return this
     this.created = true
+
+    if (data !== undefined) this.data = data
+    if (options) this.options = options
 
     if (this.parent && this.group.parent !== this.parent) {
       this.parent.add(this.group)
@@ -117,9 +122,12 @@ export class BaseLayer {
    * @param options
    */
   update(data: any, options: Record<string, any> = {}): this {
+    // 还没创建就把数据交给 create —— 否则 _build 会先以 data=null 空跑一遍，
+    // 再被下面的 _clear + _build 整个推翻。LandmarksLayer 这类 _build 不判 data
+    // 的图层，每切一次就真的白建一遍再释放。
+    if (!this.created) return this.create(data, options)
     this.data = data
     this.options = options
-    if (!this.created) this.create()
     this._clear()
     this._build()
     return this
