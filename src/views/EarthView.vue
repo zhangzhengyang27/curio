@@ -162,16 +162,14 @@ function switchViz(mode: string) {
 
 const layerList = computed(() => layerStore.layers)
 
+// 坐标有效性统一由 flyTo 自己把关（它是唯一会把相机写成 NaN 的地方）；
+// 这里原先的 `!== undefined` 看着像守卫，其实挡不住 NaN。
 function onSearchSelect(item: { lon: number; lat: number; name: string; flag: string }) {
-  if (item.lon !== undefined && item.lat !== undefined) {
-    earthCanvasRef.value?.flyTo(item.lon, item.lat)
-  }
+  earthCanvasRef.value?.flyTo(item.lon, item.lat)
 }
 
 function handleFlyTo(lon: number, lat: number) {
-  if (lon !== undefined && lat !== undefined) {
-    earthCanvasRef.value?.flyTo(lon, lat)
-  }
+  earthCanvasRef.value?.flyTo(lon, lat)
 }
 
 function handleScreenshot() {

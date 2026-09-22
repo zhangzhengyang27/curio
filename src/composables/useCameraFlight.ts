@@ -16,7 +16,11 @@ export function useCameraFlight(
   let animationId: number | null = null
 
   function flyTo(longitude: number, latitude: number, duration = 1000): void {
+    // 相机与 controls.target 一旦被写成 NaN 就再也回不来（拖拽、再次 flyTo、切模式都救不活，
+    // 只能刷新页面），所以这里是非可信坐标的必经闸门。
+    if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) return
     const target = lon2xyz(R, longitude, latitude)
+    if (!Number.isFinite(target.x) || !Number.isFinite(target.y) || !Number.isFinite(target.z)) return
     const targetVec = new THREE.Vector3(target.x, target.y, target.z)
 
     // 直达：不进 rAF。duration 为 0 时 elapsed/duration 会产生 NaN

@@ -25,6 +25,7 @@ export class ChinaLayer extends BaseLayer {
       getId: item => item.name ?? `${item.lat},${item.lon}`,
       onCreate: item => {
         const cylinder = createCylinderForItem(item, this._scatterR, this._getCylinderOptions())
+        if (!cylinder) return null
         applyUndergroundClipping(cylinder, this.R)
         return cylinder
       },

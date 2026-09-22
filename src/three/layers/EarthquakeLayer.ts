@@ -24,6 +24,7 @@ export class EarthquakeLayer extends BaseLayer {
       getId: item => item.id ?? `${item.lat},${item.lon}`,
       onCreate: item => {
         const cylinder = createCylinderForItem(item, this.R, this._getCylinderOptions(item))
+        if (!cylinder) return null
         applyUndergroundClipping(cylinder, this.R)
         return cylinder
       },

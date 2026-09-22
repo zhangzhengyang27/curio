@@ -160,9 +160,10 @@ function getCylinderState(
   }
 
   const pos = lon2xyz(R, lngVal, latVal)
-  if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-    console.error('[DEBUG] NaN in lon2xyz', { lngVal, latVal, R, item }, new Error().stack)
-  }
+  // 非有限经纬度直接丢弃这一项，绝不往下写：NaN 顶点会污染同一份合并几何的
+  // boundingSphere（three 会报 computeBoundingSphere radius is NaN），
+  // 让整组圆柱的视锥剔除与射线拾取一起失效 —— 一条脏数据毒死一组。
+  if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) return null
   _normal.set(pos.x, pos.y, pos.z).normalize()
   _basePos.copy(_normal).multiplyScalar(R * 1.002)
 
@@ -196,7 +197,7 @@ interface CylinderMeshUserData {
  * @param item - 数据项
  * @param R - 地球半径
  */
-export function createCylinderForItem(item: Record<string, any>, R: number, options: CylinderOptions = {}): THREE.Mesh {
+export function createCylinderForItem(item: Record<string, any>, R: number, options: CylinderOptions = {}): THREE.Mesh | null {
   const {
     opacity = 0.9,
     transitionDuration = 0,
@@ -204,6 +205,7 @@ export function createCylinderForItem(item: Record<string, any>, R: number, opti
   } = options
 
   const state = getCylinderState(item, R, options)
+  if (!state) return null
 
   const geometry = new THREE.CylinderGeometry(state.finalRadius, state.finalRadius, state.height, state.segments, 1)
   geometry.translate(0, state.height / 2, 0)
@@ -246,6 +248,7 @@ export function updateCylinderForItem(mesh: THREE.Mesh | null | undefined, item:
   if (!mesh) return null
 
   const state = getCylinderState(item, R, options)
+  if (!state) return null
   const newGeometry = new THREE.CylinderGeometry(state.finalRadius, state.finalRadius, state.height, state.segments, 1)
   newGeometry.translate(0, state.height / 2, 0)
   newGeometry.applyQuaternion(state.quaternion)
@@ -340,6 +343,7 @@ export function createCylinderScatterPoints(data: Array<Record<string, any>> | n
     const geometries: THREE.CylinderGeometry[] = []
     items.forEach(item => {
       const state = getCylinderState(item, R, options, computedMax, computedMin)
+      if (!state) return
       const geometry = new THREE.CylinderGeometry(state.finalRadius, state.finalRadius, state.height, state.segments, 1)
       geometry.translate(0, state.height / 2, 0)
       geometry.applyQuaternion(state.quaternion)
@@ -375,7 +379,7 @@ export function createCylinderScatterPoints(data: Array<Record<string, any>> | n
     items.forEach(item => {
       // createCylinderScatterPoints 自己管理整体的生长动画，避免单柱重复创建 Tween
       const mesh = createCylinderForItem(item, R, { ...options, maxValue: computedMax, tweenGroup: null })
-      resultGroup.add(mesh)
+      if (mesh) resultGroup.add(mesh)
     })
   }
 

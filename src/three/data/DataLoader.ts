@@ -12,7 +12,7 @@ export interface WorldFeature {
   }
   geometry: {
     type: string
-    /** Polygon: number[][][]；MultiPolygon: number[][][][]。buildEarthFromData 会原地把 Polygon 包一层 */
+    /** Polygon: number[][][]；MultiPolygon: number[][][][]。各消费方自行归一化，不得改写本字段 */
     coordinates: number[][][] | number[][][][]
   }
 }
@@ -78,10 +78,12 @@ export function buildEarthFromData(
   group.meshArr = []
 
   worldData.features.forEach(country => {
-    if (country.geometry.type === 'Polygon') {
-      country.geometry.coordinates = [country.geometry.coordinates] as number[][][][]
-    }
-    const coords = country.geometry.coordinates as number[][][][]
+    // 归一化只落在局部变量上。写回 geometry 会让 geometry.type 仍是 'Polygon'
+    // 而 coordinates 已多包一层，后续再读同一份数据的代码（如 buildSearchIndex）
+    // 会在已包过的基础上再包一层，质心取到「环的数组」而算成 NaN。
+    const coords: number[][][][] = country.geometry.type === 'Polygon'
+      ? [country.geometry.coordinates as number[][][]]
+      : country.geometry.coordinates as number[][][][]
 
     const RLine = R * 1.002
     const RMesh = R * 1.001
