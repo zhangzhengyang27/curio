@@ -1,16 +1,22 @@
 import { ref, computed, onUnmounted } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
+import { pullInitial, pullNew } from './quakeSource.ts'
+import type { RawQuake, QuakeSourceMode } from './quakeSource.ts'
 
 export type QuakeStatus = 'open' | 'processing' | 'resolved'
 export type QuakeLevel = 'critical' | 'major' | 'normal'
 
 export interface QuakeEvent {
-  id: number
+  /** USGS 事件 id（合成演练事件为 sim-* 前缀）——跨天稳定，处置持久化以它为键 */
+  id: string
   lon: number
   lat: number
   mag: number
   depth: number
-  date: string
+  /** 发震时刻（毫秒） */
+  time: number
+  place: string
+  url: string
   level: QuakeLevel
   status: QuakeStatus
   arrived: boolean
@@ -19,17 +25,16 @@ export interface QuakeEvent {
 /**
  * 地震应急监测的数据流层。
  *
- * 事件源：/data/mock/earthquakes.json（200 条，{lon,lat,mag,depth,date}）。
- * 「实时推送」为模拟实现：加载后仅放行最初一批（默认 10 条），其余进入
- * 待推送池，由定时器逐条放行（或点「模拟事件」手动放行）——用于演示
- * 告警驱动的监控闭环。
+ * 事件源：server/ 后端（USGS feed 的 SQLite 缓存 + 增量 API）；后端不可达时
+ * 退打包快照 public/data/quake-snapshot.json（见 quakeSource.ts）。
+ * 「实时推送」= 每 streamIntervalMs 轮询一次增量，新出现的事件即新到达。
  *
- * 处置状态持久化（K1）：非默认状态（处理中/已处置）以 { eventId: status }
- * 存 localStorage（tv-monitor-status），刷新后恢复；eventId 是数据池内的
- * 稳定索引（池文件冻结不变）。重置演练清空存储并全部回到未处理。
+ * 处置状态持久化（K1）：非默认状态以 { eventId: status } 存 localStorage
+ * （tv-monitor-status-v2）。键是 USGS 字符串 id；v1 用数组下标做键，
+ * 数据源换成活数据后下标会漂移，故换键并整体作废旧记录。
  */
 
-const STATUS_KEY = 'tv-monitor-status'
+const STATUS_KEY = 'tv-monitor-status-v2'
 
 function loadPersistedStatus(): Record<string, QuakeStatus> {
   try {
@@ -47,7 +52,6 @@ function persistStatus(events: QuakeEvent[]): void {
   }
   // 写侧要包：隐私模式/配额满时 setItem 会抛，而调用方此刻已经改过 e.status——
   // 不包会让「改状态」成功、「刷新地图标记」被中断，列表徽标与地图颜色从此脱钩。
-  // 持久化只是锦上添花，失败就当本次不留档。读侧本来就有 try/catch。
   try {
     localStorage.setItem(STATUS_KEY, JSON.stringify(map))
   } catch { /* 忽略：无法持久化不影响本次会话内的处置流转 */ }
@@ -68,29 +72,52 @@ export function levelOf(mag: number, threshold = 7): QuakeLevel {
   return 'normal'
 }
 
-export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }: { initialCount?: number; streamIntervalMs?: number } = {}): {
+export function formatQuakeTime(time: number, withYear = false): string {
+  const d = new Date(time)
+  const p = (n: number) => String(n).padStart(2, '0')
+  const ymd = withYear ? `${d.getFullYear()}-` : ''
+  return `${ymd}${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`
+}
+
+/** USGS 对整级震级只给 `5`，与 `4.7` 混排不齐；显示统一一位小数 */
+export function formatMag(mag: number): string {
+  return mag.toFixed(1)
+}
+
+export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 30_000 }: { initialCount?: number; streamIntervalMs?: number } = {}): {
   events: Ref<QuakeEvent[]>
-  feed: Ref<number[]>
+  feed: Ref<string[]>
   arrivedEvents: ComputedRef<QuakeEvent[]>
   stats: ComputedRef<Record<QuakeStatus | 'critical', number>>
-  pendingPool: ComputedRef<QuakeEvent[]>
   threshold: Ref<number>
   setThreshold(t: number): number
+  /** 自动推送（增量轮询）是否在跑——单一事实源，视图层不得再镜像一份 */
+  streaming: Ref<boolean>
   replaying: Ref<boolean>
+  sourceMode: Ref<QuakeSourceMode>
+  sourceUpdatedAt: Ref<number>
+  /** 最近一次轮询失败（链路中断但仍在用库内/快照数据） */
+  sourceDegraded: Ref<boolean>
   startReplay(onEach: (e: QuakeEvent) => void, intervalMs?: number): void
   stopReplay(): void
   load(): Promise<void>
-  simulateOne(): boolean
+  injectSimEvent(): QuakeEvent
   startStream(): void
   stopStream(): void
-  setStatus(id: number, status: QuakeStatus): void
+  setStatus(id: string, status: QuakeStatus): void
   resetDrill(): void
 } {
-  const events = ref<QuakeEvent[]>([]) // 全部事件（含未放行）
-  const feed = ref<number[]>([]) // 已放行（到达）的事件 id，按到达顺序，新的在前
+  const events = ref<QuakeEvent[]>([]) // 已加载的全部事件
+  const feed = ref<string[]>([]) // 已到达的事件 id，按到达顺序，新的在前
   const threshold = ref(7) // 重大阈值(K2),UI 可调
+  const streaming = ref(false)
+  const sourceMode = ref<QuakeSourceMode>('live')
+  const sourceUpdatedAt = ref(0)
+  const sourceDegraded = ref(false)
   let streamTimer: ReturnType<typeof setInterval> | null = null
   let replayTimer: ReturnType<typeof setTimeout> | null = null // 时间回放计时器(K4)
+  let replaySnapshot: string[] | null = null // 回放前的 feed 快照，退出回放时恢复
+  let simSeq = 0
 
   const arrivedEvents = computed(() => {
     const byId = new Map(events.value.map((e) => [e.id, e]))
@@ -108,11 +135,9 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     return s
   })
 
-  const pendingPool = computed(() => events.value.filter((e) => !e.arrived))
-
-  /** 调整重大阈值并全量重算分级(K2) */
+  /** 调整重大阈值并全量重算分级(K2)。粒度 0.5，与输入框 step 一致，不静默取整 */
   function setThreshold(t: number): number {
-    const v = Math.min(9, Math.max(4, Math.round(Number(t) || 7)))
+    const v = Math.min(9, Math.max(4, Math.round((Number(t) || 7) * 2) / 2))
     threshold.value = v
     for (const e of events.value) {
       e.level = levelOf(e.mag, v)
@@ -120,33 +145,41 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     return v
   }
 
-  function load(): Promise<void> {
-    return fetch('/data/mock/earthquakes.json')
-      .then((r) => r.json())
-      .then((raw) => {
-        // 按日期降序 = 「最新事件」在前，模拟流按此顺序放行
-        const sorted = [...raw].sort((a: { date: string }, b: { date: string }) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
-        const persisted = loadPersistedStatus()
-        events.value = sorted.map((r: { lon: number; lat: number; mag: number; depth: number; date: string }, i: number) => ({
-          id: i,
-          lon: r.lon,
-          lat: r.lat,
-          mag: r.mag,
-          depth: r.depth,
-          date: r.date,
-          level: levelOf(r.mag, threshold.value),
-          status: persisted[i] || 'open',
-          arrived: false,
-        }))
-        for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
-      })
+  function toEvent(r: RawQuake, persisted: Record<string, QuakeStatus>): QuakeEvent {
+    // USGS 会给出两位小数震级（M3.61），列表/标记/字幕/详情四处显示统一收成一位；
+    // 分级也按同一值算，避免「显示 7.0 / 判级用 6.96」的错位
+    const mag = Math.round(r.mag * 10) / 10
+    return {
+      id: r.id,
+      lon: r.lon,
+      lat: r.lat,
+      mag,
+      depth: r.depth,
+      time: r.time,
+      place: r.place,
+      url: r.url,
+      level: levelOf(mag, threshold.value),
+      status: persisted[r.id] || 'open',
+      arrived: false,
+    }
+  }
+
+  async function load(): Promise<void> {
+    const pull = await pullInitial()
+    sourceMode.value = pull.mode
+    sourceUpdatedAt.value = pull.generatedAt
+    sourceDegraded.value = false
+    const persisted = loadPersistedStatus()
+    // 按发震时刻降序 = 「最新事件」在前
+    events.value = [...pull.events]
+      .sort((a, b) => b.time - a.time)
+      .map((r) => toEvent(r, persisted))
+    revealInitialBatch()
   }
 
   /**
-   * 放行池中第 pooledIndex 个未放行事件。
-   * ⚠ 循环放行时固定传 0:pool 每次都会重建(已放行被过滤),传递增索引
-   *   会跳号——曾导致初始 10 条实际是「偶数位」事件、最新事件被跳过
-   *   (2026-09-15 K2 实施时发现的产品缺陷)。
+   * 放行初始批次里第 pooledIndex 个未到达事件。
+   * revealAt 是头插，首屏要「新的在前」就得倒序放行（先放批次里最旧的）。
    */
   function revealAt(pooledIndex: number): boolean {
     const pool = events.value.filter((e) => !e.arrived)
@@ -157,19 +190,65 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     return true
   }
 
-  /** 手动放行一条新事件（演示/测试用）；池空返回 false */
-  function simulateOne(): boolean {
-    return revealAt(0)
+  function revealInitialBatch(): void {
+    for (let k = Math.min(initialCount, events.value.length) - 1; k >= 0; k--) revealAt(k)
+  }
+
+  /** 注入一条合成事件（演示/测试用）；place 明确标注非真实数据。
+   *  id 用自增序号而非时间戳，测试才能稳定定位 `feed-item-sim-N` */
+  function injectSimEvent(): QuakeEvent {
+    simSeq++
+    const mag = Math.round((4.5 + Math.random() * 3) * 10) / 10
+    const e: QuakeEvent = {
+      id: `sim-${simSeq}`,
+      lon: Math.round((Math.random() * 360 - 180) * 100) / 100,
+      lat: Math.round((Math.random() * 140 - 70) * 100) / 100,
+      mag,
+      depth: Math.round(10 + Math.random() * 300),
+      time: Date.now(),
+      place: '演练事件（合成，非真实数据）',
+      url: '',
+      level: levelOf(mag, threshold.value),
+      status: 'open',
+      arrived: true,
+    }
+    events.value.push(e)
+    feed.value = [e.id, ...feed.value]
+    return e
+  }
+
+  function latestTime(): number {
+    let t = 0
+    for (const e of events.value) if (e.time > t) t = e.time
+    return t
+  }
+
+  async function pollOnce(): Promise<void> {
+    const fresh = await pullNew(latestTime())
+    if (fresh === null) {
+      sourceDegraded.value = true
+      return
+    }
+    sourceDegraded.value = false
+    sourceUpdatedAt.value = Date.now()
+    const known = new Set(events.value.map((e) => e.id))
+    const arrivals = fresh.filter((f) => !known.has(f.id)).sort((a, b) => a.time - b.time)
+    if (!arrivals.length) return
+    for (const f of arrivals) {
+      events.value.push(toEvent(f, {}))
+      // 轮询期间到达即「已到达」，不进未放行池
+      events.value[events.value.length - 1].arrived = true
+      feed.value = [f.id, ...feed.value]
+    }
   }
 
   function startStream(): void {
     stopStream()
+    streaming.value = true
     streamTimer = setInterval(() => {
-      if (pendingPool.value.length === 0) {
-        stopStream()
-        return
-      }
-      revealAt(0)
+      void pollOnce().catch(() => {
+        sourceDegraded.value = true
+      })
     }, streamIntervalMs)
   }
 
@@ -178,9 +257,10 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
       clearInterval(streamTimer)
       streamTimer = null
     }
+    streaming.value = false
   }
 
-  function setStatus(id: number, status: QuakeStatus): void {
+  function setStatus(id: string, status: QuakeStatus): void {
     const e = events.value.find((x) => x.id === id)
     if (e) {
       e.status = status
@@ -188,34 +268,29 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     }
   }
 
-  /** 重置演练：全部事件回到未处理并清空持久化（K1） */
+  /** 重置演练：处置记录清零。事件本身来自真实数据源，不再回池重放 */
   function resetDrill(): void {
     stopReplay()
-    for (const e of events.value) {
-      e.status = 'open'
-      e.arrived = false
-      e.level = levelOf(e.mag, threshold.value)
-    }
-    feed.value = []
-    // 同上：removeItem 抛错会让下面的 revealAt 整段不执行，
-    // 事件已被全部重置、列表却被清空 → 「重置演练」把页面清成空白
+    for (const e of events.value) e.status = 'open'
     try {
       localStorage.removeItem(STATUS_KEY)
     } catch { /* 忽略 */ }
-    for (let k = 0; k < Math.min(initialCount, events.value.length); k++) revealAt(0)
   }
 
   // ---- 时间回放(K4):按发震时间升序重放事件到达过程 ----
+  // 回放是「预览模式」：进入时快照当前 feed，退出（手动停止或播完）恢复，
+  // 否则中途停止会把用户的事件流清成回放前缀，且除重置演练外无路可回。
   const replaying = ref(false)
 
   function startReplay(onEach: (e: QuakeEvent) => void, intervalMs = 700): void {
     stopReplay()
     stopStream()
+    replaySnapshot = feed.value.slice()
     replaying.value = true
     // 全部回退,按发震时间升序重放
     for (const e of events.value) e.arrived = false
     feed.value = []
-    const ascending = [...events.value].sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0))
+    const ascending = [...events.value].sort((a, b) => a.time - b.time)
     let i = 0
     const step = (): void => {
       if (i >= ascending.length) {
@@ -236,6 +311,12 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
       clearTimeout(replayTimer)
       replayTimer = null
     }
+    if (replaying.value && replaySnapshot) {
+      const kept = new Set(replaySnapshot)
+      for (const e of events.value) e.arrived = kept.has(e.id)
+      feed.value = replaySnapshot
+    }
+    replaySnapshot = null
     replaying.value = false
   }
 
@@ -249,14 +330,17 @@ export function useEarthquakeFeed({ initialCount = 10, streamIntervalMs = 7000 }
     feed,
     arrivedEvents,
     stats,
-    pendingPool,
     threshold,
     setThreshold,
+    streaming,
     replaying,
+    sourceMode,
+    sourceUpdatedAt,
+    sourceDegraded,
     startReplay,
     stopReplay,
     load,
-    simulateOne,
+    injectSimEvent,
     startStream,
     stopStream,
     setStatus,

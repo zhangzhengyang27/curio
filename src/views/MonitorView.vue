@@ -40,6 +40,7 @@
       >
         重大阈值
         <input
+          id="monitor-threshold"
           type="number"
           min="4"
           max="9"
@@ -52,6 +53,8 @@
       <button
         class="mini-btn"
         data-testid="tour-btn"
+        :disabled="unresolvedCount === 0"
+        :title="unresolvedCount === 0 ? '没有未处置事件可巡游' : '自动轮播未处置事件'"
         @click="toggleTour"
       >
         <UiIcon
@@ -63,8 +66,9 @@
       <button
         class="mini-btn icon-only"
         data-testid="tour-step"
-        title="步进到下一个未处置事件"
-        aria-label="步进到下一个未处置事件"
+        :disabled="unresolvedCount === 0"
+        :title="unresolvedCount === 0 ? '没有未处置事件可巡游' : '步进到下一个未处置事件'"
+        :aria-label="unresolvedCount === 0 ? '没有未处置事件可巡游' : '步进到下一个未处置事件'"
         @click="stepTour"
       >
         <UiIcon
@@ -75,6 +79,7 @@
       <button
         class="mini-btn"
         data-testid="replay-btn"
+        title="按发震时间升序重放事件到达；退出后恢复回放前的事件流"
         @click="toggleReplay"
       >
         <UiIcon
@@ -83,7 +88,23 @@
         />
         {{ replaying ? '停止回放' : '时间回放' }}
       </button>
+      <span
+        class="stat source"
+        data-testid="source-badge"
+        :data-mode="sourceMode"
+        :title="`数据源 ${sourceMode === 'live' ? 'USGS 实时（经 server/ 后端）' : '打包快照降级'} · 更新于 ${formatQuakeTime(sourceUpdatedAt, true)}${sourceDegraded ? ' · 最近一次轮询失败' : ''}`"
+      >{{ sourceLabel }}</span>
     </header>
+
+    <!-- 巡游分镜字幕（底部居中玻璃条） -->
+    <div
+      v-if="tourCaption"
+      class="tour-caption tv-glass-panel"
+      data-testid="tour-caption"
+    >
+      <b>{{ tourCaption.title }}</b>
+      <span>{{ tourCaption.text }}</span>
+    </div>
 
     <!-- 左侧：实时事件流 -->
     <aside
@@ -95,25 +116,25 @@
           实时事件流
         </h3>
         <button
-          class="mini-btn"
+          class="mini-btn icon-only"
           data-testid="stream-toggle"
-          :title="streaming ? '停止自动推送' : '开启自动推送（每 7 秒一条）'"
+          :title="streaming ? '停止增量轮询' : `开启增量轮询（每 ${streamIntervalMs / 1000} 秒）`"
+          :aria-label="streaming ? '停止增量轮询' : '开启增量轮询'"
+          :aria-pressed="streaming"
           @click="toggleStream"
         >
           <UiIcon
             :name="streaming ? 'pause' : 'play'"
             :size="13"
           />
-          {{ streaming ? '停止推送' : '开启推送' }}
         </button>
         <button
           class="mini-btn"
           data-testid="simulate-btn"
-          :disabled="pendingCount === 0"
-          title="模拟一条新事件推送"
+          title="注入一条合成演练事件（非真实数据，用于演示与测试）"
           @click="onSimulate"
         >
-          + 模拟
+          + 演练事件
         </button>
       </div>
 
@@ -127,6 +148,7 @@
           class="feed-item"
           :class="{ active: selected?.id === e.id }"
           :data-testid="`feed-item-${e.id}`"
+          :title="e.place"
           @click="selectEvent(e)"
         >
           <span
@@ -134,8 +156,8 @@
             :style="{ background: LEVELS[e.level].color }"
           />
           <span class="feed-main">
-            <span class="feed-title">M{{ e.mag }} · {{ LEVELS[e.level].label }}</span>
-            <span class="feed-sub">{{ e.date }} · 深度 {{ e.depth }}km</span>
+            <span class="feed-title">M{{ formatMag(e.mag) }} · {{ LEVELS[e.level].label }}</span>
+            <span class="feed-sub">{{ formatQuakeTime(e.time) }} · {{ e.place }}</span>
           </span>
           <span
             class="status-badge"
@@ -146,19 +168,19 @@
           v-if="arrivedEvents.length === 0"
           class="empty-tip"
         >
-          暂无事件，点击「+ 模拟」推送一条。
+          暂无事件，点击「+ 演练事件」注入一条。
         </p>
       </div>
       <p class="list-meta">
-        已接收 {{ arrivedEvents.length }} / 数据池 {{ events.length }} 条 ·
-        {{ streaming ? `每 ${streamIntervalMs / 1000}s 自动推送` : '自动推送已停' }} ·
+        已接收 {{ arrivedEvents.length }} / 已加载 {{ events.length }} 条 ·
+        {{ streaming ? `每 ${streamIntervalMs / 1000}s 轮询增量` : '轮询已停' }} ·
         <button
           class="link-btn"
           data-testid="reset-drill"
           title="清空处置记录，全部回到未处理"
           @click="onResetDrill"
         >
-          重置演练
+          重置处置
         </button>
       </p>
     </aside>
@@ -181,12 +203,12 @@
           <div class="metric">
             <dt>震级</dt>
             <dd data-testid="detail-mag">
-              M{{ selected.mag }}（{{ LEVELS[selected.level].label }}）
+              M{{ formatMag(selected.mag) }}（{{ LEVELS[selected.level].label }}）
             </dd>
           </div>
           <div class="metric">
             <dt>发震时刻</dt>
-            <dd>{{ selected.date }}</dd>
+            <dd>{{ formatQuakeTime(selected.time, true) }}</dd>
           </div>
           <div class="metric">
             <dt>震中坐标</dt>
@@ -197,6 +219,16 @@
             <dd>{{ selected.depth }} km</dd>
           </div>
         </dl>
+
+        <p class="place-line">
+          {{ selected.place }}
+          <a
+            v-if="selected.url"
+            :href="selected.url"
+            target="_blank"
+            rel="noopener"
+          >USGS 详情</a>
+        </p>
 
         <p class="group-label">
           处置
@@ -252,7 +284,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { loadCesium } from '../map/cesiumLoader'
 import { createMapViewer } from '../map/createViewer'
-import { useEarthquakeFeed, LEVELS, STATUS_LABEL } from '../map/monitor/useEarthquakeFeed'
+import { useEarthquakeFeed, LEVELS, STATUS_LABEL, formatQuakeTime, formatMag } from '../map/monitor/useEarthquakeFeed'
 import type { QuakeEvent, QuakeStatus } from '../map/monitor/useEarthquakeFeed'
 import { useTourEngine } from '../composables/useTourEngine'
 import type { TourStep } from '../composables/useTourEngine'
@@ -262,29 +294,36 @@ const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
 const loadError = ref('')
 const selected = ref<QuakeEvent | null>(null)
-const streaming = ref(!new URLSearchParams(window.location.search).has('nostream'))
-const streamIntervalMs = 7000
-const pendingCount = computed(() => feedPool.value)
+const params = new URLSearchParams(window.location.search)
+// ?poll=<ms> 与 ?nostream / ?tour-dwell 同惯例：把 30s 轮询压短，让增量用例不必真等半分钟
+const streamIntervalMs = Number(params.get('poll')) || 30_000
+const noStream = params.has('nostream')
 
 const {
   events,
-  feed,
   arrivedEvents,
   stats,
-  pendingPool,
   threshold,
   setThreshold,
+  streaming,
   replaying,
+  sourceMode,
+  sourceUpdatedAt,
+  sourceDegraded,
   startReplay,
   stopReplay,
   load,
-  simulateOne,
+  injectSimEvent,
   startStream,
   stopStream,
   setStatus: setEventStatus,
   resetDrill,
 } = useEarthquakeFeed({ initialCount: 10, streamIntervalMs })
-const feedPool = ref(0)
+const unresolvedCount = computed(() => arrivedEvents.value.filter((e) => e.status !== 'resolved').length)
+const sourceLabel = computed(() => {
+  if (sourceMode.value === 'snapshot') return '打包快照'
+  return sourceDegraded.value ? 'USGS 链路中断' : 'USGS 实时'
+})
 
 // 巡游大屏(K3)复用全局巡游引擎(X1):未处置事件序列 → 纯相机分镜
 const tour = useTourEngine({
@@ -296,6 +335,7 @@ const tour = useTourEngine({
   },
 })
 const tourStatus = tour.status
+const tourCaption = tour.caption
 
 function buildTourRoute() {
   const targets = arrivedEvents.value.filter((e) => e.status !== 'resolved')
@@ -304,7 +344,7 @@ function buildTourRoute() {
       camera: { lon: e.lon, lat: e.lat },
       flyDuration: 1400,
       dwell: 2600,
-      caption: { title: `M${e.mag} · ${LEVELS[e.level].label}`, text: `${e.date} · 深度 ${e.depth}km` },
+      caption: { title: `M${formatMag(e.mag)} · ${LEVELS[e.level].label}`, text: `${formatQuakeTime(e.time)} · 深度 ${e.depth}km` },
       eventId: e.id,
     })),
   }
@@ -336,7 +376,7 @@ function stepTour() {
 watch(
   () => tour.route.value?.steps[tour.stepIndex.value],
   (step) => {
-    const eventId = (step as (TourStep & { eventId?: number }) | undefined)?.eventId
+    const eventId = (step as (TourStep & { eventId?: string }) | undefined)?.eventId
     if (eventId != null) {
       const ev = events.value.find((x) => x.id === eventId)
       if (ev) selected.value = ev
@@ -344,16 +384,22 @@ watch(
   }
 )
 
+// 事件流回退(回放/重置演练)后,选中项可能已不在列表与地图上——
+// 详情卡不能指向幽灵事件,否则「开始处理」会把状态写进一条看不见的记录
+watch(arrivedEvents, (list) => {
+  if (selected.value && !list.some((e) => e.id === selected.value?.id)) selected.value = null
+})
+
 function toggleStream() {
   if (streaming.value) stopStream()
   else startStream()
-  streaming.value = !streaming.value
 }
 
 function onResetDrill() {
   tour.stop()
   resetDrill()
   syncMarkers()
+  frameGlobal()
 }
 
 // ---- 阈值告警(K2) ----
@@ -368,10 +414,10 @@ function onThresholdChange(e: Event) {
 function toggleReplay() {
   if (replaying.value) {
     stopReplay()
+    syncMarkers()
     return
   }
   tour.stop()
-  syncMarkers()
   startReplay((e) => {
     selected.value = e
     syncMarkers()
@@ -379,16 +425,17 @@ function toggleReplay() {
 }
 
 let viewer: any = null
-let markerEntities = new Map<number, any>() // eventId → Cesium.Entity
+let markerEntities = new Map<string, any>() // eventId → Cesium.Entity
 let handler: any = null
-let poolTimer: ReturnType<typeof setInterval> | null = null
 
-const LEVEL_COLORS: Record<QuakeStatus, string | null> = { open: null, processing: '#42a5f5', resolved: '#9e9e9e' }
+const GLOBAL_VIEW = { lon: 104, lat: 33, height: 7_500_000 }
+
+const STATUS_COLORS: Record<QuakeStatus, string | null> = { open: null, processing: '#42a5f5', resolved: '#9e9e9e' }
 
 function markerColorFor(e: QuakeEvent) {
   const Cesium = window.Cesium
-  if (e.status === 'resolved') return Cesium.Color.fromCssColorString(LEVEL_COLORS.resolved)
-  if (e.status === 'processing') return Cesium.Color.fromCssColorString(LEVEL_COLORS.processing)
+  if (e.status === 'resolved') return Cesium.Color.fromCssColorString(STATUS_COLORS.resolved)
+  if (e.status === 'processing') return Cesium.Color.fromCssColorString(STATUS_COLORS.processing)
   return Cesium.Color.fromCssColorString(LEVELS[e.level].color)
 }
 
@@ -406,7 +453,7 @@ function addMarker(e: QuakeEvent) {
       disableDepthTestDistance: Number.POSITIVE_INFINITY,
     },
     label: {
-      text: `M${e.mag}`,
+      text: `M${formatMag(e.mag)}`,
       font: '12px sans-serif',
       fillColor: Cesium.Color.WHITE,
       showBackground: true,
@@ -416,15 +463,33 @@ function addMarker(e: QuakeEvent) {
     },
   })
   markerEntities.set(e.id, entity)
+  viewer.scene.requestRender()
 }
 
 function refreshMarker(e: QuakeEvent) {
   const entity = markerEntities.get(e.id)
-  if (entity) entity.point.color = markerColorFor(e)
+  if (entity) {
+    entity.point.color = markerColorFor(e)
+    viewer.scene.requestRender()
+  }
 }
 
+// 选中态在地图上要有落点:加粗描边换色,否则 200 个点里看不出详情卡说的是哪个
+function applySelectionHighlight() {
+  const Cesium = window.Cesium
+  const selId = selected.value?.id
+  for (const [id, entity] of markerEntities) {
+    const isSel = id === selId
+    entity.point.outlineColor = isSel ? Cesium.Color.fromCssColorString('#4f8ef7') : Cesium.Color.WHITE.withAlpha(0.8)
+    entity.point.outlineWidth = isSel ? 4 : 2
+  }
+  viewer?.scene.requestRender()
+}
+watch(selected, applySelectionHighlight)
+
 function onSimulate() {
-  if (simulateOne()) syncMarkers()
+  injectSimEvent()
+  syncMarkers()
 }
 
 function syncMarkers() {
@@ -440,6 +505,15 @@ function syncMarkers() {
     if (!markerEntities.has(e.id)) addMarker(e)
     else refreshMarker(e)
   }
+  // 重建过的实体拿的是默认描边,选中态要再落一次
+  applySelectionHighlight()
+}
+
+function frameGlobal() {
+  viewer?.camera.flyTo({
+    destination: window.Cesium.Cartesian3.fromDegrees(GLOBAL_VIEW.lon, GLOBAL_VIEW.lat, GLOBAL_VIEW.height),
+    duration: 1.2,
+  })
 }
 
 function selectEvent(e: QuakeEvent) {
@@ -450,7 +524,7 @@ function selectEvent(e: QuakeEvent) {
   })
 }
 
-function setStatus(id: number, status: QuakeStatus) {
+function setStatus(id: string, status: QuakeStatus) {
   setEventStatus(id, status)
   const e = events.value.find((x) => x.id === id)
   if (e) refreshMarker(e)
@@ -459,41 +533,43 @@ function setStatus(id: number, status: QuakeStatus) {
 onMounted(async () => {
   try {
     await load()
-    feedPool.value = pendingPool.value.length
     const Cesium = await loadCesium()
     if (!containerRef.value) return
     viewer = createMapViewer(Cesium, containerRef.value, {
       mode: 'img',
-      view: { lon: 104, lat: 33, height: 7_500_000 },
+      view: GLOBAL_VIEW,
+      // 全球视角高于影像门控(150 万米),不压暗就是天地图矢量的大面积米白——
+      // 深色玻璃面板压在其上,首屏观感等于「地图没加载出来」(KNOWN_PITFALLS D3)
+      dimBaseAtHighAltitude: true,
+      // 监控页是长期挂着的看板,空闲时没必要 60fps 烧 GPU
+      idleRender: true,
     })
     for (const e of arrivedEvents.value) addMarker(e)
 
     handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
     handler.setInputAction((e: any) => {
       const picked = viewer.scene.pick(e.position)
-      const eqId = picked?.id?.id?.replace(/^eq_/, '')
-      if (eqId != null && markerEntities.has(Number(eqId))) {
-        const ev = events.value.find((x) => x.id === Number(eqId))
+      const rawId = picked?.id?.id
+      const eqId = typeof rawId === 'string' && rawId.startsWith('eq_') ? rawId.slice(3) : null
+      if (eqId != null && markerEntities.has(eqId)) {
+        const ev = events.value.find((x) => x.id === eqId)
         if (ev) selected.value = ev
+      } else {
+        selected.value = null // 点空白处取消选中,与列表侧心智一致
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
 
-    if (!new URLSearchParams(window.location.search).has('nostream')) startStream()
-    poolTimer = setInterval(() => {
-      feedPool.value = pendingPool.value.length
-      // 数据层池空时会自动 stopStream,流状态文案须跟随(否则显示仍「推送中」)
-      if (streaming.value && pendingPool.value.length === 0) streaming.value = false
-    }, 1000)
+    if (!noStream) startStream()
     ready.value = true
   } catch (err) {
-    loadError.value = '地图引擎加载失败，请刷新重试。'
+    const msg = err instanceof Error && err.message.startsWith('[feed]') ? err.message.slice(6) : ''
+    loadError.value = msg || '地图引擎加载失败，请刷新重试。'
     console.error('[monitor] 初始化失败:', err)
   }
 })
 
 onUnmounted(() => {
   stopStream()
-  if (poolTimer) clearInterval(poolTimer)
   handler?.destroy()
   if (viewer && !viewer.isDestroyed()) viewer.destroy()
 })
@@ -529,14 +605,23 @@ onUnmounted(() => {
 .stats-bar {
   position: absolute;
   top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* 绝对定位只给 left:50% 时可用宽度只剩半屏,flex-wrap 会在半屏里提前换行;
+     双侧 0 + fit-content 才能按内容收缩且整屏居中 */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
   z-index: 10;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 18px;
+  row-gap: 8px;
+  /* 只在视口真的装不下时换行；nowrap 保证单个统计项不被劈开 */
+  max-width: calc(100vw - 32px);
   padding: 10px 22px;
-  border-radius: var(--tv-radius-full);
+  border-radius: 18px;
   font-size: var(--tv-fs-sm);
   white-space: nowrap;
 }
@@ -609,11 +694,25 @@ onUnmounted(() => {
   right: 16px;
 }
 
+/* 统计条在窄屏换行成两行时给侧栏让位，避免压住面板头 */
+@media (max-width: 900px) {
+  .panel {
+    top: 132px;
+  }
+}
+
 .panel-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
+}
+
+/* 标题与两个按钮同行：260px 面板宽已贴近上限，标题不设 nowrap 会被挤成两行 */
+.panel-head .panel-title {
+  margin: 0;
+  flex: none;
+  white-space: nowrap;
 }
 
 .panel-title {
@@ -676,6 +775,10 @@ onUnmounted(() => {
 .feed-sub {
   font-size: 10px;
   opacity: 0.6;
+  /* 真实数据的 place 是长英文地名，必须截断而不是撑破 260px 面板 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .status-badge {
@@ -753,6 +856,33 @@ onUnmounted(() => {
   margin: 0;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.place-line {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--tv-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.place-line a {
+  color: var(--tv-primary);
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+.stat.source {
+  font-size: var(--tv-fs-xs);
+  padding: 2px 9px;
+  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--tv-outline-variant);
+  color: var(--tv-on-surface-variant);
+}
+
+.stat.source[data-mode='snapshot'] {
+  border-color: color-mix(in srgb, var(--tv-warning) 55%, transparent);
+  color: var(--tv-warning);
 }
 
 .group-label {
@@ -853,5 +983,33 @@ onUnmounted(() => {
 
 .link-btn:hover {
   opacity: 0.8;
+}
+
+.tour-caption {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 10px 22px;
+  border-radius: var(--tv-radius-lg);
+  text-align: center;
+  pointer-events: none;
+}
+
+.tour-caption b {
+  font-size: var(--tv-fs-md);
+  font-weight: 700;
+  color: var(--tv-on-surface);
+}
+
+.tour-caption span {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-on-surface-variant);
 }
 </style>
