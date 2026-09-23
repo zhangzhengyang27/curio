@@ -93,8 +93,16 @@ src/examples/registry/
 
 ```
 /examples              → ExampleGallery.vue
-  · 技术栈 tab（6 个，含「地理 / GIS」领域分面）/ 子分类侧栏（16 类 + 1 个补集桶）/ 搜索 / 分页（每页 48）
-  · 筛选状态（tech / sub / keyword / page）双向同步到 URL（可刷新、可分享、可前进后退）
+  · 三维度分面筛选：技术栈（6 个，含「地理 / GIS」领域分面）→ 数据源（11 个来源，默认只展开
+    条目最多的 6 个，可展开）/ 专题分类（16 类 + 1 个补集桶）。每个维度的计数在
+    「其它维度已生效」的集合上算且**排除自身** —— 否则选中一项后同维度其它项全归零，用户换不动
+  · 结果区粘性工具条：结果数 + 已选条件 chips（可逐个移除 / 清除全部）+ 排序
+    （推荐 / 标题 / 来源 / 专题）+ 网格↔列表视图 + 紧凑密度 + 每页 24/48/96（默认 48）
+  · 筛选状态（tech / src / sub / keyword / sort / size / view / page）双向同步到 URL
+    （可刷新、可分享、可前进后退）；密度是个人偏好，存 localStorage 不进 URL
+  · 维度归属在注册表落地时一次性预计算成索引（useGalleryFilters），此后任何筛选/搜索
+    都只在数组上做 includes —— 不要退回「每次交互对全量重跑 17 条专题匹配器」的写法，
+    三维度分面会把那个成本 ×3
   · src/examples/composables/useExampleFilters.ts 负责 techGroups 与 subCategoryDefinitions 归类。
     ⚠ 子分类匹配走 seg()（路径段整词）/ stem()（词元含词干）两个原语，不要退回「对 category
       整串跑一条松散正则」—— 旧实现因此把 particle/parallax 分进了「XR / VR / AR」（占该桶 75%）。
@@ -103,6 +111,9 @@ src/examples/registry/
     新接来源必须在这里补一条，否则 tests/example-provenance.spec.ts 会红
   · 滚动容器是 #app 而不是文档（theme.css 给 html/body/#app 设了 height:100% + overflow:auto），
     window.scrollTo() 在本页是空操作 —— 要滚就走 useGalleryFilters 的 galleryScrollRoot()
+  · ⚠ totalPages 是裸 ceil（空结果集必须得到 0 页）：越界页码钳制 watch 靠它「0→1」的跳变
+    发现注册表刚落地。把它钳成最小 1 会让「?page= 越界 + 搜索保留旧页码 → 空白网格」的
+    回归重新出现（smoke.spec.ts 有专门用例）
 
 /examples/:source/...  → ExampleDemo.vue
   · 按 runner 选择渲染方式：vue → ExampleHost 动态组件；iframe → IframeRunner

@@ -1,105 +1,252 @@
 <template>
   <div class="example-gallery-page">
+    <!--
+      页头：把「这是什么库 / 封存的是哪一版 / 有多大」三件事压缩到一屏顶部。
+      原先这三段文案散在内容区左上，右侧只有一个孤零零的「共 N 个示例」，
+      既看不出库的规模，也看不出它的可信度来源。
+    -->
+    <header class="gallery-hero">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            示例中心
+          </h1>
+          <p class="hero-subtitle">
+            整合 threejs-lesson、three-cesium-examples 等优质 Three.js 示例
+          </p>
+          <!--
+            示例中心是只读归档，那么「封存的是哪一版」就是它唯一能自证可信度的信息。
+            原先全库没有任何时间/版本字段，也没登记过上游出处。
+          -->
+          <p class="hero-snapshot">
+            {{ snapshotLine }}
+          </p>
+        </div>
+        <dl class="hero-stats">
+          <div class="hero-stat">
+            <dt>示例</dt>
+            <dd class="tv-num">
+              {{ totalCount || '—' }}
+            </dd>
+          </div>
+          <div class="hero-stat">
+            <dt>来源</dt>
+            <dd class="tv-num">
+              {{ sourceCount || '—' }}
+            </dd>
+          </div>
+          <div class="hero-stat">
+            <dt>专题</dt>
+            <dd class="tv-num">
+              {{ topicCount }}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
     <main class="gallery-main">
-      <!-- Sidebar Filters -->
+      <!-- 三个维度的筛选面板：技术栈 → 数据源 → 专题分类 -->
       <GalleryFilterSidebar
+        :current-tech="currentTech"
+        :current-source="currentSource"
+        :current-sub-category="currentSubCategory"
         :current-tech-label="currentTechLabel"
         :tech-examples-count="techExamplesCount"
-        :categories="availableSubCategories"
-        :current="currentSubCategory"
+        :tech-tabs="techTabs"
+        :source-facets="sourceFacets"
+        :sub-facets="subFacets"
         @select="selectCategory"
+        @select-tech="selectTech"
+        @select-source="selectSource"
       />
 
       <!-- Main Content -->
       <section class="content-area">
-        <header class="content-header">
-          <div>
-            <h1 class="content-title">
-              示例中心
-            </h1>
-            <p class="content-subtitle">
-              整合 threejs-lesson、three-cesium-examples 等优质 Three.js 示例
-            </p>
-            <!--
-              示例中心是只读归档，那么「封存的是哪一版」就是它唯一能自证可信度的信息。
-              原先全库没有任何时间/版本字段，也没登记过上游出处。
-            -->
-            <p class="content-snapshot">
-              {{ snapshotLine }}
-            </p>
-          </div>
-          <div class="result-count tv-num">
-            共 {{ filteredExamples.length }} 个示例
-          </div>
-        </header>
-
-        <!-- 技术切换器 -->
-        <div class="tech-tabs">
-          <button
-            v-for="t in techTabs"
-            :key="t.key"
-            :class="['tech-tab', { active: currentTech === t.key }]"
-            @click="selectTech(t.key)"
-          >
-            <span class="tech-tab-label">{{ t.label }}</span>
-            <span class="tech-tab-count">{{ t.count }}</span>
-          </button>
-        </div>
-
-        <div class="card-grid">
-          <ExampleCard
-            v-for="ex in paginatedExamples"
-            :key="`${ex.source}-${ex.category}-${ex.id}`"
-            :ex="ex"
+        <!--
+          工具条粘在顶栏下方：1417 条要翻 30 页，改排序/换视图不该要求用户先滚回顶部。
+          粘性定位依赖 #app 是滚动根（见 useGalleryFilters.galleryScrollRoot 注释）。
+        -->
+        <div class="content-sticky">
+          <GalleryToolbar
+            :count="filteredExamples.length"
+            :range-start="rangeStart"
+            :range-end="rangeEnd"
+            :sort="sort"
+            :view="view"
+            :density="density"
+            :page-size="pageSize"
+            @update:sort="setSort"
+            @update:view="setView"
+            @update:density="setDensity"
+            @update:page-size="setPageSize"
+          />
+          <GalleryActiveFilters
+            :filters="activeFilters"
+            @clear="clearFilter"
+            @clear-all="clearAllFilters"
           />
         </div>
 
-        <!-- Pagination -->
-        <GalleryPagination
-          :current="currentPage"
-          :total-pages="totalPages"
-          :pages="visiblePages"
-          @update:current="goToPage"
-        />
-
+        <!-- 注册表 11 个分片是懒加载的，落地前先占位，避免整页布局跳一下 -->
         <div
-          v-if="filteredExamples.length === 0"
-          class="empty-tip"
+          v-if="loading"
+          class="card-grid"
+          :class="gridClass"
         >
-          暂无匹配示例
+          <div
+            v-for="i in 12"
+            :key="i"
+            class="card-skeleton"
+          />
         </div>
+
+        <template v-else>
+          <div
+            v-if="filteredExamples.length > 0"
+            class="card-grid"
+            :class="gridClass"
+          >
+            <ExampleCard
+              v-for="ex in paginatedExamples"
+              :key="`${ex.source}-${ex.category}-${ex.id}`"
+              :ex="ex"
+              :view="view"
+              :dense="isDense"
+            />
+          </div>
+
+          <!--
+            空态要回答「为什么空」和「怎么退出」，只写「暂无匹配示例」等于把用户晾着。
+            这里把当前条件重述一遍并给一个直接清空的出口。
+          -->
+          <div
+            v-else
+            class="empty-state"
+          >
+            <span class="empty-icon">
+              <UiIcon
+                name="compass"
+                :size="30"
+              />
+            </span>
+            <h2 class="empty-title">
+              没有符合条件的示例
+            </h2>
+            <p class="empty-desc">
+              <template v-if="activeFilters.length">
+                当前条件：{{ activeFilters.map(f => `${f.label}「${f.value}」`).join(' + ') }}
+              </template>
+              <template v-else>
+                示例库正在加载或为空
+              </template>
+            </p>
+            <div class="empty-actions">
+              <button
+                type="button"
+                class="empty-btn"
+                @click="clearAllFilters"
+              >
+                清除全部条件
+              </button>
+              <button
+                type="button"
+                class="empty-btn ghost"
+                @click="setSort('default')"
+              >
+                恢复推荐顺序
+              </button>
+            </div>
+            <p class="empty-hint">
+              试试更短的词，或直接按「数据源」浏览 —— 11 个来源各自是一套完整教程。
+            </p>
+          </div>
+
+          <GalleryPagination
+            :current="currentPage"
+            :total-pages="totalPages"
+            :pages="visiblePages"
+            @update:current="goToPage"
+          />
+        </template>
       </section>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-// 筛选状态机（URL ↔ 状态同步、过滤、分页）已抽到 useGalleryFilters，
+// 筛选状态机（URL ↔ 状态同步、分面计数、排序、分页）已抽到 useGalleryFilters，
 // 本组件只负责渲染。改动过滤逻辑请改 composable，别在这里加分支。
+import { computed } from 'vue'
 import { useGalleryFilters } from '../composables/useGalleryFilters'
+import { subCategoryDefinitions } from '../composables/useExampleFilters'
 import { snapshotSummary } from '../registry/provenance'
+import UiIcon from '../../components/UiIcon'
 import ExampleCard from './ExampleCard.vue'
 import GalleryFilterSidebar from './GalleryFilterSidebar.vue'
+import GalleryToolbar from './GalleryToolbar.vue'
+import GalleryActiveFilters from './GalleryActiveFilters.vue'
 import GalleryPagination from './GalleryPagination.vue'
 
 const snapshotLine = snapshotSummary()
 
 const {
   currentTech,
+  currentSource,
   currentSubCategory,
   currentPage,
+  pageSize,
+  sort,
+  view,
+  density,
+  loading,
+  totalCount,
   currentTechLabel,
   techExamplesCount,
   techTabs,
-  availableSubCategories,
+  sourceFacets,
+  subFacets,
   filteredExamples,
   paginatedExamples,
   totalPages,
   visiblePages,
+  activeFilters,
   selectTech,
+  selectSource,
   selectCategory,
+  setSort,
+  setPageSize,
+  setView,
+  setDensity,
+  clearFilter,
+  clearAllFilters,
   goToPage,
 } = useGalleryFilters()
+
+/** 专题数是个常量（分类定义在 useExampleFilters），不随筛选变化 */
+const topicCount = subCategoryDefinitions.length - 1
+const sourceCount = computed(() => Math.max(0, sourceFacets.value.length - 1))
+
+const isDense = computed(() => density.value === 'compact')
+
+/**
+ * 网格列数用 auto-fill 而不是写死断点：侧栏占了 260px，内容区宽度随视口非线性变化，
+ * 写死 4 列在 1024~1280 之间会把卡片压到 200px 以下。auto-fill 保证永远不溢出，
+ * 紧凑密度把最小列宽从 262px 降到 180px，一屏多出近一倍条目。
+ */
+const gridClass = computed(() => {
+  if (view.value === 'list') return ['is-list', isDense.value ? 'is-dense' : '']
+  return ['is-grid', isDense.value ? 'is-dense' : '']
+})
+
+const rangeStart = computed(() =>
+  filteredExamples.value.length === 0
+    ? 0
+    : (currentPage.value - 1) * pageSize.value + 1,
+)
+const rangeEnd = computed(() =>
+  Math.min(filteredExamples.value.length, currentPage.value * pageSize.value),
+)
 </script>
 
 <style scoped>
@@ -110,6 +257,86 @@ const {
   color: var(--tv-on-background);
 }
 
+/* ── 页头 ──────────────────────────────────────────────────────── */
+.gallery-hero {
+  border-bottom: 1px solid var(--tv-outline-variant);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-primary) 6%, var(--tv-background)),
+    var(--tv-background) 70%
+  );
+}
+
+.hero-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--tv-lg) var(--tv-lg) var(--tv-md);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--tv-md);
+}
+
+.hero-text {
+  min-width: 0;
+}
+
+.hero-title {
+  font-size: var(--tv-fs-3xl);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--tv-on-surface);
+  margin-bottom: 6px;
+}
+
+.hero-subtitle {
+  font-size: var(--tv-fs-md);
+  line-height: 22px;
+  color: var(--tv-on-surface-variant);
+}
+
+.hero-snapshot {
+  margin-top: 4px;
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+  opacity: 0.8;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: stretch;
+  gap: var(--tv-xs);
+  margin: 0;
+}
+
+.hero-stat {
+  min-width: 76px;
+  padding: 8px 14px;
+  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--tv-outline-variant);
+  background: var(--tv-surface-container-lowest);
+  text-align: center;
+}
+
+.hero-stat dt {
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+}
+
+.hero-stat dd {
+  margin: 0;
+  font-size: var(--tv-fs-xl);
+  line-height: 26px;
+  font-weight: 700;
+  color: var(--tv-on-surface);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 主体 ──────────────────────────────────────────────────────── */
 .gallery-main {
   display: flex;
   flex-direction: row;
@@ -117,152 +344,166 @@ const {
   gap: var(--tv-lg);
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 var(--tv-lg);
+  padding: var(--tv-md) var(--tv-lg) var(--tv-xl);
 }
 
-
-/* Content area */
 .content-area {
   flex: 1;
   min-width: 0;
-  padding: var(--tv-lg) 0 var(--tv-xl);
 }
 
-.content-header {
+.content-sticky {
+  position: sticky;
+  top: var(--tv-top-nav-height);
+  z-index: 4;
   display: flex;
   flex-direction: column;
   gap: var(--tv-sm);
-  margin-bottom: var(--tv-lg);
-}
-
-@media (min-width: 640px) {
-  .content-header {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-}
-
-.content-title {
-  font-size: var(--tv-fs-3xl);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--tv-on-surface);
-  margin-bottom: var(--tv-xs);
-}
-
-.content-subtitle {
-  font-size: var(--tv-fs-md);
-  line-height: 22px;
-  color: var(--tv-on-surface-variant);
-}
-
-.content-snapshot {
-  font-size: var(--tv-fs-xs);
-  line-height: 18px;
-  color: var(--tv-on-surface-variant);
-  opacity: 0.8;
-}
-
-.result-count {
-  font-size: var(--tv-fs-sm);
-  line-height: 20px;
-  font-weight: 500;
-  color: var(--tv-on-surface-variant);
-  white-space: nowrap;
-}
-
-/* Tech tabs */
-.tech-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tv-sm);
-  margin-bottom: var(--tv-lg);
-}
-
-.tech-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: var(--tv-radius-full);
-  border: 1px solid var(--tv-outline-variant);
-  background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-md);
-  line-height: 22px;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease),
-    border-color var(--tv-dur-fast) var(--tv-ease);
-}
-
-.tech-tab:hover {
-  background: var(--tv-surface-container);
-  color: var(--tv-on-surface);
-}
-
-.tech-tab.active {
-  background: var(--tv-primary-container);
-  border-color: transparent;
-  color: var(--tv-on-primary-container);
-  font-weight: 600;
-}
-
-.tech-tab-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 18px;
-  padding: 0 6px;
-  border-radius: var(--tv-radius-full);
-  background: color-mix(in srgb, var(--tv-on-surface-variant) 15%, transparent);
-  font-size: var(--tv-fs-xs);
-  line-height: 16px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.tech-tab.active .tech-tab-count {
-  background: color-mix(in srgb, var(--tv-on-primary-container) 18%, transparent);
-  color: var(--tv-on-primary-container);
+  padding: var(--tv-sm) 0;
+  margin-bottom: var(--tv-md);
+  background: var(--tv-background);
+  /* 卡片从工具条下面滚过去时，边缘不能突然断掉 */
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--tv-outline-variant) 60%, transparent);
 }
 
 /* Card grid */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
   gap: var(--tv-md);
   margin-bottom: var(--tv-lg);
 }
 
-@media (min-width: 768px) {
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr);
+.card-grid.is-grid {
+  grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
+}
+
+.card-grid.is-grid.is-dense {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--tv-sm);
+}
+
+.card-grid.is-list {
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: var(--tv-sm);
+}
+
+.card-grid.is-list.is-dense {
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 6px;
+}
+
+/* 骨架屏：刻意不复用 .example-card —— 那是 E2E 断言「每页 48 条」的选择器 */
+.card-skeleton {
+  border-radius: var(--tv-radius-xl);
+  border: 1px solid color-mix(in srgb, var(--tv-outline-variant) 30%, transparent);
+  background: var(--tv-surface-container-low);
+  min-height: 260px;
+  animation: skeleton-pulse 1.4s var(--tv-ease) infinite;
+}
+
+.is-dense .card-skeleton {
+  min-height: 130px;
+}
+
+.is-list .card-skeleton {
+  min-height: 116px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-skeleton {
+    animation: none;
   }
 }
 
-@media (min-width: 1024px) {
-  .card-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  .card-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-
-.empty-tip {
+/* ── 空态 ──────────────────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: var(--tv-xl) 0;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-md);
+  gap: var(--tv-sm);
+  padding: var(--tv-xl) var(--tv-lg);
+  border-radius: var(--tv-radius-xl);
+  border: 1px dashed var(--tv-outline-variant);
+  background: var(--tv-surface-container-lowest);
+  margin-bottom: var(--tv-lg);
 }
 
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tv-radius-full);
+  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-primary) 22%, transparent);
+}
+
+.empty-title {
+  font-size: var(--tv-fs-lg);
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--tv-on-surface);
+}
+
+.empty-desc {
+  font-size: var(--tv-fs-md);
+  line-height: 22px;
+  color: var(--tv-on-surface-variant);
+  max-width: 620px;
+  word-break: break-word;
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tv-sm);
+  margin-top: 2px;
+}
+
+.empty-btn {
+  padding: 7px 16px;
+  border-radius: var(--tv-radius-full);
+  border: 1px solid transparent;
+  background: var(--tv-primary-container);
+  color: var(--tv-on-primary-container);
+  font-family: inherit;
+  font-size: var(--tv-fs-sm);
+  line-height: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter var(--tv-dur-fast) var(--tv-ease);
+}
+
+.empty-btn:hover {
+  filter: brightness(1.06);
+}
+
+.empty-btn.ghost {
+  background: transparent;
+  border-color: var(--tv-outline-variant);
+  color: var(--tv-on-surface-variant);
+  font-weight: 500;
+}
+
+.empty-btn.ghost:hover {
+  background: var(--tv-surface-container-high);
+  color: var(--tv-on-surface);
+}
+
+.empty-hint {
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+  opacity: 0.85;
+  max-width: 560px;
+}
 </style>

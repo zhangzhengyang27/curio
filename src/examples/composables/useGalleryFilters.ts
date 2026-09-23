@@ -1,27 +1,70 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount, shallowRef } from 'vue'
-import type { Ref } from 'vue'
 import type { RegistryExample } from '../registry/index'
+import { KNOWN_SOURCES, getSources } from '../registry/index'
 import { useRoute, useRouter } from 'vue-router'
-import { techGroups, techSearchTerms, subCategoryDefinitions, countSubCategories, ensureRegistryLoaded } from './useExampleFilters'
+import { techGroups, techSearchTerms, subCategoryDefinitions, ensureRegistryLoaded } from './useExampleFilters'
 
 /**
- * 示例中心画廊的「筛选状态机」：URL ↔ 状态双向同步 + 过滤/分页的全部派生数据。
+ * 示例中心画廊的「筛选状态机」：URL ↔ 状态双向同步 + 分面计数 / 过滤 / 排序 / 分页。
  *
  * 为什么抽出来：原实现全在 ExampleGallery.vue 的 <script setup> 里（约 170 行），
  * 与 400 行样式混在一起，既无法单独验证，也让组件难以继续拆分。
- * 抽成 composable 后，状态机可以脱离模板被理解和复用。
  *
  * 关键行为（改动前请确认这些不变量仍然成立，E2E 有覆盖）：
- *   - 状态 → URL：切换技术/子分类/搜索/翻页都写回 query，刷新可保持、可分享
+ *   - 状态 → URL：切换任何筛选/排序/视图都写回 query，刷新可保持、可分享
  *   - URL → 状态：onMounted + watch(route.query) 还原，支持前进/后退
  *   - 用户主动切换才重置子分类与页码；从 URL 还原时**不**重置
  *     （否则前进/后退会把子分类与页码冲掉）
+ *
+ * ── 检索索引（2026-09-23 重构）───────────────────────────────────────────
+ * 三个筛选维度（技术 / 来源 / 专题）各自要显示「在其它维度已生效条件下的计数」，
+ * 这是标准分面检索。老实现只算「技术 × 专题」两层，且每敲一个字就对 1417 条
+ * 重跑 17 条专题匹配器 —— 三维度分面会把这个成本 ×3。
+ *
+ * 所以改成：注册表落地时**一次性**把每条示例的维度归属算成字符串数组（技术键、
+ * 专题键、来源键 + 检索串），此后任何一次交互都只是在这些数组上做 includes，
+ * 匹配器（含正则 / 分词）不再参与运行时计算。
  */
-/**
- * 每页 16 时 1415 条要 89 页，配合「翻页不回到顶部」基本没人能翻过第 3 页。
- * 48 在 1440 宽下正好是 4 列 × 12 行，页数降到 30。
- */
-export const PAGE_SIZE = 48
+
+/** 每页条数选项。默认 48：1440 宽下正好 4 列 × 12 行，1417 条降到 30 页。 */
+export const PAGE_SIZE_OPTIONS = [24, 48, 96]
+export const DEFAULT_PAGE_SIZE = 48
+
+export const SORT_OPTIONS = [
+  { key: 'default', label: '推荐顺序' },
+  { key: 'title', label: '标题 A→Z' },
+  { key: 'source', label: '按来源分组' },
+  { key: 'category', label: '按专题分组' },
+] as const
+
+export type GallerySortKey = (typeof SORT_OPTIONS)[number]['key']
+export type GalleryView = 'grid' | 'list'
+export type GalleryDensity = 'comfortable' | 'compact'
+
+/** 分面项：键 + 展示名 + 在当前其它维度条件下的命中数 */
+export interface GalleryFacet {
+  key: string
+  label: string
+  count: number
+}
+
+/** 已选条件 chip */
+export interface ActiveFilter {
+  key: 'tech' | 'source' | 'sub' | 'search'
+  label: string
+  value: string
+}
+
+interface IndexedExample {
+  ex: RegistryExample
+  /** 小写检索串，字段间用 \u0000 分隔（避免跨字段拼接产生意外命中） */
+  haystack: string
+  /** 命中的技术键（不含 'all'） */
+  techs: string[]
+  /** 命中的专题键（不含 'all'） */
+  subs: string[]
+  source: string
+}
 
 /**
  * 画廊的滚动容器。
@@ -37,6 +80,27 @@ export function galleryScrollRoot(): HTMLElement | null {
 
 /** 详情返回列表时的滚动位置暂存键；值形如 `${fullPath}|${scrollTop}` */
 const SCROLL_KEY = 'tv:examples:scroll'
+/** 密度是个人偏好，不进 URL（分享链接不该把对方的视图设成紧凑） */
+const DENSITY_KEY = 'tv:examples:density'
+
+/** 中文标题排序要用 collator，否则 localeCompare 的拼音序在部分浏览器不一致 */
+const collator = new Intl.Collator('zh-Hans-CN', { numeric: true, sensitivity: 'base' })
+
+function readDensity(): GalleryDensity {
+  try {
+    return localStorage.getItem(DENSITY_KEY) === 'compact' ? 'compact' : 'comfortable'
+  } catch {
+    return 'comfortable'
+  }
+}
+
+/** 逐键比对，避免 JSON.stringify 受键顺序影响而误判为「有变化」触发多余导航 */
+function sameQuery(a: Record<string, unknown>, b: Record<string, unknown>) {
+  const ka = Object.keys(a).filter(k => a[k] !== undefined && a[k] !== '')
+  const kb = Object.keys(b).filter(k => b[k] !== undefined && b[k] !== '')
+  if (ka.length !== kb.length) return false
+  return ka.every(k => String(a[k]) === String(b[k]))
+}
 
 export function useGalleryFilters() {
   const route = useRoute()
@@ -44,11 +108,17 @@ export function useGalleryFilters() {
 
   const keyword = ref(typeof route.query.search === 'string' ? route.query.search : '')
   const currentTech = ref('all')
+  const currentSource = ref('all')
   const currentSubCategory = ref('all')
+  const sort = ref<GallerySortKey>('default')
+  const view = ref<GalleryView>('grid')
+  const density = ref<GalleryDensity>(readDensity())
   const currentPage = ref(Number(route.query.page) || 1)
-  const pageSize = PAGE_SIZE
+  const pageSize = ref(DEFAULT_PAGE_SIZE)
 
-  const allExamplesList = shallowRef<RegistryExample[]>([])
+  const indexed = shallowRef<IndexedExample[]>([])
+  /** source key → 中文名；注册表加载后由 getSources() 填 */
+  const sourceLabels = ref<Record<string, string>>({})
 
   /**
    * 从示例详情返回时恢复列表滚动位置。
@@ -110,81 +180,133 @@ export function useGalleryFilters() {
   ensureRegistryLoaded().then(list => {
     // displayHidden 在这里过滤，而不是在 registry 缓存处删条目 ——
     // 否则 verify-registry / verify-thumbnails 会跟着少检这些条目（见 metadata/index.ts）
-    allExamplesList.value = list.filter(ex => !ex.displayHidden)
+    indexed.value = list
+      .filter(ex => !ex.displayHidden)
+      .map(ex => {
+        const matchedTechs = techGroups.filter(t => t.key !== 'all' && t.match(ex))
+        // 分面派生词一并进检索串，让「地图」这类领域词能命中地理条目（取舍见 techSearchTerms 注释）
+        const facetWords = matchedTechs.flatMap(t => techSearchTerms[t.key] || [])
+        return {
+          ex,
+          haystack: [ex.title || '', ex.description || '', ...(ex.tags || []), ...facetWords]
+            .join('\u0000')
+            .toLowerCase(),
+          techs: matchedTechs.map(t => t.key),
+          subs: subCategoryDefinitions.filter(s => s.key !== 'all' && s.match(ex)).map(s => s.key),
+          source: ex.source,
+        }
+      })
+    try {
+      sourceLabels.value = Object.fromEntries(getSources().map(s => [s.source, s.label]))
+    } catch {
+      // 拿不到中文名就退回 source 键，不让分面整块消失
+    }
     restoreScroll()
   })
-  const allExamples = computed(() => allExamplesList.value)
+
+  const loading = computed(() => indexed.value.length === 0)
+  const totalCount = computed(() => indexed.value.length)
+
+  function sourceLabel(key: string) {
+    return sourceLabels.value[key] || key
+  }
+  function subLabel(key: string) {
+    return subCategoryDefinitions.find(s => s.key === key)?.label || key
+  }
 
   /**
-   * 一次性派生的检索索引：按「技术」分桶 + 预计算小写检索串。
+   * 三维度分面的公共过滤器。
    *
-   * 为什么需要：下面 techTabs / availableSubCategories / filteredExamples 原本各自
-   * 全量扫一遍全部示例（1417 条），而 subCategoryDefinitions 有 17 条分类匹配器、
-   * 关键词匹配还要逐条 toLowerCase —— 每敲一个字就整链重算，是几万次正则匹配
-   * 加几千次字符串分配。
-   *
-   * 分桶只在注册表加载完成时构建一次；此后改搜索词只需在「当前技术的桶」里做
-   * 字符串匹配，技术维度的匹配不再重复计算。
+   * `skip` 传要忽略的维度：算某个维度的计数时，必须把**它自己**排除在外，
+   * 否则选中「Three.js」之后其它技术项的计数会全部变成 0，用户就没法换了。
    */
-  const exampleIndex = computed(() => {
-    const byTech = new Map<string, RegistryExample[]>(techGroups.map(t => [t.key, [] as RegistryExample[]]))
-    // 用 \u0000 分隔，避免跨字段拼接产生意外命中（如标题尾部 + 标签首部连起来）
-    const haystacks = new Map<RegistryExample, string>()
-    for (const ex of allExamplesList.value) {
-      // 分面派生词一并进检索串，让「地图」这类领域词能命中地理条目（取舍见 techSearchTerms 注释）
-      const facetWords = techGroups
-        .filter(t => t.key !== 'all' && t.match(ex))
-        .flatMap(t => techSearchTerms[t.key] || [])
-      haystacks.set(
-        ex,
-        [ex.title || '', ex.description || '', ...(ex.tags || []), ...facetWords].join('\u0000').toLowerCase()
-      )
-      for (const tech of techGroups) {
-        if (tech.match(ex)) byTech.get(tech.key)!.push(ex)
-      }
+  const kw = computed(() => keyword.value.trim().toLowerCase())
+  function passes(item: IndexedExample, skip: 'tech' | 'source' | 'sub' | null) {
+    if (skip !== 'tech' && currentTech.value !== 'all' && !item.techs.includes(currentTech.value)) return false
+    if (skip !== 'source' && currentSource.value !== 'all' && item.source !== currentSource.value) return false
+    if (skip !== 'sub' && currentSubCategory.value !== 'all' && !item.subs.includes(currentSubCategory.value)) return false
+    if (kw.value && !item.haystack.includes(kw.value)) return false
+    return true
+  }
+
+  const techPool = computed(() => indexed.value.filter(i => passes(i, 'tech')))
+  const sourcePool = computed(() => indexed.value.filter(i => passes(i, 'source')))
+  const subPool = computed(() => indexed.value.filter(i => passes(i, 'sub')))
+
+  const techTabs = computed<GalleryFacet[]>(() => {
+    const counts = new Map<string, number>()
+    for (const item of techPool.value) {
+      counts.set('all', (counts.get('all') || 0) + 1)
+      for (const t of item.techs) counts.set(t, (counts.get(t) || 0) + 1)
     }
-    return { byTech, haystacks }
+    return techGroups.map(t => ({ key: t.key, label: t.label, count: counts.get(t.key) || 0 }))
   })
 
-  // 当前技术下的示例集合（复用分桶结果，不在每次输入时重算）
-  const techExamples = computed(
-    () => exampleIndex.value.byTech.get(currentTech.value) ?? allExamples.value
+  const sourceFacets = computed<GalleryFacet[]>(() => {
+    const counts = new Map<string, number>()
+    for (const item of sourcePool.value) {
+      counts.set(item.source, (counts.get(item.source) || 0) + 1)
+    }
+    // 来源名长短不一，按条目数降序排比按字母排更好扫
+    const items = [...counts.entries()].sort((a, b) => b[1] - a[1])
+    return [
+      { key: 'all', label: '全部来源', count: sourcePool.value.length },
+      ...items.map(([key, count]) => ({ key, label: sourceLabel(key), count })),
+    ]
+  })
+
+  const subFacets = computed<GalleryFacet[]>(() => {
+    const counts = new Map<string, number>()
+    for (const item of subPool.value) {
+      for (const s of item.subs) counts.set(s, (counts.get(s) || 0) + 1)
+    }
+    return subCategoryDefinitions
+      .map(s => ({
+        key: s.key,
+        label: s.label,
+        count: s.key === 'all' ? subPool.value.length : (counts.get(s.key) || 0),
+      }))
+      .filter(s => s.key === 'all' || s.count > 0)
+  })
+
+  const currentTechLabel = computed(
+    () => techGroups.find(t => t.key === currentTech.value)?.label || '全部技术',
+  )
+  /** 侧栏顶部那一行「当前技术 N 个示例」；与 techTabs 同源，不会和标签数漂移 */
+  const techExamplesCount = computed(
+    () => techTabs.value.find(t => t.key === currentTech.value)?.count ?? 0,
   )
 
-  const techTabs = computed(() => {
-    return techGroups.map(t => ({ ...t, count: exampleIndex.value.byTech.get(t.key)!.length }))
+  const filteredExamples = computed<RegistryExample[]>(() => {
+    const list = indexed.value.filter(i => passes(i, null)).map(i => i.ex)
+    switch (sort.value) {
+      case 'title':
+        return list.sort((a, b) => collator.compare(a.title || '', b.title || ''))
+      case 'source':
+        return list.sort(
+          (a, b) =>
+            collator.compare(sourceLabel(a.source), sourceLabel(b.source)) ||
+            collator.compare(a.title || '', b.title || ''),
+        )
+      case 'category':
+        return list.sort(
+          (a, b) =>
+            collator.compare(a.categoryLabel || a.category || '', b.categoryLabel || b.category || '') ||
+            collator.compare(a.title || '', b.title || ''),
+        )
+      default:
+        // 注册表原序 = 上游组织好的章节顺序，是「推荐顺序」的唯一可信来源
+        return list
+    }
   })
 
-  const currentTechInfo = computed(() => techGroups.find(t => t.key === currentTech.value))
-  const currentTechLabel = computed(() => currentTechInfo.value?.label || '全部技术')
-  const techExamplesCount = computed(() => techExamples.value.length)
-
-  const availableSubCategories = computed(() => {
-    const counts = countSubCategories(techExamples.value)
-    return subCategoryDefinitions
-      .filter(sub => sub.key === 'all' || (counts.get(sub.key) || 0) > 0)
-      .map(sub => ({ ...sub, count: counts.get(sub.key) || 0 }))
-  })
-
-  const filteredExamples = computed(() => {
-    const kw = keyword.value.trim().toLowerCase()
-    const sub = subCategoryDefinitions.find(s => s.key === currentSubCategory.value)
-    const list = techExamples.value
-
-    // 无关键词且不限子分类时直接复用分桶数组，连一次遍历都省掉
-    if (!kw && sub?.key === 'all') return list
-
-    return list.filter(ex => {
-      if (sub && sub.key !== 'all' && !sub.match(ex)) return false
-      if (!kw) return true
-      return exampleIndex.value.haystacks.get(ex)!.includes(kw)
-    })
-  })
-
-  const totalPages = computed(() => Math.ceil(filteredExamples.value.length / pageSize))
+  // 注意：这里**不能**钳成最小 1。空结果集必须得到 0 页，
+  // 否则注册表落地时 totalPages 从 1 变 1（无变化），
+  // 下面的越界钳制 watch 就永远不触发 —— 「?page=7 配 11 条结果」的空白网格回归会重新出现。
+  const totalPages = computed(() => Math.ceil(filteredExamples.value.length / pageSize.value))
   const paginatedExamples = computed(() => {
-    const start = (currentPage.value - 1) * pageSize
-    return filteredExamples.value.slice(start, start + pageSize)
+    const start = (currentPage.value - 1) * pageSize.value
+    return filteredExamples.value.slice(start, start + pageSize.value)
   })
 
   const visiblePages = computed(() => {
@@ -211,11 +333,24 @@ export function useGalleryFilters() {
     return pages
   })
 
-  // 页码钳制。两个来源会让 currentPage 落到有效范围之外：
+  const activeFilters = computed<ActiveFilter[]>(() => {
+    const list: ActiveFilter[] = []
+    if (currentTech.value !== 'all') list.push({ key: 'tech', label: '技术', value: currentTechLabel.value })
+    if (currentSource.value !== 'all') list.push({ key: 'source', label: '来源', value: sourceLabel(currentSource.value) })
+    if (currentSubCategory.value !== 'all') {
+      list.push({ key: 'sub', label: '专题', value: subLabel(currentSubCategory.value) })
+    }
+    const trimmed = keyword.value.trim()
+    if (trimmed) list.push({ key: 'search', label: '关键词', value: trimmed })
+    return list
+  })
+
+  // 页码钳制。三个来源会让 currentPage 落到有效范围之外：
   //   ① 顶栏写 ?search= 时是 {...route.query}（src/App.vue），旧 page 被原样保留——
   //      在第 3 页输入关键词、结果不足 3 页时 paginatedExamples 为空，
   //      而 filteredExamples.length 又 >0，连空态提示都不显示 → 用户见「共 N 个」配空白网格；
-  //   ② 手输/分享的 ?page=999、?page=-3、?page=2.5 直接落进 slice（负数会从尾部取错数据）。
+  //   ② 手输/分享的 ?page=999、?page=-3、?page=2.5 直接落进 slice（负数会从尾部取错数据）；
+  //   ③ 缩小每页条数会让总页数变多/变少的反向越界。
   // 放在这里而不是让 selectTech/selectCategory 重置，是因为它们管不到「搜索」这条路径，
   // 且前进/后退还原 URL 时不该被额外重置。
   watch([totalPages, currentPage], () => {
@@ -225,13 +360,23 @@ export function useGalleryFilters() {
     else if (cur > max) currentPage.value = max
   })
 
-  // 用户主动切换技术 / 子分类时，重置子分类与页码。
+  // 用户主动切换技术 / 来源 / 专题时，重置页码。
   // 注意：不再用 watch(currentTech) / watch([keyword, currentSubCategory]) 自动重置，
   // 否则在浏览器前进/后退（syncQueryToState 从 URL 还原状态）时也会触发重置，
   // 导致子分类与页码状态被冲掉、无法恢复。
+  //
+  // 切技术时连专题一起重置：专题是「在当前技术范围内」的计数，跨技术沿用
+  // 一个不存在的专题键会直接空结果，且界面上看不出原因。
   function selectTech(key: string) {
     if (currentTech.value === key) return
     currentTech.value = key
+    currentSubCategory.value = 'all'
+    currentPage.value = 1
+  }
+
+  function selectSource(key: string) {
+    if (currentSource.value === key) return
+    currentSource.value = key
     currentSubCategory.value = 'all'
     currentPage.value = 1
   }
@@ -242,11 +387,53 @@ export function useGalleryFilters() {
     currentPage.value = 1
   }
 
+  function setSort(key: GallerySortKey) {
+    if (sort.value === key) return
+    sort.value = key
+    currentPage.value = 1
+  }
+
+  function setPageSize(n: number) {
+    if (!PAGE_SIZE_OPTIONS.includes(n) || pageSize.value === n) return
+    pageSize.value = n
+    currentPage.value = 1
+  }
+
+  function setView(v: GalleryView) {
+    view.value = v
+  }
+
+  function setDensity(d: GalleryDensity) {
+    density.value = d
+    try {
+      localStorage.setItem(DENSITY_KEY, d)
+    } catch {
+      // 隐私模式下写不进就算了，当前会话内仍然生效
+    }
+  }
+
+  /** 单个 chip 的 × ：把对应维度清回默认值 */
+  function clearFilter(key: ActiveFilter['key']) {
+    if (key === 'tech') currentTech.value = 'all'
+    else if (key === 'source') currentSource.value = 'all'
+    else if (key === 'sub') currentSubCategory.value = 'all'
+    else keyword.value = ''
+    currentPage.value = 1
+  }
+
+  function clearAllFilters() {
+    currentTech.value = 'all'
+    currentSource.value = 'all'
+    currentSubCategory.value = 'all'
+    keyword.value = ''
+    currentPage.value = 1
+  }
+
   /**
    * 用户点击页码：改页码并把容器滚回顶部。
    *
-   * 为什么挂在动作上而不是 watch(currentPage)：currentPage 会被三条路径改动 ——
-   * 用户翻页、URL 还原（syncQueryToState）、越界钳制。后两条不该滚，
+   * 为什么挂在动作上而不是 watch(currentPage)：currentPage 会被多条路径改动 ——
+   * 用户翻页、URL 还原（syncQueryToState）、越界钳制、改每页条数。后几条不该滚，
    * 而且会和 restoreScroll 抢同一个容器（实测恢复到的 700 被拽回 33）。
    */
   function goToPage(page: number) {
@@ -258,11 +445,18 @@ export function useGalleryFilters() {
   function syncQueryToState() {
     const tech = route.query.tech
     const sub = route.query.sub
+    const src = route.query.src
     const search = route.query.search
-    const validTech = typeof tech === 'string' && techGroups.some(t => t.key === tech)
-    const validSub = typeof sub === 'string' && subCategoryDefinitions.some(s => s.key === sub)
-    if (validTech) currentTech.value = tech as string
-    if (validSub) currentSubCategory.value = sub as string
+    const sortQ = route.query.sort
+    const sizeQ = Number(route.query.size)
+    const viewQ = route.query.view
+
+    if (typeof tech === 'string' && techGroups.some(t => t.key === tech)) currentTech.value = tech
+    if (typeof src === 'string' && KNOWN_SOURCES.includes(src)) currentSource.value = src
+    if (typeof sub === 'string' && subCategoryDefinitions.some(s => s.key === sub)) currentSubCategory.value = sub
+    if (typeof sortQ === 'string' && SORT_OPTIONS.some(o => o.key === sortQ)) sort.value = sortQ as GallerySortKey
+    if (PAGE_SIZE_OPTIONS.includes(sizeQ)) pageSize.value = sizeQ
+    if (viewQ === 'list' || viewQ === 'grid') view.value = viewQ
     keyword.value = typeof search === 'string' ? search : ''
     currentPage.value = Number(route.query.page) || 1
   }
@@ -270,18 +464,20 @@ export function useGalleryFilters() {
   onMounted(syncQueryToState)
   watch(() => route.query, syncQueryToState, { deep: true })
 
-  // 状态 -> URL：切换技术 / 分类 / 搜索时写回 query，刷新可保持、可分享、可前进后退
-  watch([currentTech, currentSubCategory, keyword, currentPage], () => {
+  // 状态 -> URL：任何筛选/排序/视图变化都写回 query，刷新可保持、可分享、可前进后退
+  watch([currentTech, currentSource, currentSubCategory, keyword, sort, pageSize, view, currentPage], () => {
     const query: Record<string, string | number> = {}
     if (currentTech.value !== 'all') query.tech = currentTech.value
+    if (currentSource.value !== 'all') query.src = currentSource.value
     if (currentSubCategory.value !== 'all') query.sub = currentSubCategory.value
-    const kw = keyword.value.trim()
-    if (kw) query.search = kw
+    const trimmed = keyword.value.trim()
+    if (trimmed) query.search = trimmed
+    if (sort.value !== 'default') query.sort = sort.value
+    if (pageSize.value !== DEFAULT_PAGE_SIZE) query.size = pageSize.value
+    if (view.value !== 'grid') query.view = view.value
     if (currentPage.value > 1) query.page = currentPage.value
     // 避免无实质变化时触发导航（防止 watch 循环）
-    const currentQuery = route.query
-    const isSame = JSON.stringify(query) === JSON.stringify({ ...currentQuery })
-    if (!isSame) router.replace({ query })
+    if (!sameQuery(query, route.query as Record<string, unknown>)) router.replace({ query })
   })
 
   /**
@@ -323,20 +519,36 @@ export function useGalleryFilters() {
   return {
     // 状态（模板直接绑定的）
     currentTech,
+    currentSource,
     currentSubCategory,
     currentPage,
-    // 派生数据
+    pageSize,
+    sort,
+    view,
+    density,
+    loading,
+    // 分面与派生数据
+    totalCount,
     currentTechLabel,
     techExamplesCount,
     techTabs,
-    availableSubCategories,
+    sourceFacets,
+    subFacets,
     filteredExamples,
     paginatedExamples,
     totalPages,
     visiblePages,
+    activeFilters,
     // 动作
     selectTech,
+    selectSource,
     selectCategory,
+    setSort,
+    setPageSize,
+    setView,
+    setDensity,
+    clearFilter,
+    clearAllFilters,
     goToPage,
   }
 }

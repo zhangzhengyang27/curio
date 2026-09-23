@@ -33,6 +33,15 @@ const registryLoaders = {
   'city-realtime-webgl': () => import('./cityRealtimeWebglExamples.ts'),
 }
 
+/**
+ * 全部已知来源键。
+ *
+ * 与 getSources() 的区别：那个要等 11 个分片加载完才有（且 label 从缓存取），
+ * 而 URL 参数校验发生在 onMounted —— 那时注册表还没落地，拿它校验 ?src=webgl
+ * 会一律判为非法。分面列表可以在加载后用 getSources() 补中文名，校验用这里。
+ */
+export const KNOWN_SOURCES: readonly string[] = Object.keys(registryLoaders)
+
 // 同步缓存（加载完成后可用）
 const _registryCache = new Map<string, { source: string; label: string; examples: RegistryExample[] }>()
 let _allExamplesCache: RegistryExample[] | null = null
