@@ -48,6 +48,28 @@
 规矩：改完 `grep -rn` 一下涉及的**数字与机制名**，命中 `README` / `docs/` /
 `.github/workflows/ci.yml` 注释就一起改。**结构性描述滞后比数字过时更危险。**
 
+## 产物体积与示例组件的引用机制（2026-09-23 实测）
+
+- 1436 个示例组件**只通过一处** `import.meta.glob` 被引用：
+  `src/examples/components/index.ts:20`（组件）与 `:42`（`?raw` 源码）。
+  全仓唯一消费者是 `ExampleDemo.vue:93`（懒加载路由）。
+  → glob 是静态的**摇不掉**；但只要让 `/examples/:source/*` 路由不存在，
+  整条链（2683 个 chunk / 20 MB）就会消失。**部署拆分的最小切口是路由表，不是删文件。**
+- `dist` 1.4 GB 里的 1.1 GB **不是** `copy-example-deps.js` 拷的（那只拷 81 MB 的
+  `dist/node_modules`），而是 Vite `publicDir` 整目录原样拷贝。
+  平台真正需要的 public 子目录只有 `data`(12M) + `textures`(1.9M)。
+- **隐藏硬耦合**：平台首页（Three.js 那套）依赖 `src/examples/three-build-compat` 与
+  `jsm-compat`（`vite.config.ts:26-36` 全局重定向 three）。
+  → `src/examples/` **不能**整体从平台构建移除；想物理拆包必须先搬这两个目录。
+
 ## 状态提醒
 
-仓库**没有 remote**，所有提交只在本机磁盘（ROADMAP P0 未做）。
+- 仓库**没有 remote**，所有提交只在本机磁盘（ROADMAP P0 未做）。
+- **需求方 2026-09-23 拍板：暂时不要裁剪项目。** 完整规划见
+  `docs/PRODUCT_PLAN.md`（产品侧）与 `docs/TECH_ROADMAP.md`（工程侧）。
+- ⚠ 由此遗留的矛盾：不裁剪 → 产物仍 ~1.4 GB → 免费托管上不去 → 「可分享链接」不可达。
+  下次接手先挑明这层。
+- ⚠ `dist/index.html:12` 曾嵌百度 AK 明文（`dist` 被 gitignore 未入库，但上传即公开）。
+  **轮换凭据后必须删掉并重建 `dist/`**，不能上传旧产物。
+- `dist/` 当前是**陈旧产物**（源码有 `/bmap` 按需注入逻辑，产物里没有），
+  所以 `du -sh dist = 1.4 GB` 不能当基线，体积结论必须用新构建校准。
