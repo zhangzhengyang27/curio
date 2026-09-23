@@ -1,15 +1,23 @@
 /**
  * 全球分析页的等值区着色（choropleth）。
  *
- * 世界多边形通过 GeoJsonDataSource 装载为实体集合；按「当年 GDP 排名
- * 百分位」映射到 7 级蓝色色阶（GDP 长尾分布，排名比绝对值更适合分色）。
- * 选中国与对比国使用高亮色覆盖。无数据/非当前视图国家为浅灰。
+ * 世界多边形通过 GeoJsonDataSource 装载为实体集合；按「当年数值排名
+ * 百分位」映射到 7 级色阶（长尾分布，排名比绝对值更适合分色）。
+ * 选中国与对比国使用高亮色覆盖。无数据国家为浅灰。
  */
 /* viewer/entity 为预编译 Cesium 对象，无类型可依 */
+/**
+ * 7 级色阶（ColorBrewer Blues）：percent 0=最弱 → 浅，1=最强 → 深。
+ * 球面始终是浅色矢量底图（卫星影像层按高度门控，vec/cva 不受门控），
+ * 所以色阶不跟应用明暗主题走——暗色主题下把高值映到近白只会白上加白。
+ */
 const RAMP = ['#f7fbff', '#d0e1f2', '#94c4df', '#4a98c9', '#2271b2', '#0c4a8c', '#08306b']
 
 const SELECT_COLOR = '#ff8a3d' // 主选国
 const COMPARE_COLORS = ['#e0457b', '#7c4dc4', '#2bb596', '#c9b314'] // 对比国依次取用
+
+const NODATA_CSS = '#dcdcd6'
+const NODATA_ALPHA = 0.6
 
 function rampColor(percent: number): string {
   // percent: 0~1，0=最弱
@@ -46,7 +54,7 @@ export class Choropleth {
     if (!geo) geo = await (await fetch('/data/worldZh.json')).json()
     const ds = await this.Cesium.GeoJsonDataSource.load(geo, {
       stroke: this.Cesium.Color.fromCssColorString('#9a9a9a'),
-      fill: this.Cesium.Color.fromCssColorString('#e8e8e2').withAlpha(0.85),
+      fill: this.Cesium.Color.fromCssColorString(NODATA_CSS).withAlpha(NODATA_ALPHA),
       strokeWidth: 1,
     })
     this.viewer.dataSources.add(ds)
@@ -98,12 +106,12 @@ export class Choropleth {
       return idx === -1 ? null : COMPARE_COLORS[idx % COMPARE_COLORS.length]
     }
 
-    // entries 已按数值降序，直接用位次取百分位（原先每轮再 findIndex 一次，是 O(n²)）
+    // entries 已按数值降序：rank 0 = 最强，换算成「0=最弱」的百分位契约
     for (let rank = 0; rank < entries.length; rank++) {
       const [name] = entries[rank]
       const entities = this.byName.get(name)
       if (!entities) continue
-      const percent = entries.length > 1 ? rank / (entries.length - 1) : 1
+      const percent = entries.length > 1 ? 1 - rank / (entries.length - 1) : 1
       const highlight = name === selected ? SELECT_COLOR : compareColorOf(name)
       const css = highlight || rampColor(percent)
       const color = Cesium.Color.fromCssColorString(css).withAlpha(highlight ? 0.95 : 0.85)
@@ -112,12 +120,11 @@ export class Choropleth {
       }
     }
     // 无数据的国家置灰
+    const nodataColor = Cesium.Color.fromCssColorString(NODATA_CSS).withAlpha(NODATA_ALPHA)
     for (const [name, entities] of this.byName) {
       if (!(name in values) && !(name === selected) && !compared.includes(name)) {
         for (const entity of entities) {
-          if (entity.polygon) {
-            entity.polygon.material = Cesium.Color.fromCssColorString('#dcdcd6').withAlpha(0.6)
-          }
+          if (entity.polygon) entity.polygon.material = nodataColor
         }
       }
     }
