@@ -1,0 +1,87 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build output
+dist
+dist-ssr
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.zcode/
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Cache
+.cache
+.temp
+.tmp
+node_modules/.vite
+
+# OS
+Thumbs.db
+
+# Test artifacts
+# 注意：以下一次性脚本的忽略规则必须用前导「/」锚定到仓库根目录。
+# 早期版本写成 `verify-examples.mjs` / `check-*.mjs` / `test-*.py`（无前导斜杠），
+# 会匹配任意层级，导致 tests/ 下的测试文件和 scripts/check-secrets.mjs 被误忽略。
+/tmp/
+/example-screenshots/
+/verify-examples.mjs
+/check-*.mjs
+/test-*.py
+build.log
+svg_sandbox.png
+test-results/
+playwright-report/
+playwright/.cache/
+scripts/*-summary.json
+
+# ===== ↑ 以上同步自 .gitignore（「从 .gitignore 同步」只重写以上部分）=====
+.git/
+.hg/
+.svn/
+bower_components/
+jspm_packages/
+__pycache__/
+site-packages/
+venv/
+coverage/
+htmlcov/
+lcov-report/
+cmakefiles/
+cmake-build-*/
+bazel-*/
+pods/
+deriveddata/
+storybook-static/
+allure-results/
+allure-report/
+cdk.out/
+*.egg-info/
+*.dist-info/
+eggs/
+pip-wheel-metadata/
+wheels/
+# ----- ↑ 以上为 ZCode 默认排除规则（自定义规则请写在本行下方，不会被同步/恢复改动）-----
+# 自定义规则写在下方（本行提示可删除）
