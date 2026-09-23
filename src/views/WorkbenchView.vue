@@ -6,6 +6,13 @@
     />
 
     <div
+      v-if="!ready && !loadError && !dataError"
+      class="load-error tv-glass-panel"
+      data-testid="boot-hint"
+    >
+      {{ bootHint }}
+    </div>
+    <div
       v-if="dataError"
       class="load-error tv-glass-panel"
     >
@@ -22,108 +29,158 @@
     <aside
       v-if="ready"
       class="panel panel-left tv-glass-panel"
+      :class="{ collapsed: !leftOpen }"
     >
-      <h3 class="panel-title">
-        分析工作台
-      </h3>
-      <div class="theme-tabs">
+      <header class="panel-head">
+        <h3 class="panel-title">
+          分析工作台
+        </h3>
         <button
-          v-for="key in THEME_KEYS"
-          :key="key"
-          class="theme-tab"
-          :class="{ active: theme === key }"
-          :data-testid="`theme-${key}`"
-          @click="setTheme(key)"
+          class="fold-btn"
+          :aria-expanded="leftOpen"
+          :aria-label="leftOpen ? '收起排行面板' : '展开排行面板'"
+          @click="togglePanel('left')"
         >
-          {{ THEMES[key].short }}
+          <UiIcon
+            name="chevron-down"
+            :size="16"
+            :class="{ 'flip-up': !leftOpen }"
+          />
         </button>
-      </div>
-
-      <p class="group-label">
-        {{ themeTitle }} · Top 10
-      </p>
-      <ol
-        class="ranking"
-        data-testid="ranking-list"
+      </header>
+      <div
+        v-show="leftOpen"
+        class="panel-body"
       >
-        <li
-          v-for="(item, i) in top10"
-          :key="item.name"
-          class="rank-row"
-          :data-testid="`rank-item-${i}`"
-          @click="focusCountry(item.name)"
+        <div class="theme-tabs">
+          <button
+            v-for="key in THEME_KEYS"
+            :key="key"
+            class="theme-tab"
+            :class="{ active: theme === key }"
+            :data-testid="`theme-${key}`"
+            @click="setTheme(key)"
+          >
+            {{ THEMES[key].short }}
+          </button>
+        </div>
+
+        <p class="group-label">
+          {{ themeTitle }} · Top 10
+        </p>
+        <ol
+          class="ranking"
+          data-testid="ranking-list"
         >
-          <span class="rank-no">{{ i + 1 }}</span>
-          <span class="rank-name">{{ item.name }}</span>
-          <span class="rank-value">{{ formatValue(item.value) }}</span>
-        </li>
-      </ol>
+          <li
+            v-for="(item, i) in top10"
+            :key="item.name"
+          >
+            <button
+              class="rank-row"
+              :data-testid="`rank-item-${i}`"
+              @click="focusCountry(item.name)"
+            >
+              <span class="rank-no">{{ i + 1 }}</span>
+              <span class="rank-name">{{ item.name }}</span>
+              <span class="rank-value">{{ formatValue(item.value) }}</span>
+            </button>
+          </li>
+        </ol>
+      </div>
     </aside>
 
     <!-- 右侧：图表与报告 -->
     <aside
       v-if="ready"
       class="panel panel-right tv-glass-panel"
+      :class="{ collapsed: !rightOpen }"
     >
-      <h3 class="panel-title">
-        {{ themeTitle }} · 分布图表
-      </h3>
+      <header class="panel-head">
+        <h3 class="panel-title">
+          {{ themeTitle }} · 分布图表
+        </h3>
+        <button
+          class="fold-btn"
+          :aria-expanded="rightOpen"
+          :aria-label="rightOpen ? '收起图表面板' : '展开图表面板'"
+          @click="togglePanel('right')"
+        >
+          <UiIcon
+            name="chevron-down"
+            :size="16"
+            :class="{ 'flip-up': !rightOpen }"
+          />
+        </button>
+      </header>
       <div
-        ref="chartRef"
-        class="chart-box"
-        data-testid="chart"
-      />
-      <!-- 选国下钻(W3):GDP 主题点排行后显示该国多年趋势 -->
-      <template v-if="drillCountry">
-        <p class="group-label">
-          {{ drillCountry }} · GDP 走势(2000~2020)
-        </p>
+        v-show="rightOpen"
+        class="panel-body"
+      >
         <div
-          ref="drillRef"
-          class="drill-box"
-          data-testid="drill-chart"
+          ref="chartRef"
+          class="chart-box"
+          data-testid="chart"
         />
-      </template>
-      <p
-        class="summary"
-        data-testid="summary"
-      >
-        {{ summary }}
-      </p>
-      <p class="group-label">
-        报告模板
-      </p>
-      <div class="report-mode">
-        <button
-          class="mode-pill"
-          :class="{ active: reportMode === 'brief' }"
-          data-testid="mode-brief"
-          @click="reportMode = 'brief'"
+        <!-- 选国下钻(W3):GDP 主题点排行后显示该国多年趋势 -->
+        <template v-if="drillCountry">
+          <p class="group-label">
+            {{ drillCountry }} · GDP 走势(2000~2020)
+          </p>
+          <div
+            ref="drillRef"
+            class="drill-box"
+            data-testid="drill-chart"
+          />
+        </template>
+        <p
+          class="summary"
+          data-testid="summary"
         >
-          摘要版
-        </button>
+          {{ summary }}
+        </p>
+        <p class="group-label">
+          报告模板
+        </p>
+        <div class="report-mode">
+          <button
+            class="mode-pill"
+            :class="{ active: reportMode === 'brief' }"
+            data-testid="mode-brief"
+            @click="reportMode = 'brief'"
+          >
+            摘要版
+          </button>
+          <button
+            class="mode-pill"
+            :class="{ active: reportMode === 'full' }"
+            data-testid="mode-full"
+            @click="reportMode = 'full'"
+          >
+            完整版
+          </button>
+        </div>
         <button
-          class="mode-pill"
-          :class="{ active: reportMode === 'full' }"
-          data-testid="mode-full"
-          @click="reportMode = 'full'"
+          class="mini-btn primary"
+          data-testid="export-report"
+          :disabled="exporting"
+          @click="exportReport"
         >
-          完整版
+          <UiIcon
+            v-if="!exporting"
+            name="download"
+            :size="14"
+          />
+          {{ exporting ? '报告生成中…' : '生成分析报告' }}
         </button>
+        <p
+          v-if="exportError"
+          class="export-error"
+          role="alert"
+        >
+          {{ exportError }}
+        </p>
       </div>
-      <button
-        class="mini-btn primary"
-        data-testid="export-report"
-        :disabled="exporting"
-        @click="exportReport"
-      >
-        <UiIcon
-          v-if="!exporting"
-          name="download"
-          :size="14"
-        />
-        {{ exporting ? '报告生成中…' : '生成分析报告' }}
-      </button>
     </aside>
   </div>
 </template>
@@ -136,6 +193,7 @@ import { loadCesium } from '../map/cesiumLoader'
 import { createMapViewer } from '../map/createViewer'
 import { Choropleth } from '../map/analysis/choropleth'
 import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData'
+import { useThemeStore } from '../stores/useThemeStore'
 import UiIcon from '../components/UiIcon'
 
 // 数轴刻度压缩：原始值如 5,000,000,000,000 会让相邻刻度互相重叠成一团，
@@ -205,8 +263,47 @@ const ready = ref(false)
 const loadError = ref('')
 const theme = ref('gdp')
 const exporting = ref(false)
+const exportError = ref('')
 const route = useRoute()
 const router = useRouter()
+const themeStore = useThemeStore()
+
+// 窄屏下两块 300px 面板会把地图盖到只剩一条缝：默认收起，展开时手风琴互斥
+const NARROW_BREAKPOINT = 760
+const leftOpen = ref(true)
+const rightOpen = ref(true)
+let wasNarrow = false
+
+function applyNarrowLayout() {
+  const narrow = window.innerWidth < NARROW_BREAKPOINT
+  if (narrow === wasNarrow) return
+  wasNarrow = narrow
+  // 跨越断点时收起/恢复，保证地图始终有可见区域
+  leftOpen.value = !narrow
+  rightOpen.value = !narrow
+  if (!narrow) syncChartSizes()
+}
+
+// 收起态下容器对 echarts 是 0 尺寸，展开后须手动同步，否则画布保持 0×0
+function syncChartSizes() {
+  nextTick(() => {
+    chartInstance?.resize()
+    drillChart?.resize()
+    renderDrill()
+  })
+}
+
+function togglePanel(side: 'left' | 'right') {
+  const narrow = window.innerWidth < NARROW_BREAKPOINT
+  if (side === 'left') {
+    leftOpen.value = !leftOpen.value
+    if (leftOpen.value && narrow) rightOpen.value = false
+    return
+  }
+  rightOpen.value = !rightOpen.value
+  if (rightOpen.value && narrow) leftOpen.value = false
+  if (rightOpen.value) syncChartSizes()
+}
 
 // URL 状态(X2):?theme= 与 analysis 的 ?country=&year= 同一套命名规范;
 // 本页仅此一个 URL 机制(C11:一个页面的 URL 状态只能归一个机制管)
@@ -218,9 +315,25 @@ watch(theme, (t: string) => {
   router.replace({ query: t === 'gdp' ? {} : { theme: t } }).catch(() => {})
 })
 
+// URL 状态双向:组件复用时(客户端跳转/前进后退带回 ?theme=)也要把地址回填成主题。
+// 原先只写不读,回退后地址写着 carbon、激活页签却是 GDP,界面与地址失同步。
+watch(() => route.query.theme, (q) => {
+  const t = typeof q === 'string' ? q : ''
+  if (t === theme.value) return
+  if (THEME_QUERY_KEYS.includes(t)) setTheme(t)
+  else if (t === '') setTheme('gdp')
+})
+
+// 应用级明暗切换只换 CSS 令牌:echarts canvas 不会自动重绘,
+// 不手动重绘一遍,旧主题的文字色会冻结在画布上(浅色下几乎不可读)
+watch(() => themeStore.isDark, () => refresh())
+
 // dataError = 数据层错误(数据文件拉取失败);loadError = Cesium 初始化错误。
 // 曾只解构数据不接 error,数据失败时页面静默全灰(审查 P2 死代码分支)
-const { countries, gdpByYear, world, load, error: dataError } = useCountryData()
+const { countries, gdpByYear, world, loading, load, error: dataError } = useCountryData()
+
+// 冷启动(数据 2.4MB + Cesium 底座)期间不能只有导航条+空背景:给出所处阶段
+const bootHint = computed(() => (loading.value ? '正在加载全球数据…' : '正在启动地图引擎…'))
 let viewer: any = null
 let choropleth: Choropleth | null = null
 let chartInstance: import('echarts').ECharts | null = null
@@ -288,7 +401,7 @@ function setTheme(t: string) {
 }
 
 function refresh() {
-  choropleth?.applyValues(values.value)
+  choropleth?.applyValues(values.value, drillCountry.value)
   renderChart()
   renderDrill()
 }
@@ -299,8 +412,10 @@ const drillRef = ref<HTMLDivElement | null>(null)
 let drillChart: import('echarts').ECharts | null = null
 
 function focusCountry(name: string) {
-  choropleth?.flyTo(name)
   drillCountry.value = theme.value === 'gdp' ? name : null
+  choropleth?.flyTo(name)
+  // 选中高亮:Choropleth 本就支持 selected 参量,原先点完只飞相机、地图上无持续反馈
+  choropleth?.applyValues(values.value, drillCountry.value)
   nextTick(renderDrill)
 }
 
@@ -386,6 +501,7 @@ function reportFingerprint() {
 async function exportReport() {
   if (exporting.value) return
   exporting.value = true
+  exportError.value = ''
   try {
     viewer.render()
     const mapSnap = viewer.canvas.toDataURL('image/png')
@@ -428,6 +544,10 @@ ${fingerprintSection}
     a.click()
     a.remove()
     setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+  } catch (err) {
+    // 快照/序列化任何一步抛错都不能只留 unhandled rejection:按钮会恢复但用户毫无反馈
+    exportError.value = '报告生成失败，请重试。'
+    console.error('[workbench] 报告导出失败:', err)
   } finally {
     exporting.value = false
   }
@@ -435,6 +555,7 @@ ${fingerprintSection}
 
 let resizeHandler: (() => void) | null = null
 onMounted(async () => {
+  applyNarrowLayout()
   try {
     await load()
     if (dataError.value) return
@@ -444,6 +565,10 @@ onMounted(async () => {
       mode: 'vec',
       view: { lon: 60, lat: 28, height: 9_500_000 },
     })
+    // 瓦片到达前 globe 用 baseColor 兜底,默认纯黑会让海洋看起来像「加载失败的洞」
+    viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString(
+      themeStore.isDark ? '#0d1b2a' : '#e8eef4'
+    )
     choropleth = new Choropleth(Cesium, viewer)
     await choropleth.load(world.value)
     choropleth.applyValues(values.value)
@@ -452,7 +577,10 @@ onMounted(async () => {
     const echarts = await import('echarts')
     chartInstance = echarts.init(chartRef.value)
     renderChart()
-    resizeHandler = () => chartInstance?.resize()
+    resizeHandler = () => {
+      chartInstance?.resize()
+      applyNarrowLayout()
+    }
     window.addEventListener('resize', resizeHandler)
   } catch (err) {
     loadError.value = '页面初始化失败，请刷新重试。'
@@ -510,19 +638,60 @@ onUnmounted(() => {
   overflow: auto;
 }
 
+/* 左面板贴内容高度：top/bottom 双锚定会让 10 行排行之下剩半屏死空间 */
 .panel-left {
   left: 16px;
-  bottom: 16px;
+  max-height: calc(100% - 32px);
 }
 
 .panel-right {
   right: 16px;
-  bottom: 16px;
   max-height: calc(100% - 32px);
 }
 
+.panel.collapsed {
+  width: auto;
+  min-width: 132px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fold-btn {
+  display: inline-flex;
+  padding: 2px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tv-on-surface-variant);
+  cursor: pointer;
+}
+
+.fold-btn:hover {
+  color: var(--tv-on-surface);
+}
+
+.fold-btn svg {
+  transition: transform var(--tv-dur-fast) var(--tv-ease);
+}
+
+.fold-btn .flip-up {
+  transform: rotate(-90deg);
+}
+
+.panel-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 10px;
+}
+
 .panel-title {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 14px;
 }
 
@@ -576,14 +745,25 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
   padding: 5px 6px;
+  border: none;
   border-radius: 8px;
+  background: transparent;
+  color: inherit;
   font-size: 12px;
+  font-family: inherit;
+  text-align: left;
   cursor: pointer;
 }
 
 .rank-row:hover {
   background: rgba(128, 128, 128, 0.12);
+}
+
+.rank-row:focus-visible {
+  outline: 2px solid var(--tv-primary);
+  outline-offset: -2px;
 }
 
 .rank-no {
@@ -607,11 +787,13 @@ onUnmounted(() => {
 .chart-box {
   width: 100%;
   height: 260px;
+  flex-shrink: 0;
 }
 
 .drill-box {
   width: 100%;
   height: 140px;
+  flex-shrink: 0;
 }
 
 .report-mode {
@@ -677,5 +859,23 @@ onUnmounted(() => {
 .mini-btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.export-error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--tv-error);
+}
+
+/* Cesium 归属标识默认贴左下角，会被左面板压住一半；移到右下空位 */
+.map-container :deep(.cesium-widget-credits) {
+  left: auto;
+  right: 8px;
+}
+
+@media (max-width: 760px) {
+  .panel {
+    width: min(300px, calc(100vw - 32px));
+  }
 }
 </style>

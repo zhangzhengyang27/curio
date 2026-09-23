@@ -200,6 +200,50 @@ test.describe('主题分析工作台', () => {
     await expect(page.locator('[data-testid="theme-gdp"]')).toHaveClass(/active/)
   })
 
+  test('URL 状态双向:组件复用时地址变化回填主题(回归:只写不读致地址与页签失同步)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="theme-gdp"]')).toHaveClass(/active/)
+
+    // 不整页刷新地改地址(客户端跳转/前进后退的同款路径):vue-router 监听 popstate
+    await page.evaluate(() => {
+      history.pushState({}, '', '/workbench?theme=carbon')
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
+    await expect(page.locator('[data-testid="theme-carbon"]')).toHaveClass(/active/, { timeout: 5_000 })
+    await expect(page.locator('[data-testid="rank-item-0"]')).toContainText('MtCO₂', { timeout: 10_000 })
+
+    await page.evaluate(() => {
+      history.pushState({}, '', '/workbench')
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
+    await expect(page.locator('[data-testid="theme-gdp"]')).toHaveClass(/active/, { timeout: 5_000 })
+  })
+
+  test('排行行键盘可达:聚焦后 Enter 触发下钻(回归:li+click 键盘完全不可达)', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
+
+    const row = page.locator('[data-testid="rank-item-0"]')
+    await expect(row).toHaveRole('button')
+    await row.focus()
+    await expect(row).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('[data-testid="drill-chart"] canvas')).toBeVisible()
+  })
+
+  test('切换明暗主题:图表画布随之重绘(回归:文字色曾冻结在旧主题)', async ({ page }) => {
+    await page.goto('/workbench')
+    await expect(page.locator('[data-testid="chart"] canvas')).toBeVisible({ timeout: CHART_FIRST_RENDER })
+
+    const snap = () =>
+      page.locator('[data-testid="chart"] canvas').evaluate((c) => (c as HTMLCanvasElement).toDataURL())
+    const before = await snap()
+    await page.locator('button[title="切换到浅色"]').click()
+    // 重绘是 watch 异步触发,轮询到画布像素变化为止
+    await expect.poll(snap, { timeout: 8_000 }).not.toBe(before)
+  })
+
   test('数据加载失败：显示错误提示而非静默空白(回归:错误分支曾是死代码)', async ({ page }) => {
     await page.route('**/data/mock/gdp-timeline.json', (route) => route.abort())
     await page.goto('/workbench')
