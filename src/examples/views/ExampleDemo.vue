@@ -16,6 +16,10 @@
               ← 返回示例列表
             </button>
             <span class="demo-title">{{ example?.title || '示例' }}</span>
+            <span
+              v-if="demoMeta"
+              class="demo-meta tv-num"
+            >{{ demoMeta }}</span>
           </div>
           <div class="meta-bottom">
             <span class="demo-tags">
@@ -82,11 +86,12 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getExampleById } from '../registry/index.ts'
+import { getExampleById, getSources } from '../registry/index.ts'
 import { ensureRegistryLoaded } from '../composables/useExampleFilters'
 import IframeRunner from '../runners/IframeRunner.vue'
 import ExampleHost from './ExampleHost.vue'
 import { loadExampleComponent, loadExampleSource } from '../components/index'
+import { exampleCategoryLabel, exampleDiscriminator } from '../utils/exampleMeta'
 import CodeDrawer from '../../components/CodeDrawer.vue'
 
 const route = useRoute()
@@ -143,6 +148,26 @@ const example = computed(() => {
 const exampleKey = computed(() => {
   const { source, category, id } = parsed.value
   return `${source}-${category}-${id}`
+})
+
+/**
+ * 「来源 · 分类 · id 尾段」一行摊开。
+ *
+ * 详情页原先只有标题：registry 里有 127 组重名标题（最糟的 32 条全叫
+ * 「加载器：模型加载」，且 category / categoryLabel 也完全一样），
+ * 用户从卡片点进来之后，页面上没有任何字段能说明这是 3dm 还是 3ds。
+ */
+const demoMeta = computed(() => {
+  const ex = example.value
+  if (!ex) return ''
+  // 条目对象的 source 未必已注入（getExampleById 走单条查表），URL 里的那一段才是可靠来源
+  const sourceSlug = (parsed.value as { source: string }).source || ex.source || ''
+  const sourceFound = getSources().find(s => s.source === sourceSlug)
+  return [
+    sourceFound ? sourceFound.label : sourceSlug,
+    exampleCategoryLabel(ex),
+    exampleDiscriminator(ex),
+  ].filter(Boolean).join(' · ')
 })
 
 const vueComponent = computed(() => {
@@ -241,6 +266,7 @@ onBeforeUnmount(() => {
 
 .meta-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--tv-sm);
   min-width: 0;
@@ -257,6 +283,15 @@ onBeforeUnmount(() => {
   color: var(--tv-on-surface);
   font-size: 13px;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-meta {
+  color: var(--tv-on-surface-variant);
+  font-size: var(--tv-fs-xs);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

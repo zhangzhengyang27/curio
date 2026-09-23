@@ -20,6 +20,13 @@
             <p class="content-subtitle">
               整合 threejs-lesson、three-cesium-examples 等优质 Three.js 示例
             </p>
+            <!--
+              示例中心是只读归档，那么「封存的是哪一版」就是它唯一能自证可信度的信息。
+              原先全库没有任何时间/版本字段，也没登记过上游出处。
+            -->
+            <p class="content-snapshot">
+              {{ snapshotLine }}
+            </p>
           </div>
           <div class="result-count tv-num">
             共 {{ filteredExamples.length }} 个示例
@@ -70,9 +77,12 @@
 // 筛选状态机（URL ↔ 状态同步、过滤、分页）已抽到 useGalleryFilters，
 // 本组件只负责渲染。改动过滤逻辑请改 composable，别在这里加分支。
 import { useGalleryFilters } from '../composables/useGalleryFilters'
+import { snapshotSummary } from '../registry/provenance'
 import ExampleCard from './ExampleCard.vue'
 import GalleryFilterSidebar from './GalleryFilterSidebar.vue'
 import GalleryPagination from './GalleryPagination.vue'
+
+const snapshotLine = snapshotSummary()
 
 const {
   currentTech,
@@ -88,12 +98,8 @@ const {
   visiblePages,
   selectTech,
   selectCategory,
+  goToPage,
 } = useGalleryFilters()
-
-// 分页器是纯展示组件，只派发页码；这里显式写回 state（不在模板里直接改 ref）
-function goToPage(page: number) {
-  currentPage.value = page
-}
 </script>
 
 <style scoped>
@@ -150,6 +156,13 @@ function goToPage(page: number) {
   font-size: var(--tv-fs-md);
   line-height: 22px;
   color: var(--tv-on-surface-variant);
+}
+
+.content-snapshot {
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+  opacity: 0.8;
 }
 
 .result-count {
@@ -229,6 +242,12 @@ function goToPage(page: number) {
 @media (min-width: 768px) {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

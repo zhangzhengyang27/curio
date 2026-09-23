@@ -36,6 +36,12 @@
       <h3 class="card-title">
         {{ ex.title }}
       </h3>
+      <p
+        v-if="metaLine"
+        class="card-meta tv-num"
+      >
+        {{ metaLine }}
+      </p>
       <p class="card-desc">
         {{ ex.description || ex.title }}
       </p>
@@ -52,11 +58,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { PropType } from 'vue'
 import UiIcon from '../../components/UiIcon'
 import { getSources } from '../registry/index.ts'
+import type { RegistryExample } from '../registry/index.ts'
+import { exampleCategoryLabel, exampleDiscriminator } from '../utils/exampleMeta'
 
 const props = defineProps({
-  ex: { type: Object, required: true },
+  ex: { type: Object as PropType<RegistryExample>, required: true },
 })
 
 // 数据源展示名（如 threejs-official → three.js 官方示例）
@@ -65,6 +74,11 @@ const sourceLabel = computed(() => {
   const found = sources.value.find(s => s.source === props.ex.source)
   return found ? found.label : props.ex.source
 })
+
+// 「加载器 · 3dm」这样的一行，用来分开同名同分类的条目（见 utils/exampleMeta）
+const metaLine = computed(() =>
+  [exampleCategoryLabel(props.ex), exampleDiscriminator(props.ex)].filter(Boolean).join(' · '),
+)
 
 // 缩略图加载失败（文件缺失 / 网络错误）时回退到占位符，避免破图。
 // 状态由每张卡片自己持有，与其它卡片互不影响。
@@ -206,6 +220,17 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 3))
   color: var(--tv-on-surface);
   margin-bottom: var(--tv-xs);
   transition: color 0.2s;
+}
+
+.card-meta {
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
+  opacity: 0.85;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-desc {

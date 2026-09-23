@@ -17,19 +17,37 @@
         <span class="item-count tv-num">{{ cat.count }}</span>
       </button>
     </nav>
+
+    <!--
+      分类之间是有意允许重叠的（一个示例可以同时是「着色器」和「粒子」），
+      所以各类计数之和会大于「全部」。这个差值过去没有任何说明，
+      用户只能把它读成「数错了」。只在真的出现重叠时才渲染。
+    -->
+    <p
+      v-if="overlapping"
+      class="sidebar-note"
+    >
+      一个示例可同时属于多个分类，各类之和（{{ countSum }}）大于当前范围（{{ techExamplesCount }}）。
+    </p>
   </aside>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 // 示例中心左侧筛选栏（当前技术 + 子分类列表）。
 // 纯展示组件：状态由父组件的 useGalleryFilters 持有，选中只发事件。
-defineProps({
+const props = defineProps({
   currentTechLabel: { type: String, default: '' },
   techExamplesCount: { type: Number, default: 0 },
   categories: { type: Array as PropType<Array<{ key: string; label: string; count?: number }>>, default: () => [] },
   current: { type: String, default: 'all' },
 })
+
+const countSum = computed(() =>
+  props.categories.reduce((sum, c) => (c.key === 'all' ? sum : sum + (c.count || 0)), 0),
+)
+const overlapping = computed(() => countSum.value > props.techExamplesCount)
 
 defineEmits(['select'])
 </script>
@@ -141,6 +159,15 @@ defineEmits(['select'])
 
 .item-label {
   flex: 1;
+}
+
+.sidebar-note {
+  margin: var(--tv-sm) 10px 0;
+  padding-top: var(--tv-sm);
+  border-top: 1px solid var(--tv-outline-variant);
+  font-size: var(--tv-fs-xs);
+  line-height: 18px;
+  color: var(--tv-on-surface-variant);
 }
 
 .item-count {
