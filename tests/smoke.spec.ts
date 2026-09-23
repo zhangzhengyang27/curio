@@ -100,9 +100,16 @@ test.describe('冒烟测试：核心链路', () => {
 
     await page.goto('/')
     await page.locator('canvas').waitFor({ timeout: 15_000 })
-    await page.evaluate(() => {
-      (document.querySelector('a[href="/three-globe"]') as HTMLElement | null)?.click()
-    })
+
+    // 切走路由靠顶栏链接。以前这里点的是 a[href="/three-globe"]，而首页用的是
+    // ProductShell（links 里只有 地球/全球分析/分析工作台/业务监控），那个元素
+    // 根本不存在，可选链又让它静默跳过 —— 于是这条用例从来没真正切走过路由，
+    // 却一直显示通过。改点首页真实存在的 /analysis，并显式断言链接存在，
+    // 让「找不到目标」变成失败而不是空转。
+    const navLink = page.locator('.nav-links a[href="/analysis"]')
+    await expect(navLink).toHaveCount(1)
+    await navLink.click()
+
     await page.waitForTimeout(10_000) // 越过 8s 延迟点，续跑此时必然已发生
 
     expect(initErrors, `卸载后仍有初始化续跑：\n${initErrors.join('\n')}`).toEqual([])
