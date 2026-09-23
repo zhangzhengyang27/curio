@@ -6,6 +6,30 @@
 
 ## 2026-09 治理轮次
 
+### 示例中心可发现性整改（2026-09-23）
+
+一轮以产品/项目视角做的实测审计（1415 条可见示例 / 261 个 `source::category` 组合），
+按「修坏死 → 机制优化 → 需拍板」分层落地。闸门基线：`verify` 6 项全绿、`typecheck` 0 error、
+`lint:ci` 0 error、`smoke` 20/20、`tools-examples` + `viz-loading` 19/19。
+
+| 项 | 说明 |
+|---|---|
+| 翻页不回到顶部（A1） | `useGalleryFilters` 的 `window.scrollTo()` 是**空操作** —— theme.css 给 `html, body, #app` 都设了 `height:100% + overflow:auto`，文档永不溢出，真实滚动容器是 `#app`。实测点第 2 页前后 `scrollTop` 恒为 838、首卡位于 `top:-603`。改为滚 `galleryScrollRoot()`，并把滚顶从 `watch(currentPage)` 移到用户动作 `goToPage`（URL 还原与越界钳制也会改页码，不该滚） |
+| 返回列表丢滚动位置（A5） | 同根因：原生前进/后退恢复只作用于文档滚动根。最终实现：**在卡片 click 的捕获阶段**同步存 `fullPath + scrollTop` 到 sessionStorage，返回后每 100ms 重试直到容器长开再落位、并持续强制 1.5s（期间用户任何 wheel/pointerdown/keydown 立刻让路）。**三个踩过的坑，都记下来**：① `onBeforeUnmount` 读 `scrollTop` 拿到残值；② `onBeforeRouteLeave` 比那次残值写入还晚，守卫只能冻结不能取值；③ Chrome 的异步覆盖**不派发 scroll 事件**，所以纯事件驱动收不到，只能靠持续强制。刻意没改 `history.scrollRestoration`（全站开关，会连带 /tools） |
+| ⚠ 顺带：用例里的测试假象 | 这条用例反复红 8 轮才定位到真凶 —— **Playwright 的 `locator.click()` 会先把目标滚进视口**，在 `#app` 这种嵌套滚动容器里把 700 挪成 75，应用忠实地存下了这个被测试工具造出来的值。改用 `el.click()` 派发事件（不带滚动副作用）后 8/8 稳定通过。教训：nested-scroller 页面里 `locator.click()` 之前不要断言滚动位置 |
+| XR/VR/AR 分类 75% 误分（A2） | `/(xr\|vr\|ar\|webxr)/i` 无词边界，particle / parallax / clearcoat / morphtargets 全落进该桶：**116 条里 87 条只因含 "ar" 三个字母**。子分类匹配整体重写为 `seg()`（路径段整词）/ `stem()`（词元含词干）两个原语，该桶回到 29 条真 XR |
+| 125 条任何分类都筛不到（A3） | 16 条旧正则合起来漏掉 125 条（`threeExamples/application` 整块 61 条）。新增「其他 / 未归类」**补集桶**，让「每条至少落在一个子分类」成为结构性不变量，该桶计数即分类质量棘轮。跨桶重叠 137 → 50，并在侧栏加一行说明「各类之和大于全部」（此前 1465 vs 1415 无任何解释） |
+| ≤1100px 整页横向溢出（A4） | theme.css 的 `min-width: 1280px` 降到 1024px（≤767px 顶栏导航逐字竖排一并消失），画廊栅格补 3 列档。**不做移动适配**（仅 PC 端已拍板），只保证不横向溢出、文字不竖排 |
+| 89 页翻不到底（B1） | `PAGE_SIZE` 16 → 48（1440 宽下正好 4×12），页数 89 → 30；分页器加「跳至第 N 页」（省略号原先是 `disabled`，深翻只能反复点下一页） |
+| 448 条同名标题（B2） | **不动 registry**（R1/R2 + 只读归档）。实测最糟的 32 条「加载器：模型加载」连 `category`/`categoryLabel` 都完全相同，唯一带差异的是 id 尾段 → 新增 `utils/exampleMeta.ts` 从 id 剥掉分类前缀推出尾段，卡片与详情页各加一行「来源 · 分类 · 3dm」。521/1415 条可推出，那 32 条全部可区分 |
+| 全库无时间/版本字段（B3） | 新增 `registry/provenance.ts` **按来源**登记上游出处与快照日期。刻意不写进 registry 条目（溯源是按来源的属性，1417 份日期只会制造 1417 个漂移点）。⚠ 不要用 registry 文件的 git 日期当数据日期 —— 11 个分片全显示 2026-09-19，那是 `.js→.ts` 改名（579b5729）掩盖的。10 个来源上游查不到出处，如实记 `null`，并由 `tests/example-provenance.spec.ts` 当作接入新源时的闸门 |
+| 地理 / GIS 分面（C，需拍板项） | 库按渲染技术组织、产品按地理场景定位：搜「地图」6 条、「中国」1 条、「GIS」1 条，而「粒子」329 条。新增 `techGroups` 第 6 项 `geo`，由 source + category 规则自动判定（不逐条人工整改）。断言它**不是 Cesium 标签的别名**：覆盖 ≥4 个来源、且有一批条目落在 Cesium 之外 |
+
+**新增用例**：`tests/example-taxonomy.spec.ts`（3 条不变量）、`example-gallery-scroll.spec.ts`（5）、
+`example-gallery-pagination.spec.ts`（3）、`example-geo-facet.spec.ts`（2）、`example-provenance.spec.ts`（2）。
+补充分类不变量用例在旧代码上**全部先红后绿**，窄窗口「逐字竖排」的判据改用 Range 行盒计数
+（原先拿元素高度比阈值，padding 会让它在 1280px 就误报 —— 已用人为压窄到 60px 做阳性对照验证）。
+
 ### 平台页缺陷排查与修复（2026-09-20）
 
 对四条平台页 + three.js 首页 + 示例基建做了一轮排查，逐条实测后修复。闸门基线：

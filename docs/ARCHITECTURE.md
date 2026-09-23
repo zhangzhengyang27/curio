@@ -93,14 +93,23 @@ src/examples/registry/
 
 ```
 /examples              → ExampleGallery.vue
-  · 技术栈 tab / 子分类侧栏 / 搜索 / 分页
+  · 技术栈 tab（6 个，含「地理 / GIS」领域分面）/ 子分类侧栏（16 类 + 1 个补集桶）/ 搜索 / 分页（每页 48）
   · 筛选状态（tech / sub / keyword / page）双向同步到 URL（可刷新、可分享、可前进后退）
-  · src/examples/composables/useExampleFilters.js 负责 techGroups 与 subCategoryDefinitions 归类
+  · src/examples/composables/useExampleFilters.ts 负责 techGroups 与 subCategoryDefinitions 归类。
+    ⚠ 子分类匹配走 seg()（路径段整词）/ stem()（词元含词干）两个原语，不要退回「对 category
+      整串跑一条松散正则」—— 旧实现因此把 particle/parallax 分进了「XR / VR / AR」（占该桶 75%）。
+      不变量由 tests/example-taxonomy.spec.ts 守住
+  · 页头显示快照日期（src/examples/registry/provenance.ts）：按来源登记上游出处，
+    新接来源必须在这里补一条，否则 tests/example-provenance.spec.ts 会红
+  · 滚动容器是 #app 而不是文档（theme.css 给 html/body/#app 设了 height:100% + overflow:auto），
+    window.scrollTo() 在本页是空操作 —— 要滚就走 useGalleryFilters 的 galleryScrollRoot()
 
 /examples/:source/...  → ExampleDemo.vue
   · 按 runner 选择渲染方式：vue → ExampleHost 动态组件；iframe → IframeRunner
   · 「查看代码」：loadExampleSource() 用 ?raw 懒加载源码，连带展示引用的 ExampleScene 共享壳
-  · 顶部浮动卡片（返回 / 标题 / 标签 / 查看代码）Teleport 到 body，避开示例内部的层叠上下文
+  · 顶部浮动卡片（返回 / 标题 / 来源·分类·id 尾段 / 标签 / 查看代码）Teleport 到 body，
+    避开示例内部的层叠上下文。那行元信息不是装饰：registry 里有 127 组重名标题，
+    最糟的 32 条连 category 都相同，只有 id 尾段能分开（见 utils/exampleMeta.ts）
 ```
 
 ### 3.4 资源清理（防止 WebGL 上下文与 GUI 面板泄漏）

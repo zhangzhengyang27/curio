@@ -162,11 +162,14 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 关键源码位置：
 
 ```
-src/examples/registry/index.js        # 11 个 registry 按 source 懒加载（注意：getAllExamples() 是同步缓存版，
+src/examples/registry/index.ts        # 11 个 registry 按 source 懒加载（注意：getAllExamples() 是同步缓存版，
                                       #   未加载时返回 []，脚本里必须用 getAllExamplesAsync()）
-src/examples/components/index.js      # 组件「约定路径」解析（import.meta.glob）
-src/examples/composables/useGalleryFilters.js   # 画廊筛选状态机 + URL 同步 + 分页
-src/examples/composables/useExampleFilters.js   # 技术栈分组 / 子分类定义（改分类的主要修改点）
+src/examples/registry/provenance.ts   # 按来源的上游溯源登记（手工维护，接入新源必须补一条，有用例闸门）
+src/examples/components/index.ts      # 组件「约定路径」解析（import.meta.glob）
+src/examples/composables/useGalleryFilters.ts   # 画廊筛选状态机 + URL 同步 + 分页
+                                                #   ⚠ 本页滚动容器是 #app，不是 window
+src/examples/composables/useExampleFilters.ts   # 技术栈分组 / 子分类定义（改分类的主要修改点）
+src/examples/utils/exampleMeta.ts     # 从 id 剥分类前缀推区分尾段（分开 127 组重名标题用）
 scripts/lib/example-component.mjs     # 组件约定路径的单一事实来源（生成器与校验器共用）
 scripts/lib/registry-guard.mjs        # registry 写入守卫 + --dry-run/--check/--force
 ```
