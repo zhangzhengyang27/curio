@@ -78,7 +78,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run test:e2e` | Playwright 冒烟（dev server，端口 5299） |
 | `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具。配了 `TDT_TOKEN`（或回退读 `VITE_TDT_TOKEN`）后它同时是**天地图瓦片反代**，前端在 `.env.local` 设 `VITE_TILE_PROXY=/tiles` 才启用；没起时前端自动退回直连 |
 | `npm run refresh:quakes` | 重生成打包降级快照 `public/data/quake-snapshot.json`（进版本库；数据可随时再抓） |
-| `npm run verify` | **一键跑 6 项一致性校验**（见下） |
+| `npm run verify` | **一键跑 7 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
 ---
@@ -86,7 +86,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 ## 5. 改完必须跑的闸门
 
 ```bash
-npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 主题令牌/对比度
+npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 图形渲染器生成物 → 主题令牌/对比度
 npm run typecheck
 npm run lint:ci
 npm run build
@@ -99,6 +99,12 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
   —— 历史上 `manualChunks` 静默失效、以及一条 E2E 选择器歧义，都是 preview 才暴露的。
 - 改动涉及 `vite.config.ts` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
 - `npm run verify:drift` 是 `verify` 的第 3 环，也是判断「registry 与生成器是否一致」的唯一可靠手段。
+- `npm run verify:gl-renderer` 守 `src/examples/jsm-compat/gl-renderer.esm.js`：它是
+  `public/graphics/common/lib/gl-renderer.js`（webpack UMD，课程原版渲染器）的 ESM 转换产物，
+  **由 `scripts/generate-gl-renderer-esm.mjs` 生成、禁止手工编辑**。`graphics` / `mygrapics`
+  两棵树共 84 个组件用的 `compileSync` / `useProgram` / `setMeshData` / `uniforms` /
+  `createFBO` / `bindFBO` 全来自它；产物与上游 UMD 漂移 = 那 84 个示例静默渲染失败
+  （2026-09-24 就是这么坏的）。改了上游 UMD 必须重跑生成器。
 - `npm run verify:theme` 是**棘轮（ratchet）**：`scripts/_theme_token_baseline.json` 记录每个文件
   允许的硬编码色值上限，**只允许下降**。改完一批 token 化后跑
   `node scripts/verify-theme-tokens.mjs --update` 收紧基线；
@@ -113,6 +119,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 |---|---|
 | 第二次 `vite build` 失败于 `[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED]`，日志里却已有 `✓ N modules transformed` | **代码没问题**，是清空 `dist/`（3600+ 文件）触发本机批量删除保护（阈值 500）。输出到仓库外：<br>`npx vite build --outDir /tmp/earth-build-verify --emptyOutDir true` |
 | 生产构建耗时 7~37 分钟不等 | 用后台任务跑，不要用前台短超时 |
+| `npm run typecheck` 报 `TS6053: File 'X.vue' not found`，而该文件确实存在、git 无改动、可读 | **不是类型错误，是并发负载造成的假错**。实测同一份代码：独占机器 **1m24s / 0 错**；同时跑 eslint **17m43s / 报 TS6053**。→ **typecheck 要独占跑**；看到「文件不存在」先怀疑负载，用「`git stash` 改动后对照重跑」或「独占重跑」定论，不要先怀疑自己的改动 |
 | E2E 全部用例以「元素找不到」失败，但应用本身正常 | 端口被本机其它项目占用，`reuseExistingServer` 连到了**别人的 dev server**。已改用 `E2E_PORT`（默认 5299）+ `--strictPort`；需要时覆盖 `E2E_PORT` |
 | 新增依赖后路由组件完全不挂载、且无报错 | Vite 模块图变脏：`rm -rf node_modules/.vite && npm run dev` |
 | `npm run` 用久了 zsh 进入损坏态（`_load_nvm: command not found` / `maximum nested function level reached`） | 直接用绝对路径的 node 跑脚本 |
@@ -156,6 +163,9 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | 部署形态、托管要求与发布前校验 | [`docs/DEPLOY.md`](./docs/DEPLOY.md) |
 | three.js 兼容层机制与退出步骤 | [`docs/THREE_UPGRADE.md`](./docs/THREE_UPGRADE.md) |
 | 首屏性能基线与测量方法 | [`docs/PERF_BASELINE.md`](./docs/PERF_BASELINE.md) |
+| **示例去重 / 缩减的可行性调研（结论：真重复仅 17 条）** | [`docs/DEDUP_RESEARCH.md`](./docs/DEDUP_RESEARCH.md) |
+| **示例封面空白的根因排查（含 84 个示例渲染失败的发现过程）** | [`docs/THUMBNAIL_ROOT_CAUSE.md`](./docs/THUMBNAIL_ROOT_CAUSE.md) |
+| **graphics / mygrapics 84 个示例渲染失败的根因与修复** | [`docs/GL_RENDERER_FIX.md`](./docs/GL_RENDERER_FIX.md) |
 | 脚本分类（质量闸门 / registry 写入 / 一次性） | [`scripts/README.md`](./scripts/README.md) |
 | 历史 spec 归档（**路径已失效，仅决策留痕**） | `.trae/specs/`、`.trae/documents/` |
 
