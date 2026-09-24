@@ -45,7 +45,9 @@ test('每个来源都在 provenance 里登记过，且快照日期可核实', as
 
 test('快照说明会显示在画廊页头，用户能看到这批内容是啥时候封存的', async ({ page }) => {
   await page.goto('/examples')
-  const line = page.locator('.content-snapshot')
+  // 类名曾是 .content-snapshot，2026-09-23 画廊改版（befc4c2a）重写头部后变为
+  // .hero-snapshot —— 改版后无人全量跑 E2E，T02 全量跑才暴露这条追的已是死类名。
+  const line = page.locator('.hero-snapshot')
   await expect(line).toBeVisible()
   await expect(line).toContainText('资源快照')
   await expect(line).toContainText('three')
