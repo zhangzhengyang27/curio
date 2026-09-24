@@ -23,8 +23,8 @@ import ProductShell from './shells/ProductShell.vue'
 import ResourceShell from './shells/ResourceShell.vue'
 import { useThemeStore } from './stores/useThemeStore'
 
-/** 示例资源库的四个入口前缀；其余（含首页与未知路径）都归数据产品外壳 */
-const RESOURCE_PREFIXES = ['examples', 'three-globe', 'tools', 'bmap']
+/** 示例资源库的入口前缀（/tools 已迁入产品外壳，2026-09-24 T02）；其余（含首页与未知路径）都归数据产品外壳 */
+const RESOURCE_PREFIXES = ['examples', 'three-globe', 'bmap']
 
 const route = useRoute()
 const themeStore = useThemeStore()

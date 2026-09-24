@@ -72,7 +72,7 @@ test.describe('冒烟测试：核心链路', () => {
 
     await expect(page.locator('.app-nav')).toBeVisible()
     await expect(page.locator('.nav-brand')).toBeVisible()
-    await expect(page.locator('.nav-links a')).toHaveCount(4)
+    await expect(page.locator('.nav-links a')).toHaveCount(5)
     await expect(page.locator('.action-btn')).toBeVisible()
     // 数据产品外壳**不该**有示例搜索框：它原先挂在共用顶栏上，
     // 在首页敲一个字符就会把用户连人带地球场景拽去 /examples。
@@ -102,10 +102,9 @@ test.describe('冒烟测试：核心链路', () => {
     await page.locator('canvas').waitFor({ timeout: 15_000 })
 
     // 切走路由靠顶栏链接。以前这里点的是 a[href="/three-globe"]，而首页用的是
-    // ProductShell（links 里只有 地球/全球分析/分析工作台/业务监控），那个元素
-    // 根本不存在，可选链又让它静默跳过 —— 于是这条用例从来没真正切走过路由，
-    // 却一直显示通过。改点首页真实存在的 /analysis，并显式断言链接存在，
-    // 让「找不到目标」变成失败而不是空转。
+    // ProductShell，那个元素根本不存在，可选链又让它静默跳过 —— 于是这条用例
+    // 从来没真正切走过路由，却一直显示通过。改点首页真实存在的 /analysis，
+    // 并显式断言链接存在，让「找不到目标」变成失败而不是空转。
     const navLink = page.locator('.nav-links a[href="/analysis"]')
     await expect(navLink).toHaveCount(1)
     await navLink.click()
@@ -137,8 +136,10 @@ test.describe('冒烟测试：核心链路', () => {
     // 回归：此前 8 项导航把 4 个产品功能和 4 个示例集平铺在一条顶栏里，
     // 且那条顶栏搜索在任何页面敲一个字符都会把用户拽去 /examples。
     // 现在按路由分壳，跨产品只剩一个显式的「切换」链接。
-    const productLinks = ['地球', '全球分析', '分析工作台', '业务监控']
-    const resourceLinks = ['示例中心', 'ThreeGlobe', '地图工具箱', '百度地图']
+    // 2026-09-24 T02：/tools 迁入产品外壳（平台页②却挂在资源库壳是历史错位），
+    // 导航文案与各页面自身的名字统一（业务监控→地震应急监测等）。
+    const productLinks = ['地球', '地图工具箱', '全球数据分析', '地震应急监测', '分析工作台']
+    const resourceLinks = ['示例中心', 'ThreeGlobe', '百度地图']
     const navLinks = page.locator('.app-nav .nav-links a')
 
     await page.goto('/')
@@ -151,6 +152,11 @@ test.describe('冒烟测试：核心链路', () => {
 
     await page.goto('/analysis')
     await expect(navLinks).toHaveText(productLinks)
+
+    // /tools（含详情页）也在产品壳：顶栏可见另外 4 个平台页，且没有示例搜索框
+    await page.goto('/tools')
+    await expect(navLinks).toHaveText(productLinks)
+    await expect(page.locator('.nav-search')).toHaveCount(0)
 
     await page.goto('/examples')
     await expect(navLinks).toHaveText(resourceLinks)
@@ -204,20 +210,21 @@ test.describe('冒烟测试：核心链路', () => {
     test.setTimeout(120_000)
     // 回归：这条搜索原先挂在两个产品共用的顶栏上，对任意路由每次按键都
     // router.push('/examples')。拆壳后跨产品这条路已经不存在，但**同一个外壳内**
-    // （/tools、/bmap、/three-globe 上）输入仍然不该把用户从当前页拽走。
+    // （/bmap、/three-globe 上）输入仍然不该把用户从当前页拽走。
+    // （原打在 /tools 上；2026-09-24 T02 起 /tools 迁入产品外壳，本壳不再含它。）
     const nav = page.locator('.nav-search .search-input')
 
     // 先访问一次示例中心再 SPA 切走：/examples 的懒加载 chunk 若未预载，
     // 旧代码那次 push 会在 chunk 加载阶段被中止，本用例就抓不到劫持（实测踩过）。
     await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
-    await page.locator('.app-nav a[href="/tools"]').click()
+    await page.locator('.app-nav a[href="/three-globe"]').click()
     await expect(page.locator('.gallery-page')).toBeVisible({ timeout: 30_000 })
     await page.waitForTimeout(2000)
 
     await nav.fill('globe')
     await page.waitForTimeout(1500)
-    expect(new URL(page.url()).pathname, '输入关键词不应把用户从地图工具箱带走').toBe('/tools')
+    expect(new URL(page.url()).pathname, '输入关键词不应把用户从 ThreeGlobe 画廊带走').toBe('/three-globe')
 
     await nav.press('Enter')
     await expect(page).toHaveURL(/\/examples\?search=globe/)

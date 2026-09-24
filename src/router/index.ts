@@ -16,9 +16,8 @@ const NotFoundView = () => import('../views/NotFoundView.vue')
 
 const BRAND = 'TerraVista 3D'
 
-// 标题取「用户在页面上看到的那个名字」（h1 / 面板主标题），不取导航项文案——
-// 两者目前并不一致（导航「业务监控」vs 页面「地震应急监测」，
-// 导航「地图工具」vs 页面「地图工具箱」），标签页应当和打开后的页面自洽。
+// 标题取「用户在页面上看到的那个名字」（h1 / 面板主标题）；
+// 顶栏导航文案已与页面名统一（2026-09-24 T02），标签页、导航、页面三者自洽。
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'earth', component: EarthView, meta: { title: `${BRAND} · 地球 3D 数据可视化` } },
   { path: '/three-globe', name: 'gallery', component: ThreeGlobeGallery, meta: { title: `ThreeGlobe 示例集 · ${BRAND}` } },

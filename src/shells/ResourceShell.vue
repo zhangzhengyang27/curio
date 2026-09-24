@@ -37,12 +37,13 @@
 
 <script setup lang="ts">
 /**
- * 示例资源库外壳：1417 条示例画廊 + ThreeGlobe + 地图工具箱 + 百度地图。
+ * 示例资源库外壳：1417 条示例画廊 + ThreeGlobe + 百度地图。
+ * （/tools 曾长期挂在本壳，2026-09-24 T02 起迁入产品外壳 —— 它是平台页②。）
  *
  * 搜索框只存在于这个外壳里（数据产品外壳没有），所以它再也无法把用户
  * 从首页地球上拽走。行为契约与 P0-3 一致：
  *   - 已在 /examples 上：输入即就地 router.replace 写 ?search=，不产生历史记录
- *   - 在本外壳的其它页（/tools /bmap /three-globe）：输入不动，回车才跳转
+ *   - 在本外壳的其它页（/bmap /three-globe）：输入不动，回车才跳转
  *   - 只带 tech/sub，不带 page（搜索词变了沿用旧页码会落到空白网格），
  *     也不把别页的 query 透传进来
  */
@@ -55,7 +56,6 @@ import { useExampleFilters } from '../examples/composables/useExampleFilters'
 const links = [
   { to: '/examples', label: '示例中心' },
   { to: '/three-globe', label: 'ThreeGlobe' },
-  { to: '/tools', label: '地图工具箱' },
   { to: '/bmap', label: '百度地图' },
 ]
 
