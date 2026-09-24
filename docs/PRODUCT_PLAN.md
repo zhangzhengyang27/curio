@@ -1,7 +1,8 @@
 # 产品重整规划（PRODUCT_PLAN）
 
 > **文档性质**：诊断 + 收口 + 重整路线图。本文件是**唯一对外表达「这个项目是什么、要变成什么」的产品文档**。
-> **作者**：许清楚（PM） · **日期**：2026-09-23 · **状态**：待需求方拍板
+> **作者**：许清楚（PM） · **日期**：2026-09-23 · **状态**：已部分拍板（2026-09-24）
+> **2026-09-24 拍板结论**：Q1=保留 `/` 为开场页；Q2=`/three-globe`、`/bmap` 维持现状（**推翻**本文 §4.2 建议）；Q3+Q4=暂不部署、只做构建拆分，上线等明确需要；Q7=时间盒改为一个月、目标「随时可发布」。同场拍板远端/CI 继续搁置。逐项落点见 `docs/ROADMAP.md` §1「2026-09-24 需求方拍板」块。Q5（引擎对外讲法）留待「关于页」文案时定，Q6（凭据白名单）留待上线前。
 > **本次工作为只读分析**：未修改任何代码，唯一新增文件即本文件。
 >
 > 所有结论均给出文件/行号/命令作为证据。查不到的地方写「未核实」，不编。
@@ -113,13 +114,16 @@ const shell = computed(() => {
 
 ## 1.5 工程闸门现状
 
-`npm run verify` 实际串 **6 项**（`package.json:26`）：
-`check:secrets` → `verify:registry` → `verify:drift` → `verify:thumbnails` → `verify:three-compat` → `verify:theme`
+`npm run verify` 实际串 **7 项**（`package.json:26`）：
+`check:secrets` → `verify:registry` → `verify:drift` → `verify:thumbnails` → `verify:three-compat` → `verify:gl-renderer` → `verify:theme`
+
+> 2026-09-24 由 6 项增至 7 项：新增 `verify:gl-renderer`（守 `jsm-compat/gl-renderer.esm.js`
+> 与上游 UMD 的漂移），并顺带修正 `README.md` 里「五项 + 表格漏 `verify:theme`」的滞后。
 
 | 闸门 | 本地状态 | CI 状态 |
 |---|---|---|
 | `check:secrets` | 文档称通过 | **CI 从未真正执行过** |
-| `verify` 6 项 | 文档称全绿（ROADMAP:99、CHANGELOG:36） | 同上 |
+| `verify` 7 项 | 文档称全绿（ROADMAP:99、CHANGELOG:36） | 同上 |
 | `typecheck` | 文档称 0 error | 同上 |
 | `lint:ci` | 文档称 0 error / 4 warning | 同上 |
 | `build` | 文档称 EXIT=0 | 同上 |
@@ -242,14 +246,14 @@ const shell = computed(() => {
 
 | # | 事实 | 文档 A | 文档 B | 真相（实测） |
 |---|---|---|---|---|
-| 1 | `npm run verify` 串几项 | `README.md:58`「**五项**校验」+ 表格 5 行（缺 `verify:theme`） | `AGENTS.md:81`「**6 项**」 | `package.json:26` = **6 项** |
+| 1 | `npm run verify` 串几项 | ~~`README.md:58`「**五项**校验」+ 表格 5 行（缺 `verify:theme`）~~ **2026-09-24 已修**（改为「七项」并补齐 `verify:theme` / `verify:gl-renderer` 两行） | ~~`AGENTS.md:81`「**6 项**」~~ 已同步为「7 项」 | `package.json:26` = **7 项** |
 | 2 | `.vue` 组件数 | `README.md:90`「**1429** 个示例组件」 | `AGENTS.md:23`「**1523** 个」 | `find src -name '*.vue' \| wc -l` = **1527**（examples 下 1436） |
 | 3 | typecheck 覆盖 | `README.md:51`「**1500** 个 `.vue`」 | `ci.yml:55`「实测 **1500** 个」、`CHANGELOG.md:154`「实测 1500 个」 | 同上 = **1527** |
 | 4 | 路由表 | `AGENTS.md:30-31`：**8 条，缺 `/workbench` 与 `/tools/:slug`** | `ARCHITECTURE.md:23-24`：**只有 6 条**，缺 `/tools` `/analysis` `/workbench` `/monitor` | `src/router/index.ts:22-38` = **13 条**（含 404）。**只有 `README.md:82` 是完整且对的** |
 | 5 | 文件扩展名 | `README.md:82` `src/router/index.js`、`README.md:89` `registry/index.js` 全篇 `.js` | `AGENTS.md` 已改 `.ts` | 实测全为 `.ts`（TS 迁移 2026-09 已完成） |
 | 6 | 示例条数 | `PAGES_ENHANCEMENT_PLAN.md:20`「`/examples`（**166** 条示例库）」 | 其余均写 1417 | **1417** |
 
-**索引不覆盖**：`README.md` 文档表（9 行）与 `AGENTS.md` 文档地图（12 行）互不覆盖——README 有 `TOUR_ROUTES` 但无 `CHANGELOG`/`TS_MIGRATION`；AGENTS 反之。`docs/PAGES_ENHANCEMENT_PLAN.md`、`docs/PAGES_REVIEW_REPORT.md` 至少有一份没被任何索引收录。
+**索引不覆盖**：`README.md` 文档表（9 行）与 `AGENTS.md` 文档地图（15 行，2026-09-24 新增 2 行调研/修复报告）互不覆盖——README 有 `TOUR_ROUTES` 但无 `CHANGELOG`/`TS_MIGRATION`；AGENTS 反之。`docs/PAGES_ENHANCEMENT_PLAN.md`、`docs/PAGES_REVIEW_REPORT.md` 至少有一份没被任何索引收录。
 
 **影响（对贡献者/AI 代理，严重）**：任何人（含 AI 代理）接手时，会按错误的心智模型动手——这正是 `KNOWN_PITFALLS` A/B/E 类坑反复出现的土壤。
 
@@ -374,7 +378,7 @@ const shell = computed(() => {
 | 备选 | 为什么否 |
 |---|---|
 | **A. 平台 + 示例中心并列双主线**（现状） | 就是「乱」的本体。已通过拆壳（2026-09）试过一次，只治了顶栏症状，没治定位（D1/D3 仍在） |
-| **B. 砍掉示例中心** | ① 违反 ROADMAP:14-17 已拍板的「只读归档」；② 1417 条示例 + 全量 TS 迁移 + 6 项一致性闸门**本身就是工程能力的硬证据**，删掉是自杀式减分。**正确做法不是删，是把它的部署形态与主站解耦** |
+| **B. 砍掉示例中心** | ① 违反 ROADMAP:14-17 已拍板的「只读归档」；② 1417 条示例 + 全量 TS 迁移 + 7 项一致性闸门**本身就是工程能力的硬证据**，删掉是自杀式减分。**正确做法不是删，是把它的部署形态与主站解耦** |
 | **C. 删掉首页，只留 Cesium 四页** | ① 巡游是唯一「一键演示」资产，删掉可惜；② Three.js 的 17 个图层 + 4 条巡游是另一套技术栈的证据，招聘方会认；③ 首页有 47 条 E2E 守护，是全仓最健康的部分 |
 | **D. 把首页迁到 Cesium，统一引擎** | ① 两套引擎是资产不是债，但要说清分工；② 迁移工作量 L 级且要重写巡游引擎；③ `useTourEngine` 已被 `/monitor` 的巡游大屏复用（CHANGELOG:119），动它代价大 |
 | **E. 做成一个「大而全的门户」（首页聚合所有入口）** | 与「可分享的真实功能演示」冲突——门户不是功能演示，招聘方不会点第二层 |
@@ -479,7 +483,7 @@ flowchart TB
 | 编号 | 标题 | 要做什么 | 为什么 | 验收标准 | 量 | 依赖 |
 |---|---|---|---|---|---|---|
 | **PRD-P2-1** | 首页模式收敛 | `vizModes` 12 → 8，去掉与平台页重复或临时的（导入数据、热力图等，或明确定位为「快速预览」） | D2 | 首页底栏 8 个模式；相应 E2E 同步 | M | PRD-P1-5 |
-| **PRD-P2-2** | 作品集「关于」页 | 一页讲清：技术栈、两条引擎的分工、工程治理（6 项闸门 / 137 条 E2E / CI）、数据出处与快照日期 | 招聘方最想看的是「你怎么做的」，不只是「做了什么」 | 新路由 `/about`，在页脚可达；含 CI 徽章与数据源署名 | M | PRD-P0-3 |
+| **PRD-P2-2** | 作品集「关于」页 | 一页讲清：技术栈、两条引擎的分工、工程治理（7 项闸门 / 137 条 E2E / CI）、数据出处与快照日期 | 招聘方最想看的是「你怎么做的」，不只是「做了什么」 | 新路由 `/about`，在页脚可达；含 CI 徽章与数据源署名 | M | PRD-P0-3 |
 | **PRD-P2-3** | 404 与空态产品化 | `NotFoundView.vue` 加回主导航的明确入口；四页的空态（无数据/加载失败）给出「去哪里」而不是一片灰 | 展示时的兜底体验 | 404 页含 5 个主入口链接 | S | — |
 
 ## 5.2 工程侧

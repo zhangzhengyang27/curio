@@ -1,7 +1,8 @@
 # 工程侧整改路线图（TECH_ROADMAP）
 
 > **文档性质**：工程侧整改的技术设计 + 可执行任务分解。产品侧的需求定义、定位与需求池以 `docs/PRODUCT_PLAN.md` 为准，本文不重复。
-> **作者**：高见远（架构师）· **日期**：2026-09-23 · **状态**：待评审
+> **作者**：高见远（架构师）· **日期**：2026-09-23 · **状态**：已评审采纳（2026-09-24），按需求方拍板修订
+> **2026-09-24 修订**：① T02 缩窄——`/three-globe`、`/bmap` 维持现状（§2.1 的 N1 照做、N3 中「移出主导航」部分取消，resourceLinks 只移除「地图工具箱」一项）；② T04 上线暂缓，等「有明确需要」时启动（其前置「凭据轮换 + 删旧 dist + 天地图白名单」随 T04 一起触发）；③ T01 缩窄——远端、CI 首跑、凭据轮换均搁置，仅保留「清理工作树」；④ T03 照做，但 CI job（A9）与徽章相关项随远端搁置一起延后，验收以本地 V1~V7 为准。详见 `docs/ROADMAP.md` §1「2026-09-24 需求方拍板」块。
 > **本次工作为只读分析**：未修改任何代码，唯一新增文件即本文件。
 >
 > 所有结论均给出文件/行号/命令作为证据。查不到的地方写「未核实」，不编。
@@ -106,7 +107,7 @@ src/router/index.ts:27  (lazy route /examples/:source/*)
 | 但 glob 所在模块**只被懒加载路由引用** | ✅ **可以**通过「让 `/examples/:source/*` 这条路由不存在」→ `ExampleDemo.vue` 不可达 → `components/index.ts` 被摇掉 → 2683 个 chunk 全部消失 |
 | 这些 chunk **不在** `dist/index.html` 的 `modulepreload` 里 | ✅ 它们不污染首屏，只占体积与构建时间 |
 
-> **一句话**：示例组件不是「摇不掉」，而是「只要路由还在就摇不掉」。所以部署拆分的最小切口是**路由表**，不是删文件。这也是方案 A 能做到「6 项闸门零改动」的根本原因。
+> **一句话**：示例组件不是「摇不掉」，而是「只要路由还在就摇不掉」。所以部署拆分的最小切口是**路由表**，不是删文件。这也是方案 A 能做到「7 项闸门零改动」的根本原因。
 
 ## 1.3 `public/` 下那 1.1 GB 是怎么进产物的
 
@@ -291,7 +292,7 @@ src/main.ts → src/App.vue:23  import ResourceShell from './shells/ResourceShel
 | 产物 | 主站包（`/` + `/tools` + `/tools/:slug` + `/analysis` + `/monitor` + `/workbench` + 404）**< 200 MB** |
 | 归档包 | 示例中心全量，可单独部署或暂不部署 |
 | 回归 | 主站包跑 `E2E_TARGET=preview` 全绿（示例相关用例除外，按目标跳过） |
-| 闸门 | `npm run verify` 6 项**保持全绿**（这是方案选型的硬约束，见 §3.2） |
+| 闸门 | `npm run verify` 7 项**保持全绿**（这是方案选型的硬约束，见 §3.2） |
 | 不改 | 不删 `src/examples/` 任何文件；不动 `three-build-compat` / `jsm-compat` 的位置（本轮） |
 
 ## 3.2 三个候选方案总览
@@ -301,7 +302,7 @@ src/main.ts → src/App.vue:23  import ResourceShell from './shells/ResourceShel
 | 切口 | **路由表 + publicDir + copy 白名单**，源码不删 | 目录搬家 + 两套构建入口 | 只裁剪产物，源码与路由不动 |
 | 是否删 `src/examples/` | 否 | 是（至少搬走 compat 两个目录） | 否 |
 | 1 周时间盒内可完成 | ✅ | ❌ | ✅ |
-| 6 项 verify 闸门改动 | **0** | 3~4 项需改路径 | 0 |
+| 7 项 verify 闸门改动 | **0** | 4~5 项需改路径 | 0 |
 | 主站包体积 | ~75-85 MB（推算） | ~75 MB | ~150 MB（示例页资源 404）或 需外链对象存储 |
 | 长期整洁度 | 中（同一个路由表里留着条件分支） | 高 | 低 |
 
@@ -410,7 +411,7 @@ const ARCHIVE_ONLY = [ ... ]   // 见下方实录清单
 
 ### 3.3.8 为什么推荐方案 A
 
-1. **6 项 verify 闸门零改动**——`verify:registry` / `verify:drift` / `verify:thumbnails` 读的是 `src/examples/registry/` 与 `public/example-thumbs/`，`verify:three-compat` 读的是 `src/examples/three-build-compat/`（`scripts/verify-three-compat.mjs:30`）与 `vite.config.ts` 是否含 `three-compat-resolver`（`:119`）。方案 A **不删任何源文件、不改这些路径**，所以闸门天然保持全绿。这是方案 B 做不到的。
+1. **7 项 verify 闸门零改动**——`verify:registry` / `verify:drift` / `verify:thumbnails` 读的是 `src/examples/registry/` 与 `public/example-thumbs/`，`verify:three-compat` 读的是 `src/examples/three-build-compat/`（`scripts/verify-three-compat.mjs:30`）与 `vite.config.ts` 是否含 `three-compat-resolver`（`:119`），`verify:gl-renderer` 读的是 `src/examples/jsm-compat/gl-renderer.esm.js` 与 `public/graphics/common/lib/gl-renderer.js`（2026-09-24 新增）。方案 A **不删任何源文件、不改这些路径**，所以闸门天然保持全绿。这是方案 B 做不到的。
 2. **不改变既有拍板**——示例中心仍是只读归档，一个文件都不删（PRODUCT_PLAN §6.1）。
 3. **可增量、可回退**——每一步都能单独验证；最坏情况下把 `VITE_BUILD_TARGET` 默认改回 `archive` 即回到今天。
 4. **符合 1 周时间盒**——核心改动集中在 3 个文件（`vite.config.ts`、`src/router/index.ts`、`scripts/copy-example-deps.js`）。
@@ -443,7 +444,7 @@ const ARCHIVE_ONLY = [ ... ]   // 见下方实录清单
 |---|---|
 | 长期整洁度 | ✅ 最好——「平台包不认识 examples」成为结构性事实，而非靠环境变量约定 |
 | 工作量 | **L+**（B0 的 593+6 文件搬家 + 两套配置 + 全链路验证），远超 1 周时间盒 |
-| 对 verify 闸门 | ⚠ `verify:three-compat`、`verify:drift`、`verify:thumbnails` 的路径假设都要改；`verify` 6 项里有 3~4 项需动 |
+| 对 verify 闸门 | ⚠ `verify:three-compat`、`verify:gl-renderer`、`verify:drift`、`verify:thumbnails` 的路径假设都要改；`verify` 7 项里有 4~5 项需动 |
 | 风险 | **高**：一次性大规模搬家，回滚困难；`jsm-compat` 里 593 个文件有 `@/examples/jsm-compat/...` 形式的**绝对路径自引用**（实测 `src/examples/jsm-compat/mygrapics/*/app.js` 有 10+ 处 `@/examples/jsm-compat/...`），搬家后这些 alias 全部要改 |
 
 > **结论**：方案 B 是终态，但不是本轮。**本轮先做方案 A；B0-1~B0-3 作为 ENG-P1-6（three 兼容层退出）的前置动作单独排期。**
@@ -460,7 +461,7 @@ const ARCHIVE_ONLY = [ ... ]   // 见下方实录清单
 2. `publicDir` 白名单（A4）→ 省 ~1.16 GB；
 3. 示例组件的 2683 个 chunk（20 MB）**保留**（因为路由还在）。
 
-**结果**：`dist` ≈ `assets` 57M + `node_modules` 31M + `public` 14M ≈ **102 MB**，**低于 200 MB 门槛**，且 `npm run verify` 6 项、路由、E2E **全部零改动**。
+**结果**：`dist` ≈ `assets` 57M + `node_modules` 31M + `public` 14M ≈ **102 MB**，**低于 200 MB 门槛**，且 `npm run verify` 7 项、路由、E2E **全部零改动**。
 
 **代价**：`/examples`、`/three-globe`、`/three-project` 等示例页的模型/贴图/源码资源全部 404——画廊卡片还能渲染（封面在 `example-thumbs`，也被裁掉了，所以连封面都没了），点进去是空的。这与 ROADMAP:14-17「只读归档」和 PRODUCT_PLAN §6.2-6「不做示例中心的视觉/交互整改，但只修坏死」**直接冲突**：裁剪出来的归档站是一个「坏掉的归档站」。
 
@@ -761,7 +762,7 @@ git ls-files dist | head -3          # 空 = dist 已被 gitignore
 | 1.1 GB 怎么进产物的？ | **不是** `copy-example-deps.js`（那只拷 81 MB 的 `dist/node_modules`）；是 Vite `publicDir` 整目录原样拷贝 |
 | 平台需要哪些 public 子目录？ | 只有 `data`（12M）+ `textures`（1.9M）。其余 9 个目录平台侧引用数实测为 0 |
 | 最大的隐藏耦合？ | **平台首页依赖 `src/examples/three-build-compat` 与 `jsm-compat`**（§1.4）→ `src/examples/` 不能整体从平台构建移除 → 物理拆包（方案 B）必须先搬家 |
-| 推荐方案？ | **方案 A**：`VITE_BUILD_TARGET=platform\|archive` 条件构建。理由：**6 项 verify 闸门零改动** + 不删任何源文件 + 一周内可完成 |
+| 推荐方案？ | **方案 A**：`VITE_BUILD_TARGET=platform\|archive` 条件构建。理由：**7 项 verify 闸门零改动** + 不删任何源文件 + 一周内可完成 |
 | 主站包能到多少？ | 推算 ~75-85 MB（assets ~37M + cesium ~31M + public ~15M − 交叉项）。**未实测**，T03 第 1 小步校准 |
 | Go/No-Go 在哪一步？ | T03 第 1 小步：路由条件化 + 跑 V2（chunk 数从 3252 降到 ~569）。不达标就切方案 C 并上报 |
 | 最该先做的三件事 | ① 建远端推上去（T01）；② 轮换凭据 + **删掉含 AK 明文的旧 `dist`**；③ 导航收口（T02，半天） |
