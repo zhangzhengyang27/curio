@@ -19,8 +19,8 @@ async function initMyGrapicsExample() {
         const context = canvas.getContext('2d')!;
     
         (async function () {
-          const img = await loadImage('assets/girl1.jpg');
-          const sunlight = await loadImage('assets/sunlight.png');
+          const img = await loadImage('/mygrapics/pixels/assets/girl1.jpg');
+          const sunlight = await loadImage('/mygrapics/pixels/assets/sunlight.png');
     
           const imageData = getImageData(img);
           const texture = getImageData(sunlight);

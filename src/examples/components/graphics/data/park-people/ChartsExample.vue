@@ -34,7 +34,7 @@ async function initGraphicsExample() {
   {
     const  {Scene, Sprite, Polyline, SpriteSvg} = spritejs;
         (async function() {
-          const data = await (await fetch('data.json')).json();
+          const data = await (await fetch('/graphics/data/park-people/data.json')).json();
           const dataset = d3.rollups(data, (v: any) => v.length, (d: any) => d.time).sort(([a]: any, [b]: any) => a - b);
           dataset.unshift([6, 0]);
           dataset.push([22, 0]);

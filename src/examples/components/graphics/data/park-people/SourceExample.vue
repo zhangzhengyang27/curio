@@ -92,7 +92,7 @@ async function initGraphicsExample() {
           }
         }
     
-        fetch('data.json').then((res) => {
+        fetch('/graphics/data/park-people/data.json').then((res) => {
           return res.json();
         }).then((data) => {
           draw(data, ({time}: any) => time === 12);

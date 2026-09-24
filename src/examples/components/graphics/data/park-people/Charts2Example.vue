@@ -42,7 +42,7 @@ async function initGraphicsExample() {
   {
     const  {Scene, Sprite, Polyline, SpriteSvg} = spritejs;
         (async function() {
-          const data = await (await fetch('data.json')).json();
+          const data = await (await fetch('/graphics/data/park-people/data.json')).json();
           // group data
     
           function count(d: any, dataset: any) {

@@ -131,7 +131,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }: { canva
               webgl.drawArrays(webgl.TRIANGLES, 0, 9);
           }
   
-  if (typeof init === 'function') {
+  if (typeof webglStart === 'function') {
+    webglStart()
+  } else if (typeof init === 'function') {
     init()
   }
 }

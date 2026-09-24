@@ -1,10 +1,13 @@
 export function loadImage(src) {
   const img = new Image();
   img.crossOrigin = 'anonymous';
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     img.onload = () => {
       resolve(img);
     };
+    // ⚠ 必须显式 reject：图片 404 时若只有 onload，Promise 永不 settle，
+    //   canvas 尺寸永不赋值 → 组件静默白屏（这正是本目录 9 个示例曾经的故障）
+    img.onerror = () => reject(new Error('图片加载失败: ' + src));
     img.src = src;
   });
 }

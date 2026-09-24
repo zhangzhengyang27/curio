@@ -16,10 +16,13 @@ async function initMyGrapicsExample() {
     function loadImage(src: any) {
           const img = new Image();
           img.crossOrigin = 'anonymous';
-          return new Promise<any>((resolve) => {
+          return new Promise<any>((resolve, reject) => {
             img.onload = () => {
               resolve(img);
             };
+            // ⚠ 必须显式 reject：图片 404 时若只有 onload，Promise 永不 settle，
+            //   canvas 尺寸永不赋值 → 组件静默白屏（这正是本目录 9 个示例曾经的故障）
+            img.onerror = () => reject(new Error('图片加载失败: ' + src));
             img.src = src;
           });
         }
@@ -28,7 +31,7 @@ async function initMyGrapicsExample() {
         const context = canvas.getContext('2d')!;
     
         (async function () {
-          const img = await loadImage('assets/girl1.jpg');
+          const img = await loadImage('/mygrapics/pixels/assets/girl1.jpg');
           const {width, height} = img;
     
           canvas.width = width;

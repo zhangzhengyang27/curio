@@ -21,6 +21,7 @@ async function loadScript(src: any) {
 }
 
 async function initMyGrapicsExample() {
+  await loadScript("/mygrapics/assets/external/rough.umd.js");
   await loadScript("/mygrapics/coordinates/app.js");
 }
 

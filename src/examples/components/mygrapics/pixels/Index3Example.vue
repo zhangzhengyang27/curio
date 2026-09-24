@@ -19,7 +19,7 @@ async function initMyGrapicsExample() {
         const context = canvas.getContext('2d')!;
     
         (async function () {
-          const img = await loadImage('assets/girl1.jpg');
+          const img = await loadImage('/mygrapics/pixels/assets/girl1.jpg');
           const imageData = getImageData(img);
           canvas.width = imageData.width;
           canvas.height = imageData.height;

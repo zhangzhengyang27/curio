@@ -30,9 +30,10 @@ async function initGraphicsExample() {
   const container = gContainer.value!.querySelector('#container')
   await loadScript("/graphics/assets/external/spritejs.js");
   await loadScript("/graphics/assets/external/sprite-extend-3d.js");
-  // TODO: missing local script /lib/spritejs.js
-  // TODO: missing local script /lib/sprite-extend-3d.js
-  // TODO: missing local script /js/sprite-geo-earth.js
+  await loadScript("/graphics/assets/external/sprite-geo-earth.js");
+  await loadScript("/graphics/assets/external/sprite-geo-earth.localize.js");
+  // 上游 examples/lib/{spritejs,sprite-extend-3d}.js 与 js/sprite-geo-earth.js 已 vendored
+  // 到 /graphics/assets/external/，三者均在上方 loadScript 中加载。
   {
     const {Scene} = spritejs;
         const container = gContainer.value!.querySelector('#container');

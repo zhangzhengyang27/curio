@@ -160,7 +160,9 @@ async function onReady({ canvas, container, addUpdateCallback, resize }: { canva
   
           
   
-  if (typeof init === 'function') {
+  if (typeof webglStart === 'function') {
+    webglStart()
+  } else if (typeof init === 'function') {
     init()
   }
 }
