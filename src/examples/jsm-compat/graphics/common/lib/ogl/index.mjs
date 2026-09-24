@@ -1,7 +1,7 @@
 // Core
 export { Geometry } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Geometry.js';
 export { Program } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Program.js';
-export { Renderer } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Renderer.js';
+export { Renderer } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/OglRenderer.js';
 export { Camera } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Camera.js';
 export { Transform } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Transform.js';
 export { Mesh } from '@/examples/jsm-compat/graphics/common/lib/ogl/core/Mesh.js';

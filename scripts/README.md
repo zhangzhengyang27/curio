@@ -19,6 +19,7 @@
 | `npm run verify:drift` | **registry 与生成器漂移检测**：依次以 `--check` 跑下面 3 个生成器，逐字节比对生成结果与已提交文件。四个 registry（`threeCesiumExamples` / `cesiumExamples` / `threejsLesson` / `earthLessons`）当前均为 0 漂移 |
 | `verify-thumbnails.mjs` | 非空 thumbnail 对应的封面文件是否存在（防线上破图） |
 | `verify-three-compat.mjs` | three.js 本地兼容层的哈希基线守卫（`--update` 可更新基线） |
+| `generate-gl-renderer-esm.mjs --check` | **图形渲染器生成物守卫**（`npm run verify:gl-renderer`）。逐字节比对 `src/examples/jsm-compat/gl-renderer.esm.js` 与其上游 UMD `public/graphics/common/lib/gl-renderer.js`。漂移 = `graphics`/`mygrapics` 共 84 个示例用的 `compileSync` 等 API 失效、静默渲染失败 |
 | `verify-theme-tokens.mjs` | 主题令牌棘轮 + 静态 WCAG 对比度守卫（`npm run verify:theme`）。逐文件统计绕过 `--tv-*` 的硬编码色值，**只允许比 `scripts/_theme_token_baseline.json` 更少**；同一条规则里 `color` 与 `background` 均为字面量且对比度 < 4.5:1 时直接失败（不进基线、零容忍）。`--report` 看清单，`--update` 收紧基线。豁免写在被豁免行的**上一行**：`/* theme-tokens:allow */`。排除 `src/examples/components/**`（三方抓取）、vendored 构建产物、`theme.css`（令牌定义）、`code-highlight.css`（语法配色表）。**注意**：`var(--tv-x, #hex)` 里的 `#hex` 是回退值不是违规，脚本已剔除 |
 | `audit-deps.mjs` | 依赖使用情况审计（`npm run audit:deps`）。分层扫描 src / public / 配置 / bin / types，输出「未检测到引用」的候选清单；**只输出线索、不改 package.json** |
 | `audit-console.mjs` | 示例层 console 调用分类审计（`node scripts/audit-console.mjs [目录]`）。按「错误/告警/ElMessage 替代/教学演示输出/疑似噪声」分类；**只输出线索、不改文件** |
@@ -70,6 +71,15 @@
   而项目不变量是全部 `vue`。
 
 **新增条目不受影响**：现有文件中不存在的条目仍由生成器正常产出。
+
+## B2. 生成物脚本（非 registry）
+
+| 脚本 | 产物 | 说明 |
+|---|---|---|
+| `generate-gl-renderer-esm.mjs` | `src/examples/jsm-compat/gl-renderer.esm.js`（入库） | 把课程原版渲染器 `public/graphics/common/lib/gl-renderer.js`（webpack UMD）剥掉 UMD 外壳转成 ESM。**产物禁止手工编辑**；上游 UMD 变了就重跑，`--check` 做逐字节漂移检测（已接入 `npm run verify`） |
+
+> 为什么需要转换：该 UMD 靠 `root["GlRenderer"] = factory()` 挂到 `window`，而 ESM 模块作用域里
+> `this` 是 `undefined`，直接 `import` 会抛错；剥壳后显式调用 factory 得到等价模块。
 
 ## C. 一次性脚本 → `scripts/legacy/`（不建议重跑）
 
