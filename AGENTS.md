@@ -20,7 +20,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | 主线 | 入口 | 外壳 | 规模 |
 |---|---|---|---|
 | 数据产品 | `/` → `src/views/EarthView.vue` | `ProductShell`（无搜索框） | 多类数据可视化图层（`src/three/layers/`） |
-| 示例资源库 | `/examples` → `src/examples/` | `ResourceShell`（带示例搜索） | **11 个来源 / 1417 条示例 / 1523 个 `.vue` 组件(2026-09 TS 迁移后全部 `lang="ts"`,平台侧无 `.js` 残留)** |
+| 示例资源库 | `/examples` → `src/examples/` | `ResourceShell`（带示例搜索） | **11 个来源 / 1400 条示例 / 1512 个 `.vue` 组件(全仓 2026-09-27 实测,其中示例组件 1421;TS 迁移后全部 `lang="ts"`,平台侧无 `.js` 残留)** |
 
 > 早期版本两条主线**共用一条 8 项顶栏**，是「页面功能非常乱」的直接来源：
 > 4 个产品功能和 4 个示例集平铺在同一层，且那条全局搜索在任何页面敲一个字符
@@ -31,7 +31,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
   `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）、`/monitor`（数字地球平台·业务监控）。
 - **范围已冻结**：不再接入新的示例来源，只做存量修复与机制优化
   （[`docs/ROADMAP.md`](./docs/ROADMAP.md) 第 0 节）。
-- **不变量**：1417 条示例的 `runner` **全部为 `'vue'`**（`iframe` 通道存在但无条目使用）。
+- **不变量**：1400 条示例的 `runner` **全部为 `'vue'`**（`iframe` 通道存在但无条目使用）。
 - 仓库现状：**没有 git remote，只有 `main` 分支**，全部提交仅存于本机磁盘（ROADMAP P0）。
 
 ---

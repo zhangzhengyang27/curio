@@ -8,7 +8,7 @@
 | 主线 | 入口 | 外壳 | 目标 |
 |---|---|---|---|
 | 数据产品 | `/`（`src/views/EarthView.vue`）、`/analysis`、`/workbench`、`/monitor` | `ProductShell` | 用 3D 地球承载多类数据可视化图层 |
-| 示例资源库 | `/examples`（`src/examples/`）、`/three-globe`、`/tools`、`/bmap` | `ResourceShell` | 浏览 / 运行 / 查看 1417 条示例源码 |
+| 示例资源库 | `/examples`（`src/examples/`）、`/three-globe`、`/tools`、`/bmap` | `ResourceShell` | 浏览 / 运行 / 查看 1400 条示例源码 |
 
 分壳的动因：早期两条主线共用一条 8 项顶栏，把 4 个产品功能和 4 个示例集平铺在
 同一层，用户无法判断"这是软件还是素材库"；更要紧的是那条全局搜索挂在共用壳上，

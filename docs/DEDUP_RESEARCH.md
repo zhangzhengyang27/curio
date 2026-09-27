@@ -417,6 +417,13 @@ B 和 A 零冲突、收益最大；C 收益最小且阻力最大，放最后。
 > ⚠ **前置条件**：先修订 §7.2 的两条拍板（`docs/ROADMAP.md:24-26`、`docs/TECH_ROADMAP.md:415`）。
 > 未修订前**不要执行**。执行前确认工作树干净（`git status`）。
 
+> ✅ **已执行（2026-09-27）**：前置拍板修订见 `docs/ROADMAP.md` §0（commit `1a5ca0c8`），
+> 删除执行为 commit `3c92a0a6`。实测与 B.4 一致：registry 合计 1417 → 1400、可见 1415 → 1398、
+> mygrapics 97 → 80、`verify:registry` 全绿。两处与本文差异：
+> ① B.2 第 3 步**并非空操作**——`_thumb_map.json` 是 509 行的列表（含 17 行 mygrapics 映射）需同步删除；
+> ② `mygrapicsExamples.ts` 条目分隔行风格不均匀（分类内有「4 空格行」、跨分类无），块删除后需收敛堆叠空白行、
+> 并把「跨分类新邻接」还原为无分隔风格。
+
 ### B.1 落点清单
 
 组件文件名 = `PascalCase(id)Example.vue`（见 `AGENTS.md` R3），17 条全部落在 2 个目录：
