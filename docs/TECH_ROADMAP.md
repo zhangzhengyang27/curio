@@ -415,6 +415,7 @@ const ARCHIVE_ONLY = [ ... ]   // 见下方实录清单
 
 1. **7 项 verify 闸门零改动**——`verify:registry` / `verify:drift` / `verify:thumbnails` 读的是 `src/examples/registry/` 与 `public/example-thumbs/`，`verify:three-compat` 读的是 `src/examples/three-build-compat/`（`scripts/verify-three-compat.mjs:30`）与 `vite.config.ts` 是否含 `three-compat-resolver`（`:119`），`verify:gl-renderer` 读的是 `src/examples/jsm-compat/gl-renderer.esm.js` 与 `public/graphics/common/lib/gl-renderer.js`（2026-09-24 新增）。方案 A **不删任何源文件、不改这些路径**，所以闸门天然保持全绿。这是方案 B 做不到的。
 2. **不改变既有拍板**——示例中心仍是只读归档，一个文件都不删（PRODUCT_PLAN §6.1）。
+   **2026-09-27 修订**：见 `docs/ROADMAP.md` §0 —— 新增允许「同库机械副本合并」这一类删除（首例 mygrapics 17 条），其余不变。
 3. **可增量、可回退**——每一步都能单独验证；最坏情况下把 `VITE_BUILD_TARGET` 默认改回 `archive` 即回到今天。
 4. **符合 1 周时间盒**——核心改动集中在 3 个文件（`vite.config.ts`、`src/router/index.ts`、`scripts/copy-example-deps.js`）。
 
