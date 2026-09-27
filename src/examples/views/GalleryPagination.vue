@@ -202,6 +202,12 @@ function jumpToPage() {
 }
 
 /* Dark mode overrides */
+html.dark .page-btn,
+html.dark .page-jump-input,
+html.dark .page-jump-btn {
+  background: var(--tv-surface-container);
+}
+
 html.dark .page-btn.active {
   background: var(--tv-secondary-container);
   border-color: var(--tv-secondary-container);

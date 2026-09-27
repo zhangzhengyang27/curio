@@ -1,45 +1,58 @@
 <template>
   <div class="demo-root">
-    <div class="demo-body">
-      <!-- 浮动元信息：Teleport 到 body，避免被 .demo-body overflow:hidden 或示例内部层叠上下文盖住 -->
-      <Teleport to="body">
-        <div
-          v-if="example"
-          class="demo-float-meta"
+    <!--
+      实心顶部信息栏（44px，与文件底部 lil-gui 全局偏移 calc(顶栏+44px) 严格对齐）。
+      改版前元信息是 68% 透明度的 fixed 浮层，压在 3D 画布上后标题只有 12px、
+      「查看代码」按钮对比度不达标，实际上看不见；且为了躲示例内部层叠上下文
+      付出了 Teleport + z-index 的持续维护成本。移回文档流后两个问题同时消失。
+    -->
+    <header
+      v-if="example"
+      class="demo-topbar"
+    >
+      <div class="tb-left">
+        <button
+          type="button"
+          class="back-btn"
+          @click="goBackToList"
         >
-          <div class="meta-top">
-            <button
-              type="button"
-              class="back-btn"
-              @click="goBackToList"
-            >
-              ← 返回示例列表
-            </button>
-            <span class="demo-title">{{ example?.title || '示例' }}</span>
-            <span
-              v-if="demoMeta"
-              class="demo-meta tv-num"
-            >{{ demoMeta }}</span>
-          </div>
-          <div class="meta-bottom">
-            <span class="demo-tags">
-              <span
-                v-for="tag in example.tags"
-                :key="tag"
-                class="tag"
-              >{{ tag }}</span>
-            </span>
-            <button
-              v-if="example.runner === 'vue'"
-              class="code-btn"
-              title="查看当前示例的源码"
-              @click="openCode"
-            >
-              &lt;/&gt; 查看代码
-            </button>
-          </div>
-        </div>
-      </Teleport>
+          ← 返回列表
+        </button>
+        <span
+          class="tb-divider"
+          aria-hidden="true"
+        />
+        <h1 class="demo-title">
+          {{ example?.title || '示例' }}
+        </h1>
+        <span
+          v-if="demoMeta"
+          class="demo-meta tv-num"
+        >{{ demoMeta }}</span>
+      </div>
+      <div class="tb-right">
+        <span class="demo-tags">
+          <span
+            v-for="tag in visibleTags"
+            :key="tag"
+            class="tag"
+          >{{ tag }}</span>
+          <span
+            v-if="hiddenTagCount > 0"
+            class="tag tag-more"
+          >+{{ hiddenTagCount }}</span>
+        </span>
+        <button
+          v-if="example.runner === 'vue'"
+          class="code-btn"
+          title="查看当前示例的源码"
+          @click="openCode"
+        >
+          &lt;/&gt; 查看代码
+        </button>
+      </div>
+    </header>
+    <div class="demo-body">
       <div
         v-if="!example"
         class="error-tip"
@@ -170,6 +183,11 @@ const demoMeta = computed(() => {
   ].filter(Boolean).join(' · ')
 })
 
+// 44px 顶栏一行放不下全部标签：展示前 4 个，其余折叠成 +N
+const MAX_TAGS = 4
+const visibleTags = computed(() => (example.value?.tags || []).slice(0, MAX_TAGS))
+const hiddenTagCount = computed(() => Math.max(0, (example.value?.tags || []).length - MAX_TAGS))
+
 const vueComponent = computed(() => {
   const p2 = parsed.value as { source: string; category: string; id: string }
   if (!p2.source || !p2.category || !p2.id || example.value?.runner !== 'vue') return null
@@ -231,7 +249,7 @@ onBeforeUnmount(() => {
   font-size: 13px;
   font-weight: 500;
   flex-shrink: 0;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
   border: none;
   background: none;
   padding: 0;
@@ -241,47 +259,49 @@ onBeforeUnmount(() => {
 }
 
 .back-btn:hover {
-  color: var(--tv-primary-container);
+  opacity: 0.75;
 }
 
-/* 浮动元信息：固定在示例内容左上角，不占顶栏文档流空间。
-   用 position:fixed + 高 z-index 让它脱离 .demo-root 的层叠上下文，
-   避免被示例内部的全屏覆盖层、lil-gui 面板（默认 z-index:1001）等挡住点击。 */
-.demo-float-meta {
-  position: fixed;
-  top: calc(var(--tv-top-nav-height) + 12px);
-  left: 12px;
-  z-index: 1002;
-  pointer-events: auto;
+/* ── 实心顶部信息栏 ────────────────────────────────────────────────
+   高度 44px 是硬约束：全局样式把示例内 autoPlace 的 lil-gui 面板
+   下移到 calc(var(--tv-top-nav-height) + 44px)，改这里必须同步改那里。 */
+.demo-topbar {
+  height: 44px;
+  flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: var(--tv-sm);
-  padding: var(--tv-sm) var(--tv-md);
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 68%, transparent);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-md);
-  max-width: calc(100% - 24px);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-md);
+  padding: 0 var(--tv-md);
+  background: var(--tv-surface-container-lowest);
+  border-bottom: 1px solid var(--tv-outline-variant);
 }
 
-.meta-top {
+html.dark .demo-topbar {
+  background: var(--tv-surface-container-low);
+  border-bottom-color: var(--tv-outline);
+}
+
+.tb-left {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--tv-sm);
+  flex: 1;
   min-width: 0;
 }
 
-.meta-bottom {
-  display: flex;
-  align-items: center;
-  gap: var(--tv-sm);
-  flex-wrap: wrap;
+.tb-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--tv-outline);
+  flex-shrink: 0;
 }
 
+/* 标题是这一栏的主角：15px/600 高对比，先于元信息被挤压 */
 .demo-title {
   color: var(--tv-on-surface);
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 22px;
   font-weight: 600;
   min-width: 0;
   overflow: hidden;
@@ -292,18 +312,27 @@ onBeforeUnmount(() => {
 .demo-meta {
   color: var(--tv-on-surface-variant);
   font-size: var(--tv-fs-xs);
+  line-height: 18px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.tb-right {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-sm);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
 .demo-tags {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: var(--tv-xs);
-  flex-shrink: 0;
-  max-width: 64vw;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .code-btn {
@@ -312,10 +341,11 @@ onBeforeUnmount(() => {
   height: 30px;
   padding: 0 12px;
   border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
+  /* outline 档在明暗两种主题下都可见；variant 档（0.1 透明度）在暗色下近乎消失 */
+  border: 1px solid var(--tv-outline);
   background: transparent;
   color: var(--tv-on-surface-variant);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--tv-font-mono);
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -331,10 +361,19 @@ onBeforeUnmount(() => {
 .tag {
   background: color-mix(in srgb, var(--tv-secondary-container) 20%, transparent);
   color: var(--tv-on-secondary-container);
-  font-family: monospace;
-  font-size: 10px;
+  font-family: var(--tv-font-mono);
+  font-size: 11px;
+  line-height: 16px;
   padding: 2px 8px;
   border-radius: var(--tv-radius-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tag-more {
+  background: transparent;
+  border: 1px dashed var(--tv-outline);
+  color: var(--tv-on-surface-variant);
 }
 
 .demo-body {

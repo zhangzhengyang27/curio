@@ -22,26 +22,26 @@
             {{ snapshotLine }}
           </p>
         </div>
-        <dl class="hero-stats">
-          <div class="hero-stat">
-            <dt>示例</dt>
-            <dd class="tv-num">
-              {{ totalCount || '—' }}
-            </dd>
-          </div>
-          <div class="hero-stat">
-            <dt>来源</dt>
-            <dd class="tv-num">
-              {{ sourceCount || '—' }}
-            </dd>
-          </div>
-          <div class="hero-stat">
-            <dt>专题</dt>
-            <dd class="tv-num">
-              {{ topicCount }}
-            </dd>
-          </div>
-        </dl>
+        <!--
+          统计从三个独立色块改为一行内联数字：它们是页头的佐证信息，
+          不是需要各自占一个卡片的主体内容；一行排开与右侧缘对齐更稳。
+        -->
+        <p
+          v-if="totalCount"
+          class="hero-stats tv-num"
+        >
+          <span class="hero-stat-num">{{ totalCount }}</span> 个示例
+          <span
+            class="hero-stat-dot"
+            aria-hidden="true"
+          >·</span>
+          <span class="hero-stat-num">{{ sourceCount }}</span> 个来源
+          <span
+            class="hero-stat-dot"
+            aria-hidden="true"
+          >·</span>
+          <span class="hero-stat-num">{{ topicCount }}</span> 个专题
+        </p>
       </div>
     </header>
 
@@ -270,12 +270,14 @@ const rangeEnd = computed(() =>
 .hero-inner {
   max-width: 1600px;
   margin: 0 auto;
-  padding: var(--tv-lg) var(--tv-lg) var(--tv-md);
+  /* 页头只承担「这是什么 / 有多大」两句话的高度，垂直内衬压到 16px，
+     让用户第一屏就看到筛选栏和卡片 */
+  padding: var(--tv-md) var(--tv-lg);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--tv-md);
+  gap: var(--tv-xs) var(--tv-md);
 }
 
 .hero-text {
@@ -283,12 +285,12 @@ const rangeEnd = computed(() =>
 }
 
 .hero-title {
-  font-size: var(--tv-fs-3xl);
-  line-height: 1.2;
+  font-size: var(--tv-fs-2xl);
+  line-height: 1.25;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--tv-on-surface);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .hero-subtitle {
@@ -298,7 +300,7 @@ const rangeEnd = computed(() =>
 }
 
 .hero-snapshot {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: var(--tv-fs-xs);
   line-height: 18px;
   color: var(--tv-on-surface-variant);
@@ -306,34 +308,24 @@ const rangeEnd = computed(() =>
 }
 
 .hero-stats {
-  display: flex;
-  align-items: stretch;
-  gap: var(--tv-xs);
   margin: 0;
-}
-
-.hero-stat {
-  min-width: 76px;
-  padding: 8px 14px;
-  border-radius: var(--tv-radius-lg);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-lowest);
-  text-align: center;
-}
-
-.hero-stat dt {
-  font-size: var(--tv-fs-xs);
-  line-height: 18px;
+  padding-bottom: 2px;
+  font-size: var(--tv-fs-sm);
+  line-height: 20px;
   color: var(--tv-on-surface-variant);
+  white-space: nowrap;
 }
 
-.hero-stat dd {
-  margin: 0;
-  font-size: var(--tv-fs-xl);
-  line-height: 26px;
+.hero-stat-num {
+  font-size: var(--tv-fs-lg);
+  line-height: 20px;
   font-weight: 700;
   color: var(--tv-on-surface);
-  font-variant-numeric: tabular-nums;
+}
+
+.hero-stat-dot {
+  margin: 0 var(--tv-sm);
+  opacity: 0.6;
 }
 
 /* ── 主体 ──────────────────────────────────────────────────────── */
@@ -361,15 +353,18 @@ const rangeEnd = computed(() =>
   gap: var(--tv-sm);
   padding: var(--tv-sm) 0;
   margin-bottom: var(--tv-md);
-  background: var(--tv-background);
-  /* 卡片从工具条下面滚过去时，边缘不能突然断掉 */
+  /* 半透明 + 背景模糊：卡片从工具条下滚过时是「穿过毛玻璃」而不是被硬边切断；
+     86% 不透明度保证下面的内容不会透过文字区干扰读数 */
+  background: color-mix(in srgb, var(--tv-background) 86%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--tv-outline-variant) 60%, transparent);
 }
 
 /* Card grid */
 .card-grid {
   display: grid;
-  gap: var(--tv-md);
+  gap: 20px;
   margin-bottom: var(--tv-lg);
 }
 

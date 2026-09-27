@@ -62,6 +62,10 @@ const open = ref(props.defaultOpen)
 <style scoped>
 .filter-section + .filter-section {
   margin-top: var(--tv-xs);
+  /* 三个分区之间的分隔线：让「技术栈 / 数据源 / 专题分类」的分组一眼可辨，
+     不再依赖折叠箭头本身表达层级 */
+  border-top: 1px solid color-mix(in srgb, var(--tv-outline) 35%, transparent);
+  padding-top: 2px;
 }
 
 .section-head {
@@ -90,6 +94,12 @@ const open = ref(props.defaultOpen)
   top: 0;
   z-index: 1;
   background: var(--tv-surface-container-lowest);
+}
+
+/* 粘性标题的底色必须跟侧栏面板同档（暗色下侧栏已抬到 container-low），
+   否则条目从标题下滚过时会露出一条异色缝隙 */
+html.dark .section-head {
+  background: var(--tv-surface-container-low);
 }
 
 .section-head:hover {

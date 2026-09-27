@@ -168,6 +168,13 @@ defineEmits(['select', 'select-tech', 'select-source'])
   width: 4px;
 }
 
+/* 暗色下 lowest 档与页面底色几乎同值，面板会整个消失在背景里
+   （与卡片糊成一片同一条根因）：暗色抬到 container-low 档 + outline 描边 */
+html.dark .filter-sidebar {
+  background: var(--tv-surface-container-low);
+  border-color: var(--tv-outline);
+}
+
 .filter-sidebar::-webkit-scrollbar-thumb {
   background: var(--tv-outline-variant);
   border-radius: var(--tv-radius-full);

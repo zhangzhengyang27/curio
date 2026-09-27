@@ -456,6 +456,13 @@ test.describe('冒烟测试：核心链路', () => {
     await page.goto('/examples?tech=webgl')
     await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
 
+    // 信息瘦身改版：网格卡片不再渲染描述段（描述与标签内容大量重复）；
+    await expect(page.locator('.card-grid.is-grid .card-desc')).toHaveCount(0)
+    // 描述类断言改在列表视图上看 —— 列表行保留一行描述，
+    // 是「无信息描述」清洗成果在界面上仍然可见的地方。
+    await page.getByLabel('列表视图').click()
+    await expect(page.locator('.example-card.is-list').first()).toBeVisible()
+
     // WebGL 分片 134 条里原本 126 条共用两句模板，现在应全部换成章节主题
     const texts = await page.locator('.example-card').allInnerTexts()
     expect(texts.length).toBeGreaterThan(0)

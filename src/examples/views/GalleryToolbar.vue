@@ -339,4 +339,10 @@ const sizeModel = computed({
   outline: 2px solid var(--tv-primary);
   outline-offset: 1px;
 }
+
+/* 暗色下 lowest/low 档控件贴进粘性工具条的底色里，抬一档保持可见 */
+html.dark .control,
+html.dark .segmented {
+  background: var(--tv-surface-container);
+}
 </style>

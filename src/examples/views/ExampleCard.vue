@@ -44,7 +44,15 @@
       >
         {{ metaLine }}
       </p>
-      <p class="card-desc">
+      <!--
+        描述段只保留在列表视图：网格里它与标签内容大量重复（同一段技术栈
+        文案在描述、标签、来源角标里出现 3~4 次），是卡片信息过载的主要来源。
+        列表行有横向空间，一行描述能提供标签给不了的上下文。
+      -->
+      <p
+        v-if="isList"
+        class="card-desc"
+      >
         {{ ex.description || ex.title }}
       </p>
       <div class="card-tags">
@@ -95,8 +103,12 @@ function onThumbError() {
   thumbFailed.value = true
 }
 
-// 列表视图横向空间有限，标签留 2 个就够，多了会把元信息挤掉
-const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 2 : 3))
+// 列表视图才有描述段；网格卡片不再渲染（见模板内注释）
+const isList = computed(() => props.view === 'list')
+
+// 所有视图统一只留 2 个标签：描述段退场后标签是卡片最后一行噪音防线，
+// 第 3 个起基本是同义反复（「粒子/点云」旁边再挂「粒子」）
+const visibleTags = computed(() => (props.ex.tags || []).slice(0, 2))
 </script>
 
 <style scoped>
@@ -132,6 +144,18 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
   outline-offset: 2px;
 }
 
+/* 暗色主题的表面分级：Material 的「lowest」档在暗色下与页面底色几乎同值，
+   卡片只能靠一根细线与背景区分 —— 这是改版前「糊成一片」的根因。
+   暗色下卡片抬到 container 档、描边换 outline，靠亮度差而不是细线分层。 */
+html.dark .example-card {
+  background: var(--tv-surface-container);
+  border-color: var(--tv-outline);
+}
+
+html.dark .example-card:hover {
+  background: var(--tv-surface-container-high);
+}
+
 .card-media {
   position: relative;
   width: 100%;
@@ -139,6 +163,16 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
   overflow: hidden;
   background: var(--tv-surface-container-low);
   flex-shrink: 0;
+}
+
+/* 封面内描边：1415 张封面饱和度/明度差异极大，一圈 1px 的收束线
+   让高饱和封面与深浅两种页面底色之间都有一致边界 */
+.card-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-outline) 30%, transparent);
 }
 
 .card-media img {
@@ -227,16 +261,17 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 4px;
   padding: var(--tv-md);
   min-width: 0;
 }
 
+/* 标题是卡片的第一信息：15px/600，必须明显强于下面的元信息行 */
 .card-title {
-  font-size: 17px;
-  line-height: 25px;
-  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
   color: var(--tv-on-surface);
-  margin-bottom: var(--tv-xs);
   transition: color 0.2s;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -248,21 +283,18 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
   font-size: var(--tv-fs-xs);
   line-height: 18px;
   color: var(--tv-on-surface-variant);
-  opacity: 0.85;
-  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* 描述只在列表视图渲染（见模板内注释）：一行收齐，不再占两行 */
 .card-desc {
-  flex: 1;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: var(--tv-fs-sm);
+  line-height: 20px;
   color: var(--tv-on-surface-variant);
-  margin-bottom: var(--tv-md);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -272,6 +304,7 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
   gap: var(--tv-xs);
   flex-wrap: wrap;
   margin-top: auto;
+  padding-top: 10px;
 }
 
 .card-tag {
@@ -301,19 +334,19 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
 }
 
 .example-card.is-grid.is-dense .card-title {
-  font-size: 15px;
-  line-height: 22px;
-  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
   -webkit-line-clamp: 1;
 }
 
-.example-card.is-grid.is-dense .card-desc,
+/* 紧凑网格只留「封面 + 标题 + 标签」，元信息行也收掉 */
 .example-card.is-grid.is-dense .card-meta {
   display: none;
 }
 
 .example-card.is-grid.is-dense .card-tags {
-  margin-top: 6px;
+  margin-top: auto;
+  padding-top: 6px;
 }
 
 /* ── 列表视图 ────────────────────────────────────────────────────── */
@@ -336,20 +369,19 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, props.dense ? 
 }
 
 .example-card.is-list .card-title {
-  font-size: 16px;
-  line-height: 24px;
-  margin-bottom: 0;
+  font-size: 15px;
+  line-height: 22px;
   -webkit-line-clamp: 1;
 }
 
 .example-card.is-list .card-desc {
   flex: 0 1 auto;
-  margin-bottom: 0;
   -webkit-line-clamp: 1;
 }
 
 .example-card.is-list .card-tags {
   margin-top: 0;
+  padding-top: 0;
 }
 
 .example-card.is-list .card-play {
