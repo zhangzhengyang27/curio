@@ -249,28 +249,6 @@ test.describe('冒烟测试：核心链路', () => {
     expect(posAfter, '输入过程不应产生历史记录，否则后退键要按几十次').toBe(posBefore)
   })
 
-  test('切换技术标签会过滤结果并写回 URL', async ({ page }) => {
-    await page.goto('/examples')
-    await expect(page.locator('.example-card').first()).toBeVisible()
-    const total = Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10)
-
-    const threeTab = page.locator('.tech-tab', { hasText: 'Three.js' })
-    await expect(threeTab).toBeVisible()
-    const tabCount = Number.parseInt((await threeTab.locator('.tech-tab-count').innerText()).replace(/\D/g, ''), 10)
-    expect(tabCount, 'Three.js 标签应显示自己的条目数').toBeGreaterThan(0)
-
-    await threeTab.click()
-
-    await expect(page.locator('.tech-tab.active')).toContainText('Three.js')
-    await expect.poll(() => new URL(page.url()).searchParams.get('tech')).toBe('threejs')
-    // 结果计数与侧栏计数都应切到该技术
-    await expect
-      .poll(async () => Number.parseInt((await page.locator('.result-count').innerText()).replace(/\D/g, ''), 10))
-      .toBe(tabCount)
-    await expect(page.locator('.tech-count')).toContainText(String(tabCount))
-    expect(tabCount, `技术过滤后应少于全部（全部 ${total}）`).toBeLessThan(total)
-  })
-
   test('点击侧栏子分类会过滤结果并写回 URL', async ({ page }) => {
     await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible()
@@ -453,7 +431,8 @@ test.describe('冒烟测试：核心链路', () => {
     // 同一章节里既有空洞条目也有写了具体技术点的条目，无条件按章节覆盖会把后者一起抹掉。
     const CONTENT_FREE = /通过标准渲染流程呈现/
 
-    await page.goto('/examples?tech=webgl')
+    // 技术栈筛选维度已裁剪（2026-09-27），这里直接浏览全库第一页
+    await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
 
     // 信息瘦身改版：网格卡片不再渲染描述段（描述与标签内容大量重复）；
@@ -463,13 +442,14 @@ test.describe('冒烟测试：核心链路', () => {
     await page.getByLabel('列表视图').click()
     await expect(page.locator('.example-card.is-list').first()).toBeVisible()
 
-    // WebGL 分片 134 条里原本 126 条共用两句模板，现在应全部换成章节主题
     const texts = await page.locator('.example-card').allInnerTexts()
     expect(texts.length).toBeGreaterThan(0)
     for (const t of texts) {
       expect(t, `卡片仍在展示无信息描述：\n${t}`).not.toMatch(CONTENT_FREE)
     }
-    expect(texts.join('\n')).toMatch(/专题/)
+    // 原「描述应含章节主题」的正向断言随技术栈维度一起移除：
+    // 它针对的 WebGL 分片不再能从 URL 表达，正向覆盖由下方
+    // Theatre.js 逐条覆盖断言继续承担（人工改写的技术点描述必须存活）。
 
     // 逐条覆盖要能盖过分类规则：Theatrejs 的标题是人工改写的
     await page.goto('/examples?search=Theatre')

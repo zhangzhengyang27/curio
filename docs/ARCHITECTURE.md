@@ -93,16 +93,17 @@ src/examples/registry/
 
 ```
 /examples              → ExampleGallery.vue
-  · 三维度分面筛选：技术栈（6 个，含「地理 / GIS」领域分面）→ 数据源（11 个来源，默认只展开
-    条目最多的 6 个，可展开）/ 专题分类（16 类 + 1 个补集桶）。每个维度的计数在
-    「其它维度已生效」的集合上算且**排除自身** —— 否则选中一项后同维度其它项全归零，用户换不动
+  · 筛选面板只保留「专题分类」单维度（16 类 + 1 个补集桶）+ 关键词搜索。技术栈 / 数据源
+    两个维度（含 ?tech= / ?src= URL 参数）已于 2026-09-27 从界面与状态机中整体移除，
+    旧链接里的这两个参数会被静默忽略；techGroups 仍为搜索索引供分面派生词（含「地理 / GIS」
+    领域词），不再作为筛选入口。专题分面的计数在「其它条件已生效」的集合上算且**排除自身**
+    —— 否则选中一项后同维度其它项全归零，用户换不动
   · 结果区粘性工具条：结果数 + 已选条件 chips（可逐个移除 / 清除全部）+ 排序
     （推荐 / 标题 / 来源 / 专题）+ 网格↔列表视图 + 紧凑密度 + 每页 24/48/96（默认 48）
-  · 筛选状态（tech / src / sub / keyword / sort / size / view / page）双向同步到 URL
+  · 筛选状态（sub / keyword / sort / size / view / page）双向同步到 URL
     （可刷新、可分享、可前进后退）；密度是个人偏好，存 localStorage 不进 URL
   · 维度归属在注册表落地时一次性预计算成索引（useGalleryFilters），此后任何筛选/搜索
-    都只在数组上做 includes —— 不要退回「每次交互对全量重跑 17 条专题匹配器」的写法，
-    三维度分面会把那个成本 ×3
+    都只在数组上做 includes —— 不要退回「每次交互对全量重跑 17 条专题匹配器」的写法
   · src/examples/composables/useExampleFilters.ts 负责 techGroups 与 subCategoryDefinitions 归类。
     ⚠ 子分类匹配走 seg()（路径段整词）/ stem()（词元含词干）两个原语，不要退回「对 category
       整串跑一条松散正则」—— 旧实现因此把 particle/parallax 分进了「XR / VR / AR」（占该桶 75%）。

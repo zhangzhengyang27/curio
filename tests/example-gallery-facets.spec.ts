@@ -1,16 +1,14 @@
 import { test, expect } from '@playwright/test'
 
 /**
- * 示例中心的三维度分面 + 视图控制（2026-09-23 改版）。
+ * 示例中心的专题分面 + 排序 / 视图控制 + 已选条件 + 空态。
  *
- * 改版前只有「技术栈」和「专题分类」两个维度，11 个数据源在界面上完全没有入口，
- * 也没有排序 / 视图 / 每页条数，已选条件只能靠侧栏里各高亮一行来表达 ——
- * 滚到网格中段就完全看不出「我现在筛了什么」。
+ * 2026-09-27 裁剪：侧栏只保留「专题分类」一个维度，技术栈 / 数据源两个维度
+ * （含 ?tech= / ?src= URL 参数与它们的分面用例）已从界面与状态机中整体移除。
  *
  * 这组用例守住三件事：
- *   ① 三个维度的计数是**分面**的（某个维度的计数排除它自己，否则选中后
- *      同维度其它项会全部变 0，用户就换不动了）；
- *   ② 新增的筛选状态同样可分享（写回 URL，刷新可还原）；
+ *   ① 专题分面的计数是**分面**的（选中某项后其它项的计数不归零，用户才换得动）；
+ *   ② 筛选状态同样可分享（写回 URL，刷新可还原）；
  *   ③ 已选条件可视、可逐个移除、可一键清空。
  */
 
@@ -23,66 +21,45 @@ async function openGallery(page: import('@playwright/test').Page, query = '') {
   await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
 }
 
-/** 数据源默认只展开条目最多的 6 个，点非头部来源前先把列表摊开 */
-async function expandSources(page: import('@playwright/test').Page) {
-  const toggle = page.locator('.source-toggle')
-  if (await toggle.isVisible()) await toggle.click()
-}
-
-test.describe('示例中心分面筛选', () => {
-  test('数据源分面存在，点击后过滤并写回 URL', async ({ page }) => {
+test.describe('示例中心专题分面', () => {
+  test('点击专题分类过滤并写回 URL，结果数与计数一致', async ({ page }) => {
     await openGallery(page)
 
-    const items = page.locator('.source-item')
+    const items = page.locator('.category-item')
     await expect(items.first()).toBeVisible()
-    // 第 1 项是「全部来源」，跳过它，取条目数最多的那个源
+    // 第 1 项是「全部」，跳过它，取第一个真实子分类
     const target = items.nth(1)
     const label = (await target.locator('.item-label').innerText()).trim()
     const count = await parseCount(target.locator('.item-count'))
-    expect(count, `数据源「${label}」应有计数`).toBeGreaterThan(0)
+    expect(count, `专题「${label}」应有计数`).toBeGreaterThan(0)
 
     await target.click()
 
-    await expect(page.locator('.source-item.active')).toContainText(label)
-    await expect.poll(() => new URL(page.url()).searchParams.get('src')).not.toBeNull()
+    await expect(page.locator('.category-item.active')).toContainText(label)
+    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).not.toBeNull()
     await expect
       .poll(async () => parseCount(page.locator('.result-count')))
       .toBe(count)
   })
 
-  test('选中数据源后，技术栈计数随之收窄（分面计数排除自身维度）', async ({ page }) => {
-    await openGallery(page)
-
-    const threeBefore = await parseCount(
-      page.locator('.tech-tab', { hasText: 'Three.js' }).locator('.tech-tab-count'),
-    )
-    const allBefore = await parseCount(page.locator('.result-count'))
-    expect(threeBefore).toBeGreaterThan(0)
-
-    // 选一个「本身属于 Three.js 栈但只覆盖一部分」的源：
-    // 选中后 threejs 计数应变小而不是归零 —— 归零说明同维度计数忘了排除自己
-    await expandSources(page)
-    await page.locator('.source-item', { hasText: 'Three.js 官方示例' }).click()
-
-    await expect.poll(() => new URL(page.url()).searchParams.get('src')).toBe('threejs-official')
-    const threeAfter = await parseCount(
-      page.locator('.tech-tab', { hasText: 'Three.js' }).locator('.tech-tab-count'),
-    )
-    const allAfter = await parseCount(page.locator('.result-count'))
-
-    expect(allAfter, '选中单一来源后结果集应小于全库').toBeLessThan(allBefore)
-    expect(threeAfter, '该来源本身属于 Three.js 栈，计数应保留').toBeGreaterThan(0)
-    expect(threeAfter, '但应小于全库的 Three.js 计数').toBeLessThan(threeBefore)
-    expect(await parseCount(page.locator('.source-item.active .item-count'))).toBe(allAfter)
-  })
-
-  test('?src= 可从分享链接还原', async ({ page }) => {
-    await openGallery(page, '?src=webgl')
-    const count = await parseCount(page.locator('.result-count'))
-    expect(count).toBeGreaterThan(0)
-    // 被折叠进尾部的来源也要保住选中项的可见性，否则用户以为条件丢了
-    await expect(page.locator('.source-item.active')).toContainText('WebGL 基础')
+  test('?sub= 可从分享链接还原，且换一个专题仍可选（分面计数排除自身）', async ({ page }) => {
+    await openGallery(page, '?sub=shader')
+    await expect(page.locator('.category-item.active')).toContainText('着色器')
+    const total = await parseCount(page.locator('.result-count'))
+    expect(total).toBeGreaterThan(0)
     expect(await page.locator('.example-card').count()).toBeLessThanOrEqual(48)
+
+    // 选中「着色器」之后，其它专题的计数不应归零 ——
+    // 归零说明分面计数忘了排除自身，用户就换不动了
+    const other = page.locator('.category-item', { hasText: '动画 / 粒子' })
+    const otherCount = await parseCount(other.locator('.item-count'))
+    expect(otherCount, '其它专题的计数应保留').toBeGreaterThan(0)
+
+    await other.click()
+    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).toBe('animation')
+    await expect
+      .poll(async () => parseCount(page.locator('.result-count')))
+      .toBe(otherCount)
   })
 })
 
@@ -146,24 +123,24 @@ test.describe('已选条件与空态', () => {
     await openGallery(page)
     await expect(page.locator('.af-chip')).toHaveCount(0)
 
-    await page.locator('.tech-tab', { hasText: 'Three.js' }).click()
+    await page.locator('.category-item', { hasText: '着色器 / GLSL' }).click()
     await page.locator('.nav-search .search-input').fill('shader')
     await expect.poll(() => new URL(page.url()).searchParams.get('search')).toBe('shader')
 
     const chips = page.locator('.af-chip')
     await expect(chips).toHaveCount(2)
-    await expect(chips.first()).toContainText('Three.js')
+    await expect(chips.first()).toContainText('着色器')
 
-    // 移除技术条件，关键词应当留下
+    // 移除专题条件，关键词应当留下
     await chips.first().click()
-    await expect.poll(() => new URL(page.url()).searchParams.get('tech')).toBeNull()
+    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).toBeNull()
     expect(new URL(page.url()).searchParams.get('search')).toBe('shader')
     await expect(page.locator('.af-chip')).toHaveCount(1)
   })
 
-  test('清除全部把四个维度一次归位', async ({ page }) => {
-    await openGallery(page, '?tech=threejs&src=threejs-official&sub=shader&search=地球')
-    await expect(page.locator('.af-chip')).toHaveCount(4)
+  test('清除全部把两个条件一次归位', async ({ page }) => {
+    await openGallery(page, '?sub=shader&search=地球')
+    await expect(page.locator('.af-chip')).toHaveCount(2)
 
     await page.getByRole('button', { name: '清除全部' }).click()
 

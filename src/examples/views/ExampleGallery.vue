@@ -46,19 +46,11 @@
     </header>
 
     <main class="gallery-main">
-      <!-- 三个维度的筛选面板：技术栈 → 数据源 → 专题分类 -->
+      <!-- 筛选面板：只保留专题分类一个维度（技术栈/数据源已于 2026-09-27 裁剪） -->
       <GalleryFilterSidebar
-        :current-tech="currentTech"
-        :current-source="currentSource"
         :current-sub-category="currentSubCategory"
-        :current-tech-label="currentTechLabel"
-        :tech-examples-count="techExamplesCount"
-        :tech-tabs="techTabs"
-        :source-facets="sourceFacets"
         :sub-facets="subFacets"
         @select="selectCategory"
-        @select-tech="selectTech"
-        @select-source="selectSource"
       />
 
       <!-- Main Content -->
@@ -191,8 +183,6 @@ import GalleryPagination from './GalleryPagination.vue'
 const snapshotLine = snapshotSummary()
 
 const {
-  currentTech,
-  currentSource,
   currentSubCategory,
   currentPage,
   pageSize,
@@ -201,18 +191,13 @@ const {
   density,
   loading,
   totalCount,
-  currentTechLabel,
-  techExamplesCount,
-  techTabs,
-  sourceFacets,
+  sourceCount,
   subFacets,
   filteredExamples,
   paginatedExamples,
   totalPages,
   visiblePages,
   activeFilters,
-  selectTech,
-  selectSource,
   selectCategory,
   setSort,
   setPageSize,
@@ -225,7 +210,6 @@ const {
 
 /** 专题数是个常量（分类定义在 useExampleFilters），不随筛选变化 */
 const topicCount = subCategoryDefinitions.length - 1
-const sourceCount = computed(() => Math.max(0, sourceFacets.value.length - 1))
 
 const isDense = computed(() => density.value === 'compact')
 

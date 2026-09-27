@@ -1,6 +1,6 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount, shallowRef } from 'vue'
 import type { RegistryExample } from '../registry/index'
-import { KNOWN_SOURCES, getSources } from '../registry/index'
+import { getSources } from '../registry/index'
 import { useRoute, useRouter } from 'vue-router'
 import { techGroups, techSearchTerms, subCategoryDefinitions, ensureRegistryLoaded } from './useExampleFilters'
 
@@ -16,13 +16,17 @@ import { techGroups, techSearchTerms, subCategoryDefinitions, ensureRegistryLoad
  *   - 用户主动切换才重置子分类与页码；从 URL 还原时**不**重置
  *     （否则前进/后退会把子分类与页码冲掉）
  *
- * ── 检索索引（2026-09-23 重构）───────────────────────────────────────────
- * 三个筛选维度（技术 / 来源 / 专题）各自要显示「在其它维度已生效条件下的计数」，
- * 这是标准分面检索。老实现只算「技术 × 专题」两层，且每敲一个字就对 1417 条
- * 重跑 17 条专题匹配器 —— 三维度分面会把这个成本 ×3。
+ * 维度裁剪（2026-09-27）：侧栏只保留「专题分类」单维度 + 关键词搜索。
+ * 技术栈 / 数据源两个维度已从界面与状态机中整体移除（含 ?tech= / ?src= URL 参数）——
+ * 旧链接里的这两个参数会被静默忽略。techGroups 仍然保留：它只为搜索索引供分面派生词
+ * （见 techSearchTerms），不再作为筛选入口。
  *
- * 所以改成：注册表落地时**一次性**把每条示例的维度归属算成字符串数组（技术键、
- * 专题键、来源键 + 检索串），此后任何一次交互都只是在这些数组上做 includes，
+ * ── 检索索引（2026-09-23 重构）───────────────────────────────────────────
+ * 筛选维度要显示「在其它条件已生效下的计数」，这是标准分面检索。老实现每敲一个字
+ * 就对 1417 条重跑 17 条专题匹配器。
+ *
+ * 所以改成：注册表落地时**一次性**把每条示例的归属算成字符串数组（专题键 + 检索串），
+ * 此后任何一次交互都只是在这些数组上做 includes，
  * 匹配器（含正则 / 分词）不再参与运行时计算。
  */
 
@@ -50,7 +54,7 @@ export interface GalleryFacet {
 
 /** 已选条件 chip */
 export interface ActiveFilter {
-  key: 'tech' | 'source' | 'sub' | 'search'
+  key: 'sub' | 'search'
   label: string
   value: string
 }
@@ -59,11 +63,8 @@ interface IndexedExample {
   ex: RegistryExample
   /** 小写检索串，字段间用 \u0000 分隔（避免跨字段拼接产生意外命中） */
   haystack: string
-  /** 命中的技术键（不含 'all'） */
-  techs: string[]
   /** 命中的专题键（不含 'all'） */
   subs: string[]
-  source: string
 }
 
 /**
@@ -107,8 +108,6 @@ export function useGalleryFilters() {
   const router = useRouter()
 
   const keyword = ref(typeof route.query.search === 'string' ? route.query.search : '')
-  const currentTech = ref('all')
-  const currentSource = ref('all')
   const currentSubCategory = ref('all')
   const sort = ref<GallerySortKey>('default')
   const view = ref<GalleryView>('grid')
@@ -183,23 +182,22 @@ export function useGalleryFilters() {
     indexed.value = list
       .filter(ex => !ex.displayHidden)
       .map(ex => {
+        // 技术分面派生词只进检索串（「地图」这类领域词能命中地理条目，
+        // 取舍见 techSearchTerms 注释），不再作为筛选维度
         const matchedTechs = techGroups.filter(t => t.key !== 'all' && t.match(ex))
-        // 分面派生词一并进检索串，让「地图」这类领域词能命中地理条目（取舍见 techSearchTerms 注释）
         const facetWords = matchedTechs.flatMap(t => techSearchTerms[t.key] || [])
         return {
           ex,
           haystack: [ex.title || '', ex.description || '', ...(ex.tags || []), ...facetWords]
             .join('\u0000')
             .toLowerCase(),
-          techs: matchedTechs.map(t => t.key),
           subs: subCategoryDefinitions.filter(s => s.key !== 'all' && s.match(ex)).map(s => s.key),
-          source: ex.source,
         }
       })
     try {
       sourceLabels.value = Object.fromEntries(getSources().map(s => [s.source, s.label]))
     } catch {
-      // 拿不到中文名就退回 source 键，不让分面整块消失
+      // 拿不到中文名就退回 source 键，不让「按来源分组」排序退化
     }
     restoreScroll()
   })
@@ -215,45 +213,17 @@ export function useGalleryFilters() {
   }
 
   /**
-   * 三维度分面的公共过滤器。
-   *
-   * `skip` 传要忽略的维度：算某个维度的计数时，必须把**它自己**排除在外，
-   * 否则选中「Three.js」之后其它技术项的计数会全部变成 0，用户就没法换了。
+   * 分面过滤器。`skip` 传要忽略的条件：算专题分面的计数时必须把**它自己**排除在外，
+   * 否则选中一个专题后其它专题的计数会全部变成 0，用户就没法换了。
    */
   const kw = computed(() => keyword.value.trim().toLowerCase())
-  function passes(item: IndexedExample, skip: 'tech' | 'source' | 'sub' | null) {
-    if (skip !== 'tech' && currentTech.value !== 'all' && !item.techs.includes(currentTech.value)) return false
-    if (skip !== 'source' && currentSource.value !== 'all' && item.source !== currentSource.value) return false
+  function passes(item: IndexedExample, skip: 'sub' | null) {
     if (skip !== 'sub' && currentSubCategory.value !== 'all' && !item.subs.includes(currentSubCategory.value)) return false
     if (kw.value && !item.haystack.includes(kw.value)) return false
     return true
   }
 
-  const techPool = computed(() => indexed.value.filter(i => passes(i, 'tech')))
-  const sourcePool = computed(() => indexed.value.filter(i => passes(i, 'source')))
   const subPool = computed(() => indexed.value.filter(i => passes(i, 'sub')))
-
-  const techTabs = computed<GalleryFacet[]>(() => {
-    const counts = new Map<string, number>()
-    for (const item of techPool.value) {
-      counts.set('all', (counts.get('all') || 0) + 1)
-      for (const t of item.techs) counts.set(t, (counts.get(t) || 0) + 1)
-    }
-    return techGroups.map(t => ({ key: t.key, label: t.label, count: counts.get(t.key) || 0 }))
-  })
-
-  const sourceFacets = computed<GalleryFacet[]>(() => {
-    const counts = new Map<string, number>()
-    for (const item of sourcePool.value) {
-      counts.set(item.source, (counts.get(item.source) || 0) + 1)
-    }
-    // 来源名长短不一，按条目数降序排比按字母排更好扫
-    const items = [...counts.entries()].sort((a, b) => b[1] - a[1])
-    return [
-      { key: 'all', label: '全部来源', count: sourcePool.value.length },
-      ...items.map(([key, count]) => ({ key, label: sourceLabel(key), count })),
-    ]
-  })
 
   const subFacets = computed<GalleryFacet[]>(() => {
     const counts = new Map<string, number>()
@@ -269,13 +239,8 @@ export function useGalleryFilters() {
       .filter(s => s.key === 'all' || s.count > 0)
   })
 
-  const currentTechLabel = computed(
-    () => techGroups.find(t => t.key === currentTech.value)?.label || '全部技术',
-  )
-  /** 侧栏顶部那一行「当前技术 N 个示例」；与 techTabs 同源，不会和标签数漂移 */
-  const techExamplesCount = computed(
-    () => techTabs.value.find(t => t.key === currentTech.value)?.count ?? 0,
-  )
+  /** 页头「N 个来源」：注册表里实际出现的来源数，与「按来源分组」排序同源 */
+  const sourceCount = computed(() => new Set(indexed.value.map(i => i.ex.source)).size)
 
   const filteredExamples = computed<RegistryExample[]>(() => {
     const list = indexed.value.filter(i => passes(i, null)).map(i => i.ex)
@@ -335,8 +300,6 @@ export function useGalleryFilters() {
 
   const activeFilters = computed<ActiveFilter[]>(() => {
     const list: ActiveFilter[] = []
-    if (currentTech.value !== 'all') list.push({ key: 'tech', label: '技术', value: currentTechLabel.value })
-    if (currentSource.value !== 'all') list.push({ key: 'source', label: '来源', value: sourceLabel(currentSource.value) })
     if (currentSubCategory.value !== 'all') {
       list.push({ key: 'sub', label: '专题', value: subLabel(currentSubCategory.value) })
     }
@@ -351,7 +314,7 @@ export function useGalleryFilters() {
   //      而 filteredExamples.length 又 >0，连空态提示都不显示 → 用户见「共 N 个」配空白网格；
   //   ② 手输/分享的 ?page=999、?page=-3、?page=2.5 直接落进 slice（负数会从尾部取错数据）；
   //   ③ 缩小每页条数会让总页数变多/变少的反向越界。
-  // 放在这里而不是让 selectTech/selectCategory 重置，是因为它们管不到「搜索」这条路径，
+  // 放在这里而不是让 selectCategory 重置，是因为它管不到「搜索」这条路径，
   // 且前进/后退还原 URL 时不该被额外重置。
   watch([totalPages, currentPage], () => {
     const max = Math.max(1, totalPages.value)
@@ -360,27 +323,10 @@ export function useGalleryFilters() {
     else if (cur > max) currentPage.value = max
   })
 
-  // 用户主动切换技术 / 来源 / 专题时，重置页码。
-  // 注意：不再用 watch(currentTech) / watch([keyword, currentSubCategory]) 自动重置，
+  // 用户主动切换专题时，重置页码。
+  // 注意：不再用 watch([keyword, currentSubCategory]) 自动重置，
   // 否则在浏览器前进/后退（syncQueryToState 从 URL 还原状态）时也会触发重置，
   // 导致子分类与页码状态被冲掉、无法恢复。
-  //
-  // 切技术时连专题一起重置：专题是「在当前技术范围内」的计数，跨技术沿用
-  // 一个不存在的专题键会直接空结果，且界面上看不出原因。
-  function selectTech(key: string) {
-    if (currentTech.value === key) return
-    currentTech.value = key
-    currentSubCategory.value = 'all'
-    currentPage.value = 1
-  }
-
-  function selectSource(key: string) {
-    if (currentSource.value === key) return
-    currentSource.value = key
-    currentSubCategory.value = 'all'
-    currentPage.value = 1
-  }
-
   function selectCategory(key: string) {
     if (currentSubCategory.value === key) return
     currentSubCategory.value = key
@@ -412,18 +358,14 @@ export function useGalleryFilters() {
     }
   }
 
-  /** 单个 chip 的 × ：把对应维度清回默认值 */
+  /** 单个 chip 的 × ：把对应条件清回默认值 */
   function clearFilter(key: ActiveFilter['key']) {
-    if (key === 'tech') currentTech.value = 'all'
-    else if (key === 'source') currentSource.value = 'all'
-    else if (key === 'sub') currentSubCategory.value = 'all'
+    if (key === 'sub') currentSubCategory.value = 'all'
     else keyword.value = ''
     currentPage.value = 1
   }
 
   function clearAllFilters() {
-    currentTech.value = 'all'
-    currentSource.value = 'all'
     currentSubCategory.value = 'all'
     keyword.value = ''
     currentPage.value = 1
@@ -443,16 +385,12 @@ export function useGalleryFilters() {
   }
 
   function syncQueryToState() {
-    const tech = route.query.tech
     const sub = route.query.sub
-    const src = route.query.src
     const search = route.query.search
     const sortQ = route.query.sort
     const sizeQ = Number(route.query.size)
     const viewQ = route.query.view
 
-    if (typeof tech === 'string' && techGroups.some(t => t.key === tech)) currentTech.value = tech
-    if (typeof src === 'string' && KNOWN_SOURCES.includes(src)) currentSource.value = src
     if (typeof sub === 'string' && subCategoryDefinitions.some(s => s.key === sub)) currentSubCategory.value = sub
     if (typeof sortQ === 'string' && SORT_OPTIONS.some(o => o.key === sortQ)) sort.value = sortQ as GallerySortKey
     if (PAGE_SIZE_OPTIONS.includes(sizeQ)) pageSize.value = sizeQ
@@ -464,11 +402,10 @@ export function useGalleryFilters() {
   onMounted(syncQueryToState)
   watch(() => route.query, syncQueryToState, { deep: true })
 
-  // 状态 -> URL：任何筛选/排序/视图变化都写回 query，刷新可保持、可分享、可前进后退
-  watch([currentTech, currentSource, currentSubCategory, keyword, sort, pageSize, view, currentPage], () => {
+  // 状态 -> URL：任何筛选/排序/视图变化都写回 query，刷新可保持、可分享、可前进后退。
+  // 旧链接里的 ?tech= / ?src= 不再被读取；下一次任何状态写入时它们会自然消失。
+  watch([currentSubCategory, keyword, sort, pageSize, view, currentPage], () => {
     const query: Record<string, string | number> = {}
-    if (currentTech.value !== 'all') query.tech = currentTech.value
-    if (currentSource.value !== 'all') query.src = currentSource.value
     if (currentSubCategory.value !== 'all') query.sub = currentSubCategory.value
     const trimmed = keyword.value.trim()
     if (trimmed) query.search = trimmed
@@ -518,8 +455,6 @@ export function useGalleryFilters() {
 
   return {
     // 状态（模板直接绑定的）
-    currentTech,
-    currentSource,
     currentSubCategory,
     currentPage,
     pageSize,
@@ -529,10 +464,7 @@ export function useGalleryFilters() {
     loading,
     // 分面与派生数据
     totalCount,
-    currentTechLabel,
-    techExamplesCount,
-    techTabs,
-    sourceFacets,
+    sourceCount,
     subFacets,
     filteredExamples,
     paginatedExamples,
@@ -540,8 +472,6 @@ export function useGalleryFilters() {
     visiblePages,
     activeFilters,
     // 动作
-    selectTech,
-    selectSource,
     selectCategory,
     setSort,
     setPageSize,
