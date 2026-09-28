@@ -1,9 +1,9 @@
 {
-  "name": "terravista-quake-server",
+  "name": "curio-quake-server",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "TerraVista 3D 业务监控的地震数据后端：抓取 USGS feed、SQLite 存储、进程内定时重同步、对前端提供增量 API",
+  "description": "Curio 业务监控的地震数据后端：抓取 USGS feed、SQLite 存储、进程内定时重同步、对前端提供增量 API",
   "engines": {
     "node": ">=22.6.0"
   },

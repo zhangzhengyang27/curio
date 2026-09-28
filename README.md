@@ -1,4 +1,6 @@
-# TerraVista 3D（earth-app）
+# Curio（earth-app）
+
+> **Curio · 可视化珍品馆**：以示例库为重点 —— 11 个来源、1400 条 Three.js / Cesium / WebGL / 图形学示例的浏览画廊；另附数字地球数据平台。
 
 基于 Vue 3 + Vite + Three.js + Cesium 的 **3D 数据可视化项目**，包含两条主线：
 

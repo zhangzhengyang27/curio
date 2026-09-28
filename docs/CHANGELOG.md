@@ -6,6 +6,19 @@
 
 ## 2026-09 治理轮次
 
+### 项目定名 Curio（2026-09-28）
+
+需求方拍板项目品牌名 **Curio · 可视化珍品馆**（定位：以示例库为重点 —— 11 来源 /
+1400 条 Three.js / Cesium / WebGL / 图形学示例的浏览画廊，另附数字地球数据平台）。
+历经四轮候选筛选：地球系（TerraScope/TerraPulse 等）、直白示例系（DemoSphere/
+GLAtlas 等）、意象系（星罗/琳琅等）后选定 Curio（与 curate「策展」同根）。
+
+| 项 | 内容 |
+|---|---|
+| 改名落点 | `router/index.ts` BRAND 常量（全部路由 document.title）、`index.html` 静态标题、`ShellNav` 顶栏品牌文案、Workbench 导出报告的品牌与下载前缀（`terra-report-` → `curio-report-`，同步改 `workbench.spec.ts` 两条断言）、`theme.css` 令牌注释、`package.json` 与 `server/package.json` 包名及描述、README / AGENTS 首屏 |
+| 保持不动 | 目录名 / 仓库名 `earth-app`；CSS 变量前缀 `--tv-`（内部 API，改名是纯机械大 churn，另行评估）；历史留痕文档 `PRODUCT_PLAN.md` / `PAGES_ENHANCEMENT_PLAN.md` 中的旧名按原文保留 |
+| 测试影响 | E2E 只断言页面自身标题（不含品牌名），BRAND 改动不影响；`workbench.spec.ts` 两条下载文件名断言随前缀同步更新 |
+
 ### 示例缩减第一例：合并 mygrapics 17 条机械副本（2026-09-27）
 
 「1415 条能不能缩减」议题重启（09-24 去重调研的后续）。先用对称归一化的定向扫描

@@ -518,7 +518,7 @@ async function exportReport() {
       ? `<h2>生成参数指纹</h2><p class="meta"><code>${reportFingerprint()}</code> · 相同参数重新生成指纹一致,可用于核对报告与数据版本</p>`
       : ''
     const html = `<!doctype html><html lang="zh"><head><meta charset="utf-8">
-<title>TerraVista 分析报告 · ${themeTitle.value}${full ? '' : '（摘要版）'}</title>
+<title>Curio 分析报告 · ${themeTitle.value}${full ? '' : '（摘要版）'}</title>
 <style>body{font-family:system-ui,-apple-system,'PingFang SC',sans-serif;max-width:920px;margin:28px auto;padding:0 16px;color:#222}
 img{max-width:100%;border:1px solid #ddd;border-radius:8px}h1{font-size:22px}h2{font-size:16px;margin-top:28px}
 table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid #ddd;padding:6px 10px;font-size:14px;text-align:left}
@@ -528,17 +528,17 @@ table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid 
 </style></head><body>
 <button class="print-bar" onclick="window.print()">🖨 打印 / 保存为 PDF</button>
 <p class="meta">提示:点击右上角按钮,在打印对话框中选择「另存为 PDF」即可导出 PDF 文件。</p>
-<h1>TerraVista 3D · ${themeTitle.value}分析报告${full ? '' : '（摘要版）'}</h1>
+<h1>Curio · ${themeTitle.value}分析报告${full ? '' : '（摘要版）'}</h1>
 <p class="meta">模板 ${full ? '完整版' : '摘要版'} · 生成时间 ${new Date().toLocaleString('zh-CN')} · 数据年份 ${yearDesc} · 样本 ${Object.keys(values.value).length} 个经济体</p>
 <p>${summary.value}</p>
 <h2>全球分布</h2><img src="${mapSnap}" alt="全球分布">
 ${chartSection}
 <h2>Top 10</h2><table><tr><th>排名</th><th>经济体</th><th>数值</th></tr>${rows}</table>
 ${fingerprintSection}
-<p class="meta">由 TerraVista 3D 分析工作台生成 · 数据为演示用途</p>
+<p class="meta">由 Curio 分析工作台生成 · 数据为演示用途</p>
 </body></html>`
     const a = document.createElement('a')
-    a.download = `terra-report-${theme.value}-${reportMode.value}-${Date.now()}.html`
+    a.download = `curio-report-${theme.value}-${reportMode.value}-${Date.now()}.html`
     a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }))
     document.body.appendChild(a)
     a.click()

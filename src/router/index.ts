@@ -14,7 +14,7 @@ const WorkbenchView = () => import('../views/WorkbenchView.vue')
 const MonitorView = () => import('../views/MonitorView.vue')
 const NotFoundView = () => import('../views/NotFoundView.vue')
 
-const BRAND = 'TerraVista 3D'
+const BRAND = 'Curio'
 
 // 标题取「用户在页面上看到的那个名字」（h1 / 面板主标题）；
 // 顶栏导航文案已与页面名统一（2026-09-24 T02），标签页、导航、页面三者自洽。

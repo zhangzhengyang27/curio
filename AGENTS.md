@@ -12,7 +12,7 @@
 
 ## 1. 项目是什么
 
-**TerraVista 3D（`earth-app`）**：Vue 3.5 + Vite 8（打包内核是 **Rolldown**）+
+**Curio（`earth-app`）**：Vue 3.5 + Vite 8（打包内核是 **Rolldown**）+
 Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由全部懒加载。
 
 两条主线，**各自拥有独立的顶栏外壳**（`src/shells/`，由 `App.vue` 按 `route.path` 首段选择）：

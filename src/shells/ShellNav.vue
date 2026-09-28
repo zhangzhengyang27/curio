@@ -32,7 +32,7 @@
         :to="homeTo"
         class="brand-name"
       >
-        TerraVista 3D
+        Curio
       </RouterLink>
       <span
         v-if="tag"

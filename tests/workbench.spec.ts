@@ -92,7 +92,7 @@ test.describe('主题分析工作台', () => {
     // Cesium 页上 CDP 点击偶发丢事件致 download 事件迟迟不达(KNOWN_PITFALLS C13),走 DOM click
     await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
     const download = await downloadPromise
-    expect(download.suggestedFilename()).toMatch(/terra-report-gdp-.*\.html$/)
+    expect(download.suggestedFilename()).toMatch(/curio-report-gdp-.*\.html$/)
     const path = await download.path()
     const fs = await import('node:fs')
     const html = fs.readFileSync(path, 'utf8')
@@ -149,7 +149,7 @@ test.describe('主题分析工作台', () => {
     let dl = page.waitForEvent('download')
     await page.locator('[data-testid="export-report"]').evaluate((el) => el.click())
     const brief = await dl
-    expect(brief.suggestedFilename()).toMatch(/terra-report-gdp-brief-.*\.html$/)
+    expect(brief.suggestedFilename()).toMatch(/curio-report-gdp-brief-.*\.html$/)
     const briefHtml = fs.readFileSync(await brief.path(), 'utf8')
     expect(briefHtml).toContain('（摘要版）')
     expect(briefHtml).toContain('data:image/png') // 地图快照仍在
