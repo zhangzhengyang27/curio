@@ -120,14 +120,20 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 2))
   border-radius: var(--cu-radius-xl);
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: transform 0.25s var(--cu-ease), box-shadow 0.25s var(--cu-ease), border-color 0.25s var(--cu-ease);
+  box-shadow: var(--cu-shadow-1);
+  transition:
+    transform var(--cu-dur) var(--cu-ease),
+    box-shadow var(--cu-dur) var(--cu-ease),
+    border-color var(--cu-dur) var(--cu-ease),
+    background var(--cu-dur) var(--cu-ease);
 }
 
+/* hover 微升(spec §6.4)对齐 GlassPanel interactive 语法:
+   主色描边 + shadow 升档;暗色的表面抬档由下方 html.dark 分支继续负责 */
 .example-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--cu-primary) 15%, rgba(0, 0, 0, 0.08));
-  border-color: color-mix(in srgb, var(--cu-primary-container) 40%, transparent);
+  transform: translateY(-2px);
+  box-shadow: var(--cu-shadow-2);
+  border-color: color-mix(in srgb, var(--cu-primary) 40%, var(--cu-outline-variant));
 }
 
 .example-card:hover .card-title {
@@ -179,7 +185,7 @@ html.dark .example-card:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s var(--cu-ease);
+  transition: transform var(--cu-dur-slow) var(--cu-ease);
 }
 
 .example-card:hover .card-media img {
@@ -195,7 +201,7 @@ html.dark .example-card:hover {
   background:
     radial-gradient(320px 120px at 50% 20%, color-mix(in srgb, var(--cu-primary) 10%, transparent), transparent),
     var(--cu-surface-container);
-  transition: transform 0.5s var(--cu-ease);
+  transition: transform var(--cu-dur-slow) var(--cu-ease);
 }
 
 .example-card:hover .thumb-placeholder {
@@ -272,7 +278,7 @@ html.dark .example-card:hover {
   line-height: 22px;
   font-weight: 600;
   color: var(--cu-on-surface);
-  transition: color 0.2s;
+  transition: color var(--cu-dur-fast) var(--cu-ease);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
