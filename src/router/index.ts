@@ -13,6 +13,7 @@ const AnalysisView = () => import('../views/AnalysisView.vue')
 const WorkbenchView = () => import('../views/WorkbenchView.vue')
 const MonitorView = () => import('../views/MonitorView.vue')
 const NotFoundView = () => import('../views/NotFoundView.vue')
+const DesignKitView = () => import('../views/DesignKitView.vue')
 
 const BRAND = 'Curio'
 
@@ -30,6 +31,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/analysis', name: 'global-analysis', component: AnalysisView, meta: { title: `全球数据分析 · ${BRAND}` } },
   { path: '/workbench', name: 'workbench', component: WorkbenchView, meta: { title: `分析工作台 · ${BRAND}` } },
   { path: '/monitor', name: 'business-monitor', component: MonitorView, meta: { title: `地震应急监测 · ${BRAND}` } },
+  { path: '/design-kit', name: 'design-kit', component: DesignKitView, meta: { title: `设计套件 · ${BRAND}` } },
   // 必须放最后：vue-router 按声明顺序匹配，通配符在前会吞掉上面所有路径。
   // 在此之前，未知路径只产生一条 console warn 并渲染成「导航条 + 空白」，
   // 界面上完全看不出是路由问题（/examples 的任意拼写错误都会静默白屏）。
