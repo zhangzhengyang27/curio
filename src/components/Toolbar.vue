@@ -9,27 +9,33 @@
         class="toolbar-sep"
         aria-hidden="true"
       />
-      <CuTooltip
-        v-for="tool in group.tools"
-        :key="tool.key"
-        :label="tool.title"
-        :kbd="tool.kbd"
-        placement="left"
+      <div
+        class="toolbar-group"
+        role="group"
+        :aria-label="group.label"
       >
-        <button
-          class="tool-btn"
-          :class="{ active: tool.active }"
-          :aria-label="tool.title"
-          @click="tool.action"
+        <CuTooltip
+          v-for="tool in group.tools"
+          :key="tool.key"
+          :label="tool.title"
+          :kbd="tool.kbd"
+          placement="left"
         >
-          <!-- eslint-disable vue/no-v-html -- tool.icon 来自组件内静态 SVG 常量表,非外部输入 -->
-          <span
-            class="tool-icon"
-            v-html="tool.icon"
-          />
-          <!-- eslint-enable vue/no-v-html -->
-        </button>
-      </CuTooltip>
+          <button
+            class="tool-btn"
+            :class="{ active: tool.active }"
+            :aria-label="tool.title"
+            @click="tool.action"
+          >
+            <!-- eslint-disable vue/no-v-html -- tool.icon 来自组件内静态 SVG 常量表,非外部输入 -->
+            <span
+              class="tool-icon"
+              v-html="tool.icon"
+            />
+            <!-- eslint-enable vue/no-v-html -->
+          </button>
+        </CuTooltip>
+      </div>
     </template>
   </div>
 </template>
@@ -154,6 +160,13 @@ const toolGroups = computed<Array<{ key: string; label: string; tools: ToolItem[
 
 <style scoped>
 .toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cu-xs);
+}
+
+.toolbar-group {
   display: flex;
   flex-direction: column;
   align-items: center;

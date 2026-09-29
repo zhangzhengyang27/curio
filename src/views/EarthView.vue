@@ -6,6 +6,7 @@
   <div
     v-else
     class="earth-view"
+    :class="{ 'panel-entered': panelsSettled }"
   >
     <EarthCanvas ref="earthCanvasRef" />
 
@@ -170,6 +171,13 @@ const interactionStore = useInteractionStore()
 const earthCanvasRef = ref<InstanceType<typeof EarthCanvas> | null>(null)
 const splitMode = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
+// 进场动画只做首挂载:落定后给根挂 panel-entered,信息面板开合/巡游底栏
+// 复插时不再重放 460ms 进场(终审 Minor #6)
+const panelsSettled = ref(false)
+onMounted(() => {
+  const t = setTimeout(() => { panelsSettled.value = true }, 700)
+  onUnmounted(() => clearTimeout(t))
+})
 
 // ── 命令面板(仅首页挂载,spec 决策点 2)──
 const commandPaletteRef = ref<InstanceType<typeof CommandPalette> | null>(null)
@@ -584,7 +592,9 @@ watch(() => earthStore.currentVisualization, (v) => {
   position: absolute;
   left: var(--cu-margin);
   top: var(--cu-margin);
-  bottom: var(--cu-margin);
+  /* 不再钉死通高:图层少时面板收缩,消灭下半屏死空间(M0 审计 P1) */
+  bottom: auto;
+  max-height: calc(100% - var(--cu-margin) * 2);
   width: var(--cu-panel-width);
   z-index: 50;
   overflow: hidden;
@@ -661,6 +671,11 @@ watch(() => earthStore.currentVisualization, (v) => {
     opacity: 1;
     translate: 0 0;
   }
+}
+
+/* 首挂载落定后,浮层复插(信息面板开合/巡游退出)不再重放进场动画 */
+.panel-entered :is(.left-panel, .right-panel, .tools-panel, .bottom-bar) {
+  animation: none;
 }
 
 .viz-btn {

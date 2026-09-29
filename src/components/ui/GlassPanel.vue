@@ -23,7 +23,9 @@ withDefaults(defineProps<{
 </script>
 
 <style scoped>
-.cu-glass {
+/* 基类声明包 :where() 降为零特异性:页面用自己的类即可覆写圆角/描边等,
+   不必再靠「子组件样式先注入」的顺序赢平局(终审 Minor #5) */
+:where(.cu-glass) {
   background: var(--cu-surface-container-low);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -33,7 +35,7 @@ withDefaults(defineProps<{
 }
 
 /* 暗色基调:换成带透明度的 surface(与旧 .tv-glass-panel 的暗色行为一致) */
-:global(html.dark) .cu-glass {
+:global(html.dark) :where(.cu-glass) {
   background: var(--cu-surface);
 }
 

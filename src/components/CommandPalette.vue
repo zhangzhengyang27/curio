@@ -5,10 +5,12 @@
       class="cu-palette-mask"
       data-testid="command-palette"
       @mousedown.self="close"
+      @keydown.escape="close"
     >
       <div
         class="cu-palette"
         role="dialog"
+        aria-modal="true"
         aria-label="命令面板"
       >
         <div class="cu-palette__input-row">
@@ -80,6 +82,8 @@ const open = ref(false)
 const query = ref('')
 const active = ref(0)
 const inputRef = ref<HTMLInputElement | null>(null)
+// 关闭时把焦点还给唤起者(dialog a11y:终审 Minor #2)
+let lastActive: HTMLElement | null = null
 
 const flat = computed(() =>
   filterItems(
@@ -101,10 +105,14 @@ watch(query, () => { active.value = 0 })
 
 watch(open, async (v) => {
   if (v) {
+    lastActive = document.activeElement as HTMLElement | null
     query.value = ''
     active.value = 0
     await nextTick()
     inputRef.value?.focus()
+  } else {
+    lastActive?.focus?.()
+    lastActive = null
   }
 })
 

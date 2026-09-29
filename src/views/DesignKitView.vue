@@ -139,6 +139,12 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 设计套件自检页。动效约定(spec §4.5「动效有语法」的两条例外,写明防止被当成可仿写的先例):
+ * 1. 交互动效(悬停/展开/进场)必须走 --cu-dur-* / --cu-ease 令牌,禁止裸秒数;
+ * 2. 循环动画(spinner 0.8s / skeleton 1.4s / tooltip 300ms 防误触延迟)允许裸值——
+ *    它们是物理节奏不是主题节奏,提令牌反而暗示可主题化。
+ */
 import { ref } from 'vue'
 import GlassPanel from '../components/ui/GlassPanel.vue'
 import CuButton from '../components/ui/CuButton.vue'
