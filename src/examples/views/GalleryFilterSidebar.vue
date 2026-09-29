@@ -1,5 +1,8 @@
 <template>
-  <aside class="filter-sidebar">
+  <GlassPanel
+    as="aside"
+    class="filter-sidebar"
+  >
     <!--
       2026-09-27 裁剪后侧栏只剩专题分类一个维度 —— 单一列表不再需要
       可折叠的分区标题行（「专题分类 17」），直接平铺列表本身。
@@ -26,13 +29,14 @@
     >
       一个示例可同时属于多个分类，各类之和（{{ countSum }}）大于当前范围（{{ subFacets[0]?.count ?? 0 }}）。
     </p>
-  </aside>
+  </GlassPanel>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { GalleryFacet } from '../composables/useGalleryFilters'
+import GlassPanel from '../../components/ui/GlassPanel.vue'
 // 示例中心左侧筛选面板：只保留「专题分类」一个维度（2026-09-27 裁剪，
 // 技术栈 / 数据源两个维度已随状态机一起移除）。
 // 纯展示组件：状态由父组件的 useGalleryFilters 持有，选中只发事件。
@@ -53,7 +57,7 @@ defineEmits(['select'])
 </script>
 
 <style scoped>
-/* Sidebar */
+/* Sidebar(容器 chrome 由 GlassPanel 提供,这里只管定位与滚动) */
 .filter-sidebar {
   position: sticky;
   /* 与右侧粘性工具条对齐：两者都贴在顶栏正下方，视觉上才是一条横线 */
@@ -64,22 +68,13 @@ defineEmits(['select'])
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--cu-sm);
-  background: var(--cu-surface-container-lowest);
-  border: 1px solid var(--cu-outline-variant);
-  border-radius: var(--cu-radius-lg);
-  box-shadow: var(--cu-shadow-1);
 }
 
 .filter-sidebar::-webkit-scrollbar {
   width: 4px;
 }
 
-/* 暗色下 lowest 档与页面底色几乎同值，面板会整个消失在背景里
-   （与卡片糊成一片同一条根因）：暗色抬到 container-low 档 + outline 描边 */
-html.dark .filter-sidebar {
-  background: var(--cu-surface-container-low);
-  border-color: var(--cu-outline);
-}
+/* 暗色基调由 GlassPanel 的 html.dark 分支接管,不再本地覆写 */
 
 .category-item {
   display: flex;
