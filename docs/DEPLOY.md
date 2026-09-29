@@ -48,7 +48,7 @@
 server {
     listen 443 ssl;
     server_name your.domain;          # 证书配置略
-    root /var/www/earth-app;          # dist/ 整目录
+    root /var/www/curio;          # dist/ 整目录
     index index.html;
 
     # 直接服务构建期生成的预压缩文件，省去动态压缩 CPU

@@ -2,7 +2,7 @@
   import { ref } from "vue"
 
   /**
-   * 页面布局组件 - 用于 Three.js 示例的统一布局（适配 earth-app 示例容器）
+   * 页面布局组件 - 用于 Three.js 示例的统一布局（适配 curio 示例容器）
    */
   defineProps<{
     title: string

@@ -1,5 +1,5 @@
 /**
- * Three.js 场景通用逻辑（适配 earth-app 示例容器）
+ * Three.js 场景通用逻辑（适配 curio 示例容器）
  */
 import { shallowRef, onMounted, onUnmounted, type ShallowRef } from "vue"
 import * as THREE from "three"

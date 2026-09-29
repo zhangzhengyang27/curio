@@ -1,4 +1,4 @@
-# Curio（earth-app）
+# Curio
 
 > **Curio · 可视化珍品馆**：以示例库为重点 —— 11 个来源、1400 条 Three.js / Cesium / WebGL / 图形学示例的浏览画廊；另附数字地球数据平台。
 

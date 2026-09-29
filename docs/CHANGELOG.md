@@ -6,6 +6,16 @@
 
 ## 2026-09 治理轮次
 
+### 目录 / 仓库名改定 curio（2026-09-29）
+
+定名次日需求方追认：目录名与仓库名也不再保留 `earth-app`，随品牌一并改为
+`curio`（`Desktop/earth-app` → `Desktop/curio`；仓库无 remote，改名即全部）。
+README / AGENTS 首屏去掉「（earth-app）」注记，`DEPLOY.md` 部署示例路径与
+`three-project` 两个共享组件的注释同步。上一节「保持不动：目录名 / 仓库名
+`earth-app`」自本节起作废。改名后清理 `node_modules/.vite`（缓存含绝对路径），
+新路径下 `git status` 干净、`verify` 全量通过。`.trae/` 与 `scripts/legacy/`
+中出现的 earth-app 字样属更早时期的历史留痕（本就指向已不存在的旧路径），不动。
+
 ### 项目定名 Curio（2026-09-28）
 
 需求方拍板项目品牌名 **Curio · 可视化珍品馆**（定位：以示例库为重点 —— 11 来源 /
