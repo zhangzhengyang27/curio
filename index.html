@@ -6,6 +6,19 @@
     <title>Curio · 地球 3D 数据可视化</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
     <!--
+      主题预置:Vue 挂载前按已保存偏好(无偏好默认暗色,与 useThemeStore.init 一致)
+      给 <html> 打 .dark,消除「先画亮色再翻暗色」的首屏闪白。
+      键名与 useThemeStore 的 localStorage 键一致(tv-theme);
+      M4 把该键改名为 cu-theme 时必须同步改这里,并在此处读旧键迁移。
+    -->
+    <script>
+      ;(function () {
+        var t = 'dark'
+        try { t = localStorage.getItem('tv-theme') || 'dark' } catch (e) { /* 隐私模式等 */ }
+        if (t === 'dark') document.documentElement.classList.add('dark')
+      })()
+    </script>
+    <!--
       百度地图 GL SDK：AK 属于机密配置，不写死在仓库里，由 Vite 在启动/构建时
       用 %VITE_BMAP_AK% 从 .env.local 注入（见 .env.example）。
 

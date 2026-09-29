@@ -104,30 +104,53 @@
 
   /* Focus */
   --cu-focus-ring: 0 0 0 2px var(--cu-background), 0 0 0 4px color-mix(in srgb, var(--cu-primary) 70%, transparent);
+
+  /* ── Design System v2 增补(深空指挥中心,spec §4) ── */
+  --cu-pad-compact: 12px;
+  --cu-pad: 16px;
+  --cu-pad-loose: 24px;
+  --cu-fs-display-1: 48px;
+  --cu-fs-display-2: 64px;
+  --cu-dur-slow: 400ms;
+
+  /* 数据语义色板(亮色):只允许出现在数据上(标记/折线/数字高亮),禁止用于 chrome */
+  --cu-data-quake: #b3402f;
+  --cu-data-layer: #0f766e;
+  --cu-data-track: #6d28d9;
+  --cu-data-flight: #1d4ed8;
+  --cu-data-warn: #92400e;
+  --cu-data-ok: #15803d;
+
+  /* 发光三档:白名单场景 = 主 CTA 悬停 / active 段控 / 地球交互反馈 / 关键数字 */
+  --cu-glow-sm: 0 0 0 1px color-mix(in srgb, var(--cu-primary) 45%, transparent);
+  --cu-glow-md: 0 0 0 1px color-mix(in srgb, var(--cu-primary) 55%, transparent),
+    0 0 16px color-mix(in srgb, var(--cu-primary) 28%, transparent);
+  --cu-glow-lg: 0 0 0 1px color-mix(in srgb, var(--cu-primary) 65%, transparent),
+    0 0 28px color-mix(in srgb, var(--cu-primary) 40%, transparent);
 }
 
 html.dark {
-  /* Dark Mode - Deep Space（唯一基调：色相统一到靛蓝夜空，单一 accent） */
-  --cu-background: #0a0e17;
-  --cu-surface: rgba(18, 23, 36, 0.82);
-  --cu-surface-dim: #0a0e17;
-  --cu-surface-bright: #1a2030;
-  --cu-surface-container-lowest: rgba(10, 14, 23, 0.92);
-  --cu-surface-container-low: rgba(19, 24, 38, 0.8);
-  --cu-surface-container: rgba(25, 31, 48, 0.85);
-  --cu-surface-container-high: rgba(33, 40, 60, 0.85);
-  --cu-surface-container-highest: rgba(43, 51, 72, 0.85);
-  --cu-surface-variant: rgba(43, 51, 72, 0.6);
+  /* Dark Mode - Deep Space v2(四阶表面 0→3 递亮;层级 = 色阶 + 1px 描边,shadow 降权) */
+  --cu-background: #090d15;
+  --cu-surface: rgba(17, 23, 37, 0.82);
+  --cu-surface-dim: #090d15;
+  --cu-surface-bright: #1c2334;
+  --cu-surface-container-lowest: rgba(13, 18, 30, 0.92);
+  --cu-surface-container-low: rgba(19, 25, 40, 0.88);
+  --cu-surface-container: rgba(26, 33, 52, 0.9);
+  --cu-surface-container-high: rgba(35, 43, 66, 0.92);
+  --cu-surface-container-highest: rgba(46, 55, 82, 0.94);
+  --cu-surface-variant: rgba(46, 55, 82, 0.6);
 
-  --cu-on-surface: #e6eaf2;
-  --cu-on-surface-variant: #97a0b4;
+  --cu-on-surface: #eef1f8;
+  --cu-on-surface-variant: #9fa9c0;
   --cu-inverse-surface: #eef1f9;
   --cu-inverse-on-surface: #2d3137;
 
-  --cu-outline: rgba(214, 226, 248, 0.22);
-  --cu-outline-variant: rgba(214, 226, 248, 0.1);
+  --cu-outline: rgba(214, 226, 248, 0.24);
+  --cu-outline-variant: rgba(214, 226, 248, 0.11);
 
-  --cu-primary: #6ba7e2;
+  --cu-primary: #79b1e8;
   --cu-on-primary: #071120;
   --cu-primary-container: #1c3a5f;
   --cu-on-primary-container: #cfe2fa;
@@ -162,7 +185,15 @@ html.dark {
   --cu-warning: #e0a34e;
   --cu-success: #58b78e;
 
-  --cu-surface-tint: #6ba7e2;
+  /* 数据语义色板（暗色） */
+  --cu-data-quake: #ff8a7a;
+  --cu-data-layer: #52dcc8;
+  --cu-data-track: #b990ff;
+  --cu-data-flight: #6db3ff;
+  --cu-data-warn: #ffc46b;
+  --cu-data-ok: #5cd695;
+
+  --cu-surface-tint: #79b1e8;
 
   --cu-shadow-1: 0 1px 2px rgba(2, 6, 14, 0.4), 0 2px 8px rgba(2, 6, 14, 0.3);
   --cu-shadow-2: 0 4px 16px rgba(2, 6, 14, 0.5), 0 2px 6px rgba(2, 6, 14, 0.35);
@@ -199,6 +230,22 @@ body {
   line-height: 22px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* ── 表单控件样式基线(M0 审计增补,最小实现)──
+   原生 checkbox/radio 的系统默认外观是两主题共有的最大 demo 指纹:
+   accent-color 让它们吃上主色,color-scheme 让原生控件按主题渲染明暗。 */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+input[type='checkbox'],
+input[type='radio'],
+input[type='range'] {
+  accent-color: var(--cu-primary);
+  cursor: pointer;
 }
 
 /* 数据密集界面的数字对齐 */
