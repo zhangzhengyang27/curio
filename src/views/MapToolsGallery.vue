@@ -88,14 +88,14 @@ function iconFor(slug: string): UiIconName {
 <style scoped>
 .gallery-page {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
   overflow: auto;
   background:
-    radial-gradient(1100px 520px at 85% -12%, color-mix(in srgb, var(--tv-primary) 9%, transparent), transparent),
-    var(--tv-background);
+    radial-gradient(1100px 520px at 85% -12%, color-mix(in srgb, var(--cu-primary) 9%, transparent), transparent),
+    var(--cu-background);
 }
 
 .gallery-main {
@@ -106,17 +106,17 @@ function iconFor(slug: string): UiIconName {
 
 .page-title {
   margin: 0 0 8px;
-  font-size: var(--tv-fs-3xl);
+  font-size: var(--cu-fs-3xl);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .page-subtitle {
   margin: 0 0 36px;
-  font-size: var(--tv-fs-md);
-  color: var(--tv-on-surface-variant);
+  font-size: var(--cu-fs-md);
+  color: var(--cu-on-surface-variant);
 }
 
 .card-grid {
@@ -128,24 +128,24 @@ function iconFor(slug: string): UiIconName {
 .example-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
   overflow: hidden;
-  background: var(--tv-surface-container-low);
+  background: var(--cu-surface-container-low);
   text-decoration: none;
-  transition: transform var(--tv-dur) var(--tv-ease), border-color var(--tv-dur) var(--tv-ease),
-    box-shadow var(--tv-dur) var(--tv-ease);
+  transition: transform var(--cu-dur) var(--cu-ease), border-color var(--cu-dur) var(--cu-ease),
+    box-shadow var(--cu-dur) var(--cu-ease);
 }
 
 .example-card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--tv-primary) 45%, transparent);
-  box-shadow: var(--tv-shadow-3);
+  border-color: color-mix(in srgb, var(--cu-primary) 45%, transparent);
+  box-shadow: var(--cu-shadow-3);
 }
 
 .example-card:hover .card-icon-chip {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
   border-color: transparent;
 }
 
@@ -155,9 +155,9 @@ function iconFor(slug: string): UiIconName {
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(340px 130px at 50% 0%, color-mix(in srgb, var(--tv-primary) 10%, transparent), transparent),
-    var(--tv-surface-container);
-  border-bottom: 1px solid var(--tv-outline-variant);
+    radial-gradient(340px 130px at 50% 0%, color-mix(in srgb, var(--cu-primary) 10%, transparent), transparent),
+    var(--cu-surface-container);
+  border-bottom: 1px solid var(--cu-outline-variant);
 }
 
 .card-icon-chip {
@@ -166,12 +166,12 @@ function iconFor(slug: string): UiIconName {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tv-radius-lg);
-  color: var(--tv-primary);
-  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-primary) 22%, transparent);
-  transition: background var(--tv-dur) var(--tv-ease), color var(--tv-dur) var(--tv-ease),
-    border-color var(--tv-dur) var(--tv-ease);
+  border-radius: var(--cu-radius-lg);
+  color: var(--cu-primary);
+  background: color-mix(in srgb, var(--cu-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cu-primary) 22%, transparent);
+  transition: background var(--cu-dur) var(--cu-ease), color var(--cu-dur) var(--cu-ease),
+    border-color var(--cu-dur) var(--cu-ease);
 }
 
 .card-body {
@@ -183,17 +183,17 @@ function iconFor(slug: string): UiIconName {
 
 .card-title {
   margin: 0 0 6px;
-  font-size: var(--tv-fs-lg);
+  font-size: var(--cu-fs-lg);
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .card-desc {
   margin: 0 0 14px;
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   line-height: 1.65;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -209,15 +209,15 @@ function iconFor(slug: string): UiIconName {
 
 .card-tag {
   padding: 2px 9px;
-  border-radius: var(--tv-radius-full);
-  font-size: var(--tv-fs-xs);
+  border-radius: var(--cu-radius-full);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
-  background: var(--tv-surface-container-high);
-  border: 1px solid var(--tv-outline-variant);
+  color: var(--cu-on-surface-variant);
+  background: var(--cu-surface-container-high);
+  border: 1px solid var(--cu-outline-variant);
 }
 
 .example-card:hover .card-tag {
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 </style>

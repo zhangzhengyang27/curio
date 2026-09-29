@@ -103,8 +103,8 @@ function jumpToPage() {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: var(--tv-xs);
-  margin-top: var(--tv-lg);
+  gap: var(--cu-xs);
+  margin-top: var(--cu-lg);
 }
 
 .page-btn {
@@ -114,10 +114,10 @@ function jumpToPage() {
   align-items: center;
   justify-content: center;
   padding: 0 10px;
-  border-radius: var(--tv-radius-lg);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-low);
-  color: var(--tv-on-surface-variant);
+  border-radius: var(--cu-radius-lg);
+  border: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container-low);
+  color: var(--cu-on-surface-variant);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -130,14 +130,14 @@ function jumpToPage() {
 }
 
 .page-btn:hover:not(:disabled) {
-  background: var(--tv-surface-container);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container);
+  color: var(--cu-on-surface);
 }
 
 .page-btn.active {
-  background: color-mix(in srgb, var(--tv-primary) 15%, transparent);
-  border-color: color-mix(in srgb, var(--tv-primary) 30%, transparent);
-  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--cu-primary) 15%, transparent);
+  border-color: color-mix(in srgb, var(--cu-primary) 30%, transparent);
+  color: var(--cu-primary);
 }
 
 .page-btn:disabled {
@@ -157,10 +157,10 @@ function jumpToPage() {
 .page-jump {
   display: inline-flex;
   align-items: center;
-  gap: var(--tv-xs);
-  margin-left: var(--tv-sm);
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-sm);
+  gap: var(--cu-xs);
+  margin-left: var(--cu-sm);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-sm);
 }
 
 .page-jump-label {
@@ -171,29 +171,29 @@ function jumpToPage() {
   width: 60px;
   height: 32px;
   padding: 0 8px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-low);
-  color: var(--tv-on-surface);
+  border-radius: var(--cu-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container-low);
+  color: var(--cu-on-surface);
   font-family: inherit;
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
 }
 
 .page-jump-btn {
   height: 32px;
   padding: 0 12px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-low);
-  color: var(--tv-on-surface-variant);
+  border-radius: var(--cu-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container-low);
+  color: var(--cu-on-surface-variant);
   font-family: inherit;
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   cursor: pointer;
 }
 
 .page-jump-btn:hover:not(:disabled) {
-  background: var(--tv-surface-container);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container);
+  color: var(--cu-on-surface);
 }
 
 .page-jump-btn:disabled {
@@ -205,12 +205,12 @@ function jumpToPage() {
 html.dark .page-btn,
 html.dark .page-jump-input,
 html.dark .page-jump-btn {
-  background: var(--tv-surface-container);
+  background: var(--cu-surface-container);
 }
 
 html.dark .page-btn.active {
-  background: var(--tv-secondary-container);
-  border-color: var(--tv-secondary-container);
-  color: var(--tv-on-secondary-container);
+  background: var(--cu-secondary-container);
+  border-color: var(--cu-secondary-container);
+  color: var(--cu-on-secondary-container);
 }
 </style>

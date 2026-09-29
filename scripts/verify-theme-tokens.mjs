@@ -14,7 +14,7 @@
  * 做两件事：
  *   1. 静态对比度：同一条规则里 color 与 background 都是字面量时，
  *      算 WCAG 2.1 对比度，低于 4.5 直接失败（不看基线，新缺陷零容忍）
- *   2. 硬编码色值棘轮（ratchet）：逐文件统计绕过 --tv-* 令牌的字面量数量，
+ *   2. 硬编码色值棘轮（ratchet）：逐文件统计绕过 --cu-* 令牌的字面量数量，
  *      只允许比基线更少，不允许更多。存量在 P1-1 逐批改，改完 --update 收紧
  *
  * 用法：
@@ -41,7 +41,7 @@ const SKIP_DIRS = [
 ]
 /**
  * theme.css 是令牌定义本身；code-highlight.css 是代码高亮配色表 ——
- * 它按语言 token 类型给色，与界面主题正交，套 --tv-* 反而会让语法色失去意义。
+ * 它按语言 token 类型给色，与界面主题正交，套 --cu-* 反而会让语法色失去意义。
  */
 const SKIP_FILES = [join('src', 'styles', 'theme.css'), join('src', 'styles', 'code-highlight.css')]
 
@@ -78,14 +78,14 @@ const stripComments = css =>
 
 /**
  * 把 var(...) 整体摘掉再扫描 —— 里面的十六进制是**令牌回退值**，不是绕过令牌。
- * 不处理的话 `background: var(--tv-primary, #4f8ef7)` 会被误报成硬编码，
+ * 不处理的话 `background: var(--cu-primary, #4f8ef7)` 会被误报成硬编码，
  * 而误报的代价是让人开始无视这个闸门，那它就等于没有了。
  * 反复替换最内层，兼容 var(--a, var(--b, #fff)) 这种嵌套写法。
  */
 function stripVar(css) {
   let out = css
   // 占位符不能再写成 var(...)，否则下一轮仍匹配得上，这里就是死循环
-  while (/var\([^()]*\)/.test(out)) out = out.replace(/var\([^()]*\)/g, '__TV_VAR__')
+  while (/var\([^()]*\)/.test(out)) out = out.replace(/var\([^()]*\)/g, '__CU_VAR__')
   return out
 }
 
@@ -240,7 +240,7 @@ for (const f of contrastFailures) {
 if (errors.length) {
   console.error(`[verify-theme-tokens] 失败（${errors.length} 条）：`)
   for (const e of errors) console.error('  - ' + e)
-  console.error('\n色值请改用 src/styles/theme.css 里的 --tv-* 令牌。')
+  console.error('\n色值请改用 src/styles/theme.css 里的 --cu-* 令牌。')
   console.error('注意：传给地图 SDK 的 JS 数据色（strokeColor/fillColor 等）不在本守卫范围内，')
   console.error('      那些位置 CSS 变量根本不生效，不要为了降数字去改。')
   process.exit(1)

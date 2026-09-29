@@ -18,34 +18,34 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  height: var(--tv-top-nav-height);
+  height: var(--cu-top-nav-height);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 0 var(--tv-gutter);
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent);
+  padding: 0 var(--cu-gutter);
+  background: color-mix(in srgb, var(--cu-surface-container-lowest) 80%, transparent);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--tv-outline-variant);
+  border-bottom: 1px solid var(--cu-outline-variant);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .app-nav .nav-brand {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   justify-self: start;
 }
 
 .app-nav .brand-logo {
   width: 32px;
   height: 32px;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
 }
 
 .app-nav .brand-name {
   font-size: 18px;
   font-weight: 700;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   letter-spacing: -0.01em;
   /* 它原先是 <span>，现在是 RouterLink；不关掉就是浏览器默认的下划线链接 */
   text-decoration: none;
@@ -56,17 +56,17 @@
   font-weight: 600;
   line-height: 16px;
   padding: 1px 7px;
-  border-radius: var(--tv-radius-full);
-  color: var(--tv-on-surface-variant);
-  background: var(--tv-surface-container-high);
-  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--cu-radius-full);
+  color: var(--cu-on-surface-variant);
+  background: var(--cu-surface-container-high);
+  border: 1px solid var(--cu-outline-variant);
   white-space: nowrap;
 }
 
 .app-nav .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--tv-lg);
+  gap: var(--cu-lg);
   height: 100%;
   justify-self: center;
 }
@@ -75,7 +75,7 @@
   display: flex;
   align-items: center;
   height: 100%;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -85,27 +85,27 @@
 }
 
 .app-nav .nav-links a:hover {
-  color: var(--tv-primary);
+  color: var(--cu-primary);
 }
 
 .app-nav .nav-links a.active {
-  color: var(--tv-primary);
-  border-bottom-color: var(--tv-primary);
+  color: var(--cu-primary);
+  border-bottom-color: var(--cu-primary);
 }
 
 .app-nav .nav-right {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   justify-self: end;
 }
 
 .app-nav .nav-search {
   display: flex;
   align-items: center;
-  background: var(--tv-surface-container);
-  border-radius: var(--tv-radius-full);
-  padding: 0 var(--tv-md);
+  background: var(--cu-surface-container);
+  border-radius: var(--cu-radius-full);
+  padding: 0 var(--cu-md);
   height: 36px;
   min-width: 200px;
 }
@@ -113,7 +113,7 @@
 .app-nav .nav-search .search-icon {
   width: 18px;
   height: 18px;
-  color: var(--tv-outline);
+  color: var(--cu-outline);
   flex-shrink: 0;
 }
 
@@ -121,21 +121,21 @@
   border: none;
   background: transparent;
   outline: none;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   flex: 1;
-  padding: 0 var(--tv-sm);
+  padding: 0 var(--cu-sm);
   font-size: 14px;
   line-height: 22px;
 }
 
 .app-nav .nav-search .search-input::placeholder {
-  color: var(--tv-outline);
+  color: var(--cu-outline);
 }
 
 .app-nav .nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
 }
 
 .app-nav .action-btn {
@@ -144,17 +144,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tv-radius-full);
+  border-radius: var(--cu-radius-full);
   border: none;
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
 
 .app-nav .action-btn:hover {
-  background: var(--tv-surface-container);
-  color: var(--tv-primary);
+  background: var(--cu-surface-container);
+  color: var(--cu-primary);
 }
 
 .app-nav .icon {
@@ -167,10 +167,10 @@
   display: flex;
   align-items: center;
   height: 36px;
-  padding: 0 var(--tv-md);
-  border-radius: var(--tv-radius-full);
-  border: 1px solid var(--tv-outline-variant);
-  color: var(--tv-on-surface-variant);
+  padding: 0 var(--cu-md);
+  border-radius: var(--cu-radius-full);
+  border: 1px solid var(--cu-outline-variant);
+  color: var(--cu-on-surface-variant);
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
@@ -179,8 +179,8 @@
 }
 
 .app-nav .shell-switch:hover {
-  color: var(--tv-primary);
-  border-color: var(--tv-primary);
+  color: var(--cu-primary);
+  border-color: var(--cu-primary);
 }
 
 /* ── 示例中心技术栈下拉 ───────────────────────────────────────── */
@@ -196,7 +196,7 @@
   display: flex;
   align-items: center;
   height: 100%;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -208,12 +208,12 @@
 }
 
 .app-nav .dropdown-trigger:hover {
-  color: var(--tv-primary);
+  color: var(--cu-primary);
 }
 
 .app-nav .dropdown-trigger.active {
-  color: var(--tv-primary);
-  border-bottom-color: var(--tv-primary);
+  color: var(--cu-primary);
+  border-bottom-color: var(--cu-primary);
 }
 
 .app-nav .dropdown-arrow {
@@ -232,10 +232,10 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 95%, transparent);
+  background: color-mix(in srgb, var(--cu-surface-container-lowest) 95%, transparent);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-xl);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-xl);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
   padding: 12px;
   min-width: 220px;
@@ -257,17 +257,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   padding: 8px 10px;
-  border-radius: var(--tv-radius-lg);
+  border-radius: var(--cu-radius-lg);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .app-nav .dropdown-item:hover,
 .app-nav .dropdown-item.active {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
 }
 
 .app-nav .dropdown-label {
@@ -279,16 +279,16 @@
   font-size: 11px;
   line-height: 16px;
   font-weight: 600;
-  color: var(--tv-on-surface-variant);
-  background: var(--tv-surface-container-high);
+  color: var(--cu-on-surface-variant);
+  background: var(--cu-surface-container-high);
   padding: 1px 6px;
-  border-radius: var(--tv-radius-full);
+  border-radius: var(--cu-radius-full);
 }
 
 .app-nav .dropdown-item:hover .dropdown-count,
 .app-nav .dropdown-item.active .dropdown-count {
-  background: color-mix(in srgb, var(--tv-on-primary-container) 15%, transparent);
-  color: var(--tv-on-primary-container);
+  background: color-mix(in srgb, var(--cu-on-primary-container) 15%, transparent);
+  color: var(--cu-on-primary-container);
 }
 
 .app-nav .dropdown-fade-enter-active,
@@ -303,18 +303,18 @@
 }
 
 html.dark .app-nav .dropdown-menu {
-  background: color-mix(in srgb, var(--tv-surface-container-lowest) 92%, transparent);
+  background: color-mix(in srgb, var(--cu-surface-container-lowest) 92%, transparent);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 html.dark .app-nav .dropdown-item:hover,
 html.dark .app-nav .dropdown-item.active {
-  background: var(--tv-secondary-container);
-  color: var(--tv-on-secondary-container);
+  background: var(--cu-secondary-container);
+  color: var(--cu-on-secondary-container);
 }
 
 html.dark .app-nav .dropdown-item:hover .dropdown-count,
 html.dark .app-nav .dropdown-item.active .dropdown-count {
-  background: color-mix(in srgb, var(--tv-on-secondary-container) 15%, transparent);
-  color: var(--tv-on-secondary-container);
+  background: color-mix(in srgb, var(--cu-on-secondary-container) 15%, transparent);
+  color: var(--cu-on-secondary-container);
 }

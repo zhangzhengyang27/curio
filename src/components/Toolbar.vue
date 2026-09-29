@@ -106,7 +106,7 @@ const tools = computed(() => [
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
 }
 
 .tool-btn {
@@ -116,22 +116,22 @@ const tools = computed(() => [
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tv-radius-full);
+  border-radius: var(--cu-radius-full);
   border: none;
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .tool-btn:hover {
-  background: var(--tv-primary-fixed);
-  color: var(--tv-primary);
+  background: var(--cu-primary-fixed);
+  color: var(--cu-primary);
 }
 
 .tool-btn.active {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
 }
 
 .tool-icon {
@@ -152,10 +152,10 @@ const tools = computed(() => [
   right: calc(100% + 10px);
   top: 50%;
   transform: translateY(-50%);
-  background: var(--tv-inverse-surface);
-  color: var(--tv-inverse-on-surface);
+  background: var(--cu-inverse-surface);
+  color: var(--cu-inverse-on-surface);
   padding: 4px 10px;
-  border-radius: var(--tv-radius-md);
+  border-radius: var(--cu-radius-md);
   font-size: 11px;
   font-weight: 500;
   white-space: nowrap;

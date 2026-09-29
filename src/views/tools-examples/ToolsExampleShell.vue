@@ -121,7 +121,7 @@ onMounted(async () => {
 <style scoped>
 .tools-example {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
@@ -141,7 +141,7 @@ onMounted(async () => {
   transform: translate(-50%, -50%);
   padding: 16px 24px;
   border-radius: 12px;
-  color: var(--tv-outline-variant);
+  color: var(--cu-outline-variant);
   z-index: 5;
 }
 
@@ -157,7 +157,7 @@ onMounted(async () => {
 
 .back-link {
   font-size: 12px;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   text-decoration: none;
 }
 
@@ -175,7 +175,7 @@ onMounted(async () => {
   margin: 0;
   font-size: 12px;
   line-height: 1.6;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 /* 示例功能面板：与 header 同列堆叠，风格对齐综合工具箱的左面板。

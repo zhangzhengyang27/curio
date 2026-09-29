@@ -488,24 +488,24 @@ watch(() => earthStore.currentVisualization, (v) => {
 <style scoped>
 .earth-view {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  height: calc(100vh - var(--tv-top-nav-height));
+  height: calc(100vh - var(--cu-top-nav-height));
   overflow: hidden;
 }
 
 .search-wrapper {
   position: absolute;
-  top: var(--tv-margin);
+  top: var(--cu-margin);
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   width: 100%;
   max-width: 480px;
-  padding: 0 var(--tv-gutter);
+  padding: 0 var(--cu-gutter);
   pointer-events: none;
 }
 
@@ -515,10 +515,10 @@ watch(() => earthStore.currentVisualization, (v) => {
 
 .left-panel {
   position: absolute;
-  left: var(--tv-margin);
-  top: var(--tv-margin);
-  bottom: var(--tv-margin);
-  width: var(--tv-panel-width);
+  left: var(--cu-margin);
+  top: var(--cu-margin);
+  bottom: var(--cu-margin);
+  width: var(--cu-panel-width);
   z-index: 50;
   overflow: hidden;
   display: flex;
@@ -527,10 +527,10 @@ watch(() => earthStore.currentVisualization, (v) => {
 
 .right-panel {
   position: absolute;
-  right: var(--tv-margin);
-  top: var(--tv-margin);
-  bottom: var(--tv-margin);
-  width: var(--tv-info-panel-width);
+  right: var(--cu-margin);
+  top: var(--cu-margin);
+  bottom: var(--cu-margin);
+  width: var(--cu-info-panel-width);
   z-index: 50;
   overflow: hidden;
   display: flex;
@@ -539,48 +539,48 @@ watch(() => earthStore.currentVisualization, (v) => {
 
 .tools-panel {
   position: absolute;
-  right: calc(var(--tv-margin) + var(--tv-info-panel-width) + var(--tv-md));
+  right: calc(var(--cu-margin) + var(--cu-info-panel-width) + var(--cu-md));
   top: 50%;
   transform: translateY(-50%);
   z-index: 50;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--tv-md) var(--tv-sm);
-  border-radius: var(--tv-radius-full);
-  gap: var(--tv-sm);
-  transition: right var(--tv-dur) var(--tv-ease);
+  padding: var(--cu-md) var(--cu-sm);
+  border-radius: var(--cu-radius-full);
+  gap: var(--cu-sm);
+  transition: right var(--cu-dur) var(--cu-ease);
 }
 
 /* 信息面板收起时，工具条回到右缘 */
 .tools-panel:not(.with-info) {
-  right: var(--tv-margin);
+  right: var(--cu-margin);
 }
 
 .bottom-bar {
   position: absolute;
-  bottom: var(--tv-margin);
+  bottom: var(--cu-margin);
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: var(--tv-xs);
-  padding: var(--tv-sm) var(--tv-md);
-  border-radius: var(--tv-radius-full);
-  max-width: calc(100% - var(--tv-panel-width) - var(--tv-info-panel-width) - var(--tv-margin) * 4);
+  gap: var(--cu-xs);
+  padding: var(--cu-sm) var(--cu-md);
+  border-radius: var(--cu-radius-full);
+  max-width: calc(100% - var(--cu-panel-width) - var(--cu-info-panel-width) - var(--cu-margin) * 4);
   overflow-x: auto;
 }
 
 .viz-btn {
   display: flex;
   align-items: center;
-  gap: var(--tv-xs);
-  padding: var(--tv-xs) var(--tv-md);
-  border-radius: var(--tv-radius-full);
+  gap: var(--cu-xs);
+  padding: var(--cu-xs) var(--cu-md);
+  border-radius: var(--cu-radius-full);
   border: none;
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -589,13 +589,13 @@ watch(() => earthStore.currentVisualization, (v) => {
 }
 
 .viz-btn:hover {
-  color: var(--tv-primary);
-  background: var(--tv-surface-container);
+  color: var(--cu-primary);
+  background: var(--cu-surface-container);
 }
 
 .viz-btn.active {
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
+  background: var(--cu-primary);
+  color: var(--cu-on-primary);
 }
 
 .viz-icon {
@@ -609,7 +609,7 @@ watch(() => earthStore.currentVisualization, (v) => {
     width: 280px;
   }
   .tools-panel.with-info {
-    right: calc(var(--tv-margin) + 280px + var(--tv-md));
+    right: calc(var(--cu-margin) + 280px + var(--cu-md));
   }
 }
 
@@ -622,7 +622,7 @@ watch(() => earthStore.currentVisualization, (v) => {
     width: 220px;
   }
   .bottom-bar {
-    max-width: calc(100% - 220px - var(--tv-margin) * 3);
+    max-width: calc(100% - 220px - var(--cu-margin) * 3);
   }
 }
 
@@ -631,7 +631,7 @@ watch(() => earthStore.currentVisualization, (v) => {
     display: none;
   }
   .bottom-bar {
-    max-width: calc(100% - var(--tv-margin) * 2);
+    max-width: calc(100% - var(--cu-margin) * 2);
   }
 }
 
@@ -646,7 +646,7 @@ watch(() => earthStore.currentVisualization, (v) => {
   align-items: center;
   gap: 10px;
   padding: 8px 16px;
-  border-radius: var(--tv-radius-full, 999px);
+  border-radius: var(--cu-radius-full, 999px);
   font-size: 13px;
   white-space: nowrap;
   pointer-events: none;
@@ -656,14 +656,14 @@ watch(() => earthStore.currentVisualization, (v) => {
   pointer-events: auto;
   /* 加载提示是纯展示、被底栏压住无所谓；可重试的提示必须点得到，要盖过底栏（z 99/100） */
   z-index: 300;
-  color: var(--tv-error);
+  color: var(--cu-error);
 }
 
 .viz-error-retry {
-  border: 1px solid var(--tv-error);
-  border-radius: var(--tv-radius-full, 999px);
+  border: 1px solid var(--cu-error);
+  border-radius: var(--cu-radius-full, 999px);
   background: transparent;
-  color: var(--tv-error);
+  color: var(--cu-error);
   padding: 2px 12px;
   font-size: 12px;
   cursor: pointer;
@@ -673,7 +673,7 @@ watch(() => earthStore.currentVisualization, (v) => {
 .viz-spinner {
   display: inline-block;
   border: 2px solid rgba(128, 128, 128, 0.3);
-  border-top-color: var(--tv-primary, #4f8ef7);
+  border-top-color: var(--cu-primary, #4f8ef7);
   border-radius: 50%;
   animation: viz-spin 0.8s linear infinite;
 }

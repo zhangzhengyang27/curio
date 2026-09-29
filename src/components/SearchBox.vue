@@ -135,24 +135,24 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   width: 100%;
-  background: var(--tv-surface-container-lowest);
+  background: var(--cu-surface-container-lowest);
   backdrop-filter: blur(16px);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-full);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 8px 12px;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .search-box:focus-within {
-  border-color: color-mix(in srgb, var(--tv-primary) 50%, var(--tv-outline-variant));
+  border-color: color-mix(in srgb, var(--cu-primary) 50%, var(--cu-outline-variant));
   box-shadow: 0 4px 16px rgba(0, 87, 194, 0.12);
 }
 
 .search-icon {
   width: 20px;
   height: 20px;
-  color: var(--tv-outline);
+  color: var(--cu-outline);
   flex-shrink: 0;
 }
 
@@ -160,7 +160,7 @@ onUnmounted(() => {
   flex: 1;
   border: none;
   background: transparent;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   font-size: 14px;
   line-height: 22px;
   padding: 0 10px;
@@ -168,7 +168,7 @@ onUnmounted(() => {
 }
 
 .search-input::placeholder {
-  color: var(--tv-outline);
+  color: var(--cu-outline);
 }
 
 .suggestions {
@@ -176,9 +176,9 @@ onUnmounted(() => {
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: var(--tv-surface-container-lowest);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
+  background: var(--cu-surface-container-lowest);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   list-style: none;
   padding: 6px 0;
@@ -191,7 +191,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   cursor: pointer;
   font-size: 14px;
   transition: background 0.15s;
@@ -199,8 +199,8 @@ onUnmounted(() => {
 
 .suggestion-item:hover,
 .suggestion-item.active {
-  background: var(--tv-primary-fixed);
-  color: var(--tv-on-primary-fixed);
+  background: var(--cu-primary-fixed);
+  color: var(--cu-on-primary-fixed);
 }
 
 .suggestion-flag {

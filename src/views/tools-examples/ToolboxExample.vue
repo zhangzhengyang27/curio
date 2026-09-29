@@ -1099,7 +1099,7 @@ onUnmounted(() => {
 <style scoped>
 .tools-view {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
@@ -1120,7 +1120,7 @@ onUnmounted(() => {
   transform: translate(-50%, -50%);
   padding: 16px 24px;
   border-radius: 12px;
-  color: var(--tv-outline-variant);
+  color: var(--cu-outline-variant);
 }
 
 .panel {
@@ -1280,12 +1280,12 @@ onUnmounted(() => {
 }
 
 .tool-item:hover {
-  border-color: var(--tv-primary, var(--tv-primary));
+  border-color: var(--cu-primary, var(--cu-primary));
 }
 
 .tool-item.active {
-  border-color: var(--tv-primary, var(--tv-primary));
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.12));
+  border-color: var(--cu-primary, var(--cu-primary));
+  background: var(--cu-primary-fixed, rgba(79, 142, 247, 0.12));
 }
 
 .tool-icon {
@@ -1381,7 +1381,7 @@ onUnmounted(() => {
 }
 
 .mini-btn:hover:not(:disabled) {
-  border-color: var(--tv-primary, var(--tv-primary));
+  border-color: var(--cu-primary, var(--cu-primary));
 }
 
 .mini-btn:disabled {
@@ -1391,9 +1391,9 @@ onUnmounted(() => {
 
 .mini-btn.primary {
   width: 100%;
-  background: var(--tv-primary, var(--tv-primary));
+  background: var(--cu-primary, var(--cu-primary));
   border-color: transparent;
-  color: var(--tv-on-primary, #fff);
+  color: var(--cu-on-primary, #fff);
   font-weight: 600;
 }
 
@@ -1430,7 +1430,7 @@ onUnmounted(() => {
 }
 
 .bookmark-goto:hover {
-  border-color: var(--tv-primary, var(--tv-primary));
+  border-color: var(--cu-primary, var(--cu-primary));
 }
 
 .bookmark-del {
@@ -1465,7 +1465,7 @@ onUnmounted(() => {
   gap: 18px;
   max-width: calc(100% - 32px);
   padding: 8px 18px;
-  border-radius: var(--tv-radius-full, 999px);
+  border-radius: var(--cu-radius-full, 999px);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -1492,7 +1492,7 @@ onUnmounted(() => {
   padding: 4px 10px;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.65);
-  color: var(--tv-success);
+  color: var(--cu-success);
   font: 11px/1.6 monospace;
   white-space: nowrap;
   pointer-events: none;

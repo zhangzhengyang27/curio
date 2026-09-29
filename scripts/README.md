@@ -20,7 +20,7 @@
 | `verify-thumbnails.mjs` | 非空 thumbnail 对应的封面文件是否存在（防线上破图） |
 | `verify-three-compat.mjs` | three.js 本地兼容层的哈希基线守卫（`--update` 可更新基线） |
 | `generate-gl-renderer-esm.mjs --check` | **图形渲染器生成物守卫**（`npm run verify:gl-renderer`）。逐字节比对 `src/examples/jsm-compat/gl-renderer.esm.js` 与其上游 UMD `public/graphics/common/lib/gl-renderer.js`。漂移 = `graphics`/`mygrapics` 共 84 个示例用的 `compileSync` 等 API 失效、静默渲染失败 |
-| `verify-theme-tokens.mjs` | 主题令牌棘轮 + 静态 WCAG 对比度守卫（`npm run verify:theme`）。逐文件统计绕过 `--tv-*` 的硬编码色值，**只允许比 `scripts/_theme_token_baseline.json` 更少**；同一条规则里 `color` 与 `background` 均为字面量且对比度 < 4.5:1 时直接失败（不进基线、零容忍）。`--report` 看清单，`--update` 收紧基线。豁免写在被豁免行的**上一行**：`/* theme-tokens:allow */`。排除 `src/examples/components/**`（三方抓取）、vendored 构建产物、`theme.css`（令牌定义）、`code-highlight.css`（语法配色表）。**注意**：`var(--tv-x, #hex)` 里的 `#hex` 是回退值不是违规，脚本已剔除 |
+| `verify-theme-tokens.mjs` | 主题令牌棘轮 + 静态 WCAG 对比度守卫（`npm run verify:theme`）。逐文件统计绕过 `--cu-*` 的硬编码色值，**只允许比 `scripts/_theme_token_baseline.json` 更少**；同一条规则里 `color` 与 `background` 均为字面量且对比度 < 4.5:1 时直接失败（不进基线、零容忍）。`--report` 看清单，`--update` 收紧基线。豁免写在被豁免行的**上一行**：`/* theme-tokens:allow */`。排除 `src/examples/components/**`（三方抓取）、vendored 构建产物、`theme.css`（令牌定义）、`code-highlight.css`（语法配色表）。**注意**：`var(--cu-x, #hex)` 里的 `#hex` 是回退值不是违规，脚本已剔除 |
 | `audit-deps.mjs` | 依赖使用情况审计（`npm run audit:deps`）。分层扫描 src / public / 配置 / bin / types，输出「未检测到引用」的候选清单；**只输出线索、不改 package.json** |
 | `audit-console.mjs` | 示例层 console 调用分类审计（`node scripts/audit-console.mjs [目录]`）。按「错误/告警/ElMessage 替代/教学演示输出/疑似噪声」分类；**只输出线索、不改文件** |
 | `audit-pages.mjs` | 数字地球平台四页巡检（`node scripts/audit-pages.mjs`，需 dev server 已跑在 5173）。逐页检查 load-error / canvas / pageerror / HTTP≥400；**只输出线索、不改文件** |

@@ -231,11 +231,11 @@ onBeforeUnmount(() => {
 <style scoped>
 .demo-root {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--tv-background);
+  background: var(--cu-background);
   display: flex;
   flex-direction: column;
 }
@@ -243,8 +243,8 @@ onBeforeUnmount(() => {
 .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--tv-xs);
-  color: var(--tv-primary);
+  gap: var(--cu-xs);
+  color: var(--cu-primary);
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
@@ -264,28 +264,28 @@ onBeforeUnmount(() => {
 
 /* ── 实心顶部信息栏 ────────────────────────────────────────────────
    高度 44px 是硬约束：全局样式把示例内 autoPlace 的 lil-gui 面板
-   下移到 calc(var(--tv-top-nav-height) + 44px)，改这里必须同步改那里。 */
+   下移到 calc(var(--cu-top-nav-height) + 44px)，改这里必须同步改那里。 */
 .demo-topbar {
   height: 44px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tv-md);
-  padding: 0 var(--tv-md);
-  background: var(--tv-surface-container-lowest);
-  border-bottom: 1px solid var(--tv-outline-variant);
+  gap: var(--cu-md);
+  padding: 0 var(--cu-md);
+  background: var(--cu-surface-container-lowest);
+  border-bottom: 1px solid var(--cu-outline-variant);
 }
 
 html.dark .demo-topbar {
-  background: var(--tv-surface-container-low);
-  border-bottom-color: var(--tv-outline);
+  background: var(--cu-surface-container-low);
+  border-bottom-color: var(--cu-outline);
 }
 
 .tb-left {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   flex: 1;
   min-width: 0;
 }
@@ -293,13 +293,13 @@ html.dark .demo-topbar {
 .tb-divider {
   width: 1px;
   height: 16px;
-  background: var(--tv-outline);
+  background: var(--cu-outline);
   flex-shrink: 0;
 }
 
 /* 标题是这一栏的主角：15px/600 高对比，先于元信息被挤压 */
 .demo-title {
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   font-size: 15px;
   line-height: 22px;
   font-weight: 600;
@@ -310,8 +310,8 @@ html.dark .demo-topbar {
 }
 
 .demo-meta {
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
   min-width: 0;
   overflow: hidden;
@@ -322,7 +322,7 @@ html.dark .demo-topbar {
 .tb-right {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   flex-shrink: 0;
   min-width: 0;
 }
@@ -330,7 +330,7 @@ html.dark .demo-topbar {
 .demo-tags {
   display: flex;
   align-items: center;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
   min-width: 0;
   overflow: hidden;
 }
@@ -340,12 +340,12 @@ html.dark .demo-topbar {
   align-items: center;
   height: 30px;
   padding: 0 12px;
-  border-radius: var(--tv-radius-md);
+  border-radius: var(--cu-radius-md);
   /* outline 档在明暗两种主题下都可见；variant 档（0.1 透明度）在暗色下近乎消失 */
-  border: 1px solid var(--tv-outline);
+  border: 1px solid var(--cu-outline);
   background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-family: var(--tv-font-mono);
+  color: var(--cu-on-surface-variant);
+  font-family: var(--cu-font-mono);
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -353,27 +353,27 @@ html.dark .demo-topbar {
 }
 
 .code-btn:hover {
-  color: var(--tv-primary);
-  border-color: var(--tv-primary);
-  background: var(--tv-surface-container);
+  color: var(--cu-primary);
+  border-color: var(--cu-primary);
+  background: var(--cu-surface-container);
 }
 
 .tag {
-  background: color-mix(in srgb, var(--tv-secondary-container) 20%, transparent);
-  color: var(--tv-on-secondary-container);
-  font-family: var(--tv-font-mono);
+  background: color-mix(in srgb, var(--cu-secondary-container) 20%, transparent);
+  color: var(--cu-on-secondary-container);
+  font-family: var(--cu-font-mono);
   font-size: 11px;
   line-height: 16px;
   padding: 2px 8px;
-  border-radius: var(--tv-radius-sm);
+  border-radius: var(--cu-radius-sm);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .tag-more {
   background: transparent;
-  border: 1px dashed var(--tv-outline);
-  color: var(--tv-on-surface-variant);
+  border: 1px dashed var(--cu-outline);
+  color: var(--cu-on-surface-variant);
 }
 
 .demo-body {
@@ -388,9 +388,9 @@ html.dark .demo-topbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tv-error);
+  color: var(--cu-error);
   font-size: 14px;
-  background: var(--tv-background);
+  background: var(--cu-background);
 }
 </style>
 
@@ -400,7 +400,7 @@ html.dark .demo-topbar {
 <style>
 body.example-detail-active .lil-gui.root,
 body.example-detail-active .lil-gui.lil-root {
-  top: calc(var(--tv-top-nav-height) + 44px) !important;
+  top: calc(var(--cu-top-nav-height) + 44px) !important;
   z-index: 20 !important;
 }
 </style>

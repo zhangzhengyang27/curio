@@ -907,11 +907,11 @@ function toggleTerrain() {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 var(--tv-gutter, 24px);
+  padding: 0 var(--cu-gutter, 24px);
   text-align: center;
   font-size: 14px;
   line-height: 1.6;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   z-index: 60;
   pointer-events: none;
 }

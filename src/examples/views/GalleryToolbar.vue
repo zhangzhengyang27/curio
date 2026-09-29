@@ -224,28 +224,28 @@ const sizeModel = computed({
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tv-sm) var(--tv-md);
+  gap: var(--cu-sm) var(--cu-md);
 }
 
 .toolbar-left {
   display: flex;
   align-items: baseline;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   min-width: 0;
 }
 
 .result-count {
-  font-size: var(--tv-fs-md);
+  font-size: var(--cu-fs-md);
   line-height: 22px;
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   white-space: nowrap;
 }
 
 .range-hint {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   white-space: nowrap;
 }
 
@@ -253,7 +253,7 @@ const sizeModel = computed({
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
 }
 
 .field {
@@ -263,21 +263,21 @@ const sizeModel = computed({
 }
 
 .field-label {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   white-space: nowrap;
 }
 
 .control {
   height: 32px;
   padding: 0 26px 0 10px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-lowest);
-  color: var(--tv-on-surface);
+  border-radius: var(--cu-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container-lowest);
+  color: var(--cu-on-surface);
   font-family: inherit;
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   line-height: 20px;
   cursor: pointer;
   /* 原生下拉箭头随主题走，这里只去掉系统外观、补一个自己的 */
@@ -287,24 +287,24 @@ const sizeModel = computed({
   background-position: right 12px center, right 7px center;
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .control:hover {
-  border-color: var(--tv-primary);
+  border-color: var(--cu-primary);
 }
 
 .control:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: 1px;
 }
 
 .segmented {
   display: inline-flex;
   padding: 2px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container-low);
+  border-radius: var(--cu-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container-low);
 }
 
 .segmented button {
@@ -314,11 +314,11 @@ const sizeModel = computed({
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: var(--tv-radius-sm);
+  border-radius: var(--cu-radius-sm);
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   cursor: pointer;
-  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease);
+  transition: background var(--cu-dur-fast) var(--cu-ease), color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .segmented button svg {
@@ -327,22 +327,22 @@ const sizeModel = computed({
 }
 
 .segmented button:hover {
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .segmented button.on {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
 }
 
 .segmented button:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: 1px;
 }
 
 /* 暗色下 lowest/low 档控件贴进粘性工具条的底色里，抬一档保持可见 */
 html.dark .control,
 html.dark .segmented {
-  background: var(--tv-surface-container);
+  background: var(--cu-surface-container);
 }
 </style>

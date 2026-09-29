@@ -101,23 +101,23 @@ defineEmits(['copy', 'close'])
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tv-sm);
-  padding: var(--tv-sm) var(--tv-md);
-  border-bottom: 1px solid var(--tv-outline-variant);
+  gap: var(--cu-sm);
+  padding: var(--cu-sm) var(--cu-md);
+  border-bottom: 1px solid var(--cu-outline-variant);
   flex-shrink: 0;
 }
 
 .code-title {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   min-width: 0;
 }
 
 .code-icon {
   width: 18px;
   height: 18px;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   flex-shrink: 0;
 }
 
@@ -130,7 +130,7 @@ defineEmits(['copy', 'close'])
 .title-name {
   font-size: 13px;
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,7 +139,7 @@ defineEmits(['copy', 'close'])
 .code-actions {
   display: flex;
   align-items: center;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
   flex-shrink: 0;
 }
 
@@ -149,19 +149,19 @@ defineEmits(['copy', 'close'])
   gap: 4px;
   height: 28px;
   padding: 0 10px;
-  border-radius: var(--tv-radius-md);
-  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--cu-radius-md);
+  border: 1px solid var(--cu-outline-variant);
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .action-btn:hover:not(:disabled) {
-  background: var(--tv-surface-container);
-  color: var(--tv-primary);
-  border-color: var(--tv-primary);
+  background: var(--cu-surface-container);
+  color: var(--cu-primary);
+  border-color: var(--cu-primary);
 }
 
 .action-btn:disabled {

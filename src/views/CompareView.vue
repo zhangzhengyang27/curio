@@ -108,7 +108,7 @@ function goBack() {
 <style scoped>
 /* 顶栏是 fixed 的，本视图在正常流里从 y=0 开始：不扣掉顶栏高度会整块被压住 56px */
 .compare-view {
-  width: 100%; height: calc(100vh - var(--tv-top-nav-height)); margin-top: var(--tv-top-nav-height);
+  width: 100%; height: calc(100vh - var(--cu-top-nav-height)); margin-top: var(--cu-top-nav-height);
   display: flex; position: relative;
 }
 .split-pane {
@@ -139,10 +139,10 @@ function goBack() {
 /* 与 EarthView 的 .right-panel 同构：InfoPanel 自身只负责内容，定位靠宿主 */
 .right-panel {
   position: absolute;
-  right: var(--tv-margin);
-  top: var(--tv-margin);
-  bottom: var(--tv-margin);
-  width: var(--tv-info-panel-width);
+  right: var(--cu-margin);
+  top: var(--cu-margin);
+  bottom: var(--cu-margin);
+  width: var(--cu-info-panel-width);
   z-index: 300;
   overflow: hidden;
   display: flex;

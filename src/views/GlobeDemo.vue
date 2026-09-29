@@ -466,13 +466,13 @@ onUnmounted(() => disposeGlobe())
 </script>
 
 <style scoped>
-.demo-root { position: fixed; top: var(--tv-top-nav-height); left: 0; right: 0; bottom: 0; background: var(--tv-background); }
-.top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; height: 44px; padding: 0 var(--tv-md); background: color-mix(in srgb, var(--tv-surface-container-lowest) 80%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--tv-outline-variant); }
-.back-btn { display: inline-flex; align-items: center; gap: var(--tv-xs); color: var(--tv-primary); text-decoration: none; font-size: 13px; font-weight: 500; margin-right: var(--tv-md); flex-shrink: 0; transition: color 0.2s; }
-.back-btn:hover { color: var(--tv-primary-container); }
-.demo-title { color: var(--tv-on-surface); font-size: 14px; font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.status { color: var(--tv-secondary); font-size: 12px; font-weight: 500; }
+.demo-root { position: fixed; top: var(--cu-top-nav-height); left: 0; right: 0; bottom: 0; background: var(--cu-background); }
+.top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; height: 44px; padding: 0 var(--cu-md); background: color-mix(in srgb, var(--cu-surface-container-lowest) 80%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--cu-outline-variant); }
+.back-btn { display: inline-flex; align-items: center; gap: var(--cu-xs); color: var(--cu-primary); text-decoration: none; font-size: 13px; font-weight: 500; margin-right: var(--cu-md); flex-shrink: 0; transition: color 0.2s; }
+.back-btn:hover { color: var(--cu-primary-container); }
+.demo-title { color: var(--cu-on-surface); font-size: 14px; font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status { color: var(--cu-secondary); font-size: 12px; font-weight: 500; }
 .globe-container { width: 100%; height: 100%; position: relative; }
 
-html.dark .top-bar { background: color-mix(in srgb, var(--tv-surface-container-lowest) 60%, transparent); }
+html.dark .top-bar { background: color-mix(in srgb, var(--cu-surface-container-lowest) 60%, transparent); }
 </style>

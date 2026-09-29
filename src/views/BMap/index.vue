@@ -179,17 +179,17 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
   flex-direction: column;
   gap: 1.5rem;
   min-height: 100dvh;
-  padding-top: calc(var(--tv-top-nav-height) + var(--tv-lg));
-  padding-right: var(--tv-margin);
-  padding-bottom: var(--tv-xl);
-  padding-left: var(--tv-margin);
-  background-color: var(--tv-background);
-  color: var(--tv-on-surface);
+  padding-top: calc(var(--cu-top-nav-height) + var(--cu-lg));
+  padding-right: var(--cu-margin);
+  padding-bottom: var(--cu-xl);
+  padding-left: var(--cu-margin);
+  background-color: var(--cu-background);
+  color: var(--cu-on-surface);
 }
 
 .bmap-header p {
   margin: 0.5rem 0 0;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .bmap-nav {
@@ -199,25 +199,25 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 }
 
 .bmap-tab {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   text-decoration: none;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   border: none;
-  background: var(--tv-surface-container-high);
+  background: var(--cu-surface-container-high);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .bmap-tab:hover {
-  background: var(--tv-surface-container-highest);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container-highest);
+  color: var(--cu-on-surface);
 }
 
 .bmap-tab.active {
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
+  background: var(--cu-primary);
+  color: var(--cu-on-primary);
 }
 
 .bmap-content {
@@ -233,20 +233,20 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 .bmap-warning {
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  background: var(--tv-tertiary-container);
-  color: var(--tv-on-tertiary-container);
+  background: var(--cu-tertiary-container);
+  color: var(--cu-on-tertiary-container);
   font-weight: 600;
 }
 
 .bmap-loading {
   padding: 2rem;
   text-align: center;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-size: 1rem;
 }
 
 .bmap-meta {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-size: 0.9rem;
 }
 
@@ -259,9 +259,9 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 .bmap-actions button {
   padding: 0.45rem 0.9rem;
   border-radius: 8px;
-  border: 1px solid var(--tv-outline);
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface);
+  border: 1px solid var(--cu-outline);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface);
   cursor: pointer;
 }
 
@@ -269,9 +269,9 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 .bmap-actions input {
   padding: 0.45rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--tv-outline);
-  background: var(--tv-surface-container-lowest);
-  color: var(--tv-on-surface);
+  border: 1px solid var(--cu-outline);
+  background: var(--cu-surface-container-lowest);
+  color: var(--cu-on-surface);
   font-size: 0.9rem;
   min-width: 140px;
 }
@@ -282,15 +282,15 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
   height: 420px;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--tv-surface-container);
+  background: var(--cu-surface-container);
 }
 
 .bmap-input {
   padding: 0.45rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--tv-outline);
-  background: var(--tv-surface-container-lowest);
-  color: var(--tv-on-surface);
+  border: 1px solid var(--cu-outline);
+  background: var(--cu-surface-container-lowest);
+  color: var(--cu-on-surface);
   font-size: 0.9rem;
   min-width: 220px;
 }
@@ -298,10 +298,10 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 .bmap-ctx-menu {
   position: absolute;
   z-index: 20;
-  background: var(--tv-surface-container-high);
-  border: 1px solid var(--tv-outline);
+  background: var(--cu-surface-container-high);
+  border: 1px solid var(--cu-outline);
   border-radius: 8px;
-  box-shadow: var(--tv-shadow-3);
+  box-shadow: var(--cu-shadow-3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -310,7 +310,7 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 .bmap-ctx-menu button {
   border: none;
   background: transparent;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   padding: 0.55rem 1rem;
   text-align: left;
   cursor: pointer;
@@ -318,31 +318,31 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 }
 
 .bmap-ctx-menu button:hover {
-  background: var(--tv-surface-container-highest);
+  background: var(--cu-surface-container-highest);
 }
 
 .data-card {
   position: absolute;
   transform: translate(-50%, -120%);
-  background: var(--tv-surface-container-highest);
-  border: 1px solid var(--tv-outline);
-  border-left: 4px solid var(--tv-primary);
+  background: var(--cu-surface-container-highest);
+  border: 1px solid var(--cu-outline);
+  border-left: 4px solid var(--cu-primary);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: 12px;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   white-space: nowrap;
-  box-shadow: var(--tv-shadow-2);
+  box-shadow: var(--cu-shadow-2);
   pointer-events: none;
 }
 
 .data-card strong {
   display: block;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .data-card span {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 </style>

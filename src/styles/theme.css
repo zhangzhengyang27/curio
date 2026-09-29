@@ -1,172 +1,172 @@
 :root {
   /* Orbital Data / Curio Design Tokens - Light Mode */
-  --tv-background: #f4f6fb;
-  --tv-surface: #f4f6fb;
-  --tv-surface-dim: #d7dae2;
-  --tv-surface-bright: #f4f6fb;
-  --tv-surface-container-lowest: #ffffff;
-  --tv-surface-container-low: #f1f3fc;
-  --tv-surface-container: #ebeef6;
-  --tv-surface-container-high: #e5e8f0;
-  --tv-surface-container-highest: #dfe2eb;
-  --tv-surface-variant: #dfe2eb;
+  --cu-background: #f4f6fb;
+  --cu-surface: #f4f6fb;
+  --cu-surface-dim: #d7dae2;
+  --cu-surface-bright: #f4f6fb;
+  --cu-surface-container-lowest: #ffffff;
+  --cu-surface-container-low: #f1f3fc;
+  --cu-surface-container: #ebeef6;
+  --cu-surface-container-high: #e5e8f0;
+  --cu-surface-container-highest: #dfe2eb;
+  --cu-surface-variant: #dfe2eb;
 
-  --tv-on-surface: #181c22;
-  --tv-on-surface-variant: #454b59;
-  --tv-inverse-surface: #2d3137;
-  --tv-inverse-on-surface: #eef1f9;
+  --cu-on-surface: #181c22;
+  --cu-on-surface-variant: #454b59;
+  --cu-inverse-surface: #2d3137;
+  --cu-inverse-on-surface: #eef1f9;
 
-  --tv-outline: #727786;
-  --tv-outline-variant: #c5cad9;
+  --cu-outline: #727786;
+  --cu-outline-variant: #c5cad9;
 
-  --tv-primary: #0057c2;
-  --tv-on-primary: #ffffff;
-  --tv-primary-container: #d6e4fa;
-  --tv-on-primary-container: #002d5e;
-  --tv-inverse-primary: #afc6ff;
-  --tv-primary-fixed: #d9e2ff;
-  --tv-primary-fixed-dim: #afc6ff;
-  --tv-on-primary-fixed: #001a43;
-  --tv-on-primary-fixed-variant: #004398;
+  --cu-primary: #0057c2;
+  --cu-on-primary: #ffffff;
+  --cu-primary-container: #d6e4fa;
+  --cu-on-primary-container: #002d5e;
+  --cu-inverse-primary: #afc6ff;
+  --cu-primary-fixed: #d9e2ff;
+  --cu-primary-fixed-dim: #afc6ff;
+  --cu-on-primary-fixed: #001a43;
+  --cu-on-primary-fixed-variant: #004398;
 
-  --tv-secondary: #00687b;
-  --tv-on-secondary: #ffffff;
-  --tv-secondary-container: #c5e8f0;
-  --tv-on-secondary-container: #004d59;
-  --tv-secondary-fixed: #afecff;
-  --tv-secondary-fixed-dim: #48d7f9;
-  --tv-on-secondary-fixed: #001f27;
-  --tv-on-secondary-fixed-variant: #004e5d;
+  --cu-secondary: #00687b;
+  --cu-on-secondary: #ffffff;
+  --cu-secondary-container: #c5e8f0;
+  --cu-on-secondary-container: #004d59;
+  --cu-secondary-fixed: #afecff;
+  --cu-secondary-fixed-dim: #48d7f9;
+  --cu-on-secondary-fixed: #001f27;
+  --cu-on-secondary-fixed-variant: #004e5d;
 
-  --tv-tertiary: #8a3a08;
-  --tv-on-tertiary: #ffffff;
-  --tv-tertiary-container: #ffd9c4;
-  --tv-on-tertiary-container: #4a1d00;
-  --tv-tertiary-fixed: #ffdbcc;
-  --tv-tertiary-fixed-dim: #ffb695;
-  --tv-on-tertiary-fixed: #351000;
-  --tv-on-tertiary-fixed-variant: #7c2e00;
+  --cu-tertiary: #8a3a08;
+  --cu-on-tertiary: #ffffff;
+  --cu-tertiary-container: #ffd9c4;
+  --cu-on-tertiary-container: #4a1d00;
+  --cu-tertiary-fixed: #ffdbcc;
+  --cu-tertiary-fixed-dim: #ffb695;
+  --cu-on-tertiary-fixed: #351000;
+  --cu-on-tertiary-fixed-variant: #7c2e00;
 
-  --tv-error: #b3261e;
-  --tv-on-error: #ffffff;
-  --tv-error-container: #ffdad6;
-  --tv-on-error-container: #93000a;
-  --tv-warning: #9a6b00;
-  --tv-success: #22704b;
+  --cu-error: #b3261e;
+  --cu-on-error: #ffffff;
+  --cu-error-container: #ffdad6;
+  --cu-on-error-container: #93000a;
+  --cu-warning: #9a6b00;
+  --cu-success: #22704b;
 
-  --tv-surface-tint: #0059c7;
+  --cu-surface-tint: #0059c7;
 
   /* Spacing */
-  --tv-unit: 8px;
-  --tv-xs: 4px;
-  --tv-sm: 8px;
-  --tv-md: 16px;
-  --tv-lg: 24px;
-  --tv-xl: 32px;
-  --tv-gutter: 16px;
-  --tv-margin: 24px;
+  --cu-unit: 8px;
+  --cu-xs: 4px;
+  --cu-sm: 8px;
+  --cu-md: 16px;
+  --cu-lg: 24px;
+  --cu-xl: 32px;
+  --cu-gutter: 16px;
+  --cu-margin: 24px;
 
   /* Radius */
-  --tv-radius-sm: 4px;
-  --tv-radius-md: 6px;
-  --tv-radius-lg: 12px;
-  --tv-radius-xl: 16px;
-  --tv-radius-full: 9999px;
+  --cu-radius-sm: 4px;
+  --cu-radius-md: 6px;
+  --cu-radius-lg: 12px;
+  --cu-radius-xl: 16px;
+  --cu-radius-full: 9999px;
 
   /* Layout */
-  --tv-top-nav-height: 56px;
-  --tv-panel-width: 260px;
-  --tv-info-panel-width: 320px;
+  --cu-top-nav-height: 56px;
+  --cu-panel-width: 260px;
+  --cu-info-panel-width: 320px;
 
   /* Typography（中文界面：系统栈优先，不引入外部字体文件） */
-  --tv-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+  --cu-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
-  --tv-font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  --cu-font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Type scale */
-  --tv-fs-xs: 12px;
-  --tv-fs-sm: 13px;
-  --tv-fs-md: 14px;
-  --tv-fs-lg: 16px;
-  --tv-fs-xl: 20px;
-  --tv-fs-2xl: 26px;
-  --tv-fs-3xl: 34px;
+  --cu-fs-xs: 12px;
+  --cu-fs-sm: 13px;
+  --cu-fs-md: 14px;
+  --cu-fs-lg: 16px;
+  --cu-fs-xl: 20px;
+  --cu-fs-2xl: 26px;
+  --cu-fs-3xl: 34px;
 
   /* Motion */
-  --tv-ease: cubic-bezier(0.2, 0, 0, 1);
-  --tv-dur-fast: 150ms;
-  --tv-dur: 250ms;
+  --cu-ease: cubic-bezier(0.2, 0, 0, 1);
+  --cu-dur-fast: 150ms;
+  --cu-dur: 250ms;
 
   /* Elevation（带背景色相的阴影，不用纯黑） */
-  --tv-shadow-1: 0 1px 2px rgba(24, 38, 66, 0.06), 0 2px 8px rgba(24, 38, 66, 0.05);
-  --tv-shadow-2: 0 4px 14px rgba(24, 38, 66, 0.1), 0 2px 6px rgba(24, 38, 66, 0.06);
-  --tv-shadow-3: 0 16px 44px rgba(24, 38, 66, 0.16), 0 4px 12px rgba(24, 38, 66, 0.08);
+  --cu-shadow-1: 0 1px 2px rgba(24, 38, 66, 0.06), 0 2px 8px rgba(24, 38, 66, 0.05);
+  --cu-shadow-2: 0 4px 14px rgba(24, 38, 66, 0.1), 0 2px 6px rgba(24, 38, 66, 0.06);
+  --cu-shadow-3: 0 16px 44px rgba(24, 38, 66, 0.16), 0 4px 12px rgba(24, 38, 66, 0.08);
 
   /* Focus */
-  --tv-focus-ring: 0 0 0 2px var(--tv-background), 0 0 0 4px color-mix(in srgb, var(--tv-primary) 70%, transparent);
+  --cu-focus-ring: 0 0 0 2px var(--cu-background), 0 0 0 4px color-mix(in srgb, var(--cu-primary) 70%, transparent);
 }
 
 html.dark {
   /* Dark Mode - Deep Space（唯一基调：色相统一到靛蓝夜空，单一 accent） */
-  --tv-background: #0a0e17;
-  --tv-surface: rgba(18, 23, 36, 0.82);
-  --tv-surface-dim: #0a0e17;
-  --tv-surface-bright: #1a2030;
-  --tv-surface-container-lowest: rgba(10, 14, 23, 0.92);
-  --tv-surface-container-low: rgba(19, 24, 38, 0.8);
-  --tv-surface-container: rgba(25, 31, 48, 0.85);
-  --tv-surface-container-high: rgba(33, 40, 60, 0.85);
-  --tv-surface-container-highest: rgba(43, 51, 72, 0.85);
-  --tv-surface-variant: rgba(43, 51, 72, 0.6);
+  --cu-background: #0a0e17;
+  --cu-surface: rgba(18, 23, 36, 0.82);
+  --cu-surface-dim: #0a0e17;
+  --cu-surface-bright: #1a2030;
+  --cu-surface-container-lowest: rgba(10, 14, 23, 0.92);
+  --cu-surface-container-low: rgba(19, 24, 38, 0.8);
+  --cu-surface-container: rgba(25, 31, 48, 0.85);
+  --cu-surface-container-high: rgba(33, 40, 60, 0.85);
+  --cu-surface-container-highest: rgba(43, 51, 72, 0.85);
+  --cu-surface-variant: rgba(43, 51, 72, 0.6);
 
-  --tv-on-surface: #e6eaf2;
-  --tv-on-surface-variant: #97a0b4;
-  --tv-inverse-surface: #eef1f9;
-  --tv-inverse-on-surface: #2d3137;
+  --cu-on-surface: #e6eaf2;
+  --cu-on-surface-variant: #97a0b4;
+  --cu-inverse-surface: #eef1f9;
+  --cu-inverse-on-surface: #2d3137;
 
-  --tv-outline: rgba(214, 226, 248, 0.22);
-  --tv-outline-variant: rgba(214, 226, 248, 0.1);
+  --cu-outline: rgba(214, 226, 248, 0.22);
+  --cu-outline-variant: rgba(214, 226, 248, 0.1);
 
-  --tv-primary: #6ba7e2;
-  --tv-on-primary: #071120;
-  --tv-primary-container: #1c3a5f;
-  --tv-on-primary-container: #cfe2fa;
-  --tv-inverse-primary: #0057c2;
-  --tv-primary-fixed: #d9e2ff;
-  --tv-primary-fixed-dim: #afc6ff;
-  --tv-on-primary-fixed: #001a43;
-  --tv-on-primary-fixed-variant: #004398;
+  --cu-primary: #6ba7e2;
+  --cu-on-primary: #071120;
+  --cu-primary-container: #1c3a5f;
+  --cu-on-primary-container: #cfe2fa;
+  --cu-inverse-primary: #0057c2;
+  --cu-primary-fixed: #d9e2ff;
+  --cu-primary-fixed-dim: #afc6ff;
+  --cu-on-primary-fixed: #001a43;
+  --cu-on-primary-fixed-variant: #004398;
 
-  --tv-secondary: #63b3a9;
-  --tv-on-secondary: #071613;
-  --tv-secondary-container: #16403e;
-  --tv-on-secondary-container: #b2e0d8;
-  --tv-secondary-fixed: #afecff;
-  --tv-secondary-fixed-dim: #48d7f9;
-  --tv-on-secondary-fixed: #001f27;
-  --tv-on-secondary-fixed-variant: #004e5d;
+  --cu-secondary: #63b3a9;
+  --cu-on-secondary: #071613;
+  --cu-secondary-container: #16403e;
+  --cu-on-secondary-container: #b2e0d8;
+  --cu-secondary-fixed: #afecff;
+  --cu-secondary-fixed-dim: #48d7f9;
+  --cu-on-secondary-fixed: #001f27;
+  --cu-on-secondary-fixed-variant: #004e5d;
 
-  --tv-tertiary: #f0b493;
-  --tv-on-tertiary: #22100a;
-  --tv-tertiary-container: #5a2c12;
-  --tv-on-tertiary-container: #ffdcc8;
-  --tv-tertiary-fixed: #ffdbcc;
-  --tv-tertiary-fixed-dim: #ffb695;
-  --tv-on-tertiary-fixed: #351000;
-  --tv-on-tertiary-fixed-variant: #7c2e00;
+  --cu-tertiary: #f0b493;
+  --cu-on-tertiary: #22100a;
+  --cu-tertiary-container: #5a2c12;
+  --cu-on-tertiary-container: #ffdcc8;
+  --cu-tertiary-fixed: #ffdbcc;
+  --cu-tertiary-fixed-dim: #ffb695;
+  --cu-on-tertiary-fixed: #351000;
+  --cu-on-tertiary-fixed-variant: #7c2e00;
 
-  --tv-error: #ec6a60;
-  --tv-on-error: #2b0805;
-  --tv-error-container: #5c1a15;
-  --tv-on-error-container: #ffdad6;
-  --tv-warning: #e0a34e;
-  --tv-success: #58b78e;
+  --cu-error: #ec6a60;
+  --cu-on-error: #2b0805;
+  --cu-error-container: #5c1a15;
+  --cu-on-error-container: #ffdad6;
+  --cu-warning: #e0a34e;
+  --cu-success: #58b78e;
 
-  --tv-surface-tint: #6ba7e2;
+  --cu-surface-tint: #6ba7e2;
 
-  --tv-shadow-1: 0 1px 2px rgba(2, 6, 14, 0.4), 0 2px 8px rgba(2, 6, 14, 0.3);
-  --tv-shadow-2: 0 4px 16px rgba(2, 6, 14, 0.5), 0 2px 6px rgba(2, 6, 14, 0.35);
-  --tv-shadow-3: 0 18px 50px rgba(2, 6, 14, 0.6), 0 4px 14px rgba(2, 6, 14, 0.4);
+  --cu-shadow-1: 0 1px 2px rgba(2, 6, 14, 0.4), 0 2px 8px rgba(2, 6, 14, 0.3);
+  --cu-shadow-2: 0 4px 16px rgba(2, 6, 14, 0.5), 0 2px 6px rgba(2, 6, 14, 0.35);
+  --cu-shadow-3: 0 18px 50px rgba(2, 6, 14, 0.6), 0 4px 14px rgba(2, 6, 14, 0.4);
 }
 
 * {
@@ -192,10 +192,10 @@ body,
 }
 
 body {
-  font-family: var(--tv-font-sans);
-  background-color: var(--tv-background);
-  color: var(--tv-on-surface);
-  font-size: var(--tv-fs-md);
+  font-family: var(--cu-font-sans);
+  background-color: var(--cu-background);
+  color: var(--cu-on-surface);
+  font-size: var(--cu-fs-md);
   line-height: 22px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -209,12 +209,12 @@ body {
 /* 键盘可达性：统一的焦点环 */
 :focus-visible {
   outline: none;
-  box-shadow: var(--tv-focus-ring);
-  border-radius: var(--tv-radius-md);
+  box-shadow: var(--cu-focus-ring);
+  border-radius: var(--cu-radius-md);
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--tv-primary) 30%, transparent);
+  background: color-mix(in srgb, var(--cu-primary) 30%, transparent);
 }
 
 /* Scrollbar */
@@ -226,33 +226,33 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--tv-on-surface-variant) 45%, transparent);
+  background-color: color-mix(in srgb, var(--cu-on-surface-variant) 45%, transparent);
   border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: color-mix(in srgb, var(--tv-on-surface-variant) 70%, transparent);
+  background-color: color-mix(in srgb, var(--cu-on-surface-variant) 70%, transparent);
 }
 
 /* Utility classes */
 .tv-glass-panel {
-  background: var(--tv-surface-container-low);
+  background: var(--cu-surface-container-low);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--tv-outline-variant);
-  box-shadow: var(--tv-shadow-1);
-  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--cu-outline-variant);
+  box-shadow: var(--cu-shadow-1);
+  border-radius: var(--cu-radius-lg);
 }
 
 .tv-card-hover {
-  transition: transform var(--tv-dur) var(--tv-ease), box-shadow var(--tv-dur) var(--tv-ease),
-    border-color var(--tv-dur) var(--tv-ease);
+  transition: transform var(--cu-dur) var(--cu-ease), box-shadow var(--cu-dur) var(--cu-ease),
+    border-color var(--cu-dur) var(--cu-ease);
 }
 .tv-card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: var(--tv-shadow-3);
-  border-color: color-mix(in srgb, var(--tv-primary) 40%, transparent);
+  box-shadow: var(--cu-shadow-3);
+  border-color: color-mix(in srgb, var(--cu-primary) 40%, transparent);
 }
 
 html.dark .tv-glass-panel {
-  background: var(--tv-surface);
+  background: var(--cu-surface);
 }

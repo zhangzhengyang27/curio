@@ -204,21 +204,21 @@ function addToComparison() {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--tv-md);
+  padding: var(--cu-md);
 }
 
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: var(--tv-md);
-  border-bottom: 1px solid var(--tv-outline-variant);
+  padding-bottom: var(--cu-md);
+  border-bottom: 1px solid var(--cu-outline-variant);
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
 }
 
 .flag {
@@ -230,12 +230,12 @@ function addToComparison() {
   width: 28px;
   height: 20px;
   border-radius: 2px;
-  background: var(--tv-surface-variant);
-  border: 1px solid var(--tv-outline-variant);
+  background: var(--cu-surface-variant);
+  border: 1px solid var(--cu-outline-variant);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
 }
 
 .flag-icon {
@@ -247,52 +247,52 @@ h3 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   line-height: 28px;
 }
 
 .panel-body {
   flex: 1;
   overflow-y: auto;
-  padding: var(--tv-md) 0;
+  padding: var(--cu-md) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--tv-lg);
+  gap: var(--cu-lg);
 }
 
 .section-title {
   font-size: 11px;
   font-weight: 600;
-  color: var(--tv-outline);
+  color: var(--cu-outline);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: var(--tv-sm);
+  margin-bottom: var(--cu-sm);
 }
 
 .metrics-section {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
 }
 
 .metric-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tv-sm);
-  border-radius: var(--tv-radius-lg);
+  padding: var(--cu-sm);
+  border-radius: var(--cu-radius-lg);
   transition: background 0.2s;
 }
 
 .metric-row:hover {
-  background: var(--tv-surface-container);
+  background: var(--cu-surface-container);
 }
 
 .metric-label {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
-  color: var(--tv-on-surface-variant);
+  gap: var(--cu-sm);
+  color: var(--cu-on-surface-variant);
   font-size: 14px;
 }
 
@@ -304,7 +304,7 @@ h3 {
 .metric-value {
   font-size: 13px;
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .metric-value.mono {
@@ -315,16 +315,16 @@ h3 {
 .panel-footer {
   display: flex;
   flex-direction: column;
-  gap: var(--tv-sm);
-  padding-top: var(--tv-md);
-  border-top: 1px solid var(--tv-outline-variant);
+  gap: var(--cu-sm);
+  padding-top: var(--cu-md);
+  border-top: 1px solid var(--cu-outline-variant);
 }
 
 .primary-btn,
 .secondary-btn {
   width: 100%;
-  padding: var(--tv-sm);
-  border-radius: var(--tv-radius-md);
+  padding: var(--cu-sm);
+  border-radius: var(--cu-radius-md);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -333,8 +333,8 @@ h3 {
 }
 
 .primary-btn {
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
+  background: var(--cu-primary);
+  color: var(--cu-on-primary);
 }
 
 .primary-btn:hover {
@@ -343,12 +343,12 @@ h3 {
 
 .secondary-btn {
   background: transparent;
-  color: var(--tv-primary);
-  border: 1px solid var(--tv-outline-variant);
+  color: var(--cu-primary);
+  border: 1px solid var(--cu-outline-variant);
 }
 
 .secondary-btn:hover {
-  background: var(--tv-primary-fixed);
+  background: var(--cu-primary-fixed);
 }
 
 .panel-enter-active,

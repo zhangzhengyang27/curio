@@ -6,6 +6,21 @@
 
 ## 2026-09 治理轮次
 
+### 主题令牌前缀 --tv- → --cu-（2026-09-29）
+
+目录改名同日，需求方拍板把最后一处旧名痕迹也清掉：CSS 令牌前缀
+`--tv-`（TerraVista 缩写）全量改为 `--cu-`。清点实测 1121 处 / 51 文件，
+替换 50 个（`src` 全部样式与组件、`verify-theme-tokens.mjs` 的占位符
+`__TV_VAR__` → `__CU_VAR__` 及注释与报错文案、`scripts/legacy/
+tokenize-tools-examples.mjs`、ARCHITECTURE / scripts-README 中的提法）；
+本文件既有归档条目中的 `--tv-` 按原文留痕。
+
+| 项 | 内容 |
+|---|---|
+| 安全性论证 | 无动态拼接用法（`getPropertyValue`/`setProperty` 命中均为 jsm-compat vendored 三方代码，用的别的变量）；E2E 测试零引用变量名；棘轮基线只按文件存硬编码色值计数，不存变量名；棘轮的 var() 摘除是通用正则 `var\([^()]*\)`，不写死前缀 |
+| 报错文案必须同步 | `verify-theme-tokens.mjs` 的报错文案原本引导开发者「改用 --tv-* 令牌」，不同步就会引导人去用死变量 |
+| 验证 | `verify` 全绿（棘轮 169 处硬编码色值计数不变，符合预期）、typecheck 0 error、lint:ci 0 error、dev 全量 E2E 通过 |
+
 ### 目录 / 仓库名改定 curio（2026-09-29）
 
 定名次日需求方追认：目录名与仓库名也不再保留 `earth-app`，随品牌一并改为

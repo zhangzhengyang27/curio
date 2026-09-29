@@ -115,23 +115,23 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 2))
 .example-card {
   display: flex;
   flex-direction: column;
-  background: var(--tv-surface-container-lowest);
-  border: 1px solid color-mix(in srgb, var(--tv-outline-variant) 30%, transparent);
-  border-radius: var(--tv-radius-xl);
+  background: var(--cu-surface-container-lowest);
+  border: 1px solid color-mix(in srgb, var(--cu-outline-variant) 30%, transparent);
+  border-radius: var(--cu-radius-xl);
   overflow: hidden;
   text-decoration: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: transform 0.25s var(--tv-ease), box-shadow 0.25s var(--tv-ease), border-color 0.25s var(--tv-ease);
+  transition: transform 0.25s var(--cu-ease), box-shadow 0.25s var(--cu-ease), border-color 0.25s var(--cu-ease);
 }
 
 .example-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 22px color-mix(in srgb, var(--tv-primary) 15%, rgba(0, 0, 0, 0.08));
-  border-color: color-mix(in srgb, var(--tv-primary-container) 40%, transparent);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--cu-primary) 15%, rgba(0, 0, 0, 0.08));
+  border-color: color-mix(in srgb, var(--cu-primary-container) 40%, transparent);
 }
 
 .example-card:hover .card-title {
-  color: var(--tv-primary);
+  color: var(--cu-primary);
 }
 
 .example-card:hover .card-play {
@@ -140,7 +140,7 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 2))
 }
 
 .example-card:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: 2px;
 }
 
@@ -148,12 +148,12 @@ const visibleTags = computed(() => (props.ex.tags || []).slice(0, 2))
    卡片只能靠一根细线与背景区分 —— 这是改版前「糊成一片」的根因。
    暗色下卡片抬到 container 档、描边换 outline，靠亮度差而不是细线分层。 */
 html.dark .example-card {
-  background: var(--tv-surface-container);
-  border-color: var(--tv-outline);
+  background: var(--cu-surface-container);
+  border-color: var(--cu-outline);
 }
 
 html.dark .example-card:hover {
-  background: var(--tv-surface-container-high);
+  background: var(--cu-surface-container-high);
 }
 
 .card-media {
@@ -161,7 +161,7 @@ html.dark .example-card:hover {
   width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: var(--tv-surface-container-low);
+  background: var(--cu-surface-container-low);
   flex-shrink: 0;
 }
 
@@ -172,14 +172,14 @@ html.dark .example-card:hover {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-outline) 30%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cu-outline) 30%, transparent);
 }
 
 .card-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s var(--tv-ease);
+  transition: transform 0.5s var(--cu-ease);
 }
 
 .example-card:hover .card-media img {
@@ -193,9 +193,9 @@ html.dark .example-card:hover {
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(320px 120px at 50% 20%, color-mix(in srgb, var(--tv-primary) 10%, transparent), transparent),
-    var(--tv-surface-container);
-  transition: transform 0.5s var(--tv-ease);
+    radial-gradient(320px 120px at 50% 20%, color-mix(in srgb, var(--cu-primary) 10%, transparent), transparent),
+    var(--cu-surface-container);
+  transition: transform 0.5s var(--cu-ease);
 }
 
 .example-card:hover .thumb-placeholder {
@@ -208,10 +208,10 @@ html.dark .example-card:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tv-radius-lg);
-  color: var(--tv-primary);
-  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-primary) 22%, transparent);
+  border-radius: var(--cu-radius-lg);
+  color: var(--cu-primary);
+  background: color-mix(in srgb, var(--cu-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cu-primary) 22%, transparent);
 }
 
 .card-play {
@@ -224,12 +224,12 @@ html.dark .example-card:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--tv-radius-full);
+  border-radius: var(--cu-radius-full);
   background: rgba(8, 12, 22, 0.66);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.28);
   opacity: 0;
-  transition: opacity var(--tv-dur) var(--tv-ease), transform var(--tv-dur) var(--tv-ease);
+  transition: opacity var(--cu-dur) var(--cu-ease), transform var(--cu-dur) var(--cu-ease);
   pointer-events: none;
 }
 
@@ -243,11 +243,11 @@ html.dark .example-card:hover {
   top: 10px;
   right: 10px;
   padding: 2px 8px;
-  border-radius: var(--tv-radius-sm);
+  border-radius: var(--cu-radius-sm);
   background: rgba(8, 12, 22, 0.66);
   color: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 16px;
   font-weight: 500;
   backdrop-filter: blur(4px);
@@ -262,7 +262,7 @@ html.dark .example-card:hover {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: var(--tv-md);
+  padding: var(--cu-md);
   min-width: 0;
 }
 
@@ -271,7 +271,7 @@ html.dark .example-card:hover {
   font-size: 15px;
   line-height: 22px;
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   transition: color 0.2s;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -280,9 +280,9 @@ html.dark .example-card:hover {
 }
 
 .card-meta {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -290,9 +290,9 @@ html.dark .example-card:hover {
 
 /* 描述只在列表视图渲染（见模板内注释）：一行收齐，不再占两行 */
 .card-desc {
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   line-height: 20px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -301,7 +301,7 @@ html.dark .example-card:hover {
 
 .card-tags {
   display: flex;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
   flex-wrap: wrap;
   margin-top: auto;
   padding-top: 10px;
@@ -309,11 +309,11 @@ html.dark .example-card:hover {
 
 .card-tag {
   padding: 2px 9px;
-  border-radius: var(--tv-radius-full);
-  background: var(--tv-surface-container-high);
-  border: 1px solid var(--tv-outline-variant);
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  border-radius: var(--cu-radius-full);
+  background: var(--cu-surface-container-high);
+  border: 1px solid var(--cu-outline-variant);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   line-height: 16px;
   white-space: nowrap;
   max-width: 100%;
@@ -329,7 +329,7 @@ html.dark .example-card:hover {
 }
 
 .example-card.is-grid.is-dense .card-body {
-  padding: var(--tv-sm) var(--tv-sm) var(--tv-md);
+  padding: var(--cu-sm) var(--cu-sm) var(--cu-md);
   gap: 2px;
 }
 
@@ -363,7 +363,7 @@ html.dark .example-card:hover {
 }
 
 .example-card.is-list .card-body {
-  padding: var(--tv-sm) var(--tv-md);
+  padding: var(--cu-sm) var(--cu-md);
   justify-content: center;
   gap: 4px;
 }
@@ -395,7 +395,7 @@ html.dark .example-card:hover {
 }
 
 .example-card.is-list.is-dense {
-  border-radius: var(--tv-radius-lg);
+  border-radius: var(--cu-radius-lg);
 }
 
 .example-card.is-list.is-dense .card-media {
@@ -404,7 +404,7 @@ html.dark .example-card:hover {
 }
 
 .example-card.is-list.is-dense .card-body {
-  padding: 6px var(--tv-sm);
+  padding: 6px var(--cu-sm);
 }
 
 .example-card.is-list.is-dense .card-desc,

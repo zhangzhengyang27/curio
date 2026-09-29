@@ -159,7 +159,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   max-height: 70vh;
   overflow: auto;
   padding: 20px;
-  border-radius: var(--tv-radius-lg, 16px);
+  border-radius: var(--cu-radius-lg, 16px);
 }
 
 .tour-picker-head h3 {
@@ -195,8 +195,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 
 .tour-route-card:hover {
-  border-color: var(--tv-primary, #4f8ef7);
-  background: var(--tv-primary-fixed, rgba(79, 142, 247, 0.08));
+  border-color: var(--cu-primary, #4f8ef7);
+  background: var(--cu-primary-fixed, rgba(79, 142, 247, 0.08));
 }
 
 .tour-route-title {
@@ -236,8 +236,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   max-width: 380px;
   padding: 14px 18px;
   border-radius: 14px;
-  background: var(--tv-inverse-surface, rgba(20, 20, 24, 0.82));
-  color: var(--tv-inverse-on-surface, #fff);
+  background: var(--cu-inverse-surface, rgba(20, 20, 24, 0.82));
+  color: var(--cu-inverse-on-surface, #fff);
   backdrop-filter: blur(8px);
 }
 
@@ -270,7 +270,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   align-items: center;
   gap: 14px;
   padding: 10px 16px;
-  border-radius: var(--tv-radius-full, 999px);
+  border-radius: var(--cu-radius-full, 999px);
 }
 
 .tour-bar-title {
@@ -297,12 +297,12 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 
 .tour-dot.played {
-  background: var(--tv-primary, #4f8ef7);
+  background: var(--cu-primary, #4f8ef7);
   opacity: 0.5;
 }
 
 .tour-dot.active {
-  background: var(--tv-primary, #4f8ef7);
+  background: var(--cu-primary, #4f8ef7);
   transform: scale(1.35);
   opacity: 1;
 }
@@ -316,7 +316,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .tour-ctrl {
   padding: 5px 12px;
   border: none;
-  border-radius: var(--tv-radius-full, 999px);
+  border-radius: var(--cu-radius-full, 999px);
   background: rgba(128, 128, 128, 0.14);
   color: inherit;
   font-size: 12px;
@@ -335,13 +335,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 
 .tour-play {
-  background: var(--tv-primary, #4f8ef7);
-  color: var(--tv-on-primary, #fff);
+  background: var(--cu-primary, #4f8ef7);
+  color: var(--cu-on-primary, #fff);
   font-weight: 600;
 }
 
 .tour-play:hover:not(:disabled) {
-  background: var(--tv-primary, #4f8ef7);
+  background: var(--cu-primary, #4f8ef7);
   filter: brightness(1.08);
 }
 

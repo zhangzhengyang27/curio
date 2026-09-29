@@ -578,12 +578,12 @@ onUnmounted(() => {
 <style scoped>
 .monitor-view {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: var(--tv-background);
+  background: var(--cu-background);
 }
 
 .map-container,
@@ -622,36 +622,36 @@ onUnmounted(() => {
   max-width: calc(100vw - 32px);
   padding: 10px 22px;
   border-radius: 18px;
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   white-space: nowrap;
 }
 
 .stats-title {
   font-weight: 700;
-  font-size: var(--tv-fs-md);
+  font-size: var(--cu-fs-md);
   margin-right: 6px;
 }
 
 .stat {
   display: inline-flex;
   align-items: baseline;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .stat b {
-  font-size: var(--tv-fs-lg);
+  font-size: var(--cu-fs-lg);
   margin-left: 5px;
   font-weight: 700;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
   font-variant-numeric: tabular-nums;
 }
 
 .stat.warn {
-  color: var(--tv-error);
+  color: var(--cu-error);
 }
 
 .stat.warn b {
-  color: var(--tv-error);
+  color: var(--cu-error);
 }
 
 .threshold-row {
@@ -734,22 +734,22 @@ onUnmounted(() => {
   align-items: center;
   gap: 8px;
   padding: 7px 9px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-md);
   background: transparent;
   color: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease);
 }
 
 .feed-item:hover {
-  border-color: var(--tv-primary);
+  border-color: var(--cu-primary);
 }
 
 .feed-item.active {
-  border-color: var(--tv-primary);
-  background: color-mix(in srgb, var(--tv-primary) 14%, transparent);
+  border-color: var(--cu-primary);
+  background: color-mix(in srgb, var(--cu-primary) 14%, transparent);
 }
 
 .level-dot {
@@ -787,10 +787,10 @@ onUnmounted(() => {
   gap: 5px;
   font-size: 10px;
   padding: 2px 8px;
-  border-radius: var(--tv-radius-full);
-  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--cu-radius-full);
+  border: 1px solid var(--cu-outline-variant);
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   white-space: nowrap;
   flex: none;
 }
@@ -801,38 +801,38 @@ onUnmounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--tv-on-surface-variant);
+  background: var(--cu-on-surface-variant);
   flex: none;
 }
 
 .status-badge[data-status='open']::before {
-  background: var(--tv-error);
+  background: var(--cu-error);
 }
 
 .status-badge[data-status='open'] {
-  border-color: color-mix(in srgb, var(--tv-error) 45%, transparent);
-  color: var(--tv-error);
+  border-color: color-mix(in srgb, var(--cu-error) 45%, transparent);
+  color: var(--cu-error);
 }
 
 .status-badge[data-status='processing']::before {
-  background: var(--tv-primary);
+  background: var(--cu-primary);
 }
 
 .status-badge[data-status='processing'] {
-  border-color: color-mix(in srgb, var(--tv-primary) 45%, transparent);
-  color: var(--tv-primary);
+  border-color: color-mix(in srgb, var(--cu-primary) 45%, transparent);
+  color: var(--cu-primary);
 }
 
 .status-badge[data-status='resolved']::before {
-  background: var(--tv-success);
+  background: var(--cu-success);
 }
 
 .status-badge[data-status='resolved'] {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .status-badge.big {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
 }
 
 .metrics {
@@ -862,27 +862,27 @@ onUnmounted(() => {
   margin: 8px 0 0;
   font-size: 11px;
   line-height: 1.5;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   overflow-wrap: anywhere;
 }
 
 .place-line a {
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   margin-left: 4px;
   white-space: nowrap;
 }
 
 .stat.source {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   padding: 2px 9px;
-  border-radius: var(--tv-radius-full);
-  border: 1px solid var(--tv-outline-variant);
-  color: var(--tv-on-surface-variant);
+  border-radius: var(--cu-radius-full);
+  border: 1px solid var(--cu-outline-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .stat.source[data-mode='snapshot'] {
-  border-color: color-mix(in srgb, var(--tv-warning) 55%, transparent);
-  color: var(--tv-warning);
+  border-color: color-mix(in srgb, var(--cu-warning) 55%, transparent);
+  color: var(--cu-warning);
 }
 
 .group-label {
@@ -903,21 +903,21 @@ onUnmounted(() => {
   justify-content: center;
   gap: 5px;
   padding: 6px 11px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-md);
   background: transparent;
-  color: var(--tv-on-surface);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface);
+  font-size: var(--cu-fs-xs);
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
-    color var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .mini-btn:hover:not(:disabled) {
-  border-color: var(--tv-primary);
-  color: var(--tv-primary);
+  border-color: var(--cu-primary);
+  color: var(--cu-primary);
 }
 
 .mini-btn:disabled {
@@ -926,9 +926,9 @@ onUnmounted(() => {
 }
 
 .mini-btn.primary {
-  background: var(--tv-primary);
+  background: var(--cu-primary);
   border-color: transparent;
-  color: var(--tv-on-primary);
+  color: var(--cu-on-primary);
   font-weight: 600;
 }
 
@@ -944,23 +944,23 @@ onUnmounted(() => {
   padding: 28px 12px;
   margin-top: 8px;
   text-align: center;
-  border: 1px dashed var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
+  border: 1px dashed var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
 }
 
 .empty-icon {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   opacity: 0.7;
 }
 
 .empty-state-title {
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .empty-tip {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   opacity: 0.7;
   line-height: 1.6;
 }
@@ -975,7 +975,7 @@ onUnmounted(() => {
   border: none;
   padding: 0;
   background: transparent;
-  color: var(--tv-primary, #4f8ef7);
+  color: var(--cu-primary, #4f8ef7);
   font-size: 10px;
   cursor: pointer;
   text-decoration: underline;
@@ -997,19 +997,19 @@ onUnmounted(() => {
   gap: 2px;
   max-width: min(560px, calc(100vw - 32px));
   padding: 10px 22px;
-  border-radius: var(--tv-radius-lg);
+  border-radius: var(--cu-radius-lg);
   text-align: center;
   pointer-events: none;
 }
 
 .tour-caption b {
-  font-size: var(--tv-fs-md);
+  font-size: var(--cu-fs-md);
   font-weight: 700;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .tour-caption span {
-  font-size: var(--tv-fs-xs);
-  color: var(--tv-on-surface-variant);
+  font-size: var(--cu-fs-xs);
+  color: var(--cu-on-surface-variant);
 }
 </style>

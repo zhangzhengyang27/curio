@@ -196,7 +196,7 @@ watch(activeIndex, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--tv-md);
+  padding: var(--cu-md);
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -207,9 +207,9 @@ watch(activeIndex, () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--tv-surface-container-lowest);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
+  background: var(--cu-surface-container-lowest);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
 }
 
@@ -225,9 +225,9 @@ watch(activeIndex, () => {
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 4px;
-  padding: 8px var(--tv-md);
-  border-bottom: 1px solid var(--tv-outline-variant);
-  background: var(--tv-surface-container);
+  padding: 8px var(--cu-md);
+  border-bottom: 1px solid var(--cu-outline-variant);
+  background: var(--cu-surface-container);
   flex-shrink: 0;
 }
 
@@ -235,10 +235,10 @@ watch(activeIndex, () => {
   flex: 0 0 auto;
   max-width: 180px;
   padding: 5px 12px;
-  border-radius: var(--tv-radius-md);
+  border-radius: var(--cu-radius-md);
   border: 1px solid transparent;
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 11.5px;
   white-space: nowrap;
@@ -249,24 +249,24 @@ watch(activeIndex, () => {
 }
 
 .code-tab:hover {
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface);
 }
 
 .code-tab.active {
-  background: var(--tv-primary);
+  background: var(--cu-primary);
   color: #fff;
-  border-color: var(--tv-primary);
+  border-color: var(--cu-primary);
 }
 
 .code-pre {
   margin: 0;
-  padding: var(--tv-md);
+  padding: var(--cu-md);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12.5px;
   line-height: 1.6;
   tab-size: 2;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .code-pre code {
@@ -278,9 +278,9 @@ watch(activeIndex, () => {
 .code-empty {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
-  padding: var(--tv-lg);
-  color: var(--tv-on-surface-variant);
+  gap: var(--cu-sm);
+  padding: var(--cu-lg);
+  color: var(--cu-on-surface-variant);
   font-size: 13px;
 }
 
@@ -291,8 +291,8 @@ watch(activeIndex, () => {
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid var(--tv-outline-variant);
-  border-top-color: var(--tv-primary);
+  border: 2px solid var(--cu-outline-variant);
+  border-top-color: var(--cu-primary);
   border-radius: 50%;
   animation: code-spin 0.8s linear infinite;
   flex-shrink: 0;

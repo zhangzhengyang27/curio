@@ -57,13 +57,13 @@ defineEmits(['clear', 'clear-all'])
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
 }
 
 .af-label {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   margin-right: 2px;
 }
 
@@ -73,29 +73,29 @@ defineEmits(['clear', 'clear-all'])
   gap: 6px;
   max-width: 280px;
   padding: 3px 8px;
-  border-radius: var(--tv-radius-full);
-  border: 1px solid color-mix(in srgb, var(--tv-primary) 32%, transparent);
-  background: color-mix(in srgb, var(--tv-primary) 10%, transparent);
-  color: var(--tv-on-surface);
+  border-radius: var(--cu-radius-full);
+  border: 1px solid color-mix(in srgb, var(--cu-primary) 32%, transparent);
+  background: color-mix(in srgb, var(--cu-primary) 10%, transparent);
+  color: var(--cu-on-surface);
   font-family: inherit;
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
   cursor: pointer;
-  transition: background var(--tv-dur-fast) var(--tv-ease), border-color var(--tv-dur-fast) var(--tv-ease);
+  transition: background var(--cu-dur-fast) var(--cu-ease), border-color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .af-chip:hover {
-  background: color-mix(in srgb, var(--tv-primary) 20%, transparent);
-  border-color: var(--tv-primary);
+  background: color-mix(in srgb, var(--cu-primary) 20%, transparent);
+  border-color: var(--cu-primary);
 }
 
 .af-chip:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: 1px;
 }
 
 .af-chip-label {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   flex-shrink: 0;
 }
 
@@ -119,24 +119,24 @@ defineEmits(['clear', 'clear-all'])
 
 .af-clear {
   padding: 3px 10px;
-  border-radius: var(--tv-radius-full);
-  border: 1px solid var(--tv-outline-variant);
+  border-radius: var(--cu-radius-full);
+  border: 1px solid var(--cu-outline-variant);
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   font-family: inherit;
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
   cursor: pointer;
-  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease);
+  transition: background var(--cu-dur-fast) var(--cu-ease), color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .af-clear:hover {
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface);
 }
 
 .af-clear:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: 1px;
 }
 </style>

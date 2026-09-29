@@ -50,12 +50,12 @@ function onReady() {
   margin: 0 0 8px;
   font-size: 12px;
   line-height: 1.7;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .status {
   margin: 0;
   font-size: 12px;
-  color: var(--tv-success);
+  color: var(--cu-success);
 }
 </style>

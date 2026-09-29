@@ -133,24 +133,24 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--tv-md);
+  padding: var(--cu-md);
 }
 
 .panel-header {
-  margin-bottom: var(--tv-lg);
+  margin-bottom: var(--cu-lg);
 }
 
 .panel-title {
   font-size: 18px;
   font-weight: 600;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   line-height: 28px;
 }
 
 .panel-subtitle {
   font-size: 12px;
   font-weight: 500;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   letter-spacing: 0.02em;
   margin-top: 2px;
 }
@@ -160,8 +160,8 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--tv-xs);
-  padding-right: var(--tv-xs);
+  gap: var(--cu-xs);
+  padding-right: var(--cu-xs);
 }
 
 .layer-group {
@@ -173,27 +173,27 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tv-sm);
-  border-radius: var(--tv-radius-lg);
+  padding: var(--cu-sm);
+  border-radius: var(--cu-radius-lg);
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 
 .layer-item:hover {
-  background: var(--tv-surface-container);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container);
+  color: var(--cu-on-surface);
 }
 
 .layer-item.active {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
 }
 
 .layer-left {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
 }
 
 .layer-icon {
@@ -217,13 +217,13 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
 .layer-right {
   display: flex;
   align-items: center;
-  gap: var(--tv-xs);
+  gap: var(--cu-xs);
 }
 
 .layer-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: var(--tv-primary);
+  accent-color: var(--cu-primary);
   cursor: pointer;
 }
 
@@ -238,31 +238,31 @@ function setOpacity(layer: LayerNodeLike, event: Event) {
 }
 
 .layer-children {
-  padding: var(--tv-xs) var(--tv-sm) var(--tv-sm) 40px;
+  padding: var(--cu-xs) var(--cu-sm) var(--cu-sm) 40px;
 }
 
 .opacity-control {
   display: flex;
   align-items: center;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
 }
 
 .opacity-label {
   font-size: 12px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   flex-shrink: 0;
 }
 
 .opacity-slider {
   flex: 1;
   height: 4px;
-  accent-color: var(--tv-primary);
+  accent-color: var(--cu-primary);
   cursor: pointer;
 }
 
 .opacity-value {
-  font-size: var(--tv-fs-xs);
-  color: var(--tv-on-surface-variant);
+  font-size: var(--cu-fs-xs);
+  color: var(--cu-on-surface-variant);
   min-width: 32px;
   text-align: right;
   font-variant-numeric: tabular-nums;

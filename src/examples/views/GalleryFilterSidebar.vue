@@ -57,17 +57,17 @@ defineEmits(['select'])
 .filter-sidebar {
   position: sticky;
   /* 与右侧粘性工具条对齐：两者都贴在顶栏正下方，视觉上才是一条横线 */
-  top: calc(var(--tv-top-nav-height) + var(--tv-sm));
+  top: calc(var(--cu-top-nav-height) + var(--cu-sm));
   width: 260px;
   flex-shrink: 0;
-  max-height: calc(100vh - var(--tv-top-nav-height) - var(--tv-lg) * 2);
+  max-height: calc(100vh - var(--cu-top-nav-height) - var(--cu-lg) * 2);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--tv-sm);
-  background: var(--tv-surface-container-lowest);
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
-  box-shadow: var(--tv-shadow-1);
+  padding: var(--cu-sm);
+  background: var(--cu-surface-container-lowest);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
+  box-shadow: var(--cu-shadow-1);
 }
 
 .filter-sidebar::-webkit-scrollbar {
@@ -77,38 +77,38 @@ defineEmits(['select'])
 /* 暗色下 lowest 档与页面底色几乎同值，面板会整个消失在背景里
    （与卡片糊成一片同一条根因）：暗色抬到 container-low 档 + outline 描边 */
 html.dark .filter-sidebar {
-  background: var(--tv-surface-container-low);
-  border-color: var(--tv-outline);
+  background: var(--cu-surface-container-low);
+  border-color: var(--cu-outline);
 }
 
 .category-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tv-sm);
+  gap: var(--cu-sm);
   width: 100%;
   padding: 9px 12px;
-  border-radius: var(--tv-radius-md);
+  border-radius: var(--cu-radius-md);
   border: none;
   background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-md);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-md);
   line-height: 22px;
   font-weight: 500;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease);
+  transition: background var(--cu-dur-fast) var(--cu-ease), color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .category-item:hover {
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface);
 }
 
 .category-item.active {
-  background: color-mix(in srgb, var(--tv-primary) 12%, transparent);
-  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--cu-primary) 12%, transparent);
+  color: var(--cu-primary);
   font-weight: 600;
 }
 
@@ -128,32 +128,32 @@ html.dark .filter-sidebar {
   min-width: 24px;
   height: 20px;
   padding: 0 6px;
-  border-radius: var(--tv-radius-full);
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  border-radius: var(--cu-radius-full);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   line-height: 16px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  transition: background var(--tv-dur-fast) var(--tv-ease), color var(--tv-dur-fast) var(--tv-ease);
+  transition: background var(--cu-dur-fast) var(--cu-ease), color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .category-item:hover .item-count {
-  background: var(--tv-surface-container-highest);
-  color: var(--tv-on-surface);
+  background: var(--cu-surface-container-highest);
+  color: var(--cu-on-surface);
 }
 
 .category-item.active .item-count {
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
 }
 
 .sidebar-note {
-  margin: var(--tv-sm) 10px 2px;
-  padding-top: var(--tv-sm);
-  border-top: 1px solid var(--tv-outline-variant);
-  font-size: var(--tv-fs-xs);
+  margin: var(--cu-sm) 10px 2px;
+  padding-top: var(--cu-sm);
+  border-top: 1px solid var(--cu-outline-variant);
+  font-size: var(--cu-fs-xs);
   line-height: 18px;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
 }
 </style>

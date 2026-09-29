@@ -35,67 +35,67 @@ const route = useRoute()
 <style scoped>
 .not-found-page {
   min-height: 100dvh;
-  padding-top: var(--tv-top-nav-height);
+  padding-top: var(--cu-top-nav-height);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tv-background);
-  color: var(--tv-on-surface);
+  background-color: var(--cu-background);
+  color: var(--cu-on-surface);
 }
 
 .not-found-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--tv-md);
-  padding: var(--tv-xl) var(--tv-lg);
+  gap: var(--cu-md);
+  padding: var(--cu-xl) var(--cu-lg);
   text-align: center;
 }
 
 .code {
-  font-family: var(--tv-font-mono);
-  font-size: var(--tv-fs-3xl);
+  font-family: var(--cu-font-mono);
+  font-size: var(--cu-fs-3xl);
   font-weight: 700;
-  color: var(--tv-primary);
+  color: var(--cu-primary);
   line-height: 1;
 }
 
 h1 {
-  font-size: var(--tv-fs-xl);
+  font-size: var(--cu-fs-xl);
   font-weight: 600;
 }
 
 .path {
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-sm);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-sm);
 }
 
 .path code {
-  font-family: var(--tv-font-mono);
+  font-family: var(--cu-font-mono);
   padding: 2px 6px;
-  border-radius: var(--tv-radius-sm);
-  background: var(--tv-surface-container);
+  border-radius: var(--cu-radius-sm);
+  background: var(--cu-surface-container);
 }
 
 .actions {
   display: flex;
-  gap: var(--tv-sm);
-  margin-top: var(--tv-sm);
+  gap: var(--cu-sm);
+  margin-top: var(--cu-sm);
 }
 
 .action-btn {
   padding: 0.5rem 1rem;
-  border-radius: var(--tv-radius-lg);
-  border: 1px solid var(--tv-outline);
-  background: var(--tv-surface-container-high);
-  color: var(--tv-on-surface);
+  border-radius: var(--cu-radius-lg);
+  border: 1px solid var(--cu-outline);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface);
   text-decoration: none;
-  font-size: var(--tv-fs-md);
+  font-size: var(--cu-fs-md);
 }
 
 .action-btn.primary {
-  background: var(--tv-primary);
+  background: var(--cu-primary);
   border-color: transparent;
-  color: var(--tv-on-primary);
+  color: var(--cu-on-primary);
 }
 </style>

@@ -208,7 +208,7 @@ function formatCompact(v: number): string {
 
 // 图表文字色取自主题令牌：ECharts 默认按浅色底渲染，暗色下不注入会看不清
 function chartTextColor(): string {
-  return getComputedStyle(document.documentElement).getPropertyValue('--tv-on-surface-variant').trim() || '#97a0b4'
+  return getComputedStyle(document.documentElement).getPropertyValue('--cu-on-surface-variant').trim() || '#97a0b4'
 }
 
 interface WorkbenchTheme {
@@ -602,12 +602,12 @@ onUnmounted(() => {
 <style scoped>
 .workbench-view {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: var(--tv-background);
+  background: var(--cu-background);
 }
 
 .map-container,
@@ -667,16 +667,16 @@ onUnmounted(() => {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   cursor: pointer;
 }
 
 .fold-btn:hover {
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .fold-btn svg {
-  transition: transform var(--tv-dur-fast) var(--tv-ease);
+  transition: transform var(--cu-dur-fast) var(--cu-ease);
 }
 
 .fold-btn .flip-up {
@@ -704,27 +704,27 @@ onUnmounted(() => {
 
 .theme-tab {
   padding: 6px 4px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-md);
   background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   font-family: inherit;
   white-space: nowrap;
   cursor: pointer;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
-    color var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .theme-tab:hover {
-  color: var(--tv-on-surface);
-  border-color: var(--tv-outline);
+  color: var(--cu-on-surface);
+  border-color: var(--cu-outline);
 }
 
 .theme-tab.active {
   border-color: transparent;
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
   font-weight: 600;
 }
 
@@ -762,7 +762,7 @@ onUnmounted(() => {
 }
 
 .rank-row:focus-visible {
-  outline: 2px solid var(--tv-primary);
+  outline: 2px solid var(--cu-primary);
   outline-offset: -2px;
 }
 
@@ -804,25 +804,25 @@ onUnmounted(() => {
 .mode-pill {
   flex: 1;
   padding: 5px 8px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-full);
   background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   font-family: inherit;
   cursor: pointer;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
-    color var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .mode-pill:hover {
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .mode-pill.active {
   border-color: transparent;
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
   font-weight: 600;
 }
 
@@ -842,14 +842,14 @@ onUnmounted(() => {
   gap: 6px;
   padding: 8px 10px;
   border: none;
-  border-radius: var(--tv-radius-md);
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
-  font-size: var(--tv-fs-sm);
+  border-radius: var(--cu-radius-md);
+  background: var(--cu-primary);
+  color: var(--cu-on-primary);
+  font-size: var(--cu-fs-sm);
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: transform var(--tv-dur-fast) var(--tv-ease), filter var(--tv-dur-fast) var(--tv-ease);
+  transition: transform var(--cu-dur-fast) var(--cu-ease), filter var(--cu-dur-fast) var(--cu-ease);
 }
 
 .mini-btn:active:not(:disabled) {
@@ -864,7 +864,7 @@ onUnmounted(() => {
 .export-error {
   margin: 8px 0 0;
   font-size: 12px;
-  color: var(--tv-error);
+  color: var(--cu-error);
 }
 
 /* Cesium 归属标识默认贴左下角，会被左面板压住一半；移到右下空位 */

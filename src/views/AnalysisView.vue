@@ -565,12 +565,12 @@ onUnmounted(() => {
 <style scoped>
 .analysis-view {
   position: fixed;
-  top: var(--tv-top-nav-height);
+  top: var(--cu-top-nav-height);
   left: 0;
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: var(--tv-background);
+  background: var(--cu-background);
 }
 
 .map-container,
@@ -654,8 +654,8 @@ onUnmounted(() => {
 }
 
 .country-row.active {
-  background: color-mix(in srgb, var(--tv-primary) 16%, transparent);
-  color: var(--tv-primary);
+  background: color-mix(in srgb, var(--cu-primary) 16%, transparent);
+  color: var(--cu-primary);
 }
 
 .country-name {
@@ -745,19 +745,19 @@ onUnmounted(() => {
   justify-content: center;
   gap: 6px;
   padding: 6px 10px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-md);
   background: transparent;
-  color: var(--tv-on-surface);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface);
+  font-size: var(--cu-fs-xs);
   font-family: inherit;
   cursor: pointer;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease);
 }
 
 .mini-btn:hover {
-  border-color: var(--tv-primary);
-  color: var(--tv-primary);
+  border-color: var(--cu-primary);
+  color: var(--cu-primary);
 }
 
 .btn-icon {
@@ -772,23 +772,23 @@ onUnmounted(() => {
   padding: 28px 12px;
   margin: 8px 0;
   text-align: center;
-  border: 1px dashed var(--tv-outline-variant);
-  border-radius: var(--tv-radius-lg);
+  border: 1px dashed var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
 }
 
 .empty-icon {
-  color: var(--tv-on-surface-variant);
+  color: var(--cu-on-surface-variant);
   opacity: 0.7;
 }
 
 .empty-state-title {
-  font-size: var(--tv-fs-sm);
+  font-size: var(--cu-fs-sm);
   font-weight: 600;
-  color: var(--tv-on-surface);
+  color: var(--cu-on-surface);
 }
 
 .empty-tip {
-  font-size: var(--tv-fs-xs);
+  font-size: var(--cu-fs-xs);
   opacity: 0.7;
   line-height: 1.6;
 }
@@ -809,7 +809,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 12px;
   padding: 8px 16px;
-  border-radius: var(--tv-radius-full, 999px);
+  border-radius: var(--cu-radius-full, 999px);
 }
 
 .play-btn {
@@ -818,15 +818,15 @@ onUnmounted(() => {
   gap: 6px;
   padding: 5px 14px;
   border: none;
-  border-radius: var(--tv-radius-full);
-  background: var(--tv-primary);
-  color: var(--tv-on-primary);
-  font-size: var(--tv-fs-sm);
+  border-radius: var(--cu-radius-full);
+  background: var(--cu-primary);
+  color: var(--cu-on-primary);
+  font-size: var(--cu-fs-sm);
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform var(--tv-dur-fast) var(--tv-ease), filter var(--tv-dur-fast) var(--tv-ease);
+  transition: transform var(--cu-dur-fast) var(--cu-ease), filter var(--cu-dur-fast) var(--cu-ease);
 }
 
 .play-btn:active {
@@ -877,27 +877,27 @@ onUnmounted(() => {
 
 .metric-tab {
   padding: 3px 9px;
-  border: 1px solid var(--tv-outline-variant);
-  border-radius: var(--tv-radius-full);
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-full);
   background: transparent;
-  color: var(--tv-on-surface-variant);
-  font-size: var(--tv-fs-xs);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
   font-family: inherit;
   white-space: nowrap;
   cursor: pointer;
-  transition: border-color var(--tv-dur-fast) var(--tv-ease), background var(--tv-dur-fast) var(--tv-ease),
-    color var(--tv-dur-fast) var(--tv-ease);
+  transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .metric-tab:hover {
-  color: var(--tv-on-surface);
-  border-color: var(--tv-outline);
+  color: var(--cu-on-surface);
+  border-color: var(--cu-outline);
 }
 
 .metric-tab.active {
   border-color: transparent;
-  background: var(--tv-primary-container);
-  color: var(--tv-on-primary-container);
+  background: var(--cu-primary-container);
+  color: var(--cu-on-primary-container);
   font-weight: 600;
 }
 
