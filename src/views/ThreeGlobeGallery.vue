@@ -11,30 +11,6 @@
             交互式三维地理可视化示例，覆盖弧线、多边形、轨迹与专题数据图层。
           </p>
         </div>
-        <div class="header-actions">
-          <div class="search-box">
-            <svg
-              class="search-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-              />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              v-model="searchQuery"
-              class="search-input"
-              placeholder="搜索示例..."
-              type="text"
-            >
-          </div>
-        </div>
       </header>
 
       <!-- Tags -->
@@ -115,7 +91,7 @@
         v-if="filteredExamples.length === 0"
         class="empty-state"
       >
-        未找到匹配 “{{ searchQuery }}” 的示例
+        该分类下暂无示例
       </p>
     </main>
   </div>
@@ -125,7 +101,6 @@
 import { ref, computed } from 'vue'
 import UiIcon, { type UiIconName } from '../components/UiIcon'
 
-const searchQuery = ref('')
 const activeCategory = ref('all')
 
 const categoryTags = [
@@ -192,17 +167,11 @@ function iconFor(id: string): UiIconName {
   return ID_ICONS[id] ?? 'globe'
 }
 
-const filteredExamples = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase()
-  return examples.filter(ex => {
-    const matchesSearch = !q ||
-      ex.title.toLowerCase().includes(q) ||
-      ex.desc.toLowerCase().includes(q) ||
-      ex.tags.some(t => t.toLowerCase().includes(q))
-    const matchesCategory = activeCategory.value === 'all' || ex.category === activeCategory.value
-    return matchesSearch && matchesCategory
-  })
-})
+// 文本搜索维度已随页内搜索框一并移除(2026-09-29 双搜索合并):18 条静态列表
+// 用分类 tags 浏览足够;顶栏搜索回车落 /examples 检索全库(smoke 契约钉住)
+const filteredExamples = computed(() =>
+  examples.filter(ex => activeCategory.value === 'all' || ex.category === activeCategory.value),
+)
 </script>
 
 <style scoped>
@@ -251,56 +220,14 @@ const filteredExamples = computed(() => {
   color: var(--cu-on-surface-variant);
 }
 
-.header-actions {
-  display: flex;
-  gap: var(--cu-sm);
-  align-items: center;
-}
 
-.search-box {
-  position: relative;
-  width: 100%;
-}
 
 @media (min-width: 640px) {
-  .search-box {
-    width: 264px;
-  }
 }
 
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  color: var(--cu-on-surface-variant);
-  pointer-events: none;
-}
 
-.search-input {
-  width: 100%;
-  padding: 8px 12px 8px 38px;
-  background: var(--cu-surface-container-low);
-  border: 1px solid var(--cu-outline-variant);
-  border-radius: var(--cu-radius-lg);
-  font-size: var(--cu-fs-md);
-  line-height: 22px;
-  font-family: inherit;
-  color: var(--cu-on-surface);
-  outline: none;
-  transition: border-color var(--cu-dur) var(--cu-ease), box-shadow var(--cu-dur) var(--cu-ease);
-}
 
-.search-input::placeholder {
-  color: var(--cu-on-surface-variant);
-}
 
-.search-input:focus {
-  border-color: var(--cu-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cu-primary) 16%, transparent);
-}
 
 .tags-row {
   display: flex;
