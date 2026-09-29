@@ -37,4 +37,13 @@ test.describe('设计套件自检页', () => {
     await expect(page.getByTestId('kit-retry-count')).toHaveText('重试次数:1')
     await expect(page.getByTestId('kit-skeleton').locator('.cu-skel__line').first()).toBeVisible()
   })
+
+  test('CuTooltip:悬停出现气泡,支持快捷键标注', async ({ page }) => {
+    await page.goto('/design-kit')
+    const trigger = page.getByTestId('kit-tip-trigger')
+    await trigger.hover()
+    await expect(page.getByTestId('kit-tip-bubble')).toBeVisible()
+    await expect(page.getByTestId('kit-tip-bubble').getByText('截图')).toBeVisible()
+    await expect(page.getByTestId('kit-tip-bubble').locator('.cu-tip__kbd')).toHaveText('S')
+  })
 })

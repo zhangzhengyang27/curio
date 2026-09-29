@@ -94,6 +94,28 @@
         class="kit-retry-log"
       >重试次数:{{ retryCount }}</p>
     </section>
+    <section class="kit-section">
+      <h2>CuTooltip</h2>
+      <div class="kit-row kit-align">
+        <CuTooltip
+          label="截图"
+          kbd="S"
+          placement="top"
+          testdata="kit-tip-bubble"
+        >
+          <CuButton
+            variant="icon"
+            data-testid="kit-tip-trigger"
+          >
+            <UiIcon
+              name="camera"
+              :size="18"
+            />
+          </CuButton>
+        </CuTooltip>
+        <span class="kit-tip-note">悬停 300ms 后出现(防扫过乱闪)</span>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -105,6 +127,7 @@ import UiIcon from '../components/UiIcon'
 import EmptyState from '../components/ui/EmptyState.vue'
 import ErrorState from '../components/ui/ErrorState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+import CuTooltip from '../components/ui/CuTooltip.vue'
 
 const retryCount = ref(0)
 </script>
@@ -129,6 +152,7 @@ const retryCount = ref(0)
 .kit-align { align-items: center; }
 .kit-state { width: 260px; }
 .kit-retry-log { margin-top: var(--cu-md); color: var(--cu-on-surface-variant); font-size: var(--cu-fs-sm); }
+.kit-tip-note { color: var(--cu-on-surface-variant); font-size: var(--cu-fs-sm); }
 .kit-box {
   min-width: 150px;
   min-height: 88px;
