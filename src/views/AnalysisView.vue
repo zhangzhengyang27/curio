@@ -702,6 +702,10 @@ onUnmounted(() => {
   display: block;
 }
 
+.compare-toggle:hover {
+  opacity: 0.75;
+}
+
 .metrics {
   margin: 0;
 }
@@ -886,9 +890,10 @@ onUnmounted(() => {
 }
 
 .metric-tabs {
-  /* 3 列网格:消灭 flex-wrap 造成的「碳排放」孤行(M0 审计 P1) */
+  /* 2×2 网格:4 项指标在 230px 面板里 3 列仍是 3+1 孤行(终审 Important #2),
+     2 列每格 ~95px 绰绰有余 */
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 4px;
 }
 

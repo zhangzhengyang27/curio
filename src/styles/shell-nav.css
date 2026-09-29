@@ -133,7 +133,8 @@
 }
 
 .app-nav .nav-search .search-input::placeholder {
-  color: var(--cu-outline);
+  /* 不用 --cu-outline:暗色实测 1.91:1(M3a 终审 Important #1),详见 scripts/verify-contrast.mjs 的 placeholder 扫描 */
+  color: var(--cu-on-surface-variant);
 }
 
 .app-nav .nav-actions {

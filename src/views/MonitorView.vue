@@ -638,7 +638,6 @@ onUnmounted(() => {
   font-size: var(--cu-fs-lg);
   margin-left: 5px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
   color: var(--cu-on-surface);
   font-variant-numeric: tabular-nums;
 }

@@ -39,10 +39,11 @@ withDefaults(defineProps<{
   background: var(--cu-surface);
 }
 
-.cu-glass--compact { padding: var(--cu-pad-compact); }
-.cu-glass--cozy { padding: var(--cu-pad); }
-.cu-glass--loose { padding: var(--cu-pad-loose); }
-.cu-glass--none { padding: 0; }
+/* 密度类同样零特异性:页面自管 padding 时显式传 density 也不会打架 */
+:where(.cu-glass--compact) { padding: var(--cu-pad-compact); }
+:where(.cu-glass--cozy) { padding: var(--cu-pad); }
+:where(.cu-glass--loose) { padding: var(--cu-pad-loose); }
+:where(.cu-glass--none) { padding: 0; }
 
 .cu-glass--interactive {
   cursor: pointer;

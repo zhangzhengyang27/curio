@@ -17,6 +17,9 @@
  *   2. 硬编码色值棘轮（ratchet）：逐文件统计绕过 --cu-* 令牌的字面量数量，
  *      只允许比基线更少，不允许更多。存量在 P1-1 逐批改，改完 --update 收紧
  *
+ * 分工(2026-09-29 M3a 起)：本脚本管「组件 CSS 的字面量」；theme.css 令牌值本身的
+ * 关键文字对与 ::placeholder 用法由 scripts/verify-contrast.mjs 把守,两者都在 verify/CI 里。
+ *
  * 用法：
  *   node scripts/verify-theme-tokens.mjs            # 校验（CI 使用）
  *   node scripts/verify-theme-tokens.mjs --report    # 只打印清单与计数，不比对基线

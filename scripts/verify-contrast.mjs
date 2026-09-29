@@ -19,19 +19,26 @@ import { fileURLToPath } from 'node:url'
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..')
 const CSS = readFileSync(join(ROOT, 'src', 'styles', 'theme.css'), 'utf8')
 
-/** 提取某个选择器块内的 --cu-* 令牌表 */
+/** 提取某类选择器块内的 --cu-* 令牌表;同名令牌多块时后者覆盖前者 */
 function tokensOf(selectorRe) {
-  const m = selectorRe.exec(CSS)
-  if (!m) throw new Error(`theme.css 里找不到 ${selectorRe} 块`)
   const map = {}
-  for (const [, name, value] of m[1].matchAll(/--cu-([a-z0-9-]+)\s*:\s*([^;]+);/g)) {
-    map[name] = value.trim()
+  const blocks = [...CSS.matchAll(new RegExp(selectorRe.source, 'g'))]
+  if (!blocks.length) throw new Error(`theme.css 里找不到 ${selectorRe} 块`)
+  for (const m of blocks) {
+    for (const [, name, value] of m[1].matchAll(/--cu-([a-z0-9-]+)\s*:\s*([^;]+);/g)) {
+      map[name] = value.trim()
+    }
   }
   return map
 }
 
 const light = tokensOf(/:root\s*\{([^}]*)\}/)
 const dark = { ...light, ...tokensOf(/html\.dark\s*\{([^}]*)\}/) }
+// 假绿防护:html.dark 块将来被拆散/挪走时,覆写数会骤降——直接失败而不是带着残缺的暗色表继续绿
+const darkOverrides = Object.keys(dark).filter(k => dark[k] !== light[k])
+if (darkOverrides.length < 20) {
+  throw new Error(`html.dark 覆写令牌仅 ${darkOverrides.length} 个(预期 ≥20)——theme.css 结构变了?先修本脚本的解析`)
+}
 
 function parseColor(raw) {
   const t = raw.trim()
@@ -111,8 +118,54 @@ for (const [theme, fgName, bgName] of DATA_PAIRS) {
   console.log(`${ratio >= 3 ? 'PASS' : 'WARN'}  ${ratio.toFixed(2)}:1  [${theme}] ${fgName} on ${bgName} — 图形件 3:1`)
 }
 
+// ── placeholder 用法扫描 ──
+// placeholder 是对比度事故惯犯(M2 终审 CommandPalette 1.9:1、M3a 终审 SearchBox/顶栏搜索
+// 仍是 --cu-outline 1.91:1——令牌对清单永远查不到「用法」,必须查用法本身):
+// 所有 ::placeholder 的 color 只允许 on-surface / on-surface-variant 令牌,禁止字面量。
+import { readdirSync, statSync } from 'node:fs'
+import { relative as relPath } from 'node:path'
+
+const PLACEHOLDER_ALLOWED = new Set(['on-surface', 'on-surface-variant'])
+const SKIP = [
+  join('src', 'examples', 'components'),
+  join('src', 'examples', 'jsm-compat'),
+  join('src', 'examples', 'three-build-compat'),
+  join('src', 'examples', 'registry'),
+  join('src', 'styles', 'theme.css'),
+  join('src', 'styles', 'code-highlight.css'),
+]
+
+function* walkSrc(dir) {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name)
+    const rel = relPath(ROOT, full)
+    if (SKIP.some(s => rel === s || rel.startsWith(s + '\\') || rel.startsWith(s + '/'))) continue
+    const st = statSync(full)
+    if (st.isDirectory()) yield* walkSrc(full)
+    else if (name.endsWith('.vue') || name.endsWith('.css')) yield rel
+  }
+}
+
+const PH_RULE = /::placeholder\s*\{[^}]*\}/g
+const COLOR_DECL = /color\s*:\s*([^;]+)/
+
+for (const rel of walkSrc(join(ROOT, 'src'))) {
+  const text = readFileSync(join(ROOT, rel), 'utf8')
+  for (const rule of text.match(PH_RULE) ?? []) {
+    const decl = COLOR_DECL.exec(rule)
+    if (!decl) continue
+    const value = decl[1].trim()
+    const varName = /^var\(--cu-([a-z0-9-]+)/.exec(value)
+    const ok = varName ? PLACEHOLDER_ALLOWED.has(varName[1]) : false
+    if (!ok) {
+      failures++
+      console.log(`FAIL  placeholder 用法违规  ${rel} — color: ${value}(只允许 var(--cu-on-surface[-variant]))`)
+    }
+  }
+}
+
 if (failures) {
-  console.error(`\n[verify-contrast] ${failures} 对文字对比度 < 4.5:1 —— 调整 theme.css 对应令牌值,不要改本清单来让失败消失`)
+  console.error(`\n[verify-contrast] ${failures} 处失败 —— 调整 theme.css 对应令牌值或用法,不要改本清单来让失败消失`)
   process.exit(1)
 }
-console.log(`\n[verify-contrast] OK —— ${TEXT_PAIRS.length} 对关键文字对全部 ≥ 4.5:1`)
+console.log(`\n[verify-contrast] OK —— ${TEXT_PAIRS.length} 对关键文字对全部 ≥ 4.5:1,placeholder 用法全部合规`)

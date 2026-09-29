@@ -168,7 +168,9 @@ onUnmounted(() => {
 }
 
 .search-input::placeholder {
-  color: var(--cu-outline);
+  /* 不用 --cu-outline:暗色 lowest 表面实测 1.91:1(M3a 终审 Important #1);
+     on-surface-variant 实测暗 7.95:1 / 亮 7.89:1 */
+  color: var(--cu-on-surface-variant);
 }
 
 .suggestions {

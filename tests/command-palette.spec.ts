@@ -36,15 +36,20 @@ test.describe('首页命令面板', () => {
     await expect(page.getByTestId('command-palette')).toHaveCount(0)
   })
 
-  test('焦点移出输入框后 Esc 仍能关闭,dialog 为 aria-modal', async ({ page }) => {
+  test('焦点移出输入框后 Esc 仍能关闭,dialog 为 aria-modal,Tab 被圈闭在面板内', async ({ page }) => {
     await page.goto('/')
     await expect(page.locator('.earth-view')).toBeVisible()
     await page.keyboard.press('ControlOrMeta+k')
     const palette = page.getByTestId('command-palette')
     await expect(palette).toBeVisible()
     await expect(palette.getByRole('dialog')).toHaveAttribute('aria-modal', 'true')
-    // Tab 把焦点移到结果项上,Escape 必须仍能关窗(mask 层兜底,终审 Minor #2)
-    await page.keyboard.press('Tab')
+    // 连按 30 次 Tab(超过面板内的可聚焦元素数):无圈闭时焦点必然逃出面板
+    for (let i = 0; i < 30; i++) await page.keyboard.press('Tab')
+    const inside = await page.evaluate(
+      () => !!document.activeElement?.closest('[data-testid="command-palette"]'),
+    )
+    expect(inside, '连按 Tab 后焦点仍在面板内').toBe(true)
+    // 焦点在结果项上时 Escape 必须仍能关窗
     await page.keyboard.press('Escape')
     await expect(palette).toBeHidden()
   })

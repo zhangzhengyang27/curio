@@ -2,10 +2,12 @@
   <Teleport to="body">
     <div
       v-if="open"
+      ref="maskRef"
       class="cu-palette-mask"
       data-testid="command-palette"
       @mousedown.self="close"
       @keydown.escape="close"
+      @keydown.tab="trapTab"
     >
       <div
         class="cu-palette"
@@ -82,7 +84,8 @@ const open = ref(false)
 const query = ref('')
 const active = ref(0)
 const inputRef = ref<HTMLInputElement | null>(null)
-// 关闭时把焦点还给唤起者(dialog a11y:终审 Minor #2)
+// 关闭时把焦点还给唤起者(dialog a11y:终审 Minor #2)。
+// 已知边界:执行会卸载触发元素的命令(如分屏)时归还目标已销毁,焦点落 body——无害,不追。
 let lastActive: HTMLElement | null = null
 
 const flat = computed(() =>
@@ -133,6 +136,25 @@ function executeActive() {
 
 function close() {
   open.value = false
+}
+
+/** 焦点圈闭:Tab/Shift+Tab 在面板内回绕。aria-modal 声称了模态,焦点就必须真的出不去
+ *  (终审 Important #3:焦点逃逸后 mask 收不到 Esc,面板会卡死在屏上) */
+const maskRef = ref<HTMLDivElement | null>(null)
+
+function trapTab(e: KeyboardEvent) {
+  const focusables = maskRef.value?.querySelectorAll<HTMLElement>('input, button:not([disabled])')
+  if (!focusables?.length) return
+  const first = focusables[0]!
+  const last = focusables[focusables.length - 1]!
+  const current = document.activeElement
+  if (e.shiftKey && (current === first || !maskRef.value?.contains(current))) {
+    e.preventDefault()
+    last.focus()
+  } else if (!e.shiftKey && current === last) {
+    e.preventDefault()
+    first.focus()
+  }
 }
 
 defineExpose({

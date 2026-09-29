@@ -200,7 +200,7 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 
 // ── 分类收纳(M0 审计 P1:46 个 chip 平铺无层级)──
 // 归组映射全量显式:新增示例必须落组,不落组的会被归组断言拦下(见 groupedTabs 后的校验)
-type GroupId = "basics" | "overlays" | "draw" | "routes" | "viz" | "search";
+type GroupId = "basics" | "overlays" | "draw" | "routes" | "viz" | "search" | "others";
 
 const GROUP_META: Record<GroupId, string> = {
   basics: "基础与地图模式",
@@ -209,6 +209,7 @@ const GROUP_META: Record<GroupId, string> = {
   routes: "路径与动画",
   viz: "可视化与热力",
   search: "检索与编码",
+  others: "其他",
 };
 
 const GROUP_ORDER: GroupId[] = ["basics", "overlays", "draw", "routes", "viz", "search"];
@@ -264,12 +265,19 @@ const GROUP_OF: Record<string, GroupId> = {
 
 const groupedTabs = computed(() => {
   const ungrouped = tabs.filter((t) => !GROUP_OF[t.id]);
-  if (ungrouped.length) throw new Error(`bmap 示例未归组:${ungrouped.map((t) => t.id).join(", ")}`);
-  return GROUP_ORDER.map((id) => ({
+  // 开发期直接抛错逼着归组;生产回落到「其他」组兜底,不让整页白屏(终审 Minor #6)
+  if (ungrouped.length && import.meta.env.DEV) {
+    throw new Error(`bmap 示例未归组:${ungrouped.map((t) => t.id).join(", ")}`);
+  }
+  const groups = GROUP_ORDER.map((id) => ({
     id,
     label: GROUP_META[id],
     tabs: tabs.filter((t) => GROUP_OF[t.id] === id),
   }));
+  if (ungrouped.length) {
+    groups.push({ id: "others", label: GROUP_META.others, tabs: ungrouped });
+  }
+  return groups;
 });
 
 const openGroups = ref(new Set<string>(["basics"]));
