@@ -46,4 +46,13 @@ test.describe('设计套件自检页', () => {
     await expect(page.getByTestId('kit-tip-bubble').getByText('截图')).toBeVisible()
     await expect(page.getByTestId('kit-tip-bubble').locator('.cu-tip__kbd')).toHaveText('S')
   })
+
+  test('PageHeader:渲染标题、描述、计数与 actions 插槽', async ({ page }) => {
+    await page.goto('/design-kit')
+    const header = page.getByTestId('kit-page-header')
+    await expect(header.getByRole('heading', { name: '示例页头' })).toBeVisible()
+    await expect(header.getByText('这是页头描述文案')).toBeVisible()
+    await expect(header.locator('.cu-num')).toHaveText('27')
+    await expect(header.getByRole('button', { name: '页头动作' })).toBeVisible()
+  })
 })

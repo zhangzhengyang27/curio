@@ -4,16 +4,15 @@
     data-testid="tools-gallery"
   >
     <main class="gallery-main">
-      <header class="gallery-header">
-        <div class="header-text">
-          <h1 class="page-title">
-            地图工具箱
-          </h1>
-          <p class="page-subtitle">
-            基于 Cesium 的地图工具与空间分析示例，共 {{ TOOLS_EXAMPLES.length }} 个，点击卡片进入交互演示。
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="地图工具箱"
+        :count="TOOLS_EXAMPLES.length"
+        count-label="个工具，点击卡片进入交互演示"
+      >
+        <template #description>
+          基于 Cesium 的地图工具与空间分析示例。
+        </template>
+      </PageHeader>
 
       <div class="card-grid">
         <router-link
@@ -57,6 +56,7 @@
 
 <script setup lang="ts">
 import UiIcon, { type UiIconName } from '../components/UiIcon'
+import PageHeader from '../components/ui/PageHeader.vue'
 import { TOOLS_EXAMPLES } from './tools-examples/index'
 
 // 卡头不再使用彩虹渐变：统一为「图标芯片 + 主题色微光」，按 slug 选用语义图标
@@ -102,21 +102,6 @@ function iconFor(slug: string): UiIconName {
   max-width: 1160px;
   margin: 0 auto;
   padding: 48px 24px 64px;
-}
-
-.page-title {
-  margin: 0 0 8px;
-  font-size: var(--cu-fs-3xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--cu-on-surface);
-}
-
-.page-subtitle {
-  margin: 0 0 36px;
-  font-size: var(--cu-fs-md);
-  color: var(--cu-on-surface-variant);
 }
 
 .card-grid {

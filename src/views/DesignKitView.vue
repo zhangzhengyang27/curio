@@ -116,6 +116,25 @@
         <span class="kit-tip-note">悬停 300ms 后出现(防扫过乱闪)</span>
       </div>
     </section>
+    <section class="kit-section">
+      <h2>PageHeader</h2>
+      <GlassPanel density="cozy">
+        <PageHeader
+          title="示例页头"
+          description="这是页头描述文案"
+          :count="27"
+          count-label="个条目"
+          data-testid="kit-page-header"
+        >
+          <template #actions>
+            <CuButton
+              variant="primary"
+              size="sm"
+            >页头动作</CuButton>
+          </template>
+        </PageHeader>
+      </GlassPanel>
+    </section>
   </div>
 </template>
 
@@ -128,6 +147,7 @@ import EmptyState from '../components/ui/EmptyState.vue'
 import ErrorState from '../components/ui/ErrorState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
 import CuTooltip from '../components/ui/CuTooltip.vue'
+import PageHeader from '../components/ui/PageHeader.vue'
 
 const retryCount = ref(0)
 </script>
