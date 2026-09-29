@@ -81,6 +81,8 @@ const ICONS = {
   'chevron-down': '<path d="M6 9l6 6 6-6"/>',
   search:
     '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>',
+  alert:
+    '<path d="M12 3.5 21.5 20h-19L12 3.5z"/><path d="M12 10v4.5M12 17.5h.01"/>',
 } as const
 
 export type UiIconName = keyof typeof ICONS

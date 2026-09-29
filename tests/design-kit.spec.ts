@@ -29,4 +29,12 @@ test.describe('设计套件自检页', () => {
     await expect(page.locator('.cu-btn--primary').first()).toBeVisible()
     await expect(page.locator('.cu-btn--ghost').first()).toBeVisible()
   })
+
+  test('状态三件套:空态带标题,错误态可触发 retry,骨架屏可见', async ({ page }) => {
+    await page.goto('/design-kit')
+    await expect(page.getByTestId('kit-empty').getByText('暂无数据')).toBeVisible()
+    await page.getByTestId('kit-error').getByRole('button', { name: '重试' }).click()
+    await expect(page.getByTestId('kit-retry-count')).toHaveText('重试次数:1')
+    await expect(page.getByTestId('kit-skeleton').locator('.cu-skel__line').first()).toBeVisible()
+  })
 })

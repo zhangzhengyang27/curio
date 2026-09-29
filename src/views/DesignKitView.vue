@@ -50,13 +50,63 @@
         <CuButton disabled>禁用</CuButton>
       </div>
     </section>
+    <section class="kit-section">
+      <h2>状态三件套</h2>
+      <div class="kit-row">
+        <GlassPanel
+          data-testid="kit-empty"
+          density="cozy"
+          class="kit-state"
+        >
+          <EmptyState
+            title="暂无数据"
+            description="调整筛选条件或导入一份试试"
+          >
+            <template #action>
+              <CuButton
+                variant="primary"
+                size="sm"
+              >导入数据</CuButton>
+            </template>
+          </EmptyState>
+        </GlassPanel>
+        <GlassPanel
+          data-testid="kit-error"
+          density="cozy"
+          class="kit-state"
+        >
+          <ErrorState
+            title="数据加载失败"
+            description="网络抖了,重试一下"
+            @retry="retryCount++"
+          />
+        </GlassPanel>
+        <GlassPanel
+          data-testid="kit-skeleton"
+          density="cozy"
+          class="kit-state"
+        >
+          <LoadingSkeleton :lines="4" />
+        </GlassPanel>
+      </div>
+      <p
+        data-testid="kit-retry-count"
+        class="kit-retry-log"
+      >重试次数:{{ retryCount }}</p>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import GlassPanel from '../components/ui/GlassPanel.vue'
 import CuButton from '../components/ui/CuButton.vue'
 import UiIcon from '../components/UiIcon'
+import EmptyState from '../components/ui/EmptyState.vue'
+import ErrorState from '../components/ui/ErrorState.vue'
+import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+
+const retryCount = ref(0)
 </script>
 
 <style scoped>
@@ -77,6 +127,8 @@ import UiIcon from '../components/UiIcon'
 }
 .kit-row { display: flex; gap: var(--cu-md); flex-wrap: wrap; }
 .kit-align { align-items: center; }
+.kit-state { width: 260px; }
+.kit-retry-log { margin-top: var(--cu-md); color: var(--cu-on-surface-variant); font-size: var(--cu-fs-sm); }
 .kit-box {
   min-width: 150px;
   min-height: 88px;
