@@ -131,6 +131,11 @@
       style="display:none"
       @change="handleFileImport"
     >
+
+    <CommandPalette
+      ref="commandPaletteRef"
+      :groups="paletteGroups"
+    />
   </div>
 </template>
 
@@ -155,6 +160,8 @@ import { useTimelineStore } from '../stores/useTimelineStore'
 import type { TourRouteWithDuration } from '../three/tours/routes'
 import UiIcon, { type UiIconName } from '../components/UiIcon'
 import { useInteractionStore } from '../stores/useInteractionStore'
+import CommandPalette from '../components/CommandPalette.vue'
+import { type CommandItem } from '../composables/commandPaletteCore'
 
 const earthStore = useEarthStore()
 const layerStore = useLayerStore()
@@ -163,6 +170,44 @@ const interactionStore = useInteractionStore()
 const earthCanvasRef = ref<InstanceType<typeof EarthCanvas> | null>(null)
 const splitMode = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
+
+// ── 命令面板(仅首页挂载,spec 决策点 2)──
+const commandPaletteRef = ref<InstanceType<typeof CommandPalette> | null>(null)
+
+const paletteGroups = computed<Array<{ name: string; items: CommandItem[] }>>(() => [
+  {
+    name: '地点',
+    items: Object.entries(earthStore.searchIndex).map(([name, d]) => ({
+      key: `地点:${name}`,
+      group: '地点',
+      label: name,
+      hint: `${d.lon.toFixed(0)}, ${d.lat.toFixed(0)}`,
+      run: () => earthCanvasRef.value?.flyTo(d.lon, d.lat),
+    })),
+  },
+  {
+    name: '图层',
+    items: layerList.value.map(l => ({
+      key: `图层:${l.id}`,
+      group: '图层',
+      label: l.name,
+      hint: l.visible ? '显示中' : '已隐藏',
+      run: () => handleLayerToggle(l.id, !l.visible),
+    })),
+  },
+  {
+    name: '工具',
+    items: [
+      { key: '工具:自动旋转', group: '工具', label: '自动旋转', hint: 'Space', run: () => { earthStore.isRotating = !earthStore.isRotating } },
+      { key: '工具:截图', group: '工具', label: '截图', hint: 'S', run: handleScreenshot },
+      { key: '工具:夜间模式', group: '工具', label: '夜间模式', hint: 'N', run: handleNightToggle },
+      { key: '工具:云层', group: '工具', label: '云层', run: handleCloudToggle },
+      { key: '工具:风暴', group: '工具', label: '风暴', run: handleStorm },
+      { key: '工具:分屏对比', group: '工具', label: '分屏对比', run: handleSplitScreen },
+      { key: '工具:数据巡游', group: '工具', label: '数据巡游', run: openTourPicker },
+    ],
+  },
+])
 
 const vizModes: Array<{ key: string; label: string; icon?: UiIconName }> = [
   { key: 'gdp', label: 'GDP', icon: 'banknote' },
@@ -243,12 +288,20 @@ function handleSplitScreen() {
 }
 
 function handleKeydown(e: KeyboardEvent) {
+  // ⌘K/Ctrl+K 在输入框聚焦时也必须可用(命令面板的标准唤醒方式),
+  // 所以放在 INPUT/SELECT 守卫之前
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    commandPaletteRef.value?.open()
+    return
+  }
   if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'SELECT') return
   // 巡游界面打开期间全局快捷键整体让位（空格/相机类按键归播放器管，
   // 且 document 先于 window 收到事件，播放器侧 preventDefault 拦不住这里）
   if (tourUIVisible.value) return
   switch (e.key.toLowerCase()) {
     case ' ': e.preventDefault(); earthStore.isRotating = !earthStore.isRotating; break
+    case '/': e.preventDefault(); commandPaletteRef.value?.open(); break
     case 's': handleScreenshot(); break
     case 'c': earthStore.compareCountries = []; break
     case 'r': earthCanvasRef.value?.flyTo(0, 20); break
