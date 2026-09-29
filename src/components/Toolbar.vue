@@ -1,27 +1,43 @@
 <template>
   <div class="toolbar">
-    <button
-      v-for="tool in tools"
-      :key="tool.key"
-      class="tool-btn"
-      :class="{ active: tool.active }"
-      :title="tool.title"
-      @click="tool.action"
+    <template
+      v-for="(group, gi) in toolGroups"
+      :key="group.key"
     >
-      <!-- eslint-disable vue/no-v-html -- tool.icon 来自组件内静态 SVG 常量表，非外部输入 -->
       <span
-        class="tool-icon"
-        v-html="tool.icon"
+        v-if="gi > 0"
+        class="toolbar-sep"
+        aria-hidden="true"
       />
-      <!-- eslint-enable vue/no-v-html -->
-      <span class="tool-tooltip">{{ tool.title }}</span>
-    </button>
+      <CuTooltip
+        v-for="tool in group.tools"
+        :key="tool.key"
+        :label="tool.title"
+        :kbd="tool.kbd"
+        placement="left"
+      >
+        <button
+          class="tool-btn"
+          :class="{ active: tool.active }"
+          :aria-label="tool.title"
+          @click="tool.action"
+        >
+          <!-- eslint-disable vue/no-v-html -- tool.icon 来自组件内静态 SVG 常量表,非外部输入 -->
+          <span
+            class="tool-icon"
+            v-html="tool.icon"
+          />
+          <!-- eslint-enable vue/no-v-html -->
+        </button>
+      </CuTooltip>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useEarthStore } from '../stores/useEarthStore'
+import CuTooltip from './ui/CuTooltip.vue'
 
 const props = defineProps({
   onScreenshot: Function,
@@ -85,19 +101,54 @@ function handleRealisticEarthToggle() {
 
 // 必须是 computed：写成普通数组的话 active/title 只在 setup 时求值一次，
 // 实测点「云层」「自动旋转」后按钮状态毫无变化，11 个开关全都不反馈开合状态。
-const tools = computed(() => [
-  { key: 'tour', title: '数据巡游', icon: icons.tour, action: () => props.onTour?.() },
-  { key: 'screenshot', title: '截图', icon: icons.screenshot, action: () => props.onScreenshot?.() },
-  { key: 'rotate', title: '自动旋转', icon: icons.rotate, action: toggleRotation, active: earthStore.isRotating },
-  { key: 'cloud', title: '云层', icon: icons.cloud, action: handleCloudToggle, active: cloudActive.value },
-  // 夜间模式状态取自 store：快捷键 n 改的是同一份，按钮不能另存一份
-  { key: 'night', title: '夜间模式', icon: icons.night, action: () => props.onNightToggle?.(), active: earthStore.nightMode },
-  { key: 'storm', title: '风暴', icon: icons.storm, action: () => props.onStorm?.() },
-  { key: 'terrain', title: '地形', icon: icons.terrain, action: handleTerrainToggle, active: terrainActive.value },
-  { key: 'split', title: '分屏对比', icon: icons.split, action: () => props.onSplitScreen?.() },
-  { key: 'record', title: recording.value ? '停止录制' : '录制 GIF', icon: icons.record, action: handleRecordGif, active: recording.value },
-  { key: 'bloom', title: '辉光', icon: icons.bloom, action: handleBloomToggle, active: bloomActive.value },
-  { key: 'realistic', title: '真实地球', icon: icons.realistic, action: handleRealisticEarthToggle, active: realisticActive.value }
+// M0 审计后按「视图 / 效果 / 截图 / 巡游」四组重排(spec §6.2),分隔线隔开。
+interface ToolItem {
+  key: string
+  title: string
+  icon: string
+  action: () => void
+  active?: boolean
+  /** 既有全局快捷键才标 kbd:空格=旋转、S=截图、N=夜间(spec §6.2) */
+  kbd?: string
+}
+
+const toolGroups = computed<Array<{ key: string; label: string; tools: ToolItem[] }>>(() => [
+  {
+    key: 'view',
+    label: '视图',
+    tools: [
+      { key: 'rotate', title: '自动旋转', icon: icons.rotate, action: toggleRotation, active: earthStore.isRotating, kbd: 'Space' },
+      { key: 'terrain', title: '地形', icon: icons.terrain, action: handleTerrainToggle, active: terrainActive.value },
+      { key: 'split', title: '分屏对比', icon: icons.split, action: () => props.onSplitScreen?.() },
+      { key: 'realistic', title: '真实地球', icon: icons.realistic, action: handleRealisticEarthToggle, active: realisticActive.value },
+    ],
+  },
+  {
+    key: 'effect',
+    label: '效果',
+    tools: [
+      { key: 'cloud', title: '云层', icon: icons.cloud, action: handleCloudToggle, active: cloudActive.value },
+      // 夜间模式状态取自 store：快捷键 n 改的是同一份，按钮不能另存一份
+      { key: 'night', title: '夜间模式', icon: icons.night, action: () => props.onNightToggle?.(), active: earthStore.nightMode, kbd: 'N' },
+      { key: 'storm', title: '风暴', icon: icons.storm, action: () => props.onStorm?.() },
+      { key: 'bloom', title: '辉光', icon: icons.bloom, action: handleBloomToggle, active: bloomActive.value },
+    ],
+  },
+  {
+    key: 'capture',
+    label: '截图',
+    tools: [
+      { key: 'screenshot', title: '截图', icon: icons.screenshot, action: () => props.onScreenshot?.(), kbd: 'S' },
+      { key: 'record', title: recording.value ? '停止录制' : '录制 GIF', icon: icons.record, action: handleRecordGif, active: recording.value },
+    ],
+  },
+  {
+    key: 'tour',
+    label: '巡游',
+    tools: [
+      { key: 'tour', title: '数据巡游', icon: icons.tour, action: () => props.onTour?.() },
+    ],
+  },
 ])
 </script>
 
@@ -121,7 +172,9 @@ const tools = computed(() => [
   background: transparent;
   color: var(--cu-on-surface-variant);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .tool-btn:hover {
@@ -147,25 +200,10 @@ const tools = computed(() => [
   height: 100%;
 }
 
-.tool-tooltip {
-  position: absolute;
-  right: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--cu-inverse-surface);
-  color: var(--cu-inverse-on-surface);
-  padding: 4px 10px;
-  border-radius: var(--cu-radius-md);
-  font-size: 11px;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.tool-btn:hover .tool-tooltip {
-  opacity: 1;
+.toolbar-sep {
+  width: 24px;
+  height: 1px;
+  background: var(--cu-outline-variant);
+  margin: var(--cu-xs) 0;
 }
 </style>

@@ -54,7 +54,7 @@ test.describe('首页地球 · 双屏对比', () => {
       .poll(() => page.evaluate(() => document.querySelector('.earth-canvas')?.__vueParentComponent?.exposed?.getRenderer()?.info?.render?.frame ?? 0), { timeout: 60_000 })
       .toBeGreaterThan(0)
 
-    await page.locator('.tool-btn').filter({ hasText: '分屏对比' }).evaluate((el) => el.click())
+    await page.locator('.tool-btn[aria-label="分屏对比"]').evaluate((el) => el.click())
     await expect(page.locator('.earth-container')).toHaveCount(2)
     await expect
       .poll(() => page.evaluate(() => document.querySelectorAll('.earth-container canvas').length), { timeout: 60_000 })
@@ -92,7 +92,7 @@ test.describe('首页地球 · 双屏对比', () => {
     test.slow()
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    await page.locator('.tool-btn').filter({ hasText: '分屏对比' }).evaluate((el) => el.click())
+    await page.locator('.tool-btn[aria-label="分屏对比"]').evaluate((el) => el.click())
     await expect(page.locator('.earth-container')).toHaveCount(2)
     await expect
       .poll(() => page.evaluate(() => document.querySelectorAll('.earth-container canvas').length), { timeout: 60_000 })
@@ -139,7 +139,7 @@ test.describe('首页地球 · 双屏对比', () => {
     test.slow()
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    await page.locator('.tool-btn').filter({ hasText: '分屏对比' }).evaluate((el) => el.click())
+    await page.locator('.tool-btn[aria-label="分屏对比"]').evaluate((el) => el.click())
     await expect(page.locator('.earth-container')).toHaveCount(2)
 
     await page.locator('.ctrl-btn').filter({ hasText: '返回' }).evaluate((el) => el.click())

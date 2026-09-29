@@ -49,7 +49,7 @@ async function sceneInkRatio(page) {
   }, b64)
 }
 
-const bloomBtn = (page) => page.locator('.tool-btn').filter({ hasText: '辉光' })
+const bloomBtn = (page) => page.locator('.tool-btn[aria-label="辉光"]')
 
 test.beforeEach(async ({ page }) => {
   await mockTianditu(page)

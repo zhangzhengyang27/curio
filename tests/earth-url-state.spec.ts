@@ -11,7 +11,7 @@ import { mockTianditu } from './helpers/tiles'
  *    从 carbon 切回 gdp 后地址仍留着 #carbon，同一个链接再打开落在别的模式。
  */
 
-const nightBtn = (page) => page.locator('.tool-btn').filter({ hasText: '夜间模式' })
+const nightBtn = (page) => page.locator('.tool-btn[aria-label="夜间模式"]')
 
 test.beforeEach(async ({ page }) => {
   await mockTianditu(page)

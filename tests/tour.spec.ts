@@ -8,14 +8,15 @@ import { mockTianditu } from './helpers/tiles'
  * 暂停/播放切换 → Esc 退出清理 → 分享链接直达续播。
  *
  * 选择器取自真实组件：
- *   [title="数据巡游"]                        → src/components/Toolbar.vue
+ *   [aria-label="数据巡游"]                   → src/components/Toolbar.vue(2026-09 工具条
+ *                                              改造后原生 title 由 aria-label + CuTooltip 承担)
  *   [data-testid="tour-picker|tour-bar|…"]    → src/components/TourOverlay.vue
  *
  * 断言聚焦「字幕与 URL 状态机」，不依赖 WebGL 场景内容
  * （headless + swiftshader 下场景内容不稳定，字幕/URL 才是巡游的骨架）。
  */
 
-const TOUR_BTN = '[title="数据巡游"]'
+const TOUR_BTN = '[aria-label="数据巡游"]'
 const PICKER = '[data-testid="tour-picker"]'
 const BAR = '[data-testid="tour-bar"]'
 const CAPTION = '[data-testid="tour-caption"]'
