@@ -20,4 +20,13 @@ test.describe('设计套件自检页', () => {
     await page.goto('/design-kit')
     await expect(page.locator('html.dark')).toHaveCount(1)
   })
+
+  test('CuButton:loading 态禁用并显示 spinner,primary/ghost 样式类正确', async ({ page }) => {
+    await page.goto('/design-kit')
+    const loadingBtn = page.locator('.cu-btn--loading')
+    await expect(loadingBtn).toBeDisabled()
+    await expect(loadingBtn.locator('.cu-btn__spinner')).toBeVisible()
+    await expect(page.locator('.cu-btn--primary').first()).toBeVisible()
+    await expect(page.locator('.cu-btn--ghost').first()).toBeVisible()
+  })
 })

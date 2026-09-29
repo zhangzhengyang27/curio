@@ -29,11 +29,34 @@
       </div>
     </section>
     <!-- 后续任务在此追加各组件段落 -->
+    <section class="kit-section">
+      <h2>CuButton</h2>
+      <div class="kit-row kit-align">
+        <CuButton variant="primary">主要动作</CuButton>
+        <CuButton>次要动作</CuButton>
+        <CuButton
+          variant="icon"
+          aria-label="示例图标按钮"
+        >
+          <UiIcon
+            name="camera"
+            :size="18"
+          />
+        </CuButton>
+        <CuButton
+          variant="primary"
+          loading
+        >加载中</CuButton>
+        <CuButton disabled>禁用</CuButton>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import GlassPanel from '../components/ui/GlassPanel.vue'
+import CuButton from '../components/ui/CuButton.vue'
+import UiIcon from '../components/UiIcon'
 </script>
 
 <style scoped>
@@ -53,6 +76,7 @@ import GlassPanel from '../components/ui/GlassPanel.vue'
   margin-bottom: var(--cu-md);
 }
 .kit-row { display: flex; gap: var(--cu-md); flex-wrap: wrap; }
+.kit-align { align-items: center; }
 .kit-box {
   min-width: 150px;
   min-height: 88px;
