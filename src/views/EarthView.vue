@@ -15,25 +15,30 @@
     </div>
 
     <!-- Left Side Panel - Layers -->
-    <aside class="left-panel tv-glass-panel">
+    <GlassPanel
+      as="aside"
+      class="left-panel"
+    >
       <LayerPanel
         :layers="layerList"
         :on-toggle="handleLayerToggle"
         :on-opacity="handleLayerOpacity"
       />
-    </aside>
+    </GlassPanel>
 
     <!-- Right Info Panel（按需渲染：未选中任何地点时不留空壳面板） -->
-    <aside
+    <GlassPanel
       v-if="interactionStore.showInfoPanel"
-      class="right-panel tv-glass-panel"
+      as="aside"
+      class="right-panel"
     >
       <InfoPanel />
-    </aside>
+    </GlassPanel>
 
     <!-- Right Floating Toolbar -->
-    <aside
-      class="tools-panel tv-glass-panel"
+    <GlassPanel
+      as="aside"
+      class="tools-panel"
       :class="{ 'with-info': interactionStore.showInfoPanel }"
     >
       <Toolbar
@@ -48,12 +53,13 @@
         :on-realistic-earth-toggle="handleRealisticEarthToggle"
         :on-tour="openTourPicker"
       />
-    </aside>
+    </GlassPanel>
 
     <!-- 巡游播放时隐藏模式切换条与时间轴：既聚焦叙事，也避免与播放条抢底部空间 -->
-    <div
+    <GlassPanel
       v-if="!tourUIVisible"
-      class="bottom-bar tv-glass-panel"
+      as="div"
+      class="bottom-bar"
     >
       <button
         v-for="mode in vizModes"
@@ -74,25 +80,27 @@
         />
         <span>{{ mode.label }}</span>
       </button>
-    </div>
+    </GlassPanel>
 
     <!-- 异步图层加载提示：非阻塞；巡游模式下底栏隐藏，此 chip 仍可见 -->
     <Transition name="fade">
-      <div
+      <GlassPanel
         v-if="earthStore.vizLoading"
-        class="viz-loading tv-glass-panel"
+        as="div"
+        class="viz-loading"
         data-testid="viz-loading"
       >
         <span class="viz-loading-spinner" />
         <span>正在加载「{{ vizLoadingLabel }}」数据…</span>
-      </div>
+      </GlassPanel>
     </Transition>
 
     <!-- 图层数据加载失败：必须给可重试入口，否则按钮亮着、画面空、用户无从下手 -->
     <Transition name="fade">
-      <div
+      <GlassPanel
         v-if="earthStore.vizError"
-        class="viz-loading viz-error tv-glass-panel"
+        as="div"
+        class="viz-loading viz-error"
         data-testid="viz-error"
       >
         <span>「{{ vizErrorLabel }}」数据加载失败</span>
@@ -102,7 +110,7 @@
         >
           重试
         </button>
-      </div>
+      </GlassPanel>
     </Transition>
 
     <ComparePanel />    <TimelineSlider v-if="!tourUIVisible" />
@@ -138,6 +146,7 @@ import Toolbar from '../components/Toolbar.vue'
 import LayerPanel from '../components/LayerPanel.vue'
 import TimelineSlider from '../components/TimelineSlider.vue'
 import LegendBar from '../components/LegendBar.vue'
+import GlassPanel from '../components/ui/GlassPanel.vue'
 import CompareView from './CompareView.vue'
 import { useTourEngine } from '../composables/useTourEngine'
 import { useEarthStore } from '../stores/useEarthStore'
@@ -572,6 +581,30 @@ watch(() => earthStore.currentVisualization, (v) => {
   overflow-x: auto;
 }
 
+/* 面板错峰进场(spec §6.2):地球先入,浮层 60ms stagger 跟进。
+   用独立 translate 属性而不是 transform——tools-panel/bottom-bar 的居中
+   依赖 transform: translate(-50%)/translateY(-50%),两者互不覆盖 */
+.left-panel,
+.right-panel,
+.tools-panel,
+.bottom-bar {
+  animation: cu-panel-in var(--cu-dur-slow) var(--cu-ease) backwards;
+}
+.right-panel { animation-delay: 60ms; }
+.tools-panel { animation-delay: 120ms; }
+.bottom-bar { animation-delay: 180ms; }
+
+@keyframes cu-panel-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
 .viz-btn {
   display: flex;
   align-items: center;
@@ -585,7 +618,9 @@ watch(() => earthStore.currentVisualization, (v) => {
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition:
+    color var(--cu-dur-fast) var(--cu-ease),
+    background var(--cu-dur-fast) var(--cu-ease);
 }
 
 .viz-btn:hover {
