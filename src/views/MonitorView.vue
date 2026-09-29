@@ -5,17 +5,19 @@
       class="map-container"
     />
 
-    <div
+    <GlassPanel
       v-if="loadError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       {{ loadError }}
-    </div>
+    </GlassPanel>
 
     <!-- 顶部统计大盘 -->
-    <header
+    <GlassPanel
       v-if="ready"
-      class="stats-bar tv-glass-panel"
+      as="header"
+      class="stats-bar"
     >
       <span class="stats-title">地震应急监测</span>
       <span
@@ -94,22 +96,24 @@
         :data-mode="sourceMode"
         :title="`数据源 ${sourceMode === 'live' ? 'USGS 实时（经 server/ 后端）' : '打包快照降级'} · 更新于 ${formatQuakeTime(sourceUpdatedAt, true)}${sourceDegraded ? ' · 最近一次轮询失败' : ''}`"
       >{{ sourceLabel }}</span>
-    </header>
+    </GlassPanel>
 
     <!-- 巡游分镜字幕（底部居中玻璃条） -->
-    <div
+    <GlassPanel
       v-if="tourCaption"
-      class="tour-caption tv-glass-panel"
+      as="div"
+      class="tour-caption"
       data-testid="tour-caption"
     >
       <b>{{ tourCaption.title }}</b>
       <span>{{ tourCaption.text }}</span>
-    </div>
+    </GlassPanel>
 
     <!-- 左侧：实时事件流 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-left tv-glass-panel"
+      as="aside"
+      class="panel panel-left"
     >
       <div class="panel-head">
         <h3 class="panel-title">
@@ -183,12 +187,13 @@
           重置处置
         </button>
       </p>
-    </aside>
+    </GlassPanel>
 
     <!-- 右侧：详情与处置 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-right tv-glass-panel"
+      as="aside"
+      class="panel panel-right"
     >
       <template v-if="selected">
         <h3 class="panel-title">
@@ -260,23 +265,13 @@
           </button>
         </div>
       </template>
-      <div
+      <EmptyState
         v-else
-        class="empty-state"
-      >
-        <UiIcon
-          class="empty-icon"
-          name="activity"
-          :size="26"
-        />
-        <p class="empty-state-title">
-          未选择事件
-        </p>
-        <p class="empty-tip">
-          点击左侧事件流或地球上的标记查看详情并处置。
-        </p>
-      </div>
-    </aside>
+        icon="activity"
+        title="未选择事件"
+        description="点击左侧事件流或地球上的标记查看详情并处置。"
+      />
+    </GlassPanel>
   </div>
 </template>
 
@@ -289,6 +284,8 @@ import type { QuakeEvent, QuakeStatus } from '../map/monitor/useEarthquakeFeed'
 import { useTourEngine } from '../composables/useTourEngine'
 import type { TourStep } from '../composables/useTourEngine'
 import UiIcon from '../components/UiIcon'
+import GlassPanel from '../components/ui/GlassPanel.vue'
+import EmptyState from '../components/ui/EmptyState.vue'
 
 const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
@@ -598,8 +595,7 @@ onUnmounted(() => {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 16px 24px;
-  border-radius: 12px;
-  color: #eee;
+  color: var(--cu-on-surface);
 }
 
 .stats-bar {
@@ -642,6 +638,7 @@ onUnmounted(() => {
   font-size: var(--cu-fs-lg);
   margin-left: 5px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--cu-on-surface);
   font-variant-numeric: tabular-nums;
 }
@@ -688,6 +685,8 @@ onUnmounted(() => {
 
 .panel-left {
   left: 16px;
+  /* 左下角让出一条 22px 的底层带给 Cesium ion logo(M0 审计 P1:统计文字与 logo 相撞) */
+  bottom: 42px;
 }
 
 .panel-right {
