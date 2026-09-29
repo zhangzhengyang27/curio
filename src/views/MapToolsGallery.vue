@@ -132,6 +132,8 @@ function iconFor(slug: string): UiIconName {
   background: var(--cu-primary-container);
   color: var(--cu-on-primary-container);
   border-color: transparent;
+  /* glow 白名单场景:卡片焦点预览(spec §4.1) */
+  box-shadow: var(--cu-glow-sm);
 }
 
 .card-media {
@@ -139,9 +141,14 @@ function iconFor(slug: string): UiIconName {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 细网格线纹理向远处淡出(mask)+ 底部主色光晕:消解「纯色占位块」感(M0 审计 P1) */
   background:
-    radial-gradient(340px 130px at 50% 0%, color-mix(in srgb, var(--cu-primary) 10%, transparent), transparent),
+    linear-gradient(color-mix(in srgb, var(--cu-outline-variant) 55%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, color-mix(in srgb, var(--cu-outline-variant) 55%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+    radial-gradient(260px 120px at 50% 115%, color-mix(in srgb, var(--cu-primary) 16%, transparent), transparent),
     var(--cu-surface-container);
+  -webkit-mask-image: radial-gradient(130% 100% at 50% 0%, black 55%, transparent);
+  mask-image: radial-gradient(130% 100% at 50% 0%, black 55%, transparent);
   border-bottom: 1px solid var(--cu-outline-variant);
 }
 
@@ -156,7 +163,7 @@ function iconFor(slug: string): UiIconName {
   background: color-mix(in srgb, var(--cu-primary) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--cu-primary) 22%, transparent);
   transition: background var(--cu-dur) var(--cu-ease), color var(--cu-dur) var(--cu-ease),
-    border-color var(--cu-dur) var(--cu-ease);
+    border-color var(--cu-dur) var(--cu-ease), box-shadow var(--cu-dur) var(--cu-ease);
 }
 
 .card-body {
