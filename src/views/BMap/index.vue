@@ -18,15 +18,41 @@
     </div>
     <template v-else>
       <nav class="bmap-nav">
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          type="button"
-          :class="['bmap-tab', { active: activeTab === tab.id }]"
-          @click="activeTab = tab.id"
+        <section
+          v-for="group in groupedTabs"
+          :key="group.id"
+          class="bmap-group"
+          :class="{ open: openGroups.has(group.id) }"
         >
-          {{ tab.label }}
-        </button>
+          <button
+            type="button"
+            class="bmap-group-head"
+            :aria-expanded="openGroups.has(group.id)"
+            @click="toggleGroup(group.id)"
+          >
+            <span class="bmap-group-title">{{ group.label }}</span>
+            <span class="bmap-group-count">{{ group.tabs.length }}</span>
+            <UiIcon
+              class="bmap-group-chevron"
+              name="chevron-down"
+              :size="14"
+            />
+          </button>
+          <div
+            v-show="openGroups.has(group.id)"
+            class="bmap-group-tabs"
+          >
+            <button
+              v-for="tab in group.tabs"
+              :key="tab.id"
+              type="button"
+              :class="['bmap-tab', { active: activeTab === tab.id }]"
+              @click="pickTab(tab.id, group.id)"
+            >
+              {{ tab.label }}
+            </button>
+          </div>
+        </section>
       </nav>
       <div class="bmap-content">
         <component
@@ -42,6 +68,7 @@
 import { computed, onMounted, ref } from "vue";
 import type { Component } from "vue";
 import { ensureBMapSDK } from "./composables/useBMap";
+import UiIcon from "../../components/UiIcon";
 import BMapBasic from "./components/BMapBasic.vue";
 import BMapControls from "./components/BMapControls.vue";
 import BMapBoundary from "./components/BMapBoundary.vue";
@@ -170,6 +197,99 @@ const tabs: TabItem[] = [
 
 const activeTab = ref(tabs[0]!.id);
 const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value) ?? tabs[0]!);
+
+// ── 分类收纳(M0 审计 P1:46 个 chip 平铺无层级)──
+// 归组映射全量显式:新增示例必须落组,不落组的会被归组断言拦下(见 groupedTabs 后的校验)
+type GroupId = "basics" | "overlays" | "draw" | "routes" | "viz" | "search";
+
+const GROUP_META: Record<GroupId, string> = {
+  basics: "基础与地图模式",
+  overlays: "覆盖物与标注",
+  draw: "绘制与量算",
+  routes: "路径与动画",
+  viz: "可视化与热力",
+  search: "检索与编码",
+};
+
+const GROUP_ORDER: GroupId[] = ["basics", "overlays", "draw", "routes", "viz", "search"];
+
+const GROUP_OF: Record<string, GroupId> = {
+  "custom-style": "basics",
+  "earth-mode": "basics",
+  basic: "basics",
+  controls: "basics",
+  "map-events": "basics",
+  "three-d": "basics",
+  satellite: "basics",
+  boundary: "basics",
+  "rich-marker": "overlays",
+  "custom-overlay": "overlays",
+  "custom-overlay-adv": "overlays",
+  "info-window": "overlays",
+  "info-window-style": "overlays",
+  "icon-marker": "overlays",
+  "draggable-marker": "overlays",
+  "context-menu": "overlays",
+  "marker-clusterer": "overlays",
+  building: "overlays",
+  "wall-layer": "overlays",
+  "drawing-manager": "draw",
+  "distance-tool": "draw",
+  draw: "draw",
+  measure: "draw",
+  "driving-route": "routes",
+  "transit-route": "routes",
+  lushu: "routes",
+  track: "routes",
+  animation: "routes",
+  "line-trip": "routes",
+  "line-point": "routes",
+  "bus-line": "routes",
+  heatmap: "viz",
+  visualization: "viz",
+  flyline: "viz",
+  "mapvgl-heatmap": "viz",
+  "icon-layer": "viz",
+  "shape-layer": "viz",
+  "line-layer": "viz",
+  "point-collection": "viz",
+  "region-color": "viz",
+  traffic: "viz",
+  "curve-line": "viz",
+  waimai: "viz",
+  "local-search": "search",
+  geocoder: "search",
+  autocomplete: "search",
+};
+
+const groupedTabs = computed(() => {
+  const ungrouped = tabs.filter((t) => !GROUP_OF[t.id]);
+  if (ungrouped.length) throw new Error(`bmap 示例未归组:${ungrouped.map((t) => t.id).join(", ")}`);
+  return GROUP_ORDER.map((id) => ({
+    id,
+    label: GROUP_META[id],
+    tabs: tabs.filter((t) => GROUP_OF[t.id] === id),
+  }));
+});
+
+const openGroups = ref(new Set<string>(["basics"]));
+
+function toggleGroup(id: GroupId) {
+  const next = new Set(openGroups.value);
+  if (next.has(id)) next.delete(id);
+  else next.add(id);
+  openGroups.value = next;
+}
+
+/** 激活某示例时保证其所在组是展开的(chip 只在展开组里可见,此处兜底编程式激活) */
+function pickTab(id: string, groupId: GroupId) {
+  activeTab.value = id;
+  if (!openGroups.value.has(groupId)) {
+    const next = new Set(openGroups.value);
+    next.add(groupId);
+    openGroups.value = next;
+  }
+}
 </script>
 
 <style>
@@ -194,8 +314,62 @@ const currentTab = computed(() => tabs.find((tab) => tab.id === activeTab.value)
 
 .bmap-nav {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bmap-group {
+  border: 1px solid var(--cu-outline-variant);
+  border-radius: var(--cu-radius-lg);
+  overflow: hidden;
+}
+
+.bmap-group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--cu-sm);
+  width: 100%;
+  padding: 0.55rem 0.9rem;
+  border: none;
+  background: var(--cu-surface-container-low);
+  color: var(--cu-on-surface);
+  font-weight: 600;
+  font-size: var(--cu-fs-sm);
+  cursor: pointer;
+  transition: background var(--cu-dur-fast) var(--cu-ease);
+}
+
+.bmap-group-head:hover {
+  background: var(--cu-surface-container);
+}
+
+.bmap-group-count {
+  padding: 0 7px;
+  border-radius: var(--cu-radius-full);
+  background: var(--cu-surface-container-high);
+  color: var(--cu-on-surface-variant);
+  font-size: var(--cu-fs-xs);
+  font-weight: 600;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.bmap-group-chevron {
+  margin-left: auto;
+  color: var(--cu-on-surface-variant);
+  transition: transform var(--cu-dur-fast) var(--cu-ease);
+}
+
+.bmap-group.open .bmap-group-chevron {
+  transform: rotate(180deg);
+}
+
+.bmap-group-tabs {
+  display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem 0.9rem;
+  border-top: 1px solid var(--cu-outline-variant);
 }
 
 .bmap-tab {
