@@ -5,29 +5,33 @@
       class="map-container"
     />
 
-    <div
+    <GlassPanel
       v-if="dataError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       {{ dataError }}
-    </div>
-    <div
+    </GlassPanel>
+    <GlassPanel
       v-else-if="loadError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       {{ loadError }}
-    </div>
-    <div
+    </GlassPanel>
+    <GlassPanel
       v-else-if="loading"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       数据加载中…
-    </div>
+    </GlassPanel>
 
     <!-- 左侧：国家列表 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-left tv-glass-panel"
+      as="aside"
+      class="panel panel-left"
     >
       <h3 class="panel-title">
         全球数据分析
@@ -94,12 +98,13 @@
         <span class="legend-text">{{ metricLabel }} 低 → 高</span>
         <span class="legend-gradient" />
       </div>
-    </aside>
+    </GlassPanel>
 
     <!-- 右侧：指标卡与对比 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-right tv-glass-panel"
+      as="aside"
+      class="panel panel-right"
     >
       <template v-if="selectedCountry">
         <h3 class="panel-title">
@@ -240,12 +245,13 @@
           清空对比
         </button>
       </template>
-    </aside>
+    </GlassPanel>
 
     <!-- 底部：GDP 时间轴 -->
-    <footer
+    <GlassPanel
       v-if="ready && years.length"
-      class="timeline-bar tv-glass-panel"
+      as="footer"
+      class="timeline-bar"
     >
       <button
         class="play-btn"
@@ -270,7 +276,7 @@
         class="year-label"
         data-testid="timeline-year"
       >{{ year }}</span>
-    </footer>
+    </GlassPanel>
 
     <!-- 调试角标（?debug=1） -->
     <div
@@ -291,6 +297,7 @@ import { createMapViewer } from '../map/createViewer'
 import { useCountryData, formatUSD, formatPopulation, formatAreaSqKm, gdpRank } from '../map/analysis/useCountryData'
 import { Choropleth } from '../map/analysis/choropleth'
 import UiIcon from '../components/UiIcon'
+import GlassPanel from '../components/ui/GlassPanel.vue'
 
 const containerRef = ref<HTMLElement | null>(null)
 const ready = ref(false)
@@ -585,8 +592,7 @@ onUnmounted(() => {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 16px 24px;
-  border-radius: 12px;
-  color: #eee;
+  color: var(--cu-on-surface);
 }
 
 .panel {
@@ -640,6 +646,9 @@ onUnmounted(() => {
   overflow: auto;
   margin-top: 8px;
   min-height: 0;
+  /* 底部 28px 淡出:列表滚动到底时不再是生硬的半行截断(M0 审计 P1) */
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent);
 }
 
 .country-row {
@@ -684,6 +693,13 @@ onUnmounted(() => {
 .compare-toggle {
   padding: 0 6px;
   cursor: pointer;
+}
+
+/* 对比勾选框:原生控件 + 统一尺寸(M1 已吃 accent-color;M0 审计 P1 收尾) */
+.compare-toggle input {
+  width: 15px;
+  height: 15px;
+  display: block;
 }
 
 .metrics {
@@ -870,13 +886,14 @@ onUnmounted(() => {
 }
 
 .metric-tabs {
-  display: flex;
-  flex-wrap: wrap;
+  /* 3 列网格:消灭 flex-wrap 造成的「碳排放」孤行(M0 审计 P1) */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 4px;
 }
 
 .metric-tab {
-  padding: 3px 9px;
+  padding: 3px 4px;
   border: 1px solid var(--cu-outline-variant);
   border-radius: var(--cu-radius-full);
   background: transparent;
@@ -884,6 +901,7 @@ onUnmounted(() => {
   font-size: var(--cu-fs-xs);
   font-family: inherit;
   white-space: nowrap;
+  text-align: center;
   cursor: pointer;
   transition: border-color var(--cu-dur-fast) var(--cu-ease), background var(--cu-dur-fast) var(--cu-ease),
     color var(--cu-dur-fast) var(--cu-ease);
