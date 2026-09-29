@@ -125,6 +125,7 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | `npm run` 用久了 zsh 进入损坏态（`_load_nvm: command not found` / `maximum nested function level reached`） | 直接用绝对路径的 node 跑脚本 |
 | `test:e2e` 任务状态显示 failed，但输出里是 `N passed` | npm 收尾清理 `~/.npm/_logs` 被沙箱拦下所致。**看 `N passed`，不看退出状态** |
 | preview E2E 中所有 Cesium/示例页「地图引擎加载失败」而 dev 全绿 | 产物缺 `dist/node_modules` 运行时资源：裸 `vite build --outDir X` **不会**执行 `copy-example-deps.js`。补跑 `node scripts/copy-example-deps.js --outDir X`，或直接用 `npm run build` |
+| 仓库目录改名后（09-29 实测 `earth-app` → `curio`），已开会话的 shell 持久化 cwd 仍钉在旧路径，每条命令 spawn 报 `ENOENT` | 先用 Write 工具往**旧路径**写一个占位文件把目录撑起来（Write 会自动建父目录），shell 即恢复；此后每条命令以 `cd <新路径> &&` 开头，在最后一条命令里删掉占位目录。改名后同时 `rm -rf node_modules/.vite`（缓存含绝对路径，不清会导致 dev/build 异常） |
 
 ---
 
