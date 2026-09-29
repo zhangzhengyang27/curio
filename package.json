@@ -25,7 +25,8 @@
     "verify:three-compat": "node scripts/verify-three-compat.mjs",
     "verify:gl-renderer": "node scripts/generate-gl-renderer-esm.mjs --check",
     "verify:theme": "node scripts/verify-theme-tokens.mjs",
-    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat && npm run verify:gl-renderer && npm run verify:theme"
+    "verify:contrast": "node scripts/verify-contrast.mjs",
+    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat && npm run verify:gl-renderer && npm run verify:theme && npm run verify:contrast"
   },
   "dependencies": {
     "@cesium-extends/drawer": "^1.3.8",

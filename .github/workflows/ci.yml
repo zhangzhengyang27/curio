@@ -92,6 +92,11 @@ jobs:
         # 拦的是「暗色主题重构漏掉某一页 → 白字白底整排不可读」这类七环闸门全都看不见的缺陷。
         run: npm run verify:theme
 
+      - name: 令牌对比度守卫（关键文字对）
+        # verify:theme 管组件字面量棘轮；这里管 theme.css 令牌值本身。
+        # M2 终审发现 placeholder 用 --cu-outline 暗色实测 1.9:1——此前没有任何闸门看得见它。
+        run: npm run verify:contrast
+
       - name: 生产构建
         run: npm run build
 
