@@ -485,8 +485,11 @@ watch(() => earthStore.currentVisualization, (v) => {
   // 「后退」会在 12 个模式之间来回走而不是退出页面。
   // gdp 是默认值，切回它要把 hash 清掉 —— 否则 carbon → gdp 后地址还留着
   // #carbon，同一个链接再打开会落在别的模式上。
+  // 'default' 同理不算用户选择：它是画布初始化落地的「无选择」原生态
+  // （EarthCanvas 启动即切它），写进 URL 只会产出一枚恢复逻辑不认识的 #default，
+  // 还会与客户端导航后的 URL 断言竞速（2026-09-29 smoke 外壳分区用例即因此翻车）。
   const base = window.location.pathname + window.location.search
-  if (v && v !== 'gdp') {
+  if (v && v !== 'gdp' && v !== 'default') {
     window.history.replaceState(null, '', base + '#' + v)
   } else if (window.location.hash) {
     window.history.replaceState(null, '', base)
