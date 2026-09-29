@@ -26,4 +26,13 @@ test.describe('首页命令面板', () => {
     await page.keyboard.press('ControlOrMeta+k')
     await expect(page.getByTestId('command-palette')).toHaveCount(0)
   })
+
+  test('巡游界面打开期间 ⌘K 不唤起命令面板(快捷键让位播放器)', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('.earth-view')).toBeVisible()
+    await page.locator('[aria-label="数据巡游"]').click()
+    await expect(page.locator('[data-testid="tour-picker"]')).toBeVisible()
+    await page.keyboard.press('ControlOrMeta+k')
+    await expect(page.getByTestId('command-palette')).toHaveCount(0)
+  })
 })

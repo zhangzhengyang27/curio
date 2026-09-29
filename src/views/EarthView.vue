@@ -289,8 +289,10 @@ function handleSplitScreen() {
 
 function handleKeydown(e: KeyboardEvent) {
   // ⌘K/Ctrl+K 在输入框聚焦时也必须可用(命令面板的标准唤醒方式),
-  // 所以放在 INPUT/SELECT 守卫之前
+  // 所以放在 INPUT/SELECT 守卫之前;但巡游期间仍要让位——palette 压在
+  // 播放器之上,还能触发分屏等打断巡游状态机的命令(终审 Important #1)
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    if (tourUIVisible.value) return
     e.preventDefault()
     commandPaletteRef.value?.open()
     return

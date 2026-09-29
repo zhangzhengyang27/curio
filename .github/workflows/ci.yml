@@ -61,6 +61,11 @@ jobs:
         # 这里补的是运行时行为（映射器 / 每日调度数学 / API）。
         run: npm run test:server
 
+      - name: 前端纯逻辑单测（node:test，零依赖）
+        # 命令面板核心等纯 TS 状态机；不接入的话改坏 filterItems/moveActive
+        # 时 verify/typecheck/build/E2E 全都不会红（终审 Important #1）。
+        run: npm run test:unit
+
       - name: 示例注册表一致性
         run: npm run verify:registry
 

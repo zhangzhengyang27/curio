@@ -175,7 +175,11 @@ defineExpose({
   color: var(--cu-on-surface);
   font-size: var(--cu-fs-lg);
 }
-.cu-palette__input::placeholder { color: var(--cu-outline); }
+.cu-palette__input::placeholder {
+  /* 不用 --cu-outline:它在暗色 lowest 表面上只有 1.9:1(终审 Important #2);
+     on-surface-variant 实测暗 7.95:1 / 亮 8.74:1,且仍比正文弱一档保留层级 */
+  color: var(--cu-on-surface-variant);
+}
 .cu-palette__esc {
   font-family: var(--cu-font-mono);
   font-size: var(--cu-fs-xs);
