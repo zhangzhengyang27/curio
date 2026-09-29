@@ -114,14 +114,17 @@ function jumpToPage() {
   align-items: center;
   justify-content: center;
   padding: 0 10px;
-  border-radius: var(--cu-radius-lg);
+  border-radius: var(--cu-radius-md);
   border: 1px solid var(--cu-outline-variant);
   background: var(--cu-surface-container-low);
   color: var(--cu-on-surface-variant);
-  font-size: 14px;
+  font-size: var(--cu-fs-md);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease),
+    border-color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .page-btn svg {
@@ -135,9 +138,11 @@ function jumpToPage() {
 }
 
 .page-btn.active {
-  background: color-mix(in srgb, var(--cu-primary) 15%, transparent);
-  border-color: color-mix(in srgb, var(--cu-primary) 30%, transparent);
-  color: var(--cu-primary);
+  /* 与 CuButton/段控同一语法:primary-container 底,双主题通用,不再要暗色特例 */
+  background: var(--cu-primary-container);
+  border-color: transparent;
+  color: var(--cu-on-primary-container);
+  font-weight: 600;
 }
 
 .page-btn:disabled {
@@ -189,6 +194,9 @@ function jumpToPage() {
   font-family: inherit;
   font-size: var(--cu-fs-sm);
   cursor: pointer;
+  transition:
+    background var(--cu-dur-fast) var(--cu-ease),
+    color var(--cu-dur-fast) var(--cu-ease);
 }
 
 .page-jump-btn:hover:not(:disabled) {
@@ -201,16 +209,8 @@ function jumpToPage() {
   cursor: not-allowed;
 }
 
-/* Dark mode overrides */
-html.dark .page-btn,
-html.dark .page-jump-input,
-html.dark .page-jump-btn {
+/* 暗色基调由容器令牌自理;active 已用 primary-container 双主题通用,仅输入框保留一档 */
+html.dark .page-jump-input {
   background: var(--cu-surface-container);
-}
-
-html.dark .page-btn.active {
-  background: var(--cu-secondary-container);
-  border-color: var(--cu-secondary-container);
-  color: var(--cu-on-secondary-container);
 }
 </style>
