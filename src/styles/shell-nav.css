@@ -74,23 +74,27 @@
 .app-nav .nav-links a {
   display: flex;
   align-items: center;
-  height: 100%;
+  /* 从撑满 56px 改为固定 36px:上下留白让 pill 有呼吸感;顶栏总高不变 */
+  height: 36px;
+  padding: 0 var(--cu-md);
+  border-radius: var(--cu-radius-full);
   color: var(--cu-on-surface-variant);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  border-bottom: 2px solid transparent;
-  padding-top: 2px;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color var(--cu-dur-fast) var(--cu-ease),
+    background var(--cu-dur-fast) var(--cu-ease);
 }
 
 .app-nav .nav-links a:hover {
-  color: var(--cu-primary);
+  color: var(--cu-on-surface);
+  background: var(--cu-surface-container);
 }
 
 .app-nav .nav-links a.active {
-  color: var(--cu-primary);
-  border-bottom-color: var(--cu-primary);
+  color: var(--cu-on-surface);
+  background: var(--cu-surface-container-high);
 }
 
 .app-nav .nav-right {
@@ -195,25 +199,28 @@
 .app-nav .dropdown-trigger {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 36px;
+  padding: 0 var(--cu-md);
+  border-radius: var(--cu-radius-full);
   color: var(--cu-on-surface-variant);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  border-bottom: 2px solid transparent;
-  padding-top: 2px;
-  transition: color 0.2s, border-color 0.2s;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    color var(--cu-dur-fast) var(--cu-ease),
+    background var(--cu-dur-fast) var(--cu-ease);
 }
 
 .app-nav .dropdown-trigger:hover {
-  color: var(--cu-primary);
+  color: var(--cu-on-surface);
+  background: var(--cu-surface-container);
 }
 
 .app-nav .dropdown-trigger.active {
-  color: var(--cu-primary);
-  border-bottom-color: var(--cu-primary);
+  color: var(--cu-on-surface);
+  background: var(--cu-surface-container-high);
 }
 
 .app-nav .dropdown-arrow {
