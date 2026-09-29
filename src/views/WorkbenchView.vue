@@ -5,30 +5,34 @@
       class="map-container"
     />
 
-    <div
+    <GlassPanel
       v-if="!ready && !loadError && !dataError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
       data-testid="boot-hint"
     >
       {{ bootHint }}
-    </div>
-    <div
+    </GlassPanel>
+    <GlassPanel
       v-if="dataError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       {{ dataError }}
-    </div>
-    <div
+    </GlassPanel>
+    <GlassPanel
       v-if="loadError"
-      class="load-error tv-glass-panel"
+      as="div"
+      class="load-error"
     >
       {{ loadError }}
-    </div>
+    </GlassPanel>
 
     <!-- 左侧：主题与排行 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-left tv-glass-panel"
+      as="aside"
+      class="panel panel-left"
       :class="{ collapsed: !leftOpen }"
     >
       <header class="panel-head">
@@ -88,12 +92,13 @@
           </li>
         </ol>
       </div>
-    </aside>
+    </GlassPanel>
 
     <!-- 右侧：图表与报告 -->
-    <aside
+    <GlassPanel
       v-if="ready"
-      class="panel panel-right tv-glass-panel"
+      as="aside"
+      class="panel panel-right"
       :class="{ collapsed: !rightOpen }"
     >
       <header class="panel-head">
@@ -181,7 +186,7 @@
           {{ exportError }}
         </p>
       </div>
-    </aside>
+    </GlassPanel>
   </div>
 </template>
 
@@ -195,6 +200,7 @@ import { Choropleth } from '../map/analysis/choropleth'
 import { useCountryData, formatUSD, formatPopulation } from '../map/analysis/useCountryData'
 import { useThemeStore } from '../stores/useThemeStore'
 import UiIcon from '../components/UiIcon'
+import GlassPanel from '../components/ui/GlassPanel.vue'
 
 // 数轴刻度压缩：原始值如 5,000,000,000,000 会让相邻刻度互相重叠成一团，
 // 统一压缩为 万/亿/万亿 量级（与排行/摘要的中文单位口径一致）
@@ -463,7 +469,8 @@ function renderChart() {
       data: top.map((t) => t.value).reverse(),
       itemStyle: { color: '#2271b2', borderRadius: [0, 4, 4, 0] },
       barWidth: '60%',
-      label: { show: true, position: 'right', fontSize: 10, formatter: (p: any) => formatValue(p.value) },
+      // 标签色走主题令牌(默认 #333 在暗色不可读)、数值走 compact(长单位文案互相压盖,M0 审计 P0)
+      label: { show: true, position: 'right', fontSize: 10, color: chartTextColor(), formatter: (p: any) => formatCompact(p.value) },
     }],
   })
 }
@@ -622,8 +629,7 @@ onUnmounted(() => {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 16px 24px;
-  border-radius: 12px;
-  color: #eee;
+  color: var(--cu-on-surface);
 }
 
 .panel {
