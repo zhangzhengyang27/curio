@@ -23,7 +23,7 @@
     </div>
     <VcOverlayEcharts
       :options="(ECHARTS_OPTION as any)"
-      custom-class="tv-echarts-full"
+      custom-class="cu-echarts-full"
       @ready="onReady"
     />
   </ToolsExampleShell>
@@ -111,7 +111,7 @@ function onReady() {
      0×0 容器上建画布,zrender 涟漪动画逐帧抛 drawImage 异常且什么都画不出;
      必须显式铺满 viewer 容器(内容不在本组件 scoped 作用域内,须全局) -->
 <style>
-.tv-echarts-full {
+.cu-echarts-full {
   width: 100% !important;
   height: 100% !important;
 }

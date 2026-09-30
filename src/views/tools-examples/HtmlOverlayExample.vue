@@ -34,7 +34,7 @@
         :key="m.name"
         :position="[m.lon, m.lat, 0]"
         :pixel-offset="[0, -52]"
-        custom-class="tv-html-anchor"
+        custom-class="cu-html-anchor"
       >
         <div
           class="weather-card"
