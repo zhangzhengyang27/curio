@@ -86,7 +86,7 @@ const emit = defineEmits<{ switch: [mode: string]; import: [] }>()
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(128, 128, 128, 0.3);
+  border: 2px solid color-mix(in srgb, var(--cu-on-surface-variant) 30%, transparent);
   border-top-color: var(--cu-primary, #4f8ef7);
   border-radius: 50%;
   animation: viz-spin 0.8s linear infinite;
