@@ -125,6 +125,8 @@
 
 | 项 | 说明 |
 |---|---|
+| 大厂级重塑收尾项 | 主体已全部合入（见 `docs/CHANGELOG.md` 2026-09-29/30 轮次）。**仍待做**:① 迁移协议补 Node 单测(`src/utils/legacyStorage.ts` 的读旧迁新是纯 localStorage 协议,jsdom 可仿真——终审建议,ledger 里的「无法仿真」只对 E2E 成立);② 示例中心双主题下「M0 审计 P1 残留」按底账(`specs/2026-09-29-m0-audit.md`)逐项消化;③ palette 在 /examples 等页的推广范围决策(spec §11 决策点 2,当前仅首页) |
+| 拆分巨石组件（收尾） | `ExampleGallery.vue`（895→266）与 `CodeDrawer.vue`（675→317）已拆完（过程见 `docs/CHANGELOG.md`）。`EarthView.vue` 已拆（706→356,2026-09-30）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务；动手前沿用「先补特征测试再拆」的纪律 |
 | 拆分巨石组件（收尾） | `ExampleGallery.vue`（895→266）与 `CodeDrawer.vue`（675→317）已拆完（过程见 `docs/CHANGELOG.md`）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务；动手前沿用「先补特征测试再拆」的纪律 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
 | 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见 `docs/CHANGELOG.md`）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小 |

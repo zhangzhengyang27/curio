@@ -584,6 +584,39 @@ await expect(page.locator('.result-count')).toHaveText('共 0 个示例') // 加
 
 ---
 
+### C19. `<script setup>` 里的 ES export 只在 dev server 编译期炸，typecheck / ESLint / build 全都拦不住
+
+**现象**（2026-09-30 M4 实测，`VizModeBar.vue`；此前 M2 的 `CommandPalette` 踩过同款）：
+在 `<script setup>` 中写 `export const VIZ_MODES = [...]`（想顺手导出静态数据给别处用），
+`npm run typecheck` 0 error、`npm run lint:ci` 0 error，dev server 返回 **500**，
+页面表现为「路由初始导航失败」+ `.earth-view` 不存在——所有 E2E 级联红，但没有一条
+错误信息指向真正的原因（要从 dev server 的 `curl` 响应里挖出
+`<script setup> cannot contain ES module exports`）。
+
+**为什么三道闸门都看不见**：vue-tsc 检查类型不模拟 SFC 编译约束；ESLint 解析后
+export 在语法上合法；生产构建报错但本地通常先跑 dev。唯一可靠的拦截点是
+**自己的纪律**：SFC 的 `<script setup>` 里只允许 `defineXxx` / import / 顶层语句，
+要导出常量/类型就开独立 `.ts` 文件（本仓先例：`src/components/vizModes.ts`、
+`src/composables/commandPaletteCore.ts`）。
+
+### C20. 端口被「具体地址绑定」的旧进程抢占时，`--strictPort` 也不报错，测试会打到别人的页面
+
+**现象**（2026-09-29 M0 审计实测）：本机 5177 上有一个**别的项目**的 dev server
+以 `127.0.0.1:5177` 绑定（PID 常驻多日）。我方 vite 以通配 `*:5177` 成功监听、
+启动日志一切正常、`--strictPort` 无感；但 macOS 上**具体地址优先于通配**，
+`localhost:5177` 与 `127.0.0.1:5177` 全被旧进程截走——首轮 16 张审计截图
+截到的是「NAS 服务管理台」，不是本项目。
+
+**与既有坑的关系**：AGENTS §6 的「E2E 全挂是连到了别人的 dev server」是
+`reuseExistingServer` 主动复用导致的；本条是**连接层静默劫持**，不用 Playwright
+也中招（任何 curl / 截图脚本 / 手动访问都会打偏）。
+
+**处理**：给本项目用的端口先做**内容验证**而不是端口探测——
+`curl -s http://127.0.0.1:<port>/ | grep -o '<title>[^<]*</title>'` 确认标题是
+Curio 再开工；不一致就换冷门端口（本次改用 5277）。`lsof -nP -i :<port>`
+能看到两个 LISTEN（一个具体地址一个通配）即是本坑。
+
+
 ## D. 凭据与配置
 
 ### D1. 地图凭据一律走环境变量

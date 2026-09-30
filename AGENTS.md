@@ -78,7 +78,8 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run test:e2e` | Playwright 冒烟（dev server，端口 5299） |
 | `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具。配了 `TDT_TOKEN`（或回退读 `VITE_TDT_TOKEN`）后它同时是**天地图瓦片反代**，前端在 `.env.local` 设 `VITE_TILE_PROXY=/tiles` 才启用；没起时前端自动退回直连 |
 | `npm run refresh:quakes` | 重生成打包降级快照 `public/data/quake-snapshot.json`（进版本库；数据可随时再抓） |
-| `npm run verify` | **一键跑 7 项一致性校验**（见下） |
+| `npm run test:unit` | 前端纯逻辑单测（Node 内置 `node:test`，`tests/unit/`，零依赖）。命令面板核心等纯状态机放这里；CI 同步跑 |
+| `npm run verify` | **一键跑 8 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
 ---
@@ -86,7 +87,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 ## 5. 改完必须跑的闸门
 
 ```bash
-npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 图形渲染器生成物 → 主题令牌/对比度
+npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 图形渲染器生成物 → 主题令牌/对比度 → 令牌关键文字对/placeholder 用法
 npm run typecheck
 npm run lint:ci
 npm run build
@@ -110,6 +111,10 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
   `node scripts/verify-theme-tokens.mjs --update` 收紧基线；
   **不要用 `--update` 让失败消失**，那等于把闸门关掉。静态对比度不达标（< 4.5:1）零容忍、不进基线。
   刻意保留的例外（如压在地图 SDK 自绘白底上的色）写在上一行加 `/* theme-tokens:allow */`。
+- `npm run verify:contrast` 守 **theme.css 令牌值本身**（`verify:theme` 管组件字面量，两者分工写在两脚本头注释）：
+  12 对关键文字对双主题 WCAG 实测 ≥ 4.5:1 + 全仓 `::placeholder` 只允许
+  `--cu-on-surface[-variant]`（placeholder 是对比度事故惯犯——M2 终审 CommandPalette 1.9:1、
+  M3a 终审 SearchBox 1.91:1 都曾无闸门可见）。清单勿删，失败请改令牌值。
 
 ---
 

@@ -6,6 +6,31 @@
 
 ## 2026-09 治理轮次
 
+### 「大厂级重塑」M0–M4 全程（2026-09-29 ~ 09-30）
+
+以「深空指挥中心」为方向的全站重塑,六个里程碑独立分支实施、每支独立
+fresh-reviewer 终审 + 修复轮后快进合入 main（spec / 计划 / 审计 / ledger
+见 `docs/superpowers/`）。要点:
+
+| 里程碑 | 内容 |
+|---|---|
+| M0 | 16 图（8 路由 × 双主题）走查审计,产出 P0/P1/P2 底账（`specs/2026-09-29-m0-audit.md`） |
+| M1 | 设计系统 v2 令牌（深空四阶表面/数据语义色板/glow/展示字阶）+ 首屏闪白修复（`index.html` 预置）+ 零依赖基础组件五组（`src/components/ui/`:GlassPanel/CuButton/EmptyState/ErrorState/LoadingSkeleton/CuTooltip）+ `/design-kit` 自检页 |
+| M2 | 样板页:顶栏 pill 段控、首页浮层 GlassPanel 化 + 60ms 错峰进场、工具条四分组 + 快捷键 tooltip、首页命令面板（⌘K/,纯核心 `commandPaletteCore.ts` 可单测）;顺手修掉 `#default` URL 污染存量缺陷 |
+| M3a | 平台四页 + bmap:对比度闸门转正（见下）、PageHeader、暗色图表标签修复、Cesium logo 避让、46 个分类 chips 六组收纳、终审 Minor 收编（焦点圈闭等） |
+| M3b | 示例库壳层:/three-globe 页内搜索下线（双搜索合并,冻结契约逐字保留）、侧栏/分页/卡片统一按钮与面板语法;M2 终审 Important#3（首页双入口）以「分工非重复」裁决关闭 |
+| M4 | 代码收尾:`tv-` 前缀代码面清零（纯样式 41 处 + DOM 钩子 2 类）、存储 4 键更名 cu-* 带一次性迁移（`src/utils/legacyStorage.ts` 收敛协议）、`EarthView.vue` 706→356 行拆分（五个迁出单元,样式全局化并加 `.earth-view` 作用域前缀） |
+
+| 项 | 内容 |
+|---|---|
+| 新常驻闸门 | `verify:contrast`（`scripts/verify-contrast.mjs`）:12 对关键令牌文字对双主题 WCAG 实测 + 全仓 `::placeholder` 用法扫描（只允许 on-surface 系）——由 M2/M3a 两次终审的 placeholder 1.9:1 事故推动,verify 增至 **8 项**、CI 同步 |
+| 棘轮 | 硬编码色值 169 → 165（重塑期间顺势收紧）;基线删除 EarthView 陈旧额度时手工编辑而非 `--update` 重写全局 |
+| 终审产出 | 六轮 fresh review 共修复 1 Critical（M4 拆分丢失 `timelineStore.pause()`,孤儿定时器）+ 6 Important（placeholder 假绿闸门/暗色 hover 被特异性吞掉/aria-modal 假圈闭/SearchBox 并存裁决/指标网格算术错/⌘K 巡游守卫）+ 若干 Minor（延后项在各自 ledger） |
+| 测试 | dev 全量 174 用例 / preview 165 用例双全量绿;新增 design-kit（6）/command-palette（5）/暗色 hover 计算样式回归钉等 |
+| 教训入坑 | KNOWN_PITFALLS 新增 C19（`<script setup>` ES export 只在 dev 编译期炸,三道闸门全盲）、C20（端口被具体地址绑定抢占,strictPort 无感） |
+
+### 主题令牌前缀 --tv- → --cu-（2026-09-29）
+
 ### 主题令牌前缀 --tv- → --cu-（2026-09-29）
 
 目录改名同日，需求方拍板把最后一处旧名痕迹也清掉：CSS 令牌前缀
