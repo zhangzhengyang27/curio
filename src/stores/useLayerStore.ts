@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, markRaw } from 'vue'
 import type { Mesh, Object3D } from 'three'
 
-interface LayerNode {
+export interface LayerNode {
   id: string
   name: string
   visible: boolean

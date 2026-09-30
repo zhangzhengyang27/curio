@@ -1,0 +1,212 @@
+/**
+ * EarthView(首页地球)布局样式,自 <style scoped> 迁出(2026-09-30 M4 拆分)。
+ * 沿用 shell-nav.css 的全局惯例:所有选择器都以本视图的特征类打头,
+ * 不使用裸通用类名,避免漏到其它页面。`html.dark` 与面板进场动画同源迁出。
+ */
+.earth-view {
+  position: fixed;
+  top: var(--cu-top-nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - var(--cu-top-nav-height));
+  overflow: hidden;
+}
+
+.search-wrapper {
+  position: absolute;
+  top: var(--cu-margin);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 var(--cu-gutter);
+  pointer-events: none;
+}
+
+.search-wrapper > * {
+  pointer-events: auto;
+}
+
+.left-panel {
+  position: absolute;
+  left: var(--cu-margin);
+  top: var(--cu-margin);
+  /* 不再钉死通高:图层少时面板收缩,消灭下半屏死空间(M0 审计 P1) */
+  bottom: auto;
+  max-height: calc(100% - var(--cu-margin) * 2);
+  width: var(--cu-panel-width);
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  position: absolute;
+  right: var(--cu-margin);
+  top: var(--cu-margin);
+  bottom: var(--cu-margin);
+  width: var(--cu-info-panel-width);
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tools-panel {
+  position: absolute;
+  right: calc(var(--cu-margin) + var(--cu-info-panel-width) + var(--cu-md));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--cu-md) var(--cu-sm);
+  border-radius: var(--cu-radius-full);
+  gap: var(--cu-sm);
+  transition: right var(--cu-dur) var(--cu-ease);
+}
+
+/* 信息面板收起时，工具条回到右缘 */
+.tools-panel:not(.with-info) {
+  right: var(--cu-margin);
+}
+
+.bottom-bar {
+  position: absolute;
+  bottom: var(--cu-margin);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: var(--cu-xs);
+  padding: var(--cu-sm) var(--cu-md);
+  border-radius: var(--cu-radius-full);
+  max-width: calc(100% - var(--cu-panel-width) - var(--cu-info-panel-width) - var(--cu-margin) * 4);
+  overflow-x: auto;
+}
+
+/* 面板错峰进场(spec §6.2):地球先入,浮层 60ms stagger 跟进。
+   用独立 translate 属性而不是 transform——tools-panel/bottom-bar 的居中
+   依赖 transform: translate(-50%)/translateY(-50%),两者互不覆盖 */
+.left-panel,
+.right-panel,
+.tools-panel,
+.bottom-bar {
+  animation: cu-panel-in var(--cu-dur-slow) var(--cu-ease) backwards;
+}
+.right-panel { animation-delay: 60ms; }
+.tools-panel { animation-delay: 120ms; }
+.bottom-bar { animation-delay: 180ms; }
+
+@keyframes cu-panel-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* 首挂载落定后,浮层复插(信息面板开合/巡游退出)不再重放进场动画 */
+.panel-entered :is(.left-panel, .right-panel, .tools-panel, .bottom-bar) {
+  animation: none;
+}
+
+@media (max-width: 1200px) {
+  .right-panel {
+    width: 280px;
+  }
+  .tools-panel.with-info {
+    right: calc(var(--cu-margin) + 280px + var(--cu-md));
+  }
+}
+
+@media (max-width: 992px) {
+  .right-panel,
+  .tools-panel {
+    display: none;
+  }
+  .left-panel {
+    width: 220px;
+  }
+  .bottom-bar {
+    max-width: calc(100% - 220px - var(--cu-margin) * 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .left-panel {
+    display: none;
+  }
+  .bottom-bar {
+    max-width: calc(100% - var(--cu-margin) * 2);
+  }
+}
+
+/* 异步图层加载提示 */
+.viz-loading {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: var(--cu-radius-full, 999px);
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.viz-error {
+  pointer-events: auto;
+  /* 加载提示是纯展示、被底栏压住无所谓；可重试的提示必须点得到，要盖过底栏（z 99/100） */
+  z-index: 300;
+  color: var(--cu-error);
+}
+
+.viz-error-retry {
+  border: 1px solid var(--cu-error);
+  border-radius: var(--cu-radius-full, 999px);
+  background: transparent;
+  color: var(--cu-error);
+  padding: 2px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.viz-loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(128, 128, 128, 0.3);
+  border-top-color: var(--cu-primary, #4f8ef7);
+  border-radius: 50%;
+  animation: viz-spin 0.8s linear infinite;
+}
+
+@keyframes viz-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
