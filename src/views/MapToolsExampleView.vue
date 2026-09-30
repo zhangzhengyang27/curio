@@ -6,7 +6,7 @@
   />
   <div
     v-else
-    class="not-found tv-glass-panel"
+    class="not-found cu-glass-panel"
     data-testid="example-not-found"
   >
     <p>未找到示例「{{ slug }}」</p>

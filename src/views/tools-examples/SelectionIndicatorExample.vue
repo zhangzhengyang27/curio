@@ -5,7 +5,7 @@
     @viewer-ready="onViewerReady"
   >
     <div
-      class="tool-panel tv-glass-panel"
+      class="tool-panel cu-glass-panel"
       data-testid="example-panel"
     >
       <h3 class="panel-title">

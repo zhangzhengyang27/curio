@@ -1,10 +1,10 @@
 <template>
   <div class="gallery-toolbar">
     <div class="toolbar-left">
-      <span class="result-count tv-num">共 {{ count }} 个示例</span>
+      <span class="result-count cu-num">共 {{ count }} 个示例</span>
       <span
         v-if="count > 0"
-        class="range-hint tv-num"
+        class="range-hint cu-num"
       >
         第 {{ rangeStart }}–{{ rangeEnd }} 条
       </span>
@@ -171,7 +171,7 @@
         <span class="field-label">每页</span>
         <select
           v-model="sizeModel"
-          class="control tv-num"
+          class="control cu-num"
           aria-label="每页条数"
         >
           <option

@@ -52,7 +52,7 @@
       <span class="page-jump-label">/ {{ totalPages }} 页，跳至</span>
       <input
         v-model="jump"
-        class="page-jump-input tv-num"
+        class="page-jump-input cu-num"
         type="number"
         :min="1"
         :max="totalPages"

@@ -40,7 +40,7 @@
       </h3>
       <p
         v-if="metaLine"
-        class="card-meta tv-num"
+        class="card-meta cu-num"
       >
         {{ metaLine }}
       </p>

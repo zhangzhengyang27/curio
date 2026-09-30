@@ -3,7 +3,7 @@
     title="量测"
     description="左键取点 · 双击结束 · 右键回退上一点 · Ctrl+右键取消。绘制完成后点击图形可拖动/插入/删除顶点。"
   >
-    <div class="tool-panel tv-glass-panel">
+    <div class="tool-panel cu-glass-panel">
       <h3 class="panel-title">
         量测工具
       </h3>

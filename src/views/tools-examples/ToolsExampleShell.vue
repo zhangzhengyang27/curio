@@ -2,14 +2,14 @@
   <div class="tools-example">
     <div
       v-if="loadError"
-      class="state-panel tv-glass-panel"
+      class="state-panel cu-glass-panel"
       data-testid="example-error"
     >
       {{ loadError }}
     </div>
     <div
       v-else-if="!cesiumReady"
-      class="state-panel tv-glass-panel"
+      class="state-panel cu-glass-panel"
       data-testid="example-loading"
     >
       Cesium 加载中…
@@ -34,7 +34,7 @@
       </VcViewer>
     </VcConfigProvider>
 
-    <header class="example-header tv-glass-panel">
+    <header class="example-header cu-glass-panel">
       <RouterLink
         class="back-link"
         to="/tools"

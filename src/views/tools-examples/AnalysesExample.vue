@@ -3,7 +3,7 @@
     title="通视与可视域"
     description="通视：选两点检查视线是否被遮挡。可视域：选定视点与方向后渲染可见范围（面向 3DTiles 建筑，当前场景无 3DTiles 时以地面为主）。"
   >
-    <div class="tool-panel tv-glass-panel">
+    <div class="tool-panel cu-glass-panel">
       <h3 class="panel-title">
         空间分析
       </h3>

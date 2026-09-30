@@ -3,7 +3,7 @@
     title="标绘"
     description="图钉/点/线/面/矩形/圆/正多边形。线与面自动贴地，绘制完成后点击图形可编辑顶点。"
   >
-    <div class="tool-panel tv-glass-panel">
+    <div class="tool-panel cu-glass-panel">
       <h3 class="panel-title">
         标绘工具
       </h3>

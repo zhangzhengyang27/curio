@@ -7,7 +7,7 @@
 
     <div
       v-if="loadError"
-      class="load-error tv-glass-panel"
+      class="load-error cu-glass-panel"
     >
       {{ loadError }}
     </div>
@@ -15,7 +15,7 @@
     <!-- 左侧：工具箱 -->
     <aside
       v-if="ready"
-      class="panel panel-left tv-glass-panel"
+      class="panel panel-left cu-glass-panel"
     >
       <h3 class="panel-title">
         地图工具箱
@@ -374,7 +374,7 @@
     <!-- 右侧：书签与导出 -->
     <aside
       v-if="ready"
-      class="panel panel-right tv-glass-panel"
+      class="panel panel-right cu-glass-panel"
     >
       <h3 class="panel-title">
         书签与导出
@@ -538,7 +538,7 @@
     <!-- 底部状态栏 -->
     <footer
       v-if="ready"
-      class="status-bar tv-glass-panel"
+      class="status-bar cu-glass-panel"
     >
       <span
         class="status-coords"

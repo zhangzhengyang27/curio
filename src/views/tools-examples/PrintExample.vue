@@ -4,7 +4,7 @@
     description="右上角打印按钮，将当前地图视图（含标注）生成为可打印页面（VcPrint）。"
   >
     <div
-      class="tool-panel tv-glass-panel"
+      class="tool-panel cu-glass-panel"
       data-testid="example-panel"
     >
       <h3 class="panel-title">

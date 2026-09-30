@@ -4,7 +4,7 @@
     description="小窗与主图视野双向联动：拖动主图时红框实时指示当前范围，点击小窗任意位置主图即平移过去（VcOverviewMap）。"
   >
     <div
-      class="tool-panel tv-glass-panel"
+      class="tool-panel cu-glass-panel"
       data-testid="example-panel"
     >
       <h3 class="panel-title">

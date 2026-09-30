@@ -39,7 +39,7 @@
          分屏下右键已经 preventDefault，却又什么都不弹，等于把交互做成了死路 -->
     <aside
       v-if="interactionStore.showInfoPanel"
-      class="right-panel tv-glass-panel"
+      class="right-panel cu-glass-panel"
     >
       <InfoPanel />
     </aside>

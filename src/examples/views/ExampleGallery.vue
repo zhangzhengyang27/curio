@@ -28,7 +28,7 @@
         -->
         <p
           v-if="totalCount"
-          class="hero-stats tv-num"
+          class="hero-stats cu-num"
         >
           <span class="hero-stat-num">{{ totalCount }}</span> 个示例
           <span

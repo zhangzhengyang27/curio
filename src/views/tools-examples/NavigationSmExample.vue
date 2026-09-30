@@ -4,7 +4,7 @@
     description="紧凑版罗盘 + 缩放控件，适合小尺寸地图容器（VcNavigationSm）。"
   >
     <div
-      class="tool-panel tv-glass-panel"
+      class="tool-panel cu-glass-panel"
       data-testid="example-panel"
     >
       <h3 class="panel-title">

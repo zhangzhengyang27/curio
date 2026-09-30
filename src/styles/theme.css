@@ -249,7 +249,7 @@ input[type='range'] {
 }
 
 /* 数据密集界面的数字对齐 */
-.tv-num {
+.cu-num {
   font-variant-numeric: tabular-nums;
 }
 
@@ -281,7 +281,7 @@ input[type='range'] {
 }
 
 /* Utility classes */
-.tv-glass-panel {
+.cu-glass-panel {
   background: var(--cu-surface-container-low);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -290,16 +290,16 @@ input[type='range'] {
   border-radius: var(--cu-radius-lg);
 }
 
-.tv-card-hover {
+.cu-card-hover {
   transition: transform var(--cu-dur) var(--cu-ease), box-shadow var(--cu-dur) var(--cu-ease),
     border-color var(--cu-dur) var(--cu-ease);
 }
-.tv-card-hover:hover {
+.cu-card-hover:hover {
   transform: translateY(-4px);
   box-shadow: var(--cu-shadow-3);
   border-color: color-mix(in srgb, var(--cu-primary) 40%, transparent);
 }
 
-html.dark .tv-glass-panel {
+html.dark .cu-glass-panel {
   background: var(--cu-surface);
 }

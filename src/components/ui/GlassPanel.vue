@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 /**
- * 全站唯一浮层/卡片容器语法(spec §5)。替代散落各处的 .tv-glass-panel class;
+ * 全站唯一浮层/卡片容器语法(spec §5)。替代散落各处的 .cu-glass-panel class;
  * 密度默认 none 以对齐旧容器「自管内边距」的行为,需要留白时显式传。
  */
 withDefaults(defineProps<{
@@ -34,7 +34,7 @@ withDefaults(defineProps<{
   border-radius: var(--cu-radius-lg);
 }
 
-/* 暗色基调:换成带透明度的 surface(与旧 .tv-glass-panel 的暗色行为一致) */
+/* 暗色基调:换成带透明度的 surface(与旧 .cu-glass-panel 的暗色行为一致) */
 :global(html.dark) :where(.cu-glass) {
   background: var(--cu-surface);
 }

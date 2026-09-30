@@ -27,7 +27,7 @@
         </h1>
         <span
           v-if="demoMeta"
-          class="demo-meta tv-num"
+          class="demo-meta cu-num"
         >{{ demoMeta }}</span>
       </div>
       <div class="tb-right">

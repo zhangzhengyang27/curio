@@ -15,7 +15,7 @@
       @click="$emit('select', cat.key)"
     >
       <span class="item-label">{{ cat.label }}</span>
-      <span class="item-count tv-num">{{ cat.count }}</span>
+      <span class="item-count cu-num">{{ cat.count }}</span>
     </button>
 
     <!--

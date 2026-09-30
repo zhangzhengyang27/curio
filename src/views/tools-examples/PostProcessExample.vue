@@ -5,7 +5,7 @@
     :view="{ lon: 114.3, lat: 30.6, height: 280000 }"
   >
     <div
-      class="tool-panel tv-glass-panel"
+      class="tool-panel cu-glass-panel"
       data-testid="example-panel"
     >
       <h3 class="panel-title">

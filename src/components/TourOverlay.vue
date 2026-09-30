@@ -2,7 +2,7 @@
   <!-- 路线选择浮层：尚未进入任何路线时展示 -->
   <div
     v-if="!tour.route.value"
-    class="tour-picker tv-glass-panel"
+    class="tour-picker cu-glass-panel"
     data-testid="tour-picker"
   >
     <header class="tour-picker-head">
@@ -50,7 +50,7 @@
     </div>
 
     <div
-      class="tour-bar tv-glass-panel"
+      class="tour-bar cu-glass-panel"
       data-testid="tour-bar"
     >
       <span class="tour-bar-title">{{ (tour.route.value as TourRouteWithDuration)?.title }}</span>

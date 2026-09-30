@@ -5,7 +5,7 @@
     :view="{ lon: 114.3, lat: 30.58, height: 18_000 }"
     @viewer-ready="onViewerReady"
   >
-    <div class="tool-panel tv-glass-panel">
+    <div class="tool-panel cu-glass-panel">
       <h3 class="panel-title">
         水位模拟
       </h3>
