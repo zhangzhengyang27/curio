@@ -197,14 +197,6 @@ const filteredExamples = computed(() =>
   margin-bottom: var(--cu-lg);
 }
 
-@media (min-width: 768px) {
-  .gallery-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
 .page-title {
   font-size: var(--cu-fs-3xl);
   line-height: 1.2;
@@ -219,15 +211,6 @@ const filteredExamples = computed(() =>
   line-height: 22px;
   color: var(--cu-on-surface-variant);
 }
-
-
-
-@media (min-width: 640px) {
-}
-
-
-
-
 
 .tags-row {
   display: flex;

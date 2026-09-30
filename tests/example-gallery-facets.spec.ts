@@ -162,3 +162,23 @@ test.describe('已选条件与空态', () => {
     await expect(page.locator('.example-card').first()).toBeVisible()
   })
 })
+
+test.describe('示例卡片暗色高程(M3b 终审 Important#1 回归钉)', () => {
+  test.use({ colorScheme: null })
+
+  test('暗色下卡片 hover 的描边必须亮于静置态(主色描边不被暗色基底吞掉)', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('tv-theme', 'dark'))
+    await page.goto('/examples')
+    const card = page.locator('.example-card').first()
+    await expect(card).toBeVisible()
+
+    const restBorder = await card.evaluate(el => getComputedStyle(el).borderColor)
+    await card.hover()
+    await page.waitForTimeout(400)
+    const hoverBorder = await card.evaluate(el => getComputedStyle(el).borderColor)
+
+    // 两者必须不同:静置 = outline 系中性描边,hover = 主色混合描边。
+    // 特异性吞掉时二者相等(暗色基底恒胜),这正是被钉住的缺陷。
+    expect(hoverBorder, 'hover 描边应异于静置描边').not.toBe(restBorder)
+  })
+})

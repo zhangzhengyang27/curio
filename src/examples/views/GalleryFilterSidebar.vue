@@ -74,7 +74,12 @@ defineEmits(['select'])
   width: 4px;
 }
 
-/* 暗色基调由 GlassPanel 的 html.dark 分支接管,不再本地覆写 */
+/* 暗色基调由 GlassPanel 的 html.dark 分支接管;仅描边恢复一档——
+   旧本地覆写用 --cu-outline 的动机是一次真实的「面板糊进背景」回归,
+   outline-variant(0.11)在毛玻璃侧栏上太弱(M3b 终审 Minor#3) */
+html.dark .filter-sidebar {
+  border-color: var(--cu-outline);
+}
 
 .category-item {
   display: flex;

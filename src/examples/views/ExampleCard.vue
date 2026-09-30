@@ -160,6 +160,9 @@ html.dark .example-card {
 
 html.dark .example-card:hover {
   background: var(--cu-surface-container-high);
+  /* 暗色基底 (0,3,1) 恒胜亮色段写的 hover 描边 (0,3,0)——不在此重申的话
+     主色描边在暗色下永远不出现(M3b 终审 Important#1,回归钉在 facets spec) */
+  border-color: color-mix(in srgb, var(--cu-primary) 40%, var(--cu-outline));
 }
 
 .card-media {
