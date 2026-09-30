@@ -18,7 +18,7 @@
       ref="inputRef"
       v-model="query"
       class="search-input"
-      placeholder="搜索坐标、地点或数据..."
+      placeholder="搜索地点..."
       @input="onInput"
       @focus="showSuggestions = true"
       @keydown.enter="selectFirst"

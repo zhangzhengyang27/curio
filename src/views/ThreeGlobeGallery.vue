@@ -279,10 +279,11 @@ const filteredExamples = computed(() =>
     border-color var(--cu-dur) var(--cu-ease);
 }
 
+/* 与 ExampleCard 的 hover 语法收敛(-2px / shadow-2 / 主色描边):同名词法只留一套数值 */
 .example-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--cu-shadow-3);
-  border-color: color-mix(in srgb, var(--cu-primary) 45%, transparent);
+  transform: translateY(-2px);
+  box-shadow: var(--cu-shadow-2);
+  border-color: color-mix(in srgb, var(--cu-primary) 40%, var(--cu-outline-variant));
 }
 
 .example-card:hover .card-title {
