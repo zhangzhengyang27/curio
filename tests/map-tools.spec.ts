@@ -30,8 +30,8 @@ test.describe('地图工具箱', () => {
     // reload 后刚存的书签也清掉（实测踩过）；sessionStorage 标记保证只清一次
     await page.addInitScript(() => {
       if (!sessionStorage.getItem('__tv-cleaned')) {
-        localStorage.removeItem('tv-map-bookmarks')
-        localStorage.removeItem('tv-map-annotations')
+        localStorage.removeItem('cu-map-bookmarks')
+        localStorage.removeItem('cu-map-annotations')
         sessionStorage.setItem('__tv-cleaned', '1')
       }
     })

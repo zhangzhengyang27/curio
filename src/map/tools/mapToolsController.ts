@@ -116,7 +116,22 @@ const DRAWER_TYPE: Partial<Record<ToolKind, string>> = {
   surfaceDistance: 'POLYLINE',
 }
 
-const STORAGE_KEY = 'tv-map-annotations'
+const STORAGE_KEY = 'cu-map-annotations'
+/** 2026-09-30 M4 前的旧键;首次读取时一次性迁移 */
+const LEGACY_ANNOTATIONS = 'tv-map-annotations';
+
+function readStorage(): string | null {
+  try {
+    const cur = localStorage.getItem(STORAGE_KEY);
+    if (cur !== null) return cur
+    const legacy = localStorage.getItem(LEGACY_ANNOTATIONS);
+    if (legacy !== null) {
+      localStorage.setItem(STORAGE_KEY, legacy)
+      localStorage.removeItem(LEGACY_ANNOTATIONS)
+    }
+    return legacy
+  } catch { return null }
+}
 
 /** Drawer 只在此懒加载:模块求值时依赖 window.Cesium(cesium-interop shim),必须晚于 loadCesium() */
 let drawerPromise: Promise<any> | null = null
@@ -1050,7 +1065,7 @@ export class MapToolsController {
   restoreSaved(): number {
     let records: any[] = []
     try {
-      records = JSON.parse(localStorage.getItem(STORAGE_KEY) as string) || []
+      records = JSON.parse(readStorage() as string) || []
     } catch {
       // 解析失败按空处理(脏数据不阻断页面)
     }

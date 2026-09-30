@@ -167,7 +167,7 @@ test.describe('示例卡片暗色高程(M3b 终审 Important#1 回归钉)', () =
   test.use({ colorScheme: null })
 
   test('暗色下卡片 hover 的描边必须亮于静置态(主色描边不被暗色基底吞掉)', async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem('tv-theme', 'dark'))
+    await page.addInitScript(() => localStorage.setItem('cu-theme', 'dark'))
     await page.goto('/examples')
     const card = page.locator('.example-card').first()
     await expect(card).toBeVisible()

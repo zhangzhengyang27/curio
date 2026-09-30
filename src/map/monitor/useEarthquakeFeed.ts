@@ -34,11 +34,26 @@ export interface QuakeEvent {
  * 数据源换成活数据后下标会漂移，故换键并整体作废旧记录。
  */
 
-const STATUS_KEY = 'tv-monitor-status-v2'
+const STATUS_KEY = 'cu-monitor-status-v2'
+/** 2026-09-30 M4 前的旧键;首次读取时一次性迁移 */
+const LEGACY_STATUS = 'tv-monitor-status-v2';
+
+function readStorage(): string | null {
+  try {
+    const cur = localStorage.getItem(STATUS_KEY);
+    if (cur !== null) return cur
+    const legacy = localStorage.getItem(LEGACY_STATUS);
+    if (legacy !== null) {
+      localStorage.setItem(STATUS_KEY, legacy)
+      localStorage.removeItem(LEGACY_STATUS)
+    }
+    return legacy
+  } catch { return null }
+}
 
 function loadPersistedStatus(): Record<string, QuakeStatus> {
   try {
-    const raw = JSON.parse(localStorage.getItem(STATUS_KEY) as string)
+    const raw = JSON.parse(readStorage() as string)
     return raw && typeof raw === 'object' ? raw : {}
   } catch {
     return {}

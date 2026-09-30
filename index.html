@@ -8,13 +8,20 @@
     <!--
       主题预置:Vue 挂载前按已保存偏好(无偏好默认暗色,与 useThemeStore.init 一致)
       给 <html> 打 .dark,消除「先画亮色再翻暗色」的首屏闪白。
-      键名与 useThemeStore 的 localStorage 键一致(tv-theme);
-      M4 把该键改名为 cu-theme 时必须同步改这里,并在此处读旧键迁移。
+      读取逻辑必须与 useThemeStore.init 逐字镜像:读新键 cu-theme → 回退旧键
+      tv-theme 并顺手迁移(2026-09-30 M4 键名更替);两处只允许同步修改。
     -->
     <script>
       ;(function () {
         var t = 'dark'
-        try { t = localStorage.getItem('tv-theme') || 'dark' } catch (e) { /* 隐私模式等 */ }
+        try {
+          t = localStorage.getItem('cu-theme')
+          if (!t) {
+            t = localStorage.getItem('tv-theme')
+            if (t) { localStorage.setItem('cu-theme', t); localStorage.removeItem('tv-theme') }
+          }
+        } catch (e) { /* 隐私模式等 */ }
+        t = t || 'dark'
         if (t === 'dark') document.documentElement.classList.add('dark')
       })()
     </script>

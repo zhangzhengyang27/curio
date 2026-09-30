@@ -14,11 +14,26 @@ export interface MapBookmark {
   createdAt: number
 }
 
-const KEY = 'tv-map-bookmarks'
+const KEY = 'cu-map-bookmarks'
+/** 2026-09-30 M4 前的旧键;首次读取时一次性迁移 */
+const LEGACY_BOOKMARKS = 'tv-map-bookmarks';
+
+function readStorage(): string | null {
+  try {
+    const cur = localStorage.getItem(KEY);
+    if (cur !== null) return cur
+    const legacy = localStorage.getItem(LEGACY_BOOKMARKS);
+    if (legacy !== null) {
+      localStorage.setItem(KEY, legacy)
+      localStorage.removeItem(LEGACY_BOOKMARKS)
+    }
+    return legacy
+  } catch { return null }
+}
 
 export function loadBookmarks(): MapBookmark[] {
   try {
-    return (JSON.parse(localStorage.getItem(KEY) as string) || []) as MapBookmark[]
+    return (JSON.parse(readStorage() as string) || []) as MapBookmark[]
   } catch {
     return []
   }

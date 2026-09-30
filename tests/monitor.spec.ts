@@ -91,7 +91,7 @@ test.describe('业务监控', () => {
     // ⚠ addInitScript 每次导航都执行，裸清会把 reload 后刚存的状态也清掉，须只清一次
     await page.addInitScript(() => {
       if (!sessionStorage.getItem('__tv-cleaned')) {
-        localStorage.removeItem('tv-monitor-status-v2')
+        localStorage.removeItem('cu-monitor-status-v2')
         sessionStorage.setItem('__tv-cleaned', '1')
       }
     })
@@ -125,11 +125,11 @@ test.describe('业务监控', () => {
         throw new DOMException('quota', 'QuotaExceededError')
       }
       Storage.prototype.setItem = function (k, v) {
-        if (k === 'tv-monitor-status-v2') boom()
+        if (k === 'cu-monitor-status-v2') boom()
         return origSet.call(this, k, v)
       }
       Storage.prototype.removeItem = function (k) {
-        if (k === 'tv-monitor-status-v2') boom()
+        if (k === 'cu-monitor-status-v2') boom()
         return origRm.call(this, k)
       }
     })
