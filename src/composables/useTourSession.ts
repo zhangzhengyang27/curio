@@ -1,4 +1,4 @@
-import { ref, shallowRef, computed, watch, onMounted } from 'vue'
+import { ref, shallowRef, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { Ref } from 'vue'
 import { useTourEngine } from './useTourEngine'

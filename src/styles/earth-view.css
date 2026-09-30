@@ -1,7 +1,8 @@
 /**
  * EarthView(首页地球)布局样式,自 <style scoped> 迁出(2026-09-30 M4 拆分)。
- * 沿用 shell-nav.css 的全局惯例:所有选择器都以本视图的特征类打头,
- * 不使用裸通用类名,避免漏到其它页面。`html.dark` 与面板进场动画同源迁出。
+ * 全局样式的作用域纪律:泄漏面规则一律以 .earth-view 打头(M4 终审 Important#2——
+ * 裸 .right-panel 会命中 CompareView 同名元素,裸 .fade-* 与 LegendBar 同名词法相撞)。
+ * 动画 keyframes 名自带 viz-/cu- 前缀,无泄漏面。
  */
 .earth-view {
   position: fixed;
@@ -14,7 +15,7 @@
   overflow: hidden;
 }
 
-.search-wrapper {
+.earth-view .search-wrapper {
   position: absolute;
   top: var(--cu-margin);
   left: 50%;
@@ -26,11 +27,11 @@
   pointer-events: none;
 }
 
-.search-wrapper > * {
+.earth-view .search-wrapper > * {
   pointer-events: auto;
 }
 
-.left-panel {
+.earth-view .left-panel {
   position: absolute;
   left: var(--cu-margin);
   top: var(--cu-margin);
@@ -44,7 +45,7 @@
   flex-direction: column;
 }
 
-.right-panel {
+.earth-view .right-panel {
   position: absolute;
   right: var(--cu-margin);
   top: var(--cu-margin);
@@ -56,7 +57,7 @@
   flex-direction: column;
 }
 
-.tools-panel {
+.earth-view .tools-panel {
   position: absolute;
   right: calc(var(--cu-margin) + var(--cu-info-panel-width) + var(--cu-md));
   top: 50%;
@@ -72,11 +73,11 @@
 }
 
 /* 信息面板收起时，工具条回到右缘 */
-.tools-panel:not(.with-info) {
+.earth-view .tools-panel:not(.with-info) {
   right: var(--cu-margin);
 }
 
-.bottom-bar {
+.earth-view .bottom-bar {
   position: absolute;
   bottom: var(--cu-margin);
   left: 50%;
@@ -94,15 +95,15 @@
 /* 面板错峰进场(spec §6.2):地球先入,浮层 60ms stagger 跟进。
    用独立 translate 属性而不是 transform——tools-panel/bottom-bar 的居中
    依赖 transform: translate(-50%)/translateY(-50%),两者互不覆盖 */
-.left-panel,
-.right-panel,
-.tools-panel,
-.bottom-bar {
+.earth-view .left-panel,
+.earth-view .right-panel,
+.earth-view .tools-panel,
+.earth-view .bottom-bar {
   animation: cu-panel-in var(--cu-dur-slow) var(--cu-ease) backwards;
 }
-.right-panel { animation-delay: 60ms; }
-.tools-panel { animation-delay: 120ms; }
-.bottom-bar { animation-delay: 180ms; }
+.earth-view .right-panel { animation-delay: 60ms; }
+.earth-view .tools-panel { animation-delay: 120ms; }
+.earth-view .bottom-bar { animation-delay: 180ms; }
 
 @keyframes cu-panel-in {
   from {
@@ -116,43 +117,43 @@
 }
 
 /* 首挂载落定后,浮层复插(信息面板开合/巡游退出)不再重放进场动画 */
-.panel-entered :is(.left-panel, .right-panel, .tools-panel, .bottom-bar) {
+.earth-view .panel-entered :is(.left-panel, .right-panel, .tools-panel, .bottom-bar) {
   animation: none;
 }
 
 @media (max-width: 1200px) {
-  .right-panel {
+  .earth-view .right-panel {
     width: 280px;
   }
-  .tools-panel.with-info {
+  .earth-view .tools-panel.with-info {
     right: calc(var(--cu-margin) + 280px + var(--cu-md));
   }
 }
 
 @media (max-width: 992px) {
-  .right-panel,
-  .tools-panel {
+  .earth-view .right-panel,
+  .earth-view .tools-panel {
     display: none;
   }
-  .left-panel {
+  .earth-view .left-panel {
     width: 220px;
   }
-  .bottom-bar {
+  .earth-view .bottom-bar {
     max-width: calc(100% - 220px - var(--cu-margin) * 3);
   }
 }
 
 @media (max-width: 768px) {
-  .left-panel {
+  .earth-view .left-panel {
     display: none;
   }
-  .bottom-bar {
+  .earth-view .bottom-bar {
     max-width: calc(100% - var(--cu-margin) * 2);
   }
 }
 
 /* 异步图层加载提示 */
-.viz-loading {
+.earth-view .viz-loading {
   position: absolute;
   left: 50%;
   bottom: 84px;
@@ -168,14 +169,14 @@
   pointer-events: none;
 }
 
-.viz-error {
+.earth-view .viz-error {
   pointer-events: auto;
   /* 加载提示是纯展示、被底栏压住无所谓；可重试的提示必须点得到，要盖过底栏（z 99/100） */
   z-index: 300;
   color: var(--cu-error);
 }
 
-.viz-error-retry {
+.earth-view .viz-error-retry {
   border: 1px solid var(--cu-error);
   border-radius: var(--cu-radius-full, 999px);
   background: transparent;
@@ -185,7 +186,7 @@
   cursor: pointer;
 }
 
-.viz-loading-spinner {
+.earth-view .viz-loading-spinner {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -201,12 +202,12 @@
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
+.earth-view .fade-enter-active,
+.earth-view .fade-leave-active {
   transition: opacity 0.25s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.earth-view .fade-enter-from,
+.earth-view .fade-leave-to {
   opacity: 0;
 }

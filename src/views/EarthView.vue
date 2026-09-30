@@ -129,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import EarthCanvas from '../components/EarthCanvas.vue'
 import SearchBox from '../components/SearchBox.vue'
 import InfoPanel from '../components/InfoPanel.vue'
@@ -152,7 +152,6 @@ import { useLayerStore } from '../stores/useLayerStore'
 import { useTimelineStore } from '../stores/useTimelineStore'
 import { useInteractionStore } from '../stores/useInteractionStore'
 import CommandPalette from '../components/CommandPalette.vue'
-import { type CommandItem } from '../composables/commandPaletteCore'
 
 const earthStore = useEarthStore()
 const layerStore = useLayerStore()
@@ -292,6 +291,9 @@ function handleKeydown(e: KeyboardEvent) {
 }
 onMounted(() => { document.addEventListener('keydown', handleKeydown) })
 onUnmounted(() => { document.removeEventListener('keydown', handleKeydown) })
+// 拆分回归修复(M4 终审 Critical#1):GDP 年表播放中离开首页必须停掉,
+// 否则 store 里的链式 setTimeout 每秒空转,回到 / 时时间轴还在自动播放
+onUnmounted(() => { timelineStore.pause() })
 
 // 「录制 GIF」：抓帧 → 统一尺寸 → 单文件 GIF。
 // 旧实现把 ≤60 张 JPEG 帧以 50ms 间隔逐个 link.click() 倒进下载目录，

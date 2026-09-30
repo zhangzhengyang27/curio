@@ -34,26 +34,16 @@ export interface QuakeEvent {
  * 数据源换成活数据后下标会漂移，故换键并整体作废旧记录。
  */
 
+import { readLegacyMigratedStorage, removeLegacyKey } from '../../utils/legacyStorage'
+
 const STATUS_KEY = 'cu-monitor-status-v2'
 /** 2026-09-30 M4 前的旧键;首次读取时一次性迁移 */
 const LEGACY_STATUS = 'tv-monitor-status-v2';
 
-function readStorage(): string | null {
-  try {
-    const cur = localStorage.getItem(STATUS_KEY);
-    if (cur !== null) return cur
-    const legacy = localStorage.getItem(LEGACY_STATUS);
-    if (legacy !== null) {
-      localStorage.setItem(STATUS_KEY, legacy)
-      localStorage.removeItem(LEGACY_STATUS)
-    }
-    return legacy
-  } catch { return null }
-}
 
 function loadPersistedStatus(): Record<string, QuakeStatus> {
   try {
-    const raw = JSON.parse(readStorage() as string)
+    const raw = JSON.parse(readLegacyMigratedStorage(STATUS_KEY, LEGACY_STATUS) as string)
     return raw && typeof raw === 'object' ? raw : {}
   } catch {
     return {}
@@ -69,6 +59,7 @@ function persistStatus(events: QuakeEvent[]): void {
   // 不包会让「改状态」成功、「刷新地图标记」被中断，列表徽标与地图颜色从此脱钩。
   try {
     localStorage.setItem(STATUS_KEY, JSON.stringify(map))
+  removeLegacyKey(LEGACY_STATUS)
   } catch { /* 忽略：无法持久化不影响本次会话内的处置流转 */ }
 }
 

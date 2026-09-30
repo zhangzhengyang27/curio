@@ -16,7 +16,7 @@
         var t = 'dark'
         try {
           t = localStorage.getItem('cu-theme')
-          if (!t) {
+          if (t === null) {
             t = localStorage.getItem('tv-theme')
             if (t) { localStorage.setItem('cu-theme', t); localStorage.removeItem('tv-theme') }
           }

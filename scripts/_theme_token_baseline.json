@@ -28,7 +28,6 @@
     "src/views/MapToolsExampleView.vue": 2,
     "src/views/tools-examples/ToolsExampleShell.vue": 2,
     "src/components/SearchBox.vue": 1,
-    "src/views/EarthView.vue": 1,
     "src/views/tools-examples/EchartsOverlayExample.vue": 1,
     "src/views/tools-examples/NavigationSmExample.vue": 1,
     "src/views/tools-examples/OverviewMapExample.vue": 1,

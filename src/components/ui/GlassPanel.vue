@@ -10,7 +10,8 @@
 
 <script setup lang="ts">
 /**
- * 全站唯一浮层/卡片容器语法(spec §5)。替代散落各处的 .cu-glass-panel class;
+ * 全站唯一浮层/卡片容器语法(spec §5)。替代散落各处的 .tv-glass-panel class
+ * (2026-09-30 更名 cu-glass-panel,作为 utility 与本组件并存于 theme.css);
  * 密度默认 none 以对齐旧容器「自管内边距」的行为,需要留白时显式传。
  */
 withDefaults(defineProps<{
