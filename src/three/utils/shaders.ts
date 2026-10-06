@@ -10,7 +10,7 @@
  *   - setExtendedMaterialUniforms  安全更新扩展材质 uniform
  */
 
-import { BufferAttribute } from 'three'
+import { BufferAttribute, Mesh } from 'three'
 import type { Material, Object3D } from 'three'
 
 /** onBeforeCompile 回调中 shader 对象的最小公共结构 */
@@ -241,10 +241,12 @@ export const applyUndergroundClipping = (object3D: Object3D | null | undefined, 
   if (!object3D) return
 
   object3D.traverse(child => {
-    if (!child.isMesh || !child.material) return
+    // traverse 回调的类型是 Object3D，isMesh 守卫后收窄为 Mesh 才有 geometry/material
+    if (!(child instanceof Mesh) || !child.material) return
+    const meshChild = child as Mesh
 
     // 为几何体添加 surfaceRadius 顶点属性
-    const geom = child.geometry
+    const geom = meshChild.geometry
     if (geom && geom.attributes.position && !geom.attributes.surfaceRadius) {
       const count = geom.attributes.position.count
       const surfaceRadii = new Float32Array(count)
@@ -253,8 +255,8 @@ export const applyUndergroundClipping = (object3D: Object3D | null | undefined, 
     }
 
     // 注入着色器扩展
-    applyShaderExtensionToMaterial(child.material, invisibleUndergroundShaderExtend)
-    setExtendedMaterialUniforms(child.material, u => {
+    applyShaderExtensionToMaterial(meshChild.material, invisibleUndergroundShaderExtend)
+    setExtendedMaterialUniforms(meshChild.material, u => {
       u.uSurfaceRadius.value = R
     })
   })

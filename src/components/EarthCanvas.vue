@@ -258,8 +258,8 @@ onMounted(async () => {
 
     const borderKids: THREE.Object3D[] = [], meshKids: THREE.Object3D[] = []
     earth.traverse(child => {
-      if (child.isLineLoop) borderKids.push(child)
-      if (child.isMesh && child !== sphereMesh) meshKids.push(child)
+      if ((child as unknown as { isLineLoop?: boolean }).isLineLoop) borderKids.push(child)
+      if ((child as THREE.Mesh).isMesh && child !== sphereMesh) meshKids.push(child)
     })
     if (props.primary) {
       layerStore.setLayerChildren('borders', borderKids)

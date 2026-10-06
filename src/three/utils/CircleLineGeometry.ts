@@ -15,7 +15,7 @@ export class CircleLineGeometry extends BufferGeometry {
 
     // three 0.185 将 type 声明为只读，子类定制类型名需绕过
     ;(this as unknown as { type: string }).type = 'CircleLineGeometry'
-    this.parameters = { radius, segmentCount }
+    ;(this as unknown as { parameters: { radius: number; segmentCount: number } }).parameters = { radius, segmentCount }
 
     const points: Vector3[] = []
     for (let i = 0; i <= segmentCount; i++) {

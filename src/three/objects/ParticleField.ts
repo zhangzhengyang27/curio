@@ -162,7 +162,7 @@ export function updateStormParticles(obj: THREE.Points | THREE.Group | null | un
   }
 
   // 旧版兼容：直接传入 Points
-  if (obj?.isPoints) {
+  if (obj && (obj as THREE.Points).isPoints) {
     updatePoints(obj as THREE.Points, delta, (obj as THREE.Points).userData?.rotationSpeed ?? 1)
   }
 }

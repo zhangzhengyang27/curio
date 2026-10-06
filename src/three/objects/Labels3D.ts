@@ -174,7 +174,7 @@ export function create3DLabels(
     const hasRange = Array.isArray(range) && range.length >= 2
 
     group.children.forEach(child => {
-      if (!child.isSprite) return
+      if (!(child as THREE.Sprite).isSprite) return
       child.getWorldPosition(temp)
 
       const toLabel = temp.clone().normalize()

@@ -384,7 +384,7 @@ export function createCylinderScatterPoints(data: Array<Record<string, any>> | n
   }
 
   if (transitionDuration > 0) {
-    const meshList = resultGroup.children.filter(c => c.isMesh)
+    const meshList = resultGroup.children.filter(c => (c as THREE.Mesh).isMesh)
 
     if (!merge && meshList.length) {
       meshList.forEach(mesh => { mesh.scale.y = 0 })

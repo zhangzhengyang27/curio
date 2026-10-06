@@ -266,7 +266,7 @@ function loadFusionModel(worldRoot: any, FILE_HOST: any) {
         const bounds = new THREE.Box3().setFromObject(model)
         if (Number.isFinite(bounds.min.y)) model.position.y -= bounds.min.y
         model.traverse((obj) => {
-          if (!obj.isMesh) return
+          if (!(obj as THREE.Mesh).isMesh) return
           obj.userData.pickable = true
           obj.userData.label = obj.userData.label || obj.name || 'littlest-tokyo'
           obj.castShadow = false

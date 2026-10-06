@@ -129,7 +129,7 @@ export function createTexturedEarth(R: number, options: TexturedEarthOptions = {
     ? (globeMaterial.clone ? globeMaterial.clone() : globeMaterial)
     : createBaseMaterial(fallbackTexture)
 
-  const sphere = new THREE.Mesh(geometry, material) as THREE.Mesh & {
+  const sphere = new THREE.Mesh(geometry, material) as unknown as THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial> & {
     setTexture: (url: string) => void
     setBumpMap: (url: string) => void
   }
@@ -138,7 +138,7 @@ export function createTexturedEarth(R: number, options: TexturedEarthOptions = {
 
   // 追踪由本模块加载的纹理，便于安全释放
   const loadedTextures = new Set<THREE.Texture>()
-  if (!globeMaterial && material.map === fallbackTexture) {
+  if (!globeMaterial && (material as THREE.MeshBasicMaterial).map === fallbackTexture) {
     loadedTextures.add(fallbackTexture)
   }
 
@@ -175,7 +175,7 @@ export function createTexturedEarth(R: number, options: TexturedEarthOptions = {
 
   function setTexture(url: string): void {
     loadTexture(url, true, (texture) => {
-      const sphereMat = sphere.material as THREE.MeshPhongMaterial
+      const sphereMat = sphere.material as unknown as THREE.MeshPhongMaterial
       const oldMap = sphereMat.map
       sphereMat.map = texture
       sphereMat.needsUpdate = true
@@ -188,7 +188,7 @@ export function createTexturedEarth(R: number, options: TexturedEarthOptions = {
 
   function setBumpMap(url: string): void {
     loadTexture(url, false, (texture) => {
-      const sphereMat = sphere.material as THREE.MeshPhongMaterial
+      const sphereMat = sphere.material as unknown as THREE.MeshPhongMaterial
       const oldBump = sphereMat.bumpMap
       sphereMat.bumpMap = texture
       sphereMat.needsUpdate = true

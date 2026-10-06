@@ -412,7 +412,7 @@ export function animateFlowLines(flowGroup: THREE.Group | null | undefined, _R?:
 export function animateFlowParticles(flowGroup: THREE.Group | null | undefined, _R?: number): FlowLinesController {
   const particles: Array<{ mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>; line: THREE.Line; progress: number; speed: number }> = []
   flowGroup?.children.forEach(child => {
-    if (child.isLine) {
+    if ((child as THREE.Line).isLine) {
       const line = child as THREE.Line
       particles.push({
         mesh: createParticle(),
