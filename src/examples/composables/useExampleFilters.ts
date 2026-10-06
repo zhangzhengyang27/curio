@@ -30,9 +30,7 @@ export function ensureRegistryLoaded() {
  * 其余来源只计入明确带地理语义的章节。
  */
 const GEO_SOURCES = [
-  'three-cesium-examples',
   'cesium-examples',
-  'earth-lessons',
   'city-realtime-webgl',
 ]
 
@@ -62,7 +60,7 @@ export function isGeoExample(ex: RegistryExample): boolean {
  * 给 380 条逐条补标签要动生成器并撞 verify:drift（AGENTS.md R1/R2）。
  *
  * ⚠ 代价是「语义不透明」：搜「地图」会命中元数据里根本没写「地图」二字的条目
- * （three-cesium-examples 整源计入 geo，其中含纯着色器示例）。
+ * （cesium-examples 整源计入 geo）。
  * 这是需求方 2026-09-23 明确选的取舍 —— 原先搜「地图」只出 6 条、
  * 「GIS」1 条，等于地理内容在 1415 条库里不可检索。
  */
@@ -72,12 +70,11 @@ export const techSearchTerms: Record<string, string[]> = {
 
 export const techGroups = [
   { key: 'all', label: '全部技术', match: () => true },
-  { key: 'threejs', label: 'Three.js', match: (ex: RegistryExample) => ['threejs-official', 'threejs-lesson', 'earth-lessons', 'three-project', 'granary-3d'].includes(ex.source) || ex.category === 'threejsOfficialExamples' },
-  { key: 'cesium', label: 'Cesium', match: (ex: RegistryExample) => ['three-cesium-examples', 'cesium-examples'].includes(ex.source) || ex.category === 'threeCesiumExamples' || (ex.category && ex.category.startsWith('cesiumExamples/')) },
+  { key: 'cesium', label: 'Cesium', match: (ex: RegistryExample) => ex.source === 'cesium-examples' || (ex.category && ex.category.startsWith('cesiumExamples/')) },
   { key: 'webgl', label: 'WebGL', match: (ex: RegistryExample) => ex.source === 'webgl' || ex.source === 'city-realtime-webgl' || ex.category === 'webglExamples' },
   { key: 'graphics', label: 'Graphics / MyGrapics', match: (ex: RegistryExample) => ex.source === 'graphics' || ex.source === 'mygrapics' },
   // 与 Cesium 标签有意重叠（Cesium 本来就是地球引擎），价值在于把散在
-  // graphics / three-project 里的地理章节也一并收进来，并让「地图」这个词可搜。
+  // graphics 里的地理章节也一并收进来，并让「地图」这个词可搜。
   { key: 'geo', label: '地理 / GIS', match: isGeoExample },
 ]
 
@@ -85,7 +82,7 @@ export const techGroups = [
  * 子分类的匹配原语。
  *
  * 为什么不再用「对 category 整串跑一条松散正则」：category 是 `webxr/ar`、
- * `threeExamples/particle` 这样的**路径**，整串正则会跨词边界误命中。
+ * `cesiumExamples/xxx` 这样的**路径**，整串正则会跨词边界误命中。
  * 旧实现里 `/(xr|vr|ar|webxr)/i` 把 particle / parallax / clearcoat / morphtargets
  * 全分进了「XR / VR / AR」—— 116 条中 87 条是误分，占该桶 75%。
  * 拆成「短词整段相等 / 长词才允许词干包含」两类后，这两类误分都能结构性避免。
@@ -121,7 +118,7 @@ function anyOf(...matchers: Array<(ex: RegistryExample) => boolean>) {
 /**
  * 前 16 桶是人工语义；最后「其他 / 未归类」取**补集**，
  * 由此让「每条示例至少落在一个子分类里」成为恒成立的不变量 ——
- * 旧实现漏掉 125 条（含 threeExamples/application 整块 61 条），
+ * 旧实现漏掉 125 条（整块漏分类的场景），
  * 那些条目在任何子分类下都筛不到，且不会有任何报错。
  * 该桶计数同时是分类质量的棘轮：它变大说明 registry 引入了新的 category 词。
  */
@@ -174,15 +171,6 @@ const definedCategories = [
       'raffle', '特效', '后处理'),
   },
   {
-    key: 'render-target',
-    label: '渲染目标',
-    match: anyOf(
-      stem('framebuffer', 'rendertarget', 'multisampled', 'depth', 'reversed', 'volume',
-        'layers'),
-      seg('rtt', 'mrt', 'read'),
-    ),
-  },
-  {
     key: 'interaction',
     label: '交互 / 相机',
     match: anyOf(
@@ -197,11 +185,6 @@ const definedCategories = [
     match: stem('loader', 'exporter', 'layer', 'offline', '加载', '资源'),
   },
   {
-    key: 'physics',
-    label: '物理引擎',
-    match: stem('physics', 'ammo', 'rapier', 'jolt', 'game'),
-  },
-  {
     key: 'data-viz',
     label: '数据可视化',
     match: anyOf(
@@ -209,17 +192,6 @@ const definedCategories = [
         'park-people', '可视化'),
       seg('d3'),
     ),
-  },
-  {
-    key: 'xr-vr',
-    label: 'XR / VR / AR',
-    // 只认整段：webxr/ar、webxr/vr、webxr/xr、webgpu/xr
-    match: anyOf(seg('xr', 'vr', 'ar'), stem('webxr')),
-  },
-  {
-    key: 'audio',
-    label: '音频',
-    match: stem('audio', 'sound'),
   },
   {
     key: 'math',

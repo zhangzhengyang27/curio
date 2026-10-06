@@ -4,7 +4,7 @@
 
 **自本文件生效起，示例中心冻结接入新的示例来源。**
 
-理由：项目已从「地球数据可视化应用」蔓延为 11 个来源、1417 条示例的聚合体，
+理由：项目已从「地球数据可视化应用」蔓延为 5 个来源、403 条示例的聚合体，
 而工程治理（版本控制、CI、测试、文档）严重滞后。继续接新源会持续放大维护成本，
 且每个新源都是「半集成」状态（如 `city-realtime-webgl` 的 source 改名后组件路径一度失配）。
 
@@ -129,7 +129,7 @@
 | 拆分巨石组件（收尾） | `ExampleGallery.vue`（895→266）与 `CodeDrawer.vue`（675→317）已拆完（过程见 `docs/CHANGELOG.md`）。`EarthView.vue` 已拆（706→356,2026-09-30）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务；动手前沿用「先补特征测试再拆」的纪律 |
 | 拆分巨石组件（收尾） | `ExampleGallery.vue`（895→266）与 `CodeDrawer.vue`（675→317）已拆完（过程见 `docs/CHANGELOG.md`）。**仍待拆**：`EarthCanvas.vue`（653 行）、`PersonFirstMoveExample.vue`（2081 行），均需视觉/交互回归验证，属独立任务；动手前沿用「先补特征测试再拆」的纪律 |
 | 示例资源收敛 | 把裸 canvas 示例逐步收口到 `useExampleStage`，减少对 `ExampleHost` 兜底的依赖 |
-| 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见 `docs/CHANGELOG.md`）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小 |
+| 依赖分层（长期） | 已用 `scripts/audit-deps.mjs` 建立审计口径并清掉 7 个未使用依赖（见 `docs/CHANGELOG.md`）。**仍待做**：把「产品运行时依赖」与「1400+ 示例专用依赖」分开管理（例如把纯示例依赖移到可选安装），以控制安装体积与主包大小（2026-10-05 three 侧 6 源已迁出 html5-dataviz，示例专用依赖已大幅缩减） |
 | three 兼容层退出 | 指定 owner，跟踪 npm `three` 稳定版进度，达成条件后按 `THREE_UPGRADE.md` 退出。**维护节奏：每月首周核对一次** npm `three` 稳定版是否已包含 r186 引入的 API（`MeshBasicNodeMaterial` / `CanvasTarget` 等），达成即启动退出 |
 
 ### P2（体验与工程效率）

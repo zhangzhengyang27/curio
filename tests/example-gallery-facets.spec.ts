@@ -139,7 +139,9 @@ test.describe('已选条件与空态', () => {
   })
 
   test('清除全部把两个条件一次归位', async ({ page }) => {
-    await openGallery(page, '?sub=shader&search=地球')
+    // 「地球」在 three 侧迁出后仅剩 1 条。组合需取真交集：shader 桶（77 条，多为
+    // graphics/mygrapics 源）∩ 关键词「webgl」实测 48 条（cesium 等词交集为 0）
+    await openGallery(page, '?sub=shader&search=webgl')
     await expect(page.locator('.af-chip')).toHaveCount(2)
 
     await page.getByRole('button', { name: '清除全部' }).click()
@@ -147,7 +149,7 @@ test.describe('已选条件与空态', () => {
     await expect(page.locator('.af-chip')).toHaveCount(0)
     await expect.poll(() => new URL(page.url()).search).toBe('')
     const total = await parseCount(page.locator('.result-count'))
-    expect(total, '清空后应回到全库').toBeGreaterThan(1000)
+    expect(total, '清空后应回到全库').toBeGreaterThan(300)
   })
 
   test('搜不到时给出可读空态，并给出退出路径', async ({ page }) => {

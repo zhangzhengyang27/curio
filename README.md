@@ -1,11 +1,11 @@
 # Curio
 
-> **Curio · 可视化珍品馆**：以示例库为重点 —— 11 个来源、1400 条 Three.js / Cesium / WebGL / 图形学示例的浏览画廊；另附数字地球数据平台。
+> **Curio · 可视化珍品馆**：以示例库为重点 —— 5 个来源、403 条 Cesium / WebGL / 图形学示例的浏览画廊；另附数字地球数据平台。
 
 基于 Vue 3 + Vite + Three.js + Cesium 的 **3D 数据可视化项目**，包含两条主线：
 
 1. **首页地球应用**：可交互的 3D 地球，叠加人口、GDP、航线、地震、疫情、灯光等多类可视化图层，含时间轴、图层管理、对比视图，以及**数据巡游**（一键自动导览：相机逐站飞行、逐层点亮、字幕解说，`?tour=` 链接可分享，见 [`docs/TOUR_ROUTES.md`](docs/TOUR_ROUTES.md)）。
-2. **示例中心**：聚合 **11 个来源、1400 条** Three.js / Cesium / WebGL / 图形学示例的可浏览画廊。可按**专题分类**（17 类）筛选、搜索、排序，并支持网格 / 列表视图、紧凑密度与每页条数切换；筛选状态全部写回 URL（`?sub=&search=&sort=&size=&view=&page=`），刷新与分享可还原。
+2. **示例中心**：聚合 **5 个来源、403 条** Cesium / WebGL / 图形学示例的可浏览画廊。可按**专题分类**（17 类）筛选、搜索、排序，并支持网格 / 列表视图、紧凑密度与每页条数切换；筛选状态全部写回 URL（`?sub=&search=&sort=&size=&view=&page=`），刷新与分享可还原。
 
 > 当前范围已冻结：**不再接入新的示例来源**，先收口存量并补齐工程治理。
 > 详见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
@@ -91,8 +91,8 @@ src/
 ├── three/                  # 首页地球渲染层：objects / layers / geo / utils / gc
 ├── views/                  # EarthView、ThreeGlobeGallery、GlobeDemo、BMap
 └── examples/               # ★ 示例中心
-    ├── registry/           # 11 个数据源注册表 + 聚合入口 index.js
-    ├── components/         # 1429 个示例组件(全部 lang="ts")，按 {source}/{category}/{Id}Example.vue 约定
+    ├── registry/           # 5 个数据源注册表 + 聚合入口 index.js
+    ├── components/         # 410 个示例组件(全部 lang="ts")，按 {source}/{category}/{Id}Example.vue 约定
     ├── views/              # ExampleGallery（画廊）/ ExampleDemo（详情）/ ExampleHost（宿主）
     ├── runners/            # IframeRunner
     ├── composables/        # useExampleFilters、各技术栈 stage

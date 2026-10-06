@@ -20,7 +20,7 @@
     "audit:deps": "node scripts/audit-deps.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "verify:registry": "node --experimental-strip-types scripts/verify-registry.mjs",
-    "verify:drift": "node --experimental-strip-types scripts/generate-registry.js --check && node --experimental-strip-types scripts/generate-threejs-lesson-registry.js --check && node --experimental-strip-types scripts/generate-earth-lessons-registry.js --check",
+    "verify:drift": "node --experimental-strip-types scripts/generate-registry.js --check",
     "verify:thumbnails": "node --experimental-strip-types scripts/verify-thumbnails.mjs",
     "verify:three-compat": "node scripts/verify-three-compat.mjs",
     "verify:gl-renderer": "node scripts/generate-gl-renderer-esm.mjs --check",

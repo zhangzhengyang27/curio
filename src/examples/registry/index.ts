@@ -20,16 +20,10 @@ export interface RegistryExample {
 }
 
 const registryLoaders = {
-  'three-cesium-examples': () => import('./threeCesiumExamples.ts'),
   'cesium-examples': () => import('./cesiumExamples.ts'),
-  'threejs-lesson': () => import('./threejsLesson.ts'),
-  'earth-lessons': () => import('./earthLessons.ts'),
-  'threejs-official': () => import('./threejsOfficialExamples.ts'),
-  'granary-3d': () => import('./granary3dExamples.ts'),
   'webgl': () => import('./webglExamples.ts'),
   'mygrapics': () => import('./mygrapicsExamples.ts'),
   'graphics': () => import('./graphicsExamples.ts'),
-  'three-project': () => import('./threeProjectExamples.ts'),
   'city-realtime-webgl': () => import('./cityRealtimeWebglExamples.ts'),
 }
 

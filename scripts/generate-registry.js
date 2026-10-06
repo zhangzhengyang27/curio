@@ -191,12 +191,9 @@ export default ${JSON.stringify(data, null, 2)}
   }
 }
 
-console.warn('[generate-registry] 即将覆盖并重新生成 registry 文件（仅 threeCesiumExamples.js 与 cesiumExamples.js）。重跑前请先 git diff/commit 确认，手工改动的条目会被「合并保护」尽量保留。')
+console.warn('[generate-registry] 即将覆盖并重新生成 registry 文件（仅 cesiumExamples.js）。重跑前请先 git diff/commit 确认，手工改动的条目会被「合并保护」尽量保留。')
 
 ;(async () => {
-  const threeRegistry = await buildRegistry('threeCesiumExamples', 'threeExamples', 'Three.js 案例', 'three-cesium-examples')
-  writeRegistry('threeCesiumExamples', threeRegistry)
-
   const cesiumRegistry = await buildRegistry('cesiumExamples', 'cesiumExamples', 'Cesium 案例', 'cesium-examples')
   writeRegistry('cesiumExamples', cesiumRegistry)
 })()

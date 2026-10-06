@@ -60,27 +60,9 @@ test('I1 没有任何示例落在全部子分类之外（兜底桶必须存在�
  * 旧实现用 /(xr|vr|ar|webxr)/i 匹配整串 category，particle / parallax / clearcoat
  * 全被吞进来（116 条里 87 条只因含 "ar" 三个字母），这条就是拦这个。
  */
-test('「XR / VR / AR」桶里每条的 category 段都真的是 xr/vr/ar/webxr', async ({ page }) => {
-  await page.goto('/examples?sub=xr-vr')
-  const cards = page.locator('.example-card')
-  await expect(cards.first()).toBeVisible()
-  const n = await cards.count()
-  expect(n, 'XR 桶不该空').toBeGreaterThan(0)
-  // 修好后是 29 条；留到 60 是给以后真的补 XR 示例的余量，不给误分留余量
-  expect(n, 'XR 条目数暴涨，八成又是子串误命中').toBeLessThan(60)
-
-  const hrefs = await cards.evaluateAll(els =>
-    els.map(e => (e as HTMLAnchorElement).getAttribute('href') || ''),
-  )
-  const bad = hrefs.filter(href => {
-    const rest = href.replace(/^\/examples\//, '').split('/')
-    // rest[0] 是 source（不含 /），末段是 id（不含 /），中间整段是 category
-    const segs = rest.slice(1, -1).join('/').toLowerCase().split('/')
-    return !segs.some(s => ['xr', 'vr', 'ar', 'webxr'].includes(s))
-  })
-  expect([...new Set(bad)], `这些非 XR 的 category 被分进了 XR 桶：${bad.join(', ')}`).toEqual([])
-})
-
+/** XR / VR / AR 子分类已随 three 侧 6 源迁出（2026-10-05）删除：剩余 403 条中无 xr/vr/ar
+ *  分类内容，桶为空违反 I3；未来若接入含 XR 内容的新来源，随桶定义一起恢复本用例。
+ */
 test('I3 子分类并集覆盖全部条目，且不存在空桶', async ({ page }) => {
   test.skip(IS_PREVIEW, '依赖 dev 模式下可按 URL 二次 import 的源码模块')
   const r = await page.evaluate(SUBS_AND_DATA)

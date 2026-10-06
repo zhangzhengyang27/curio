@@ -8,24 +8,24 @@ import { test, expect } from '@playwright/test'
  */
 
 test.describe('示例中心分页', () => {
-  test('每页渲染 48 条，总页数因此降到 30 以内', async ({ page }) => {
+  test('每页渲染 48 条，末位页码与总页数一致', async ({ page }) => {
+    // 2026-10-05 three 侧 6 源迁出后全库 403 条，size=48 共 9 页（原 1415 条为 30 页）
     await page.goto('/examples')
     await expect(page.locator('.example-card')).toHaveCount(48)
-    // 末位页码按钮（.page-btn 的最后一个其实是「下一页」箭头，里面只有 SVG）
-    await expect(page.locator('.page-btn', { hasText: /^30$/ })).toBeVisible()
+    await expect(page.locator('.page-btn', { hasText: /^9$/ })).toBeVisible()
   })
 
-  test('可以直接跳到第 20 页，URL 与内容同步', async ({ page }) => {
+  test('可以直接跳到最后一页，URL 与内容同步', async ({ page }) => {
     await page.goto('/examples')
     const firstOnPage1 = await page.locator('.example-card').first().innerText()
 
-    await page.getByLabel('跳转到指定页码').fill('20')
+    await page.getByLabel('跳转到指定页码').fill('9')
     await page.locator('.page-jump-btn').click()
 
-    await expect(page).toHaveURL(/page=20/)
-    await expect(page.locator('.page-btn.active')).toContainText('20')
-    const firstOnPage20 = await page.locator('.example-card').first().innerText()
-    expect(firstOnPage20).not.toBe(firstOnPage1)
+    await expect(page).toHaveURL(/page=9/)
+    await expect(page.locator('.page-btn.active')).toContainText('9')
+    const firstOnPage9 = await page.locator('.example-card').first().innerText()
+    expect(firstOnPage9).not.toBe(firstOnPage1)
   })
 
   test('越界或重复的页码不会触发跳转', async ({ page }) => {

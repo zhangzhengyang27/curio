@@ -24,21 +24,11 @@ export interface SourceProvenance {
 }
 
 export const sourceProvenance: Record<string, SourceProvenance> = {
-  'threejs-official': {
-    upstream: 'https://threejs.org/examples/',
-    upstreamRef: null,
-    evidence: 'scripts/download-threejs-screenshots.mjs:2,44（id 与截图取自官方示例目录）',
-  },
-  'three-cesium-examples': { upstream: null, upstreamRef: null },
   'cesium-examples': { upstream: null, upstreamRef: null },
-  'threejs-lesson': { upstream: null, upstreamRef: null },
-  'earth-lessons': { upstream: null, upstreamRef: null },
-  'granary-3d': { upstream: null, upstreamRef: null },
   'city-realtime-webgl': { upstream: null, upstreamRef: null },
   webgl: { upstream: null, upstreamRef: null },
   graphics: { upstream: null, upstreamRef: null },
   mygrapics: { upstream: null, upstreamRef: null },
-  'three-project': { upstream: null, upstreamRef: null },
 }
 
 /**

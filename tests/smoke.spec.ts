@@ -23,7 +23,7 @@ import { mockTianditu } from './helpers/tiles'
  */
 
 // 结构简单、依赖少的示例：css2d 的 label 示例（含共享壳 ExampleScene，可覆盖多节代码）
-const DEMO_PATH = '/examples/threejs-official/css2d/css2d_label'
+const DEMO_PATH = '/examples/cesium-examples/cesiumExamples/tools/computerNewPoint'
 
 /**
  * registry **数据**分块的识别模式，兼容两种 E2E 目标：
@@ -35,7 +35,7 @@ const DEMO_PATH = '/examples/threejs-official/css2d/css2d_label'
  * 顶栏在所有路由都挂载，曾因此把 3+ 个数据 registry 拉进首屏（见 docs/PERF_BASELINE.md）。
  */
 const REGISTRY_CHUNK_RE =
-  /(?:\/src\/examples\/registry\/|\/assets\/)(?:threeCesiumExamples|cesiumExamples|threejsLesson|earthLessons|threejsOfficialExamples|granary3dExamples|webglExamples|mygrapicsExamples|graphicsExamples|threeProjectExamples|cityRealtimeWebglExamples)(?:-[A-Za-z0-9_-]+)?\.js/
+  /(?:\/src\/examples\/registry\/|\/assets\/)(?:cesiumExamples|webglExamples|mygrapicsExamples|graphicsExamples|cityRealtimeWebglExamples)(?:-[A-Za-z0-9_-]+)?\.js/
 
 /** 收集页面级未捕获异常，用于断言框架层没有崩溃 */
 function collectPageErrors(page) {
@@ -192,11 +192,12 @@ test.describe('冒烟测试：核心链路', () => {
     await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible()
     const total = await readCount()
-    expect(total, '未过滤时应展示全部示例').toBeGreaterThan(1000)
+    expect(total, '未过滤时应展示全部示例').toBeGreaterThan(300) // 2026-10-05 three 侧迁出后全库 403 条
 
     // 关键词走 route.query.search → ExampleGallery 的 filteredExamples。
-    // 用「shader」而非更直觉的词：标题/描述/标签多为中文，实测 "water" / "camera"
+    // 用「shader」而非更直觉的词：标题/描述/标签多为中文，实测多数英文词
     // 在这三个字段里命中数为 0（页面会显示空态，卡片渲染不出来）。
+    // 2026-10-05 three 侧迁出后 shader 实测命中 13 条。
     await page.goto('/examples?search=shader')
     await expect(page.locator('.example-card').first()).toBeVisible()
     const filtered = await readCount()
@@ -290,12 +291,12 @@ test.describe('冒烟测试：核心链路', () => {
   // 而 filteredExamples.length 又 >0 → 连空态提示都不渲染，用户看到「共 N 个」配空白网格。
   // ?page=999 / 负数 / 小数同属这一类越界。
   test('页码越界自动钳制，不出现空白网格(回归:搜索保留旧 page)', async ({ page }) => {
-    // 「地球」实测 11 条 = 1 页；单页时 .pagination 整个不渲染，
+    // 「shader」实测 13 条 = 1 页；单页时 .pagination 整个不渲染，
     // 所以这里断言的是「卡片可见 + 越界的 page 参数被写回清掉」，而不是分页按钮
-    await page.goto('/examples?search=地球&page=7')
+    await page.goto('/examples?search=shader&page=7')
     await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 15_000 })
     expect(new URL(page.url()).searchParams.has('page'), '钳回第 1 页后 page 参数应被省略').toBe(false)
-    await expect(page.locator('.example-card')).toHaveCount(11)
+    await expect(page.locator('.example-card')).toHaveCount(13)
 
     // 负数会让 slice 从尾部取错数据，属于同一类脏 URL；这条有多页，可以断按钮
     await page.goto('/examples?page=-3')
@@ -447,13 +448,9 @@ test.describe('冒烟测试：核心链路', () => {
     for (const t of texts) {
       expect(t, `卡片仍在展示无信息描述：\n${t}`).not.toMatch(CONTENT_FREE)
     }
-    // 原「描述应含章节主题」的正向断言随技术栈维度一起移除：
-    // 它针对的 WebGL 分片不再能从 URL 表达，正向覆盖由下方
-    // Theatre.js 逐条覆盖断言继续承担（人工改写的技术点描述必须存活）。
-
-    // 逐条覆盖要能盖过分类规则：Theatrejs 的标题是人工改写的
-    await page.goto('/examples?search=Theatre')
-    await expect(page.locator('.example-card').first()).toContainText('Theatre.js 动画编排')
+    // 原「描述应含章节主题」的正向断言随技术栈维度一起移除；
+    // Theatre.js 逐条覆盖断言也随 three 侧 6 源迁出（2026-10-05）一并移除——
+    // 剩余 403 条的逐条覆盖仅剩 hidden 调试页标记，由下方 hiddenEntries 断言承担。
 
     // 被标 hidden 的上游调试页不该能从详情直连进去。
     //
@@ -466,7 +463,6 @@ test.describe('冒烟测试：核心链路', () => {
     // 「影像图层调试页」/「综合调试页」，搜「测试」命中不到，等于没测。
     const hiddenEntries = [
       '/examples/cesium-examples/cesiumExamples/tools/test',
-      '/examples/three-cesium-examples/threeExamples/other/test',
     ]
     for (const href of hiddenEntries) {
       await page.goto(href)

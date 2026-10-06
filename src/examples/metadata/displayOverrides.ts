@@ -33,21 +33,11 @@ export interface DisplayOverride {
 
 export const displayOverrides: Record<string, DisplayOverride> = {
   // ── 上游把 id 直接当标题（Theatre.js 是动画编排库，不是 "Theatrejs"）──
-  'three-cesium-examples|threeExamples/animation|Theatrejs': {
-    title: 'Theatre.js 动画编排',
-    description: '用 Theatre.js 编排 Three.js 场景的动画时间轴，可在浏览器里可视化调参。',
-    tags: ['Three.js', '动画', 'Theatre.js', '时间轴'],
-  },
 
   // ── 上游调试页，非案例 ────────────────────────────────────────────
   'cesium-examples|cesiumExamples/tools|test': {
     title: '影像图层调试页',
     description: '上游仓库的 Cesium 影像图层调试页，用于验证图层挂载，不是完整案例。',
-    hidden: true,
-  },
-  'three-cesium-examples|threeExamples/other|test': {
-    title: '综合调试页',
-    description: '上游仓库 Three.js / Cesium 混合环境的调试页，不是完整案例。',
     hidden: true,
   },
 }
@@ -67,7 +57,6 @@ export const displayOverrides: Record<string, DisplayOverride> = {
  * 来源标签（「Three.js 案例」等）卡片上已有徽标，所以这里刻意不重复。
  */
 export const displayCategoryOverrides: Record<string, DisplayOverride> = {
-  "earth-lessons|earth-lessons": { description: "地球案例专题" },
   "graphics|d3": { description: "D3 数据可视化专题" },
   "graphics|d3-spritejs": { description: "D3 + SpriteJS 专题" },
   "graphics|data-graph-css": { description: "CSS 数据图形专题" },
@@ -105,23 +94,6 @@ export const displayCategoryOverrides: Record<string, DisplayOverride> = {
   "mygrapics|vector_draw": { description: "向量绘制专题" },
   "mygrapics|vector_tree": { description: "向量树专题" },
   "mygrapics|webgl_particles": { description: "WebGL 粒子专题" },
-  "three-cesium-examples|threeExamples/application": { description: "应用级案例专题" },
-  "three-cesium-examples|threeExamples/basic": { description: "基础专题" },
-  "three-cesium-examples|threeExamples/expand": { description: "扩展专题" },
-  "three-cesium-examples|threeExamples/other": { description: "其它专题" },
-  "three-cesium-examples|threeExamples/particle": { description: "粒子专题" },
-  "three-cesium-examples|threeExamples/shader": { description: "着色器专题" },
-  "three-project|light": { description: "光照专题" },
-  "three-project|particle": { description: "粒子专题" },
-  "three-project|webgl": { description: "WebGL 专题" },
-  "threejs-lesson|03-basics": { description: "Three.js 基础专题" },
-  "threejs-lesson|06-materials": { description: "材质专题" },
-  "threejs-lesson|09-cleanup": { description: "资源清理专题" },
-  "threejs-official|misc/animation": { description: "动画专题" },
-  "threejs-official|webgl/loader": { description: "模型加载专题" },
-  "threejs-official|webgl/materials": { description: "材质专题" },
-  "threejs-official|webgl/shadowmesh": { description: "阴影网格专题" },
-  "threejs-official|webgl/worker": { description: "Web Worker 专题" },
   "webgl|kaikeba-webgl/01-webgl-入门-webgl": { description: "WebGL 入门专题" },
   "webgl|kaikeba-webgl/04-矩阵变换": { description: "矩阵变换专题" },
   "webgl|kaikeba-webgl/05-复合变换": { description: "复合变换专题" },
