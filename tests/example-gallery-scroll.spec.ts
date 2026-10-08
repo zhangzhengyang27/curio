@@ -36,7 +36,7 @@ test.describe('示例中心滚动与窄窗口', () => {
   })
 
   test('从详情返回列表时恢复到离开前所在的位置', async ({ page }) => {
-    await page.goto('/examples?page=3')
+    await page.goto('/examples?page=2')  // 2026-10-08 四源迁出后 77 条共 2 页
     await expect(page.locator('.example-card').first()).toBeVisible()
     await page.evaluate(() => {
       const root = document.getElementById('app')
@@ -58,7 +58,7 @@ test.describe('示例中心滚动与窄窗口', () => {
     await page.locator('.example-card').nth(1).evaluate(el => (el as HTMLElement).click())
     await expect(page).toHaveURL(/\/examples\/[^/]+\//)
     await page.goBack()
-    await expect(page).toHaveURL(/\/examples\?page=3/)
+    await expect(page).toHaveURL(/\/examples\?page=2/)
     await expect(page.locator('.example-card').first()).toBeVisible()
 
     let restored = -1

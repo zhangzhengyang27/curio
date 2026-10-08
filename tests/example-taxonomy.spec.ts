@@ -27,7 +27,8 @@ const SUBS_AND_DATA = `
     const R = await import('/src/examples/registry/index.ts')
     await R.loadAllRegistries()
     const all = R.getAllExamples().filter(e => !e.displayHidden)
-    const subs = F.subCategoryDefinitions.filter(s => s.key !== 'all')
+    // unclassified 是「已定义桶的补集」，按定义为空是理想态，不参与空桶检查
+    const subs = F.subCategoryDefinitions.filter(s => s.key !== 'all' && s.key !== 'unclassified')
     const hits = (ex) => subs.filter(s => { try { return !!s.match(ex) } catch { return false } }).map(s => s.key)
     return {
       total: all.length,
@@ -60,7 +61,7 @@ test('I1 没有任何示例落在全部子分类之外（兜底桶必须存在�
  * 旧实现用 /(xr|vr|ar|webxr)/i 匹配整串 category，particle / parallax / clearcoat
  * 全被吞进来（116 条里 87 条只因含 "ar" 三个字母），这条就是拦这个。
  */
-/** XR / VR / AR 子分类已随 three 侧 6 源迁出（2026-10-05）删除：剩余 403 条中无 xr/vr/ar
+/** XR / VR / AR 子分类已随 three 侧 6 源迁出（2026-10-05）删除：2026-10-08 四源再迁出后（剩 78 条）无 xr/vr/ar
  *  分类内容，桶为空违反 I3；未来若接入含 XR 内容的新来源，随桶定义一起恢复本用例。
  */
 test('I3 子分类并集覆盖全部条目，且不存在空桶', async ({ page }) => {

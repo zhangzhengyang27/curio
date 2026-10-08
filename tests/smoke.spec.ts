@@ -27,15 +27,16 @@ const DEMO_PATH = '/examples/cesium-examples/cesiumExamples/tools/computerNewPoi
 
 /**
  * registry **数据**分块的识别模式，兼容两种 E2E 目标：
- *   dev     → /src/examples/registry/threeCesiumExamples.js（源码路径）
- *   preview → /assets/threeCesiumExamples-CcbqyxGT.js（带哈希的分块名）
+ *   dev     → /src/examples/registry/cesiumExamples.js（源码路径）
+ *   preview → /assets/cesiumExamples-<hash>.js（带哈希的分块名）
  *
- * 必须只匹配 11 个数据文件、排除 registry/index.js：index.js 是 barrel，
+ * 必须只匹配数据分片、排除 registry/index.js：index.js 是 barrel，
  * 被 useExampleFilters 静态导入，首页请求它属于正常；真正要拦的是数据分块。
  * 顶栏在所有路由都挂载，曾因此把 3+ 个数据 registry 拉进首屏（见 docs/PERF_BASELINE.md）。
+ * 2026-10-08 webgl/graphics/mygrapics/city 四源迁出后仅剩 cesium 一个分片。
  */
 const REGISTRY_CHUNK_RE =
-  /(?:\/src\/examples\/registry\/|\/assets\/)(?:cesiumExamples|webglExamples|mygrapicsExamples|graphicsExamples|cityRealtimeWebglExamples)(?:-[A-Za-z0-9_-]+)?\.js/
+  /(?:\/src\/examples\/registry\/|\/assets\/)cesiumExamples(?:-[A-Za-z0-9_-]+)?\.js/
 
 /** 收集页面级未捕获异常，用于断言框架层没有崩溃 */
 function collectPageErrors(page) {
@@ -192,7 +193,7 @@ test.describe('冒烟测试：核心链路', () => {
     await page.goto('/examples')
     await expect(page.locator('.example-card').first()).toBeVisible()
     const total = await readCount()
-    expect(total, '未过滤时应展示全部示例').toBeGreaterThan(300) // 2026-10-05 three 侧迁出后全库 403 条
+    expect(total, '未过滤时应展示全部示例').toBeGreaterThan(50) // 2026-10-08 四源迁出后全库 78 条
 
     // 关键词走 route.query.search → ExampleGallery 的 filteredExamples。
     // 用「shader」而非更直觉的词：标题/描述/标签多为中文，实测多数英文词
@@ -291,12 +292,13 @@ test.describe('冒烟测试：核心链路', () => {
   // 而 filteredExamples.length 又 >0 → 连空态提示都不渲染，用户看到「共 N 个」配空白网格。
   // ?page=999 / 负数 / 小数同属这一类越界。
   test('页码越界自动钳制，不出现空白网格(回归:搜索保留旧 page)', async ({ page }) => {
-    // 「shader」实测 13 条 = 1 页；单页时 .pagination 整个不渲染，
-    // 所以这里断言的是「卡片可见 + 越界的 page 参数被写回清掉」，而不是分页按钮
+    // 「shader」2026-10-08 四源迁出后实测命中 1 条（原 13 条中 12 条属 graphics 源）
+    // = 1 页；单页时 .pagination 整个不渲染，所以这里断言的是
+    // 「卡片可见 + 越界的 page 参数被写回清掉」，而不是分页按钮
     await page.goto('/examples?search=shader&page=7')
     await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 15_000 })
     expect(new URL(page.url()).searchParams.has('page'), '钳回第 1 页后 page 参数应被省略').toBe(false)
-    await expect(page.locator('.example-card')).toHaveCount(13)
+    await expect(page.locator('.example-card')).toHaveCount(1)
 
     // 负数会让 slice 从尾部取错数据，属于同一类脏 URL；这条有多页，可以断按钮
     await page.goto('/examples?page=-3')
@@ -450,7 +452,8 @@ test.describe('冒烟测试：核心链路', () => {
     }
     // 原「描述应含章节主题」的正向断言随技术栈维度一起移除；
     // Theatre.js 逐条覆盖断言也随 three 侧 6 源迁出（2026-10-05）一并移除——
-    // 剩余 403 条的逐条覆盖仅剩 hidden 调试页标记，由下方 hiddenEntries 断言承担。
+    // 剩余 78 条的逐条覆盖仅剩 hidden 调试页标记，由下方 hiddenEntries 断言承担
+    // （graphics/webgl 等源的 44 条分类覆盖已随 2026-10-08 四源迁出一并移除）。
 
     // 被标 hidden 的上游调试页不该能从详情直连进去。
     //

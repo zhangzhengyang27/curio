@@ -31,20 +31,11 @@ export function ensureRegistryLoaded() {
  */
 const GEO_SOURCES = [
   'cesium-examples',
-  'city-realtime-webgl',
 ]
 
-/** 非地理来源里，章节本身就带地理语义的 category 片段 */
-const GEO_CATEGORY_HINTS = [
-  'vis-geo-earth',
-  'city-realtime',
-  'weather',
-  'covid',
-  'park-people',
-  'github-contributions',
-  'polyline-curve',
-  'polygon-fill',
-]
+/** 非地理来源里，章节本身就带地理语义的 category 片段
+ *  （2026-10-08 四源迁出后已清空：这批片段全属 graphics/city 源，cesium 不需要提示词） */
+const GEO_CATEGORY_HINTS: string[] = []
 
 export function isGeoExample(ex: RegistryExample): boolean {
   if (GEO_SOURCES.includes(ex.source)) return true
@@ -71,8 +62,7 @@ export const techSearchTerms: Record<string, string[]> = {
 export const techGroups = [
   { key: 'all', label: '全部技术', match: () => true },
   { key: 'cesium', label: 'Cesium', match: (ex: RegistryExample) => ex.source === 'cesium-examples' || (ex.category && ex.category.startsWith('cesiumExamples/')) },
-  { key: 'webgl', label: 'WebGL', match: (ex: RegistryExample) => ex.source === 'webgl' || ex.source === 'city-realtime-webgl' || ex.category === 'webglExamples' },
-  { key: 'graphics', label: 'Graphics / MyGrapics', match: (ex: RegistryExample) => ex.source === 'graphics' || ex.source === 'mygrapics' },
+  // webgl / graphics 两组分面已随四源迁出（2026-10-08）删除
   // 与 Cesium 标签有意重叠（Cesium 本来就是地球引擎），价值在于把散在
   // graphics 里的地理章节也一并收进来，并让「地图」这个词可搜。
   { key: 'geo', label: '地理 / GIS', match: isGeoExample },
@@ -123,46 +113,14 @@ function anyOf(...matchers: Array<(ex: RegistryExample) => boolean>) {
  * 该桶计数同时是分类质量的棘轮：它变大说明 registry 引入了新的 category 词。
  */
 const definedCategories = [
+  // 2026-10-08 四源迁出后仅剩 cesium 源（77 条），实测只落进这 4 个桶；
+  // geometry/materials/lights/shader/animation/interaction/data-viz/math 8 个
+  // 空桶已删（I3「不存在空桶」不变量）。桶词干里仍留部分死词无副作用。
   {
     key: 'basics',
     label: '基础入门',
     match: stem('basic', 'base', 'start', 'scene', 'cleanup', 'scenegraph', 'helper',
       'simple', 'watch', 'hierarchy', 'coordinat', 'machineroom', 'lesson', '入门', '层次'),
-  },
-  {
-    key: 'geometry',
-    label: '几何体 / 线条',
-    match: stem('geometr', 'polygon', 'polyline', 'curve', 'triang', 'lines', 'model',
-      'vector', 'shaping', 'centroid', 'marchingcube', 'clip', 'parametric', 'mesh',
-      '几何', '线条', '三角', '形状'),
-  },
-  {
-    key: 'materials',
-    label: '材质 / 纹理',
-    match: stem('material', 'texture', 'normal', 'cubemap', 'pmrem', 'decal', 'clearcoat',
-      'mirror', 'reflection', 'refraction', 'panorama', 'portal', 'video', 'backdrop',
-      'caustic', 'ocean', 'water', 'sky', 'fog', 'procedural', 'hdr', 'display',
-      'renderer', 'color', 'equirectangular', 'parallax', 'tonemap', '纹理', '颜色', '贴图'),
-  },
-  {
-    key: 'lights',
-    label: '灯光 / 阴影',
-    match: stem('light', 'shadow', 'lensflare', 'occlusion', '光照', '灯光'),
-  },
-  {
-    key: 'shader',
-    label: '着色器 / GLSL',
-    match: anyOf(
-      stem('shader', 'glsl', 'noise', 'pixel', 'gpgpu', 'compute', 'custom', 'sandbox',
-        'polar', 'generator', 'struct', 'storage', 'compile', '着色器', '语言'),
-      seg('tsl', 'ubo'),
-    ),
-  },
-  {
-    key: 'animation',
-    label: '动画 / 粒子',
-    match: stem('animat', 'particl', 'morph', 'skin', 'instanc', 'point', 'batch',
-      'sprite', 'random', '动画', '粒子'),
   },
   {
     key: 'post-effects',
@@ -171,33 +129,9 @@ const definedCategories = [
       'raffle', '特效', '后处理'),
   },
   {
-    key: 'interaction',
-    label: '交互 / 相机',
-    match: anyOf(
-      stem('control', 'camera', 'raycast', 'boxselection', 'multiple', 'interact',
-        '拾取', '交互'),
-      seg('uv'),
-    ),
-  },
-  {
     key: 'loader',
     label: '加载器 / 资源',
     match: stem('loader', 'exporter', 'layer', 'offline', '加载', '资源'),
-  },
-  {
-    key: 'data-viz',
-    label: '数据可视化',
-    match: anyOf(
-      stem('data', 'chart', 'covid', 'github', 'graph', 'weather', 'city', 'vis-geo',
-        'park-people', '可视化'),
-      seg('d3'),
-    ),
-  },
-  {
-    key: 'math',
-    label: '数学 / 变换',
-    match: stem('quaternion', 'matrix', 'vector', 'math', 'easing', 'bezier', 'spline',
-      'random', '矩阵', '变换'),
   },
   {
     key: 'expand',

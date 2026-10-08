@@ -25,10 +25,6 @@ export interface SourceProvenance {
 
 export const sourceProvenance: Record<string, SourceProvenance> = {
   'cesium-examples': { upstream: null, upstreamRef: null },
-  'city-realtime-webgl': { upstream: null, upstreamRef: null },
-  webgl: { upstream: null, upstreamRef: null },
-  graphics: { upstream: null, upstreamRef: null },
-  mygrapics: { upstream: null, upstreamRef: null },
 }
 
 /**

@@ -19,12 +19,10 @@ export interface RegistryExample {
   [key: string]: unknown
 }
 
+// 2026-10-08：webgl / graphics / mygrapics / city-realtime-webgl 四源已整体迁出至
+// html5-dataviz 项目（组件/分片/资产同批删除），仅剩 cesium-examples。
 const registryLoaders = {
   'cesium-examples': () => import('./cesiumExamples.ts'),
-  'webgl': () => import('./webglExamples.ts'),
-  'mygrapics': () => import('./mygrapicsExamples.ts'),
-  'graphics': () => import('./graphicsExamples.ts'),
-  'city-realtime-webgl': () => import('./cityRealtimeWebglExamples.ts'),
 }
 
 /**

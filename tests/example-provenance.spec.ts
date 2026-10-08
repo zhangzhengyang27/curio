@@ -33,7 +33,26 @@ test('每个来源都在 provenance 里登记过，且快照日期可核实', as
   test.skip(IS_PREVIEW, '依赖 dev 模式下可按 URL 二次 import 的源码模块')
   test.setTimeout(180_000)
   await page.goto('/examples')
-  const f = await page.evaluate(facts)
+  // evaluate 里动态 import 源码模块；dev server 并行负载下可能触发依赖重优化
+  // → 整页 reload → "Execution context was destroyed"。这是环境抖动不是断言失败，
+  // 重试两次（2026-10-08 四源迁出后全量跑实测 3 次 1 次撞上）。
+  type ProvenanceFacts = {
+    sources: string[]
+    registered: string[]
+    summary: string
+    assets: { capturedAt: string; capturedCommit: string }
+  }
+  let f: ProvenanceFacts | undefined
+  for (let i = 0; i < 3; i++) {
+    try {
+      f = await page.evaluate<ProvenanceFacts>(facts)
+      break
+    } catch (err) {
+      if (i === 2 || !/Execution context was destroyed/i.test(String(err))) throw err
+      await page.waitForTimeout(3000)
+    }
+  }
+  if (!f) throw new Error('provenance evaluate 重试三次均失败')
 
   const missing = f.sources.filter(s => !f.registered.includes(s))
   expect(missing, `这些来源没有溯源登记：${missing.join(', ')}`).toEqual([])

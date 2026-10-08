@@ -43,20 +43,20 @@ test.describe('示例中心专题分面', () => {
   })
 
   test('?sub= 可从分享链接还原，且换一个专题仍可选（分面计数排除自身）', async ({ page }) => {
-    await openGallery(page, '?sub=shader')
-    await expect(page.locator('.category-item.active')).toContainText('着色器')
+    await openGallery(page, '?sub=loader')
+    await expect(page.locator('.category-item.active')).toContainText('加载器')
     const total = await parseCount(page.locator('.result-count'))
     expect(total).toBeGreaterThan(0)
     expect(await page.locator('.example-card').count()).toBeLessThanOrEqual(48)
 
     // 选中「着色器」之后，其它专题的计数不应归零 ——
     // 归零说明分面计数忘了排除自身，用户就换不动了
-    const other = page.locator('.category-item', { hasText: '动画 / 粒子' })
+    const other = page.locator('.category-item', { hasText: '扩展 / 综合' })
     const otherCount = await parseCount(other.locator('.item-count'))
     expect(otherCount, '其它专题的计数应保留').toBeGreaterThan(0)
 
     await other.click()
-    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).toBe('animation')
+    await expect.poll(() => new URL(page.url()).searchParams.get('sub')).toBe('expand')
     await expect
       .poll(async () => parseCount(page.locator('.result-count')))
       .toBe(otherCount)
@@ -123,25 +123,25 @@ test.describe('已选条件与空态', () => {
     await openGallery(page)
     await expect(page.locator('.af-chip')).toHaveCount(0)
 
-    await page.locator('.category-item', { hasText: '着色器 / GLSL' }).click()
-    await page.locator('.nav-search .search-input').fill('shader')
-    await expect.poll(() => new URL(page.url()).searchParams.get('search')).toBe('shader')
+    await page.locator('.category-item', { hasText: '加载器 / 资源' }).click()
+    await page.locator('.nav-search .search-input').fill('cesium')
+    await expect.poll(() => new URL(page.url()).searchParams.get('search')).toBe('cesium')
 
     const chips = page.locator('.af-chip')
     await expect(chips).toHaveCount(2)
-    await expect(chips.first()).toContainText('着色器')
+    await expect(chips.first()).toContainText('加载器')
 
     // 移除专题条件，关键词应当留下
     await chips.first().click()
     await expect.poll(() => new URL(page.url()).searchParams.get('sub')).toBeNull()
-    expect(new URL(page.url()).searchParams.get('search')).toBe('shader')
+    expect(new URL(page.url()).searchParams.get('search')).toBe('cesium')
     await expect(page.locator('.af-chip')).toHaveCount(1)
   })
 
   test('清除全部把两个条件一次归位', async ({ page }) => {
-    // 「地球」在 three 侧迁出后仅剩 1 条。组合需取真交集：shader 桶（77 条，多为
-    // graphics/mygrapics 源）∩ 关键词「webgl」实测 48 条（cesium 等词交集为 0）
-    await openGallery(page, '?sub=shader&search=webgl')
+    // 2026-10-08 四源迁出后仅剩 cesium 源（77 条）：组合取真交集
+    // loader 桶（18 条）∩ 关键词「cesium」实测 18 条（标题/描述含 Cesium）
+    await openGallery(page, '?sub=loader&search=cesium')
     await expect(page.locator('.af-chip')).toHaveCount(2)
 
     await page.getByRole('button', { name: '清除全部' }).click()
@@ -149,7 +149,7 @@ test.describe('已选条件与空态', () => {
     await expect(page.locator('.af-chip')).toHaveCount(0)
     await expect.poll(() => new URL(page.url()).search).toBe('')
     const total = await parseCount(page.locator('.result-count'))
-    expect(total, '清空后应回到全库').toBeGreaterThan(300)
+    expect(total, '清空后应回到全库').toBeGreaterThan(50)
   })
 
   test('搜不到时给出可读空态，并给出退出路径', async ({ page }) => {
