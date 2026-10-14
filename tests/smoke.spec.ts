@@ -369,40 +369,42 @@ test.describe('冒烟测试：核心链路', () => {
     await expect(page.locator('.bmap-page')).toBeVisible()
     await expect(page.locator('.bmap-header h1')).toContainText('百度地图')
 
-    // 回归：7b00e25「全站暗色主题」漏掉了本页 —— .bmap-tab 用 color:inherit 配
-    // 硬编码 #f3f4f6 底，47 个 tab 变成白字白底（对比度 1.15:1），整页导航不可读。
-    // 5 项 verify 闸门、typecheck、lint 都不看 CSS 值，所以这类缺陷只能这样拦。
-    const contrast = await page.evaluate(() => {
-      const lum = (c) => {
-        const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map((v) => {
-          const x = Number(v) / 255
-          return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
-        })
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b
-      }
-      const ratio = (fg, bg) => {
-        const a = lum(fg)
-        const b = lum(bg)
-        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
-      }
-      const effBg = (el) => {
-        let n = el
-        while (n) {
-          const c = getComputedStyle(n).backgroundColor
-          if (c && !/rgba\(0, 0, 0, 0\)/.test(c)) return c
-          n = n.parentElement
-        }
-        return 'rgb(10, 14, 23)'
-      }
-      const tab = document.querySelector('.bmap-tab:not(.active)')
-      return { tab: ratio(getComputedStyle(tab).color, effBg(tab)) }
-    })
-    expect(contrast.tab, `/bmap tab 对比度仅 ${contrast.tab.toFixed(2)}:1，低于 AA 要求的 4.5`).toBeGreaterThanOrEqual(4.5)
-
     if (akConfigured) {
       // 已配置 VITE_BMAP_AK → SDK 动态加载成功，示例 tab 栏渲染出来
       await expect(page.locator('.bmap-nav')).toBeVisible({ timeout: 20000 })
       await expect(page.locator('.bmap-warning')).toHaveCount(0)
+
+      // 回归：7b00e25「全站暗色主题」漏掉了本页 —— .bmap-tab 用 color:inherit 配
+      // 硬编码 #f3f4f6 底，47 个 tab 变成白字白底（对比度 1.15:1），整页导航不可读。
+      // 5 项 verify 闸门、typecheck、lint 都不看 CSS 值，所以这类缺陷只能这样拦。
+      // ⚠ 必须放在 akConfigured 分支内：无 AK 时页面走降级提示、tab 栏不渲染，
+      //   此检查会因 querySelector 拿到 null 而炸（CI 首跑就是这么红的）。
+      const contrast = await page.evaluate(() => {
+        const lum = (c) => {
+          const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map((v) => {
+            const x = Number(v) / 255
+            return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
+          })
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b
+        }
+        const ratio = (fg, bg) => {
+          const a = lum(fg)
+          const b = lum(bg)
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+        }
+        const effBg = (el) => {
+          let n = el
+          while (n) {
+            const c = getComputedStyle(n).backgroundColor
+            if (c && !/rgba\(0, 0, 0, 0\)/.test(c)) return c
+            n = n.parentElement
+          }
+          return 'rgb(10, 14, 23)'
+        }
+        const tab = document.querySelector('.bmap-tab:not(.active)')
+        return { tab: ratio(getComputedStyle(tab).color, effBg(tab)) }
+      })
+      expect(contrast.tab, `/bmap tab 对比度仅 ${contrast.tab.toFixed(2)}:1，低于 AA 要求的 4.5`).toBeGreaterThanOrEqual(4.5)
     } else {
       // 未配置 AK → 必须给出可读的降级提示，而不是一直卡在「正在加载…」
       await expect(page.locator('.bmap-warning')).toContainText('未配置百度地图 AK', {
