@@ -96,6 +96,35 @@ compare.value = ['y']     // → n 变 1
 图表是在整页冷启动**之后**再 `await import('echarts')`（dev 下 1.1 MB 未打包 chunk）
 才挂上的，30s 在全量长跑满负荷时仍不够。
 
+### A6. macOS 大小写不敏感文件系统把「文件名大小写漂移」藏到 CI/生产才爆
+
+**现象**（2026-10-14 CI 首跑实测）：本地 `npm run verify` 全绿，CI 的 `verify:drift` 报
+「registry 已与生成器不一致」，首处差异是 `baiDu` 条目位置错位；同批日志里有 13 条
+「本地未找到 JS」。
+
+**根因**（两层叠加）：
+1. 生成器曾用 `` `${id}.js` `` 推导源文件路径做 `existsSync` 探测，而上游 config 里
+   `id` 与实际文件名大小写不一致（`id: baiDu`，实际文件 `baidu.js`，config 的
+   `codeUrl`/`image` 是小写真实路径）。
+2. macOS（APFS 默认大小写不敏感 + `core.ignorecase=true`）让
+   `existsSync('baiDu.js')` 命中 `baidu.js`，本地生成一切「正常」；Linux CI/生产
+   大小写敏感 → 找不到 → 条目被跳过、再被合并保护从旧 registry 追加到末尾 →
+   顺序错位报漂移。**更隐蔽的是 registry 里登记的 `entry`/`thumbnail` 一并写成了
+   id 派生路径（`baiDu.*`），部署到 Linux 后该示例源码与封面直接 404——本地全绿
+   掩盖的不只是 CI 假红，是真实的生产断链。**
+
+**正确做法**：
+- 文件路径一律以「声明处」为准（上游 config 的 `codeUrl`/`image`、registry 字段）
+  做字节级精确引用，不要从 id/名称重新拼路径再探测；
+- 判据不能用 `fs.existsSync`（macOS 上是大小写盲的），要用 `readdirSync` 取真实
+  目录项与引用串做**字节级**比对；
+- 凡 existsSync 型探测，设计时就假设运行环境大小写敏感；
+- 排查时的叠加坑：直跑 `node scripts/generate-registry.js` 与 `npm run` 内的 node
+  可能不同版本（本机 shell 是 v22.15，npm script 带 `--experimental-strip-types`，
+  直跑缺 flag → `loadExistingExamples()` 静默吞 import 错 → 合并保护失效 →
+  dry-run 显示 -193 行的「大漂移」假象）。见 E5，**verify:drift 相关命令一律走
+  npm script 或手动补 flag**。
+
 ---
 
 ## B. 不可逆 / 高危操作

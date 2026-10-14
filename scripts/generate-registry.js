@@ -48,6 +48,7 @@ function parseConfig(configText, sourceName) {
     examples.push({
       id,
       category,
+      codeUrl,
       title,
       titleEn,
       description: title,
@@ -59,13 +60,21 @@ function parseConfig(configText, sourceName) {
   return examples
 }
 
-function findLocalThumbnail(category, id) {
-  const baseDir = path.join(examplesRoot, category)
+function findLocalThumbnail(ex) {
+  const toPublicUrl = (filePath) =>
+    `/${path.relative(path.join(projectRoot, 'public'), filePath).replace(/\\/g, '/')}`
+  // 优先用上游 config 声明的 image：id 与文件名大小写可能不一致（baiDu/baidu.js），
+  // 用 id 推导路径在大小写敏感的 CI/生产环境会失配（macOS 本地测不出来）
+  if (ex.thumbnail) {
+    const declared = path.join(examplesRoot, ex.thumbnail)
+    if (fs.existsSync(declared)) return toPublicUrl(declared)
+  }
+  const baseDir = path.join(examplesRoot, ex.category)
   const exts = ['.jpg', '.webp', '.png']
   for (const ext of exts) {
-    const filePath = path.join(baseDir, id + ext)
+    const filePath = path.join(baseDir, ex.id + ext)
     if (fs.existsSync(filePath)) {
-      return `/${path.relative(path.join(projectRoot, 'public'), filePath).replace(/\\/g, '/')}`
+      return toPublicUrl(filePath)
     }
   }
   return ''
@@ -98,14 +107,19 @@ async function buildRegistry(name, sourceName, label, sourceKey) {
   // 按 category 分组
   const groups = new Map()
   parsed.forEach(ex => {
-    const jsPath = path.join(examplesRoot, ex.category, `${ex.id}.js`)
+    // 源文件路径必须用上游 config 声明的 codeUrl，不能用 `${id}.js` 推导：
+    // 上游存在 id 与文件名大小写不一致的条目（如 id=baiDu / 文件=baidu.js），
+    // macOS 大小写不敏感会命中、Linux CI/生产则找不到——这是 CI 首跑漂移检测
+    // 假红（实为真漂移）的根因，见 KNOWN_PITFALLS A6。
+    const jsPath = path.join(examplesRoot, ex.codeUrl)
     if (!fs.existsSync(jsPath)) {
       console.warn(`[${sourceName}] 本地未找到 JS: ${jsPath}`)
       return
     }
+    delete ex.codeUrl // 仅用于上述定位，不写入 registry
 
     ex.entry = `/${path.relative(path.join(projectRoot, 'public'), jsPath).replace(/\\/g, '/')}`
-    ex.thumbnail = findLocalThumbnail(ex.category, ex.id)
+    ex.thumbnail = findLocalThumbnail(ex)
     ex.tags = [sourceName, ...ex.category.split('/').filter(Boolean).slice(1), ex.tag].filter(Boolean)
     ex.runner = 'vue'
     ex.globals = {
@@ -161,7 +175,14 @@ async function buildRegistry(name, sourceName, label, sourceKey) {
         ...ex,
         title: prev.title ?? ex.title,
         description: prev.description ?? ex.description,
-        thumbnail: prev.thumbnail ?? ex.thumbnail,
+        // 人工策展封面（/example-thumbs/，截图流水线产物）优先保留；本次推导为空时
+        // 也保留旧值防回退。/external-examples/ 开头的是旧版生成器产物，一律以
+        // 本次推导值覆盖——否则 id 与文件名大小写不一致的条目会永远带着旧错路径
+        //（baiDu 条目的 baiDu.jpg 即此来源，Linux 生产上 404）。
+        thumbnail:
+          ex.thumbnail && !prev.thumbnail?.startsWith('/example-thumbs/')
+            ? ex.thumbnail
+            : prev.thumbnail ?? ex.thumbnail,
         tags: prev.tags ?? ex.tags,
       }
     })

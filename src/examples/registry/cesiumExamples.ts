@@ -422,9 +422,9 @@ export default {
       "title": "内网百度",
       "titleEn": "Intranet Baidu",
       "description": "这是一个基于 Cesium 的示例。运用了 实体(Entity)、影像图层 技术。",
-      "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/baiDu.jpg",
+      "thumbnail": "/external-examples/three-cesium-examples/cesiumExamples/offline/baidu.jpg",
       "tag": "",
-      "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/baiDu.js",
+      "entry": "/external-examples/three-cesium-examples/cesiumExamples/offline/baidu.js",
       "tags": [
         "Cesium",
         "实体(Entity)",
