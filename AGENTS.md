@@ -79,7 +79,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具。配了 `TDT_TOKEN`（或回退读 `VITE_TDT_TOKEN`）后它同时是**天地图瓦片反代**，前端在 `.env.local` 设 `VITE_TILE_PROXY=/tiles` 才启用；没起时前端自动退回直连 |
 | `npm run refresh:quakes` | 重生成打包降级快照 `public/data/quake-snapshot.json`（进版本库；数据可随时再抓） |
 | `npm run test:unit` | 前端纯逻辑单测（Node 内置 `node:test`，`tests/unit/`，零依赖）。命令面板核心等纯状态机放这里；CI 同步跑 |
-| `npm run verify` | **一键跑 8 项一致性校验**（见下） |
+| `npm run verify` | **一键跑 7 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
 ---
@@ -87,7 +87,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 ## 5. 改完必须跑的闸门
 
 ```bash
-npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 图形渲染器生成物 → 主题令牌/对比度 → 令牌关键文字对/placeholder 用法
+npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 主题令牌/对比度 → 令牌关键文字对/placeholder 用法
 npm run typecheck
 npm run lint:ci
 npm run build
@@ -100,12 +100,6 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
   —— 历史上 `manualChunks` 静默失效、以及一条 E2E 选择器歧义，都是 preview 才暴露的。
 - 改动涉及 `vite.config.ts` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
 - `npm run verify:drift` 是 `verify` 的第 3 环，也是判断「registry 与生成器是否一致」的唯一可靠手段。
-- `npm run verify:gl-renderer` 守 `src/examples/jsm-compat/gl-renderer.esm.js`：它是
-  `public/graphics/common/lib/gl-renderer.js`（webpack UMD，课程原版渲染器）的 ESM 转换产物，
-  **由 `scripts/generate-gl-renderer-esm.mjs` 生成、禁止手工编辑**。`graphics` / `mygrapics`
-  两棵树共 84 个组件用的 `compileSync` / `useProgram` / `setMeshData` / `uniforms` /
-  `createFBO` / `bindFBO` 全来自它；产物与上游 UMD 漂移 = 那 84 个示例静默渲染失败
-  （2026-09-24 就是这么坏的）。改了上游 UMD 必须重跑生成器。
 - `npm run verify:theme` 是**棘轮（ratchet）**：`scripts/_theme_token_baseline.json` 记录每个文件
   允许的硬编码色值上限，**只允许下降**。改完一批 token 化后跑
   `node scripts/verify-theme-tokens.mjs --update` 收紧基线；

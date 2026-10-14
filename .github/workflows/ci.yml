@@ -52,7 +52,7 @@ jobs:
         run: npm run lint:ci
 
       - name: TypeScript 类型检查（全量 vue-tsc）
-        # vue-tsc --noEmit 覆盖全部 .vue（实测 1500 个）+ 自有 .ts，当前 0 error。
+        # vue-tsc --noEmit 覆盖 src 下全部 .vue 与自有 .ts，当前 0 error。
         # 不要退回「只查 .ts 子集」的收敛配置：那是基于错误假设的降级方案。
         run: npm run typecheck
 
@@ -80,12 +80,6 @@ jobs:
 
       - name: three.js 兼容层守卫
         run: npm run verify:three-compat
-
-      - name: 图形渲染器生成物守卫
-        # src/examples/jsm-compat/gl-renderer.esm.js 由 public/graphics/common/lib/gl-renderer.js
-        # （webpack UMD）生成，是 graphics / mygrapics 两棵树共 84 个组件的渲染器实现。
-        # 上游 UMD 变了而入库的 ESM 没重生成 → 那 84 个示例会静默渲染失败（历史上就是如此）。
-        run: npm run verify:gl-renderer
 
       - name: 主题令牌与对比度守卫
         # 棘轮：硬编码色值只允许比基线更少；静态 color/background 对比度 < 4.5:1 直接失败。

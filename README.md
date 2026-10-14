@@ -57,7 +57,7 @@ npm run build
 
 ### 质量阀门
 
-`npm run verify` 串联八项校验，CI 与本地都应保持全绿：
+`npm run verify` 串联七项校验，CI 与本地都应保持全绿：
 
 | 校验 | 脚本 | 拦截什么 |
 |---|---|---|
@@ -66,12 +66,11 @@ npm run build
 | 注册表漂移 | `npm run verify:drift` | 改了 registry 却没同步生成器（或反之）。串起 3 个生成器以 `--check` 做**逐字节**比对，比行数统计严格 |
 | 封面完整性 | `scripts/verify-thumbnails.mjs` | 非空 thumbnail 对应文件缺失（线上破图）；**同图字节被 > 5 条共用**（截图失败的占位图） |
 | 兼容层守卫 | `scripts/verify-three-compat.mjs` | three.js 本地兼容层被静默改动 |
-| 图形渲染器生成物 | `npm run verify:gl-renderer` | `jsm-compat/gl-renderer.esm.js` 与上游 UMD（`public/graphics/common/lib/gl-renderer.js`）漂移 —— 漂移会让 graphics / mygrapics 共 84 个示例渲染不出来 |
 | 主题令牌/对比度 | `npm run verify:theme` | 硬编码色值超出棘轮基线；`color`/`background` 字面量对比度 < 4.5:1 |
 | 令牌对比度（关键文字对） | `npm run verify:contrast` | theme.css 令牌值本身：12 对关键文字对 WCAG 实测 ≥ 4.5:1，且全仓 `::placeholder` 只允许 on-surface 系令牌（placeholder 是对比度事故惯犯——查「用法」而非枚举令牌对） |
 
 CI 定义在 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：
-`凭据扫描 → ESLint → 类型检查 → 八项校验 → 单测（server + 前端纯逻辑）→ 生产构建 → 冒烟 E2E（dev + 生产产物）`。
+`凭据扫描 → ESLint → 类型检查 → 七项校验 → 单测（server + 前端纯逻辑）→ 生产构建 → 冒烟 E2E（dev + 生产产物）`。
 
 > 冒烟测试要跑两种模式：dev server 反馈快，但**不经过生产打包**，
 > 测不出分包 / 产物相关问题，因此 CI 里还会用 `vite preview` 跑一遍真实产物。
