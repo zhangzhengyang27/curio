@@ -36,30 +36,16 @@ function copy(src, dest) {
 /**
  * 依赖列表：从 node_modules 复制到 dist/node_modules
  * 格式：[源相对 node_modules 路径, 目标相对 dist/node_modules 路径]
+ *
+ * 2026-10-15 示例中心移除后收敛为仅 Cesium：/tools 与 vue-cesium 的运行时
+ * 由 src/map/cesiumLoader.ts 以 CESIUM_BASE='/node_modules/cesium/Build/Cesium'
+ * 动态 <script> 加载，dev 下 vite 直接服务 node_modules，生产必须由本脚本
+ * 把 Build 产物拷进 dist/node_modules（ Workers/Assets/ThirdParty 与 Cesium.js
+ * 相对自身 URL 加载，整目录拷贝）。原先的 three/gsap/lil-gui 等十余项只服务
+ * 已删除的示例 iframe 运行器，随示例中心一并移除。
  */
 const deps = [
-  ['three/build/three.core.js', 'three/build/three.core.js'],
-  ['three/build/three.module.js', 'three/build/three.module.js'],
-  ['three/examples/jsm', 'three/examples/jsm'],
-  ['lil-gui/dist/lil-gui.esm.js', 'lil-gui/dist/lil-gui.esm.js'],
-  ['gsap/index.js', 'gsap/index.js'],
-  ['gsap/gsap-core.js', 'gsap/gsap-core.js'],
-  ['gsap/CSSPlugin.js', 'gsap/CSSPlugin.js'],
-  ['gsap/package.json', 'gsap/package.json'],
-  ['animejs/dist/modules', 'animejs/dist/modules'],
-  ['@tweenjs/tween.js/dist/tween.esm.js', '@tweenjs/tween.js/dist/tween.esm.js'],
-  ['three-mesh-bvh/src', 'three-mesh-bvh/src'],
-  ['postprocessing/build', 'postprocessing/build'],
-  ['postprocessing/package.json', 'postprocessing/package.json'],
-  ['cesium/Source', 'cesium/Source'],
   ['cesium/Build/Cesium', 'cesium/Build/Cesium'],
-  ['cesium/package.json', 'cesium/package.json'],
-  ['cesium-transform-controls/dist', 'cesium-transform-controls/dist'],
-  ['cesium-transform-controls/package.json', 'cesium-transform-controls/package.json'],
-  ['@mkkellogg/gaussian-splats-3d/build', '@mkkellogg/gaussian-splats-3d/build'],
-  ['@mkkellogg/gaussian-splats-3d/package.json', '@mkkellogg/gaussian-splats-3d/package.json'],
-  ['@sparkjsdev/spark/dist', '@sparkjsdev/spark/dist'],
-  ['@sparkjsdev/spark/package.json', '@sparkjsdev/spark/package.json'],
 ]
 
 if (!fs.existsSync(dist)) {
@@ -73,4 +59,4 @@ deps.forEach(([srcRel, destRel]) => {
   copy(src, dest)
 })
 
-console.log(`[copy-example-deps] 已将示例依赖复制到 ${distNodeModules}`)
+console.log(`[copy-example-deps] 已将 Cesium 运行时复制到 ${distNodeModules}`)
