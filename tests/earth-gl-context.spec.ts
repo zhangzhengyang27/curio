@@ -32,7 +32,7 @@ test('反复进出首页不累积 WebGL 上下文', async ({ page }) => {
 
   for (let i = 0; i < 4; i++) {
     await page.locator('.shell-switch').evaluate((el) => el.click())
-    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
+    await expect(page.locator('.gallery-page')).toBeVisible({ timeout: 30_000 })
     await page.locator('.shell-switch').evaluate((el) => el.click())
     await expect(page.locator('.earth-canvas')).toBeVisible({ timeout: 30_000 })
   }

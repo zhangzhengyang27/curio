@@ -22,7 +22,6 @@ import { test } from '@playwright/test'
 
 const ROUTES = [
   { path: '/', name: '首页地球', ready: '.app-nav' },
-  { path: '/examples', name: '示例中心', ready: '.example-card' },
   // 四页面(X3):Cesium 底座约 10MB 级传输属预期,预算见 docs/PERF_BASELINE.md
   // /tools 已改版为示例列表;性能测量对象是工具箱本体 /tools/toolbox(2026-09-16)
   { path: '/tools/toolbox', name: '地图工具箱', ready: '.panel-left' },

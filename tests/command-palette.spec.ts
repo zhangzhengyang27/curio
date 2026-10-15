@@ -14,7 +14,7 @@ test.describe('首页命令面板', () => {
     await expect(palette).toBeHidden()
   })
 
-  test('Escape 关闭;范围仅首页,/examples 上不响应(spec 决策点 2)', async ({ page }) => {
+  test('Escape 关闭;范围仅首页,/three-globe 上不响应(spec 决策点 2)', async ({ page }) => {
     await page.goto('/')
     await expect(page.locator('.earth-view')).toBeVisible()
     await page.keyboard.press('ControlOrMeta+k')
@@ -22,7 +22,7 @@ test.describe('首页命令面板', () => {
     await page.keyboard.press('Escape')
     await expect(page.getByTestId('command-palette')).toBeHidden()
 
-    await page.goto('/examples')
+    await page.goto('/three-globe')
     await page.keyboard.press('ControlOrMeta+k')
     await expect(page.getByTestId('command-palette')).toHaveCount(0)
   })

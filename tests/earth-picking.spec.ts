@@ -80,7 +80,7 @@ test.describe('首页地球 · 射线拾取', () => {
 
     // 走 SPA 路由（整页刷新会重建 store，测不到跨路由残留）
     await page.locator('.shell-switch').evaluate((el) => (el as HTMLElement).click())
-    await expect(page.locator('.example-card').first()).toBeVisible({ timeout: 30_000 })
+    await expect(page.locator('.gallery-page')).toBeVisible({ timeout: 30_000 })
     await page.locator('.shell-switch').evaluate((el) => (el as HTMLElement).click())
     await expect(page.locator('.earth-canvas')).toBeVisible({ timeout: 30_000 })
 
