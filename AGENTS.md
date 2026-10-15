@@ -32,7 +32,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 - **范围已冻结**：不再接入新的示例来源，只做存量修复与机制优化
   （[`docs/ROADMAP.md`](./docs/ROADMAP.md) 第 0 节）。
 - **不变量**：全部示例的 `runner` **均为 `'vue'`**（`iframe` 通道存在但无条目使用；403 条实测 2026-10-06）。
-- 仓库现状：**没有 git remote，只有 `main` 分支**，全部提交仅存于本机磁盘（ROADMAP P0）。
+- 仓库现状：远端 `github.com/zhangzhengyang27/curio`（私有），仅 `main` 分支；CI 已于 2026-10-14 首跑全绿（`.github/workflows/ci.yml`，全链约 25 分钟）。⚠ 到 github.com 直连不稳定，push 可能需多次重试。
 
 ---
 

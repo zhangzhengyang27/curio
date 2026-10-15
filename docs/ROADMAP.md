@@ -117,9 +117,10 @@
 
 | 项 | 说明 | 备注 |
 |---|---|---|
-| 建立远端仓库并推送 | 当前仓库 **没有任何 remote**，40+ 个提交只存在于本机磁盘 | 一次磁盘故障即全部丢失 |
-| 轮换已泄露的凭据 | 百度 AK 与天地图令牌曾以明文存在于工作区，应视为已泄露 | 需在对应控制台轮换 + 配置白名单 |
-| 首次跑通 CI | `.github/workflows/ci.yml` **已存在**（含 lint / typecheck / verify / build / e2e，verify 链已含新增的漂移检测），但**从未真正执行过** —— 需先建远端并推送后才可能跑。**分步已在本机手工验过**：`npm run lint` 干净、`npm run verify` 全绿、`npm run typecheck` 0 error、`vite build` EXIT=0、E2E dev + preview 各 15/15；`npm ci --dry-run --legacy-peer-deps` 亦通过，且本地 `node_modules` 同为 npm 安装 —— 即 CI 将装出的依赖树与本机一致。剩余风险主要是 GitHub 环境差异（`npx playwright install --with-deps chromium` 等）。⚠ 在这些步骤真正跑通前，仍应视为「未验证」 |
+| 轮换已泄露的凭据 | 百度 AK 与天地图令牌曾以明文存在于工作区，应视为已泄露 | 需在对应控制台轮换 + 配置域名白名单；公开部署前同时删除含旧 AK 的本地 `dist/`（404MB） |
+
+> 2026-10-14：「建立远端仓库并推送」与「首次跑通 CI」两项完成——远端 `github.com/zhangzhengyang27/curio`，
+> CI 经四轮修复后全绿（过程与根因归档见 `docs/CHANGELOG.md` 2026-10-14 小节）。
 
 ### P1（技术债）
 

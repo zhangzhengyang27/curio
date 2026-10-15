@@ -4,6 +4,22 @@
 > 下表为原 ROADMAP「已完成」小节的**原文整体迁入**（未改写），以保留背景与实测数据；
 > 新完成的工作追加到对应小节即可，不要回填路线图。
 
+## 2026-10 治理轮次
+
+### CI 首跑全绿与远端建立（2026-10-14）
+
+背景：10-05 / 10-08 两次示例迁出（three 侧 6 源 997 条、webgl 侧 4 源 325 条 → html5-dataviz，
+`1fae38ab` / `697698f7`）之后，ROADMAP P0 三件套在本日完成两项（余「轮换凭据」）。
+
+| 项 | 说明 |
+|---|---|
+| 远端仓库 | `github.com/zhangzhengyang27/curio`，main 全量推送（800MB 历史、最大单文件 58MB，未触发 GitHub 100MB 限制）。⚠ 到 github.com 直连不稳定（443 超时 / HTTP2 framing 错误 / Recv timeout 交替出现），推送需带重试 |
+| CI 第 1 轮 | 失败于 verify:drift。根因见 KNOWN_PITFALLS **A6**：生成器用 `${id}.js` 探测源文件，上游 config 存在 id 与文件名大小写不一致条目（id=baiDu / 文件=baidu.js）——macOS 大小写不敏感全绿、Linux CI 找不到文件跳过条目报漂移；且 registry 里 baiDu 的 entry/thumbnail 是 id 派生的错误大小写路径，Linux 生产会 404（真实断链，非仅 CI 假红）。修复（`2111016f`）：生成器改按 config 声明的 codeUrl/image 精确路径探测登记、合并保护细化（仅 /example-thumbs/ 策展封面优先保留）、registry 重跑 2 行；全仓 156 条路径 readdir 字节级审计确认无同类问题 |
+| CI 第 2 轮 | 失败于「图形渲染器生成物守卫」：`verify:gl-renderer` 脚本与其守护的 `gl-renderer.esm.js` 及 84 个使用方组件已随 10-08 迁出删除，package.json 已收敛为七项，ci.yml 步骤未跟上（Missing script）。修复（`8a91880e`）：删 CI 步骤；README/AGENTS「八项校验」→「七项」；typecheck 注释去掉易漂移的 .vue 计数 |
+| CI 第 3 轮 | 七项校验 + 生产构建 + Playwright 安装全过；E2E dev 172/173。唯一失败：/bmap 冒烟用例的对比度回归检查写在 AK 分支之外，CI 无 `VITE_BMAP_AK` 走降级分支、tab 栏不渲染 → `getComputedStyle(null)` 抛错（本地始终配真 AK，该形态从未被覆盖）。修复（`7456f407`）：检查移入 akConfigured 分支；两个形态均本地实测（临时移走 `.env.local` 模拟 CI） |
+| CI 第 4 轮 | **全绿**（run 38602375746，24m48s）：凭据扫描 → ESLint → typecheck → server 单测 → 前端单测 → 七项校验 → 生产构建 → dev E2E（173 passed / 1 skipped，12.7m）→ preview E2E（164 passed / 10 skipped，8.9m）。dev 1 skipped 为依赖 `VITE_AMAP_KEY` 的用例按设计跳过；preview 10 skipped 为 preview 形态下的既有设计。日志中 `/api/quakes ECONNREFUSED 8787` 是 monitor 后端未启动的预期降级（monitor 用例走 route 拦截，全绿） |
+| 遗留（非阻塞） | DesignKitView.vue 6 处 ESLint 警告（`<CuButton>`/`<GlassPanel>` 换行，0 error）——归入迁出收尾清理轮；CI 通知 ubuntu-latest 镜像 2026-10-19 起迁 Ubuntu 26，届时关注首跑表现 |
+
 ## 2026-09 治理轮次
 
 ### 「大厂级重塑」M0–M4 全程（2026-09-29 ~ 09-30）
