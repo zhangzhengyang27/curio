@@ -1,26 +1,27 @@
 # 部署指引（静态托管）
 
-> 状态：**方案文档，尚无线上环境**（2026-09）。
+> 状态：**已上线（2026-10-15）**——部署于黑群晖 NAS（nginx:alpine 容器，:6301），
+> 公网经阿里云 VPS Nginx + frp 隧道：`https://curio.zhangzhengyang.com`。
+> 运维手册与发布脚本在 NAS 知识库：`NAS/01-项目部署手册/curio部署与避雷手册.md`、
+> `NAS/curio-deploy/sync.sh`。本文件保留产物形态、托管硬性要求与发布前校验。
 > 本项目构建产物是纯静态站点，任何「能服务静态文件 + SPA 回退」的环境均可部署。
-> 部署动作依赖 P0「建立远端仓库」之后才可自动化（CI 发布），本文只覆盖产物形态、
-> 托管硬性要求与发布前校验。
 
 ---
 
-## 1. 产物形态（实测，2026-09）
+## 1. 产物形态（实测，2026-10-15 示例中心移除后）
 
 `npm run build` = `vite build` + `scripts/copy-example-deps.js`，产出 `dist/`：
 
 | 指标 | 数值 | 说明 |
 |---|---|---|
-| 总量 | **~1.4 GB / 14813 个文件** | 选托管方前先看这个量级 |
-| `assets/` | 56 MB | 应用 + 示例分包，文件名带哈希；≥10 KB 文件附 `.gz`/`.br` 预压缩副本 |
-| `public/` 拷贝 | ~1.2 GB | `external-examples`(426M) / `threejs-official`(415M) / `three-project`(381M) 等，**示例运行时资源与源码**，非构建产物、不可裁剪 |
-| `node_modules/` | 81 MB | `copy-example-deps.js` 拷入的示例运行时依赖（cesium/three/gsap 等） |
-| 首屏传输 | 539 KB | 真实用户只按需加载，见 `docs/PERF_BASELINE.md` |
+| 总量 | **~53 MB / 626 个文件** | 示例中心移除前为 1.4 GB / 14813 文件 |
+| `assets/` | 8.3 MB | 应用分包，文件名带哈希；≥10 KB 文件附 `.gz`/`.br` 预压缩副本 |
+| `public/` 拷贝 | ~17 MB | data/textures/three-globe-data（产品数据） |
+| `node_modules/` | 25 MB | copy-example-deps 拷入的 **cesium/Build/Cesium**（/tools 生产运行时硬依赖） |
+| 首屏传输 | 见 `docs/PERF_BASELINE.md` | 按需加载 |
 
-**必须整目录上传 `dist/`**：顶层那些非 assets 目录缺了任何一块，表现都是
-「部分示例白屏 / 资源 404」，且**构建不报错**。不要只上传 `assets/` + `index.html`。
+**必须整目录上传 `dist/`**：`node_modules/`（Cesium Workers/Assets）缺了的表现是
+「/tools 白屏 + 资源 404」，且**构建不报错**。不要只上传 `assets/` + `index.html`。
 
 ---
 
@@ -35,10 +36,9 @@
 
 选型提示：
 
-- **GitHub Pages 不合适**：官方建议仓库（含产物）< 1 GB，本项目产物 1.4 GB。
-- **自有 nginx / 对象存储 + CDN 最直接**（产物量大、国内访问百度/天地图示例也在此线路）。
-- Netlify / Cloudflare Pages 可用（Cloudflare 单站 2 万文件上限，14813 个满足），
-  但每次全量上传 1.4 GB 偏重，适合试运行、不适合日常发布节奏。
+- **GitHub Pages 现在可行**（产物 53MB，远低于 1GB 建议上限），但仍需整目录 + SPA 回退（404 页法）。
+- 当前选择：**NAS 自托管**（nginx:alpine 容器 + frp/VPS HTTPS），与既有项目群同构；
+  如需与家庭网络解耦可迁 VPS 直托管或对象存储 + CDN。
 
 ---
 
