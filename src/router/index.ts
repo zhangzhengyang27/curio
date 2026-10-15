@@ -4,8 +4,6 @@ import type { RouteRecordRaw } from 'vue-router'
 const EarthView = () => import('../views/EarthView.vue')
 const ThreeGlobeGallery = () => import('../views/ThreeGlobeGallery.vue')
 const GlobeDemo = () => import('../views/GlobeDemo.vue')
-const ExampleGallery = () => import('../examples/views/ExampleGallery.vue')
-const ExampleDemo = () => import('../examples/views/ExampleDemo.vue')
 const BMapView = () => import('../views/BMap/index.vue')
 const MapToolsGallery = () => import('../views/MapToolsGallery.vue')
 const MapToolsExampleView = () => import('../views/MapToolsExampleView.vue')
@@ -23,8 +21,6 @@ const routes: RouteRecordRaw[] = [
   { path: '/', name: 'earth', component: EarthView, meta: { title: `${BRAND} · 地球 3D 数据可视化` } },
   { path: '/three-globe', name: 'gallery', component: ThreeGlobeGallery, meta: { title: `ThreeGlobe 示例集 · ${BRAND}` } },
   { path: '/three-globe/:example', name: 'globe-demo', component: GlobeDemo, props: true, meta: { title: `ThreeGlobe 示例 · ${BRAND}` } },
-  { path: '/examples', name: 'example-gallery', component: ExampleGallery, meta: { title: `示例中心 · ${BRAND}` } },
-  { path: '/examples/:source/:pathMatch(.*)*', name: 'example-demo', component: ExampleDemo, props: true, meta: { title: `示例详情 · ${BRAND}` } },
   { path: '/bmap', name: 'bmap', component: BMapView, meta: { title: `百度地图示例集成 · ${BRAND}` } },
   { path: '/tools', name: 'map-tools-gallery', component: MapToolsGallery, meta: { title: `地图工具箱 · ${BRAND}` } },
   { path: '/tools/:slug', name: 'map-tools-example', component: MapToolsExampleView, props: true, meta: { title: `地图工具示例 · ${BRAND}` } },

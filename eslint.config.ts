@@ -11,18 +11,10 @@ export default tseslint.config(
       'node_modules',
       '.vite',
       'public',
-      // 自动生成的示例代码与第三方库，不纳入常规 lint
+      // three.js 兼容层（产品依赖，见 vite.config 的 threeCompatResolver / jsm 别名）：
+      // vendored 三方代码，不纳入常规 lint
       'src/examples/three-build-compat',
       'src/examples/jsm-compat',
-      'src/examples/components/cesium-examples',
-      'src/examples/components/earth-lessons',
-      'src/examples/components/granary-3d',
-      'src/examples/components/graphics',
-      'src/examples/components/mygrapics',
-      'src/examples/components/three-cesium-examples',
-      'src/examples/components/threejs-official',
-      'src/examples/components/webgl',
-      'src/examples/registry/*Examples.ts',
     ],
   },
 
@@ -73,125 +65,6 @@ export default tseslint.config(
     },
   },
 
-  // 由 HTML 自动转换的 WebGL 示例：保留原始代码风格，关闭对转换产物过于严格的规则
-  {
-    files: ['src/examples/components/webgl/**/*.vue', 'src/examples/jsm-compat/webgl/**/*.js'],
-    languageOptions: {
-      globals: {
-        mat4: 'readonly',
-        vec3: 'readonly',
-        vec4: 'readonly',
-        glMatrix: 'readonly',
-      },
-    },
-    rules: {
-      'no-useless-assignment': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      'no-undef': 'error',
-    },
-  },
-
-  // 由 HTML 自动转换的 MyGrapics 示例：保留原始代码风格，关闭对转换产物过于严格的规则
-  {
-    files: ['src/examples/components/mygrapics/**/*.vue'],
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
-    rules: {
-      'no-useless-assignment': 'off',
-      'no-constant-condition': 'off',
-      'no-empty': 'off',
-      'no-fallthrough': 'off',
-      'no-func-assign': 'off',
-      'no-unassigned-vars': 'off',
-      'no-unexpected-multiline': 'off',
-      'no-unsafe-finally': 'off',
-      'no-extra-boolean-cast': 'off',
-      'constructor-super': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      'vue/max-attributes-per-line': 'off',
-      'vue/attributes-order': 'off',
-      'vue/html-self-closing': 'off',
-    },
-  },
-
-  // MyGrapics 第三方库：UMD/IIFE 全局变量较多，关闭严格规则
-  {
-    files: ['src/examples/jsm-compat/mygrapics/**/*.js'],
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
-    rules: {
-      'no-useless-assignment': 'off',
-      'no-constant-condition': 'off',
-      'no-empty': 'off',
-      'no-fallthrough': 'off',
-      'no-func-assign': 'off',
-      'no-unassigned-vars': 'off',
-      'no-unexpected-multiline': 'off',
-      'no-unsafe-finally': 'off',
-      'no-extra-boolean-cast': 'off',
-      'constructor-super': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      'no-undef': 'off',
-    },
-  },
-
-  // 由 HTML 自动转换的 Graphics 示例：保留原始代码风格，关闭对转换产物过于严格的规则
-  {
-    files: ['src/examples/components/graphics/**/*.vue'],
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
-    rules: {
-      'no-useless-assignment': 'off',
-      'no-constant-condition': 'off',
-      'no-empty': 'off',
-      'no-fallthrough': 'off',
-      'no-func-assign': 'off',
-      'no-unassigned-vars': 'off',
-      'no-unexpected-multiline': 'off',
-      'no-unsafe-finally': 'off',
-      'no-extra-boolean-cast': 'off',
-      'constructor-super': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      'vue/max-attributes-per-line': 'off',
-      'vue/attributes-order': 'off',
-      'vue/html-self-closing': 'off',
-    },
-  },
-
-  // Graphics 第三方库：UMD/IIFE 全局变量较多，关闭严格规则
-  {
-    files: ['src/examples/jsm-compat/graphics/**/*.js'],
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
-    rules: {
-      'no-useless-assignment': 'off',
-      'no-constant-condition': 'off',
-      'no-empty': 'off',
-      'no-fallthrough': 'off',
-      'no-func-assign': 'off',
-      'no-unassigned-vars': 'off',
-      'no-unexpected-multiline': 'off',
-      'no-unsafe-finally': 'off',
-      'no-extra-boolean-cast': 'off',
-      'constructor-super': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      'no-undef': 'off',
-    },
-  },
-
-  // WebGL 第三方库：UMD/IIFE 全局变量较多，关闭 no-undef
-  {
-    files: ['src/examples/jsm-compat/webgl/**/libs/*.js', 'src/examples/jsm-compat/webgl/**/libs/*.min.js'],
-    rules: {
-      'no-undef': 'off',
-    },
-  },
-
   // CommonJS 脚本（package.json type=module 下显式 .cjs）
   {
     files: ['**/*.cjs'],
@@ -220,8 +93,9 @@ export default tseslint.config(
   },
 
   // 应用层（首页地球 + BMap 等自有页面）：禁止遗留调试日志。
-  // 说明：src/examples/** 下的 1400+ 示例组件属于「参考代码」，保留其原始
-  // console 输出（很多示例本身就是教学用途），因此这里显式排除。
+  // 说明：src/examples/** 下只剩 vendored 兼容层（three-build-compat / jsm-compat），
+  // 本就在全局 ignores；这里保留 ignores 是双保险，防止三方副本被纳入 lint 后
+  // console 规则误伤。
   {
     files: ['src/**/*.{js,ts,vue}'],
     ignores: ['src/examples/**'],

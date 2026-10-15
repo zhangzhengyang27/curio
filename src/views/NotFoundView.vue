@@ -17,9 +17,9 @@
         </RouterLink>
         <RouterLink
           class="action-btn"
-          to="/examples"
+          to="/three-globe"
         >
-          前往示例中心
+          ThreeGlobe 示例集
         </RouterLink>
       </div>
     </div>

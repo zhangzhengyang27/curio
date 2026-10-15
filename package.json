@@ -19,13 +19,10 @@
     "refresh:quakes": "node scripts/refresh-quake-snapshot.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "verify:registry": "node --experimental-strip-types scripts/verify-registry.mjs",
-    "verify:drift": "node --experimental-strip-types scripts/generate-registry.js --check",
-    "verify:thumbnails": "node --experimental-strip-types scripts/verify-thumbnails.mjs",
     "verify:three-compat": "node scripts/verify-three-compat.mjs",
     "verify:theme": "node scripts/verify-theme-tokens.mjs",
     "verify:contrast": "node scripts/verify-contrast.mjs",
-    "verify": "npm run check:secrets && npm run verify:registry && npm run verify:drift && npm run verify:thumbnails && npm run verify:three-compat && npm run verify:theme && npm run verify:contrast"
+    "verify": "npm run check:secrets && npm run verify:three-compat && npm run verify:theme && npm run verify:contrast"
   },
   "dependencies": {
     "@cesium-extends/drawer": "^1.3.8",
