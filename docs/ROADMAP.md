@@ -2,6 +2,13 @@
 
 ## 0. 范围声明（重要）
 
+> **2026-10-15 拍板（需求方）：示例中心整体移除。** 77 条 Cesium 示例已迁入
+> html5-dataviz 项目（`src/chart-examples/cesium-manifest.ts` + 237M 资产；与本仓库
+> 78 条的差异仅为 1 条 `test` 占位示例），本仓库随之删除 /examples 主线、配套闸门
+> 与 31 个示例专用依赖，收敛为纯数字地球平台。以下的冻结声明与「归档模式」定性
+> 随之终结，保留作历史记录。`src/examples/` 现只剩 three.js 兼容层（**产品依赖，
+> 不能删**，见 AGENTS R6）；`/three-globe` 三球画廊与 `/bmap` 保留。
+
 **自本文件生效起，示例中心冻结接入新的示例来源。**
 
 理由：项目已从「地球数据可视化应用」蔓延为 1 个来源、78 条示例的聚合体（2026-10-08 webgl/graphics/mygrapics/city 四源迁出至 html5-dataviz），

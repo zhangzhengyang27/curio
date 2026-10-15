@@ -6,6 +6,22 @@
 
 ## 2026-10 治理轮次
 
+### 示例中心整体移除，curio 收敛为纯数字地球平台（2026-10-15）
+
+需求方拍板：77 条 Cesium 示例已由其本人迁入 html5-dataviz 项目，本仓库移除 /examples 主线。
+经三个探查代理交叉验证引用面后分五步执行（五个独立提交），全程闸门绿。
+
+| 项 | 说明 |
+|---|---|
+| 迁入方核对 | `html5-dataviz/src/chart-examples/cesium-manifest.ts` 77 条 + `public/external-examples` 237M；与本仓库 78 条的差异仅为 1 条 `test` 占位示例（无实质内容）。被删内容全部在 git 历史可找回 |
+| 保留边界（探查确认） | `src/examples/{three-build-compat,jsm-compat}` 是产品 three.js 的实际来源（40+ 处 `import 'three'` 经 threeCompatResolver 重定向；CSS2D/OrbitControls/EffectComposer 等 14+ 处产品导入走 jsm 别名）——**保留**；`verify:three-compat` 闸门保留。`/three-globe`（18 条硬编码数据，不依赖示例中心）与 `/bmap` 保留，ResourceShell 保留服务两者但删除搜索框（唯一数据源 registry 已删）。jsm-compat 宽松 grep 确认零文件引用被删 npm 包（命中均为注释），整目录不动 |
+| ① 源码与闸门（`eefbaed9`） | 删 src/examples/{registry,metadata,runners,views,components,composables,utils}；删 useExampleStage/useCodeHighlight/CodeDrawer×2（唯一消费方是示例基座/ExampleDemo，逐个 grep 复核，GlobeDemo 的 exampleMeta 为本地变量误报）；路由删 /examples×2；ProductShell 切换链接改指 /three-globe；404 出路改 ThreeGlobe 示例集；删 registry 生成/校验/截图脚本 + legacy/ + lib/；verify 链 7→4；ci.yml 删三步；eslint 删示例 ignores 与 6 个死规则块 |
+| ② 测试（`128d9de7`） | 整删 5 个 example-*.spec（约 22 条）；smoke 删 11 条示例用例 + registry 预载用例，壳分区用例改走 /three-globe 并断言搜索框归零，404/title 同步；perf 删 /examples 项；command-palette 范围探针改 /three-globe；earth-gl-context / earth-picking 壳往返改断 .gallery-page。E2E 合计减少约 35 条 |
+| ③ 资产（`9b9f74e9`） | `git rm` public/{external-examples(257M), example-thumbs}；rm 三个迁出后未跟踪孤儿目录（webgl/mygrapics/three-project）。public 收敛到 17M（data/three-globe-data/textures，产品在用） |
+| ④ 构建与依赖（`0eb60268`） | 依赖 50 → 19（删 31 个孤儿包，audit:deps 复核仅剩 jiti/typescript 两个工具链已知误报）；copy-example-deps 收敛为仅拷 cesium/Build/Cesium（/tools 生产运行时硬依赖）；vite.config 删 serveUnicodePublic/lil-gui 双别名/goodrays//graphics 死别名/8 个死分包组。**实测产物 1.4GB/14813 文件 → 53MB/626**（assets 56MB→8.3MB，dist/node_modules 81MB→25MB 仅 Cesium），死分包零残留；C1 的三个 peer 冲突源（three-good-godrays/postprocessing/three-tile）随之消失，`--legacy-peer-deps` flag 暂留以防万一 |
+| ⑤ 文档（本提交） | README 重写（数字地球平台定位）、AGENTS §1/§2/§3（R1/R2/R3/R8 作废标注）/§4/§5/§7/§8、ROADMAP §0 拍板记录、scripts/README 重写 |
+| 闸门状态 | verify 四项 / typecheck 0 error / lint:ci 0 error / 生产构建 EXIT=0 全绿；dev + preview E2E 见下补记 |
+
 ### CI 首跑全绿与远端建立（2026-10-14）
 
 背景：10-05 / 10-08 两次示例迁出（three 侧 6 源 997 条、webgl 侧 4 源 325 条 → html5-dataviz，

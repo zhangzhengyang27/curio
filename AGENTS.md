@@ -15,23 +15,23 @@
 **Curio**：Vue 3.5 + Vite 8（打包内核是 **Rolldown**）+
 Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由全部懒加载。
 
-两条主线，**各自拥有独立的顶栏外壳**（`src/shells/`，由 `App.vue` 按 `route.path` 首段选择）：
+**数字地球平台**：开场地球 + 平台四页（`/tools` 地图工具箱、`/analysis` 全球数据分析、
+`/monitor` 地震应急监测、`/workbench` 分析工作台），另附 ThreeGlobe 示例集与百度地图集成。
+两个顶栏外壳（`src/shells/`，由 `App.vue` 按 `route.path` 首段选择）：
 
-| 主线 | 入口 | 外壳 | 规模 |
-|---|---|---|---|
-| 数据产品 | `/` → `src/views/EarthView.vue` | `ProductShell`（无搜索框） | 多类数据可视化图层（`src/three/layers/`） |
-| 示例资源库 | `/examples` → `src/examples/` | `ResourceShell`（带示例搜索） | **5 个来源 / 403 条示例（2026-10-06 实测，three 侧 6 源 997 条已于 2026-10-05 迁出至 html5-dataviz）** |
+| 壳 | 覆盖路由 | 顶栏 |
+|---|---|---|
+| `ProductShell` | `/`、`/tools`、`/analysis`、`/monitor`、`/workbench` | 5 项平台导航，无搜索框 |
+| `ResourceShell` | `/three-globe`、`/bmap` | 2 项（ThreeGlobe / 百度地图） |
 
-> 早期版本两条主线**共用一条 8 项顶栏**，是「页面功能非常乱」的直接来源：
-> 4 个产品功能和 4 个示例集平铺在同一层，且那条全局搜索在任何页面敲一个字符
-> 都会把用户拽去 `/examples`（首页地球场景随之销毁、不可恢复）。
-> 现在跨产品只剩一个显式的「示例中心 / 返回地球」切换链接。
+> 历史沿革：本仓库曾聚合 11 来源 / 1400+ 条示例（「示例中心」，`/examples`）。
+> 2026-10-05~08 分两批迁出至 html5-dataviz 项目，**2026-10-15 整体移除**。
+> `src/examples/` 现在只剩 `three-build-compat/` 与 `jsm-compat/` 两个兼容层目录——
+> 它们是**产品 three.js 的实际来源**（`import 'three'` 由 vite 的 threeCompatResolver
+> 重定向过去），**不能删**，见 R6。原「范围冻结（不再接新源）」声明随移除一同终结。
 
-- 路由表：`/`、`/three-globe`、`/three-globe/:example`、`/examples`、
-  `/examples/:source/:pathMatch(.*)*`、`/bmap`、`/tools`（数字地球平台·地图工具箱）、`/analysis`（数字地球平台·全球数据分析）、`/monitor`（数字地球平台·业务监控）。
-- **范围已冻结**：不再接入新的示例来源，只做存量修复与机制优化
-  （[`docs/ROADMAP.md`](./docs/ROADMAP.md) 第 0 节）。
-- **不变量**：全部示例的 `runner` **均为 `'vue'`**（`iframe` 通道存在但无条目使用；403 条实测 2026-10-06）。
+- 路由表：`/`、`/tools`、`/tools/:slug`、`/analysis`、`/workbench`、`/monitor`、
+  `/three-globe`、`/three-globe/:example`、`/bmap`、`/design-kit`。
 - 仓库现状：远端 `github.com/zhangzhengyang27/curio`（私有），仅 `main` 分支；CI 已于 2026-10-14 首跑全绿（`.github/workflows/ci.yml`，全链约 25 分钟）。⚠ 到 github.com 直连不稳定，push 可能需多次重试。
 
 ---
@@ -44,7 +44,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
    见 KNOWN_PITFALLS C1；CI 走 `npm ci --legacy-peer-deps`。）
 2. **先读 [`docs/KNOWN_PITFALLS.md`](./docs/KNOWN_PITFALLS.md)。**
    其中多条是「静默假通过」「静默丢数据」类缺陷 —— 不看会重踩，且踩了很难自查。
-3. 动手前 `git status` 确认工作树干净。**任何写 `registry` 的操作都必须有干净回退点。**
+3. 动手前 `git status` 确认工作树干净。
 
 ---
 
@@ -54,15 +54,15 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 
 | # | 规则 | 原因 |
 |---|---|---|
-| **R1** | **不要手工修改 `src/examples/registry/` 下 4 个由生成器维护的文件**（`threeCesiumExamples` / `cesiumExamples` / `threejsLesson` / `earthLessons`）的**字段顺序、空行、文案**。要改就改生成器再重跑。 | `npm run verify:drift` 做**逐字节**比对（CI 同款），手工调格式必被拦下。 |
-| **R2** | 重跑任何写 registry 的脚本：先 `--dry-run`，确认后才 `--force`。**判断「是否真漂移」要用 `--check`，不要用 `--dry-run`。** | 不带参数运行会被 `scripts/lib/registry-guard.mjs` 直接**拒绝**（安全默认值）。`--dry-run` 只统计行数/条目数/缩略图数，**只换字段顺序或只改文案时显示 `0 / 0 / 0` 假绿**。 |
-| **R3** | 改示例 `id` 必须同步改组件文件名（`git mv`），反之亦然。 | `id` → `PascalCase(id)Example.vue` 是**无类型保护的约定**，失配只表现为用户侧「未找到 Vue 组件」白屏，**没有任何构建报错**。 |
-| **R4** | 凭据只写 `.env.local`（已 gitignore）。新增变量要三件事齐做：登记 `.env.example`、在 `env.d.ts` 的 `ImportMetaEnv` 补类型、实现「未配置时优雅降级」。 | `npm run check:secrets` 在本地 git 钩子与 CI 双重拦截。 |
+| **R1** | **（已作废 2026-10-15）** registry 生成器与 `verify:drift` 已随示例中心移除；「生成器是唯一事实来源、逐字节漂移检测」的教训见 git 历史与 KNOWN_PITFALLS B1 | — |
+| **R2** | **（已作废 2026-10-15）** registry 写入守卫（`--dry-run/--check/--force`）已随示例中心移除 | — |
+| **R3** | **（已作废 2026-10-15）** 示例 `id` → 组件文件名约定已随示例中心移除 | — |
+| **R4** | **凭据只写 `.env.local`**（已 gitignore）。新增变量要三件事齐做：登记 `.env.example`、在 `env.d.ts` 的 `ImportMetaEnv` 补类型、实现「未配置时优雅降级」。 | `npm run check:secrets` 在本地 git 钩子与 CI 双重拦截。 |
 | **R5** | **不要写死本机绝对路径**（配置文件、脚本都不行）。生成脚本用 `new URL('./...', import.meta.url)` 推导。 | 历史上 `.npmrc` 写过他人机器的 `store-dir`，换机器/换 CI 直接失败。 |
-| **R6** | **不要改 `node_modules/three` 来「验证」问题** —— 改动不会生效。 | `three` / `three/webgpu` / `three/tsl` 被 `vite.config.ts` 的 `threeCompatResolver` 重定向到 `src/examples/three-build-compat/`；`three/examples/jsm`、`three/addons` → `src/examples/jsm-compat/`。 |
+| **R6** | **不要改 `node_modules/three` 来「验证」问题** —— 改动不会生效。 | `three` / `three/webgpu` / `three/tsl` 被 `vite.config.ts` 的 `threeCompatResolver` 重定向到 `src/examples/three-build-compat/`；`three/examples/jsm`、`three/addons` → `src/examples/jsm-compat/`。⚠ 示例中心移除后这两个目录**只剩兼容层**，是产品 three.js 的实际来源，更不能动。 |
 | **R7** | 分包只用 `codeSplitting.groups`，**不要用 `manualChunks`**。给某个库新增分组前，先确认它是否真的出现在首页/常用页的依赖图里。 | Vite 8 内核是 Rolldown，`manualChunks` 已废弃且**静默失效**；而分组会把库变成**共享 chunk** 并被提升进 `modulepreload` —— 曾因此让首页预载 1.7 MB 用不到的高斯泼溅库。 |
-| **R8** | 删除示例严格按顺序：`git rm` 源文件 → 手动编辑 registry 删条目 → 清 `scripts/_thumb_map.json` 映射 → 删缩略图 → 清生成器里的死键 → `npm run verify`。**不要靠重跑生成器「自动清理」。** | 顺序错会出现「registry 引用不存在的文件」，且没有构建报错。 |
-| **R9** | 不要 `--no-verify` 跳过钩子，不要直接 push `main`。 | 闸门失败请修问题，而不是绕开。 |
+| **R8** | **（已作废 2026-10-15）** 示例删除流程（registry→缩略图→生成器死键）已随示例中心移除 | — |
+| **R9** | 不要 `--no-verify` 跳过钩子，不要绕过闸门合代码。 | 闸门失败请修问题，而不是绕开。 |
 
 ---
 
@@ -79,7 +79,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 | `npm run dev:server` / `start:server` / `test:server` | `/monitor` 地震数据后端（`server/`，零依赖，:8787）。**跑 monitor 用例不需要起它**：E2E 用 route 拦截喂 `tests/helpers/quakes.ts` 夹具。配了 `TDT_TOKEN`（或回退读 `VITE_TDT_TOKEN`）后它同时是**天地图瓦片反代**，前端在 `.env.local` 设 `VITE_TILE_PROXY=/tiles` 才启用；没起时前端自动退回直连 |
 | `npm run refresh:quakes` | 重生成打包降级快照 `public/data/quake-snapshot.json`（进版本库；数据可随时再抓） |
 | `npm run test:unit` | 前端纯逻辑单测（Node 内置 `node:test`，`tests/unit/`，零依赖）。命令面板核心等纯状态机放这里；CI 同步跑 |
-| `npm run verify` | **一键跑 7 项一致性校验**（见下） |
+| `npm run verify` | **一键跑 4 项一致性校验**（见下） |
 | `npm run audit:deps` / `node scripts/audit-console.mjs` | 依赖 / console 审计，**只输出线索，不改文件** |
 
 ---
@@ -87,7 +87,7 @@ Three.js 0.185（+ r186dev 本地兼容层）+ Cesium 1.142 + Pinia 3，路由�
 ## 5. 改完必须跑的闸门
 
 ```bash
-npm run verify      # 凭据扫描 → 注册表一致性 → 漂移检测 → 封面完整性 → three 兼容层 → 主题令牌/对比度 → 令牌关键文字对/placeholder 用法
+npm run verify      # 凭据扫描 → three 兼容层 → 主题令牌/对比度 → 令牌关键文字对/placeholder 用法
 npm run typecheck
 npm run lint:ci
 npm run build
@@ -99,7 +99,6 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
   因此「分包错乱、产物模块初始化顺序、构建期 env 注入失败」这类问题在 dev 下永远测不出
   —— 历史上 `manualChunks` 静默失效、以及一条 E2E 选择器歧义，都是 preview 才暴露的。
 - 改动涉及 `vite.config.ts` 的分包 / env 注入 / 任何产物形态时，**必须**跑 preview 那一遍。
-- `npm run verify:drift` 是 `verify` 的第 3 环，也是判断「registry 与生成器是否一致」的唯一可靠手段。
 - `npm run verify:theme` 是**棘轮（ratchet）**：`scripts/_theme_token_baseline.json` 记录每个文件
   允许的硬编码色值上限，**只允许下降**。改完一批 token 化后跑
   `node scripts/verify-theme-tokens.mjs --update` 收紧基线；
@@ -137,15 +136,11 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
    保留 `.nav-search` 限定是因为它**同时表达了"这是顶栏那条"的意图**，
    改窄会让以后重新引入产品侧搜索时悄悄改测到别的元素。
    该歧义在 dev 下曾因首页渲染慢而侥幸通过，是 preview 才暴露的。
-2. **断言「首页是否预载 registry」时，识别正则要排除 `registry/index.js`** ——
-   那是 barrel，被 `useExampleFilters` 静态导入，首页请求它属正常；
-   只有 11 个**数据分块**才该被拦。
-3. **关键词过滤的测试数据要选对**：标题/描述/标签多为中文，实测多数英文词
-   在这三个字段里命中数为 **0**（页面直接空态）。2026-10-05 three 侧迁出后实测：`shader`(13)、`cesium`(78)。
-   也不要 grep 整个 registry 文件来判断 —— 那会把 `entry` 路径和 `category` 算进去，会误判。
-
 > 补测试的正确顺序：**先让新断言在旧代码上通过，再动重构。** 本项目已有两次靠这个顺序
 > 在拆分组件时当场发现真缺陷（滚动锁泄漏、`copyTimer` 未清理）。
+>
+> （2026-10-15 注：原第 2、3 条——「registry 预载断言要排除 barrel」「关键词过滤测试
+> 数据要选对」——随示例中心与对应用例移除而失效，教训原文见 git 历史。）
 
 ---
 
@@ -163,25 +158,20 @@ E2E_TARGET=preview npm run test:e2e     # 生产产物（需先 build）
 | 部署形态、托管要求与发布前校验 | [`docs/DEPLOY.md`](./docs/DEPLOY.md) |
 | three.js 兼容层机制与退出步骤 | [`docs/THREE_UPGRADE.md`](./docs/THREE_UPGRADE.md) |
 | 首屏性能基线与测量方法 | [`docs/PERF_BASELINE.md`](./docs/PERF_BASELINE.md) |
-| **示例去重 / 缩减的可行性调研（结论：真重复仅 17 条）** | [`docs/DEDUP_RESEARCH.md`](./docs/DEDUP_RESEARCH.md) |
-| **示例封面空白的根因排查（含 84 个示例渲染失败的发现过程）** | [`docs/THUMBNAIL_ROOT_CAUSE.md`](./docs/THUMBNAIL_ROOT_CAUSE.md) |
-| **graphics / mygrapics 84 个示例渲染失败的根因与修复** | [`docs/GL_RENDERER_FIX.md`](./docs/GL_RENDERER_FIX.md) |
+| **示例去重 / 缩减的可行性调研（结论：真重复仅 17 条；示例中心已移除，仅历史留痕）** | [`docs/DEDUP_RESEARCH.md`](./docs/DEDUP_RESEARCH.md) |
+| **示例封面空白的根因排查（含 84 个示例渲染失败的发现过程；仅历史留痕）** | [`docs/THUMBNAIL_ROOT_CAUSE.md`](./docs/THUMBNAIL_ROOT_CAUSE.md) |
+| **graphics / mygrapics 84 个示例渲染失败的根因与修复（仅历史留痕）** | [`docs/GL_RENDERER_FIX.md`](./docs/GL_RENDERER_FIX.md) |
 | 脚本分类（质量闸门 / registry 写入 / 一次性） | [`scripts/README.md`](./scripts/README.md) |
 | 历史 spec 归档（**路径已失效，仅决策留痕**） | `.trae/specs/`、`.trae/documents/` |
 
 关键源码位置：
 
 ```
-src/examples/registry/index.ts        # 11 个 registry 按 source 懒加载（注意：getAllExamples() 是同步缓存版，
-                                      #   未加载时返回 []，脚本里必须用 getAllExamplesAsync()）
-src/examples/registry/provenance.ts   # 按来源的上游溯源登记（手工维护，接入新源必须补一条，有用例闸门）
-src/examples/components/index.ts      # 组件「约定路径」解析（import.meta.glob）
-src/examples/composables/useGalleryFilters.ts   # 画廊筛选状态机 + URL 同步 + 分页
-                                                #   ⚠ 本页滚动容器是 #app，不是 window
-src/examples/composables/useExampleFilters.ts   # 技术栈分组 / 子分类定义（改分类的主要修改点）
-src/examples/utils/exampleMeta.ts     # 从 id 剥分类前缀推区分尾段（分开 127 组重名标题用）
-scripts/lib/example-component.mjs     # 组件约定路径的单一事实来源（生成器与校验器共用）
-scripts/lib/registry-guard.mjs        # registry 写入守卫 + --dry-run/--check/--force
+src/map/cesiumLoader.ts               # Cesium 动态加载（window.Cesium），生产依赖 copy-example-deps 拷入的 Build 产物
+src/shells/                           # 双外壳：ProductShell（平台）/ ResourceShell（ThreeGlobe+bmap）
+src/composables/commandPaletteCore.ts # 首页命令面板纯核心（tests/unit 覆盖）
+src/utils/legacyStorage.ts            # 存储键 cu-* 一次性迁移协议
+scripts/verify-three-compat.mjs       # three 兼容层哈希基线守卫（--update 更新）
 ```
 
 ---
